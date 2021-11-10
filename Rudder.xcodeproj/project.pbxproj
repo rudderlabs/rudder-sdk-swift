@@ -1,0 +1,716 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		06CABC332630C6B00097BEFF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABC322630C6B00097BEFF /* Foundation.framework */; };
+		06CABC352630C6D30097BEFF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABC2E2630C6660097BEFF /* UIKit.framework */; };
+		EDA7EF722739119600E73142 /* API+Headers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF302739119600E73142 /* API+Headers.swift */; };
+		EDA7EF732739119600E73142 /* API+Method.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF312739119600E73142 /* API+Method.swift */; };
+		EDA7EF742739119600E73142 /* API+Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF322739119600E73142 /* API+Path.swift */; };
+		EDA7EF752739119600E73142 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF332739119600E73142 /* API.swift */; };
+		EDA7EF762739119600E73142 /* RSServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF342739119600E73142 /* RSServiceManager.swift */; };
+		EDA7EF772739119600E73142 /* API+Body.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF352739119600E73142 /* API+Body.swift */; };
+		EDA7EF782739119600E73142 /* RSCustomFactoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF372739119600E73142 /* RSCustomFactoryManager.swift */; };
+		EDA7EF792739119600E73142 /* RSMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF382739119600E73142 /* RSMessageHandler.swift */; };
+		EDA7EF7A2739119600E73142 /* RSFactoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF392739119600E73142 /* RSFactoryManager.swift */; };
+		EDA7EF7B2739119600E73142 /* RSProcessorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF3A2739119600E73142 /* RSProcessorManager.swift */; };
+		EDA7EF7C2739119600E73142 /* RSReplayMessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF3B2739119600E73142 /* RSReplayMessageManager.swift */; };
+		EDA7EF7D2739119600E73142 /* RSServerConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF3C2739119600E73142 /* RSServerConfigManager.swift */; };
+		EDA7EF7E2739119600E73142 /* RSFactoryDumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF3D2739119600E73142 /* RSFactoryDumpManager.swift */; };
+		EDA7EF7F2739119600E73142 /* RSAppLifeCycleTrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF3E2739119600E73142 /* RSAppLifeCycleTrackingManager.swift */; };
+		EDA7EF802739119600E73142 /* RSEventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF3F2739119600E73142 /* RSEventManager.swift */; };
+		EDA7EF812739119600E73142 /* RSDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF402739119600E73142 /* RSDatabaseManager.swift */; };
+		EDA7EF822739119600E73142 /* RSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF412739119600E73142 /* RSClient.swift */; };
+		EDA7EF832739119600E73142 /* RSScreenTrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF422739119600E73142 /* RSScreenTrackingManager.swift */; };
+		EDA7EF842739119600E73142 /* RSUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF452739119600E73142 /* RSUserDefaults.swift */; };
+		EDA7EF852739119600E73142 /* RSConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF462739119600E73142 /* RSConstants.swift */; };
+		EDA7EF862739119600E73142 /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF482739119600E73142 /* String+Ext.swift */; };
+		EDA7EF872739119600E73142 /* NSError+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF492739119600E73142 /* NSError+Ext.swift */; };
+		EDA7EF882739119600E73142 /* UserDefaults+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF4A2739119600E73142 /* UserDefaults+Ext.swift */; };
+		EDA7EF892739119600E73142 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF4B2739119600E73142 /* UIViewController+Ext.swift */; };
+		EDA7EF8A2739119600E73142 /* RSUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF4D2739119600E73142 /* RSUtils.swift */; };
+		EDA7EF8B2739119600E73142 /* Rudder.h in Headers */ = {isa = PBXBuildFile; fileRef = EDA7EF4F2739119600E73142 /* Rudder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EDA7EF8D2739119600E73142 /* RSMessageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF532739119600E73142 /* RSMessageType.swift */; };
+		EDA7EF8E2739119600E73142 /* RSATT.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF542739119600E73142 /* RSATT.swift */; };
+		EDA7EF8F2739119600E73142 /* RSErrorCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF552739119600E73142 /* RSErrorCode.swift */; };
+		EDA7EF902739119600E73142 /* RSLogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF562739119600E73142 /* RSLogLevel.swift */; };
+		EDA7EF912739119600E73142 /* RSDBMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF582739119600E73142 /* RSDBMessage.swift */; };
+		EDA7EF922739119600E73142 /* RSConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF592739119600E73142 /* RSConfig.swift */; };
+		EDA7EF932739119600E73142 /* RSIntegrationOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF5A2739119600E73142 /* RSIntegrationOperation.swift */; };
+		EDA7EF942739119600E73142 /* RSOSInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF5B2739119600E73142 /* RSOSInfo.swift */; };
+		EDA7EF952739119600E73142 /* RSTraits.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF5C2739119600E73142 /* RSTraits.swift */; };
+		EDA7EF962739119600E73142 /* RSOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF5D2739119600E73142 /* RSOption.swift */; };
+		EDA7EF972739119600E73142 /* RSNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF5E2739119600E73142 /* RSNetwork.swift */; };
+		EDA7EF982739119600E73142 /* RSMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF5F2739119600E73142 /* RSMessage.swift */; };
+		EDA7EF992739119600E73142 /* RSServerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF612739119600E73142 /* RSServerConfig.swift */; };
+		EDA7EF9A2739119600E73142 /* RSDestinationConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF622739119600E73142 /* RSDestinationConfig.swift */; };
+		EDA7EF9B2739119600E73142 /* RSDestinationDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF632739119600E73142 /* RSDestinationDefinition.swift */; };
+		EDA7EF9C2739119600E73142 /* RSDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF642739119600E73142 /* RSDestination.swift */; };
+		EDA7EF9D2739119600E73142 /* RSContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF652739119600E73142 /* RSContext.swift */; };
+		EDA7EF9E2739119600E73142 /* RSDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF662739119600E73142 /* RSDeviceInfo.swift */; };
+		EDA7EF9F2739119600E73142 /* RSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF672739119600E73142 /* RSApp.swift */; };
+		EDA7EFA02739119600E73142 /* RSScreenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF682739119600E73142 /* RSScreenInfo.swift */; };
+		EDA7EFA12739119600E73142 /* RSLibraryInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF692739119600E73142 /* RSLibraryInfo.swift */; };
+		EDA7EFA22739119600E73142 /* RSServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6B2739119600E73142 /* RSServiceType.swift */; };
+		EDA7EFA32739119600E73142 /* RSIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6C2739119600E73142 /* RSIntegration.swift */; };
+		EDA7EFA42739119600E73142 /* RSIntegrationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6D2739119600E73142 /* RSIntegrationFactory.swift */; };
+		EDA7EFA52739119600E73142 /* RSTrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6E2739119600E73142 /* RSTrackingManager.swift */; };
+		EDA7EFA62739119600E73142 /* RSBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6F2739119600E73142 /* RSBaseManager.swift */; };
+		EDA7EFA72739119600E73142 /* RSLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF712739119600E73142 /* RSLogger.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		06CABB842630C3CA0097BEFF /* Rudder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rudder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		06CABC2E2630C6660097BEFF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/iOSSupport/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		06CABC322630C6B00097BEFF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		ED910CDE273BA25100A3EDFF /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		ED910CDF273BA25100A3EDFF /* release.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = release.sh; sourceTree = "<group>"; };
+		ED910CE0273BA25100A3EDFF /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		ED910CE1273BA25100A3EDFF /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		ED910CE2273BA25100A3EDFF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		ED910CE3273BA25100A3EDFF /* Rudder.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Rudder.podspec; sourceTree = "<group>"; };
+		ED910CE4273BA25100A3EDFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EDA7EF302739119600E73142 /* API+Headers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "API+Headers.swift"; sourceTree = "<group>"; };
+		EDA7EF312739119600E73142 /* API+Method.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "API+Method.swift"; sourceTree = "<group>"; };
+		EDA7EF322739119600E73142 /* API+Path.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "API+Path.swift"; sourceTree = "<group>"; };
+		EDA7EF332739119600E73142 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		EDA7EF342739119600E73142 /* RSServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSServiceManager.swift; sourceTree = "<group>"; };
+		EDA7EF352739119600E73142 /* API+Body.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "API+Body.swift"; sourceTree = "<group>"; };
+		EDA7EF372739119600E73142 /* RSCustomFactoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSCustomFactoryManager.swift; sourceTree = "<group>"; };
+		EDA7EF382739119600E73142 /* RSMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSMessageHandler.swift; sourceTree = "<group>"; };
+		EDA7EF392739119600E73142 /* RSFactoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSFactoryManager.swift; sourceTree = "<group>"; };
+		EDA7EF3A2739119600E73142 /* RSProcessorManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSProcessorManager.swift; sourceTree = "<group>"; };
+		EDA7EF3B2739119600E73142 /* RSReplayMessageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSReplayMessageManager.swift; sourceTree = "<group>"; };
+		EDA7EF3C2739119600E73142 /* RSServerConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSServerConfigManager.swift; sourceTree = "<group>"; };
+		EDA7EF3D2739119600E73142 /* RSFactoryDumpManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSFactoryDumpManager.swift; sourceTree = "<group>"; };
+		EDA7EF3E2739119600E73142 /* RSAppLifeCycleTrackingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAppLifeCycleTrackingManager.swift; sourceTree = "<group>"; };
+		EDA7EF3F2739119600E73142 /* RSEventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSEventManager.swift; sourceTree = "<group>"; };
+		EDA7EF402739119600E73142 /* RSDatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSDatabaseManager.swift; sourceTree = "<group>"; };
+		EDA7EF412739119600E73142 /* RSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSClient.swift; sourceTree = "<group>"; };
+		EDA7EF422739119600E73142 /* RSScreenTrackingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSScreenTrackingManager.swift; sourceTree = "<group>"; };
+		EDA7EF452739119600E73142 /* RSUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSUserDefaults.swift; sourceTree = "<group>"; };
+		EDA7EF462739119600E73142 /* RSConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSConstants.swift; sourceTree = "<group>"; };
+		EDA7EF482739119600E73142 /* String+Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
+		EDA7EF492739119600E73142 /* NSError+Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+Ext.swift"; sourceTree = "<group>"; };
+		EDA7EF4A2739119600E73142 /* UserDefaults+Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Ext.swift"; sourceTree = "<group>"; };
+		EDA7EF4B2739119600E73142 /* UIViewController+Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
+		EDA7EF4D2739119600E73142 /* RSUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSUtils.swift; sourceTree = "<group>"; };
+		EDA7EF4F2739119600E73142 /* Rudder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Rudder.h; sourceTree = "<group>"; };
+		EDA7EF502739119600E73142 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EDA7EF532739119600E73142 /* RSMessageType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSMessageType.swift; sourceTree = "<group>"; };
+		EDA7EF542739119600E73142 /* RSATT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSATT.swift; sourceTree = "<group>"; };
+		EDA7EF552739119600E73142 /* RSErrorCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSErrorCode.swift; sourceTree = "<group>"; };
+		EDA7EF562739119600E73142 /* RSLogLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSLogLevel.swift; sourceTree = "<group>"; };
+		EDA7EF582739119600E73142 /* RSDBMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSDBMessage.swift; sourceTree = "<group>"; };
+		EDA7EF592739119600E73142 /* RSConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSConfig.swift; sourceTree = "<group>"; };
+		EDA7EF5A2739119600E73142 /* RSIntegrationOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSIntegrationOperation.swift; sourceTree = "<group>"; };
+		EDA7EF5B2739119600E73142 /* RSOSInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSOSInfo.swift; sourceTree = "<group>"; };
+		EDA7EF5C2739119600E73142 /* RSTraits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSTraits.swift; sourceTree = "<group>"; };
+		EDA7EF5D2739119600E73142 /* RSOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSOption.swift; sourceTree = "<group>"; };
+		EDA7EF5E2739119600E73142 /* RSNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSNetwork.swift; sourceTree = "<group>"; };
+		EDA7EF5F2739119600E73142 /* RSMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSMessage.swift; sourceTree = "<group>"; };
+		EDA7EF612739119600E73142 /* RSServerConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSServerConfig.swift; sourceTree = "<group>"; };
+		EDA7EF622739119600E73142 /* RSDestinationConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSDestinationConfig.swift; sourceTree = "<group>"; };
+		EDA7EF632739119600E73142 /* RSDestinationDefinition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSDestinationDefinition.swift; sourceTree = "<group>"; };
+		EDA7EF642739119600E73142 /* RSDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSDestination.swift; sourceTree = "<group>"; };
+		EDA7EF652739119600E73142 /* RSContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSContext.swift; sourceTree = "<group>"; };
+		EDA7EF662739119600E73142 /* RSDeviceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSDeviceInfo.swift; sourceTree = "<group>"; };
+		EDA7EF672739119600E73142 /* RSApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSApp.swift; sourceTree = "<group>"; };
+		EDA7EF682739119600E73142 /* RSScreenInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSScreenInfo.swift; sourceTree = "<group>"; };
+		EDA7EF692739119600E73142 /* RSLibraryInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSLibraryInfo.swift; sourceTree = "<group>"; };
+		EDA7EF6B2739119600E73142 /* RSServiceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSServiceType.swift; sourceTree = "<group>"; };
+		EDA7EF6C2739119600E73142 /* RSIntegration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSIntegration.swift; sourceTree = "<group>"; };
+		EDA7EF6D2739119600E73142 /* RSIntegrationFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSIntegrationFactory.swift; sourceTree = "<group>"; };
+		EDA7EF6E2739119600E73142 /* RSTrackingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSTrackingManager.swift; sourceTree = "<group>"; };
+		EDA7EF6F2739119600E73142 /* RSBaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSBaseManager.swift; sourceTree = "<group>"; };
+		EDA7EF712739119600E73142 /* RSLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSLogger.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		06CABB812630C3CA0097BEFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				06CABC332630C6B00097BEFF /* Foundation.framework in Frameworks */,
+				06CABC352630C6D30097BEFF /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		06CABB7A2630C3CA0097BEFF = {
+			isa = PBXGroup;
+			children = (
+				ED910CE0273BA25100A3EDFF /* CHANGELOG.md */,
+				ED910CE2273BA25100A3EDFF /* LICENSE */,
+				ED910CDE273BA25100A3EDFF /* Package.swift */,
+				ED910CE1273BA25100A3EDFF /* Podfile */,
+				ED910CE4273BA25100A3EDFF /* README.md */,
+				ED910CDF273BA25100A3EDFF /* release.sh */,
+				ED910CE3273BA25100A3EDFF /* Rudder.podspec */,
+				EDA7EF2D2739119600E73142 /* Sources */,
+				06CABB852630C3CA0097BEFF /* Products */,
+				06CABC2D2630C6660097BEFF /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		06CABB852630C3CA0097BEFF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				06CABB842630C3CA0097BEFF /* Rudder.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		06CABC2D2630C6660097BEFF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				06CABC322630C6B00097BEFF /* Foundation.framework */,
+				06CABC2E2630C6660097BEFF /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EDA7EF2D2739119600E73142 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF432739119600E73142 /* Common */,
+				EDA7EF512739119600E73142 /* Domain */,
+				EDA7EF702739119600E73142 /* Helpers */,
+				EDA7EF362739119600E73142 /* Managers */,
+				EDA7EF2E2739119600E73142 /* Networking */,
+				EDA7EF4E2739119600E73142 /* SDKInfo */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		EDA7EF2E2739119600E73142 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF2F2739119600E73142 /* APIClient */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		EDA7EF2F2739119600E73142 /* APIClient */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF302739119600E73142 /* API+Headers.swift */,
+				EDA7EF312739119600E73142 /* API+Method.swift */,
+				EDA7EF322739119600E73142 /* API+Path.swift */,
+				EDA7EF332739119600E73142 /* API.swift */,
+				EDA7EF342739119600E73142 /* RSServiceManager.swift */,
+				EDA7EF352739119600E73142 /* API+Body.swift */,
+			);
+			path = APIClient;
+			sourceTree = "<group>";
+		};
+		EDA7EF362739119600E73142 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF3E2739119600E73142 /* RSAppLifeCycleTrackingManager.swift */,
+				EDA7EF412739119600E73142 /* RSClient.swift */,
+				EDA7EF372739119600E73142 /* RSCustomFactoryManager.swift */,
+				EDA7EF402739119600E73142 /* RSDatabaseManager.swift */,
+				EDA7EF3F2739119600E73142 /* RSEventManager.swift */,
+				EDA7EF3D2739119600E73142 /* RSFactoryDumpManager.swift */,
+				EDA7EF392739119600E73142 /* RSFactoryManager.swift */,
+				EDA7EF382739119600E73142 /* RSMessageHandler.swift */,
+				EDA7EF3A2739119600E73142 /* RSProcessorManager.swift */,
+				EDA7EF3B2739119600E73142 /* RSReplayMessageManager.swift */,
+				EDA7EF422739119600E73142 /* RSScreenTrackingManager.swift */,
+				EDA7EF3C2739119600E73142 /* RSServerConfigManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		EDA7EF432739119600E73142 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF442739119600E73142 /* Constants */,
+				EDA7EF472739119600E73142 /* Extensions */,
+				EDA7EF4C2739119600E73142 /* Utility */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		EDA7EF442739119600E73142 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF452739119600E73142 /* RSUserDefaults.swift */,
+				EDA7EF462739119600E73142 /* RSConstants.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+		EDA7EF472739119600E73142 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF482739119600E73142 /* String+Ext.swift */,
+				EDA7EF492739119600E73142 /* NSError+Ext.swift */,
+				EDA7EF4A2739119600E73142 /* UserDefaults+Ext.swift */,
+				EDA7EF4B2739119600E73142 /* UIViewController+Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		EDA7EF4C2739119600E73142 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF4D2739119600E73142 /* RSUtils.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		EDA7EF4E2739119600E73142 /* SDKInfo */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF4F2739119600E73142 /* Rudder.h */,
+				EDA7EF502739119600E73142 /* Info.plist */,
+			);
+			path = SDKInfo;
+			sourceTree = "<group>";
+		};
+		EDA7EF512739119600E73142 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF522739119600E73142 /* Enums */,
+				EDA7EF572739119600E73142 /* Models */,
+				EDA7EF6A2739119600E73142 /* Protocols */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		EDA7EF522739119600E73142 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF532739119600E73142 /* RSMessageType.swift */,
+				EDA7EF542739119600E73142 /* RSATT.swift */,
+				EDA7EF552739119600E73142 /* RSErrorCode.swift */,
+				EDA7EF562739119600E73142 /* RSLogLevel.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
+		EDA7EF572739119600E73142 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF582739119600E73142 /* RSDBMessage.swift */,
+				EDA7EF592739119600E73142 /* RSConfig.swift */,
+				EDA7EF5A2739119600E73142 /* RSIntegrationOperation.swift */,
+				EDA7EF5B2739119600E73142 /* RSOSInfo.swift */,
+				EDA7EF5C2739119600E73142 /* RSTraits.swift */,
+				EDA7EF5D2739119600E73142 /* RSOption.swift */,
+				EDA7EF5E2739119600E73142 /* RSNetwork.swift */,
+				EDA7EF5F2739119600E73142 /* RSMessage.swift */,
+				EDA7EF602739119600E73142 /* Attributes */,
+				EDA7EF652739119600E73142 /* RSContext.swift */,
+				EDA7EF662739119600E73142 /* RSDeviceInfo.swift */,
+				EDA7EF672739119600E73142 /* RSApp.swift */,
+				EDA7EF682739119600E73142 /* RSScreenInfo.swift */,
+				EDA7EF692739119600E73142 /* RSLibraryInfo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EDA7EF602739119600E73142 /* Attributes */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF612739119600E73142 /* RSServerConfig.swift */,
+				EDA7EF622739119600E73142 /* RSDestinationConfig.swift */,
+				EDA7EF632739119600E73142 /* RSDestinationDefinition.swift */,
+				EDA7EF642739119600E73142 /* RSDestination.swift */,
+			);
+			path = Attributes;
+			sourceTree = "<group>";
+		};
+		EDA7EF6A2739119600E73142 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF6B2739119600E73142 /* RSServiceType.swift */,
+				EDA7EF6C2739119600E73142 /* RSIntegration.swift */,
+				EDA7EF6D2739119600E73142 /* RSIntegrationFactory.swift */,
+				EDA7EF6E2739119600E73142 /* RSTrackingManager.swift */,
+				EDA7EF6F2739119600E73142 /* RSBaseManager.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		EDA7EF702739119600E73142 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				EDA7EF712739119600E73142 /* RSLogger.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		06CABB7F2630C3CA0097BEFF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDA7EF8B2739119600E73142 /* Rudder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		06CABB832630C3CA0097BEFF /* Rudder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 06CABB982630C3CA0097BEFF /* Build configuration list for PBXNativeTarget "Rudder" */;
+			buildPhases = (
+				06CABB7F2630C3CA0097BEFF /* Headers */,
+				06CABB802630C3CA0097BEFF /* Sources */,
+				06CABB812630C3CA0097BEFF /* Frameworks */,
+				06CABB822630C3CA0097BEFF /* Resources */,
+				ED1DEAE626C6463000C09CAA /* SwiftLint Script */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Rudder;
+			productName = Rudder;
+			productReference = 06CABB842630C3CA0097BEFF /* Rudder.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		06CABB7B2630C3CA0097BEFF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = RS;
+				LastUpgradeCheck = 1250;
+				ORGANIZATIONNAME = "Rudder Labs India Pvt Ltd.";
+				TargetAttributes = {
+					06CABB832630C3CA0097BEFF = {
+						CreatedOnToolsVersion = 12.3;
+						LastSwiftMigration = 1250;
+					};
+				};
+			};
+			buildConfigurationList = 06CABB7E2630C3CA0097BEFF /* Build configuration list for PBXProject "Rudder" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 06CABB7A2630C3CA0097BEFF;
+			productRefGroup = 06CABB852630C3CA0097BEFF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				06CABB832630C3CA0097BEFF /* Rudder */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		06CABB822630C3CA0097BEFF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		ED1DEAE626C6463000C09CAA /* SwiftLint Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "SwiftLint Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		06CABB802630C3CA0097BEFF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDA7EF772739119600E73142 /* API+Body.swift in Sources */,
+				EDA7EFA62739119600E73142 /* RSBaseManager.swift in Sources */,
+				EDA7EFA52739119600E73142 /* RSTrackingManager.swift in Sources */,
+				EDA7EF9E2739119600E73142 /* RSDeviceInfo.swift in Sources */,
+				EDA7EFA22739119600E73142 /* RSServiceType.swift in Sources */,
+				EDA7EF872739119600E73142 /* NSError+Ext.swift in Sources */,
+				EDA7EF792739119600E73142 /* RSMessageHandler.swift in Sources */,
+				EDA7EF902739119600E73142 /* RSLogLevel.swift in Sources */,
+				EDA7EF7F2739119600E73142 /* RSAppLifeCycleTrackingManager.swift in Sources */,
+				EDA7EF9A2739119600E73142 /* RSDestinationConfig.swift in Sources */,
+				EDA7EF8D2739119600E73142 /* RSMessageType.swift in Sources */,
+				EDA7EF832739119600E73142 /* RSScreenTrackingManager.swift in Sources */,
+				EDA7EF8F2739119600E73142 /* RSErrorCode.swift in Sources */,
+				EDA7EF722739119600E73142 /* API+Headers.swift in Sources */,
+				EDA7EF7D2739119600E73142 /* RSServerConfigManager.swift in Sources */,
+				EDA7EF852739119600E73142 /* RSConstants.swift in Sources */,
+				EDA7EF882739119600E73142 /* UserDefaults+Ext.swift in Sources */,
+				EDA7EF822739119600E73142 /* RSClient.swift in Sources */,
+				EDA7EF962739119600E73142 /* RSOption.swift in Sources */,
+				EDA7EF952739119600E73142 /* RSTraits.swift in Sources */,
+				EDA7EF742739119600E73142 /* API+Path.swift in Sources */,
+				EDA7EF922739119600E73142 /* RSConfig.swift in Sources */,
+				EDA7EFA42739119600E73142 /* RSIntegrationFactory.swift in Sources */,
+				EDA7EF752739119600E73142 /* API.swift in Sources */,
+				EDA7EF812739119600E73142 /* RSDatabaseManager.swift in Sources */,
+				EDA7EF992739119600E73142 /* RSServerConfig.swift in Sources */,
+				EDA7EF932739119600E73142 /* RSIntegrationOperation.swift in Sources */,
+				EDA7EF7C2739119600E73142 /* RSReplayMessageManager.swift in Sources */,
+				EDA7EF982739119600E73142 /* RSMessage.swift in Sources */,
+				EDA7EF892739119600E73142 /* UIViewController+Ext.swift in Sources */,
+				EDA7EF732739119600E73142 /* API+Method.swift in Sources */,
+				EDA7EF8E2739119600E73142 /* RSATT.swift in Sources */,
+				EDA7EF782739119600E73142 /* RSCustomFactoryManager.swift in Sources */,
+				EDA7EF972739119600E73142 /* RSNetwork.swift in Sources */,
+				EDA7EFA12739119600E73142 /* RSLibraryInfo.swift in Sources */,
+				EDA7EF842739119600E73142 /* RSUserDefaults.swift in Sources */,
+				EDA7EF862739119600E73142 /* String+Ext.swift in Sources */,
+				EDA7EF7E2739119600E73142 /* RSFactoryDumpManager.swift in Sources */,
+				EDA7EF9B2739119600E73142 /* RSDestinationDefinition.swift in Sources */,
+				EDA7EF7B2739119600E73142 /* RSProcessorManager.swift in Sources */,
+				EDA7EF9D2739119600E73142 /* RSContext.swift in Sources */,
+				EDA7EF9F2739119600E73142 /* RSApp.swift in Sources */,
+				EDA7EFA72739119600E73142 /* RSLogger.swift in Sources */,
+				EDA7EFA32739119600E73142 /* RSIntegration.swift in Sources */,
+				EDA7EF762739119600E73142 /* RSServiceManager.swift in Sources */,
+				EDA7EF912739119600E73142 /* RSDBMessage.swift in Sources */,
+				EDA7EF942739119600E73142 /* RSOSInfo.swift in Sources */,
+				EDA7EF7A2739119600E73142 /* RSFactoryManager.swift in Sources */,
+				EDA7EF802739119600E73142 /* RSEventManager.swift in Sources */,
+				EDA7EF9C2739119600E73142 /* RSDestination.swift in Sources */,
+				EDA7EFA02739119600E73142 /* RSScreenInfo.swift in Sources */,
+				EDA7EF8A2739119600E73142 /* RSUtils.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		06CABB962630C3CA0097BEFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		06CABB972630C3CA0097BEFF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		06CABB992630C3CA0097BEFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = GTGKNDBD23;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/SDKInfo/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.Rudder;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		06CABB9A2630C3CA0097BEFF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = GTGKNDBD23;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/SDKInfo/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.Rudder;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		06CABB7E2630C3CA0097BEFF /* Build configuration list for PBXProject "Rudder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06CABB962630C3CA0097BEFF /* Debug */,
+				06CABB972630C3CA0097BEFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		06CABB982630C3CA0097BEFF /* Build configuration list for PBXNativeTarget "Rudder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06CABB992630C3CA0097BEFF /* Debug */,
+				06CABB9A2630C3CA0097BEFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 06CABB7B2630C3CA0097BEFF /* Project object */;
+}
