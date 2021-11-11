@@ -14,7 +14,6 @@ import Foundation
     var library: RSLibraryInfo
     var osInfo: RSOSInfo
     var screenInfo: RSScreenInfo
-    var userAgent: String?
     var locale: String
     var device: RSDeviceInfo
     var network: RSNetwork
@@ -27,7 +26,6 @@ import Foundation
         library = RSLibraryInfo()
         osInfo = RSOSInfo()
         screenInfo = RSScreenInfo()
-        userAgent = RSUtils.userAgent()
         locale = RSUtils.getLocale()
         network = RSNetwork()
         timezone = NSTimeZone.local.identifier
@@ -90,9 +88,6 @@ import Foundation
         tempDict["library"] = library.dict()
         tempDict["os"] = osInfo.dict()
         tempDict["screen"] = screenInfo.dict()
-        if userAgent != nil {
-            tempDict["userAgent"] = userAgent
-        }
         tempDict["locale"] = locale
         tempDict["device"] = device.dict()
         tempDict["network"] = network.dict()

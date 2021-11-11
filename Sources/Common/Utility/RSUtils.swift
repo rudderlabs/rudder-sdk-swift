@@ -7,27 +7,26 @@
 //
 
 import Foundation
-import WebKit
 import SQLite3
 
 func logDebug(_ message: String) {
-    RSClient.shared.logger.logDebug(message: message)
+    RSLogger.logDebug(message)
 }
 
 func logError(_ message: String) {
-    RSClient.shared.logger.logError(message: message)
+    RSLogger.logError(message)
 }
 
 func logVerbose(_ message: String) {
-    RSClient.shared.logger.logVerbose(message: message)
+    RSLogger.logVerbose(message)
 }
 
 func logInfo(_ message: String) {
-    RSClient.shared.logger.logInfo(message: message)
+    RSLogger.logInfo(message)
 }
 
 func logWarn(_ message: String) {
-    RSClient.shared.logger.logWarn(message: message)
+    RSLogger.logWarn(message)
 }
 
 struct RSUtils {
@@ -75,10 +74,6 @@ struct RSUtils {
         return "NA"
     }
 
-    static func userAgent() -> String? {
-        return WKWebView().value(forKey: "userAgent") as? String
-    }
-    
     static func createTraits() -> [String: Any] {
         let traits: RSTraits = RSTraits()
         traits.anonymousId = UserDefaults.standard.anonymousId

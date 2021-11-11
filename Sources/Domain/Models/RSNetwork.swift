@@ -7,7 +7,9 @@
 //
 
 import Foundation
+#if !os(tvOS)
 import CoreTelephony
+#endif
 
 struct RSNetwork {
     
@@ -17,7 +19,11 @@ struct RSNetwork {
     let cellular: Bool
     
     init() {
+        #if !os(tvOS)
         self.carrier = CTCarrier.init().carrierName ?? "unavailable"
+        #else
+        self.carrier = "unavailable"
+        #endif
         self.wifi = true
         self.bluetooth = false
         self.cellular = false

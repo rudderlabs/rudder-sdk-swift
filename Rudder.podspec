@@ -11,7 +11,8 @@ Pod::Spec.new do |s|
   s.author           = { "Rudderstack" => "arnab@rudderlabs.com" }
   s.source           = { :git => "https://github.com/rudderlabs/rudder-sdk-ios.git", :tag => "v1.1.2" }
 
+  s.swift_version = '5.3'
   s.ios.deployment_target = '9.0'
-  s.tvos.deployment_target = '9.0'
-  s.source_files = 'Sources/**/*.{h,m}'
+  s.tvos.deployment_target = '10.0'
+  s.source_files = 'Sources/**/*.swift'
 end

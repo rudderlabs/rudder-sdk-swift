@@ -12,7 +12,10 @@ import Foundation
     let messageId: String
     let channel: String
     var context: RSContext?
-    var type: RSMessageType?
+    var _type: RSMessageType?
+    @objc public var type: String? {
+        return _type?.rawValue
+    }
     var action: String?
     let originalTimestamp: String
     var anonymousId: String?
@@ -20,7 +23,7 @@ import Foundation
     var previousId: String?
     var groupId: String?
     var traits: [String: Any]?
-    var event: String?
+    @objc public var event: String?
     var properties: [String: Any]?
     var userProperties: [String: Any]?
     var integrations: [String: Any]?
@@ -35,7 +38,7 @@ import Foundation
         context = RSClient.shared.eventManager.cachedContext
         originalTimestamp = RSUtils.getTimestampString()
         anonymousId = RSUserDefaults.getAnonymousId()
-        self.type = type
+        _type = type
     }
     
     func toDict() -> [String: Any] {
@@ -50,7 +53,7 @@ import Foundation
             }
         }
         dictionary["context"] = contextDict
-        dictionary["type"] = type?.rawValue
+        dictionary["type"] = _type?.rawValue
         dictionary["action"] = action
         dictionary["originalTimestamp"] = originalTimestamp
         if let previousId = previousId {

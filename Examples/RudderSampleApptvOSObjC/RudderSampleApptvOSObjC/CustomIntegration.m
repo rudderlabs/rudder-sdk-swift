@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Rudder/Rudder.h>
 #import "CustomIntegration.h"
 
 @implementation CustomIntegration

@@ -24,7 +24,7 @@ static NSString *WRITE_KEY = @"1pcZviVxgjd3rTUUmaTUBinGH0A";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    RSConfigBuilder *builder = [[RSConfigBuilder alloc] init];
+    RSConfig *builder = [[RSConfig alloc] init];
     [builder withDataPlaneURL:[[NSURL alloc] initWithString:DATA_PLANE_URL]];
     [builder withLoglevel:RSLogLevelDebug];
     [builder withTrackLifecycleEvens:YES];
@@ -33,7 +33,7 @@ static NSString *WRITE_KEY = @"1pcZviVxgjd3rTUUmaTUBinGH0A";
     
     [RSClient setAnonymousId:@"ANONYMOUS_ID"];
     // creating the client object by passing the options object
-    [RSClient getInstance:WRITE_KEY config:[builder build]];
+    [RSClient getInstance:WRITE_KEY config:builder];
     
 
     return YES;
@@ -69,11 +69,11 @@ static NSString *WRITE_KEY = @"1pcZviVxgjd3rTUUmaTUBinGH0A";
 }
 
 + (void) optIn {
-    [[RSClient sharedInstance]optOut:NO];
+//    [[RSClient sharedInstance]optOut:NO];
 }
 
 + (void) optOut {
-    [[RSClient sharedInstance]optOut:YES];
+//    [[RSClient sharedInstance]optOut:YES];
     
 }
 

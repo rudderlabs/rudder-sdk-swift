@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F4F75DE407AABC31654420E7 /* Pods_RudderSampleApptvOSObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1EA81A45904172E1102C8BD /* Pods_RudderSampleApptvOSObjC.framework */; };
+		CEC962A2E81A94E7179FEA5C /* Pods_RudderSampleApptvOSObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD7B03F948DADD3D30314A55 /* Pods_RudderSampleApptvOSObjC.framework */; };
 		F636324327291C0D0086D05A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F636324227291C0D0086D05A /* AppDelegate.m */; };
 		F636324627291C0D0086D05A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F636324527291C0D0086D05A /* ViewController.m */; };
 		F636324927291C0D0086D05A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F636324727291C0D0086D05A /* Main.storyboard */; };
@@ -19,9 +19,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		17B59BAC44B905B17283CAD3 /* Pods-RudderSampleApptvOSObjC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RudderSampleApptvOSObjC.debug.xcconfig"; path = "Target Support Files/Pods-RudderSampleApptvOSObjC/Pods-RudderSampleApptvOSObjC.debug.xcconfig"; sourceTree = "<group>"; };
-		D1EA81A45904172E1102C8BD /* Pods_RudderSampleApptvOSObjC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RudderSampleApptvOSObjC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F5B9D07F8A09CD1EF08AF67C /* Pods-RudderSampleApptvOSObjC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RudderSampleApptvOSObjC.release.xcconfig"; path = "Target Support Files/Pods-RudderSampleApptvOSObjC/Pods-RudderSampleApptvOSObjC.release.xcconfig"; sourceTree = "<group>"; };
+		9F385001D0E38ABB5FA7AC75 /* Pods-RudderSampleApptvOSObjC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RudderSampleApptvOSObjC.debug.xcconfig"; path = "Target Support Files/Pods-RudderSampleApptvOSObjC/Pods-RudderSampleApptvOSObjC.debug.xcconfig"; sourceTree = "<group>"; };
+		A122CEC3E2DC7AB2BC49E7CA /* Pods-RudderSampleApptvOSObjC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RudderSampleApptvOSObjC.release.xcconfig"; path = "Target Support Files/Pods-RudderSampleApptvOSObjC/Pods-RudderSampleApptvOSObjC.release.xcconfig"; sourceTree = "<group>"; };
+		BD7B03F948DADD3D30314A55 /* Pods_RudderSampleApptvOSObjC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RudderSampleApptvOSObjC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F636323E27291C0D0086D05A /* RudderSampleApptvOSObjC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RudderSampleApptvOSObjC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F636324127291C0D0086D05A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F636324227291C0D0086D05A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -45,30 +45,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4F75DE407AABC31654420E7 /* Pods_RudderSampleApptvOSObjC.framework in Frameworks */,
+				CEC962A2E81A94E7179FEA5C /* Pods_RudderSampleApptvOSObjC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		786F565AE8A12ADAE55C8416 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				17B59BAC44B905B17283CAD3 /* Pods-RudderSampleApptvOSObjC.debug.xcconfig */,
-				F5B9D07F8A09CD1EF08AF67C /* Pods-RudderSampleApptvOSObjC.release.xcconfig */,
-			);
-			name = Pods;
-			path = ../../Pods;
-			sourceTree = "<group>";
-		};
 		F636323527291C0D0086D05A = {
 			isa = PBXGroup;
 			children = (
 				F636324027291C0D0086D05A /* RudderSampleApptvOSObjC */,
 				F636323F27291C0D0086D05A /* Products */,
 				F636325627291C640086D05A /* Frameworks */,
-				786F565AE8A12ADAE55C8416 /* Pods */,
+				FF24E35095C9A53FA6D72F56 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,9 +95,19 @@
 				F636325F27291EBC0086D05A /* Rudder.framework */,
 				F636325B27291D4A0086D05A /* Rudder.framework */,
 				F636325727291C640086D05A /* Rudder.framework */,
-				D1EA81A45904172E1102C8BD /* Pods_RudderSampleApptvOSObjC.framework */,
+				BD7B03F948DADD3D30314A55 /* Pods_RudderSampleApptvOSObjC.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FF24E35095C9A53FA6D72F56 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9F385001D0E38ABB5FA7AC75 /* Pods-RudderSampleApptvOSObjC.debug.xcconfig */,
+				A122CEC3E2DC7AB2BC49E7CA /* Pods-RudderSampleApptvOSObjC.release.xcconfig */,
+			);
+			name = Pods;
+			path = ../../Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,10 +117,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F636325327291C0F0086D05A /* Build configuration list for PBXNativeTarget "RudderSampleApptvOSObjC" */;
 			buildPhases = (
-				0860CC6B933BAF9D80753CBB /* [CP] Check Pods Manifest.lock */,
+				3F62C1ACF9B5B047FB1E3775 /* [CP] Check Pods Manifest.lock */,
 				F636323A27291C0D0086D05A /* Sources */,
 				F636323B27291C0D0086D05A /* Frameworks */,
 				F636323C27291C0D0086D05A /* Resources */,
+				95B7BFF983B03DDD1C97798D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -177,7 +178,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0860CC6B933BAF9D80753CBB /* [CP] Check Pods Manifest.lock */ = {
+		3F62C1ACF9B5B047FB1E3775 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -197,6 +198,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		95B7BFF983B03DDD1C97798D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RudderSampleApptvOSObjC/Pods-RudderSampleApptvOSObjC-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RudderSampleApptvOSObjC/Pods-RudderSampleApptvOSObjC-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RudderSampleApptvOSObjC/Pods-RudderSampleApptvOSObjC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -350,7 +368,7 @@
 		};
 		F636325427291C0F0086D05A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 17B59BAC44B905B17283CAD3 /* Pods-RudderSampleApptvOSObjC.debug.xcconfig */;
+			baseConfigurationReference = 9F385001D0E38ABB5FA7AC75 /* Pods-RudderSampleApptvOSObjC.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -376,7 +394,7 @@
 		};
 		F636325527291C0F0086D05A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F5B9D07F8A09CD1EF08AF67C /* Pods-RudderSampleApptvOSObjC.release.xcconfig */;
+			baseConfigurationReference = A122CEC3E2DC7AB2BC49E7CA /* Pods-RudderSampleApptvOSObjC.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

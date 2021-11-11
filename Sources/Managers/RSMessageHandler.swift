@@ -12,7 +12,7 @@ class RSMessageHandler {
     let factoryDumpManager = RSFactoryDumpManager()
     
     func dumpMessage(_ message: RSMessage) {
-        if message.type == .identify {
+        if message._type == .identify {
             if let options = message.option, let externalIds = options.externalIds {
                 RSClient.shared.eventManager.cachedContext?.updateExternalIds(externalIds)
             }
