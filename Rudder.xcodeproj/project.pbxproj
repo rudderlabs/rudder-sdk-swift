@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		06CABC332630C6B00097BEFF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABC322630C6B00097BEFF /* Foundation.framework */; };
 		06CABC352630C6D30097BEFF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABC2E2630C6660097BEFF /* UIKit.framework */; };
+		ED277FA127421B06002A8FEA /* RSECommerceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FA027421B06002A8FEA /* RSECommerceConstants.swift */; };
 		EDA7EF722739119600E73142 /* API+Headers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF302739119600E73142 /* API+Headers.swift */; };
 		EDA7EF732739119600E73142 /* API+Method.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF312739119600E73142 /* API+Method.swift */; };
 		EDA7EF742739119600E73142 /* API+Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF322739119600E73142 /* API+Path.swift */; };
@@ -68,12 +69,13 @@
 		06CABB842630C3CA0097BEFF /* Rudder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rudder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		06CABC2E2630C6660097BEFF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/iOSSupport/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		06CABC322630C6B00097BEFF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		ED277FA027421B06002A8FEA /* RSECommerceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSECommerceConstants.swift; sourceTree = "<group>"; };
 		ED910CDE273BA25100A3EDFF /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		ED910CDF273BA25100A3EDFF /* release.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = release.sh; sourceTree = "<group>"; };
 		ED910CE0273BA25100A3EDFF /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		ED910CE1273BA25100A3EDFF /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ED910CE2273BA25100A3EDFF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		ED910CE3273BA25100A3EDFF /* Rudder.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Rudder.podspec; sourceTree = "<group>"; };
+		ED910CE3273BA25100A3EDFF /* Rudder.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Rudder.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ED910CE4273BA25100A3EDFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EDA7EF302739119600E73142 /* API+Headers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "API+Headers.swift"; sourceTree = "<group>"; };
 		EDA7EF312739119600E73142 /* API+Method.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "API+Method.swift"; sourceTree = "<group>"; };
@@ -177,7 +179,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		EDA7EF2D2739119600E73142 /* Sources */ = {
+		ED277FA227421D6B002A8FEA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				EDA7EF432739119600E73142 /* Common */,
@@ -185,6 +187,14 @@
 				EDA7EF702739119600E73142 /* Helpers */,
 				EDA7EF362739119600E73142 /* Managers */,
 				EDA7EF2E2739119600E73142 /* Networking */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		EDA7EF2D2739119600E73142 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				ED277FA227421D6B002A8FEA /* Classes */,
 				EDA7EF4E2739119600E73142 /* SDKInfo */,
 			);
 			path = Sources;
@@ -243,8 +253,9 @@
 		EDA7EF442739119600E73142 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
-				EDA7EF452739119600E73142 /* RSUserDefaults.swift */,
 				EDA7EF462739119600E73142 /* RSConstants.swift */,
+				ED277FA027421B06002A8FEA /* RSECommerceConstants.swift */,
+				EDA7EF452739119600E73142 /* RSUserDefaults.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -474,6 +485,7 @@
 				EDA7EF962739119600E73142 /* RSOption.swift in Sources */,
 				EDA7EF952739119600E73142 /* RSTraits.swift in Sources */,
 				EDA7EF742739119600E73142 /* API+Path.swift in Sources */,
+				ED277FA127421B06002A8FEA /* RSECommerceConstants.swift in Sources */,
 				EDA7EF922739119600E73142 /* RSConfig.swift in Sources */,
 				EDA7EFA42739119600E73142 /* RSIntegrationFactory.swift in Sources */,
 				EDA7EF752739119600E73142 /* API.swift in Sources */,
@@ -563,7 +575,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -619,7 +631,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -653,11 +665,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.Rudder;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos watchsimulator watchos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Debug;
 		};
@@ -684,10 +697,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.Rudder;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos watchsimulator watchos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};

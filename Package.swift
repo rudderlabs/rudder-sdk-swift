@@ -17,13 +17,7 @@ let package = Package(
         .target(
             name: "Rudder",
             path: "Sources",
-            sources: ["Classes/"],
-            publicHeadersPath: "Classes/Public/",
-            cSettings: [
-                .headerSearchPath("Classes/"),
-                .headerSearchPath("Classes/Ecomm"),
-                .headerSearchPath("Classes/Ecomm/Events")
-            ]
+            sources: ["Classes/"]
         )
     ]
 )
