@@ -24,8 +24,11 @@ class RSConstants {
     static let RSServerLastUpdatedKey: String = "rl_server_last_updated"
     static let RSTraitsKey: String = "rl_traits"
     static let RSApplicationInfoKey: String = "rl_application_info_key"
-    static let RSExternalIdKey: String =  "rl_external_id"
-    static let RSAnonymousIdKey: String =  "rl_anonymous_id"
+    static let RSExternalIdKey: String = "rl_external_id"
+    static let RSAnonymousIdKey: String = "rl_anonymous_id"
+    static let RSOptStatusKey: String = "rl_opt_status"
+    static let RSOptInTimeKey: String = "rl_opt_in_time"
+    static let RSOptOutTimeKey = "rl_opt_out_time"
     static let MAX_EVENT_SIZE: UInt = 32 * 1024
     static let MAX_BATCH_SIZE: UInt = 500 * 1024
 }

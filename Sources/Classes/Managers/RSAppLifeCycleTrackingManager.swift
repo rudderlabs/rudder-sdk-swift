@@ -18,6 +18,10 @@ class RSAppLifeCycleTrackingManager: RSTrackingManager {
     
     @objc
     func handleDidFinishLaunchingNotification(_ notification: Notification) {
+        applicationDidFinishLaunchingWithOptions(notification.userInfo)
+    }
+    
+    func applicationDidFinishLaunchingWithOptions(_ launchOptions: [AnyHashable: Any]?) {
         guard RSClient.shared.eventManager.config?.trackLifecycleEvents == true else {
             return
         }
@@ -31,8 +35,8 @@ class RSAppLifeCycleTrackingManager: RSTrackingManager {
         }
         RSClient.shared.track("Application Opened", properties: ["from_background": false,
                                                                  "version": currentVersion ?? "",
-                                                                 "referring_application": notification.userInfo?[UIApplication.LaunchOptionsKey.sourceApplication] ?? "",
-                                                                 "url": notification.userInfo?[UIApplication.LaunchOptionsKey.url] ?? ""])
+                                                                 "referring_application": launchOptions?[UIApplication.LaunchOptionsKey.sourceApplication] ?? "",
+                                                                 "url": launchOptions?[UIApplication.LaunchOptionsKey.url] ?? ""])
         RSUserDefaults.saveBuildVersionCode(currentVersion)
     }
     

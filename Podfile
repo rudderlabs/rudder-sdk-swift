@@ -4,6 +4,7 @@ inhibit_all_warnings!
 
 def shared_pods
     pod 'Rudder', :path => '.'
+#    pod 'Rudder', :git => 'https://github.com/rudderlabs/rudder-sdk-cocoa.git', :commit => '4f886c3e2cee9d96d7b83e20d03540b527751636'
 end
 
 project 'Examples/RudderSampleAppObjC/RudderSampleAppObjC.xcodeproj'
@@ -26,6 +27,6 @@ end
 
 target 'RudderSampleApptvOSObjC' do
     project 'Examples/RudderSampleApptvOSObjC/RudderSampleApptvOSObjC.xcodeproj'
-    platform :tvos, '9.0'
+    platform :tvos, '10.0'
     shared_pods
 end

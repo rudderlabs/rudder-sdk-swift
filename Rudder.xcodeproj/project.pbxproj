@@ -10,6 +10,10 @@
 		06CABC332630C6B00097BEFF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABC322630C6B00097BEFF /* Foundation.framework */; };
 		06CABC352630C6D30097BEFF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABC2E2630C6660097BEFF /* UIKit.framework */; };
 		ED277FA127421B06002A8FEA /* RSECommerceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FA027421B06002A8FEA /* RSECommerceConstants.swift */; };
+		ED277FF92744F199002A8FEA /* RSAnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FF82744F199002A8FEA /* RSAnyCodable.swift */; };
+		ED277FFB2744F265002A8FEA /* RSAnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */; };
+		ED277FFD2744F2AD002A8FEA /* RSAnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */; };
+		ED277FFF274DFD3B002A8FEA /* RSFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFE274DFD3B002A8FEA /* RSFactoryProtocol.swift */; };
 		EDA7EF722739119600E73142 /* API+Headers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF302739119600E73142 /* API+Headers.swift */; };
 		EDA7EF732739119600E73142 /* API+Method.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF312739119600E73142 /* API+Method.swift */; };
 		EDA7EF742739119600E73142 /* API+Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF322739119600E73142 /* API+Path.swift */; };
@@ -61,7 +65,6 @@
 		EDA7EFA32739119600E73142 /* RSIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6C2739119600E73142 /* RSIntegration.swift */; };
 		EDA7EFA42739119600E73142 /* RSIntegrationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6D2739119600E73142 /* RSIntegrationFactory.swift */; };
 		EDA7EFA52739119600E73142 /* RSTrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6E2739119600E73142 /* RSTrackingManager.swift */; };
-		EDA7EFA62739119600E73142 /* RSBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6F2739119600E73142 /* RSBaseManager.swift */; };
 		EDA7EFA72739119600E73142 /* RSLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF712739119600E73142 /* RSLogger.swift */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +73,10 @@
 		06CABC2E2630C6660097BEFF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/iOSSupport/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		06CABC322630C6B00097BEFF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		ED277FA027421B06002A8FEA /* RSECommerceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSECommerceConstants.swift; sourceTree = "<group>"; };
+		ED277FF82744F199002A8FEA /* RSAnyCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAnyCodable.swift; sourceTree = "<group>"; };
+		ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyDecodable.swift; sourceTree = "<group>"; };
+		ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyEncodable.swift; sourceTree = "<group>"; };
+		ED277FFE274DFD3B002A8FEA /* RSFactoryProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSFactoryProtocol.swift; sourceTree = "<group>"; };
 		ED910CDE273BA25100A3EDFF /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		ED910CDF273BA25100A3EDFF /* release.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = release.sh; sourceTree = "<group>"; };
 		ED910CE0273BA25100A3EDFF /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
@@ -129,7 +136,6 @@
 		EDA7EF6C2739119600E73142 /* RSIntegration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSIntegration.swift; sourceTree = "<group>"; };
 		EDA7EF6D2739119600E73142 /* RSIntegrationFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSIntegrationFactory.swift; sourceTree = "<group>"; };
 		EDA7EF6E2739119600E73142 /* RSTrackingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSTrackingManager.swift; sourceTree = "<group>"; };
-		EDA7EF6F2739119600E73142 /* RSBaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSBaseManager.swift; sourceTree = "<group>"; };
 		EDA7EF712739119600E73142 /* RSLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSLogger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -312,6 +318,7 @@
 		EDA7EF572739119600E73142 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				EDA7EF602739119600E73142 /* Attributes */,
 				EDA7EF582739119600E73142 /* RSDBMessage.swift */,
 				EDA7EF592739119600E73142 /* RSConfig.swift */,
 				EDA7EF5A2739119600E73142 /* RSIntegrationOperation.swift */,
@@ -320,7 +327,6 @@
 				EDA7EF5D2739119600E73142 /* RSOption.swift */,
 				EDA7EF5E2739119600E73142 /* RSNetwork.swift */,
 				EDA7EF5F2739119600E73142 /* RSMessage.swift */,
-				EDA7EF602739119600E73142 /* Attributes */,
 				EDA7EF652739119600E73142 /* RSContext.swift */,
 				EDA7EF662739119600E73142 /* RSDeviceInfo.swift */,
 				EDA7EF672739119600E73142 /* RSApp.swift */,
@@ -344,11 +350,11 @@
 		EDA7EF6A2739119600E73142 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				EDA7EF6B2739119600E73142 /* RSServiceType.swift */,
+				ED277FFE274DFD3B002A8FEA /* RSFactoryProtocol.swift */,
 				EDA7EF6C2739119600E73142 /* RSIntegration.swift */,
 				EDA7EF6D2739119600E73142 /* RSIntegrationFactory.swift */,
+				EDA7EF6B2739119600E73142 /* RSServiceType.swift */,
 				EDA7EF6E2739119600E73142 /* RSTrackingManager.swift */,
-				EDA7EF6F2739119600E73142 /* RSBaseManager.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -356,6 +362,9 @@
 		EDA7EF702739119600E73142 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				ED277FF82744F199002A8FEA /* RSAnyCodable.swift */,
+				ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */,
+				ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */,
 				EDA7EF712739119600E73142 /* RSLogger.swift */,
 			);
 			path = Helpers;
@@ -401,7 +410,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = RS;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1310;
 				ORGANIZATIONNAME = "Rudder Labs India Pvt Ltd.";
 				TargetAttributes = {
 					06CABB832630C3CA0097BEFF = {
@@ -465,7 +474,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDA7EF772739119600E73142 /* API+Body.swift in Sources */,
-				EDA7EFA62739119600E73142 /* RSBaseManager.swift in Sources */,
+				ED277FFD2744F2AD002A8FEA /* RSAnyEncodable.swift in Sources */,
 				EDA7EFA52739119600E73142 /* RSTrackingManager.swift in Sources */,
 				EDA7EF9E2739119600E73142 /* RSDeviceInfo.swift in Sources */,
 				EDA7EFA22739119600E73142 /* RSServiceType.swift in Sources */,
@@ -473,6 +482,7 @@
 				EDA7EF792739119600E73142 /* RSMessageHandler.swift in Sources */,
 				EDA7EF902739119600E73142 /* RSLogLevel.swift in Sources */,
 				EDA7EF7F2739119600E73142 /* RSAppLifeCycleTrackingManager.swift in Sources */,
+				ED277FFF274DFD3B002A8FEA /* RSFactoryProtocol.swift in Sources */,
 				EDA7EF9A2739119600E73142 /* RSDestinationConfig.swift in Sources */,
 				EDA7EF8D2739119600E73142 /* RSMessageType.swift in Sources */,
 				EDA7EF832739119600E73142 /* RSScreenTrackingManager.swift in Sources */,
@@ -483,6 +493,7 @@
 				EDA7EF882739119600E73142 /* UserDefaults+Ext.swift in Sources */,
 				EDA7EF822739119600E73142 /* RSClient.swift in Sources */,
 				EDA7EF962739119600E73142 /* RSOption.swift in Sources */,
+				ED277FFB2744F265002A8FEA /* RSAnyDecodable.swift in Sources */,
 				EDA7EF952739119600E73142 /* RSTraits.swift in Sources */,
 				EDA7EF742739119600E73142 /* API+Path.swift in Sources */,
 				ED277FA127421B06002A8FEA /* RSECommerceConstants.swift in Sources */,
@@ -492,6 +503,7 @@
 				EDA7EF812739119600E73142 /* RSDatabaseManager.swift in Sources */,
 				EDA7EF992739119600E73142 /* RSServerConfig.swift in Sources */,
 				EDA7EF932739119600E73142 /* RSIntegrationOperation.swift in Sources */,
+				ED277FF92744F199002A8FEA /* RSAnyCodable.swift in Sources */,
 				EDA7EF7C2739119600E73142 /* RSReplayMessageManager.swift in Sources */,
 				EDA7EF982739119600E73142 /* RSMessage.swift in Sources */,
 				EDA7EF892739119600E73142 /* UIViewController+Ext.swift in Sources */,
@@ -575,7 +587,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -631,7 +643,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -655,7 +667,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/SDKInfo/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -670,7 +682,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TVOS_DEPLOYMENT_TARGET = 10.0;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Debug;
 		};
@@ -687,7 +699,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/SDKInfo/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -701,7 +713,7 @@
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TVOS_DEPLOYMENT_TARGET = 10.0;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Release;
 		};

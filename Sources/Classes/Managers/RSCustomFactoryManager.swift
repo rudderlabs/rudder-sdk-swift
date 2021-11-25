@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RSCustomFactoryManager: RSBaseManager {
+class RSCustomFactoryManager: RSFactoryProtocol {
     struct Input {
         let serverConfig: RSServerConfig
         let config: RSConfig?
@@ -36,7 +36,7 @@ class RSCustomFactoryManager: RSBaseManager {
             return
         }
         for factory in config.customFactories {
-            let integration = factory.initiate(nil, client: RSClient.shared, rudderConfig: config)
+            let integration = factory.initiate([:], client: RSClient.shared, rudderConfig: config)
             logDebug("Initiating custom SDK factory \(factory.key)")
             let integrationOperation = RSIntegrationOperation(key: factory.key, integration: integration)
             integrationOperationList.append(integrationOperation)

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RSFactoryManager: RSBaseManager {
+class RSFactoryManager: RSFactoryProtocol {
     struct Input {
         let serverConfig: RSServerConfig
         let config: RSConfig?
@@ -23,8 +23,8 @@ class RSFactoryManager: RSBaseManager {
     private var integrationOperationList = [RSIntegrationOperation]()
         
     func transform(input: Input) -> Output {
-        self.serverConfig = input.serverConfig
-        self.config = input.config
+        serverConfig = input.serverConfig
+        config = input.config
         initiateFactories()
         return Output(integrationOperationList: integrationOperationList)
     }
@@ -41,7 +41,7 @@ class RSFactoryManager: RSBaseManager {
             } else {
                 for factory in config.factories {
                     if let destination = destinations.first(where: { $0.destinationDefinition?.name == factory.key }), destination.enabled {
-                        if let destinationConfig = destination.destinationDefinition?.destinationConfig {
+                        if let destinationConfig = destination.config {
                             let integration = factory.initiate(destinationConfig, client: RSClient.shared, rudderConfig: config)
                             logDebug("Initiating native SDK factory \(factory.key)")
                             let integrationOperation = RSIntegrationOperation(key: factory.key, integration: integration)

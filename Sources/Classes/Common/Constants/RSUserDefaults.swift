@@ -68,4 +68,28 @@ class RSUserDefaults {
     static func saveAnonymousId(_ anonymousId: String) {
         UserDefaults.standard.anonymousId = anonymousId
     }
+    
+    static func getOptStatus() -> Bool? {
+        return UserDefaults.standard.optStatus
+    }
+
+    static func saveOptStatus(_ optStatus: Bool) {
+        UserDefaults.standard.optStatus = optStatus
+    }
+    
+    static func getOptInTime() -> Int? {
+        return UserDefaults.standard.optInTime
+    }
+    
+    static func updateOptInTime(_ optInTime: Int?) {
+        UserDefaults.standard.optInTime = optInTime
+    }
+    
+    static func getOptOutTime() -> Int? {
+        return UserDefaults.standard.optOutTime
+    }
+    
+    static func updateOptOutTime(_ optOutTime: Int?) {
+        UserDefaults.standard.optOutTime = optOutTime
+    }
 }

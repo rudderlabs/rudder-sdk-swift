@@ -1,5 +1,5 @@
 //
-//  RSBaseManager.swift
+//  RSFactoryProtocol.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 25/08/21.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol RSBaseManager {
+protocol RSFactoryProtocol {
     associatedtype Input
     associatedtype Output
     

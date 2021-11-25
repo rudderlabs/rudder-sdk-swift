@@ -10,7 +10,7 @@ import Foundation
 
 @objc open class RSContext: NSObject {
     var app: RSApp
-    var traits: [String: Any]?
+    @objc public var traits: [String: Any]?
     var library: RSLibraryInfo
     var osInfo: RSOSInfo
     var screenInfo: RSScreenInfo
@@ -66,9 +66,21 @@ import Foundation
     }
     
     func updateTraits(_ traits: RSTraits) {
+        if let existingUserId = self.traits?["userId"] as? String, let newUserId = traits.userId, newUserId != existingUserId {
+            self.traits = traits.dictionary()
+            resetExternalIds()
+            return
+        }
         let updatedTraits = traits
         updatedTraits.anonymousId = UserDefaults.standard.anonymousId
         self.traits = updatedTraits.dictionary()
+    }
+    
+    func resetTraits() {
+        let traits = RSTraits()
+        traits.anonymousId = RSUserDefaults.getAnonymousId()
+        self.traits?.removeAll()
+        self.traits = traits.dictionary()
     }
     
     func updateExternalIds(_ externalIds: [[String: Any]]) {
@@ -79,6 +91,11 @@ import Foundation
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    func resetExternalIds() {
+        externalIds = nil
+        RSUserDefaults.clearExternalIds()
     }
     
     func dict() -> [String: Any] {

@@ -39,197 +39,152 @@ import Foundation
     }
     
     @objc
-    public static func setAnonymousId(_ anonymousId: String) {
-        RSUserDefaults.saveAnonymousId(anonymousId)
-    }
-    
-    @objc
     public func track(_ eventName: String) {
-        let message = RSMessage(type: .track)
-        message.event = eventName
-        messageHandler.dumpMessage(message)
+        messageHandler.handleTrackEvent(eventName)
     }
     
     @objc
     public func track(_ eventName: String, properties: [String: Any]) {
-        let message = RSMessage(type: .track)
-        message.event = eventName
-        message.properties = properties
-        messageHandler.dumpMessage(message)
+        messageHandler.handleTrackEvent(eventName, properties: properties)
     }
     
     @objc
     public func track(_ eventName: String, properties: [String: Any], options: RSOption) {
-        let message = RSMessage(type: .track)
-        message.event = eventName
-        message.properties = properties
-        message.option = options
-        messageHandler.dumpMessage(message)
+        messageHandler.handleTrackEvent(eventName, properties: properties, options: options)
     }
     
     @objc
     public func screen(_ screenName: String) {
-        let message = RSMessage(type: .screen)
-        message.event = screenName
-        let properties = ["name": screenName]
-        message.properties = properties
-        messageHandler.dumpMessage(message)
+        messageHandler.handleScreenEvent(screenName)
     }
     
     @objc
     public func screen(_ screenName: String, properties: [String: Any]) {
-        let message = RSMessage(type: .screen)
-        message.event = screenName
-        var properties = properties
-        properties["name"] = screenName
-        message.properties = properties
-        messageHandler.dumpMessage(message)
+        messageHandler.handleScreenEvent(screenName, properties: properties)
     }
     
     @objc
     public func screen(_ screenName: String, properties: [String: Any], options: RSOption) {
-        let message = RSMessage(type: .screen)
-        message.event = screenName
-        var properties = properties
-        properties["name"] = screenName
-        message.properties = properties
-        message.option = options
-        messageHandler.dumpMessage(message)
+        messageHandler.handleScreenEvent(screenName, properties: properties, options: options)
     }
     
     @objc
     public func group(_ groupId: String) {
-        let message = RSMessage(type: .group)
-        message.groupId = groupId
-        messageHandler.dumpMessage(message)
+        messageHandler.handleGroupEvent(groupId)
     }
     
     @objc
     public func group(_ groupId: String, traits: [String: Any]) {
-        let message = RSMessage(type: .group)
-        message.groupId = groupId
-        message.traits = traits
-        messageHandler.dumpMessage(message)
+        messageHandler.handleGroupEvent(groupId, traits: traits)
     }
     
     @objc
     public func group(_ groupId: String, traits: [String: Any], options: RSOption) {
-        let message = RSMessage(type: .group)
-        message.groupId = groupId
-        message.traits = traits
-        message.option = options
-        messageHandler.dumpMessage(message)
+        messageHandler.handleGroupEvent(groupId, traits: traits, options: options)
     }
     
     @objc
     public func alias(_ newId: String) {
-        alias(newId, options: nil)
+        messageHandler.handleAlias(newId)
     }
     
     @objc
-    public func alias(_ newId: String, options: RSOption?) {
-        let message = RSMessage(type: .alias)
-        message.userId = newId
-        message.option = options
-        let context = RSClient.shared.eventManager.cachedContext
-        var traits = context?.traits
-        var prevId: String?
-        prevId = traits?["userId"] as? String
-        if prevId == nil {
-            prevId = traits?["id"] as? String
-        }
-        
-        if prevId != nil {
-            message.previousId = prevId
-        }
-        traits?["id"] = newId
-        traits?["userId"] = newId
-        
-        RSClient.shared.eventManager.cachedContext?.traits = traits
-        RSClient.shared.eventManager.cachedContext?.saveTraits()
-        message.traits = traits
-        messageHandler.dumpMessage(message)
+    public func alias(_ newId: String, options: RSOption) {
+        messageHandler.handleAlias(newId, options: options)
     }
     
     @objc
     public func identify(_ userId: String) {
-        let traitsCopy = RSTraits()
-        traitsCopy.userId = userId
-        let message = RSMessage(type: .identify)
-        message.event = RSMessageType.identify.rawValue
-        message.userId = userId
-        RSClient.shared.eventManager.cachedContext?.updateTraits(traitsCopy)
-        messageHandler.dumpMessage(message)
+        messageHandler.handleIdentify(userId)
     }
     
     @objc
     public func identify(_ userId: String, traits: [String: Any]) {
-        let traitsCopy = RSTraits(dict: traits)
-        traitsCopy.userId = userId
-        let message = RSMessage(type: .identify)
-        message.event = RSMessageType.identify.rawValue
-        message.userId = userId
-        RSClient.shared.eventManager.cachedContext?.updateTraits(traitsCopy)
-        messageHandler.dumpMessage(message)
+        messageHandler.handleIdentify(userId, traits: traits)
     }
     
     @objc
     public func identify(_ userId: String, traits: [String: Any], options: RSOption) {
-        let traitsCopy = RSTraits(dict: traits)
-        traitsCopy.userId = userId
-        let message = RSMessage(type: .identify)
-        message.event = RSMessageType.identify.rawValue
-        message.userId = userId
-        message.option = options
-        RSClient.shared.eventManager.cachedContext?.updateTraits(traitsCopy)
-        messageHandler.dumpMessage(message)
+        messageHandler.handleIdentify(userId, traits: traits, options: options)
     }
     
     @objc
     public func getContext() -> RSContext? {
+        guard !RSClient.getOptStatus() else {
+            return nil
+        }
         return eventManager.cachedContext
     }
     
     @objc
     public func reset() {
-        
+        eventManager.reset()
     }
     
-    /*
-     - (void)reset {
-         [RSElementCache reset];
-         if (_repository != nil) {
-             [_repository reset];
-         }
-     }
-
-     - (NSString*)getAnonymousId {
-         // returns anonymousId
-         return [RSElementCache getContext].device.identifier;
-     }
-
-
-     - (RSConfig*)configuration {
-         if (_repository == nil) {
-             return nil;
-         }
-         return [_repository getConfig];
-     }
-
-     - (void)trackLifecycleEvents:(NSDictionary *)launchOptions {
-         [_repository _applicationDidFinishLaunchingWithOptions:launchOptions];
-     }
-
-     + (instancetype)sharedInstance {
-         return _instance;
-     }
-
-     + (RSOption*) getDefaultOptions {
-         return _defaultOptions;
-     }
-     + (void)setAnonymousId:(NSString *)anonymousId {
-         RSPreferenceManager *preferenceManager = [RSPreferenceManager getInstance];
-         [preferenceManager saveAnonymousId:anonymousId];
-     }
-     */
+    @objc
+    public func flush() {
+        guard !RSClient.getOptStatus() else {
+            return
+        }
+        eventManager.flush()
+    }
+    
+    @objc
+    public static func setAnonymousId(_ anonymousId: String) {
+        guard !RSClient.getOptStatus() else {
+            return
+        }
+        RSUserDefaults.saveAnonymousId(anonymousId)
+    }
+    
+    @objc
+    public func getAnonymousId() -> String? {
+        guard !RSClient.getOptStatus() else {
+            return nil
+        }
+        return RSUserDefaults.getAnonymousId()
+    }
+    
+    @objc
+    public func configuration() -> RSConfig? {
+        guard !RSClient.getOptStatus() else {
+            return nil
+        }
+        return eventManager.config
+    }
+    
+    @objc
+    public func trackLifecycleEvents(_ launchOptions: [AnyHashable: Any]?) {
+        guard !RSClient.getOptStatus() else {
+            return
+        }
+        (eventManager.appLifeCycleTrackingManager as? RSAppLifeCycleTrackingManager)?.applicationDidFinishLaunchingWithOptions(launchOptions)
+    }
+    
+    @objc
+    public func getDefaultOptions() -> RSOption? {
+        guard !RSClient.getOptStatus() else {
+            return nil
+        }
+        return eventManager.options
+    }
+    
+    @objc
+    public static func getOptStatus() -> Bool {
+        if let optStatus = RSUserDefaults.getOptStatus() {
+            logError("Opt out status: \(optStatus)")
+            return optStatus
+        }
+        return false
+    }
+    
+    @objc
+    public func optOut(_ optOut: Bool) {
+        RSUserDefaults.saveOptStatus(optOut)
+    }
+    
+    @objc
+    public func shutdown() {
+        // TODO: decide shutdown behavior
+    }
 }

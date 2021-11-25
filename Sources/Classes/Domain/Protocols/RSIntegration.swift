@@ -9,6 +9,7 @@
 import Foundation
 
 @objc public protocol RSIntegration {
-    func dump(_ message: RSMessage)
+    func dump(_ message: RSMessage?)
     func reset()
+    func flush()
 }

@@ -11,7 +11,7 @@ import Foundation
 class RSEventManager {
     var databaseManager: RSDatabaseManager?
     var serverConfigManager: RSServerConfigManager?
-    private var appLifeCycleTrackingManager: RSTrackingManager?
+    var appLifeCycleTrackingManager: RSTrackingManager?
     private var screenTrackingManager: RSTrackingManager?
     private var replayMessageManager: RSReplayMessageManager?
     private var customFactoryManager = RSCustomFactoryManager()
@@ -25,8 +25,8 @@ class RSEventManager {
     var config: RSConfig?
     var anonymousIdToken: String?
     var cachedContext: RSContext?
-    var isSDKEnabled: Bool?
-    var areFactoriesInitialized: Bool?
+    var isSDKEnabled: Bool = false
+    var areFactoriesInitialized: Bool = false
     var integrationOperationList = [RSIntegrationOperation]()
     var eventReplayMessageList = [RSMessage]()
     
@@ -81,7 +81,7 @@ class RSEventManager {
             while !isInitialized && retryCount < 6 {
                 if let serverConfig = self.serverConfigManager?.serverConfig {
                     self.isSDKEnabled = serverConfig.enabled
-                    if self.isSDKEnabled == true {
+                    if self.isSDKEnabled {
                         logDebug("EventRepository: initiating processor")
                         self.processorManager.initiateProcessor()
                         logDebug("EventRepository: initiating factories")
@@ -109,6 +109,28 @@ class RSEventManager {
                     sleep(UInt32(retryCount * 2))
                 }
             }
+        }
+    }
+    
+    func reset() {
+        if areFactoriesInitialized {
+            for item in integrationOperationList {
+                logDebug("resetting native SDK for \(item.key)")
+                item.integration.reset()
+            }
+        } else {
+            logDebug("factories are not initialized. ignoring reset call")
+        }
+    }
+    
+    func flush() {
+        if areFactoriesInitialized {
+            for item in integrationOperationList {
+                logDebug("flushing native SDK for \(item.key)")
+                item.integration.flush()
+            }
+        } else {
+            logDebug("factories are not initialized. ignoring flush call")
         }
     }
 }

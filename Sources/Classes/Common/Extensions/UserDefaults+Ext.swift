@@ -55,4 +55,19 @@ extension UserDefaults {
         get { string(forKey: RSConstants.RSAnonymousIdKey) }
         set { setValue(newValue, forKey: RSConstants.RSAnonymousIdKey) }
     }
+    
+    var optStatus: Bool? {
+        get { bool(forKey: RSConstants.RSOptStatusKey) }
+        set { setValue(newValue, forKey: RSConstants.RSOptStatusKey) }
+    }
+    
+    var optInTime: Int? {
+        get { integer(forKey: RSConstants.RSOptInTimeKey) }
+        set { setValue(newValue, forKey: RSConstants.RSOptInTimeKey) }
+    }
+    
+    var optOutTime: Int? {
+        get { integer(forKey: RSConstants.RSOptOutTimeKey) }
+        set { setValue(newValue, forKey: RSConstants.RSOptOutTimeKey) }
+    }
 }

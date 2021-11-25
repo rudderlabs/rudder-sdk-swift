@@ -11,14 +11,91 @@ import Foundation
 class RSMessageHandler {
     let factoryDumpManager = RSFactoryDumpManager()
     
-    func dumpMessage(_ message: RSMessage) {
-        if message._type == .identify {
-            if let options = message.option, let externalIds = options.externalIds {
-                RSClient.shared.eventManager.cachedContext?.updateExternalIds(externalIds)
-            }
-            message.context = RSClient.shared.eventManager.cachedContext
+    func handleTrackEvent(_ eventName: String, properties: [String: Any]? = nil, options: RSOption? = nil) {
+        guard !RSClient.getOptStatus() else {
+            return
         }
-        guard RSClient.shared.eventManager.isSDKEnabled == true else {
+        let message = RSMessage(type: .track)
+        message.event = eventName
+        message.properties = properties
+        message.option = options
+        dumpMessage(message)
+    }
+    
+    func handleScreenEvent(_ screenName: String, properties: [String: Any]? = nil, options: RSOption? = nil) {
+        guard !RSClient.getOptStatus() else {
+            return
+        }
+        let message = RSMessage(type: .screen)
+        message.event = screenName
+        if var properties = properties {
+            properties["name"] = screenName
+            message.properties = properties
+        }
+        message.option = options
+        dumpMessage(message)
+    }
+    
+    func handleGroupEvent(_ groupId: String, traits: [String: Any]? = nil, options: RSOption? = nil) {
+        guard !RSClient.getOptStatus() else {
+            return
+        }
+        let message = RSMessage(type: .group)
+        message.groupId = groupId
+        message.traits = traits
+        message.option = options
+        dumpMessage(message)
+    }
+    
+    func handleAlias(_ newId: String, options: RSOption? = nil) {
+        guard !RSClient.getOptStatus() else {
+            return
+        }
+        let message = RSMessage(type: .alias)
+        message.userId = newId
+        message.option = options
+        let context = RSClient.shared.eventManager.cachedContext
+        var traits = context?.traits
+        var prevId: String?
+        prevId = traits?["userId"] as? String
+        if prevId == nil {
+            prevId = traits?["id"] as? String
+        }
+        
+        if prevId != nil {
+            message.previousId = prevId
+        }
+        traits?["id"] = newId
+        traits?["userId"] = newId
+        
+        RSClient.shared.eventManager.cachedContext?.traits = traits
+        RSClient.shared.eventManager.cachedContext?.saveTraits()
+        message.traits = traits
+        dumpMessage(message)
+    }
+    
+    func handleIdentify(_ userId: String, traits: [String: Any]? = nil, options: RSOption? = nil) {
+        guard !RSClient.getOptStatus() else {
+            return
+        }
+        let message = RSMessage(type: .identify)
+        message.event = RSMessageType.identify.rawValue
+        message.userId = userId
+        message.option = options
+        if let traits = traits {                        
+            let traitsCopy = RSTraits(dict: traits)
+            traitsCopy.userId = userId
+            RSClient.shared.eventManager.cachedContext?.updateTraits(traitsCopy)
+        }
+        if let options = options, let externalIds = options.externalIds {
+            RSClient.shared.eventManager.cachedContext?.updateExternalIds(externalIds)
+        }
+        message.context = RSClient.shared.eventManager.cachedContext
+        dumpMessage(message)
+    }
+    
+    func dumpMessage(_ message: RSMessage) {        
+        guard RSClient.shared.eventManager.isSDKEnabled else {
             return
         }
         if message.integrations?.isEmpty == true, let options = RSClient.shared.eventManager.options, let integrations = options.integrations, !integrations.isEmpty {

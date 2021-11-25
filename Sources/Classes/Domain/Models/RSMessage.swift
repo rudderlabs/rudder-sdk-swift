@@ -11,7 +11,7 @@ import Foundation
 @objc open class RSMessage: NSObject {
     let messageId: String
     let channel: String
-    var context: RSContext?
+    @objc public var context: RSContext?
     var _type: RSMessageType?
     @objc public var type: String? {
         return _type?.rawValue
@@ -19,12 +19,12 @@ import Foundation
     var action: String?
     let originalTimestamp: String
     var anonymousId: String?
-    var userId: String?
+    @objc public var userId: String?
     var previousId: String?
     var groupId: String?
     var traits: [String: Any]?
     @objc public var event: String?
-    var properties: [String: Any]?
+    @objc public var properties: [String: Any]?
     var userProperties: [String: Any]?
     var integrations: [String: Any]?
     var customContexts: [String: [String: Any]]?

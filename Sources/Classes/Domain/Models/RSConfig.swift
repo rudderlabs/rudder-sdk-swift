@@ -35,20 +35,6 @@ import Foundation
         customFactories = [RSIntegrationFactory]()
     }
     
-    init(dataPlaneUrl: String, flushQueueSize: Int, dbCountThreshold: Int, sleepTimeOut: Int, logLevel: RSLogLevel, configRefreshInterval: Int, trackLifecycleEvents: Bool, recordScreenViews: Bool, controlPlaneUrl: String) {
-        self.dataPlaneUrl = dataPlaneUrl
-        self.flushQueueSize = flushQueueSize
-        self.dbCountThreshold = dbCountThreshold
-        self.sleepTimeOut = sleepTimeOut
-        self.logLevel = logLevel
-        self.configRefreshInterval = configRefreshInterval
-        self.trackLifecycleEvents = trackLifecycleEvents
-        self.recordScreenViews = recordScreenViews
-        self.controlPlaneUrl = controlPlaneUrl
-        self.factories = [RSIntegrationFactory]()
-        self.customFactories = [RSIntegrationFactory]()
-    }
-    
     @objc public func withDataPlaneUrl(_ dataPlaneUrl: String) -> RSConfig {
         if let url = URL(string: dataPlaneUrl) {
             if let scheme = url.scheme, let host = url.host {

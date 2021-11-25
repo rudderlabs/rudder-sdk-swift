@@ -9,8 +9,8 @@
 import Foundation
 
 struct RSDestination: Codable {
-    let config: [String: String]?
-    let secretConfig: [String: String]?
+    let config: [String: RSAnyCodable]?
+    let secretConfig: [String: RSAnyCodable]?
     
     private let _id: String?
     var id: String {
