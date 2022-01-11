@@ -24,9 +24,9 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
     // Override point for customization after application launch.
     RSOption *defaultOption = [[RSOption alloc]init];
     // adding an integration into integrations object directly by specifying its name
-    [defaultOption putIntegration:@"Amplitude" isEnabled:YES];
-    [defaultOption putIntegration:@"MoEngage" isEnabled:YES];
-    [defaultOption putIntegration:@"All" isEnabled:NO];
+//    [defaultOption putIntegration:@"Amplitude" isEnabled:YES];
+//    [defaultOption putIntegration:@"MoEngage" isEnabled:YES];
+//    [defaultOption putIntegration:@"All" isEnabled:NO];
     // adding an integration into integrations object using its Factory object
     //[defaultOption putIntegrationWithFactory:[RudderMoengageFactory instance] isEnabled:NO];
     RSConfig *builder = [[RSConfig alloc] init];
@@ -45,8 +45,8 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
     
     
     RSOption *option = [[RSOption alloc]init];
-    [option putIntegration:@"Amplitude" isEnabled:YES];
-    [option putIntegration:@"MixPanel" isEnabled:NO];
+//    [option putIntegration:@"Amplitude" isEnabled:YES];
+//    [option putIntegration:@"MixPanel" isEnabled:NO];
     [option putCustomContext: @{
         @"language": @"objective-c",
         @"version": @"1.0.0"

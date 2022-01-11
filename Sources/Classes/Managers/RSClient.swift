@@ -340,11 +340,19 @@ import Foundation
     }
     
     @objc
-    public static func setAnonymousId(_ anonymousId: String) {
+    public static func putAnonymousId(_ anonymousId: String) {
         guard !RSClient.getOptStatus() else {
             return
         }
         RSUserDefaults.saveAnonymousId(anonymousId)
+    }
+    
+    @objc
+    public static func putDeviceToken(_ deviceToken: String) {
+        guard !RSClient.getOptStatus() else {
+            return
+        }
+        RSClient.shared.eventManager.cachedContext?.putDeviceToken(deviceToken)
     }
     
     @objc

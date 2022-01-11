@@ -40,7 +40,7 @@ class RSFactoryManager: RSFactoryProtocol {
                 logDebug("EventRepository: No native SDK factory is found in the server config")
             } else {
                 for factory in config.factories {
-                    if let destination = destinations.first(where: { $0.destinationDefinition?.name == factory.key }), destination.enabled {
+                    if let destination = destinations.first(where: { $0.destinationDefinition?.displayName == factory.key }), destination.enabled {
                         if let destinationConfig = destination.config {
                             let integration = factory.initiate(destinationConfig, client: RSClient.shared, rudderConfig: config)
                             logDebug("Initiating native SDK factory \(factory.key)")
