@@ -19,7 +19,7 @@ class RSMessageHandler {
         message.event = eventName
         message.properties = properties
         message.option = options
-        dumpMessage(message)
+        processMessage(message)
     }
     
     func handleScreenEvent(_ screenName: String, properties: [String: Any]? = nil, options: RSOption? = nil) {
@@ -33,7 +33,7 @@ class RSMessageHandler {
             message.properties = properties
         }
         message.option = options
-        dumpMessage(message)
+        processMessage(message)
     }
     
     func handleGroupEvent(_ groupId: String, traits: [String: Any]? = nil, options: RSOption? = nil) {
@@ -44,7 +44,7 @@ class RSMessageHandler {
         message.groupId = groupId
         message.traits = traits
         message.option = options
-        dumpMessage(message)
+        processMessage(message)
     }
     
     func handleAlias(_ newId: String, options: RSOption? = nil) {
@@ -71,7 +71,7 @@ class RSMessageHandler {
         RSClient.shared.eventManager.cachedContext?.traits = traits
         RSClient.shared.eventManager.cachedContext?.saveTraits()
         message.traits = traits
-        dumpMessage(message)
+        processMessage(message)
     }
     
     func handleIdentify(_ userId: String, traits: [String: Any]? = nil, options: RSOption? = nil) {
@@ -91,10 +91,10 @@ class RSMessageHandler {
             RSClient.shared.eventManager.cachedContext?.updateExternalIds(externalIds)
         }
         message.context = RSClient.shared.eventManager.cachedContext
-        dumpMessage(message)
+        processMessage(message)
     }
     
-    func dumpMessage(_ message: RSMessage) {        
+    func processMessage(_ message: RSMessage) {        
         guard RSClient.shared.eventManager.isSDKEnabled else {
             return
         }
@@ -103,6 +103,10 @@ class RSMessageHandler {
         }
         message.isAll = true
         factoryDumpManager.makeFactoryDump(message)
+        dump(message: message)
+    }
+    
+    func dump(message: RSMessage) {
         do {
             let jsonObject = message.toDict()
             if JSONSerialization.isValidJSONObject(jsonObject) {

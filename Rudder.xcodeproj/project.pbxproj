@@ -14,6 +14,8 @@
 		ED277FFB2744F265002A8FEA /* RSAnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */; };
 		ED277FFD2744F2AD002A8FEA /* RSAnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */; };
 		ED277FFF274DFD3B002A8FEA /* RSFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFE274DFD3B002A8FEA /* RSFactoryProtocol.swift */; };
+		ED3D225A279EAC2800EC8366 /* RudderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D2259279EAC2800EC8366 /* RudderTests.swift */; };
+		ED3D225B279EAC2800EC8366 /* Rudder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABB842630C3CA0097BEFF /* Rudder.framework */; };
 		EDA7EF722739119600E73142 /* API+Headers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF302739119600E73142 /* API+Headers.swift */; };
 		EDA7EF732739119600E73142 /* API+Method.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF312739119600E73142 /* API+Method.swift */; };
 		EDA7EF742739119600E73142 /* API+Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF322739119600E73142 /* API+Path.swift */; };
@@ -68,6 +70,16 @@
 		EDA7EFA72739119600E73142 /* RSLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF712739119600E73142 /* RSLogger.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		ED3D225C279EAC2800EC8366 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06CABB7B2630C3CA0097BEFF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 06CABB832630C3CA0097BEFF;
+			remoteInfo = Rudder;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		06CABB842630C3CA0097BEFF /* Rudder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rudder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		06CABC2E2630C6660097BEFF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/iOSSupport/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -77,6 +89,8 @@
 		ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyDecodable.swift; sourceTree = "<group>"; };
 		ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyEncodable.swift; sourceTree = "<group>"; };
 		ED277FFE274DFD3B002A8FEA /* RSFactoryProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSFactoryProtocol.swift; sourceTree = "<group>"; };
+		ED3D2257279EAC2800EC8366 /* RudderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED3D2259279EAC2800EC8366 /* RudderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderTests.swift; sourceTree = "<group>"; };
 		ED910CDE273BA25100A3EDFF /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		ED910CDF273BA25100A3EDFF /* release.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = release.sh; sourceTree = "<group>"; };
 		ED910CE0273BA25100A3EDFF /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
@@ -149,6 +163,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ED3D2254279EAC2800EC8366 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED3D225B279EAC2800EC8366 /* Rudder.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -163,6 +185,7 @@
 				ED910CDF273BA25100A3EDFF /* release.sh */,
 				ED910CE3273BA25100A3EDFF /* Rudder.podspec */,
 				EDA7EF2D2739119600E73142 /* Sources */,
+				ED3D2258279EAC2800EC8366 /* RudderTests */,
 				06CABB852630C3CA0097BEFF /* Products */,
 				06CABC2D2630C6660097BEFF /* Frameworks */,
 			);
@@ -172,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				06CABB842630C3CA0097BEFF /* Rudder.framework */,
+				ED3D2257279EAC2800EC8366 /* RudderTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -197,6 +221,14 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
+		ED3D2258279EAC2800EC8366 /* RudderTests */ = {
+			isa = PBXGroup;
+			children = (
+				ED3D2259279EAC2800EC8366 /* RudderTests.swift */,
+			);
+			path = RudderTests;
+			sourceTree = "<group>";
+		};
 		EDA7EF2D2739119600E73142 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -217,12 +249,12 @@
 		EDA7EF2F2739119600E73142 /* APIClient */ = {
 			isa = PBXGroup;
 			children = (
+				EDA7EF332739119600E73142 /* API.swift */,
+				EDA7EF352739119600E73142 /* API+Body.swift */,
 				EDA7EF302739119600E73142 /* API+Headers.swift */,
 				EDA7EF312739119600E73142 /* API+Method.swift */,
 				EDA7EF322739119600E73142 /* API+Path.swift */,
-				EDA7EF332739119600E73142 /* API.swift */,
 				EDA7EF342739119600E73142 /* RSServiceManager.swift */,
-				EDA7EF352739119600E73142 /* API+Body.swift */,
 			);
 			path = APIClient;
 			sourceTree = "<group>";
@@ -403,6 +435,24 @@
 			productReference = 06CABB842630C3CA0097BEFF /* Rudder.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		ED3D2256279EAC2800EC8366 /* RudderTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ED3D225E279EAC2800EC8366 /* Build configuration list for PBXNativeTarget "RudderTests" */;
+			buildPhases = (
+				ED3D2253279EAC2800EC8366 /* Sources */,
+				ED3D2254279EAC2800EC8366 /* Frameworks */,
+				ED3D2255279EAC2800EC8366 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ED3D225D279EAC2800EC8366 /* PBXTargetDependency */,
+			);
+			name = RudderTests;
+			productName = RudderTests;
+			productReference = ED3D2257279EAC2800EC8366 /* RudderTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -410,12 +460,16 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = RS;
+				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1310;
 				ORGANIZATIONNAME = "Rudder Labs India Pvt Ltd.";
 				TargetAttributes = {
 					06CABB832630C3CA0097BEFF = {
 						CreatedOnToolsVersion = 12.3;
 						LastSwiftMigration = 1250;
+					};
+					ED3D2256279EAC2800EC8366 = {
+						CreatedOnToolsVersion = 13.2.1;
 					};
 				};
 			};
@@ -433,12 +487,20 @@
 			projectRoot = "";
 			targets = (
 				06CABB832630C3CA0097BEFF /* Rudder */,
+				ED3D2256279EAC2800EC8366 /* RudderTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		06CABB822630C3CA0097BEFF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED3D2255279EAC2800EC8366 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -532,7 +594,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ED3D2253279EAC2800EC8366 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED3D225A279EAC2800EC8366 /* RudderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		ED3D225D279EAC2800EC8366 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 06CABB832630C3CA0097BEFF /* Rudder */;
+			targetProxy = ED3D225C279EAC2800EC8366 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		06CABB962630C3CA0097BEFF /* Debug */ = {
@@ -717,6 +795,45 @@
 			};
 			name = Release;
 		};
+		ED3D225F279EAC2800EC8366 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GTGKNDBD23;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.RudderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		ED3D2260279EAC2800EC8366 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GTGKNDBD23;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.RudderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -734,6 +851,15 @@
 			buildConfigurations = (
 				06CABB992630C3CA0097BEFF /* Debug */,
 				06CABB9A2630C3CA0097BEFF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ED3D225E279EAC2800EC8366 /* Build configuration list for PBXNativeTarget "RudderTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED3D225F279EAC2800EC8366 /* Debug */,
+				ED3D2260279EAC2800EC8366 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
