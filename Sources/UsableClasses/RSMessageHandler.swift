@@ -7,11 +7,19 @@
 //
 
 import Foundation
+import UIKit
 
 class RSMessageHandler {
+    private let databaseManager: RSDatabaseManager    
+    private let syncQueue = DispatchQueue(label: "storage.segment.com")
+    
+    init(databaseManager: RSDatabaseManager) {
+        self.databaseManager = databaseManager
+    }
+    
     let factoryDumpManager = RSFactoryDumpManager()
     
-    func handleTrackEvent(_ eventName: String, properties: [String: Any]? = nil, options: RSOption? = nil) {
+    /*func handleTrackEvent(_ eventName: String, properties: [String: Any]? = nil, options: RSOption? = nil) {
         guard !RSClient.getOptStatus() else {
             return
         }
@@ -126,6 +134,31 @@ class RSMessageHandler {
             }
         } catch {
             logError("dump: \(error.localizedDescription)")
+        }
+    }*/
+    
+    func write(_ message: Message) {
+        syncQueue.sync {
+            do {
+                let jsonObject = message.value
+                if JSONSerialization.isValidJSONObject(jsonObject) {
+                    let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        logDebug("dump: \(jsonString)")
+                        if jsonString.getUTF8Length() > RSConstants.MAX_EVENT_SIZE {
+                            logError("dump: Event size exceeds the maximum permitted event size \(RSConstants.MAX_EVENT_SIZE)")
+                            return
+                        }
+                        databaseManager.saveEvent(jsonString)
+                    } else {
+                        logError("dump: Can not convert to JSON")
+                    }
+                } else {
+                    logError("dump: Not a valid JSON object")
+                }
+            } catch {
+                logError("dump: \(error.localizedDescription)")
+            }
         }
     }
 }

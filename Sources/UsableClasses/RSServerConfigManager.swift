@@ -23,16 +23,6 @@ class RSServerConfigManager {
             }
         }
     }
-    
-    func isServerConfigOutDated() -> Bool {
-        let currentTime = RSUtils.getTimeStamp()
-        if let lastUpdatedTime = RSUserDefaults.getLastUpdatedTime(), let config = RSClient.shared.eventManager.config {
-            logDebug("Last updated config time: \(lastUpdatedTime)")
-            logDebug("Current time: \(currentTime)")
-            return (currentTime - lastUpdatedTime) > config.configRefreshInterval * 60 * 60 * 1000
-        }
-        return false
-    }
 }
 
 extension RSServerConfigManager {

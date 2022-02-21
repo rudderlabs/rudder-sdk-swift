@@ -9,32 +9,44 @@
 import Foundation
 
 @objc open class RSConfig: NSObject {
-    var dataPlaneUrl: String
-    var flushQueueSize: Int
-    var dbCountThreshold: Int
-    var sleepTimeOut: Int
-    var logLevel: RSLogLevel
-    var configRefreshInterval: Int
-    var trackLifecycleEvents: Bool
-    var recordScreenViews: Bool
-    var controlPlaneUrl: String
-    var factories: [RSIntegrationFactory]
-    var customFactories: [RSIntegrationFactory]
+    let writeKey: String
+    let anonymousId: String? = nil
+    let dataPlaneUrl: String
+    let flushQueueSize: Int
+    let dbCountThreshold: Int
+    let sleepTimeOut: Int
+    let logLevel: RSLogLevel
+//    var configRefreshInterval: Int
+    let trackLifecycleEvents: Bool
+    let recordScreenViews: Bool
+    let controlPlaneUrl: String
+//    var factories: [RSIntegrationFactory]
+//    var customFactories: [RSIntegrationFactory]
     
-    public override init() {
-        dataPlaneUrl = RSConstants.RSDataPlaneUrl
-        flushQueueSize = RSConstants.RSFlushQueueSize
-        dbCountThreshold = RSConstants.RSDBCountThreshold
-        sleepTimeOut = RSConstants.RSSleepTimeout
-        logLevel = .error
-        configRefreshInterval = RSConstants.RSConfigRefreshInterval
-        trackLifecycleEvents = RSConstants.RSTrackLifeCycleEvents
-        recordScreenViews = RSConstants.RSRecordScreenViews
-        controlPlaneUrl = RSConstants.RSControlPlaneUrl
-        factories = [RSIntegrationFactory]()
-        customFactories = [RSIntegrationFactory]()
+    public override init(writeKey: String,
+                         anonymousId: String?,
+                         dataPlaneUrl: String = RSConstants.RSDataPlaneUrl,
+                         controlPlaneUrl: String = RSConstants.RSControlPlaneUrl,
+                         flushQueueSize: Int = RSConstants.RSFlushQueueSize,
+                         dbCountThreshold: Int = RSConstants.RSDBCountThreshold,
+                         sleepTimeOut: Int = RSConstants.RSSleepTimeout,
+                         logLevel: RSLogLevel = RSLogLevel.error,
+                         trackLifecycleEvents: Bool = RSConstants.RSTrackLifeCycleEvents,
+                         recordScreenViews: Bool = RSConstants.RSRecordScreenViews) {
+        self.writeKey = writeKey
+        self.dataPlaneUrl = dataPlaneUrl
+        self.flushQueueSize = flushQueueSize
+        self.dbCountThreshold = dbCountThreshold
+        self.sleepTimeOut = sleepTimeOut
+        self.logLevel = logLevel
+//        configRefreshInterval = RSConstants.RSConfigRefreshInterval
+        self.trackLifecycleEvents = trackLifecycleEvents
+        self.recordScreenViews = recordScreenViews
+        self.controlPlaneUrl = controlPlaneUrl
+//        factories = [RSIntegrationFactory]()
+//        customFactories = [RSIntegrationFactory]()
     }
-    
+    /*
     @objc public func withDataPlaneUrl(_ dataPlaneUrl: String) -> RSConfig {
         if let url = URL(string: dataPlaneUrl) {
             if let scheme = url.scheme, let host = url.host {
@@ -133,5 +145,5 @@ import Foundation
     @objc public func withCustomFactory(_ customFactory: RSIntegrationFactory) -> RSConfig {
         customFactories.append(customFactory)
         return self
-    }
+    }*/
 }
