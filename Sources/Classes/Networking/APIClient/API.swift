@@ -32,22 +32,3 @@ enum APIClientStatus {
         }
     }
 }
-
-extension API {
-    var baseURL: String {
-        switch self {
-        case .flushEvents:
-            return "\(RSClient.shared.eventManager.config?.dataPlaneUrl ?? "")/\(version)/"
-        case .downloadConfig:
-            if RSClient.shared.eventManager.config?.controlPlaneUrl.hasSuffix("/") == true {
-                return "\(RSClient.shared.eventManager.config?.controlPlaneUrl ?? "")"
-            } else {
-                return "\(RSClient.shared.eventManager.config?.controlPlaneUrl ?? "")/"
-            }
-        }
-    }
-    
-    var version: String {
-        return "v1"
-    }
-}

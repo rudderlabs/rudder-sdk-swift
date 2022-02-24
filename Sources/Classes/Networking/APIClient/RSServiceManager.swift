@@ -24,26 +24,36 @@ struct RSServiceManager: RSServiceType {
         return URLSession(configuration: configuration)
     }()
     
+    let client: RSClient
+    
+    var version: String {
+        return "v1"
+    }
+    
+    init(client: RSClient) {
+        self.client = client
+    }
+    
     func downloadServerConfig(_ completion: @escaping Handler<RSServerConfig>) {
-        RSServiceManager.request(.downloadConfig, completion)
+        request(.downloadConfig, completion)
     }
     
     func flushEvents(params: String, _ completion: @escaping Handler<Bool>) {
-        RSServiceManager.request(.flushEvents(params: params), completion)
+        request(.flushEvents(params: params), completion)
     }
 }
 
 extension RSServiceManager {
-    static func request<T: Codable>(_ API: API, _ completion: @escaping Handler<T>) {
-        let urlString = [API.baseURL, API.path].joined().addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+    func request<T: Codable>(_ API: API, _ completion: @escaping Handler<T>) {
+        let urlString = [baseURL(API), path(API)].joined().addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         logDebug("RSServiceManager: URL: \(urlString ?? "")")
         var request = URLRequest(url: URL(string: urlString ?? "")!)
-        request.httpMethod = API.method.value
-        if let headers = API.headers {
+        request.httpMethod = method(API).value
+        if let headers = headers(API) {
             request.allHTTPHeaderFields = headers
             logDebug("RSServiceManager: HTTPHeaderFields: \(headers)")
         }
-        if let httpBody = API.httpBody {
+        if let httpBody = httpBody(API) {
             request.httpBody = httpBody
             logDebug("RSServiceManager: httpBody: \(httpBody)")
         }
@@ -84,7 +94,7 @@ extension RSServiceManager {
         dataTask.resume()
     }
     
-    static func handleCustomError(data: Data) -> RSErrorCode {
+    func handleCustomError(data: Data) -> RSErrorCode {
         do {
             guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: String] else {
                 return .SERVER_ERROR
@@ -96,6 +106,80 @@ extension RSServiceManager {
             return .SERVER_ERROR
         } catch {
             return .SERVER_ERROR
+        }
+    }
+}
+
+extension RSServiceManager {
+    func headers(_ API: API) -> [String: String]? {
+        var headers = ["Content-Type": "Application/json",
+                       "Authorization": "Basic \(client.config.writeKey.computeAuthToken() ?? "")"]
+        switch API {
+        case .flushEvents:
+            headers["AnonymousId"] = client.config.anonymousId?.computeAnonymousIdToken() ?? ""
+        default:
+            break
+        }
+        return headers
+    }
+    
+    func baseURL(_ API: API) -> String {
+        switch API {
+        case .flushEvents:
+            return "\(client.config.dataPlaneUrl)/\(version)/"
+        case .downloadConfig:
+            if client.config.controlPlaneUrl.hasSuffix("/") == true {
+                return "\(client.config.controlPlaneUrl)"
+            } else {
+                return "\(client.config.controlPlaneUrl)/"
+            }
+        }
+    }
+    
+    func httpBody(_ API: API) -> Data? {
+        switch API {
+        case .flushEvents(let params):
+            return params.data(using: .utf8)
+        case .downloadConfig:
+            return nil
+        }
+    }
+    
+    func method(_ API: API) -> Method {
+        switch API {
+        case .downloadConfig:
+            return .get
+        default:
+            return .post
+        }
+    }
+    
+    func path(_ API: API) -> String {
+        switch API {
+        case .flushEvents:
+            return "batch"
+        case .downloadConfig:
+            return "sourceConfig?p=ios&v=\(RSConstants.RSVersion)"
+        }
+    }
+}
+
+enum Method {
+    case post
+    case get
+    case put
+    case delete
+    
+    var value: String {
+        switch self {
+        case .post:
+            return "POST"
+        case .get:
+            return "GET"
+        case .put:
+            return "PUT"
+        case .delete:
+            return "DELETE"
         }
     }
 }

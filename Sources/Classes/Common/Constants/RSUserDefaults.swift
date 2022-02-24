@@ -33,12 +33,20 @@ class RSUserDefaults {
         UserDefaults.standard.traits = traits
     }
     
-    static func getBuildVersionCode() -> String? {
-        return UserDefaults.standard.buildVersionCode
+    static func getApplicationVersion() -> String? {
+        return UserDefaults.standard.applicationVersion
     }
     
-    static func saveBuildVersionCode(_ version: String?) {
-        UserDefaults.standard.buildVersionCode = version
+    static func saveApplicationVersion(_ version: String?) {
+        UserDefaults.standard.applicationVersion = version
+    }
+    
+    static func getApplicationBuild() -> String? {
+        return UserDefaults.standard.applicationBuild
+    }
+    
+    static func saveApplicationBuild(_ build: String?) {
+        UserDefaults.standard.applicationBuild = build
     }
     
     static func getExternalIds() -> String? {
@@ -57,10 +65,12 @@ class RSUserDefaults {
         if let anonymousId = UserDefaults.standard.anonymousId {
             return anonymousId
         } else {
+            #if os(iOS) || os(tvOS) || targetEnvironment(macCatalyst)
             if let anonymousId = UIDevice.current.identifierForVendor?.uuidString.lowercased() {
                 saveAnonymousId(anonymousId)
                 return anonymousId
             }
+            #endif
         }
         return nil
     }
