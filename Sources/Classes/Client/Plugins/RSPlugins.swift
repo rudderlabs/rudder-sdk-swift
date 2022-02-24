@@ -1,5 +1,5 @@
 //
-//  Plugins.swift
+//  RSPlugins.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 24/02/22.
@@ -29,7 +29,7 @@ enum UpdateType {
     case refresh
 }
 
-protocol Plugin: AnyObject {
+protocol RSPlugin: AnyObject {
     var type: PluginType { get }
     var analytics: RSClient? { get set }
     
@@ -39,7 +39,7 @@ protocol Plugin: AnyObject {
     func shutdown()
 }
 
-extension Plugin {
+extension RSPlugin {
     func execute<T: RSMessage>(event: T?) -> T? {
         // do nothing.
         return event
@@ -58,7 +58,7 @@ extension Plugin {
     }
 }
 
-protocol EventPlugin: Plugin {
+protocol RSEventPlugin: RSPlugin {
     func identify(event: IdentifyMessage) -> IdentifyMessage?
     func track(event: TrackMessage) -> TrackMessage?
     func group(event: GroupMessage) -> GroupMessage?
@@ -68,23 +68,22 @@ protocol EventPlugin: Plugin {
     func flush()
 }
 
-protocol DestinationPlugin: EventPlugin {
+protocol RSDestinationPlugin: RSEventPlugin {
     var key: String { get }
-    var timeline: Timeline { get }
-    func add(plugin: Plugin) -> Plugin
-    func apply(closure: (Plugin) -> Void)
-    func remove(plugin: Plugin)
+    var timeline: RSTimeline { get }
+    func add(plugin: RSPlugin) -> RSPlugin
+    func apply(closure: (RSPlugin) -> Void)
+    func remove(plugin: RSPlugin)
 }
 
-protocol UtilityPlugin: EventPlugin { }
+protocol RSUtilityPlugin: RSEventPlugin { }
 
 // For internal platform-specific bits
-internal protocol PlatformPlugin: Plugin { }
-
+internal protocol PlatformPlugin: RSPlugin { }
 
 // MARK: - Adding/Removing Plugins
 
-extension DestinationPlugin {
+extension RSDestinationPlugin {
     func configure(analytics: RSClient) {
         self.analytics = analytics
         apply { plugin in
@@ -98,7 +97,7 @@ extension DestinationPlugin {
      - Parameter closure: A closure that takes an plugin to be operated on as a parameter.
      
      */
-    func apply(closure: (Plugin) -> Void) {
+    func apply(closure: (RSPlugin) -> Void) {
         timeline.apply(closure)
     }
     
@@ -110,7 +109,7 @@ extension DestinationPlugin {
      
      */
     @discardableResult
-    func add(plugin: Plugin) -> Plugin {
+    func add(plugin: RSPlugin) -> RSPlugin {
         if let analytics = self.analytics {
             plugin.configure(analytics: analytics)
         }
@@ -123,7 +122,7 @@ extension DestinationPlugin {
      
      - Parameter pluginName: An plugin name.
      */
-    func remove(plugin: Plugin) {
+    func remove(plugin: RSPlugin) {
         timeline.remove(plugin: plugin)
     }
 }

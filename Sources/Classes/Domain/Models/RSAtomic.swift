@@ -1,14 +1,15 @@
 //
-//  Atomic.swift
-//  Segment
+//  RSAtomic.swift
+//  Rudder
 //
-//  Created by Brandon Sneed on 4/8/21.
+//  Created by Pallab Maiti on 14/09/21.
+//  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
 //
 
 import Foundation
 
 @propertyWrapper
-public struct Atomic<T> {
+public struct RSAtomic<T> {
     var value: T
     private let lock = NSLock()
 

@@ -1,5 +1,5 @@
 //
-//  SegmentDestination.swift
+//  RudderDestination.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 24/02/22.
@@ -16,22 +16,21 @@ import Foundation
 import FoundationNetworking
 #endif
 
-class RudderDestination: DestinationPlugin {
+class RudderDestinationPlugin: RSDestinationPlugin {
     var key: String = ""
     
     
-        
     let type = PluginType.destination
 //    let key: String = Constants.integrationName.rawValue
-    let timeline = Timeline()
+    let timeline = RSTimeline()
     var analytics: RSClient? {
         didSet {
             initialSetup()
         }
     }
 
-    private let uploadsQueue = DispatchQueue(label: "uploadsQueue.segment.com")
-    private var flushTimer: QueueTimer? = nil
+    private let uploadsQueue = DispatchQueue(label: "uploadsQueue.rudder.com")
+    private var flushTimer: RSQueueTimer?
     
     private var messageHandler: RSMessageHandler?
     private var serviceManager: RSServiceManager?
@@ -40,7 +39,7 @@ class RudderDestination: DestinationPlugin {
         guard let analytics = self.analytics else { return }
         messageHandler = RSMessageHandler()
         serviceManager = RSServiceManager(client: analytics)
-        flushTimer = QueueTimer(interval: TimeInterval(analytics.config.sleepTimeOut)) {
+        flushTimer = RSQueueTimer(interval: TimeInterval(analytics.config.sleepTimeOut)) {
             self.flushMessage()
         }
     }
@@ -74,10 +73,10 @@ class RudderDestination: DestinationPlugin {
 }
 
 // MARK: - Utility methods
-extension RudderDestination {
+extension RudderDestinationPlugin {
     internal func configureCloudDestinations<T: RSMessage>(event: T) -> T {
         guard let integrationSettings = analytics?.serverConfig else { return event }
-        guard let plugins = analytics?.timeline.plugins[.destination]?.plugins as? [DestinationPlugin] else { return event }
+        guard let plugins = analytics?.timeline.plugins[.destination]?.plugins as? [RSDestinationPlugin] else { return event }
         guard let customerValues = event.integrations else { return event }
         
         var merged = [String: Bool]()
@@ -147,7 +146,7 @@ extension SegmentDestination {
     }
 }
 */
-extension RudderDestination {
+extension RudderDestinationPlugin {
     
     // swiftlint:disable cyclomatic_complexity
     func flushMessage() {

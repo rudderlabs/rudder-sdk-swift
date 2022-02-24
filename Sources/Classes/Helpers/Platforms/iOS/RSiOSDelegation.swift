@@ -14,7 +14,7 @@ import UIKit
 
 // MARK: - Remote Notifications
 
-protocol RemoteNotifications: Plugin {
+protocol RemoteNotifications: RSPlugin {
     func registeredForRemoteNotifications(deviceToken: Data)
     func failedToRegisterForRemoteNotification(error: Error?)
     func receivedRemoteNotification(userInfo: [AnyHashable: Any])
@@ -87,15 +87,15 @@ extension RSClient {
 // MARK: - Opening a URL
 
 protocol OpeningURLs {
-    func openURL(_ url: URL, options: [UIApplication.OpenURLOptionsKey : Any])
+    func openURL(_ url: URL, options: [UIApplication.OpenURLOptionsKey: Any])
 }
 
 extension OpeningURLs {
-    func openURL(_ url: URL, options: [UIApplication.OpenURLOptionsKey : Any]) {}
+    func openURL(_ url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) {}
 }
 
 extension RSClient {
-    func openURL(_ url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) {
+    func openURL(_ url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) {
         apply { plugin in
             if let p = plugin as? OpeningURLs {
                 p.openURL(url, options: options)

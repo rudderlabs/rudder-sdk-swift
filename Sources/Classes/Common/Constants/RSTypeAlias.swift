@@ -1,5 +1,5 @@
 //
-//  TypeAlias.swift
+//  RSTypeAlias.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 28/01/22.

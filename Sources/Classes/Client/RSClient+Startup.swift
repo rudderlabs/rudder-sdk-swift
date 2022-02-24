@@ -1,5 +1,5 @@
 //
-//  Startup.swift
+//  RSClient+Startup.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 24/02/22.
@@ -16,7 +16,7 @@ extension RSClient {
         
         // add segment destination plugin unless
         // asked not to via configuration.
-        let segmentDestination = RudderDestination()
+        let segmentDestination = RudderDestinationPlugin()
         segmentDestination.analytics = self
         add(plugin: segmentDestination)
         
@@ -38,17 +38,17 @@ extension RSClient {
         
         // add context plugin as well as it's platform specific internally.
         // this must come first.
-        plugins.append(Context())
+        plugins.append(RSContextPlugin())
         
         plugins += VendorSystem.current.requiredPlugins
 
         // setup lifecycle if desired
         if config.trackLifecycleEvents {
             #if os(iOS) || os(tvOS)
-            plugins.append(iOSLifecycleEvents())
+            plugins.append(RSiOSLifecycleEvents())
             #endif
             #if os(watchOS)
-            plugins.append(watchOSLifecycleEvents())
+            plugins.append(RSwatchOSLifecycleEvents())
             #endif
             #if os(macOS)
             // placeholder - need to build this

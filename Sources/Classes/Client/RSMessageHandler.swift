@@ -11,7 +11,7 @@ import UIKit
 
 class RSMessageHandler {
     private let databaseManager: RSDatabaseManager    
-    private let syncQueue = DispatchQueue(label: "storage.segment.com")
+    private let syncQueue = DispatchQueue(label: "storage.rudder.com")
     
     init() {
         databaseManager = RSDatabaseManager()

@@ -8,10 +8,9 @@
 
 import Foundation
 
-
 // MARK: - Main Timeline
 
-public class Timeline {
+public class RSTimeline {
     internal let plugins: [PluginType: Mediator]
     
     public init() {
@@ -53,20 +52,20 @@ public class Timeline {
 }
 
 internal class Mediator {
-    internal func add(plugin: Plugin) {
+    internal func add(plugin: RSPlugin) {
         plugins.append(plugin)
         if let option = plugin.analytics?.serverConfig {
             plugin.update(serverConfig: option, type: .initial)
         }
     }
     
-    internal func remove(plugin: Plugin) {
+    internal func remove(plugin: RSPlugin) {
         plugins.removeAll { (storedPlugin) -> Bool in
             return plugin === storedPlugin
         }
     }
 
-    internal var plugins = [Plugin]()
+    internal var plugins = [RSPlugin]()
     internal func execute<T: RSMessage>(event: T) -> T? {
         var result: T? = event
         
@@ -74,7 +73,7 @@ internal class Mediator {
             if let r = result {
                 // Drop the event return because we don't care about the
                 // final result.
-                if plugin is DestinationPlugin {
+                if plugin is RSDestinationPlugin {
                     _ = plugin.execute(event: r)
                 } else {
                     result = plugin.execute(event: r)
@@ -86,16 +85,15 @@ internal class Mediator {
     }
 }
 
-
 // MARK: - Plugin Support
 
-extension Timeline {
-    internal func apply(_ closure: (Plugin) -> Void) {
+extension RSTimeline {
+    internal func apply(_ closure: (RSPlugin) -> Void) {
         for type in PluginType.allCases {
             if let mediator = plugins[type] {
                 mediator.plugins.forEach { (plugin) in
                     closure(plugin)
-                    if let destPlugin = plugin as? DestinationPlugin {
+                    if let destPlugin = plugin as? RSDestinationPlugin {
                         destPlugin.apply(closure: closure)
                     }
                 }
@@ -103,13 +101,13 @@ extension Timeline {
         }
     }
     
-    internal func add(plugin: Plugin) {
+    internal func add(plugin: RSPlugin) {
         if let mediator = plugins[plugin.type] {
             mediator.add(plugin: plugin)
         }
     }
     
-    internal func remove(plugin: Plugin) {
+    internal func remove(plugin: RSPlugin) {
         // remove all plugins with this name in every category
         for type in PluginType.allCases {
             if let mediator = plugins[type] {
@@ -124,8 +122,8 @@ extension Timeline {
         }
     }
     
-    internal func find<T: Plugin>(pluginType: T.Type) -> T? {
-        var found = [Plugin]()
+    internal func find<T: RSPlugin>(pluginType: T.Type) -> T? {
+        var found = [RSPlugin]()
         for type in PluginType.allCases {
             if let mediator = plugins[type] {
                 found.append(contentsOf: mediator.plugins.filter { (plugin) -> Bool in
@@ -139,22 +137,22 @@ extension Timeline {
 
 // MARK: - Plugin Timeline Execution
 
-extension EventPlugin {
+extension RSEventPlugin {
     public func execute<T: RSMessage>(event: T?) -> T? {
         var result: T? = event
         switch result {
-            case let r as IdentifyMessage:
-                result = self.identify(event: r) as? T
-            case let r as TrackMessage:
-                result = self.track(event: r) as? T
-            case let r as ScreenMessage:
-                result = self.screen(event: r) as? T
-            case let r as AliasMessage:
-                result = self.alias(event: r) as? T
-            case let r as GroupMessage:
-                result = self.group(event: r) as? T
-            default:
-                break
+        case let r as IdentifyMessage:
+            result = self.identify(event: r) as? T
+        case let r as TrackMessage:
+            result = self.track(event: r) as? T
+        case let r as ScreenMessage:
+            result = self.screen(event: r) as? T
+        case let r as AliasMessage:
+            result = self.alias(event: r) as? T
+        case let r as GroupMessage:
+            result = self.group(event: r) as? T
+        default:
+            break
         }
         return result
     }
@@ -187,7 +185,7 @@ extension EventPlugin {
 
 // MARK: - Destination Timeline
 
-extension DestinationPlugin {
+extension RSDestinationPlugin {
     public func execute<T: RSMessage>(event: T?) -> T? {
         var result: T? = event
         if let r = result {
@@ -199,7 +197,7 @@ extension DestinationPlugin {
     internal func isDestinationEnabled(event: RSMessage) -> Bool {
         var customerDisabled = false
         
-        if let integration = event.integrations?.first(where: { key, value in
+        if let integration = event.integrations?.first(where: { key, _ in
             return key == self.key
         }), integration.value == false {
             customerDisabled = true
@@ -219,7 +217,7 @@ extension DestinationPlugin {
         // This will process plugins (think destination middleware) that are tied
         // to this destination.
         
-        var result: E? = nil
+        var result: E?
         
         if isDestinationEnabled(event: incomingEvent) {
             // apply .before and .enrichment types first ...
@@ -228,20 +226,20 @@ extension DestinationPlugin {
             
             // now we execute any overrides we may have made.  basically, the idea is to take an
             // incoming event, like identify, and map it to whatever is appropriate for this destination.
-            var destinationResult: E? = nil
+            var destinationResult: E?
             switch enrichmentResult {
-                case let e as IdentifyMessage:
-                    destinationResult = identify(event: e) as? E
-                case let e as TrackMessage:
-                    destinationResult = track(event: e) as? E
-                case let e as ScreenMessage:
-                    destinationResult = screen(event: e) as? E
-                case let e as GroupMessage:
-                    destinationResult = group(event: e) as? E
-                case let e as AliasMessage:
-                    destinationResult = alias(event: e) as? E
-                default:
-                    break
+            case let e as IdentifyMessage:
+                destinationResult = identify(event: e) as? E
+            case let e as TrackMessage:
+                destinationResult = track(event: e) as? E
+            case let e as ScreenMessage:
+                destinationResult = screen(event: e) as? E
+            case let e as GroupMessage:
+                destinationResult = group(event: e) as? E
+            case let e as AliasMessage:
+                destinationResult = alias(event: e) as? E
+            default:
+                break
             }
             
             // apply .after plugins ...
@@ -251,4 +249,3 @@ extension DestinationPlugin {
         return result
     }
 }
-

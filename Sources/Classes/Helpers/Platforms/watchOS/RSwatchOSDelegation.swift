@@ -1,5 +1,5 @@
 //
-//  watchOSDelegation.swift
+//  RSwatchOSDelegation.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 24/02/22.
@@ -13,7 +13,7 @@ import WatchKit
 
 // MARK: - Remote Notifications
 
-protocol RemoteNotifications: Plugin {
+protocol RemoteNotifications: RSPlugin {
     func registeredForRemoteNotifications(deviceToken: Data)
     func failedToRegisterForRemoteNotification(error: Error?)
     func receivedRemoteNotification(userInfo: [AnyHashable: Any])

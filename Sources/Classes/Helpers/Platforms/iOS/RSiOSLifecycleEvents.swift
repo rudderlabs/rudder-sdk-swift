@@ -1,5 +1,5 @@
 //
-//  iOSLifecycleEvents.swift
+//  RSiOSLifecycleEvents.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 24/02/22.
@@ -12,8 +12,7 @@ import Foundation
 
 import UIKit
 
-// swiftlint:disable type_name
-class iOSLifecycleEvents: PlatformPlugin, iOSLifecycle {
+class RSiOSLifecycleEvents: PlatformPlugin, RSiOSLifecycle {
     let type = PluginType.before
     var analytics: RSClient?
     

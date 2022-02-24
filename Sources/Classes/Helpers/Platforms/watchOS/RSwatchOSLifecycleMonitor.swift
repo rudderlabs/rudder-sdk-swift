@@ -11,7 +11,7 @@
 import Foundation
 import WatchKit
 
-public protocol watchOSLifecycle {
+public protocol RSwatchOSLifecycle {
     func applicationDidFinishLaunching(watchExtension: WKExtension)
     func applicationWillEnterForeground(watchExtension: WKExtension)
     func applicationDidEnterBackground(watchExtension: WKExtension)
@@ -19,7 +19,7 @@ public protocol watchOSLifecycle {
     func applicationWillResignActive(watchExtension: WKExtension)
 }
 
-public extension watchOSLifecycle {
+public extension RSwatchOSLifecycle {
     func applicationDidFinishLaunching(watchExtension: WKExtension) { }
     func applicationWillEnterForeground(watchExtension: WKExtension) { }
     func applicationDidEnterBackground(watchExtension: WKExtension) { }
@@ -27,8 +27,7 @@ public extension watchOSLifecycle {
     func applicationWillResignActive(watchExtension: WKExtension) { }
 }
 
-// swiftlint:disable type_name
-class watchOSLifecycleMonitor: PlatformPlugin {
+class RSwatchOSLifecycleMonitor: PlatformPlugin {
     var type = PluginType.utility
     var analytics: RSClient?
     var wasBackgrounded: Bool = false
@@ -47,7 +46,7 @@ class watchOSLifecycleMonitor: PlatformPlugin {
     
     @objc
     func notificationResponse(notification: NSNotification) {
-        switch (notification.name) {
+        switch notification.name {
         case WKExtension.applicationDidFinishLaunchingNotification:
             self.applicationDidFinishLaunching(notification: notification)
         case WKExtension.applicationWillEnterForegroundNotification:
@@ -73,7 +72,7 @@ class watchOSLifecycleMonitor: PlatformPlugin {
     
     func applicationDidFinishLaunching(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? watchOSLifecycle {
+            if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationDidFinishLaunching(watchExtension: watchExtension)
             }
         }
@@ -85,7 +84,7 @@ class watchOSLifecycleMonitor: PlatformPlugin {
         if wasBackgrounded == false { return }
         
         analytics?.apply { (ext) in
-            if let validExt = ext as? watchOSLifecycle {
+            if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationWillEnterForeground(watchExtension: watchExtension)
             }
         }
@@ -96,7 +95,7 @@ class watchOSLifecycleMonitor: PlatformPlugin {
         wasBackgrounded = true
         
         analytics?.apply { (ext) in
-            if let validExt = ext as? watchOSLifecycle {
+            if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationDidEnterBackground(watchExtension: watchExtension)
             }
         }
@@ -104,7 +103,7 @@ class watchOSLifecycleMonitor: PlatformPlugin {
     
     func applicationDidBecomeActive(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? watchOSLifecycle {
+            if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationDidBecomeActive(watchExtension: watchExtension)
             }
         }
@@ -112,7 +111,7 @@ class watchOSLifecycleMonitor: PlatformPlugin {
     
     func applicationWillResignActive(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? watchOSLifecycle {
+            if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationWillResignActive(watchExtension: watchExtension)
             }
         }
@@ -122,7 +121,7 @@ class watchOSLifecycleMonitor: PlatformPlugin {
 
 // MARK: - Segment Destination Extension
 
-extension RudderDestination: watchOSLifecycle {
+extension RSDestinationPlugin: RSwatchOSLifecycle {
     public func applicationWillEnterForeground(watchExtension: WKExtension) {
         enterForeground()
     }

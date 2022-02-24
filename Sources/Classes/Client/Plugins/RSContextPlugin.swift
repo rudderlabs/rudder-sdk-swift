@@ -1,5 +1,5 @@
 //
-//  Context.swift
+//  RSContextPlugin.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 24/02/22.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Context: PlatformPlugin {
+class RSContextPlugin: PlatformPlugin {
     let type: PluginType = .before
     var analytics: RSClient?
     

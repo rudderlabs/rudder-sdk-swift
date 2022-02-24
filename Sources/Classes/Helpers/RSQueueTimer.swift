@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal class QueueTimer {
+internal class RSQueueTimer {
     enum State {
         case suspended
         case resumed
@@ -19,12 +19,12 @@ internal class QueueTimer {
     let queue: DispatchQueue
     let handler: () -> Void
     
-    @Atomic var state: State = .suspended
+    @RSAtomic var state: State = .suspended
     
-    static var timers = [QueueTimer]()
+    static var timers = [RSQueueTimer]()
     
     static func schedule(interval: TimeInterval, queue: DispatchQueue = .main, handler: @escaping () -> Void) {
-        let timer = QueueTimer(interval: interval, queue: queue, handler: handler)
+        let timer = RSQueueTimer(interval: interval, queue: queue, handler: handler)
         Self.timers.append(timer)
     }
 

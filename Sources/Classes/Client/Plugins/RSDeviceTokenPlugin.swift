@@ -1,5 +1,5 @@
 //
-//  DeviceToken.swift
+//  RSDeviceTokenPlugin.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 24/02/22.
@@ -8,15 +8,11 @@
 
 import Foundation
 
-class DeviceToken: PlatformPlugin {
-    func update(option: RSOption, type: UpdateType) {
-        
-    }
-    
+class RSDeviceTokenPlugin: PlatformPlugin {
     let type = PluginType.before
     var analytics: RSClient?
     
-    var token: String? = nil
+    var token: String?
 
     required init() { }
     
@@ -32,10 +28,10 @@ class DeviceToken: PlatformPlugin {
 
 extension RSClient {
     func setDeviceToken(_ token: String) {
-        if let tokenPlugin = self.find(pluginType: DeviceToken.self) {
+        if let tokenPlugin = self.find(pluginType: RSDeviceTokenPlugin.self) {
             tokenPlugin.token = token
         } else {
-            let tokenPlugin = DeviceToken()
+            let tokenPlugin = RSDeviceTokenPlugin()
             tokenPlugin.token = token
             add(plugin: tokenPlugin)
         }

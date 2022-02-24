@@ -70,7 +70,7 @@ internal class iOSVendorSystem: VendorSystem {
     }
     
     override var requiredPlugins: [PlatformPlugin] {
-        return [iOSLifecycleMonitor(), DeviceToken()]
+        return [RSiOSLifecycleMonitor(), RSDeviceTokenPlugin()]
     }
     
     private func deviceModel() -> String {
@@ -152,7 +152,7 @@ internal class watchOSVendorSystem: VendorSystem {
     }
     
     override var requiredPlugins: [PlatformPlugin] {
-        return [watchOSLifecycleMonitor()]
+        return [RSwatchOSLifecycleMonitor()]
     }
     
     private func deviceModel() -> String {

@@ -12,7 +12,7 @@ import Foundation
 @objc
 open class RSClient: NSObject {
     internal var config: RSConfig
-    public var timeline: Timeline
+    public var timeline: RSTimeline
     internal var serverConfig: RSServerConfig?
     internal var databaseManager: RSDatabaseManager
     internal var error: NSError?
@@ -25,7 +25,7 @@ open class RSClient: NSObject {
         self.config = config
         serverConfig = RSUserDefaults.getServerConfig()
         databaseManager = RSDatabaseManager()
-        timeline = Timeline()
+        timeline = RSTimeline()
         
         // Get everything running
         super.init()
@@ -158,7 +158,7 @@ extension RSClient {
     /// be sent to each plugin present in the system.
     public func flush() {
         apply { plugin in
-            if let p = plugin as? EventPlugin {
+            if let p = plugin as? RSEventPlugin {
                 p.flush()
             }
         }
@@ -168,7 +168,7 @@ extension RSClient {
     /// command will also be sent to each plugin present in the system.
     public func reset() {
         apply { plugin in
-            if let p = plugin as? EventPlugin {
+            if let p = plugin as? RSEventPlugin {
                 p.reset()
             }
         }
@@ -216,7 +216,7 @@ extension RSClient {
      - Parameter closure: A closure that takes an plugin to be operated on as a parameter.
      
      */
-    func apply(closure: (Plugin) -> Void) {
+    func apply(closure: (RSPlugin) -> Void) {
         timeline.apply(closure)
     }
     
@@ -228,7 +228,7 @@ extension RSClient {
      
      */
     @discardableResult
-    func add(plugin: Plugin) -> Plugin {
+    func add(plugin: RSPlugin) -> RSPlugin {
         plugin.configure(analytics: self)
         timeline.add(plugin: plugin)
         return plugin
@@ -239,11 +239,11 @@ extension RSClient {
      
      - Parameter pluginName: An plugin name.
      */
-    func remove(plugin: Plugin) {
+    func remove(plugin: RSPlugin) {
         timeline.remove(plugin: plugin)
     }
     
-    func find<T: Plugin>(pluginType: T.Type) -> T? {
+    func find<T: RSPlugin>(pluginType: T.Type) -> T? {
         return timeline.find(pluginType: pluginType)
     }
 }
@@ -256,10 +256,10 @@ extension RSClient {
         }
     }
     
-    internal func update(plugin: Plugin, serverConfig: RSServerConfig, type: UpdateType) {
+    internal func update(plugin: RSPlugin, serverConfig: RSServerConfig, type: UpdateType) {
         plugin.update(serverConfig: serverConfig, type: type)
         // if it's a destination, tell it's plugins to update as well.
-        if let dest = plugin as? DestinationPlugin {
+        if let dest = plugin as? RSDestinationPlugin {
             dest.apply { (subPlugin) in
                 subPlugin.update(serverConfig: serverConfig, type: type)
             }

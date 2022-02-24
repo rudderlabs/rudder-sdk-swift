@@ -1,8 +1,9 @@
 //
-//  StartupQueue.swift
-//  Segment
+//  RSStartupQueuePlugin.swift
+//  Rudder
 //
-//  Created by Brandon Sneed on 6/4/21.
+//  Created by Pallab Maiti on 24/02/22.
+//  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
 //
 
 import Foundation
@@ -20,7 +21,7 @@ import Foundation
         }
     }
     
-    let syncQueue = DispatchQueue(label: "startupQueue.segment.com")
+    let syncQueue = DispatchQueue(label: "startupQueue.rudder.com")
     var queuedEvents = [Message]()
     
     required init() { }

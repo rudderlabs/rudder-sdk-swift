@@ -11,9 +11,7 @@
 import Foundation
 import UIKit
 
-// NOTE: These method signatures are marked optional as application extensions may not have
-// a UIApplication object available.  See `safeShared` below.
-protocol iOSLifecycle {
+protocol RSiOSLifecycle {
     func applicationDidEnterBackground(application: UIApplication?)
     func applicationWillEnterForeground(application: UIApplication?)
     func application(_ application: UIApplication?, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?)
@@ -25,7 +23,7 @@ protocol iOSLifecycle {
     func applicationBackgroundRefreshDidChange(application: UIApplication?, refreshStatus: UIBackgroundRefreshStatus)
 }
 
-extension iOSLifecycle {
+extension RSiOSLifecycle {
     func applicationDidEnterBackground(application: UIApplication?) { }
     func applicationWillEnterForeground(application: UIApplication?) { }
     func application(_ application: UIApplication?, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) { }
@@ -37,12 +35,11 @@ extension iOSLifecycle {
     func applicationBackgroundRefreshDidChange(application: UIApplication?, refreshStatus: UIBackgroundRefreshStatus) { }
 }
 
-// swiftlint:disable type_name
-class iOSLifecycleMonitor: PlatformPlugin {
+class RSiOSLifecycleMonitor: PlatformPlugin {
     let type = PluginType.utility
     var analytics: RSClient?
     
-    private var application: UIApplication?
+    private var application: UIApplication = UIApplication.shared
     private var appNotifications: [NSNotification.Name] = [UIApplication.didEnterBackgroundNotification,
                                                            UIApplication.willEnterForegroundNotification,
                                                            UIApplication.didFinishLaunchingNotification,
@@ -54,9 +51,6 @@ class iOSLifecycleMonitor: PlatformPlugin {
                                                            UIApplication.backgroundRefreshStatusDidChangeNotification]
 
     required init() {
-        // App extensions can't use UIAppication.shared, so
-        // funnel it through something to check; Could be nil.
-        application = UIApplication.safeShared
         setupListeners()
     }
     
@@ -96,7 +90,7 @@ class iOSLifecycleMonitor: PlatformPlugin {
     
     func applicationWillEnterForeground(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? iOSLifecycle {
+            if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationWillEnterForeground(application: application)
             }
         }
@@ -104,7 +98,7 @@ class iOSLifecycleMonitor: PlatformPlugin {
     
     func didEnterBackground(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? iOSLifecycle {
+            if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationDidEnterBackground(application: application)
             }
         }
@@ -112,7 +106,7 @@ class iOSLifecycleMonitor: PlatformPlugin {
     
     func didFinishLaunching(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? iOSLifecycle {
+            if let validExt = ext as? RSiOSLifecycle {
                 let options = notification.userInfo as? [UIApplication.LaunchOptionsKey: Any] ?? nil
                 validExt.application(application, didFinishLaunchingWithOptions: options)
             }
@@ -121,7 +115,7 @@ class iOSLifecycleMonitor: PlatformPlugin {
 
     func didBecomeActive(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? iOSLifecycle {
+            if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationDidBecomeActive(application: application)
             }
         }
@@ -129,7 +123,7 @@ class iOSLifecycleMonitor: PlatformPlugin {
     
     func willResignActive(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? iOSLifecycle {
+            if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationWillResignActive(application: application)
             }
         }
@@ -137,7 +131,7 @@ class iOSLifecycleMonitor: PlatformPlugin {
     
     func didReceiveMemoryWarning(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? iOSLifecycle {
+            if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationDidReceiveMemoryWarning(application: application)
             }
         }
@@ -145,7 +139,7 @@ class iOSLifecycleMonitor: PlatformPlugin {
     
     func willTerminate(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? iOSLifecycle {
+            if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationWillTerminate(application: application)
             }
         }
@@ -153,22 +147,17 @@ class iOSLifecycleMonitor: PlatformPlugin {
     
     func significantTimeChange(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? iOSLifecycle {
+            if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationSignificantTimeChange(application: application)
             }
         }
     }
     
     func backgroundRefreshDidChange(notification: NSNotification) {
-        // Not only would we not get this in an App Extension, but it would
-        // be useless since we couldn't provide the application object or
-        // the refreshStatus value.
-        if let application = UIApplication.safeShared {
-            analytics?.apply { (ext) in
-                if let validExt = ext as? iOSLifecycle {
-                    validExt.applicationBackgroundRefreshDidChange(application: application,
-                                                                   refreshStatus: application.backgroundRefreshStatus)
-                }
+        analytics?.apply { (ext) in
+            if let validExt = ext as? RSiOSLifecycle {
+                validExt.applicationBackgroundRefreshDidChange(application: application,
+                                                               refreshStatus: application.backgroundRefreshStatus)
             }
         }
     }
@@ -176,7 +165,7 @@ class iOSLifecycleMonitor: PlatformPlugin {
 
 // MARK: - Segment Destination Extension
 
-extension RudderDestination: iOSLifecycle {
+extension RudderDestinationPlugin: RSiOSLifecycle {
     func applicationWillEnterForeground(application: UIApplication?) {
         enterForeground()
     }
@@ -205,23 +194,5 @@ extension RudderDestination: iOSLifecycle {
     }
 }*/
 
-extension UIApplication {
-    static var safeShared: UIApplication? {
-        // UIApplication.shared is not available in app extensions so try to get
-        // it in a way that's safe for both.
-        
-        // if we are NOT an app extension, we need to get UIApplication.shared
-//        if !isAppExtension {
-            // getting it like this allows us to avoid the compiler error that would
-            // be generated even though we're guarding against app extensions.
-            // there's no preprocessor macro or @available macro to help us here unfortunately
-            // so this is the best i could do.
-            return UIApplication.value(forKeyPath: "sharedApplication") as? UIApplication
-//        }
-        // if we ARE an app extension, send back nil since we have no way to get the
-        // application instance.
-//        return nil
-    }
-}
 
 #endif

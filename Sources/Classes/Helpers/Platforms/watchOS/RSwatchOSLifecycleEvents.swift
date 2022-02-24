@@ -1,5 +1,5 @@
 //
-//  watchOSLifecycleEvents.swift
+//  RSwatchOSLifecycleEvents.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 24/02/22.
@@ -11,8 +11,7 @@
 import Foundation
 import WatchKit
 
-// swiftlint:disable type_name
-class watchOSLifecycleEvents: PlatformPlugin, watchOSLifecycle {    
+class RSwatchOSLifecycleEvents: PlatformPlugin, RSwatchOSLifecycle {    
     let type = PluginType.before
     var analytics: RSClient?
     
