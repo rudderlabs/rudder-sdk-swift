@@ -19,7 +19,7 @@ open class RSConstants: NSObject {
     public static let RSTrackLifeCycleEvents: Bool = true
     public static let RSRecordScreenViews: Bool = false
     static let RSVersion: String = "1.0.21"
-    static let TAG = "RSStack"
+    static let TAG = "RStack"
     static let RSPrefsKey: String = "rl_prefs"
     static let RSServerConfigKey: String = "rl_server_config"
     static let RSServerLastUpdatedKey: String = "rl_server_last_updated"

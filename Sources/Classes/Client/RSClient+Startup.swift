@@ -14,6 +14,11 @@ extension RSClient {
 //        add(plugin: SegmentLog())
 //        add(plugin: StartupQueue())
         
+        let logPlugin = RSLoggingPlugin()
+        logPlugin.analytics = self
+        logPlugin.loggingEnabled(config.logLevel != .none)
+        add(plugin: logPlugin)
+        
         // add segment destination plugin unless
         // asked not to via configuration.
         let segmentDestination = RudderDestinationPlugin()

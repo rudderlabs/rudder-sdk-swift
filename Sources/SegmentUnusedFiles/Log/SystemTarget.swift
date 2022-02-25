@@ -7,7 +7,7 @@
 
 #if !os(Linux)
 
-/*import Foundation
+import Foundation
 import os.log
 
 class SystemTarget: LogTarget {
@@ -51,6 +51,6 @@ class SystemTarget: LogTarget {
         }
         return osLogType
     }
-}*/
+}
 
 #endif
