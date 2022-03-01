@@ -41,17 +41,12 @@ protocol RSPlugin: AnyObject {
 
 extension RSPlugin {
     func execute<T: RSMessage>(event: T?) -> T? {
-        // do nothing.
         return event
     }
     
-    func update(serverConfig: RSServerConfig, type: UpdateType) {
-        // do nothing by default, user can override.
-    }
+    func update(serverConfig: RSServerConfig, type: UpdateType) { }
 
-    func shutdown() {
-        // do nothing by default, user can override.
-    }
+    func shutdown() { }
     
     func configure(analytics: RSClient) {
         self.analytics = analytics
@@ -70,7 +65,7 @@ protocol RSEventPlugin: RSPlugin {
 
 protocol RSDestinationPlugin: RSEventPlugin {
     var key: String { get }
-    var timeline: RSTimeline { get }
+    var timeline: RSController { get }
     func add(plugin: RSPlugin) -> RSPlugin
     func apply(closure: (RSPlugin) -> Void)
     func remove(plugin: RSPlugin)

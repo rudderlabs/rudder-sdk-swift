@@ -219,7 +219,7 @@ internal class MacVendor: Vendor {
     }
     
     override var requiredPlugins: [PlatformPlugin] {
-        return [MacOSLifecycleMonitor(), RSDeviceTokenPlugin()]
+        return [RSmacOSLifecycleMonitor(), RSDeviceTokenPlugin()]
     }
     
     private func deviceModel() -> String {

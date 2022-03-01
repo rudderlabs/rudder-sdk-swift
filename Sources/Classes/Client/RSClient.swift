@@ -12,7 +12,7 @@ import Foundation
 @objc
 open class RSClient: NSObject {
     internal var config: RSConfig
-    public var timeline: RSTimeline
+    public var timeline: RSController
     internal var serverConfig: RSServerConfig?
     internal var databaseManager: RSDatabaseManager
     internal var error: NSError?
@@ -25,11 +25,10 @@ open class RSClient: NSObject {
         self.config = config
         serverConfig = RSUserDefaults.getServerConfig()
         databaseManager = RSDatabaseManager()
-        timeline = RSTimeline()
+        timeline = RSController()
         
-        // Get everything running
         super.init()
-        platformStartup()
+        addPlugins()
     }
     
     /**
@@ -48,7 +47,8 @@ open class RSClient: NSObject {
     @objc
     public func track(_ eventName: String, properties: [String: Any]? = nil, option: RSOption? = nil) {
         let message = TrackMessage(event: eventName, properties: properties, option: option)
-        timeline.process(incomingEvent: message)
+            .applyRawEventData()
+        process(event: message)
     }
     
     /**
@@ -67,7 +67,8 @@ open class RSClient: NSObject {
     @objc
     public func screen(_ screenName: String, properties: [String: String]? = nil, option: RSOption? = nil) {
         let message = ScreenMessage(title: screenName, properties: properties, option: option)
-        timeline.process(incomingEvent: message)
+            .applyRawEventData()
+        process(event: message)
     }
     
     /**
@@ -86,7 +87,8 @@ open class RSClient: NSObject {
     @objc
     public func group(_ groupId: String, traits: [String: String]? = nil, option: RSOption? = nil) {
         let message = GroupMessage(groupId: groupId, traits: traits, option: option)
-        timeline.process(incomingEvent: message)
+            .applyRawEventData()
+        process(event: message)
     }
     
     /**
@@ -104,7 +106,10 @@ open class RSClient: NSObject {
     @objc
     public func alias(_ newId: String, option: RSOption? = nil) {
         let message = AliasMessage(newId: newId, option: option)
-        timeline.process(incomingEvent: message)
+            .applyAlias(newId: newId, client: self)
+            .applyRawEventData()
+        setUserId(newId)
+        process(event: message)
     }
     
     /**
@@ -123,7 +128,26 @@ open class RSClient: NSObject {
     @objc
     public func identify(_ userId: String, traits: [String: String]? = nil, option: RSOption? = nil) {
         let message = IdentifyMessage(userId: userId, traits: traits, option: option)
-        timeline.process(incomingEvent: message)
+            .applyRawEventData()
+        setUserId(userId)
+        process(event: message)
+    }
+        
+    internal func process(event: RSMessage) {
+        switch event {
+        case let e as TrackMessage:
+            timeline.process(incomingEvent: e)
+        case let e as IdentifyMessage:
+            timeline.process(incomingEvent: e)
+        case let e as ScreenMessage:
+            timeline.process(incomingEvent: e)
+        case let e as GroupMessage:
+            timeline.process(incomingEvent: e)
+        case let e as AliasMessage:
+            timeline.process(incomingEvent: e)
+        default:
+            break
+        }
     }
 }
 
@@ -131,28 +155,28 @@ open class RSClient: NSObject {
 
 extension RSClient {
     /// Returns the anonymousId currently in use.
-//    public var anonymousId: String {
-//        if let userInfo: UserInfo = store.currentState() {
-//            return userInfo.anonymousId
-//        }
-//        return ""
-//    }
+    public var anonymousId: String {
+        if let anonymousId = RSUserDefaults.getAnonymousId() {
+            return anonymousId
+        }
+        return ""
+    }
     
     /// Returns the userId that was specified in the last identify call.
-//    public var userId: String? {
-//        if let userInfo: UserInfo = store.currentState() {
-//            return userInfo.userId
-//        }
-//        return nil
-//    }
+    public var userId: String? {
+        if let userIdPlugin = self.find(pluginType: RSUserIdPlugin.self) {
+            return userIdPlugin.userId
+        }
+        return nil
+    }
     
     /// Returns the traits that were specified in the last identify call.
-//    public func traits<T: Codable>() -> T? {
-//        if let userInfo: UserInfo = store.currentState() {
-//            return userInfo.traits?.codableValue()
+    public var context: [String: Any]? {
+//        if let contextPlugin = self.find(pluginType: RSContextPlugin.self) {
+//            return contextPlugin.userId
 //        }
-//        return nil
-//    }
+        return nil
+    }
     
     /// Tells this instance of Analytics to flush any queued events up to Segment.com.  This command will also
     /// be sent to each plugin present in the system.
@@ -179,34 +203,24 @@ extension RSClient {
     public func version() -> String {
         return RSConstants.RSVersion
     }
-    
-    /// Retrieve the version of this library in use.
-    /// - Returns: A string representing the version in "BREAKING.FEATURE.FIX" format.
-//    public static func version() -> String {
-//        return __segment_version
-//    }
 }
 
-/*extension RSClient {
+extension RSClient {
     /// Manually retrieve the settings that were supplied from Segment.com.
     /// - Returns: A Settings object containing integration settings, tracking plan, etc.
-    public func settings() -> Settings? {
-        var settings: Settings?
-        if let system: System = store.currentState() {
-            settings = system.settings
-        }
-        return settings
+    public func configuration() -> RSConfig? {
+        return config
     }
     
     /// Manually enable a destination plugin.  This is useful when a given DestinationPlugin doesn't have any Segment tie-ins at all.
     /// This will allow the destination to be processed in the same way within this library.
     /// - Parameters:
     ///   - plugin: The destination plugin to enable.
-    public func manuallyEnableDestination(plugin: DestinationPlugin) {
-        self.store.dispatch(action: System.AddDestinationToSettingsAction(key: plugin.key))
-    }
+//    public func manuallyEnableDestination(plugin: DestinationPlugin) {
+//        self.store.dispatch(action: System.AddDestinationToSettingsAction(key: plugin.key))
+//    }
 
-}*/
+}
 
 extension RSClient {
     /**

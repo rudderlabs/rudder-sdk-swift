@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Main Timeline
 
-public class RSTimeline {
+public class RSController {
     internal let plugins: [PluginType: Mediator]
     
     public init() {
@@ -87,7 +87,7 @@ internal class Mediator {
 
 // MARK: - Plugin Support
 
-extension RSTimeline {
+extension RSController {
     internal func apply(_ closure: (RSPlugin) -> Void) {
         for type in PluginType.allCases {
             if let mediator = plugins[type] {

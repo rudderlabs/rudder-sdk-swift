@@ -22,7 +22,7 @@ class RudderDestinationPlugin: RSDestinationPlugin {
     
     let type = PluginType.destination
 //    let key: String = Constants.integrationName.rawValue
-    let timeline = RSTimeline()
+    let timeline = RSController()
     var analytics: RSClient? {
         didSet {
             initialSetup()

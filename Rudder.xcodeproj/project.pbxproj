@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED157C3727CE0EEA00F22202 /* RSmacOSLifecycleEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED157C3627CE0EEA00F22202 /* RSmacOSLifecycleEvents.swift */; };
+		ED157C3927CE1C0800F22202 /* RSUserIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED157C3827CE1C0800F22202 /* RSUserIdPlugin.swift */; };
 		ED277FA127421B06002A8FEA /* RSECommerceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FA027421B06002A8FEA /* RSECommerceConstants.swift */; };
 		ED277FF92744F199002A8FEA /* RSAnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FF82744F199002A8FEA /* RSAnyCodable.swift */; };
 		ED277FFB2744F265002A8FEA /* RSAnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */; };
@@ -23,13 +25,13 @@
 		ED3D229C27A3F0C100EC8366 /* RSiOSDelegation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D226F27A3F0C100EC8366 /* RSiOSDelegation.swift */; };
 		ED3D229D27A3F0C100EC8366 /* RSiOSLifecycleMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227027A3F0C100EC8366 /* RSiOSLifecycleMonitor.swift */; };
 		ED3D229E27A3F0C100EC8366 /* RSmacOSLifecycleMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227227A3F0C100EC8366 /* RSmacOSLifecycleMonitor.swift */; };
-		ED3D22A427A3F0C100EC8366 /* RSStartupQueuePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227A27A3F0C100EC8366 /* RSStartupQueuePlugin.swift */; };
+		ED3D22A427A3F0C100EC8366 /* RSReplayQueuePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227A27A3F0C100EC8366 /* RSReplayQueuePlugin.swift */; };
 		ED3D22A527A3F0C100EC8366 /* RudderDestinationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227B27A3F0C100EC8366 /* RudderDestinationPlugin.swift */; };
 		ED3D22A627A3F0C100EC8366 /* RSContextPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227C27A3F0C100EC8366 /* RSContextPlugin.swift */; };
 		ED3D22A727A3F0C100EC8366 /* RSDeviceTokenPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227D27A3F0C100EC8366 /* RSDeviceTokenPlugin.swift */; };
-		ED3D22A827A3F0C100EC8366 /* RSTimeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227E27A3F0C100EC8366 /* RSTimeline.swift */; };
+		ED3D22A827A3F0C100EC8366 /* RSController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227E27A3F0C100EC8366 /* RSController.swift */; };
 		ED3D22AB27A3F0C100EC8366 /* RSPlugins.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D228127A3F0C100EC8366 /* RSPlugins.swift */; };
-		ED3D22AC27A3F0C100EC8366 /* RSClient+Startup.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D228227A3F0C100EC8366 /* RSClient+Startup.swift */; };
+		ED3D22AC27A3F0C100EC8366 /* RSClient+Plugins.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D228227A3F0C100EC8366 /* RSClient+Plugins.swift */; };
 		ED3D22AF27A3F0C100EC8366 /* RSQueueTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D228627A3F0C100EC8366 /* RSQueueTimer.swift */; };
 		ED3D22BA27A3F0C100EC8366 /* RSMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D229227A3F0C100EC8366 /* RSMessage.swift */; };
 		ED3D22BE27A45B6500EC8366 /* RSTypeAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D22BD27A45B6500EC8366 /* RSTypeAlias.swift */; };
@@ -78,6 +80,8 @@
 		06CABB842630C3CA0097BEFF /* Rudder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rudder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		06CABC2E2630C6660097BEFF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/iOSSupport/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		06CABC322630C6B00097BEFF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		ED157C3627CE0EEA00F22202 /* RSmacOSLifecycleEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSmacOSLifecycleEvents.swift; sourceTree = "<group>"; };
+		ED157C3827CE1C0800F22202 /* RSUserIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSUserIdPlugin.swift; sourceTree = "<group>"; };
 		ED277FA027421B06002A8FEA /* RSECommerceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSECommerceConstants.swift; sourceTree = "<group>"; };
 		ED277FF82744F199002A8FEA /* RSAnyCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAnyCodable.swift; sourceTree = "<group>"; };
 		ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyDecodable.swift; sourceTree = "<group>"; };
@@ -99,13 +103,13 @@
 		ED3D227727A3F0C100EC8366 /* RSLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSLogger.swift; sourceTree = "<group>"; };
 		ED3D227827A3F0C100EC8366 /* RSLoggingPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSLoggingPlugin.swift; sourceTree = "<group>"; };
 		ED3D227927A3F0C100EC8366 /* RSConsoleLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSConsoleLogger.swift; sourceTree = "<group>"; };
-		ED3D227A27A3F0C100EC8366 /* RSStartupQueuePlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSStartupQueuePlugin.swift; sourceTree = "<group>"; };
+		ED3D227A27A3F0C100EC8366 /* RSReplayQueuePlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSReplayQueuePlugin.swift; sourceTree = "<group>"; };
 		ED3D227B27A3F0C100EC8366 /* RudderDestinationPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RudderDestinationPlugin.swift; sourceTree = "<group>"; };
 		ED3D227C27A3F0C100EC8366 /* RSContextPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSContextPlugin.swift; sourceTree = "<group>"; };
 		ED3D227D27A3F0C100EC8366 /* RSDeviceTokenPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSDeviceTokenPlugin.swift; sourceTree = "<group>"; };
-		ED3D227E27A3F0C100EC8366 /* RSTimeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSTimeline.swift; sourceTree = "<group>"; };
+		ED3D227E27A3F0C100EC8366 /* RSController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSController.swift; sourceTree = "<group>"; };
 		ED3D228127A3F0C100EC8366 /* RSPlugins.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSPlugins.swift; sourceTree = "<group>"; };
-		ED3D228227A3F0C100EC8366 /* RSClient+Startup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RSClient+Startup.swift"; sourceTree = "<group>"; };
+		ED3D228227A3F0C100EC8366 /* RSClient+Plugins.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RSClient+Plugins.swift"; sourceTree = "<group>"; };
 		ED3D228627A3F0C100EC8366 /* RSQueueTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSQueueTimer.swift; sourceTree = "<group>"; };
 		ED3D229227A3F0C100EC8366 /* RSMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSMessage.swift; sourceTree = "<group>"; };
 		ED3D22BD27A45B6500EC8366 /* RSTypeAlias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSTypeAlias.swift; sourceTree = "<group>"; };
@@ -247,7 +251,8 @@
 				ED3D227D27A3F0C100EC8366 /* RSDeviceTokenPlugin.swift */,
 				ED3D227827A3F0C100EC8366 /* RSLoggingPlugin.swift */,
 				ED3D228127A3F0C100EC8366 /* RSPlugins.swift */,
-				ED3D227A27A3F0C100EC8366 /* RSStartupQueuePlugin.swift */,
+				ED3D227A27A3F0C100EC8366 /* RSReplayQueuePlugin.swift */,
+				ED157C3827CE1C0800F22202 /* RSUserIdPlugin.swift */,
 				ED3D227B27A3F0C100EC8366 /* RudderDestinationPlugin.swift */,
 			);
 			path = Plugins;
@@ -297,6 +302,7 @@
 			isa = PBXGroup;
 			children = (
 				ED3D227227A3F0C100EC8366 /* RSmacOSLifecycleMonitor.swift */,
+				ED157C3627CE0EEA00F22202 /* RSmacOSLifecycleEvents.swift */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -476,10 +482,10 @@
 			children = (
 				ED3D226327A3F0C100EC8366 /* Plugins */,
 				ED3D226227A3F0C100EC8366 /* RSClient.swift */,
-				ED3D228227A3F0C100EC8366 /* RSClient+Startup.swift */,
+				ED3D228227A3F0C100EC8366 /* RSClient+Plugins.swift */,
 				EDA7EF402739119600E73142 /* RSDatabaseManager.swift */,
 				EDA7EF382739119600E73142 /* RSMessageHandler.swift */,
-				ED3D227E27A3F0C100EC8366 /* RSTimeline.swift */,
+				ED3D227E27A3F0C100EC8366 /* RSController.swift */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -686,20 +692,22 @@
 				EDA7EF852739119600E73142 /* RSConstants.swift in Sources */,
 				EDA7EF882739119600E73142 /* UserDefaults+Ext.swift in Sources */,
 				EDD3AA3627C659C80048E61E /* RSAtomic.swift in Sources */,
-				ED3D22A427A3F0C100EC8366 /* RSStartupQueuePlugin.swift in Sources */,
+				ED3D22A427A3F0C100EC8366 /* RSReplayQueuePlugin.swift in Sources */,
 				EDA7EF962739119600E73142 /* RSOption.swift in Sources */,
 				ED277FFB2744F265002A8FEA /* RSAnyDecodable.swift in Sources */,
 				ED277FA127421B06002A8FEA /* RSECommerceConstants.swift in Sources */,
+				ED157C3727CE0EEA00F22202 /* RSmacOSLifecycleEvents.swift in Sources */,
 				EDA7EF922739119600E73142 /* RSConfig.swift in Sources */,
 				EDD3AA1327C64B430048E61E /* RSKeyPath.swift in Sources */,
 				EDA7EF752739119600E73142 /* API.swift in Sources */,
 				EDA7EF812739119600E73142 /* RSDatabaseManager.swift in Sources */,
 				EDA7EF992739119600E73142 /* RSServerConfig.swift in Sources */,
 				ED277FF92744F199002A8FEA /* RSAnyCodable.swift in Sources */,
+				ED157C3927CE1C0800F22202 /* RSUserIdPlugin.swift in Sources */,
 				ED3D229E27A3F0C100EC8366 /* RSmacOSLifecycleMonitor.swift in Sources */,
 				ED3D229D27A3F0C100EC8366 /* RSiOSLifecycleMonitor.swift in Sources */,
 				EDD3AA4C27C8DABD0048E61E /* RSConsoleLogger.swift in Sources */,
-				ED3D22A827A3F0C100EC8366 /* RSTimeline.swift in Sources */,
+				ED3D22A827A3F0C100EC8366 /* RSController.swift in Sources */,
 				ED3D22A727A3F0C100EC8366 /* RSDeviceTokenPlugin.swift in Sources */,
 				EDD3AA4A27C8DAAA0048E61E /* RSLoggingPlugin.swift in Sources */,
 				EDA7EF8E2739119600E73142 /* RSATT.swift in Sources */,
@@ -713,7 +721,7 @@
 				EDA7EF9B2739119600E73142 /* RSDestinationDefinition.swift in Sources */,
 				ED3D229427A3F0C100EC8366 /* RSClient.swift in Sources */,
 				ED3D229627A3F0C100EC8366 /* AppleUtils.swift in Sources */,
-				ED3D22AC27A3F0C100EC8366 /* RSClient+Startup.swift in Sources */,
+				ED3D22AC27A3F0C100EC8366 /* RSClient+Plugins.swift in Sources */,
 				ED3D22A627A3F0C100EC8366 /* RSContextPlugin.swift in Sources */,
 				EDA7EF762739119600E73142 /* RSServiceManager.swift in Sources */,
 				EDA7EF912739119600E73142 /* RSDBMessage.swift in Sources */,
