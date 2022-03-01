@@ -26,7 +26,7 @@ internal enum ConnectionStatus {
     case unknown
 }
 
-internal class VendorSystem {
+internal class Vendor {
     var manufacturer: String {
         return "unknown"
     }
@@ -71,15 +71,15 @@ internal class VendorSystem {
         return "unavailable"
     }
     
-    static var current: VendorSystem = {
+    static var current: Vendor = {
         #if os(iOS) || os(tvOS) || targetEnvironment(macCatalyst)
-        return iOSVendorSystem()
+        return PhoneVendor()
         #elseif os(macOS)
-        return MacOSVendorSystem()
+        return MacVendor()
         #elseif os(watchOS)
-        return watchOSVendorSystem()
+        return WatchVendor()
         #else
-        return VendorSystem()
+        return Vendor()
         #endif
     }()
 }

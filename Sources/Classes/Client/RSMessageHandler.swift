@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 class RSMessageHandler {
     private let databaseManager: RSDatabaseManager    

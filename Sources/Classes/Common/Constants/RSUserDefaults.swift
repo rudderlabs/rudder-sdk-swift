@@ -6,8 +6,6 @@
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
 //
 
-import UIKit
-
 class RSUserDefaults {
     static func getLastUpdatedTime() -> Int? {
         return UserDefaults.standard.lastUpdateTime

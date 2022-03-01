@@ -11,15 +11,13 @@ import Foundation
 // MARK: - iOS, tvOS, Catalyst
 
 #if os(iOS) || os(tvOS) || targetEnvironment(macCatalyst)
-
 import SystemConfiguration
 import UIKit
 #if !os(tvOS)
 import WebKit
 #endif
 
-// swiftlint:disable type_name
-internal class iOSVendorSystem: VendorSystem {
+internal class PhoneVendor: Vendor {
     private let device = UIDevice.current
     
     override var manufacturer: String {
@@ -93,8 +91,7 @@ internal class iOSVendorSystem: VendorSystem {
 import WatchKit
 import Network
 
-// swiftlint:disable type_name
-internal class watchOSVendorSystem: VendorSystem {
+internal class WatchVendor: Vendor {
     private let device = WKInterfaceDevice.current()
     
     override var manufacturer: String {
@@ -176,7 +173,7 @@ internal class watchOSVendorSystem: VendorSystem {
 import Cocoa
 import WebKit
 
-internal class MacOSVendorSystem: VendorSystem {
+internal class MacVendor: Vendor {
     private let device = ProcessInfo.processInfo
     
     override var manufacturer: String {
@@ -214,28 +211,15 @@ internal class MacOSVendorSystem: VendorSystem {
     
     override var screenSize: ScreenSize {
         let screenSize = NSScreen.main?.frame.size ?? CGSize(width: 0, height: 0)
-        return ScreenSize(width: Double(screenSize.width), height: Double(screenSize.height))
+        return ScreenSize(width: Double(screenSize.width), height: Double(screenSize.height), density: NSScreen.main?.backingScaleFactor ?? 0)
     }
-    
-    override var userAgent: String? {
-        var userAgent: String?
-        if Thread.isMainThread {
-            userAgent = WKWebView().value(forKey: "userAgent") as? String
-        } else {
-            DispatchQueue.main.sync {
-              userAgent = WKWebView().value(forKey: "userAgent") as? String
-            }
-        }
         
-        return userAgent
-    }
-    
     override var connection: ConnectionStatus {
         return connectionStatus()
     }
     
     override var requiredPlugins: [PlatformPlugin] {
-        return [macOSLifecycleMonitor(), DeviceToken()]
+        return [MacOSLifecycleMonitor(), RSDeviceTokenPlugin()]
     }
     
     private func deviceModel() -> String {
@@ -249,12 +233,12 @@ internal class MacOSVendorSystem: VendorSystem {
         return identifier
     }
 
-    private func macAddress(bsd : String) -> String? {
+    private func macAddress(bsd: String) -> String? {
         let MAC_ADDRESS_LENGTH = 6
         let separator = ":"
 
-        var length : size_t = 0
-        var buffer : [CChar]
+        var length: size_t = 0
+        var buffer: [CChar]
 
         let bsdIndex = Int32(if_nametoindex(bsd))
         if bsdIndex == 0 {
@@ -264,7 +248,7 @@ internal class MacOSVendorSystem: VendorSystem {
         var managementInfoBase = [CTL_NET, AF_ROUTE, 0, AF_LINK, NET_RT_IFLIST, bsdIndex]
 
         if sysctl(&managementInfoBase, 6, nil, &length, nil, 0) < 0 {
-            return nil;
+            return nil
         }
 
         buffer = [CChar](unsafeUninitializedCapacity: length, initializingWith: {buffer, initializedCount in
@@ -273,7 +257,7 @@ internal class MacOSVendorSystem: VendorSystem {
         })
 
         if sysctl(&managementInfoBase, 6, &buffer, &length, nil, 0) < 0 {
-            return nil;
+            return nil
         }
 
         let infoData = Data(bytes: buffer, count: length)
@@ -282,7 +266,7 @@ internal class MacOSVendorSystem: VendorSystem {
         let lower = rangeOfToken.upperBound
         let upper = lower + MAC_ADDRESS_LENGTH
         let macAddressData = infoData[lower..<upper]
-        let addressBytes = macAddressData.map { String(format:"%02x", $0) }
+        let addressBytes = macAddressData.map { String(format: "%02x", $0) }
         return addressBytes.joined(separator: separator)
     }
 }
@@ -335,7 +319,7 @@ internal func connectionStatus() -> ConnectionStatus {
        return .unknown
     }
 
-    var flags : SCNetworkReachabilityFlags = []
+    var flags: SCNetworkReachabilityFlags = []
     if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
         return .unknown
     }

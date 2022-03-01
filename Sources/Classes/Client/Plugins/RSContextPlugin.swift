@@ -13,7 +13,7 @@ class RSContextPlugin: PlatformPlugin {
     var analytics: RSClient?
     
     internal var staticContext = staticContextData()
-    internal static var device = VendorSystem.current
+    internal static var device = Vendor.current
     
     func execute<T: RSMessage>(event: T?) -> T? {
         guard var workingEvent = event else { return event }        

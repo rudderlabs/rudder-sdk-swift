@@ -9,7 +9,7 @@
 #if os(macOS)
 import Cocoa
 
-public protocol macOSLifecycle {
+public protocol RSmacOSLifecycle {
     func applicationDidResignActive()
     func application(didFinishLaunchingWithOptions launchOptions: [String: Any]?)
     func applicationWillBecomeActive()
@@ -26,7 +26,7 @@ public protocol macOSLifecycle {
     func applicationDidChangeScreenParameters()
 }
 
-public extension macOSLifecycle {
+public extension RSmacOSLifecycle {
     func applicationDidResignActive() { }
     func application(didFinishLaunchingWithOptions launchOptions: [String: Any]?) { }
     func applicationWillBecomeActive() { }
@@ -44,11 +44,11 @@ public extension macOSLifecycle {
 }
 
 // swiftlint:disable type_name
-class macOSLifecycleMonitor: PlatformPlugin {
-    static var specificName = "Segment_macOSLifecycleMonitor"
+class RSmacOSLifecycleMonitor: PlatformPlugin {
+    static var specificName = "Rudder_macOSLifecycleMonitor"
     let type = PluginType.utility
     let name = specificName
-    var analytics: Analytics?
+    var analytics: RSClient?
     
     private var application: NSApplication
     private var appNotifications: [NSNotification.Name] =
@@ -119,7 +119,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationWillBecomeActive(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillBecomeActive()
             }
         }
@@ -127,7 +127,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationDidFinishLaunching(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 let options = notification.userInfo as? [String: Any] ?? nil
                 validExt.application(didFinishLaunchingWithOptions: options)
             }
@@ -136,7 +136,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func didResignActive(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidResignActive()
             }
         }
@@ -144,7 +144,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationDidBecomeActive(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidBecomeActive()
             }
         }
@@ -152,7 +152,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationDidHide(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidHide()
             }
         }
@@ -160,7 +160,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationDidUnhide(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidUnhide()
             }
         }
@@ -168,7 +168,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
 
     func applicationDidUpdate(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidUpdate()
             }
         }
@@ -176,7 +176,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationWillHide(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillHide()
             }
         }
@@ -184,7 +184,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationWillFinishLaunching(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillFinishLaunching()
             }
         }
@@ -192,7 +192,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationWillResignActive(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillResignActive()
             }
         }
@@ -200,7 +200,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationWillUnhide(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillUnhide()
             }
         }
@@ -208,7 +208,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationWillUpdate(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillUpdate()
             }
         }
@@ -216,7 +216,7 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationWillTerminate(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillTerminate()
             }
         }
@@ -224,14 +224,14 @@ class macOSLifecycleMonitor: PlatformPlugin {
     
     func applicationDidChangeScreenParameters(notification: NSNotification) {
         analytics?.apply { (ext) in
-            if let validExt = ext as? macOSLifecycle {
+            if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidChangeScreenParameters()
             }
         }
     }
 }
 
-extension SegmentDestination: macOSLifecycle {
+extension RudderDestinationPlugin: RSmacOSLifecycle {
     public func applicationDidBecomeActive() {
         enterForeground()
     }

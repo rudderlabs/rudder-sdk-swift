@@ -11,9 +11,6 @@ import Foundation
 extension RSClient {
         
     internal func platformStartup() {
-//        add(plugin: SegmentLog())
-//        add(plugin: StartupQueue())
-        
         let logPlugin = RSLoggingPlugin()
         logPlugin.analytics = self
         logPlugin.loggingEnabled(config.logLevel != .none)
@@ -32,9 +29,6 @@ extension RSClient {
             }
         }
         
-        // plugins will receive any settings we currently have as they are added.
-        // ... but lets go check if we have new stuff ....
-        // start checking periodically for settings changes from segment.com
         setupSettingsCheck()
     }
     
@@ -45,7 +39,7 @@ extension RSClient {
         // this must come first.
         plugins.append(RSContextPlugin())
         
-        plugins += VendorSystem.current.requiredPlugins
+        plugins += Vendor.current.requiredPlugins
 
         // setup lifecycle if desired
         if config.trackLifecycleEvents {
@@ -99,7 +93,7 @@ extension RSClient {
         // now set up a timer to do it every 24 hrs.
         // mac apps change focus a lot more than iOS apps, so this
         // seems more appropriate here.
-        QueueTimer.schedule(interval: .days(1), queue: .main) {
+        RSQueueTimer.schedule(interval: .days(1), queue: .main) {
             self.checkSettings()
         }
     }
