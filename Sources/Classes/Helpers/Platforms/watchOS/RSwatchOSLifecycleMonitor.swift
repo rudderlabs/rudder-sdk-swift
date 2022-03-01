@@ -29,7 +29,7 @@ public extension RSwatchOSLifecycle {
 
 class RSwatchOSLifecycleMonitor: PlatformPlugin {
     var type = PluginType.utility
-    var analytics: RSClient?
+    var controller: RSClient?
     var wasBackgrounded: Bool = false
     
     private var watchExtension = WKExtension.shared()
@@ -71,7 +71,7 @@ class RSwatchOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationDidFinishLaunching(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        controller?.apply { (ext) in
             if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationDidFinishLaunching(watchExtension: watchExtension)
             }
@@ -83,7 +83,7 @@ class RSwatchOSLifecycleMonitor: PlatformPlugin {
         // from iOS, so ignore until we've been backgrounded at least once.
         if wasBackgrounded == false { return }
         
-        analytics?.apply { (ext) in
+        controller?.apply { (ext) in
             if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationWillEnterForeground(watchExtension: watchExtension)
             }
@@ -94,7 +94,7 @@ class RSwatchOSLifecycleMonitor: PlatformPlugin {
         // make sure to denote that we were backgrounded.
         wasBackgrounded = true
         
-        analytics?.apply { (ext) in
+        controller?.apply { (ext) in
             if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationDidEnterBackground(watchExtension: watchExtension)
             }
@@ -102,7 +102,7 @@ class RSwatchOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationDidBecomeActive(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        controller?.apply { (ext) in
             if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationDidBecomeActive(watchExtension: watchExtension)
             }
@@ -110,7 +110,7 @@ class RSwatchOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationWillResignActive(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        controller?.apply { (ext) in
             if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationWillResignActive(watchExtension: watchExtension)
             }

@@ -48,7 +48,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     static var specificName = "Rudder_macOSLifecycleMonitor"
     let type = PluginType.utility
     let name = specificName
-    var analytics: RSClient?
+    var client: RSClient?
     
     private var application: NSApplication
     private var appNotifications: [NSNotification.Name] =
@@ -118,7 +118,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationWillBecomeActive(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillBecomeActive()
             }
@@ -126,7 +126,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationDidFinishLaunching(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 let options = notification.userInfo as? [String: Any] ?? nil
                 validExt.application(didFinishLaunchingWithOptions: options)
@@ -135,7 +135,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func didResignActive(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidResignActive()
             }
@@ -143,7 +143,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationDidBecomeActive(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidBecomeActive()
             }
@@ -151,7 +151,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationDidHide(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidHide()
             }
@@ -159,7 +159,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationDidUnhide(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidUnhide()
             }
@@ -167,7 +167,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
 
     func applicationDidUpdate(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidUpdate()
             }
@@ -175,7 +175,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationWillHide(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillHide()
             }
@@ -183,7 +183,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationWillFinishLaunching(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillFinishLaunching()
             }
@@ -191,7 +191,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationWillResignActive(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillResignActive()
             }
@@ -199,7 +199,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationWillUnhide(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillUnhide()
             }
@@ -207,7 +207,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationWillUpdate(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillUpdate()
             }
@@ -215,7 +215,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationWillTerminate(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationWillTerminate()
             }
@@ -223,7 +223,7 @@ class RSmacOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationDidChangeScreenParameters(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSmacOSLifecycle {
                 validExt.applicationDidChangeScreenParameters()
             }

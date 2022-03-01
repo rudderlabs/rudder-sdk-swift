@@ -10,7 +10,7 @@ import Foundation
 
 class RSDeviceTokenPlugin: PlatformPlugin {
     let type = PluginType.before
-    var analytics: RSClient?
+    var client: RSClient?
     
     var token: String?
 

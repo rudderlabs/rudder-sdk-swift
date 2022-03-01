@@ -37,7 +37,7 @@ extension RSiOSLifecycle {
 
 class RSiOSLifecycleMonitor: PlatformPlugin {
     let type = PluginType.utility
-    var analytics: RSClient?
+    var client: RSClient?
     
     private var application: UIApplication = UIApplication.shared
     private var appNotifications: [NSNotification.Name] = [UIApplication.didEnterBackgroundNotification,
@@ -89,7 +89,7 @@ class RSiOSLifecycleMonitor: PlatformPlugin {
     }
     
     func applicationWillEnterForeground(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationWillEnterForeground(application: application)
             }
@@ -97,7 +97,7 @@ class RSiOSLifecycleMonitor: PlatformPlugin {
     }
     
     func didEnterBackground(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationDidEnterBackground(application: application)
             }
@@ -105,7 +105,7 @@ class RSiOSLifecycleMonitor: PlatformPlugin {
     }
     
     func didFinishLaunching(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSiOSLifecycle {
                 let options = notification.userInfo as? [UIApplication.LaunchOptionsKey: Any] ?? nil
                 validExt.application(application, didFinishLaunchingWithOptions: options)
@@ -114,7 +114,7 @@ class RSiOSLifecycleMonitor: PlatformPlugin {
     }
 
     func didBecomeActive(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationDidBecomeActive(application: application)
             }
@@ -122,7 +122,7 @@ class RSiOSLifecycleMonitor: PlatformPlugin {
     }
     
     func willResignActive(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationWillResignActive(application: application)
             }
@@ -130,7 +130,7 @@ class RSiOSLifecycleMonitor: PlatformPlugin {
     }
     
     func didReceiveMemoryWarning(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationDidReceiveMemoryWarning(application: application)
             }
@@ -138,7 +138,7 @@ class RSiOSLifecycleMonitor: PlatformPlugin {
     }
     
     func willTerminate(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationWillTerminate(application: application)
             }
@@ -146,7 +146,7 @@ class RSiOSLifecycleMonitor: PlatformPlugin {
     }
     
     func significantTimeChange(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationSignificantTimeChange(application: application)
             }
@@ -154,7 +154,7 @@ class RSiOSLifecycleMonitor: PlatformPlugin {
     }
     
     func backgroundRefreshDidChange(notification: NSNotification) {
-        analytics?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSiOSLifecycle {
                 validExt.applicationBackgroundRefreshDidChange(application: application,
                                                                refreshStatus: application.backgroundRefreshStatus)

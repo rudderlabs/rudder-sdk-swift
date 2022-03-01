@@ -10,7 +10,7 @@ import Foundation
 
 class RSContextPlugin: PlatformPlugin {
     let type: PluginType = .before
-    var analytics: RSClient?
+    var client: RSClient?
     
     internal var staticContext = staticContextData()
     internal static var device = Vendor.current

@@ -13,7 +13,7 @@ import Foundation
 internal class RSLoggingPlugin: RSUtilityPlugin {
     var filterKind = RSLogLevel.debug
     
-    var analytics: RSClient? {
+    var client: RSClient? {
         didSet {
             addTargets()
         }
@@ -40,9 +40,9 @@ internal class RSLoggingPlugin: RSUtilityPlugin {
     
     required init() { }
     
-    func configure(analytics: RSClient) {
-        self.analytics = analytics
-        RSLoggingPlugin.sharedAnalytics = analytics
+    func configure(client: RSClient) {
+        self.client = client
+        RSLoggingPlugin.sharedAnalytics = client
         addTargets()
     }
     

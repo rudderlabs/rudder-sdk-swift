@@ -15,7 +15,7 @@ internal class RSReplayQueuePlugin: RSPlugin {
     
     let type: PluginType = .before
     
-    var analytics: RSClient?
+    var client: RSClient?
     
     let syncQueue = DispatchQueue(label: "replayQueue.rudder.com")
     var queuedEvents = [RSMessage]()
@@ -45,7 +45,7 @@ extension RSReplayQueuePlugin {
     internal func replayEvents() {
         syncQueue.sync {
             for event in queuedEvents {
-                analytics?.process(event: event)
+                client?.process(event: event)
             }
             queuedEvents.removeAll()
         }

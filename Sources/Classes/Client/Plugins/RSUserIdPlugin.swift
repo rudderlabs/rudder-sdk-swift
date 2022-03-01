@@ -10,7 +10,7 @@ import Foundation
 
 class RSUserIdPlugin: PlatformPlugin {
     let type = PluginType.before
-    var analytics: RSClient?
+    var client: RSClient?
     
     var userId: String?
 

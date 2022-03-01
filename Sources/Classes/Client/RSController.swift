@@ -54,7 +54,7 @@ public class RSController {
 internal class Mediator {
     internal func add(plugin: RSPlugin) {
         plugins.append(plugin)
-        if let option = plugin.analytics?.serverConfig {
+        if let option = plugin.client?.serverConfig {
             plugin.update(serverConfig: option, type: .initial)
         }
     }
@@ -204,7 +204,7 @@ extension RSDestinationPlugin {
         }
         
         var hasSettings = false        
-        if let destinations = analytics?.serverConfig?.destinations {
+        if let destinations = client?.serverConfig?.destinations {
             if let destination = destinations.first(where: { $0.destinationDefinition?.displayName == self.key }), destination.enabled {
                 hasSettings = true
             }
@@ -221,8 +221,8 @@ extension RSDestinationPlugin {
         
         if isDestinationEnabled(event: incomingEvent) {
             // apply .before and .enrichment types first ...
-            let beforeResult = timeline.applyPlugins(type: .before, event: incomingEvent)
-            let enrichmentResult = timeline.applyPlugins(type: .enrichment, event: beforeResult)
+            let beforeResult = controller.applyPlugins(type: .before, event: incomingEvent)
+            let enrichmentResult = controller.applyPlugins(type: .enrichment, event: beforeResult)
             
             // now we execute any overrides we may have made.  basically, the idea is to take an
             // incoming event, like identify, and map it to whatever is appropriate for this destination.
@@ -243,7 +243,7 @@ extension RSDestinationPlugin {
             }
             
             // apply .after plugins ...
-            result = timeline.applyPlugins(type: .after, event: destinationResult)
+            result = controller.applyPlugins(type: .after, event: destinationResult)
         }
         
         return result

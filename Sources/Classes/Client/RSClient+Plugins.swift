@@ -12,16 +12,16 @@ extension RSClient {
         
     internal func addPlugins() {
         let replayQueuePlugin = RSReplayQueuePlugin()
-        replayQueuePlugin.analytics = self
+        replayQueuePlugin.client = self
         add(plugin: replayQueuePlugin)
         
         let logPlugin = RSLoggingPlugin()
-        logPlugin.analytics = self
+        logPlugin.client = self
         logPlugin.loggingEnabled(config.logLevel != .none)
         add(plugin: logPlugin)
         
         let segmentDestination = RudderDestinationPlugin()
-        segmentDestination.analytics = self
+        segmentDestination.client = self
         add(plugin: segmentDestination)
         
         if let platformPlugins = platformPlugins() {

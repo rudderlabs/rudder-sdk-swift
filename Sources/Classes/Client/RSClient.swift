@@ -12,7 +12,7 @@ import Foundation
 @objc
 open class RSClient: NSObject {
     internal var config: RSConfig
-    public var timeline: RSController
+    public var controller: RSController
     internal var serverConfig: RSServerConfig?
     internal var databaseManager: RSDatabaseManager
     internal var error: NSError?
@@ -25,7 +25,7 @@ open class RSClient: NSObject {
         self.config = config
         serverConfig = RSUserDefaults.getServerConfig()
         databaseManager = RSDatabaseManager()
-        timeline = RSController()
+        controller = RSController()
         
         super.init()
         addPlugins()
@@ -136,15 +136,15 @@ open class RSClient: NSObject {
     internal func process(event: RSMessage) {
         switch event {
         case let e as TrackMessage:
-            timeline.process(incomingEvent: e)
+            controller.process(incomingEvent: e)
         case let e as IdentifyMessage:
-            timeline.process(incomingEvent: e)
+            controller.process(incomingEvent: e)
         case let e as ScreenMessage:
-            timeline.process(incomingEvent: e)
+            controller.process(incomingEvent: e)
         case let e as GroupMessage:
-            timeline.process(incomingEvent: e)
+            controller.process(incomingEvent: e)
         case let e as AliasMessage:
-            timeline.process(incomingEvent: e)
+            controller.process(incomingEvent: e)
         default:
             break
         }
@@ -231,7 +231,7 @@ extension RSClient {
      
      */
     func apply(closure: (RSPlugin) -> Void) {
-        timeline.apply(closure)
+        controller.apply(closure)
     }
     
     /**
@@ -243,8 +243,8 @@ extension RSClient {
      */
     @discardableResult
     func add(plugin: RSPlugin) -> RSPlugin {
-        plugin.configure(analytics: self)
-        timeline.add(plugin: plugin)
+        plugin.configure(client: self)
+        controller.add(plugin: plugin)
         return plugin
     }
     
@@ -254,11 +254,11 @@ extension RSClient {
      - Parameter pluginName: An plugin name.
      */
     func remove(plugin: RSPlugin) {
-        timeline.remove(plugin: plugin)
+        controller.remove(plugin: plugin)
     }
     
     func find<T: RSPlugin>(pluginType: T.Type) -> T? {
-        return timeline.find(pluginType: pluginType)
+        return controller.find(pluginType: pluginType)
     }
 }
 

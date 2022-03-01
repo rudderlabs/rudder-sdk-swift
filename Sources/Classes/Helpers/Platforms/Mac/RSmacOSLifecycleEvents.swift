@@ -11,10 +11,10 @@ import Foundation
 
 class RSmacOSLifecycleEvents: PlatformPlugin, RSmacOSLifecycle {
     let type = PluginType.before
-    var analytics: RSClient?
+    var client: RSClient?
 
     func application(didFinishLaunchingWithOptions launchOptions: [String: Any]?) {
-        if analytics?.config.trackLifecycleEvents == false {
+        if client?.config.trackLifecycleEvents == false {
             return
         }
         
@@ -25,12 +25,12 @@ class RSmacOSLifecycleEvents: PlatformPlugin, RSmacOSLifecycle {
         let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
         
         if previousBuild != nil {
-            analytics?.track("Application Installed", properties: [
+            client?.track("Application Installed", properties: [
                 "version": currentVersion ?? "",
                 "build": currentBuild ?? ""
             ])
         } else if currentBuild != previousBuild {
-            analytics?.track("Application Updated", properties: [
+            client?.track("Application Updated", properties: [
                 "previous_version": previousVersion ?? "",
                 "previous_build": previousBuild ?? "",
                 "version": currentVersion ?? "",
@@ -38,7 +38,7 @@ class RSmacOSLifecycleEvents: PlatformPlugin, RSmacOSLifecycle {
             ])
         }
         
-        analytics?.track("Application Opened", properties: [
+        client?.track("Application Opened", properties: [
             "from_background": false,
             "version": currentVersion ?? "",
             "build": currentBuild ?? ""

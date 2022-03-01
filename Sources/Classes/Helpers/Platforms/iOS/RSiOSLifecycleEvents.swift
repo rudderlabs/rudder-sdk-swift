@@ -14,10 +14,10 @@ import UIKit
 
 class RSiOSLifecycleEvents: PlatformPlugin, RSiOSLifecycle {
     let type = PluginType.before
-    var analytics: RSClient?
+    var client: RSClient?
     
     func application(_ application: UIApplication?, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
-        if analytics?.config.trackLifecycleEvents == false {
+        if client?.config.trackLifecycleEvents == false {
             return
         }
         
@@ -28,12 +28,12 @@ class RSiOSLifecycleEvents: PlatformPlugin, RSiOSLifecycle {
         let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
         
         if previousBuild != nil {
-            analytics?.track("Application Installed", properties: [
+            client?.track("Application Installed", properties: [
                 "version": currentVersion ?? "",
                 "build": currentBuild ?? ""
             ])
         } else if currentBuild != previousBuild {
-            analytics?.track("Application Updated", properties: [
+            client?.track("Application Updated", properties: [
                 "previous_version": previousVersion ?? "",
                 "previous_build": previousBuild ?? "",
                 "version": currentVersion ?? "",
@@ -41,7 +41,7 @@ class RSiOSLifecycleEvents: PlatformPlugin, RSiOSLifecycle {
             ])
         }
         
-        analytics?.track("Application Opened", properties: [
+        client?.track("Application Opened", properties: [
             "from_background": false,
             "version": currentVersion ?? "",
             "build": currentBuild ?? "",
@@ -54,14 +54,14 @@ class RSiOSLifecycleEvents: PlatformPlugin, RSiOSLifecycle {
     }
     
     func applicationWillEnterForeground(application: UIApplication?) {
-        if analytics?.config.trackLifecycleEvents == false {
+        if client?.config.trackLifecycleEvents == false {
             return
         }
         
         let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
         
-        analytics?.track("Application Opened", properties: [
+        client?.track("Application Opened", properties: [
             "from_background": true,
             "version": currentVersion ?? "",
             "build": currentBuild ?? ""
@@ -69,11 +69,11 @@ class RSiOSLifecycleEvents: PlatformPlugin, RSiOSLifecycle {
     }
     
     func applicationDidEnterBackground(application: UIApplication?) {
-        if analytics?.config.trackLifecycleEvents == false {
+        if client?.config.trackLifecycleEvents == false {
             return
         }
         
-        analytics?.track("Application Backgrounded")
+        client?.track("Application Backgrounded")
     }
 }
 

@@ -8,22 +8,13 @@
 
 import Foundation
 
-#if os(Linux)
-// Whoever is doing swift/linux development over there
-// decided that it'd be a good idea to split out a TON
-// of stuff into another framework that NO OTHER PLATFORM
-// has; I guess to be special.  :man-shrugging:
-import FoundationNetworking
-#endif
-
 class RudderDestinationPlugin: RSDestinationPlugin {
     var key: String = ""
     
-    
     let type = PluginType.destination
 //    let key: String = Constants.integrationName.rawValue
-    let timeline = RSController()
-    var analytics: RSClient? {
+    let controller = RSController()
+    var client: RSClient? {
         didSet {
             initialSetup()
         }
@@ -36,10 +27,10 @@ class RudderDestinationPlugin: RSDestinationPlugin {
     private var serviceManager: RSServiceManager?
     
     func initialSetup() {
-        guard let analytics = self.analytics else { return }
+        guard let client = self.client else { return }
         messageHandler = RSMessageHandler()
-        serviceManager = RSServiceManager(client: analytics)
-        flushTimer = RSQueueTimer(interval: TimeInterval(analytics.config.sleepTimeOut)) {
+        serviceManager = RSServiceManager(client: client)
+        flushTimer = RSQueueTimer(interval: TimeInterval(client.config.sleepTimeOut)) {
             self.flushMessage()
         }
     }
@@ -75,8 +66,8 @@ class RudderDestinationPlugin: RSDestinationPlugin {
 // MARK: - Utility methods
 extension RudderDestinationPlugin {
     internal func configureCloudDestinations<T: RSMessage>(event: T) -> T {
-        guard let integrationSettings = analytics?.serverConfig else { return event }
-        guard let plugins = analytics?.timeline.plugins[.destination]?.plugins as? [RSDestinationPlugin] else { return event }
+        guard let integrationSettings = client?.serverConfig else { return event }
+        guard let plugins = client?.controller.plugins[.destination]?.plugins as? [RSDestinationPlugin] else { return event }
         guard let customerValues = event.integrations else { return event }
         
         var merged = [String: Bool]()
@@ -108,44 +99,6 @@ extension RudderDestinationPlugin {
     }
 }
 
-// MARK: - Upload management
-/*
-extension SegmentDestination {
-    internal func cleanupUploads() {
-        // lets go through and get rid of any tasks that aren't running.
-        // either they were suspended because a background task took too
-        // long, or the os orphaned it due to device constraints (like a watch).
-        uploadsQueue.sync {
-            let before = uploads.count
-            var newPending = uploads
-            newPending.removeAll { uploadInfo in
-                let shouldRemove = uploadInfo.task.state != .running
-                if shouldRemove, let cleanup = uploadInfo.cleanup {
-                    cleanup()
-                }
-                return shouldRemove
-            }
-            uploads = newPending
-            let after = uploads.count
-            analytics?.log(message: "Cleaned up \(before - after) non-running uploads.")
-        }
-    }
-    
-    internal var pendingUploads: Int {
-        var uploadsCount = 0
-        uploadsQueue.sync {
-            uploadsCount = uploads.count
-        }
-        return uploadsCount
-    }
-    
-    internal func add(uploadTask: UploadTaskInfo) {
-        uploadsQueue.sync {
-            uploads.append(uploadTask)
-        }
-    }
-}
-*/
 extension RudderDestinationPlugin {
     
     // swiftlint:disable cyclomatic_complexity
@@ -156,7 +109,7 @@ extension RudderDestinationPlugin {
             var errorCode: RSErrorCode?
             var sleepCount = 0
             while true {
-                guard let databaseManager = analytics?.databaseManager, let config = analytics?.config else {
+                guard let databaseManager = client?.databaseManager, let config = client?.config else {
                     return
                 }
                 let recordCount = databaseManager.getDBRecordCount()
