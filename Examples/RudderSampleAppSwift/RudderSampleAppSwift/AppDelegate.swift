@@ -17,12 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let builder: RSConfig = RSConfig()
-            .withLoglevel(.debug)
-            .withDataPlaneUrl("https://117d05c4.ngrok.io")
-            .withTrackLifecycleEvens(true)
-            .withRecordScreenViews(true)
-        RSClient.getInstance("1ZTkZgCMnZyXeWsFbcjGsOx4jnv", config: builder)
+        let config: RSConfig = RSConfig(writeKey: "1wvsoF3Kx2SczQNlx1dvcqW9ODW")
+            .dataPlaneURL("https://rudderstacz.dataplane.rudderstack.com")
+            .loglevel(.debug)
+            .trackLifecycleEvents(true)
+            .recordScreenViews(true)
+        
+        let client = RSClient(config: config)
+        client.track("Track 1")
+        
+        client.setDeviceToken("example_device_token")
+        client.track("Track 2")
         
         return true
     }

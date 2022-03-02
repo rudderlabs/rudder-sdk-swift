@@ -32,7 +32,7 @@ internal class RSLoggerPlugin: RSUtilityPlugin {
     
     #if DEBUG
     internal static var globalLogger: RSLoggerPlugin {
-        let logger = SegmentLog()
+        let logger = RSLoggerPlugin()
         logger.addTargets()
         return logger
     }
@@ -88,7 +88,7 @@ internal struct LogFactory {
     static func buildLog(destination: RSLoggingType.LogDestination,
                          title: String,
                          message: String,
-                         kind: RSLogLevel = .debug,
+                         logLevel: RSLogLevel = .debug,
                          function: String? = nil,
                          line: Int? = nil,
                          event: RSMessage? = nil,
@@ -98,7 +98,7 @@ internal struct LogFactory {
         
         switch destination {
         case .log:
-            return GenericLog(logLevel: kind, message: message, function: function, line: line)
+            return GenericLog(logLevel: logLevel, message: message, function: function, line: line)
         case .metric:
             return MetricLog(title: title, message: message, value: value ?? 1, event: event, function: function, line: line)
         }
@@ -129,16 +129,16 @@ internal struct LogFactory {
 }
 
 extension RSClient {
-    static func rsLog(message: String, kind: RSLogLevel? = nil, function: String = #function, line: Int = #line) {
+    static func rsLog(message: String, logLevel: RSLogLevel? = nil, function: String = #function, line: Int = #line) {
         if let shared = RSLoggerPlugin.sharedAnalytics {
             shared.apply { plugin in
                 if let loggerPlugin = plugin as? RSLoggerPlugin {
                     var filterKind = loggerPlugin.logLevel
-                    if let logKind = kind {
+                    if let logKind = logLevel {
                         filterKind = logKind
                     }
                     
-                    let log = LogFactory.buildLog(destination: .log, title: "", message: message, kind: filterKind, function: function, line: line)
+                    let log = LogFactory.buildLog(destination: .log, title: "", message: message, logLevel: filterKind, function: function, line: line)
                     loggerPlugin.log(log, destination: .log)
                 }
             }

@@ -19,7 +19,7 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [RSClient putAnonymousId:@"6a276137-2fe4-4682-a8f7-77f701f63ea0"];
+    /*[RSClient putAnonymousId:@"6a276137-2fe4-4682-a8f7-77f701f63ea0"];
     
     // Override point for customization after application launch.
     RSOption *defaultOption = [[RSOption alloc]init];
@@ -55,7 +55,11 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
     [[RSClient sharedInstance] track:@"simple_track_with_props" properties:@{
         @"key_1" : @"value_1",
         @"key_2" : @"value_2"
-    } options:option];
+    } options:option];*/
+    
+    RSConfig *config = [[[[RSConfig alloc] initWithWriteKey:WRITE_KEY] trackLifecycleEvents:YES] recordScreenViews:YES];
+    RSClient *client = [[RSClient alloc] initWithConfig:config];
+    [client track:@"track 1" properties:nil option:nil];
     
     return YES;
 }

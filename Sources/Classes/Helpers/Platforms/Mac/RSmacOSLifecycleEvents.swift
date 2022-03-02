@@ -9,7 +9,7 @@
 #if os(macOS)
 import Foundation
 
-class RSmacOSLifecycleEvents: PlatformPlugin, RSmacOSLifecycle {
+class RSmacOSLifecycleEvents: RSPlatformPlugin, RSmacOSLifecycle {
     let type = PluginType.before
     var client: RSClient?
 

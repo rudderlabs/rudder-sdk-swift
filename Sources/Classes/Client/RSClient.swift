@@ -7,14 +7,12 @@
 
 import Foundation
 
-// MARK: - Base Setup
-
 @objc
 open class RSClient: NSObject {
-    internal var config: RSConfig
-    public var controller: RSController
-    internal var serverConfig: RSServerConfig?
-    internal var error: NSError?
+    var config: RSConfig
+    var controller: RSController
+    var serverConfig: RSServerConfig?
+    var error: NSError?
     
     /// Initialize this instance of RSClient with a given configuration setup.
     /// - Parameters:
@@ -130,29 +128,13 @@ open class RSClient: NSObject {
         setUserId(userId)
         process(event: message)
     }
-        
-    internal func process(event: RSMessage) {
-        switch event {
-        case let e as TrackMessage:
-            controller.process(incomingEvent: e)
-        case let e as IdentifyMessage:
-            controller.process(incomingEvent: e)
-        case let e as ScreenMessage:
-            controller.process(incomingEvent: e)
-        case let e as GroupMessage:
-            controller.process(incomingEvent: e)
-        case let e as AliasMessage:
-            controller.process(incomingEvent: e)
-        default:
-            break
-        }
-    }
 }
 
 // MARK: - System Modifiers
 
 extension RSClient {
     /// Returns the anonymousId currently in use.
+    @objc
     public var anonymousId: String {
         if let anonymousId = RSUserDefaults.getAnonymousId() {
             return anonymousId
@@ -161,6 +143,7 @@ extension RSClient {
     }
     
     /// Returns the userId that was specified in the last identify call.
+    @objc
     public var userId: String? {
         if let userIdPlugin = self.find(pluginType: RSUserIdPlugin.self) {
             return userIdPlugin.userId
@@ -169,15 +152,17 @@ extension RSClient {
     }
     
     /// Returns the traits that were specified in the last identify call.
+    @objc
     public var context: [String: Any]? {
-//        if let contextPlugin = self.find(pluginType: RSContextPlugin.self) {
-//            return contextPlugin.userId
-//        }
+        if let contextPlugin = self.find(pluginType: RSContextPlugin.self) {
+            return contextPlugin.context
+        }
         return nil
     }
     
     /// Tells this instance of Analytics to flush any queued events up to Segment.com.  This command will also
     /// be sent to each plugin present in the system.
+    @objc
     public func flush() {
         apply { plugin in
             if let p = plugin as? RSEventPlugin {
@@ -188,6 +173,7 @@ extension RSClient {
     
     /// Resets this instance of Analytics to a clean slate.  Traits, UserID's, anonymousId, etc are all cleared or reset.  This
     /// command will also be sent to each plugin present in the system.
+    @objc
     public func reset() {
         apply { plugin in
             if let p = plugin as? RSEventPlugin {
@@ -198,26 +184,17 @@ extension RSClient {
     
     /// Retrieve the version of this library in use.
     /// - Returns: A string representing the version in "BREAKING.FEATURE.FIX" format.
-    public func version() -> String {
+    @objc
+    public var version: String {
         return RSConstants.RSVersion
     }
-}
-
-extension RSClient {
+    
     /// Manually retrieve the settings that were supplied from Segment.com.
     /// - Returns: A Settings object containing integration settings, tracking plan, etc.
-    public func configuration() -> RSConfig? {
+    @objc
+    public var configuration: RSConfig? {
         return config
     }
-    
-    /// Manually enable a destination plugin.  This is useful when a given DestinationPlugin doesn't have any Segment tie-ins at all.
-    /// This will allow the destination to be processed in the same way within this library.
-    /// - Parameters:
-    ///   - plugin: The destination plugin to enable.
-//    public func manuallyEnableDestination(plugin: DestinationPlugin) {
-//        self.store.dispatch(action: System.AddDestinationToSettingsAction(key: plugin.key))
-//    }
-
 }
 
 extension RSClient {
@@ -261,16 +238,31 @@ extension RSClient {
 }
 
 extension RSClient {
-    internal func update(serverConfig: RSServerConfig, type: UpdateType) {
+    func process(event: RSMessage) {
+        switch event {
+        case let e as TrackMessage:
+            controller.process(incomingEvent: e)
+        case let e as IdentifyMessage:
+            controller.process(incomingEvent: e)
+        case let e as ScreenMessage:
+            controller.process(incomingEvent: e)
+        case let e as GroupMessage:
+            controller.process(incomingEvent: e)
+        case let e as AliasMessage:
+            controller.process(incomingEvent: e)
+        default:
+            break
+        }
+    }
+    
+    func update(serverConfig: RSServerConfig, type: UpdateType) {
         apply { (plugin) in
-            // tell all top level plugins to update.
             update(plugin: plugin, serverConfig: serverConfig, type: type)
         }
     }
     
-    internal func update(plugin: RSPlugin, serverConfig: RSServerConfig, type: UpdateType) {
+    func update(plugin: RSPlugin, serverConfig: RSServerConfig, type: UpdateType) {
         plugin.update(serverConfig: serverConfig, type: type)
-        // if it's a destination, tell it's plugins to update as well.
         if let dest = plugin as? RSDestinationPlugin {
             dest.apply { (subPlugin) in
                 subPlugin.update(serverConfig: serverConfig, type: type)
@@ -278,7 +270,7 @@ extension RSClient {
         }
     }
     
-    internal func checkSettings() {
+    func checkSettings() {
         var retryCount = 0
         var isCompleted = false
         while !isCompleted && retryCount < 4 {

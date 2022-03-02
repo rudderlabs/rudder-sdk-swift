@@ -12,7 +12,7 @@ import Foundation
 
 import UIKit
 
-class RSiOSLifecycleEvents: PlatformPlugin, RSiOSLifecycle {
+class RSiOSLifecycleEvents: RSPlatformPlugin, RSiOSLifecycle {
     let type = PluginType.before
     var client: RSClient?
     

@@ -8,7 +8,8 @@
 
 import Foundation
 
-@objc open class RSConfig: NSObject {
+@objc
+open class RSConfig: NSObject {
     let writeKey: String
     var anonymousId: String?
     var dataPlaneUrl: String = RSConstants.RSDataPlaneUrl
@@ -23,6 +24,7 @@ import Foundation
 //    var factories: [RSIntegrationFactory]
 //    var customFactories: [RSIntegrationFactory]
     
+    @objc
     public init(writeKey: String) {
         self.writeKey = writeKey
     }
@@ -72,13 +74,13 @@ import Foundation
     }
     
     @objc
-    public func configRefreshInteval(_ configRefreshInterval: Int) -> RSConfig {
+    public func configRefreshInterval(_ configRefreshInterval: Int) -> RSConfig {
         self.configRefreshInterval = configRefreshInterval
         return self
     }
     
     @objc
-    public func trackLifecycleEvens(_ trackLifecycleEvents: Bool) -> RSConfig {
+    public func trackLifecycleEvents(_ trackLifecycleEvents: Bool) -> RSConfig {
         self.trackLifecycleEvents = trackLifecycleEvents
         return self
     }

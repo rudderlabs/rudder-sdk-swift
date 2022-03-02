@@ -1,13 +1,12 @@
 //
-//  Types.swift
-//  Segment
+//  RSMessage.swift
+//  Rudder
 //
-//  Created by Brandon Sneed on 12/1/20.
+//  Created by Pallab Maiti on 02/03/22.
+//  Copyright © 2022 Rudder Labs India Pvt Ltd. All rights reserved.
 //
 
 import Foundation
-
-// MARK: - Event Types
 
 protocol RSMessage {
     var type: RSMessageType { get set }
@@ -189,122 +188,6 @@ struct AliasMessage: RSMessage {
     }
 }
 
-// MARK: - RawEvent conveniences
-
-internal struct IntegrationConstants {
-    static let allIntegrationsKey = "All"
-}
-
-extension RSMessage {
-    /**
-     Disable all cloud-mode integrations for this event, except for any specific keys given.
-     This will preserve any per-integration specific settings if the integration is to remain enabled.
-     - Parameters:
-        - exceptKeys: A list of integration keys to exclude from disabling.
-     */
-    func disableCloudIntegrations(exceptKeys: [String]? = nil) {
-        /*guard let existing = integrations?.dictionaryValue else {
-            // this shouldn't happen, might oughta log it.
-            Analytics.segmentLog(message: "Unable to get what should be a valid list of integrations from event.", kind: .error)
-            return
-        }
-        var new = [String: Any]()
-        new[IntegrationConstants.allIntegrationsKey] = false
-        if let exceptKeys = exceptKeys {
-            for key in exceptKeys {
-                if let value = existing[key], value is [String: Any] {
-                    new[key] = value
-                } else {
-                    new[key] = true
-                }
-            }
-        }
-        
-        do {
-            integrations = try JSON(new)
-        } catch {
-            // this shouldn't happen, log it.
-            Analytics.segmentLog(message: "Unable to convert list of integrations to JSON. \(error)", kind: .error)
-        }*/
-    }
-    
-    /**
-     Enable all cloud-mode integrations for this event, except for any specific keys given.
-     - Parameters:
-        - exceptKeys: A list of integration keys to exclude from enabling.
-     */
-    func enableCloudIntegrations(exceptKeys: [String]? = nil) {
-        /*var new = [String: Any]()
-        new[IntegrationConstants.allIntegrationsKey] = true
-        if let exceptKeys = exceptKeys {
-            for key in exceptKeys {
-                new[key] = false
-            }
-        }
-        
-        do {
-            integrations = try JSON(new)
-        } catch {
-            // this shouldn't happen, log it.
-            Analytics.segmentLog(message: "Unable to convert list of integrations to JSON. \(error)", kind: .error)
-        }*/
-    }
-    
-    /**
-     Disable a specific cloud-mode integration using it's key name.
-     - Parameters:
-        - key: The key name of the integration to disable.
-     */
-    func disableIntegration(key: String) {
-        /*guard let existing = integrations?.dictionaryValue else {
-            // this shouldn't happen, might oughta log it.
-            Analytics.segmentLog(message: "Unable to get what should be a valid list of integrations from event.", kind: .error)
-            return
-        }
-        // we don't really care what the value of this key was before, as
-        // a disabled one can only be false.
-        var new = existing
-        new[key] = false
-        
-        do {
-            integrations = try JSON(new)
-        } catch {
-            // this shouldn't happen, log it.
-            Analytics.segmentLog(message: "Unable to convert list of integrations to JSON. \(error)", kind: .error)
-        }*/
-    }
-    
-    /**
-     Enable a specific cloud-mode integration using it's key name.
-     - Parameters:
-        - key: The key name of the integration to enable.
-     */
-    func enableIntegration(key: String) {
-        /*guard let existing = integrations?.dictionaryValue else {
-            // this shouldn't happen, might oughta log it.
-            Analytics.segmentLog(message: "Unable to get what should be a valid list of integrations from event.", kind: .error)
-            return
-        }
-        
-        var new = existing
-        // if it's a dictionary already, it's considered enabled, so don't
-        // overwrite whatever they may have put there.  If that's not the case
-        // just set it to true since that's the only other value it could have
-        // to be considered `enabled`.
-        if (existing[key] as? [String: Any]) == nil {
-            new[key] = true
-        }
-        
-        do {
-            integrations = try JSON(new)
-        } catch {
-            // this shouldn't happen, log it.
-            Analytics.segmentLog(message: "Unable to convert list of integrations to JSON. \(error)", kind: .error)
-        }*/
-    }
-    
-}
-
 // MARK: - RawEvent data helpers
 
 extension RSMessage {
@@ -325,16 +208,21 @@ extension RSMessage {
         result.messageId = String(format: "%ld-%@", RSUtils.getTimeStamp(), RSUtils.getUniqueId())
         result.timestamp = RSUtils.getTimestampString()
         result.channel = "mobile"
-//        result.integrations = try? JSON([String: Any]())
         return result
     }
     
     func staticDictionary() -> [String: Any] {
-        return ["messageId": messageId ?? "",
-                "anonymousId": anonymousId ?? "",
-                "channel": channel ?? "",
-                "originalTimestamp": timestamp ?? "",
-                "type": type.rawValue]
-        // integrations
+        var dict = ["messageId": messageId ?? "",
+                    "anonymousId": anonymousId ?? "",
+                    "channel": channel ?? "",
+                    "originalTimestamp": timestamp ?? "",
+                    "type": type.rawValue] as [String: Any]
+        if let context = context {
+            dict["context"] = context
+        }
+        if let integrations = integrations {
+            dict["integrations"] = integrations
+        }
+        return dict
     }
 }

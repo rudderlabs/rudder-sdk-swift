@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        let rudder: RSClient? = RSClient.sharedInstance()
+        /*let rudder: RSClient? = RSClient.sharedInstance()
         
         rudder?.screen("Story", properties: [
             "name": "nil"
@@ -47,7 +47,7 @@ class ViewController: UIViewController {
             "null_key": NSNull(),
             "date_key": Date(),
             "url_key": URL(fileURLWithPath: "https://rudderstack.com")
-        ])
+        ])*/
     }
 
 

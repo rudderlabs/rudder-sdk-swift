@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RSUserIdPlugin: PlatformPlugin {
+class RSUserIdPlugin: RSPlatformPlugin {
     let type = PluginType.before
     var client: RSClient?
     

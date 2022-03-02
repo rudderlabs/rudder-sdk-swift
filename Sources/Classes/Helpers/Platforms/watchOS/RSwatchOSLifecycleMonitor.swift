@@ -27,7 +27,7 @@ public extension RSwatchOSLifecycle {
     func applicationWillResignActive(watchExtension: WKExtension) { }
 }
 
-class RSwatchOSLifecycleMonitor: PlatformPlugin {
+class RSwatchOSLifecycleMonitor: RSPlatformPlugin {
     var type = PluginType.utility
     var controller: RSClient?
     var wasBackgrounded: Bool = false

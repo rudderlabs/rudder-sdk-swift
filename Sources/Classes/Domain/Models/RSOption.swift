@@ -45,7 +45,8 @@ open class RSOption: NSObject {
 //        integrations?[factory.key] = enabled
 //    }
     
-    @objc public func putCustomContext(_ context: [String: Any]?, withKey key: String?) {
+    @objc
+    public func putCustomContext(_ context: [String: Any]?, withKey key: String?) {
         if customContexts == nil {
             customContexts = [String: Any]()
         }

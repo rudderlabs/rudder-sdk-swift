@@ -120,7 +120,7 @@ extension RSClient {
                     filterKind = logKind
                 }
                 
-                let log = LogFactory.buildLog(destination: .log, title: "", message: message, kind: filterKind, function: function, line: line)
+                let log = LogFactory.buildLog(destination: .log, title: "", message: message, logLevel: filterKind, function: function, line: line)
                 loggerPlugin.log(log, destination: .log)
             }
         }
@@ -163,7 +163,7 @@ extension RSClient {
                 do {
                     try logger.add(target: target, for: type)
                 } catch {
-                    Self.rsLog(message: "Could not add target: \(error.localizedDescription)", kind: .error)
+                    Self.rsLog(message: "Could not add target: \(error.localizedDescription)", logLevel: .error)
                 }
             }
         }

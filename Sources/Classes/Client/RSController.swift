@@ -8,12 +8,10 @@
 
 import Foundation
 
-// MARK: - Main Timeline
-
-public class RSController {
-    internal let plugins: [PluginType: Mediator]
+class RSController {
+    let plugins: [PluginType: Mediator]
     
-    public init() {
+    init() {
         self.plugins = [
             .before: Mediator(),
             .enrichment: Mediator(),
@@ -24,7 +22,7 @@ public class RSController {
     }
     
     @discardableResult
-    internal func process<E: RSMessage>(incomingEvent: E) -> E? {
+    func process<E: RSMessage>(incomingEvent: E) -> E? {
         // apply .before and .enrichment types first ...
         let beforeResult = applyPlugins(type: .before, event: incomingEvent)
         // .enrichment here is akin to source middleware in the old analytics-ios.
@@ -42,7 +40,7 @@ public class RSController {
     }
     
     // helper method used by DestinationPlugins and Timeline
-    internal func applyPlugins<E: RSMessage>(type: PluginType, event: E?) -> E? {
+    func applyPlugins<E: RSMessage>(type: PluginType, event: E?) -> E? {
         var result: E? = event
         if let mediator = plugins[type], let e = event {
             result = mediator.execute(event: e)
@@ -51,22 +49,22 @@ public class RSController {
     }
 }
 
-internal class Mediator {
-    internal func add(plugin: RSPlugin) {
+class Mediator {
+    func add(plugin: RSPlugin) {
         plugins.append(plugin)
         if let option = plugin.client?.serverConfig {
             plugin.update(serverConfig: option, type: .initial)
         }
     }
     
-    internal func remove(plugin: RSPlugin) {
+    func remove(plugin: RSPlugin) {
         plugins.removeAll { (storedPlugin) -> Bool in
             return plugin === storedPlugin
         }
     }
 
-    internal var plugins = [RSPlugin]()
-    internal func execute<T: RSMessage>(event: T) -> T? {
+    var plugins = [RSPlugin]()
+    func execute<T: RSMessage>(event: T) -> T? {
         var result: T? = event
         
         plugins.forEach { (plugin) in
@@ -88,7 +86,7 @@ internal class Mediator {
 // MARK: - Plugin Support
 
 extension RSController {
-    internal func apply(_ closure: (RSPlugin) -> Void) {
+    func apply(_ closure: (RSPlugin) -> Void) {
         for type in PluginType.allCases {
             if let mediator = plugins[type] {
                 mediator.plugins.forEach { (plugin) in
@@ -101,13 +99,13 @@ extension RSController {
         }
     }
     
-    internal func add(plugin: RSPlugin) {
+    func add(plugin: RSPlugin) {
         if let mediator = plugins[plugin.type] {
             mediator.add(plugin: plugin)
         }
     }
     
-    internal func remove(plugin: RSPlugin) {
+    func remove(plugin: RSPlugin) {
         // remove all plugins with this name in every category
         for type in PluginType.allCases {
             if let mediator = plugins[type] {
@@ -122,7 +120,7 @@ extension RSController {
         }
     }
     
-    internal func find<T: RSPlugin>(pluginType: T.Type) -> T? {
+    func find<T: RSPlugin>(pluginType: T.Type) -> T? {
         var found = [RSPlugin]()
         for type in PluginType.allCases {
             if let mediator = plugins[type] {
@@ -138,7 +136,7 @@ extension RSController {
 // MARK: - Plugin Timeline Execution
 
 extension RSEventPlugin {
-    public func execute<T: RSMessage>(event: T?) -> T? {
+    func execute<T: RSMessage>(event: T?) -> T? {
         var result: T? = event
         switch result {
         case let r as IdentifyMessage:
@@ -159,34 +157,34 @@ extension RSEventPlugin {
 
     // Default implementations that forward the event. This gives plugin
     // implementors the chance to interject on an event.
-    public func identify(event: IdentifyMessage) -> IdentifyMessage? {
+    func identify(event: IdentifyMessage) -> IdentifyMessage? {
         return event
     }
     
-    public func track(event: TrackMessage) -> TrackMessage? {
+    func track(event: TrackMessage) -> TrackMessage? {
         return event
     }
     
-    public func screen(event: ScreenMessage) -> ScreenMessage? {
+    func screen(event: ScreenMessage) -> ScreenMessage? {
         return event
     }
     
-    public func group(event: GroupMessage) -> GroupMessage? {
+    func group(event: GroupMessage) -> GroupMessage? {
         return event
     }
     
-    public func alias(event: AliasMessage) -> AliasMessage? {
+    func alias(event: AliasMessage) -> AliasMessage? {
         return event
     }
     
-    public func flush() { }
-    public func reset() { }
+    func flush() { }
+    func reset() { }
 }
 
 // MARK: - Destination Timeline
 
 extension RSDestinationPlugin {
-    public func execute<T: RSMessage>(event: T?) -> T? {
+    func execute<T: RSMessage>(event: T?) -> T? {
         var result: T? = event
         if let r = result {
             result = self.process(incomingEvent: r)
@@ -194,7 +192,7 @@ extension RSDestinationPlugin {
         return result
     }
     
-    internal func isDestinationEnabled(event: RSMessage) -> Bool {
+    func isDestinationEnabled(event: RSMessage) -> Bool {
         var customerDisabled = false
         
         if let integration = event.integrations?.first(where: { key, _ in
@@ -213,7 +211,7 @@ extension RSDestinationPlugin {
         return (hasSettings == true && customerDisabled == false)
     }
 
-    internal func process<E: RSMessage>(incomingEvent: E) -> E? {
+    func process<E: RSMessage>(incomingEvent: E) -> E? {
         // This will process plugins (think destination middleware) that are tied
         // to this destination.
         

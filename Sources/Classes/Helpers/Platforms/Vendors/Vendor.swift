@@ -63,7 +63,7 @@ internal class Vendor {
         return ConnectionStatus.unknown
     }
     
-    var requiredPlugins: [PlatformPlugin] {
+    var requiredPlugins: [RSPlatformPlugin] {
         return []
     }
     

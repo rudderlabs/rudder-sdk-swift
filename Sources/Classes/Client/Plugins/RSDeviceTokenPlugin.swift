@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RSDeviceTokenPlugin: PlatformPlugin {
+class RSDeviceTokenPlugin: RSPlatformPlugin {
     let type = PluginType.before
     var client: RSClient?
     
@@ -27,7 +27,8 @@ class RSDeviceTokenPlugin: PlatformPlugin {
 }
 
 extension RSClient {
-    func setDeviceToken(_ token: String) {
+    @objc
+    public func setDeviceToken(_ token: String) {
         if let tokenPlugin = self.find(pluginType: RSDeviceTokenPlugin.self) {
             tokenPlugin.token = token
         } else {

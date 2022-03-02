@@ -11,7 +11,7 @@
 import Foundation
 import WatchKit
 
-class RSwatchOSLifecycleEvents: PlatformPlugin, RSwatchOSLifecycle {    
+class RSwatchOSLifecycleEvents: RSPlatformPlugin, RSwatchOSLifecycle {    
     let type = PluginType.before
     var controller: RSClient?
     

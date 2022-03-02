@@ -1,5 +1,5 @@
 //
-//  RSATT.swift
+//  RSAppTrackingConsent.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 10/08/21.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-@frozen @objc public enum RSATT: Int {
+@frozen @objc public enum RSAppTrackingConsent: Int {
     case authorize = 3
     case denied = 2
     case restricted = 1

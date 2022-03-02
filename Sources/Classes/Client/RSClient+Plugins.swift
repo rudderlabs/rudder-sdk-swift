@@ -20,6 +20,10 @@ extension RSClient {
         logPlugin.loggingEnabled(config.logLevel != .none)
         add(plugin: logPlugin)
         
+        let integrationPlugin = RSIntegrationPlugin()
+        integrationPlugin.client = self
+        add(plugin: integrationPlugin)
+        
         let segmentDestination = RudderDestinationPlugin()
         segmentDestination.client = self
         add(plugin: segmentDestination)
@@ -33,8 +37,8 @@ extension RSClient {
         setupSettingsCheck()
     }
     
-    internal func platformPlugins() -> [PlatformPlugin]? {
-        var plugins = [PlatformPlugin]()
+    internal func platformPlugins() -> [RSPlatformPlugin]? {
+        var plugins = [RSPlatformPlugin]()
         
         plugins.append(RSContextPlugin())
         

@@ -35,7 +35,7 @@ extension RSiOSLifecycle {
     func applicationBackgroundRefreshDidChange(application: UIApplication?, refreshStatus: UIBackgroundRefreshStatus) { }
 }
 
-class RSiOSLifecycleMonitor: PlatformPlugin {
+class RSiOSLifecycleMonitor: RSPlatformPlugin {
     let type = PluginType.utility
     var client: RSClient?
     

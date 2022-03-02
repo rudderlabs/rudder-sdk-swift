@@ -66,7 +66,6 @@ extension RudderDestinationPlugin {
         
         var merged = [String: Bool]()
         
-        // compare settings to loaded plugins
         for plugin in plugins {
             var hasSettings = false
             if let destinations = integrationSettings.destinations {
@@ -75,13 +74,10 @@ extension RudderDestinationPlugin {
                 }
             }
             if hasSettings {
-                // we have a device mode plugin installed.
-                // tell segment not to send it via cloud mode.
                 merged[plugin.key] = false
             }
         }
         
-        // apply customer values; the customer is always right!
         for (key, value) in customerValues {
             merged[key] = value
         }

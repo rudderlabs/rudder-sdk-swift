@@ -67,7 +67,7 @@ internal class PhoneVendor: Vendor {
         return connectionStatus()
     }
     
-    override var requiredPlugins: [PlatformPlugin] {
+    override var requiredPlugins: [RSPlatformPlugin] {
         return [RSiOSLifecycleMonitor(), RSDeviceTokenPlugin()]
     }
     
@@ -148,7 +148,7 @@ internal class WatchVendor: Vendor {
         return ConnectionStatus.unknown
     }
     
-    override var requiredPlugins: [PlatformPlugin] {
+    override var requiredPlugins: [RSPlatformPlugin] {
         return [RSwatchOSLifecycleMonitor()]
     }
     

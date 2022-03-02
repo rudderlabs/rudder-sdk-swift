@@ -74,7 +74,7 @@ protocol RSDestinationPlugin: RSEventPlugin {
 protocol RSUtilityPlugin: RSEventPlugin { }
 
 // For internal platform-specific bits
-internal protocol PlatformPlugin: RSPlugin { }
+internal protocol RSPlatformPlugin: RSPlugin { }
 
 // MARK: - Adding/Removing Plugins
 

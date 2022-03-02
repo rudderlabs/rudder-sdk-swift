@@ -8,18 +8,22 @@
 
 import Foundation
 
-class RSContextPlugin: PlatformPlugin {
+class RSContextPlugin: RSPlatformPlugin {
     let type: PluginType = .before
     var client: RSClient?
     
-    internal var staticContext = staticContextData()
-    internal static var device = Vendor.current
+    var context: MessageContext?
+    
+    private var staticContext = staticContextData()
+    private static var device = Vendor.current
     
     func execute<T: RSMessage>(event: T?) -> T? {
         guard var workingEvent = event else { return event }        
         var context = staticContext
         insertDynamicPlatformContextData(context: &context)
+        insertDynamicOptionData(event: workingEvent, context: &context)
         workingEvent.context = context
+        self.context = context
         return workingEvent
     }
     
@@ -106,6 +110,19 @@ class RSContextPlugin: PlatformPlugin {
             "wifi": wifi,
             "carrier": device.carrier
         ]
+    }
+    
+    func insertDynamicOptionData(event: RSMessage, context: inout [String: Any]) {
+        if let option = event.option {
+            if let externalIds = option.externalIds {
+                context["externalId"] = externalIds
+            }
+            if let customContexts = option.customContexts {
+                for key in customContexts.keys {
+                    context[key] = [key: customContexts]
+                }
+            }
+        }
     }
 
 }
