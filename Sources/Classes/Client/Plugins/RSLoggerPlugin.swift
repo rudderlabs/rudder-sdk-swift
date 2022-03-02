@@ -1,5 +1,5 @@
 //
-//  RSLoggingPlugin.swift
+//  RSLoggerPlugin.swift
 //  Rudder
 //
 //  Created by Pallab Maiti on 24/02/22.
@@ -10,8 +10,8 @@ import Foundation
 
 // MARK: - Plugin Implementation
 
-internal class RSLoggingPlugin: RSUtilityPlugin {
-    var filterKind = RSLogLevel.debug
+internal class RSLoggerPlugin: RSUtilityPlugin {
+    var logLevel = RSLogLevel.debug
     
     var client: RSClient? {
         didSet {
@@ -31,7 +31,7 @@ internal class RSLoggingPlugin: RSUtilityPlugin {
     internal static var sharedAnalytics: RSClient?
     
     #if DEBUG
-    internal static var globalLogger: RSLoggingPlugin {
+    internal static var globalLogger: RSLoggerPlugin {
         let logger = SegmentLog()
         logger.addTargets()
         return logger
@@ -42,7 +42,7 @@ internal class RSLoggingPlugin: RSUtilityPlugin {
     
     func configure(client: RSClient) {
         self.client = client
-        RSLoggingPlugin.sharedAnalytics = client
+        RSLoggerPlugin.sharedAnalytics = client
         addTargets()
     }
     
@@ -51,7 +51,7 @@ internal class RSLoggingPlugin: RSUtilityPlugin {
     }
     
     func loggingEnabled(_ enabled: Bool) {
-        RSLoggingPlugin.loggingEnabled = enabled        
+        RSLoggerPlugin.loggingEnabled = enabled        
     }
     
     internal func log(_ logMessage: RSLogMessage, destination: RSLoggingType.LogDestination) {
@@ -130,10 +130,10 @@ internal struct LogFactory {
 
 extension RSClient {
     static func rsLog(message: String, kind: RSLogLevel? = nil, function: String = #function, line: Int = #line) {
-        if let shared = RSLoggingPlugin.sharedAnalytics {
+        if let shared = RSLoggerPlugin.sharedAnalytics {
             shared.apply { plugin in
-                if let loggerPlugin = plugin as? RSLoggingPlugin {
-                    var filterKind = loggerPlugin.filterKind
+                if let loggerPlugin = plugin as? RSLoggerPlugin {
+                    var filterKind = loggerPlugin.logLevel
                     if let logKind = kind {
                         filterKind = logKind
                     }
@@ -145,15 +145,15 @@ extension RSClient {
         } else {
             #if DEBUG
             let log = LogFactory.buildLog(destination: .log, title: "", message: message, logLevel: .debug, function: function, line: line)
-            RSLoggingPlugin.globalLogger.log(log, destination: .log)
+            RSLoggerPlugin.globalLogger.log(log, destination: .log)
             #endif
         }
     }
     
     static func rsMetric(_ type: RSMetricType, name: String, value: Double, tags: [String]? = nil) {
-        RSLoggingPlugin.sharedAnalytics?.apply { plugin in
+        RSLoggerPlugin.sharedAnalytics?.apply { plugin in
             
-            if let loggerPlugin = plugin as? RSLoggingPlugin {
+            if let loggerPlugin = plugin as? RSLoggerPlugin {
                 let log = LogFactory.buildLog(destination: .metric, title: type.toString(), message: name, value: value, tags: tags)
                 loggerPlugin.log(log, destination: .metric)
             }

@@ -14,7 +14,6 @@ open class RSClient: NSObject {
     internal var config: RSConfig
     public var controller: RSController
     internal var serverConfig: RSServerConfig?
-    internal var databaseManager: RSDatabaseManager
     internal var error: NSError?
     
     /// Initialize this instance of RSClient with a given configuration setup.
@@ -24,7 +23,6 @@ open class RSClient: NSObject {
     public init(config: RSConfig) {
         self.config = config
         serverConfig = RSUserDefaults.getServerConfig()
-        databaseManager = RSDatabaseManager()
         controller = RSController()
         
         super.init()
@@ -288,21 +286,21 @@ extension RSClient {
                 self.serverConfig = serverConfig
                 RSUserDefaults.saveServerConfig(serverConfig)
                 RSUserDefaults.updateLastUpdatedTime(RSUtils.getTimeStamp())
-                logDebug("server config download successful")
+                log(message: "server config download successful", logLevel: .debug)
                 isCompleted = true
             } else {
                 if error?.code == RSErrorCode.WRONG_WRITE_KEY.rawValue {
-                    logDebug("Wrong write key")
+                    log(message: "Wrong write key", logLevel: .debug)
                     retryCount = 4
                 } else {
-                    logDebug("Retrying download in \(retryCount) seconds")
+                    log(message: "Retrying download in \(retryCount) seconds", logLevel: .debug)
                     retryCount += 1
                     sleep(UInt32(retryCount))
                 }
             }
         }
         if !isCompleted {
-            logDebug("Server config download failed.Using last stored config from storage")
+            log(message: "Server config download failed.Using last stored config from storage", logLevel: .debug)
         }
     }
     

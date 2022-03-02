@@ -11,27 +11,30 @@ import SQLite3
 
 class RSDatabaseManager {
     
-    let database: OpaquePointer?
+    private let database: OpaquePointer?
+    private let client: RSClient
+    private let syncQueue = DispatchQueue(label: "database.rudder.com")
     
-    init() {
+    init(client: RSClient) {
+        self.client = client
         database = RSUtils.openDatabase()
         createTable()
     }
-    
+        
     func createTable() {
         var createTableStatement: OpaquePointer?
         let createTableString = "CREATE TABLE IF NOT EXISTS events( id INTEGER PRIMARY KEY AUTOINCREMENT, message TEXT NOT NULL, updated INTEGER NOT NULL);"
-        logDebug("createTableSQL: \(createTableString)")
+        client.log(message: "createTableSQL: \(createTableString)", logLevel: .debug)
         if sqlite3_prepare_v2(database, createTableString, -1, &createTableStatement, nil) ==
             SQLITE_OK {
             if sqlite3_step(createTableStatement) == SQLITE_DONE {
-                logDebug("DB Schema created")
+                client.log(message: ("DB Schema created"), logLevel: .debug)
             } else {
-                logError("DB Schema creation error")
+                client.log(message: "DB Schema creation error", logLevel: .error)
             }
         } else {
             let errorMessage = String(cString: sqlite3_errmsg(database))
-            logError("DB Schema CREATE statement is not prepared, Reason: \(errorMessage)")
+            client.log(message: "DB Schema CREATE statement is not prepared, Reason: \(errorMessage)", logLevel: .error)
         }
         sqlite3_finalize(createTableStatement)
     }
@@ -39,19 +42,18 @@ class RSDatabaseManager {
     func saveEvent(_ message: String) {
         let insertStatementString = "INSERT INTO events (message, updated) VALUES (?, ?);"
         var insertStatement: OpaquePointer?
-        if sqlite3_prepare_v2(database, insertStatementString, -1, &insertStatement, nil) ==
-            SQLITE_OK {
+        if sqlite3_prepare_v2(database, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, ((message.replacingOccurrences(of: "'", with: "''")) as NSString).utf8String, -1, nil)
             sqlite3_bind_int(insertStatement, 2, Int32(RSUtils.getTimeStamp()))
-            logDebug("saveEventSQL: \(insertStatementString)")
+            client.log(message: "saveEventSQL: \(insertStatementString)", logLevel: .debug)
             if sqlite3_step(insertStatement) == SQLITE_DONE {
-                logDebug("Event inserted to table")
+                client.log(message: "Event inserted to table", logLevel: .debug)
             } else {
-                logError("Event insertion error")
+                client.log(message: "Event insertion error", logLevel: .error)
             }
         } else {
             let errorMessage = String(cString: sqlite3_errmsg(database))
-            logError("Event INSERT statement is not prepared, Reason: \(errorMessage)")
+            client.log(message: "Event INSERT statement is not prepared, Reason: \(errorMessage)", logLevel: .error)
         }
         sqlite3_finalize(insertStatement)
     }
@@ -59,17 +61,16 @@ class RSDatabaseManager {
     func clearEvents(_ messageIds: [String]) {
         var deleteStatement: OpaquePointer?
         let deleteStatementString = "DELETE FROM events WHERE id IN (\((messageIds as NSArray).componentsJoined(by: ",") as NSString));"
-        logDebug("deleteEventSQL: \(deleteStatementString)")
-        if sqlite3_prepare_v2(database, deleteStatementString, -1, &deleteStatement, nil) ==
-            SQLITE_OK {
+        client.log(message: "deleteEventSQL: \(deleteStatementString)", logLevel: .debug)
+        if sqlite3_prepare_v2(database, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
             if sqlite3_step(deleteStatement) == SQLITE_DONE {
-                logDebug("Events deleted from DB")
+                client.log(message: "Events deleted from DB", logLevel: .debug)
             } else {
-                logError("Event deletion error")
+                client.log(message: "Event deletion error", logLevel: .error)
             }
         } else {
             let errorMessage = String(cString: sqlite3_errmsg(database))
-            logError("Event DELETE statement is not prepared, Reason: \(errorMessage)")
+            client.log(message: "Event DELETE statement is not prepared, Reason: \(errorMessage)", logLevel: .error)
         }
         sqlite3_finalize(deleteStatement)
     }
@@ -78,9 +79,8 @@ class RSDatabaseManager {
         var queryStatement: OpaquePointer?
         var message: RSDBMessage?
         let queryStatementString = "SELECT * FROM events ORDER BY updated ASC LIMIT \(count);"
-        logDebug("countSQL: \(queryStatementString)")
-        if sqlite3_prepare_v2(database, queryStatementString, -1, &queryStatement, nil) ==
-            SQLITE_OK {
+        client.log(message: "countSQL: \(queryStatementString)", logLevel: .debug)
+        if sqlite3_prepare_v2(database, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             var messages = [String]()
             var messageIds = [String]()
             while sqlite3_step(queryStatement) == SQLITE_ROW {
@@ -94,7 +94,7 @@ class RSDatabaseManager {
             message = RSDBMessage(messages: messages, messageIds: messageIds)
         } else {
             let errorMessage = String(cString: sqlite3_errmsg(database))
-            logError("Event SELECT statement is not prepared, Reason: \(errorMessage)")
+            client.log(message: "Event SELECT statement is not prepared, Reason: \(errorMessage)", logLevel: .error)
         }
         sqlite3_finalize(queryStatement)
         return message
@@ -103,17 +103,16 @@ class RSDatabaseManager {
     func getDBRecordCount() -> Int {
         var queryStatement: OpaquePointer?
         let queryStatementString = "SELECT COUNT(*) FROM 'events'"
-        logDebug("countSQL: \(queryStatementString)")
+        client.log(message: "countSQL: \(queryStatementString)", logLevel: .debug)
         var count = 0
-        if sqlite3_prepare_v2(database, queryStatementString, -1, &queryStatement, nil) ==
-            SQLITE_OK {
-            logDebug("count fetched from DB")
+        if sqlite3_prepare_v2(database, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            client.log(message: "count fetched from DB", logLevel: .debug)
             while sqlite3_step(queryStatement) == SQLITE_ROW {
                 count = Int(sqlite3_column_int(queryStatement, 0))
             }
         } else {
             let errorMessage = String(cString: sqlite3_errmsg(database))
-            logError("count SELECT statement is not prepared, Reason: \(errorMessage)")
+            client.log(message: "count SELECT statement is not prepared, Reason: \(errorMessage)", logLevel: .error)
         }
         sqlite3_finalize(queryStatement)
         return count
@@ -122,18 +121,44 @@ class RSDatabaseManager {
     func clearAllEvents() {
         var deleteStatement: OpaquePointer?
         let deleteStatementString = "DELETE FROM 'events';"
-        if sqlite3_prepare_v2(database, deleteStatementString, -1, &deleteStatement, nil) ==
-            SQLITE_OK {
-            logDebug("deleteEventSQL: \(deleteStatementString)")
+        if sqlite3_prepare_v2(database, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
+            client.log(message: "deleteEventSQL: \(deleteStatementString)", logLevel: .debug)
             if sqlite3_step(deleteStatement) == SQLITE_DONE {
-                logDebug("Events deleted from DB")
+                client.log(message: "Events deleted from DB", logLevel: .debug)
             } else {
-                logError("Event deletion error")
+                client.log(message: "Event deletion error", logLevel: .error)
             }
         } else {
             let errorMessage = String(cString: sqlite3_errmsg(database))
-            logError("Event DELETE statement is not prepared, Reason: \(errorMessage)")
+            client.log(message: "Event DELETE statement is not prepared, Reason: \(errorMessage)", logLevel: .error)
         }
         sqlite3_finalize(deleteStatement)
+    }
+}
+
+extension RSDatabaseManager {
+    func write(_ message: RSMessage) {
+        syncQueue.sync {
+            do {
+                let jsonObject = message.toDict()
+                if JSONSerialization.isValidJSONObject(jsonObject) {
+                    let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        client.log(message: "dump: \(jsonString)", logLevel: .debug)
+                        if jsonString.getUTF8Length() > RSConstants.MAX_EVENT_SIZE {
+                            client.log(message: "dump: Event size exceeds the maximum permitted event size \(RSConstants.MAX_EVENT_SIZE)", logLevel: .error)
+                            return
+                        }
+                        self.saveEvent(jsonString)
+                    } else {
+                        client.log(message: "dump: Can not convert to JSON", logLevel: .error)
+                    }
+                } else {
+                    client.log(message: "dump: Not a valid JSON object", logLevel: .error)
+                }
+            } catch {
+                client.log(message: "dump: \(error.localizedDescription)", logLevel: .error)
+            }
+        }
     }
 }

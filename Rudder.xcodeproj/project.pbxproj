@@ -37,7 +37,6 @@
 		ED3D22BE27A45B6500EC8366 /* RSTypeAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D22BD27A45B6500EC8366 /* RSTypeAlias.swift */; };
 		EDA7EF752739119600E73142 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF332739119600E73142 /* API.swift */; };
 		EDA7EF762739119600E73142 /* RSServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF342739119600E73142 /* RSServiceManager.swift */; };
-		EDA7EF792739119600E73142 /* RSMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF382739119600E73142 /* RSMessageHandler.swift */; };
 		EDA7EF812739119600E73142 /* RSDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF402739119600E73142 /* RSDatabaseManager.swift */; };
 		EDA7EF842739119600E73142 /* RSUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF452739119600E73142 /* RSUserDefaults.swift */; };
 		EDA7EF852739119600E73142 /* RSConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF462739119600E73142 /* RSConstants.swift */; };
@@ -60,7 +59,7 @@
 		EDA7EFA22739119600E73142 /* RSServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6B2739119600E73142 /* RSServiceType.swift */; };
 		EDD3AA1327C64B430048E61E /* RSKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD3AA1227C64B430048E61E /* RSKeyPath.swift */; };
 		EDD3AA3627C659C80048E61E /* RSAtomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD3AA3527C659C80048E61E /* RSAtomic.swift */; };
-		EDD3AA4A27C8DAAA0048E61E /* RSLoggingPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227827A3F0C100EC8366 /* RSLoggingPlugin.swift */; };
+		EDD3AA4A27C8DAAA0048E61E /* RSLoggerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227827A3F0C100EC8366 /* RSLoggerPlugin.swift */; };
 		EDD3AA4B27C8DAB90048E61E /* RSLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227727A3F0C100EC8366 /* RSLogger.swift */; };
 		EDD3AA4C27C8DABD0048E61E /* RSConsoleLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227927A3F0C100EC8366 /* RSConsoleLogger.swift */; };
 		EDF7B3FA27A80320001C0688 /* SampleBatchPayload.json in Resources */ = {isa = PBXBuildFile; fileRef = EDF7B3F927A80320001C0688 /* SampleBatchPayload.json */; };
@@ -101,7 +100,7 @@
 		ED3D227227A3F0C100EC8366 /* RSmacOSLifecycleMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSmacOSLifecycleMonitor.swift; sourceTree = "<group>"; };
 		ED3D227627A3F0C100EC8366 /* SystemTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemTarget.swift; sourceTree = "<group>"; };
 		ED3D227727A3F0C100EC8366 /* RSLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSLogger.swift; sourceTree = "<group>"; };
-		ED3D227827A3F0C100EC8366 /* RSLoggingPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSLoggingPlugin.swift; sourceTree = "<group>"; };
+		ED3D227827A3F0C100EC8366 /* RSLoggerPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSLoggerPlugin.swift; sourceTree = "<group>"; };
 		ED3D227927A3F0C100EC8366 /* RSConsoleLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSConsoleLogger.swift; sourceTree = "<group>"; };
 		ED3D227A27A3F0C100EC8366 /* RSReplayQueuePlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSReplayQueuePlugin.swift; sourceTree = "<group>"; };
 		ED3D227B27A3F0C100EC8366 /* RudderDestinationPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RudderDestinationPlugin.swift; sourceTree = "<group>"; };
@@ -122,7 +121,6 @@
 		ED910CE4273BA25100A3EDFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EDA7EF332739119600E73142 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		EDA7EF342739119600E73142 /* RSServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSServiceManager.swift; sourceTree = "<group>"; };
-		EDA7EF382739119600E73142 /* RSMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSMessageHandler.swift; sourceTree = "<group>"; };
 		EDA7EF402739119600E73142 /* RSDatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSDatabaseManager.swift; sourceTree = "<group>"; };
 		EDA7EF422739119600E73142 /* RSScreenTrackingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSScreenTrackingManager.swift; sourceTree = "<group>"; };
 		EDA7EF452739119600E73142 /* RSUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSUserDefaults.swift; sourceTree = "<group>"; };
@@ -249,7 +247,7 @@
 			children = (
 				ED3D227C27A3F0C100EC8366 /* RSContextPlugin.swift */,
 				ED3D227D27A3F0C100EC8366 /* RSDeviceTokenPlugin.swift */,
-				ED3D227827A3F0C100EC8366 /* RSLoggingPlugin.swift */,
+				ED3D227827A3F0C100EC8366 /* RSLoggerPlugin.swift */,
 				ED3D228127A3F0C100EC8366 /* RSPlugins.swift */,
 				ED3D227A27A3F0C100EC8366 /* RSReplayQueuePlugin.swift */,
 				ED157C3827CE1C0800F22202 /* RSUserIdPlugin.swift */,
@@ -484,7 +482,6 @@
 				ED3D226227A3F0C100EC8366 /* RSClient.swift */,
 				ED3D228227A3F0C100EC8366 /* RSClient+Plugins.swift */,
 				EDA7EF402739119600E73142 /* RSDatabaseManager.swift */,
-				EDA7EF382739119600E73142 /* RSMessageHandler.swift */,
 				ED3D227E27A3F0C100EC8366 /* RSController.swift */,
 			);
 			path = Client;
@@ -680,7 +677,6 @@
 				ED3D229B27A3F0C100EC8366 /* RSiOSLifecycleEvents.swift in Sources */,
 				EDA7EFA22739119600E73142 /* RSServiceType.swift in Sources */,
 				EDA7EF872739119600E73142 /* NSError+Ext.swift in Sources */,
-				EDA7EF792739119600E73142 /* RSMessageHandler.swift in Sources */,
 				EDA7EF902739119600E73142 /* RSLogLevel.swift in Sources */,
 				EDA7EF9A2739119600E73142 /* RSDestinationConfig.swift in Sources */,
 				EDA7EF8D2739119600E73142 /* RSMessageType.swift in Sources */,
@@ -709,7 +705,7 @@
 				EDD3AA4C27C8DABD0048E61E /* RSConsoleLogger.swift in Sources */,
 				ED3D22A827A3F0C100EC8366 /* RSController.swift in Sources */,
 				ED3D22A727A3F0C100EC8366 /* RSDeviceTokenPlugin.swift in Sources */,
-				EDD3AA4A27C8DAAA0048E61E /* RSLoggingPlugin.swift in Sources */,
+				EDD3AA4A27C8DAAA0048E61E /* RSLoggerPlugin.swift in Sources */,
 				EDA7EF8E2739119600E73142 /* RSATT.swift in Sources */,
 				EDD3AA4B27C8DAB90048E61E /* RSLogger.swift in Sources */,
 				ED3D22BE27A45B6500EC8366 /* RSTypeAlias.swift in Sources */,

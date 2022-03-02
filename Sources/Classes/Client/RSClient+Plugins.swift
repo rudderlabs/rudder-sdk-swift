@@ -15,7 +15,7 @@ extension RSClient {
         replayQueuePlugin.client = self
         add(plugin: replayQueuePlugin)
         
-        let logPlugin = RSLoggingPlugin()
+        let logPlugin = RSLoggerPlugin()
         logPlugin.client = self
         logPlugin.loggingEnabled(config.logLevel != .none)
         add(plugin: logPlugin)

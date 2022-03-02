@@ -111,11 +111,11 @@ extension RSClient {
     public func log(message: String, logLevel: RSLogLevel? = nil, function: String = #function, line: Int = #line) {
         apply { plugin in
             // Check if we should send off the event
-            if RSLoggingPlugin.loggingEnabled == false {
+            if RSLoggerPlugin.loggingEnabled == false {
                 return
             }
-            if let loggerPlugin = plugin as? RSLoggingPlugin {
-                var filterKind = loggerPlugin.filterKind
+            if let loggerPlugin = plugin as? RSLoggerPlugin {
+                var filterKind = loggerPlugin.logLevel
                 if let logKind = logLevel {
                     filterKind = logKind
                 }
@@ -136,11 +136,11 @@ extension RSClient {
     public func metric(_ type: RSMetricType, name: String, value: Double, tags: [String]? = nil) {
         apply { plugin in
             // Check if we should send off the event
-            if RSLoggingPlugin.loggingEnabled == false {
+            if RSLoggerPlugin.loggingEnabled == false {
                 return
             }
             
-            if let loggerPlugin = plugin as? RSLoggingPlugin {
+            if let loggerPlugin = plugin as? RSLoggerPlugin {
                 
                 let log = LogFactory.buildLog(destination: .metric, title: type.toString(), message: name, value: value, tags: tags)
                 loggerPlugin.log(log, destination: .metric)
@@ -159,7 +159,7 @@ extension RSClient {
     ///   API on Analytics.
     func add(target: RSLogger, type: RSLoggingType) {
         apply { (potentialLogger) in
-            if let logger = potentialLogger as? RSLoggingPlugin {
+            if let logger = potentialLogger as? RSLoggerPlugin {
                 do {
                     try logger.add(target: target, for: type)
                 } catch {
@@ -171,7 +171,7 @@ extension RSClient {
     
     func logFlush() {
         apply { (potentialLogger) in
-            if let logger = potentialLogger as? RSLoggingPlugin {
+            if let logger = potentialLogger as? RSLoggerPlugin {
                 logger.flush()
             }
         }
