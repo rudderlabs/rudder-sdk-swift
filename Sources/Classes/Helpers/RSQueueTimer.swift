@@ -67,7 +67,6 @@ internal class RSQueueTimer {
     }
 }
 
-
 extension TimeInterval {
     static func milliseconds(_ value: Int) -> TimeInterval {
         return TimeInterval(value / 1000)

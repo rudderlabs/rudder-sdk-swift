@@ -43,7 +43,6 @@ public extension RSmacOSLifecycle {
     func applicationDidChangeScreenParameters() { }
 }
 
-// swiftlint:disable type_name
 class RSmacOSLifecycleMonitor: PlatformPlugin {
     static var specificName = "Rudder_macOSLifecycleMonitor"
     let type = PluginType.utility

@@ -139,7 +139,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastUpgradeCheck = 1300;
+				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					F636323D27291C0D0086D05A = {
 						CreatedOnToolsVersion = 13.0;
@@ -370,6 +370,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9F385001D0E38ABB5FA7AC75 /* Pods-RudderSampleApptvOSObjC.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -396,6 +397,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A122CEC3E2DC7AB2BC49E7CA /* Pods-RudderSampleApptvOSObjC.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;

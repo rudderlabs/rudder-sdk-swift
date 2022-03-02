@@ -10,48 +10,25 @@ import Foundation
 
 @objc open class RSConfig: NSObject {
     let writeKey: String
-    let anonymousId: String?
-    let dataPlaneUrl: String
-    let flushQueueSize: Int
-    let dbCountThreshold: Int
-    let sleepTimeOut: Int
-    let logLevel: RSLogLevel
-    let configRefreshInterval: Int
-    let trackLifecycleEvents: Bool
-    let recordScreenViews: Bool
-    let controlPlaneUrl: String
-//    let factories: [RSIntegrationFactory]
-//    let customFactories: [RSIntegrationFactory]
+    var anonymousId: String?
+    var dataPlaneUrl: String = RSConstants.RSDataPlaneUrl
+    var flushQueueSize: Int = RSConstants.RSFlushQueueSize
+    var dbCountThreshold: Int = RSConstants.RSDBCountThreshold
+    var sleepTimeOut: Int = RSConstants.RSSleepTimeout
+    var logLevel: RSLogLevel = RSLogLevel.none
+    var configRefreshInterval: Int = RSConstants.RSConfigRefreshInterval
+    var trackLifecycleEvents: Bool = RSConstants.RSTrackLifeCycleEvents
+    var recordScreenViews: Bool = RSConstants.RSRecordScreenViews
+    var controlPlaneUrl: String = RSConstants.RSControlPlaneUrl
+//    var factories: [RSIntegrationFactory]
+//    var customFactories: [RSIntegrationFactory]
     
-    public init(writeKey: String,
-                anonymousId: String?,
-                dataPlaneUrl: String = RSConstants.RSDataPlaneUrl,
-                controlPlaneUrl: String = RSConstants.RSControlPlaneUrl,
-                flushQueueSize: Int = RSConstants.RSFlushQueueSize,
-                dbCountThreshold: Int = RSConstants.RSDBCountThreshold,
-                sleepTimeOut: Int = RSConstants.RSSleepTimeout,
-                logLevel: RSLogLevel = RSLogLevel.none,
-                configRefreshInterval: Int = RSConstants.RSConfigRefreshInterval,
-                trackLifecycleEvents: Bool = RSConstants.RSTrackLifeCycleEvents,
-                recordScreenViews: Bool = RSConstants.RSRecordScreenViews/*,
-                factories: [RSIntegrationFactory] = [RSIntegrationFactory](),
-                customFactories: [RSIntegrationFactory] = [RSIntegrationFactory]()*/) {
+    public init(writeKey: String) {
         self.writeKey = writeKey
-        self.anonymousId = anonymousId
-        self.dataPlaneUrl = dataPlaneUrl
-        self.flushQueueSize = flushQueueSize
-        self.dbCountThreshold = dbCountThreshold
-        self.sleepTimeOut = sleepTimeOut
-        self.logLevel = logLevel
-        self.configRefreshInterval = configRefreshInterval
-        self.trackLifecycleEvents = trackLifecycleEvents
-        self.recordScreenViews = recordScreenViews
-        self.controlPlaneUrl = controlPlaneUrl
-//        self.factories = factories
-//        self.customFactories = customFactories
     }
-    /*
-    @objc public func withDataPlaneUrl(_ dataPlaneUrl: String) -> RSConfig {
+    
+    @objc
+    public func dataPlaneURL(_ dataPlaneUrl: String) -> RSConfig {
         if let url = URL(string: dataPlaneUrl) {
             if let scheme = url.scheme, let host = url.host {
                 if let port = url.port {
@@ -64,60 +41,56 @@ import Foundation
         return self
     }
     
-    @objc public func withDataPlaneURL(_ dataPlaneURL: URL) -> RSConfig {
-        if let scheme = dataPlaneURL.scheme, let host = dataPlaneURL.host {
-            if let port = dataPlaneURL.port {
-                self.dataPlaneUrl = "\(scheme)://\(host):\(port)"
-            } else {
-                self.dataPlaneUrl = "\(scheme)://\(host)"
-            }
-        }
-        return self
-    }
-    
-    @objc public func withFlushQueueSize(_ flushQueueSize: Int) -> RSConfig {
+    @objc
+    public func anonymousId(_ flushQueueSize: Int) -> RSConfig {
         self.flushQueueSize = flushQueueSize
         return self
     }
     
-    @objc public func withDebug(_ debug: Bool) -> RSConfig {
-        RSClient.shared.logger.configure(logLevel: .verbose)
-        self.logLevel = .verbose
+    @objc
+    public func flushQueueSize(_ anonymousId: String) -> RSConfig {
+        self.anonymousId = anonymousId
         return self
     }
     
-    @objc public func withLoglevel(_ logLevel: RSLogLevel) -> RSConfig {
-        RSClient.shared.logger.configure(logLevel: logLevel)
+    @objc
+    public func loglevel(_ logLevel: RSLogLevel) -> RSConfig {
         self.logLevel = logLevel
         return self
     }
     
-    @objc public func withDBCountThreshold(_ dbCountThreshold: Int) -> RSConfig {
+    @objc
+    public func withDBCountThreshold(_ dbCountThreshold: Int) -> RSConfig {
         self.dbCountThreshold = dbCountThreshold
         return self
     }
     
-    @objc public func withSleepTimeOut(_ sleepTimeOut: Int) -> RSConfig {
+    @objc
+    public func sleepTimeOut(_ sleepTimeOut: Int) -> RSConfig {
         self.sleepTimeOut = sleepTimeOut
         return self
     }
     
-    @objc public func withConfigRefreshInteval(_ configRefreshInterval: Int) -> RSConfig {
+    @objc
+    public func configRefreshInteval(_ configRefreshInterval: Int) -> RSConfig {
         self.configRefreshInterval = configRefreshInterval
         return self
     }
     
-    @objc public func withTrackLifecycleEvens(_ trackLifecycleEvents: Bool) -> RSConfig {
+    @objc
+    public func trackLifecycleEvens(_ trackLifecycleEvents: Bool) -> RSConfig {
         self.trackLifecycleEvents = trackLifecycleEvents
         return self
     }
     
-    @objc public func withRecordScreenViews(_ recordScreenViews: Bool) -> RSConfig {
+    @objc
+    public func recordScreenViews(_ recordScreenViews: Bool) -> RSConfig {
         self.recordScreenViews = recordScreenViews
         return self
     }
     
-    @objc public func withControlPlaneUrl(_ controlPlaneUrl: String) -> RSConfig {
+    @objc
+    public func controlPlaneURL(_ controlPlaneUrl: String) -> RSConfig {
         if let url = URL(string: controlPlaneUrl) {
             if let scheme = url.scheme, let host = url.host {
                 if let port = url.port {
@@ -130,17 +103,7 @@ import Foundation
         return self
     }
     
-    @objc public func withControlPlaneURL(_ controlPlaneURL: URL) -> RSConfig {
-        if let scheme = controlPlaneURL.scheme, let host = controlPlaneURL.host {
-            if let port = controlPlaneURL.port {
-                self.controlPlaneUrl = "\(scheme)://\(host):\(port)"
-            } else {
-                self.controlPlaneUrl = "\(scheme)://\(host)"
-            }
-        }
-        return self
-    }
-    
+    /*
     @objc public func withFactory(_ factory: RSIntegrationFactory) -> RSConfig {
         factories.append(factory)
         return self
