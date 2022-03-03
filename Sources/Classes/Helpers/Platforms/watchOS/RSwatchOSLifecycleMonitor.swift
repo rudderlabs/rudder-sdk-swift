@@ -11,25 +11,9 @@
 import Foundation
 import WatchKit
 
-public protocol RSwatchOSLifecycle {
-    func applicationDidFinishLaunching(watchExtension: WKExtension)
-    func applicationWillEnterForeground(watchExtension: WKExtension)
-    func applicationDidEnterBackground(watchExtension: WKExtension)
-    func applicationDidBecomeActive(watchExtension: WKExtension)
-    func applicationWillResignActive(watchExtension: WKExtension)
-}
-
-public extension RSwatchOSLifecycle {
-    func applicationDidFinishLaunching(watchExtension: WKExtension) { }
-    func applicationWillEnterForeground(watchExtension: WKExtension) { }
-    func applicationDidEnterBackground(watchExtension: WKExtension) { }
-    func applicationDidBecomeActive(watchExtension: WKExtension) { }
-    func applicationWillResignActive(watchExtension: WKExtension) { }
-}
-
 class RSwatchOSLifecycleMonitor: RSPlatformPlugin {
     var type = PluginType.utility
-    var controller: RSClient?
+    var client: RSClient?
     var wasBackgrounded: Bool = false
     
     private var watchExtension = WKExtension.shared()
@@ -71,7 +55,7 @@ class RSwatchOSLifecycleMonitor: RSPlatformPlugin {
     }
     
     func applicationDidFinishLaunching(notification: NSNotification) {
-        controller?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationDidFinishLaunching(watchExtension: watchExtension)
             }
@@ -83,7 +67,7 @@ class RSwatchOSLifecycleMonitor: RSPlatformPlugin {
         // from iOS, so ignore until we've been backgrounded at least once.
         if wasBackgrounded == false { return }
         
-        controller?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationWillEnterForeground(watchExtension: watchExtension)
             }
@@ -94,7 +78,7 @@ class RSwatchOSLifecycleMonitor: RSPlatformPlugin {
         // make sure to denote that we were backgrounded.
         wasBackgrounded = true
         
-        controller?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationDidEnterBackground(watchExtension: watchExtension)
             }
@@ -102,7 +86,7 @@ class RSwatchOSLifecycleMonitor: RSPlatformPlugin {
     }
     
     func applicationDidBecomeActive(notification: NSNotification) {
-        controller?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationDidBecomeActive(watchExtension: watchExtension)
             }
@@ -110,18 +94,18 @@ class RSwatchOSLifecycleMonitor: RSPlatformPlugin {
     }
     
     func applicationWillResignActive(notification: NSNotification) {
-        controller?.apply { (ext) in
+        client?.apply { (ext) in
             if let validExt = ext as? RSwatchOSLifecycle {
                 validExt.applicationWillResignActive(watchExtension: watchExtension)
             }
         }
     }
-
+    
 }
 
 // MARK: - Segment Destination Extension
 
-extension RSDestinationPlugin: RSwatchOSLifecycle {
+extension RudderDestinationPlugin: RSwatchOSLifecycle {
     public func applicationWillEnterForeground(watchExtension: WKExtension) {
         enterForeground()
     }

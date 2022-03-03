@@ -99,7 +99,7 @@ struct ScreenMessage: RSMessage {
     var channel: String?
 
     var name: String?
-    var properties: MessageProperties?
+    var properties: ScreenProperties?
 
     func toDict() -> [String: Any] {
         var dictionary = staticDictionary()

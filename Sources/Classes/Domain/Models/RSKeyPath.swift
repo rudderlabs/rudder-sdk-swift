@@ -1,8 +1,9 @@
 //
-//  ObjectPath.swift
-//  Segment
+//  RSKeyPath.swift
+//  Rudder
 //
-//  Created by Brandon Sneed on 3/19/21.
+//  Created by Pallab Maiti on 05/08/21.
+//  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
 //
 
 import Foundation

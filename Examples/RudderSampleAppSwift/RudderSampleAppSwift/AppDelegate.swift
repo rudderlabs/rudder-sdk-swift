@@ -12,7 +12,7 @@ import Rudder
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    
+    var client: RSClient? = nil
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -20,14 +20,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let config: RSConfig = RSConfig(writeKey: "1wvsoF3Kx2SczQNlx1dvcqW9ODW")
             .dataPlaneURL("https://rudderstacz.dataplane.rudderstack.com")
             .loglevel(.debug)
-            .trackLifecycleEvents(true)
+            .trackLifecycleEvents(false)
             .recordScreenViews(true)
         
-        let client = RSClient(config: config)
-        client.track("Track 1")
+        client = RSClient(config: config)
         
-        client.setDeviceToken("example_device_token")
-        client.track("Track 2")
+        client?.setAppTrackingConsent(.authorize)
+        client?.setAnonymousId("example_anonymous_id")
+//        let defaultOption = RSOption()
+//        defaultOption.putIntegration("Amplitude", isEnabled: true)
+//        client?.setOption(defaultOption)
+        
+        client?.track("Track 1")
+        
+//        client?.setDeviceToken("example_device_token")
+//        let messageOption = RSOption()
+//        messageOption.putIntegration("MoEngage", isEnabled: true)
+//        client?.track("Track 2", option: messageOption)
         
         return true
     }
@@ -45,7 +54,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
-
 }
 
+extension UIApplicationDelegate {
+    var client: RSClient? {
+        if let appDelegate = self as? AppDelegate {
+            return appDelegate.client
+        }
+        return nil
+    }
+}

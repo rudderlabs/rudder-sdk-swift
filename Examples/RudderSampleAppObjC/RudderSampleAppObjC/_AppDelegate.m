@@ -57,7 +57,9 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
         @"key_2" : @"value_2"
     } options:option];*/
     
-    RSConfig *config = [[[[RSConfig alloc] initWithWriteKey:WRITE_KEY] trackLifecycleEvents:YES] recordScreenViews:YES];
+    RSConfig *config = [[RSConfig alloc] initWithWriteKey:WRITE_KEY];
+    [config trackLifecycleEvents:YES];
+    [config recordScreenViews:YES];
     RSClient *client = [[RSClient alloc] initWithConfig:config];
     [client track:@"track 1" properties:nil option:nil];
     

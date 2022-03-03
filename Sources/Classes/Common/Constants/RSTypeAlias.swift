@@ -10,7 +10,7 @@ import Foundation
 
 typealias MessageContext = [String: Any]
 typealias PageProperties = [String: String]
-typealias ScreenProperties = [String: String]
+typealias ScreenProperties = [String: Any]
 typealias TrackProperties = [String: Any]
 typealias IdentifyProperties = [String: String]
 typealias MessageTraits = [String: String]

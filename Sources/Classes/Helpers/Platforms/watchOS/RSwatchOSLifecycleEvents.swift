@@ -13,10 +13,10 @@ import WatchKit
 
 class RSwatchOSLifecycleEvents: RSPlatformPlugin, RSwatchOSLifecycle {    
     let type = PluginType.before
-    var controller: RSClient?
+    var client: RSClient?
     
     func applicationDidFinishLaunching(watchExtension: WKExtension) {
-        if controller?.config.trackLifecycleEvents == false {
+        if client?.config.trackLifecycleEvents == false {
             return
         }
         
@@ -27,12 +27,12 @@ class RSwatchOSLifecycleEvents: RSPlatformPlugin, RSwatchOSLifecycle {
         let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
         
         if previousBuild == nil {
-            controller?.track("Application Installed", properties: [
+            client?.track("Application Installed", properties: [
                 "version": currentVersion ?? "",
                 "build": currentBuild ?? ""
             ])
         } else if currentBuild != previousBuild {
-            controller?.track("Application Updated", properties: [
+            client?.track("Application Updated", properties: [
                 "previous_version": previousVersion ?? "",
                 "previous_build": previousBuild ?? "",
                 "version": currentVersion ?? "",
@@ -40,7 +40,7 @@ class RSwatchOSLifecycleEvents: RSPlatformPlugin, RSwatchOSLifecycle {
             ])
         }
         
-        controller?.track("Application Opened", properties: [
+        client?.track("Application Opened", properties: [
             "from_background": false,
             "version": currentVersion ?? "",
             "build": currentBuild ?? ""
@@ -51,14 +51,14 @@ class RSwatchOSLifecycleEvents: RSPlatformPlugin, RSwatchOSLifecycle {
     }
     
     func applicationWillEnterForeground(watchExtension: WKExtension) {
-        if controller?.config.trackLifecycleEvents == false {
+        if client?.config.trackLifecycleEvents == false {
             return
         }
         
         let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
         
-        controller?.track("Application Opened", properties: [
+        client?.track("Application Opened", properties: [
             "from_background": true,
             "version": currentVersion ?? "",
             "build": currentBuild ?? ""

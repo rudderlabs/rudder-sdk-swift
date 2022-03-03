@@ -11,42 +11,31 @@
 import Foundation
 import WatchKit
 
-// MARK: - Remote Notifications
-
-protocol RemoteNotifications: RSPlugin {
-    func registeredForRemoteNotifications(deviceToken: Data)
-    func failedToRegisterForRemoteNotification(error: Error?)
-    func receivedRemoteNotification(userInfo: [AnyHashable: Any])
-}
-
-extension RemoteNotifications {
-    func registeredForRemoteNotifications(deviceToken: Data) {}
-    func failedToRegisterForRemoteNotification(error: Error?) {}
-    func receivedRemoteNotification(userInfo: [AnyHashable: Any]) {}
-}
-
 extension RSClient {
-    func registeredForRemoteNotifications(deviceToken: Data) {
+    @objc
+    public func registeredForRemoteNotifications(deviceToken: Data) {
         setDeviceToken(deviceToken.hexString)
         
         apply { plugin in
-            if let p = plugin as? RemoteNotifications {
+            if let p = plugin as? RSPushNotifications {
                 p.registeredForRemoteNotifications(deviceToken: deviceToken)
             }
         }
     }
     
-    func failedToRegisterForRemoteNotification(error: Error?) {
+    @objc
+    public func failedToRegisterForRemoteNotification(error: Error?) {
         apply { plugin in
-            if let p = plugin as? RemoteNotifications {
+            if let p = plugin as? RSPushNotifications {
                 p.failedToRegisterForRemoteNotification(error: error)
             }
         }
     }
     
-    func receivedRemoteNotification(userInfo: [AnyHashable: Any]) {
+    @objc
+    public func receivedRemoteNotification(userInfo: [AnyHashable: Any]) {
         apply { plugin in
-            if let p = plugin as? RemoteNotifications {
+            if let p = plugin as? RSPushNotifications {
                 p.receivedRemoteNotification(userInfo: userInfo)
             }
         }

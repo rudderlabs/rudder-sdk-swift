@@ -1,8 +1,9 @@
 //
-//  Analytics.swift
-//  analytics-swift
+//  RSClient.swift
+//  Rudder
 //
-//  Created by Brandon Sneed on 11/17/20.
+//  Created by Pallab Maiti on 05/08/21.
+//  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
 //
 
 import Foundation
@@ -160,7 +161,7 @@ extension RSClient {
         return nil
     }
     
-    /// Tells this instance of Analytics to flush any queued events up to Segment.com.  This command will also
+    /// Tells this instance of Analytics to flush any queued events. This command will also
     /// be sent to each plugin present in the system.
     @objc
     public func flush() {
@@ -270,7 +271,7 @@ extension RSClient {
         }
     }
     
-    func checkSettings() {
+    func checkServerConfig() {
         var retryCount = 0
         var isCompleted = false
         while !isCompleted && retryCount < 4 {

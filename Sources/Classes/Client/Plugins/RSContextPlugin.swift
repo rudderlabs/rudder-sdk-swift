@@ -44,7 +44,7 @@ class RSContextPlugin: RSPlatformPlugin {
             "build": info?["CFBundleVersion"] ?? "",
             "namespace": Bundle.main.bundleIdentifier ?? ""
         ]
-        insertStaticPlatformContextData(context: &staticContext)        
+        insertStaticPlatformContextData(context: &staticContext)
         return staticContext
     }
     
@@ -59,8 +59,6 @@ class RSContextPlugin: RSPlatformPlugin {
             "name": device.name,
             "id": device.identifierForVendor ?? ""
         ]
-        
-        // "token" handled in DeviceToken.swift
         context["device"] = deviceInfo
         // os
         context["os"] = [

@@ -53,7 +53,7 @@ struct RSUtils {
     }
     
     static func getJSON(from message: RSDBMessage) -> String {
-        let sentAt = RSUtils.getTimeStamp()
+        let sentAt = RSUtils.getTimestampString()
         var jsonString = "{\"sentAt\":\"\(sentAt)\",\"batch\":["
         var totalBatchSize = jsonString.getUTF8Length() + 2
         var index = 0

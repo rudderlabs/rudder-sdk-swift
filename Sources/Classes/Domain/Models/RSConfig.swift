@@ -21,15 +21,13 @@ open class RSConfig: NSObject {
     var trackLifecycleEvents: Bool = RSConstants.RSTrackLifeCycleEvents
     var recordScreenViews: Bool = RSConstants.RSRecordScreenViews
     var controlPlaneUrl: String = RSConstants.RSControlPlaneUrl
-//    var factories: [RSIntegrationFactory]
-//    var customFactories: [RSIntegrationFactory]
     
     @objc
     public init(writeKey: String) {
         self.writeKey = writeKey
     }
     
-    @objc
+    @discardableResult @objc
     public func dataPlaneURL(_ dataPlaneUrl: String) -> RSConfig {
         if let url = URL(string: dataPlaneUrl) {
             if let scheme = url.scheme, let host = url.host {
@@ -43,55 +41,55 @@ open class RSConfig: NSObject {
         return self
     }
     
-    @objc
+    @discardableResult @objc
     public func anonymousId(_ flushQueueSize: Int) -> RSConfig {
         self.flushQueueSize = flushQueueSize
         return self
     }
     
-    @objc
+    @discardableResult @objc
     public func flushQueueSize(_ anonymousId: String) -> RSConfig {
         self.anonymousId = anonymousId
         return self
     }
     
-    @objc
+    @discardableResult @objc
     public func loglevel(_ logLevel: RSLogLevel) -> RSConfig {
         self.logLevel = logLevel
         return self
     }
     
-    @objc
+    @discardableResult @objc
     public func withDBCountThreshold(_ dbCountThreshold: Int) -> RSConfig {
         self.dbCountThreshold = dbCountThreshold
         return self
     }
     
-    @objc
+    @discardableResult @objc
     public func sleepTimeOut(_ sleepTimeOut: Int) -> RSConfig {
         self.sleepTimeOut = sleepTimeOut
         return self
     }
     
-    @objc
+    @discardableResult @objc
     public func configRefreshInterval(_ configRefreshInterval: Int) -> RSConfig {
         self.configRefreshInterval = configRefreshInterval
         return self
     }
     
-    @objc
+    @discardableResult @objc
     public func trackLifecycleEvents(_ trackLifecycleEvents: Bool) -> RSConfig {
         self.trackLifecycleEvents = trackLifecycleEvents
         return self
     }
     
-    @objc
+    @discardableResult @objc
     public func recordScreenViews(_ recordScreenViews: Bool) -> RSConfig {
         self.recordScreenViews = recordScreenViews
         return self
     }
     
-    @objc
+    @discardableResult @objc
     public func controlPlaneURL(_ controlPlaneUrl: String) -> RSConfig {
         if let url = URL(string: controlPlaneUrl) {
             if let scheme = url.scheme, let host = url.host {
@@ -104,15 +102,4 @@ open class RSConfig: NSObject {
         }
         return self
     }
-    
-    /*
-    @objc public func withFactory(_ factory: RSIntegrationFactory) -> RSConfig {
-        factories.append(factory)
-        return self
-    }
-    
-    @objc public func withCustomFactory(_ customFactory: RSIntegrationFactory) -> RSConfig {
-        customFactories.append(customFactory)
-        return self
-    }*/
 }

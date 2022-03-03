@@ -52,15 +52,14 @@ class RudderDestinationPlugin: RSDestinationPlugin {
     }
     
     private func queueEvent<T: RSMessage>(event: T) {
-        guard let messageHandler = self.databaseManager else { return }
-        messageHandler.write(event)
-//        flushMessage()
+        guard let databaseManager = self.databaseManager else { return }
+        databaseManager.write(event)
     }
 }
 
 extension RudderDestinationPlugin {
     internal func configureCloudDestinations<T: RSMessage>(event: T) -> T {
-        guard let integrationSettings = client?.serverConfig else { return event }
+        guard let serverConfig = client?.serverConfig else { return event }
         guard let plugins = client?.controller.plugins[.destination]?.plugins as? [RSDestinationPlugin] else { return event }
         guard let customerValues = event.integrations else { return event }
         
@@ -68,7 +67,7 @@ extension RudderDestinationPlugin {
         
         for plugin in plugins {
             var hasSettings = false
-            if let destinations = integrationSettings.destinations {
+            if let destinations = serverConfig.destinations {
                 if let destination = destinations.first(where: { $0.destinationDefinition?.displayName == plugin.key }), destination.enabled {
                     hasSettings = true
                 }

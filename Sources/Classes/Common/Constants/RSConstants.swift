@@ -18,7 +18,7 @@ open class RSConstants: NSObject {
     public static let RSControlPlaneUrl: String = "https://api.rudderlabs.com"
     public static let RSTrackLifeCycleEvents: Bool = true
     public static let RSRecordScreenViews: Bool = false
-    static let RSVersion: String = "1.0.21"
+    static let RSVersion: String = "1.5.2"
     static let TAG = "RStack"
     static let RSPrefsKey: String = "rl_prefs"
     static let RSServerConfigKey: String = "rl_server_config"

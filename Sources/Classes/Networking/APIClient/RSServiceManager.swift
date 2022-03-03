@@ -58,7 +58,7 @@ extension RSServiceManager {
             client.log(message: "HTTPBody: \(httpBody)", logLevel: .debug)
         }
         let dataTask = RSServiceManager.sharedSession.dataTask(with: request, completionHandler: { (data, response, error) in
-            DispatchQueue.main.async {
+//            DispatchQueue.main.async {
                 if error != nil {
                     completion(.failure(NSError(code: .SERVER_ERROR)))
                     return
@@ -89,7 +89,7 @@ extension RSServiceManager {
                 } else {
                     completion(.failure(NSError(code: .SERVER_ERROR)))
                 }
-            }
+//            }
         })
         dataTask.resume()
     }

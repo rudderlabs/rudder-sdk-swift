@@ -9,41 +9,7 @@
 #if os(macOS)
 import Cocoa
 
-public protocol RSmacOSLifecycle {
-    func applicationDidResignActive()
-    func application(didFinishLaunchingWithOptions launchOptions: [String: Any]?)
-    func applicationWillBecomeActive()
-    func applicationDidBecomeActive()
-    func applicationWillHide()
-    func applicationDidHide()
-    func applicationDidUnhide()
-    func applicationDidUpdate()
-    func applicationWillFinishLaunching()
-    func applicationWillResignActive()
-    func applicationWillUnhide()
-    func applicationWillUpdate()
-    func applicationWillTerminate()
-    func applicationDidChangeScreenParameters()
-}
-
-public extension RSmacOSLifecycle {
-    func applicationDidResignActive() { }
-    func application(didFinishLaunchingWithOptions launchOptions: [String: Any]?) { }
-    func applicationWillBecomeActive() { }
-    func applicationDidBecomeActive() { }
-    func applicationWillHide() { }
-    func applicationDidHide() { }
-    func applicationDidUnhide() { }
-    func applicationDidUpdate() { }
-    func applicationWillFinishLaunching() { }
-    func applicationWillResignActive() { }
-    func applicationWillUnhide() { }
-    func applicationWillUpdate() { }
-    func applicationWillTerminate() { }
-    func applicationDidChangeScreenParameters() { }
-}
-
-class RSmacOSLifecycleMonitor: PlatformPlugin {
+class RSmacOSLifecycleMonitor: RSPlatformPlugin {
     static var specificName = "Rudder_macOSLifecycleMonitor"
     let type = PluginType.utility
     let name = specificName

@@ -14,18 +14,17 @@ class RSIntegrationPlugin: RSPlatformPlugin {
         
     func execute<T: RSMessage>(event: T?) -> T? {
         guard var workingEvent = event else { return event }
-        if workingEvent.option?.integrations?.isEmpty == true {
-            if let optionPlugin = client?.find(pluginType: RSOptionPlugin.self) {
-                if let integrations = optionPlugin.option?.integrations {
-                    workingEvent.integrations = integrations
-                } else {
-                    workingEvent.integrations = ["All": true]
+        if let optionPlugin = client?.find(pluginType: RSOptionPlugin.self) {
+            if let integrations = optionPlugin.option?.integrations {
+                workingEvent.integrations = integrations
+                if integrations["All"] == nil {
+                    workingEvent.integrations?["All"] = true
                 }
+            } else {
+                workingEvent.integrations = ["All": true]
             }
-        }
-        if workingEvent.option?.integrations?["All"] == nil {
-            workingEvent.integrations = workingEvent.option?.integrations
-            workingEvent.integrations?["All"] = true
+        } else {
+            workingEvent.integrations = ["All": true]
         }
         return workingEvent
     }
