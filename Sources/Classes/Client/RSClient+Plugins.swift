@@ -24,9 +24,9 @@ extension RSClient {
         integrationPlugin.client = self
         add(plugin: integrationPlugin)
         
-        let segmentDestination = RudderDestinationPlugin()
-        segmentDestination.client = self
-        add(plugin: segmentDestination)
+        let rudderDestination = RudderDestinationPlugin()
+        rudderDestination.client = self
+        add(plugin: rudderDestination)
         
         add(plugin: RSGDPRPlugin())
         
@@ -108,3 +108,67 @@ extension RSClient {
     }
 }
 #endif
+
+extension RSClient {
+    func update(serverConfig: RSServerConfig, type: UpdateType) {
+        apply { (plugin) in
+            update(plugin: plugin, serverConfig: serverConfig, type: type)
+        }
+    }
+    
+    func update(plugin: RSPlugin, serverConfig: RSServerConfig, type: UpdateType) {
+        plugin.update(serverConfig: serverConfig, type: type)
+        if let dest = plugin as? RSDestinationPlugin {
+            dest.apply { (subPlugin) in
+                subPlugin.update(serverConfig: serverConfig, type: type)
+            }
+        }
+    }
+    
+    func checkServerConfig() {
+        var retryCount = 0
+        var isCompleted = false
+        while !isCompleted && retryCount < 4 {
+            if let serverConfig = fetchServerConfig() {
+                self.serverConfig = serverConfig
+                RSUserDefaults.saveServerConfig(serverConfig)
+                RSUserDefaults.updateLastUpdatedTime(RSUtils.getTimeStamp())
+                log(message: "server config download successful", logLevel: .debug)
+                isCompleted = true
+            } else {
+                if error?.code == RSErrorCode.WRONG_WRITE_KEY.rawValue {
+                    log(message: "Wrong write key", logLevel: .debug)
+                    retryCount = 4
+                } else {
+                    log(message: "Retrying download in \(retryCount) seconds", logLevel: .debug)
+                    retryCount += 1
+                    sleep(UInt32(retryCount))
+                }
+            }
+        }
+        if !isCompleted {
+            log(message: "Server config download failed.Using last stored config from storage", logLevel: .debug)
+        }
+    }
+    
+    private func fetchServerConfig() -> RSServerConfig? {
+        var serverConfig: RSServerConfig?
+        let semaphore = DispatchSemaphore(value: 0)
+        let hasSettings = RSUserDefaults.getServerConfig() != nil
+        let updateType = (hasSettings ? UpdateType.refresh : UpdateType.initial)
+        let serviceManager = RSServiceManager(client: self)
+        serviceManager.downloadServerConfig { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let config):
+                serverConfig = config
+                self.update(serverConfig: config, type: updateType)
+            case .failure(let error):
+                self.error = error
+            }
+            semaphore.signal()
+        }
+        semaphore.wait()
+        return serverConfig
+    }
+}

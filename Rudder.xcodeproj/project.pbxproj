@@ -240,7 +240,6 @@
 				ED157C4427CFD99700F22202 /* RSIntegrationPlugin.swift */,
 				ED3D227827A3F0C100EC8366 /* RSLoggerPlugin.swift */,
 				ED157C4627CFDEC000F22202 /* RSOptionPlugin.swift */,
-				ED3D228127A3F0C100EC8366 /* RSPlugins.swift */,
 				ED3D227A27A3F0C100EC8366 /* RSReplayQueuePlugin.swift */,
 				ED157C3827CE1C0800F22202 /* RSUserIdPlugin.swift */,
 				ED3D227B27A3F0C100EC8366 /* RudderDestinationPlugin.swift */,
@@ -407,6 +406,7 @@
 				ED157C5727D0FFA400F22202 /* RSLifeCycle.swift */,
 				ED3D227727A3F0C100EC8366 /* RSLogger.swift */,
 				ED3D229227A3F0C100EC8366 /* RSMessage.swift */,
+				ED3D228127A3F0C100EC8366 /* RSPlugins.swift */,
 				ED157C5927D1010D00F22202 /* RSPushNotifications.swift */,
 				EDA7EF6B2739119600E73142 /* RSServiceType.swift */,
 			);

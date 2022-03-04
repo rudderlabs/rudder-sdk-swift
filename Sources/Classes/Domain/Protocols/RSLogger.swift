@@ -8,11 +8,6 @@
 
 import Foundation
 
-// MARK: - Logging Types
-
-/// The foundation for building out a special logger. If logs need to be directed to a certain area, this is the
-/// interface to start off with. For instance a console logger, a networking logger or offline storage logger
-/// would all start off with LogTarget.
 protocol RSLogger {
     
     /// Implement this method to process logging messages. This is where the logic for the target will be

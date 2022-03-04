@@ -58,38 +58,37 @@ extension RSServiceManager {
             client.log(message: "HTTPBody: \(httpBody)", logLevel: .debug)
         }
         let dataTask = RSServiceManager.sharedSession.dataTask(with: request, completionHandler: { (data, response, error) in
-//            DispatchQueue.main.async {
-                if error != nil {
-                    completion(.failure(NSError(code: .SERVER_ERROR)))
-                    return
-                }
-                let response = response as? HTTPURLResponse
-                if let statusCode = response?.statusCode {
-                    let apiClientStatus = APIClientStatus(statusCode)
-                    switch apiClientStatus {
-                    case .success:
-                        switch API {
-                        case .flushEvents:
-                            completion(.success(true as! T)) // swiftlint:disable:this force_cast
-                        default:
-                            do {
-                                let json = try JSONSerialization.jsonObject(with: data ?? Data(), options: [])
-                                print(json)
-                                let object = try JSONDecoder().decode(T.self, from: data ?? Data())
-                                print(object)
-                                completion(.success(object))
-                            } catch {
-                                completion(.failure(NSError(code: .DECODING_FAILED)))
-                            }
-                        }
+            if error != nil {
+                completion(.failure(NSError(code: .SERVER_ERROR)))
+                return
+            }
+            let response = response as? HTTPURLResponse
+            if let statusCode = response?.statusCode {
+                let apiClientStatus = APIClientStatus(statusCode)
+                switch apiClientStatus {
+                case .success:
+                    switch API {
+                    case .flushEvents:
+                        completion(.success(true as! T)) // swiftlint:disable:this force_cast
                     default:
-                        let errorCode = handleCustomError(data: data ?? Data())
-                        completion(.failure(NSError(code: errorCode)))
+                        do {
+                            let json = try JSONSerialization.jsonObject(with: data ?? Data(), options: [])
+                            if let data = data, let jsonString = String(data: data, encoding: .utf8) {
+                                client.log(message: jsonString, logLevel: .debug)
+                            }
+                            let object = try JSONDecoder().decode(T.self, from: data ?? Data())
+                            completion(.success(object))
+                        } catch {
+                            completion(.failure(NSError(code: .DECODING_FAILED)))
+                        }
                     }
-                } else {
-                    completion(.failure(NSError(code: .SERVER_ERROR)))
+                default:
+                    let errorCode = handleCustomError(data: data ?? Data())
+                    completion(.failure(NSError(code: errorCode)))
                 }
-//            }
+            } else {
+                completion(.failure(NSError(code: .SERVER_ERROR)))
+            }
         })
         dataTask.resume()
     }
@@ -99,7 +98,6 @@ extension RSServiceManager {
             guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: String] else {
                 return .SERVER_ERROR
             }
-            print(json)
             if let message = json["message"], message == "Invalid write key" {
                 return .WRONG_WRITE_KEY
             }

@@ -13,7 +13,7 @@ protocol KeyPathHandler {
     func value(keyPath: RSKeyPath, input: Any?, reference: Any?) -> Any?
 }
 
-public struct BasicHandler: KeyPathHandler {
+struct BasicHandler: KeyPathHandler {
     func value(keyPath: RSKeyPath, input: Any?, reference: Any?) -> Any? {
         guard let input = input as? [String: Any] else { return nil }
         var result: Any?
@@ -34,19 +34,19 @@ public struct BasicHandler: KeyPathHandler {
     }
 }
 
-public struct RSKeyPath {
+struct RSKeyPath {
     var current: String
     var remaining: [String]
     
     var remainingPath: String { return remaining.joined(separator: ".") }
 
-    public init(_ string: String) {
+    init(_ string: String) {
         var components = string.components(separatedBy: ".")
         current = components.removeFirst()
         remaining = components
     }
     
-    internal static var handlers: [KeyPathHandler] = [PathHandler(), IfHandler(), BasicHandler()]
+    static var handlers: [KeyPathHandler] = [PathHandler(), IfHandler(), BasicHandler()]
     static func register(_ handler: KeyPathHandler) { handlers.insert(handler, at: 0) }
     static func handlerFor(keyPath: RSKeyPath, input: Any?) -> KeyPathHandler? {
         guard let input = input as? [String: Any] else { return nil }
@@ -60,25 +60,25 @@ public struct RSKeyPath {
 }
 
 extension RSKeyPath: ExpressibleByStringLiteral {
-    public init(stringLiteral value: String) {
+    init(stringLiteral value: String) {
         self.init(value)
     }
-    public init(unicodeScalarLiteral value: String) {
+    init(unicodeScalarLiteral value: String) {
         self.init(value)
     }
-    public init(extendedGraphemeClusterLiteral value: String) {
+    init(extendedGraphemeClusterLiteral value: String) {
         self.init(value)
     }
 }
 
 extension Dictionary where Key: StringProtocol, Value: Any {
-    internal func value(keyPath: RSKeyPath, reference: Any?) -> Any? {
+    func value(keyPath: RSKeyPath, reference: Any?) -> Any? {
         let handler = RSKeyPath.handlerFor(keyPath: keyPath, input: self)
         let result = handler?.value(keyPath: keyPath, input: self, reference: reference)
         return result
     }
     
-    internal mutating func setValue(_ value: Any?, keyPath: RSKeyPath) {
+    mutating func setValue(_ value: Any?, keyPath: RSKeyPath) {
         guard let key = keyPath.current as? Key else { return }
         
         if keyPath.remaining.isEmpty {
@@ -100,23 +100,23 @@ extension Dictionary where Key: StringProtocol, Value: Any {
         }
     }
     
-    public subscript(keyPath keyPath: RSKeyPath) -> Any? {
+    subscript(keyPath keyPath: RSKeyPath) -> Any? {
         get { return value(keyPath: keyPath, reference: nil) }
         set { setValue(newValue as Any, keyPath: keyPath) }
     }
 
-    public subscript(keyPath keyPath: RSKeyPath, reference reference: Any?) -> Any? {
+    subscript(keyPath keyPath: RSKeyPath, reference reference: Any?) -> Any? {
         get { return value(keyPath: keyPath, reference: reference) }
         set { setValue(newValue as Any, keyPath: keyPath) }
     }
     
-    public func exists(keyPath: RSKeyPath, reference: Any? = nil) -> Bool {
+    func exists(keyPath: RSKeyPath, reference: Any? = nil) -> Bool {
         return (value(keyPath: keyPath, reference: reference) != nil)
     }
 }
 
 extension String {
-    internal var strippedReference: String {
+    var strippedReference: String {
         return self.replacingOccurrences(of: "$.", with: "")
     }
 }
@@ -187,12 +187,12 @@ struct PathHandler: KeyPathHandler {
     
 }
 
-internal protocol Flattenable {
+protocol Flattenable {
     func flattened() -> Any?
 }
 
 extension Optional: Flattenable {
-    internal func flattened() -> Any? {
+    func flattened() -> Any? {
         switch self {
         case .some(let x as Flattenable): return x.flattened()
         case .some(let x): return x
