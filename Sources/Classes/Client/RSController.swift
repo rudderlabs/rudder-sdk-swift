@@ -41,7 +41,7 @@ public class RSController {
     func applyPlugins<E: RSMessage>(type: PluginType, event: E?) -> E? {
         var result: E? = event
         if let mediator = plugins[type], let e = event {
-            result = mediator.execute(event: e)
+            result = mediator.execute(message: e)
         }
         return result
     }
@@ -62,17 +62,17 @@ class Mediator {
     }
 
     var plugins = [RSPlugin]()
-    func execute<T: RSMessage>(event: T) -> T? {
-        var result: T? = event
+    func execute<T: RSMessage>(message: T) -> T? {
+        var result: T? = message
         
         plugins.forEach { (plugin) in
             if let r = result {
                 // Drop the event return because we don't care about the
                 // final result.
                 if plugin is RSDestinationPlugin {
-                    _ = plugin.execute(event: r)
+                    _ = plugin.execute(message: r)
                 } else {
-                    result = plugin.execute(event: r)
+                    result = plugin.execute(message: r)
                 }
             }
         }
@@ -134,8 +134,8 @@ extension RSController {
 // MARK: - Plugin Timeline Execution
 
 public extension RSEventPlugin {
-    func execute<T: RSMessage>(event: T?) -> T? {
-        var result: T? = event
+    func execute<T: RSMessage>(message: T?) -> T? {
+        var result: T? = message
         switch result {
         case let r as IdentifyMessage:
             result = self.identify(message: r) as? T
@@ -182,18 +182,18 @@ public extension RSEventPlugin {
 // MARK: - Destination Timeline
 
 extension RSDestinationPlugin {
-    func execute<T: RSMessage>(event: T?) -> T? {
-        var result: T? = event
+    public func execute<T: RSMessage>(message: T?) -> T? {
+        var result: T? = message
         if let r = result {
             result = self.process(incomingEvent: r)
         }
         return result
     }
     
-    func isDestinationEnabled(event: RSMessage) -> Bool {
+    func isDestinationEnabled(message: RSMessage) -> Bool {
         var customerDisabled = false
         
-        if let integration = event.integrations?.first(where: { key, _ in
+        if let integration = message.integrations?.first(where: { key, _ in
             return key == self.key
         }), integration.value == false {
             customerDisabled = true
@@ -215,7 +215,7 @@ extension RSDestinationPlugin {
         
         var result: E?
         
-        if isDestinationEnabled(event: incomingEvent) {
+        if isDestinationEnabled(message: incomingEvent) {
             // apply .before and .enrichment types first ...
             let beforeResult = controller.applyPlugins(type: .before, event: incomingEvent)
             let enrichmentResult = controller.applyPlugins(type: .enrichment, event: beforeResult)

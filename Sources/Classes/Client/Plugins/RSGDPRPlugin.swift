@@ -16,11 +16,11 @@ class RSGDPRPlugin: RSPlatformPlugin {
 
     required init() { }
     
-    func execute<T: RSMessage>(event: T?) -> T? {
+    func execute<T: RSMessage>(message: T?) -> T? {
         if RSUserDefaults.getOptStatus() == true {
             return nil
         } else {
-            return event
+            return message
         }
     }
 }

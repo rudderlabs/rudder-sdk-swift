@@ -17,11 +17,11 @@ class RSContextPlugin: RSPlatformPlugin {
     private var staticContext = staticContextData()
     private static var device = Vendor.current
     
-    func execute<T: RSMessage>(event: T?) -> T? {
-        guard var workingEvent = event else { return event }        
+    func execute<T: RSMessage>(message: T?) -> T? {
+        guard var workingEvent = message else { return message }        
         var context = staticContext
         insertDynamicPlatformContextData(context: &context)
-        insertDynamicOptionData(event: workingEvent, context: &context)
+        insertDynamicOptionData(message: workingEvent, context: &context)
         workingEvent.context = context
         self.context = context
         return workingEvent
@@ -110,8 +110,8 @@ class RSContextPlugin: RSPlatformPlugin {
         ]
     }
     
-    func insertDynamicOptionData(event: RSMessage, context: inout [String: Any]) {
-        if let option = event.option {
+    func insertDynamicOptionData(message: RSMessage, context: inout [String: Any]) {
+        if let option = message.option {
             if let externalIds = option.externalIds {
                 context["externalId"] = externalIds
             }

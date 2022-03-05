@@ -44,7 +44,7 @@ extension WKInterfaceController {
         var name = NSStringFromClass(Swift.type(of: self))
         name = name.replacingOccurrences(of: "InterfaceController", with: "")
         let screenMessage = ScreenMessage(title: name, properties: ["automatic": true, "name": name])
-        WKInterfaceController.client?.process(event: screenMessage)
+        WKInterfaceController.client?.process(message: screenMessage)
         rsDidAppear()
     }
 }

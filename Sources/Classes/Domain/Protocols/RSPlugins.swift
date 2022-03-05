@@ -35,13 +35,13 @@ public protocol RSPlugin: AnyObject {
     
     func configure(client: RSClient)
     func update(serverConfig: RSServerConfig, type: UpdateType)
-    func execute<T: RSMessage>(event: T?) -> T?
+    func execute<T: RSMessage>(message: T?) -> T?
     func shutdown()
 }
 
 public extension RSPlugin {
-    func execute<T: RSMessage>(event: T?) -> T? {
-        return event
+    func execute<T: RSMessage>(message: T?) -> T? {
+        return message
     }
     
     func update(serverConfig: RSServerConfig, type: UpdateType) { }
@@ -50,6 +50,24 @@ public extension RSPlugin {
     
     func configure(client: RSClient) {
         self.client = client
+    }
+}
+
+@objc
+open class RudderDestination: NSObject {
+    public var plugin: RSDestinationPlugin?
+    
+    public override init() {
+        
+    }
+}
+
+extension RSClient {
+    @objc
+    public func add(destination: RudderDestination) {
+        if let plugin = destination.plugin {
+            add(plugin: plugin)
+        }
     }
 }
 

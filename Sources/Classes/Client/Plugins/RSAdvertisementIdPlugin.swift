@@ -16,8 +16,8 @@ class RSAdvertisingIdPlugin: RSPlatformPlugin {
 
     required init() { }
     
-    func execute<T: RSMessage>(event: T?) -> T? {
-        guard var workingEvent = event else { return event }
+    func execute<T: RSMessage>(message: T?) -> T? {
+        guard var workingEvent = message else { return message }
         if var context = workingEvent.context, let advertisingId = advertisingId {
             context[keyPath: "device.advertisingId"] = advertisingId
             context[keyPath: "device.adTrackingEnabled"] = true

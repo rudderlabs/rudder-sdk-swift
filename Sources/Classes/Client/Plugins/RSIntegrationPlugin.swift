@@ -12,8 +12,8 @@ class RSIntegrationPlugin: RSPlatformPlugin {
     let type: PluginType = .before
     var client: RSClient?
         
-    func execute<T: RSMessage>(event: T?) -> T? {
-        guard var workingEvent = event else { return event }
+    func execute<T: RSMessage>(message: T?) -> T? {
+        guard var workingEvent = message else { return message }
         if let optionPlugin = client?.find(pluginType: RSOptionPlugin.self) {
             if let integrations = optionPlugin.option?.integrations {
                 workingEvent.integrations = integrations

@@ -33,11 +33,11 @@ class RudderDestinationPlugin: RSDestinationPlugin {
         }
     }
         
-    func execute<T: RSMessage>(event: T?) -> T? {
-        let result: T? = event
+    func execute<T: RSMessage>(message: T?) -> T? {
+        let result: T? = message
         if let r = result {
-            let modified = configureCloudDestinations(event: r)
-            queueEvent(event: modified)
+            let modified = configureCloudDestinations(message: r)
+            queueEvent(message: modified)
         }
         return result
     }
@@ -51,17 +51,17 @@ class RudderDestinationPlugin: RSDestinationPlugin {
         flushMessage()
     }
     
-    private func queueEvent<T: RSMessage>(event: T) {
+    private func queueEvent<T: RSMessage>(message: T) {
         guard let databaseManager = self.databaseManager else { return }
-        databaseManager.write(event)
+        databaseManager.write(message)
     }
 }
 
 extension RudderDestinationPlugin {
-    internal func configureCloudDestinations<T: RSMessage>(event: T) -> T {
-        guard let serverConfig = client?.serverConfig else { return event }
-        guard let plugins = client?.controller.plugins[.destination]?.plugins as? [RSDestinationPlugin] else { return event }
-        guard let customerValues = event.integrations else { return event }
+    internal func configureCloudDestinations<T: RSMessage>(message: T) -> T {
+        guard let serverConfig = client?.serverConfig else { return message }
+        guard let plugins = client?.controller.plugins[.destination]?.plugins as? [RSDestinationPlugin] else { return message }
+        guard let customerValues = message.integrations else { return message }
         
         var merged = [String: Bool]()
         
@@ -81,7 +81,7 @@ extension RudderDestinationPlugin {
             merged[key] = value
         }
         
-        var modified = event
+        var modified = message
         modified.integrations = merged
         
         return modified

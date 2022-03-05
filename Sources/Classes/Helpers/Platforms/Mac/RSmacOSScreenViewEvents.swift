@@ -46,7 +46,7 @@ extension NSViewController {
         var name = NSStringFromClass(type(of: self))
         name = name.replacingOccurrences(of: "ViewController", with: "")
         let screenMessage = ScreenMessage(title: name, properties: ["automatic": true, "name": name])
-        NSViewController.client?.process(event: screenMessage)
+        NSViewController.client?.process(message: screenMessage)
         rsViewDidAppear()
     }
 }

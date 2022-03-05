@@ -45,7 +45,7 @@ open class RSClient: NSObject {
     public func track(_ eventName: String, properties: [String: Any]? = nil, option: RSOption? = nil) {
         let message = TrackMessage(event: eventName, properties: properties, option: option)
             .applyRawEventData()
-        process(event: message)
+        process(message: message)
     }
     
     /**
@@ -65,7 +65,7 @@ open class RSClient: NSObject {
     public func screen(_ screenName: String, properties: [String: String]? = nil, option: RSOption? = nil) {
         let message = ScreenMessage(title: screenName, properties: properties, option: option)
             .applyRawEventData()
-        process(event: message)
+        process(message: message)
     }
     
     /**
@@ -85,7 +85,7 @@ open class RSClient: NSObject {
     public func group(_ groupId: String, traits: [String: String]? = nil, option: RSOption? = nil) {
         let message = GroupMessage(groupId: groupId, traits: traits, option: option)
             .applyRawEventData()
-        process(event: message)
+        process(message: message)
     }
     
     /**
@@ -106,7 +106,7 @@ open class RSClient: NSObject {
             .applyAlias(newId: newId, client: self)
             .applyRawEventData()
         setUserId(newId)
-        process(event: message)
+        process(message: message)
     }
     
     /**
@@ -127,7 +127,7 @@ open class RSClient: NSObject {
         let message = IdentifyMessage(userId: userId, traits: traits, option: option)
             .applyRawEventData()
         setUserId(userId)
-        process(event: message)
+        process(message: message)
     }
 }
 
@@ -211,7 +211,7 @@ extension RSClient {
      
      */
     @discardableResult
-    func add(plugin: RSPlugin) -> RSPlugin {
+    public func add(plugin: RSPlugin) -> RSPlugin {
         plugin.configure(client: self)
         controller.add(plugin: plugin)
         return plugin
@@ -232,8 +232,8 @@ extension RSClient {
 }
 
 extension RSClient {
-    func process(event: RSMessage) {
-        switch event {
+    func process(message: RSMessage) {
+        switch message {
         case let e as TrackMessage:
             controller.process(incomingEvent: e)
         case let e as IdentifyMessage:

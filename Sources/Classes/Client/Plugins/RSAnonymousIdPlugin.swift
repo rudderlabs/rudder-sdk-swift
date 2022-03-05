@@ -16,8 +16,8 @@ class RSAnonymousIdPlugin: RSPlatformPlugin {
 
     required init() { }
     
-    func execute<T: RSMessage>(event: T?) -> T? {
-        guard var workingEvent = event else { return event }
+    func execute<T: RSMessage>(message: T?) -> T? {
+        guard var workingEvent = message else { return message }
         if let anonymousId = anonymousId {
             workingEvent.anonymousId = anonymousId
             if var context = workingEvent.context {

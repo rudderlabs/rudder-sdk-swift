@@ -22,8 +22,8 @@ internal class RSReplayQueuePlugin: RSPlugin {
     
     required init() { }
     
-    func execute<T: RSMessage>(event: T?) -> T? {
-        if running == true, let e = event {
+    func execute<T: RSMessage>(message: T?) -> T? {
+        if running == true, let e = message {
             syncQueue.sync {
                 if queuedEvents.count >= Self.maxSize {
                     queuedEvents.removeFirst()
@@ -32,7 +32,7 @@ internal class RSReplayQueuePlugin: RSPlugin {
             }
             return nil
         }
-        return event
+        return message
     }
     
     func update(serverConfig: RSServerConfig, type: UpdateType) {
@@ -46,7 +46,7 @@ extension RSReplayQueuePlugin {
     internal func replayEvents() {
         syncQueue.sync {
             for event in queuedEvents {
-                client?.process(event: event)
+                client?.process(message: event)
             }
             queuedEvents.removeAll()
         }

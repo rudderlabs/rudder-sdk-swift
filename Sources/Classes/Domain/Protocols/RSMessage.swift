@@ -186,8 +186,8 @@ public struct AliasMessage: RSMessage {
 // MARK: - RawEvent data helpers
 
 extension RSMessage {
-    internal mutating func applyRawEventData(event: RSMessage?) {
-        if let e = event {
+    internal mutating func applyRawMessageData(message: RSMessage?) {
+        if let e = message {
             anonymousId = e.anonymousId
             messageId = e.messageId
             userId = e.userId

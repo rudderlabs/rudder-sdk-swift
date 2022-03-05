@@ -16,8 +16,8 @@ class RSAppTrackingConsentPlugin: RSPlatformPlugin {
 
     required init() { }
     
-    func execute<T: RSMessage>(event: T?) -> T? {
-        guard var workingEvent = event else { return event }
+    func execute<T: RSMessage>(message: T?) -> T? {
+        guard var workingEvent = message else { return message }
         if var context = workingEvent.context, let appTrackingConsent = appTrackingConsent {
             context[keyPath: "device.attTrackingStatus"] = appTrackingConsent.rawValue
             workingEvent.context = context
