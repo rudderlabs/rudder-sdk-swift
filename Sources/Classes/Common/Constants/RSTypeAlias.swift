@@ -8,13 +8,13 @@
 
 import Foundation
 
-typealias MessageContext = [String: Any]
-typealias PageProperties = [String: String]
-typealias ScreenProperties = [String: Any]
-typealias TrackProperties = [String: Any]
-typealias IdentifyProperties = [String: String]
-typealias MessageTraits = [String: String]
-typealias IdentifyTraits = [String: String]
-typealias MessageIntegrations = [String: Bool]
-typealias MessageProperties = [String: Any]
-typealias GroupTraits = [String: String]
+public typealias MessageContext = [String: Any]
+public typealias PageProperties = [String: String]
+public typealias ScreenProperties = [String: Any]
+public typealias TrackProperties = [String: Any]
+public typealias IdentifyProperties = [String: String]
+public typealias MessageTraits = [String: String]
+public typealias IdentifyTraits = [String: String]
+public typealias MessageIntegrations = [String: Bool]
+public typealias MessageProperties = [String: Any]
+public typealias GroupTraits = [String: String]

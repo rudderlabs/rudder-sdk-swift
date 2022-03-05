@@ -72,7 +72,6 @@ extension RSServiceManager {
                         completion(.success(true as! T)) // swiftlint:disable:this force_cast
                     default:
                         do {
-                            let json = try JSONSerialization.jsonObject(with: data ?? Data(), options: [])
                             if let data = data, let jsonString = String(data: data, encoding: .utf8) {
                                 client.log(message: jsonString, logLevel: .debug)
                             }

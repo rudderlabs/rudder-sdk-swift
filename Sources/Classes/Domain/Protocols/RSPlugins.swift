@@ -11,7 +11,7 @@ import Foundation
 /**
  PluginType specifies where in the chain a given plugin is to be executed.
  */
-enum PluginType: Int, CaseIterable {
+public enum PluginType: Int, CaseIterable {
     /// Executed before event processing begins.
     case before
     /// Executed as the first level of event processing.
@@ -24,12 +24,12 @@ enum PluginType: Int, CaseIterable {
     case utility
 }
 
-enum UpdateType {
+public enum UpdateType {
     case initial
     case refresh
 }
 
-protocol RSPlugin: AnyObject {
+public protocol RSPlugin: AnyObject {
     var type: PluginType { get }
     var client: RSClient? { get set }
     
@@ -39,7 +39,7 @@ protocol RSPlugin: AnyObject {
     func shutdown()
 }
 
-extension RSPlugin {
+public extension RSPlugin {
     func execute<T: RSMessage>(event: T?) -> T? {
         return event
     }
@@ -53,17 +53,17 @@ extension RSPlugin {
     }
 }
 
-protocol RSEventPlugin: RSPlugin {
-    func identify(event: IdentifyMessage) -> IdentifyMessage?
-    func track(event: TrackMessage) -> TrackMessage?
-    func group(event: GroupMessage) -> GroupMessage?
-    func alias(event: AliasMessage) -> AliasMessage?
-    func screen(event: ScreenMessage) -> ScreenMessage?
+public protocol RSEventPlugin: RSPlugin {
+    func identify(message: IdentifyMessage) -> IdentifyMessage?
+    func track(message: TrackMessage) -> TrackMessage?
+    func group(message: GroupMessage) -> GroupMessage?
+    func alias(message: AliasMessage) -> AliasMessage?
+    func screen(message: ScreenMessage) -> ScreenMessage?
     func reset()
     func flush()
 }
 
-protocol RSDestinationPlugin: RSEventPlugin {
+public protocol RSDestinationPlugin: RSEventPlugin {
     var key: String { get }
     var controller: RSController { get }
     func add(plugin: RSPlugin) -> RSPlugin
@@ -71,14 +71,14 @@ protocol RSDestinationPlugin: RSEventPlugin {
     func remove(plugin: RSPlugin)
 }
 
-protocol RSUtilityPlugin: RSEventPlugin { }
+public protocol RSUtilityPlugin: RSEventPlugin { }
 
 // For internal platform-specific bits
 internal protocol RSPlatformPlugin: RSPlugin { }
 
 // MARK: - Adding/Removing Plugins
 
-extension RSDestinationPlugin {
+public extension RSDestinationPlugin {
     func configure(client: RSClient) {
         self.client = client
         apply { plugin in

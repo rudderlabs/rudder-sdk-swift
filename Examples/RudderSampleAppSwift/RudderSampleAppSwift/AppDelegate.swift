@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let config: RSConfig = RSConfig(writeKey: "1wvsoF3Kx2SczQNlx1dvcqW9ODW")
             .dataPlaneURL("https://rudderstacz.dataplane.rudderstack.com")
             .loglevel(.debug)
-            .trackLifecycleEvents(false)
+            .trackLifecycleEvents(true)
             .recordScreenViews(true)
         
         client = RSClient(config: config)
@@ -31,7 +31,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        defaultOption.putIntegration("Amplitude", isEnabled: true)
 //        client?.setOption(defaultOption)
         
-        client?.track("Track 1")
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.client?.track("Track 1")
+//        }
+        
+        
         
 //        client?.setDeviceToken("example_device_token")
 //        let messageOption = RSOption()

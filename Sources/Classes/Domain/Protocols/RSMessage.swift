@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol RSMessage {
+public protocol RSMessage {
     var type: RSMessageType { get set }
     var anonymousId: String? { get set }
     var messageId: String? { get set }
@@ -22,21 +22,21 @@ protocol RSMessage {
     func toDict() -> [String: Any]
 }
 
-struct TrackMessage: RSMessage {
-    var type: RSMessageType = .track
-    var anonymousId: String?
-    var messageId: String?
-    var userId: String?
-    var timestamp: String?
-    var context: MessageContext?
-    var integrations: MessageIntegrations?
-    var option: RSOption?
-    var channel: String?
+public struct TrackMessage: RSMessage {
+    public var type: RSMessageType = .track
+    public var anonymousId: String?
+    public var messageId: String?
+    public var userId: String?
+    public var timestamp: String?
+    public var context: MessageContext?
+    public var integrations: MessageIntegrations?
+    public var option: RSOption?
+    public var channel: String?
     
-    var event: String?
-    var properties: TrackProperties?
+    public var event: String?
+    public var properties: TrackProperties?
 
-    func toDict() -> [String: Any] {
+    public func toDict() -> [String: Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
@@ -55,20 +55,20 @@ struct TrackMessage: RSMessage {
     }
 }
 
-struct IdentifyMessage: RSMessage {
-    var type: RSMessageType = .identify
-    var anonymousId: String?
-    var messageId: String?
-    var userId: String?
-    var timestamp: String?
-    var context: MessageContext?
-    var integrations: MessageIntegrations?
-    var option: RSOption?
-    var channel: String?
+public struct IdentifyMessage: RSMessage {
+    public var type: RSMessageType = .identify
+    public var anonymousId: String?
+    public var messageId: String?
+    public var userId: String?
+    public var timestamp: String?
+    public var context: MessageContext?
+    public var integrations: MessageIntegrations?
+    public var option: RSOption?
+    public var channel: String?
     
-    var traits: IdentifyTraits?
+    public var traits: IdentifyTraits?
     
-    func toDict() -> [String: Any] {
+    public func toDict() -> [String: Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
@@ -87,21 +87,21 @@ struct IdentifyMessage: RSMessage {
     }
 }
 
-struct ScreenMessage: RSMessage {
-    var type: RSMessageType = .screen
-    var anonymousId: String?
-    var messageId: String?
-    var userId: String?
-    var timestamp: String?
-    var context: MessageContext?
-    var integrations: MessageIntegrations?
-    var option: RSOption?
-    var channel: String?
+public struct ScreenMessage: RSMessage {
+    public var type: RSMessageType = .screen
+    public var anonymousId: String?
+    public var messageId: String?
+    public var userId: String?
+    public var timestamp: String?
+    public var context: MessageContext?
+    public var integrations: MessageIntegrations?
+    public var option: RSOption?
+    public var channel: String?
 
-    var name: String?
-    var properties: ScreenProperties?
+    public var name: String?
+    public var properties: ScreenProperties?
 
-    func toDict() -> [String: Any] {
+    public func toDict() -> [String: Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
@@ -120,21 +120,21 @@ struct ScreenMessage: RSMessage {
     }
 }
 
-struct GroupMessage: RSMessage {
-    var type: RSMessageType = .group
-    var anonymousId: String?
-    var messageId: String?
-    var userId: String?
-    var timestamp: String?
-    var context: MessageContext?
-    var integrations: MessageIntegrations?
-    var option: RSOption?
-    var channel: String?
+public struct GroupMessage: RSMessage {
+    public var type: RSMessageType = .group
+    public var anonymousId: String?
+    public var messageId: String?
+    public var userId: String?
+    public var timestamp: String?
+    public var context: MessageContext?
+    public var integrations: MessageIntegrations?
+    public var option: RSOption?
+    public var channel: String?
 
-    var groupId: String?
-    var traits: GroupTraits?
+    public var groupId: String?
+    public var traits: GroupTraits?
     
-    func toDict() -> [String: Any] {
+    public func toDict() -> [String: Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
@@ -153,20 +153,20 @@ struct GroupMessage: RSMessage {
     }
 }
 
-struct AliasMessage: RSMessage {
-    var type: RSMessageType = .alias
-    var anonymousId: String?
-    var messageId: String?
-    var userId: String?
-    var timestamp: String?
-    var context: MessageContext?
-    var integrations: MessageIntegrations?
-    var option: RSOption?
-    var channel: String?
+public struct AliasMessage: RSMessage {
+    public var type: RSMessageType = .alias
+    public var anonymousId: String?
+    public var messageId: String?
+    public var userId: String?
+    public var timestamp: String?
+    public var context: MessageContext?
+    public var integrations: MessageIntegrations?
+    public var option: RSOption?
+    public var channel: String?
 
-    var previousId: String?
+    public var previousId: String?
     
-    func toDict() -> [String: Any] {
+    public func toDict() -> [String: Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
@@ -180,12 +180,7 @@ struct AliasMessage: RSMessage {
     init(newId: String? = nil, option: RSOption? = nil) {
         self.userId = newId
         self.option = option
-    }
-    
-    init(existing: AliasMessage) {
-        self.init(newId: existing.userId)
-        applyRawEventData(event: existing)
-    }
+    }    
 }
 
 // MARK: - RawEvent data helpers

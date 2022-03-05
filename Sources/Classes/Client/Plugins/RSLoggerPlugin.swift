@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Plugin Implementation
 
-internal class RSLoggerPlugin: RSUtilityPlugin {
+class RSLoggerPlugin: RSUtilityPlugin {
     var logLevel = RSLogLevel.debug
     
     var client: RSClient? {
@@ -24,14 +24,14 @@ internal class RSLoggerPlugin: RSUtilityPlugin {
     fileprivate var loggingMediator = [RSLoggingType: RSLogger]()
     
     // Default to no, enable to see local logs
-    internal static var loggingEnabled = false
+    static var loggingEnabled = false
     
-    // For internal use only. Note: This will contain the last created instance
+    // For use only. Note: This will contain the last created instance
     // of analytics when used in a multi-analytics environment.
-    internal static var sharedAnalytics: RSClient?
+    static var sharedAnalytics: RSClient?
     
     #if DEBUG
-    internal static var globalLogger: RSLoggerPlugin {
+    static var globalLogger: RSLoggerPlugin {
         let logger = RSLoggerPlugin()
         logger.addTargets()
         return logger
@@ -46,7 +46,7 @@ internal class RSLoggerPlugin: RSUtilityPlugin {
         addTargets()
     }
     
-    internal func addTargets() {
+    func addTargets() {
         try? add(target: RSConsoleLogger(), for: RSLoggingType.log)
     }
     
@@ -54,7 +54,7 @@ internal class RSLoggerPlugin: RSUtilityPlugin {
         RSLoggerPlugin.loggingEnabled = enabled        
     }
     
-    internal func log(_ logMessage: RSLogMessage, destination: RSLoggingType.LogDestination) {
+    func log(_ logMessage: RSLogMessage, destination: RSLoggingType.LogDestination) {
         
         for (logType, target) in loggingMediator {
             if logType.contains(destination) {
@@ -63,7 +63,7 @@ internal class RSLoggerPlugin: RSUtilityPlugin {
         }
     }
     
-    internal func add(target: RSLogger, for loggingType: RSLoggingType) throws {
+    func add(target: RSLogger, for loggingType: RSLoggingType) throws {
         
         // Verify the target does not exist, if it does bail out
         let filtered = loggingMediator.filter { (type: RSLoggingType, existingTarget: RSLogger) in
@@ -75,16 +75,16 @@ internal class RSLoggerPlugin: RSUtilityPlugin {
         loggingMediator[loggingType] = target
     }
     
-    internal func flush() {
+    func flush() {
         for (_, target) in loggingMediator {
             target.flush()
         }        
     }
 }
 
-// MARK: - Internal Types
+// MARK: - Types
 
-internal struct LogFactory {
+struct LogFactory {
     static func buildLog(destination: RSLoggingType.LogDestination,
                          title: String,
                          message: String,

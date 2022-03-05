@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct RSDestination: Codable {
+@objc open class RSDestination: NSObject, Codable {
     let config: [String: RSAnyCodable]?
     let secretConfig: [String: RSAnyCodable]?
     

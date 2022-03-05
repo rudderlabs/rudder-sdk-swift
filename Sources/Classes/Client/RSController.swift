@@ -8,10 +8,10 @@
 
 import Foundation
 
-class RSController {
+public class RSController {
     let plugins: [PluginType: Mediator]
     
-    init() {
+    public init() {
         self.plugins = [
             .before: Mediator(),
             .enrichment: Mediator(),
@@ -25,8 +25,6 @@ class RSController {
     func process<E: RSMessage>(incomingEvent: E) -> E? {
         // apply .before and .enrichment types first ...
         let beforeResult = applyPlugins(type: .before, event: incomingEvent)
-        // .enrichment here is akin to source middleware in the old analytics-ios.
-//        let enrichmentResult = applyPlugins(type: .enrichment, event: beforeResult)
         
         // once the event enters a destination, we don't want
         // to know about changes that happen there. those changes
@@ -135,20 +133,20 @@ extension RSController {
 
 // MARK: - Plugin Timeline Execution
 
-extension RSEventPlugin {
+public extension RSEventPlugin {
     func execute<T: RSMessage>(event: T?) -> T? {
         var result: T? = event
         switch result {
         case let r as IdentifyMessage:
-            result = self.identify(event: r) as? T
+            result = self.identify(message: r) as? T
         case let r as TrackMessage:
-            result = self.track(event: r) as? T
+            result = self.track(message: r) as? T
         case let r as ScreenMessage:
-            result = self.screen(event: r) as? T
+            result = self.screen(message: r) as? T
         case let r as AliasMessage:
-            result = self.alias(event: r) as? T
+            result = self.alias(message: r) as? T
         case let r as GroupMessage:
-            result = self.group(event: r) as? T
+            result = self.group(message: r) as? T
         default:
             break
         }
@@ -157,24 +155,24 @@ extension RSEventPlugin {
 
     // Default implementations that forward the event. This gives plugin
     // implementors the chance to interject on an event.
-    func identify(event: IdentifyMessage) -> IdentifyMessage? {
-        return event
+    func identify(message: IdentifyMessage) -> IdentifyMessage? {
+        return message
     }
     
-    func track(event: TrackMessage) -> TrackMessage? {
-        return event
+    func track(message: TrackMessage) -> TrackMessage? {
+        return message
     }
     
-    func screen(event: ScreenMessage) -> ScreenMessage? {
-        return event
+    func screen(message: ScreenMessage) -> ScreenMessage? {
+        return message
     }
     
-    func group(event: GroupMessage) -> GroupMessage? {
-        return event
+    func group(message: GroupMessage) -> GroupMessage? {
+        return message
     }
     
-    func alias(event: AliasMessage) -> AliasMessage? {
-        return event
+    func alias(message: AliasMessage) -> AliasMessage? {
+        return message
     }
     
     func flush() { }
@@ -227,15 +225,15 @@ extension RSDestinationPlugin {
             var destinationResult: E?
             switch enrichmentResult {
             case let e as IdentifyMessage:
-                destinationResult = identify(event: e) as? E
+                destinationResult = identify(message: e) as? E
             case let e as TrackMessage:
-                destinationResult = track(event: e) as? E
+                destinationResult = track(message: e) as? E
             case let e as ScreenMessage:
-                destinationResult = screen(event: e) as? E
+                destinationResult = screen(message: e) as? E
             case let e as GroupMessage:
-                destinationResult = group(event: e) as? E
+                destinationResult = group(message: e) as? E
             case let e as AliasMessage:
-                destinationResult = alias(event: e) as? E
+                destinationResult = alias(message: e) as? E
             default:
                 break
             }

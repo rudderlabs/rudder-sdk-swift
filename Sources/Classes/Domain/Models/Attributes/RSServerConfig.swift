@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct RSServerConfig: Codable {
+@objc open class RSServerConfig: NSObject, Codable {
     
     struct Source: Codable {
         private let _id: String?

@@ -12,20 +12,20 @@ extension RSClient {
         
     internal func addPlugins() {
         let replayQueuePlugin = RSReplayQueuePlugin()
-        replayQueuePlugin.client = self
+//        replayQueuePlugin.client = self
         add(plugin: replayQueuePlugin)
         
         let logPlugin = RSLoggerPlugin()
-        logPlugin.client = self
+//        logPlugin.client = self
         logPlugin.loggingEnabled(config.logLevel != .none)
         add(plugin: logPlugin)
         
         let integrationPlugin = RSIntegrationPlugin()
-        integrationPlugin.client = self
+//        integrationPlugin.client = self
         add(plugin: integrationPlugin)
         
         let rudderDestination = RudderDestinationPlugin()
-        rudderDestination.client = self
+//        rudderDestination.client = self
         add(plugin: rudderDestination)
         
         add(plugin: RSGDPRPlugin())
