@@ -61,6 +61,7 @@ class RSClientTests: XCTestCase {
         let anonId = client.anonymousId
         
         XCTAssertTrue(anonId != "")
+        XCTAssertTrue(anonId == "anonymous_id")
     }
     
     func testContext() {
@@ -83,6 +84,98 @@ class RSClientTests: XCTestCase {
         XCTAssertNotNil(context?["device"], "device missing!")
         XCTAssertNotNil(context?["app"], "app missing!")
         XCTAssertNotNil(context?["locale"], "locale missing!")
+    }
+    
+    func testDeviceToken() {
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
+        let resultPlugin = ResultPlugin()
+        client.add(plugin: resultPlugin)
+
+        waitUntilStarted(client: client)
+        waitUntilServerConfigDownloaded(client: client)
+
+        client.setDeviceToken("device_token")
+        client.track("device token check")
+        
+        let device = resultPlugin.lastMessage?.context
+        let token = device?[keyPath: "device.token"] as? String
+        
+        XCTAssertTrue(token != "")
+        XCTAssertTrue(token == "device_token")
+    }
+    
+    func testTrack() {
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
+        let resultPlugin = ResultPlugin()
+        client.add(plugin: resultPlugin)
+
+        waitUntilStarted(client: client)
+        waitUntilServerConfigDownloaded(client: client)
+
+        client.track("simple_track")
+        
+        let trackEvent = resultPlugin.lastMessage as? TrackMessage
+        
+        XCTAssertTrue(trackEvent?.event == "simple_track")
+        XCTAssertTrue(trackEvent?.type == .track)
+    }
+    
+    func testTrackWithProperties() {
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
+        let resultPlugin = ResultPlugin()
+        client.add(plugin: resultPlugin)
+
+        waitUntilStarted(client: client)
+        waitUntilServerConfigDownloaded(client: client)
+
+        client.track("simple_track_with_props", properties: ["key_1": "value_1", "key_2": "value_2"])
+        
+        let trackEvent = resultPlugin.lastMessage as? TrackMessage
+        
+        XCTAssertTrue(trackEvent?.event == "simple_track_with_props")
+        XCTAssertTrue(trackEvent?.type == .track)
+        
+        let properties = trackEvent?.properties
+        
+        XCTAssertTrue(properties?["key_1"] as? String == "value_1")
+        XCTAssertTrue(properties?["key_2"] as? String == "value_2")
+    }
+    
+    func testIdentify() {
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
+        let resultPlugin = ResultPlugin()
+        client.add(plugin: resultPlugin)
+
+        waitUntilStarted(client: client)
+        waitUntilServerConfigDownloaded(client: client)
+        
+        client.identify("user_id")
+        
+        let identifyEvent = resultPlugin.lastMessage as? IdentifyMessage
+        
+        XCTAssertTrue(identifyEvent?.userId == "user_id")
+        XCTAssertTrue(identifyEvent?.type == .identify)
+    }
+    
+    func testIdentifyWithTraits() {
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
+        let resultPlugin = ResultPlugin()
+        client.add(plugin: resultPlugin)
+
+        waitUntilStarted(client: client)
+        waitUntilServerConfigDownloaded(client: client)
+        
+        client.identify("user_id", traits: ["email": "abc@def.com"])
+        
+        let identifyEvent = resultPlugin.lastMessage as? IdentifyMessage
+        
+        XCTAssertTrue(identifyEvent?.userId == "user_id")
+        XCTAssertTrue(identifyEvent?.type == .identify)
+        
+        let traits = identifyEvent?.traits
+        
+        XCTAssertTrue(traits?["email"] == "abc@def.com")
+        XCTAssertFalse(traits?["name"] == "name")
     }
 }
 
