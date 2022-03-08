@@ -1,4 +1,4 @@
-workspace 'Rudder.xcworkspace'
+workspace 'RudderStack.xcworkspace'
 use_frameworks!
 inhibit_all_warnings!
 

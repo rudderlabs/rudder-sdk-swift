@@ -53,6 +53,37 @@ class RSClientTests: XCTestCase {
             wait(for: [expectation], timeout: 2.0)
         }
     }
+    
+    func testAnonymousId() {
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
+        client.setAnonymousId("anonymous_id")
+        
+        let anonId = client.anonymousId
+        
+        XCTAssertTrue(anonId != "")
+    }
+    
+    func testContext() {
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
+        let resultPlugin = ResultPlugin()
+        client.add(plugin: resultPlugin)
+
+        waitUntilStarted(client: client)
+        waitUntilServerConfigDownloaded(client: client)
+        
+        client.track("context check")
+        
+        let context = resultPlugin.lastMessage?.context
+        XCTAssertNotNil(context)
+        XCTAssertNotNil(context?["screen"], "screen missing!")
+        XCTAssertNotNil(context?["network"], "network missing!")
+        XCTAssertNotNil(context?["os"], "os missing!")
+        XCTAssertNotNil(context?["timezone"], "timezone missing!")
+        XCTAssertNotNil(context?["library"], "library missing!")
+        XCTAssertNotNil(context?["device"], "device missing!")
+        XCTAssertNotNil(context?["app"], "app missing!")
+        XCTAssertNotNil(context?["locale"], "locale missing!")
+    }
 }
 
 func waitUntilStarted(client: RSClient?) {
@@ -128,5 +159,16 @@ class MyDestination: RudderDestination {
     init(trackCompletion: (() -> Bool)?) {
         super.init()
         plugin = MyDestinationPlugin(trackCompletion: trackCompletion)
+    }
+}
+
+class ResultPlugin: RSPlugin {
+    let type: PluginType = .after
+    var client: RSClient?
+    var lastMessage: RSMessage?
+            
+    func execute<T>(message: T?) -> T? where T: RSMessage {
+        lastMessage = message
+        return message
     }
 }
