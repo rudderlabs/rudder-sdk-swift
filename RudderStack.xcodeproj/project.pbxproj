@@ -25,8 +25,7 @@
 		ED277FF92744F199002A8FEA /* RSAnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FF82744F199002A8FEA /* RSAnyCodable.swift */; };
 		ED277FFB2744F265002A8FEA /* RSAnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */; };
 		ED277FFD2744F2AD002A8FEA /* RSAnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */; };
-		ED3D225A279EAC2800EC8366 /* RudderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D2259279EAC2800EC8366 /* RudderTests.swift */; };
-		ED3D225B279EAC2800EC8366 /* Rudder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABB842630C3CA0097BEFF /* Rudder.framework */; };
+		ED3D225B279EAC2800EC8366 /* RudderStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABB842630C3CA0097BEFF /* RudderStack.framework */; };
 		ED3D229427A3F0C100EC8366 /* RSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D226227A3F0C100EC8366 /* RSClient.swift */; };
 		ED3D229527A3F0C100EC8366 /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D226627A3F0C100EC8366 /* Vendor.swift */; };
 		ED3D229627A3F0C100EC8366 /* AppleUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D226727A3F0C100EC8366 /* AppleUtils.swift */; };
@@ -68,6 +67,8 @@
 		EDA7EF9B2739119600E73142 /* RSDestinationDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF632739119600E73142 /* RSDestinationDefinition.swift */; };
 		EDA7EF9C2739119600E73142 /* RSDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF642739119600E73142 /* RSDestination.swift */; };
 		EDA7EFA22739119600E73142 /* RSServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6B2739119600E73142 /* RSServiceType.swift */; };
+		EDC1325927D5F77100AFD833 /* RSEventFilterPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC1325827D5F77100AFD833 /* RSEventFilterPlugin.swift */; };
+		EDC1327C27D614C400AFD833 /* RSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC1327B27D614C400AFD833 /* RSClientTests.swift */; };
 		EDD3AA1327C64B430048E61E /* RSKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD3AA1227C64B430048E61E /* RSKeyPath.swift */; };
 		EDD3AA3627C659C80048E61E /* RSAtomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD3AA3527C659C80048E61E /* RSAtomic.swift */; };
 		EDD3AA4A27C8DAAA0048E61E /* RSLoggerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227827A3F0C100EC8366 /* RSLoggerPlugin.swift */; };
@@ -86,9 +87,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		06CABB842630C3CA0097BEFF /* Rudder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rudder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		06CABC2E2630C6660097BEFF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/iOSSupport/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		06CABC322630C6B00097BEFF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		06CABB842630C3CA0097BEFF /* RudderStack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED157C3627CE0EEA00F22202 /* RSmacOSLifecycleEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSmacOSLifecycleEvents.swift; sourceTree = "<group>"; };
 		ED157C3827CE1C0800F22202 /* RSUserIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSUserIdPlugin.swift; sourceTree = "<group>"; };
 		ED157C4027CFC33800F22202 /* RSAdvertisementIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAdvertisementIdPlugin.swift; sourceTree = "<group>"; };
@@ -107,8 +106,7 @@
 		ED277FF82744F199002A8FEA /* RSAnyCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAnyCodable.swift; sourceTree = "<group>"; };
 		ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyDecodable.swift; sourceTree = "<group>"; };
 		ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyEncodable.swift; sourceTree = "<group>"; };
-		ED3D2257279EAC2800EC8366 /* RudderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		ED3D2259279EAC2800EC8366 /* RudderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderTests.swift; sourceTree = "<group>"; };
+		ED3D2257279EAC2800EC8366 /* RudderStackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderStackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED3D226227A3F0C100EC8366 /* RSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSClient.swift; sourceTree = "<group>"; };
 		ED3D226627A3F0C100EC8366 /* Vendor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vendor.swift; sourceTree = "<group>"; };
 		ED3D226727A3F0C100EC8366 /* AppleUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleUtils.swift; sourceTree = "<group>"; };
@@ -137,7 +135,7 @@
 		ED910CE0273BA25100A3EDFF /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		ED910CE1273BA25100A3EDFF /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ED910CE2273BA25100A3EDFF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		ED910CE3273BA25100A3EDFF /* Rudder.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Rudder.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		ED910CE3273BA25100A3EDFF /* RudderStack.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RudderStack.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ED910CE4273BA25100A3EDFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EDA7EF332739119600E73142 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		EDA7EF342739119600E73142 /* RSServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSServiceManager.swift; sourceTree = "<group>"; };
@@ -161,6 +159,8 @@
 		EDA7EF632739119600E73142 /* RSDestinationDefinition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSDestinationDefinition.swift; sourceTree = "<group>"; };
 		EDA7EF642739119600E73142 /* RSDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSDestination.swift; sourceTree = "<group>"; };
 		EDA7EF6B2739119600E73142 /* RSServiceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSServiceType.swift; sourceTree = "<group>"; };
+		EDC1325827D5F77100AFD833 /* RSEventFilterPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSEventFilterPlugin.swift; sourceTree = "<group>"; };
+		EDC1327B27D614C400AFD833 /* RSClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSClientTests.swift; sourceTree = "<group>"; };
 		EDD3AA1227C64B430048E61E /* RSKeyPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSKeyPath.swift; sourceTree = "<group>"; };
 		EDD3AA3527C659C80048E61E /* RSAtomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAtomic.swift; sourceTree = "<group>"; };
 		EDF7B3F927A80320001C0688 /* SampleBatchPayload.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SampleBatchPayload.json; sourceTree = "<group>"; };
@@ -178,7 +178,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED3D225B279EAC2800EC8366 /* Rudder.framework in Frameworks */,
+				ED3D225B279EAC2800EC8366 /* RudderStack.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,38 +194,20 @@
 				ED910CE1273BA25100A3EDFF /* Podfile */,
 				ED910CE4273BA25100A3EDFF /* README.md */,
 				ED910CDF273BA25100A3EDFF /* release.sh */,
-				ED910CE3273BA25100A3EDFF /* Rudder.podspec */,
+				ED910CE3273BA25100A3EDFF /* RudderStack.podspec */,
 				EDA7EF2D2739119600E73142 /* Sources */,
-				ED3D2258279EAC2800EC8366 /* RudderTests */,
+				EDC1325A27D612B600AFD833 /* Tests */,
 				06CABB852630C3CA0097BEFF /* Products */,
-				06CABC2D2630C6660097BEFF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		06CABB852630C3CA0097BEFF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				06CABB842630C3CA0097BEFF /* Rudder.framework */,
-				ED3D2257279EAC2800EC8366 /* RudderTests.xctest */,
+				06CABB842630C3CA0097BEFF /* RudderStack.framework */,
+				ED3D2257279EAC2800EC8366 /* RudderStackTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		06CABC2D2630C6660097BEFF /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				06CABC322630C6B00097BEFF /* Foundation.framework */,
-				06CABC2E2630C6660097BEFF /* UIKit.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		ED3D2258279EAC2800EC8366 /* RudderTests */ = {
-			isa = PBXGroup;
-			children = (
-				ED3D2259279EAC2800EC8366 /* RudderTests.swift */,
-			);
-			path = RudderTests;
 			sourceTree = "<group>";
 		};
 		ED3D226327A3F0C100EC8366 /* Plugins */ = {
@@ -236,6 +218,7 @@
 				ED157C4827CFE6CE00F22202 /* RSAppTrackingConsentPlugin.swift */,
 				ED3D227C27A3F0C100EC8366 /* RSContextPlugin.swift */,
 				ED3D227D27A3F0C100EC8366 /* RSDeviceTokenPlugin.swift */,
+				EDC1325827D5F77100AFD833 /* RSEventFilterPlugin.swift */,
 				ED157C5327D0CA6900F22202 /* RSGDPRPlugin.swift */,
 				ED157C4427CFD99700F22202 /* RSIntegrationPlugin.swift */,
 				ED3D227827A3F0C100EC8366 /* RSLoggerPlugin.swift */,
@@ -389,6 +372,22 @@
 			path = Attributes;
 			sourceTree = "<group>";
 		};
+		EDC1325A27D612B600AFD833 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				EDC1325B27D612B600AFD833 /* RudderStackTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		EDC1325B27D612B600AFD833 /* RudderStackTests */ = {
+			isa = PBXGroup;
+			children = (
+				EDC1327B27D614C400AFD833 /* RSClientTests.swift */,
+			);
+			path = RudderStackTests;
+			sourceTree = "<group>";
+		};
 		EDD3AA1727C656F90048E61E /* Domain */ = {
 			isa = PBXGroup;
 			children = (
@@ -483,9 +482,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		06CABB832630C3CA0097BEFF /* Rudder */ = {
+		06CABB832630C3CA0097BEFF /* RudderStack */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 06CABB982630C3CA0097BEFF /* Build configuration list for PBXNativeTarget "Rudder" */;
+			buildConfigurationList = 06CABB982630C3CA0097BEFF /* Build configuration list for PBXNativeTarget "RudderStack" */;
 			buildPhases = (
 				06CABB7F2630C3CA0097BEFF /* Headers */,
 				06CABB802630C3CA0097BEFF /* Sources */,
@@ -497,14 +496,14 @@
 			);
 			dependencies = (
 			);
-			name = Rudder;
+			name = RudderStack;
 			productName = Rudder;
-			productReference = 06CABB842630C3CA0097BEFF /* Rudder.framework */;
+			productReference = 06CABB842630C3CA0097BEFF /* RudderStack.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		ED3D2256279EAC2800EC8366 /* RudderTests */ = {
+		ED3D2256279EAC2800EC8366 /* RudderStackTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = ED3D225E279EAC2800EC8366 /* Build configuration list for PBXNativeTarget "RudderTests" */;
+			buildConfigurationList = ED3D225E279EAC2800EC8366 /* Build configuration list for PBXNativeTarget "RudderStackTests" */;
 			buildPhases = (
 				ED3D2253279EAC2800EC8366 /* Sources */,
 				ED3D2254279EAC2800EC8366 /* Frameworks */,
@@ -515,9 +514,9 @@
 			dependencies = (
 				ED3D225D279EAC2800EC8366 /* PBXTargetDependency */,
 			);
-			name = RudderTests;
+			name = RudderStackTests;
 			productName = RudderTests;
-			productReference = ED3D2257279EAC2800EC8366 /* RudderTests.xctest */;
+			productReference = ED3D2257279EAC2800EC8366 /* RudderStackTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -540,7 +539,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 06CABB7E2630C3CA0097BEFF /* Build configuration list for PBXProject "Rudder" */;
+			buildConfigurationList = 06CABB7E2630C3CA0097BEFF /* Build configuration list for PBXProject "RudderStack" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -553,8 +552,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				06CABB832630C3CA0097BEFF /* Rudder */,
-				ED3D2256279EAC2800EC8366 /* RudderTests */,
+				06CABB832630C3CA0097BEFF /* RudderStack */,
+				ED3D2256279EAC2800EC8366 /* RudderStackTests */,
 			);
 		};
 /* End PBXProject section */
@@ -650,6 +649,7 @@
 				EDA7EF842739119600E73142 /* RSUserDefaults.swift in Sources */,
 				ED157C5627D0FCDC00F22202 /* RSmacOSScreenViewEvents.swift in Sources */,
 				ED3D229527A3F0C100EC8366 /* Vendor.swift in Sources */,
+				EDC1325927D5F77100AFD833 /* RSEventFilterPlugin.swift in Sources */,
 				ED157C5827D0FFA400F22202 /* RSLifeCycle.swift in Sources */,
 				EDA7EF862739119600E73142 /* String+Ext.swift in Sources */,
 				ED3D22AB27A3F0C100EC8366 /* RSPlugins.swift in Sources */,
@@ -672,7 +672,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED3D225A279EAC2800EC8366 /* RudderTests.swift in Sources */,
+				EDC1327C27D614C400AFD833 /* RSClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -681,7 +681,7 @@
 /* Begin PBXTargetDependency section */
 		ED3D225D279EAC2800EC8366 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 06CABB832630C3CA0097BEFF /* Rudder */;
+			target = 06CABB832630C3CA0097BEFF /* RudderStack */;
 			targetProxy = ED3D225C279EAC2800EC8366 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -911,7 +911,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		06CABB7E2630C3CA0097BEFF /* Build configuration list for PBXProject "Rudder" */ = {
+		06CABB7E2630C3CA0097BEFF /* Build configuration list for PBXProject "RudderStack" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				06CABB962630C3CA0097BEFF /* Debug */,
@@ -920,7 +920,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		06CABB982630C3CA0097BEFF /* Build configuration list for PBXNativeTarget "Rudder" */ = {
+		06CABB982630C3CA0097BEFF /* Build configuration list for PBXNativeTarget "RudderStack" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				06CABB992630C3CA0097BEFF /* Debug */,
@@ -929,7 +929,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		ED3D225E279EAC2800EC8366 /* Build configuration list for PBXNativeTarget "RudderTests" */ = {
+		ED3D225E279EAC2800EC8366 /* Build configuration list for PBXNativeTarget "RudderStackTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ED3D225F279EAC2800EC8366 /* Debug */,

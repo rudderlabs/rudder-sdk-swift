@@ -6,9 +6,7 @@
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
 //
 
-#if os(iOS) || os(tvOS) || targetEnvironment(macCatalyst)
-import UIKit
-#endif
+import Foundation
 
 class RSUserDefaults {
     static func getLastUpdatedTime() -> Int? {

@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Rudder.xcodeproj">
+      location = "group:/Users/pallabmaiti/Documents/Rudder/RudderStack-Cocoa/RudderStack.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Examples/RudderSampleApptvOSObjC/RudderSampleApptvOSObjC.xcodeproj">

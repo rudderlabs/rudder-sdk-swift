@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "06CABB832630C3CA0097BEFF"
-               BuildableName = "Rudder.framework"
-               BlueprintName = "Rudder"
-               ReferencedContainer = "container:Rudder.xcodeproj">
+               BuildableName = "RudderStack.framework"
+               BlueprintName = "RudderStack"
+               ReferencedContainer = "container:RudderStack.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "ED3D2256279EAC2800EC8366"
-               BuildableName = "RudderTests.xctest"
-               BlueprintName = "RudderTests"
-               ReferencedContainer = "container:Rudder.xcodeproj">
+               BuildableName = "RudderStackTests.xctest"
+               BlueprintName = "RudderStackTests"
+               ReferencedContainer = "container:RudderStack.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -61,9 +61,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "06CABB832630C3CA0097BEFF"
-            BuildableName = "Rudder.framework"
-            BlueprintName = "Rudder"
-            ReferencedContainer = "container:Rudder.xcodeproj">
+            BuildableName = "RudderStack.framework"
+            BlueprintName = "RudderStack"
+            ReferencedContainer = "container:RudderStack.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

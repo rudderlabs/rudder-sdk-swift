@@ -218,7 +218,7 @@ internal class MacVendor: Vendor {
         return connectionStatus()
     }
     
-    override var requiredPlugins: [PlatformPlugin] {
+    override var requiredPlugins: [RSPlatformPlugin] {
         return [RSmacOSLifecycleMonitor(), RSDeviceTokenPlugin()]
     }
     

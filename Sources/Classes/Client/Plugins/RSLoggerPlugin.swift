@@ -73,13 +73,7 @@ class RSLoggerPlugin: RSUtilityPlugin {
         
         // Finally add the target
         loggingMediator[loggingType] = target
-    }
-    
-    func flush() {
-        for (_, target) in loggingMediator {
-            target.flush()
-        }        
-    }
+    }    
 }
 
 // MARK: - Types

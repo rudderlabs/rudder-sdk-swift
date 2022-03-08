@@ -139,7 +139,7 @@ class RSiOSLifecycleMonitor: RSPlatformPlugin {
     }
 }
 
-// MARK: - Segment Destination Extension
+// MARK: - RudderStack Destination Extension
 
 extension RudderDestinationPlugin: RSiOSLifecycle {
     func applicationWillEnterForeground(application: UIApplication?) {
@@ -150,24 +150,5 @@ extension RudderDestinationPlugin: RSiOSLifecycle {
         enterBackground()
     }
 }
-
-/*extension SegmentDestination.UploadTaskInfo {
-    init(url: URL, task: URLSessionDataTask) {
-        self.url = url
-        self.task = task
-        
-        if let application = UIApplication.safeShared {
-            let taskIdentifier = application.beginBackgroundTask { [self] in
-                self.task.suspend()
-                self.cleanup?()
-            }
-            self.taskID = taskIdentifier.rawValue
-            
-            self.cleanup = { [self] in
-                application.endBackgroundTask(UIBackgroundTaskIdentifier(rawValue: self.taskID))
-            }
-        }
-    }
-}*/
 
 #endif

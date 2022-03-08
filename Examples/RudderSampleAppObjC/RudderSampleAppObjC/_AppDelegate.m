@@ -10,7 +10,7 @@
 #import <AdSupport/ASIdentifierManager.h>
 #import "CustomFactory.h"
 
-@import Rudder;
+@import RudderStack;
 
 static NSString *DATA_PLANE_URL = @"https://rudderstacz.dataplane.rudderstack.com";
 static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";

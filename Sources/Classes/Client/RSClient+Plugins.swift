@@ -11,24 +11,16 @@ import Foundation
 extension RSClient {
         
     internal func addPlugins() {
-        let replayQueuePlugin = RSReplayQueuePlugin()
-//        replayQueuePlugin.client = self
-        add(plugin: replayQueuePlugin)
+        add(plugin: RSReplayQueuePlugin())
         
         let logPlugin = RSLoggerPlugin()
-//        logPlugin.client = self
         logPlugin.loggingEnabled(config.logLevel != .none)
         add(plugin: logPlugin)
         
-        let integrationPlugin = RSIntegrationPlugin()
-//        integrationPlugin.client = self
-        add(plugin: integrationPlugin)
-        
-        let rudderDestination = RudderDestinationPlugin()
-//        rudderDestination.client = self
-        add(plugin: rudderDestination)
-        
+        add(plugin: RSIntegrationPlugin())
+        add(plugin: RudderDestinationPlugin())
         add(plugin: RSGDPRPlugin())
+        add(plugin: RSEventFilterPlugin())
         
         if let platformPlugins = platformPlugins() {
             for plugin in platformPlugins {
