@@ -13,9 +13,19 @@ let WRITE_KEY = "1wvsoF3Kx2SczQNlx1dvcqW9ODW"
 let DATA_PLANE_URL = "https://rudderstacz.dataplane.rudderstack.com"
 
 class RSClientTests: XCTestCase {
-
+    
+    var client: RSClient!
+    
+    override func setUpWithError() throws {
+        client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
+    }
+    
+    override func tearDownWithError() throws {
+        client = nil
+    }
+    
     func testBaseEventCreation() {
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
         client.track("Track 1")
     }
     
@@ -27,7 +37,6 @@ class RSClientTests: XCTestCase {
             return true
         }
         
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
         client.add(destination: myDestination)
         waitUntilServerConfigDownloaded(client: client)
         waitUntilStarted(client: client)
@@ -43,7 +52,6 @@ class RSClientTests: XCTestCase {
             return true
         }
 
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
         client.add(destination: myDestination)
         waitUntilServerConfigDownloaded(client: client)
         waitUntilStarted(client: client)
@@ -55,7 +63,6 @@ class RSClientTests: XCTestCase {
     }
     
     func testAnonymousId() {
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
         client.setAnonymousId("anonymous_id")
         
         let anonId = client.anonymousId
@@ -65,7 +72,6 @@ class RSClientTests: XCTestCase {
     }
     
     func testContext() {
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
         let resultPlugin = ResultPlugin()
         client.add(plugin: resultPlugin)
 
@@ -87,7 +93,6 @@ class RSClientTests: XCTestCase {
     }
     
     func testDeviceToken() {
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
         let resultPlugin = ResultPlugin()
         client.add(plugin: resultPlugin)
 
@@ -102,153 +107,6 @@ class RSClientTests: XCTestCase {
         
         XCTAssertTrue(token != "")
         XCTAssertTrue(token == "device_token")
-    }
-    
-    func testTrack() {
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
-        let resultPlugin = ResultPlugin()
-        client.add(plugin: resultPlugin)
-
-        waitUntilStarted(client: client)
-        waitUntilServerConfigDownloaded(client: client)
-
-        client.track("simple_track")
-        
-        let trackEvent = resultPlugin.lastMessage as? TrackMessage
-        
-        XCTAssertTrue(trackEvent?.event == "simple_track")
-        XCTAssertTrue(trackEvent?.type == .track)
-        XCTAssertNil(trackEvent?.properties)
-        XCTAssertNil(trackEvent?.option)
-    }
-    
-    func testTrackWithProperties() {
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
-        let resultPlugin = ResultPlugin()
-        client.add(plugin: resultPlugin)
-
-        waitUntilStarted(client: client)
-        waitUntilServerConfigDownloaded(client: client)
-
-        client.track("simple_track_with_props", properties: ["key_1": "value_1", "key_2": "value_2"])
-        
-        let trackEvent = resultPlugin.lastMessage as? TrackMessage
-        
-        XCTAssertTrue(trackEvent?.event == "simple_track_with_props")
-        XCTAssertTrue(trackEvent?.type == .track)
-        XCTAssertNotNil(trackEvent?.properties)
-        XCTAssertNil(trackEvent?.option)
-        
-        let properties = trackEvent?.properties
-        
-        XCTAssertTrue(properties?["key_1"] as? String == "value_1")
-        XCTAssertTrue(properties?["key_2"] as? String == "value_2")
-    }
-    
-    func testIdentify() {
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
-        let resultPlugin = ResultPlugin()
-        client.add(plugin: resultPlugin)
-
-        waitUntilStarted(client: client)
-        waitUntilServerConfigDownloaded(client: client)
-        
-        client.identify("user_id")
-        
-        let identifyEvent = resultPlugin.lastMessage as? IdentifyMessage
-        
-        XCTAssertTrue(identifyEvent?.userId == "user_id")
-        XCTAssertTrue(identifyEvent?.type == .identify)
-    }
-    
-    func testIdentifyWithTraits() {
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY))
-        let resultPlugin = ResultPlugin()
-        client.add(plugin: resultPlugin)
-
-        waitUntilStarted(client: client)
-        waitUntilServerConfigDownloaded(client: client)
-        
-        client.identify("user_id", traits: ["email": "abc@def.com"])
-        
-        let identifyEvent = resultPlugin.lastMessage as? IdentifyMessage
-        
-        XCTAssertTrue(identifyEvent?.userId == "user_id")
-        XCTAssertTrue(identifyEvent?.type == .identify)
-        
-        let traits = identifyEvent?.traits
-        
-        XCTAssertTrue(traits?["email"] == "abc@def.com")
-        XCTAssertFalse(traits?["name"] == "name")
-    }
-    
-    // swiftlint:disable inclusive_language
-    // make sure you select 'Blacklist' for 'Client-side Events Filtering' section in
-    // Configuration from RudderStack dashboard. It will take 5 min to be affected.
-    func testBlackListedSuccess() {
-        let expectation = XCTestExpectation(description: "Firebase Expectation")
-        let myDestination = FirebaseDestination {
-            expectation.fulfill()
-            return true
-        }
-        
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
-        client.add(destination: myDestination)
-        waitUntilServerConfigDownloaded(client: client)
-        waitUntilStarted(client: client)
-        client.track("track_blacklist_1")
-        XCTExpectFailure {
-            wait(for: [expectation], timeout: 2.0)
-        }
-    }
-    
-    func testBlackListedFailure() {
-        let expectation = XCTestExpectation(description: "Firebase Expectation")
-        let myDestination = FirebaseDestination {
-            expectation.fulfill()
-            return true
-        }
-        
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
-        client.add(destination: myDestination)
-        waitUntilServerConfigDownloaded(client: client)
-        waitUntilStarted(client: client)
-        client.track("track_blacklist_2")
-        wait(for: [expectation], timeout: 2.0)
-    }
-    
-    // make sure you select 'Whitelist' for 'Client-side Events Filtering' section in
-    // Configuration from RudderStack dashboard. It will take 5 min to be affected.
-    func testWhiteListedSuccess() {
-        let expectation = XCTestExpectation(description: "Firebase Expectation")
-        let myDestination = FirebaseDestination {
-            expectation.fulfill()
-            return true
-        }
-        
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
-        client.add(destination: myDestination)
-        waitUntilServerConfigDownloaded(client: client)
-        waitUntilStarted(client: client)
-        client.track("track_whitelist_1")
-        wait(for: [expectation], timeout: 2.0)
-    }
-    
-    func testWhiteListedFailure() {
-        let expectation = XCTestExpectation(description: "Firebase Expectation")
-        let myDestination = FirebaseDestination {
-            expectation.fulfill()
-            return true
-        }
-        
-        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
-        client.add(destination: myDestination)
-        waitUntilServerConfigDownloaded(client: client)
-        waitUntilStarted(client: client)
-        client.track("track_whitelist_2")
-        XCTExpectFailure {
-            wait(for: [expectation], timeout: 2.0)
-        }
     }
 }
 

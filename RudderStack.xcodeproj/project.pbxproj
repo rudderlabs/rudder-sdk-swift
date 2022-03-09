@@ -69,6 +69,13 @@
 		EDA7EFA22739119600E73142 /* RSServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF6B2739119600E73142 /* RSServiceType.swift */; };
 		EDC1327C27D614C400AFD833 /* RSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC1327B27D614C400AFD833 /* RSClientTests.swift */; };
 		EDC132A227D7D61D00AFD833 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC132A127D7D61D00AFD833 /* JSON.swift */; };
+		EDC132A427D8D55700AFD833 /* RSTrackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC132A327D8D55600AFD833 /* RSTrackTests.swift */; };
+		EDC132A627D8D5F300AFD833 /* RSIdentifyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC132A527D8D5F300AFD833 /* RSIdentifyTests.swift */; };
+		EDC132A827D8D61700AFD833 /* RSScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC132A727D8D61700AFD833 /* RSScreenTests.swift */; };
+		EDC132AA27D8D63D00AFD833 /* RSAliasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC132A927D8D63D00AFD833 /* RSAliasTests.swift */; };
+		EDC132AC27D8D64E00AFD833 /* RSGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC132AB27D8D64E00AFD833 /* RSGroupTests.swift */; };
+		EDC132AE27D9104700AFD833 /* RSBlackListedEventsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC132AD27D9104700AFD833 /* RSBlackListedEventsTest.swift */; };
+		EDC132B027D9106500AFD833 /* RSWhiteListedEventsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC132AF27D9106500AFD833 /* RSWhiteListedEventsTests.swift */; };
 		EDD3AA1327C64B430048E61E /* RSKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD3AA1227C64B430048E61E /* RSKeyPath.swift */; };
 		EDD3AA3627C659C80048E61E /* RSAtomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD3AA3527C659C80048E61E /* RSAtomic.swift */; };
 		EDD3AA4A27C8DAAA0048E61E /* RSLoggerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D227827A3F0C100EC8366 /* RSLoggerPlugin.swift */; };
@@ -161,6 +168,13 @@
 		EDA7EF6B2739119600E73142 /* RSServiceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSServiceType.swift; sourceTree = "<group>"; };
 		EDC1327B27D614C400AFD833 /* RSClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSClientTests.swift; sourceTree = "<group>"; };
 		EDC132A127D7D61D00AFD833 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		EDC132A327D8D55600AFD833 /* RSTrackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSTrackTests.swift; sourceTree = "<group>"; };
+		EDC132A527D8D5F300AFD833 /* RSIdentifyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSIdentifyTests.swift; sourceTree = "<group>"; };
+		EDC132A727D8D61700AFD833 /* RSScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSScreenTests.swift; sourceTree = "<group>"; };
+		EDC132A927D8D63D00AFD833 /* RSAliasTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAliasTests.swift; sourceTree = "<group>"; };
+		EDC132AB27D8D64E00AFD833 /* RSGroupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSGroupTests.swift; sourceTree = "<group>"; };
+		EDC132AD27D9104700AFD833 /* RSBlackListedEventsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSBlackListedEventsTest.swift; sourceTree = "<group>"; };
+		EDC132AF27D9106500AFD833 /* RSWhiteListedEventsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSWhiteListedEventsTests.swift; sourceTree = "<group>"; };
 		EDD3AA1227C64B430048E61E /* RSKeyPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSKeyPath.swift; sourceTree = "<group>"; };
 		EDD3AA3527C659C80048E61E /* RSAtomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAtomic.swift; sourceTree = "<group>"; };
 		EDF7B3F927A80320001C0688 /* SampleBatchPayload.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SampleBatchPayload.json; sourceTree = "<group>"; };
@@ -383,7 +397,14 @@
 		EDC1325B27D612B600AFD833 /* RudderStackTests */ = {
 			isa = PBXGroup;
 			children = (
+				EDC132A927D8D63D00AFD833 /* RSAliasTests.swift */,
+				EDC132AD27D9104700AFD833 /* RSBlackListedEventsTest.swift */,
 				EDC1327B27D614C400AFD833 /* RSClientTests.swift */,
+				EDC132AB27D8D64E00AFD833 /* RSGroupTests.swift */,
+				EDC132A527D8D5F300AFD833 /* RSIdentifyTests.swift */,
+				EDC132A727D8D61700AFD833 /* RSScreenTests.swift */,
+				EDC132A327D8D55600AFD833 /* RSTrackTests.swift */,
+				EDC132AF27D9106500AFD833 /* RSWhiteListedEventsTests.swift */,
 			);
 			path = RudderStackTests;
 			sourceTree = "<group>";
@@ -672,7 +693,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDC132AA27D8D63D00AFD833 /* RSAliasTests.swift in Sources */,
+				EDC132A427D8D55700AFD833 /* RSTrackTests.swift in Sources */,
 				EDC1327C27D614C400AFD833 /* RSClientTests.swift in Sources */,
+				EDC132A827D8D61700AFD833 /* RSScreenTests.swift in Sources */,
+				EDC132B027D9106500AFD833 /* RSWhiteListedEventsTests.swift in Sources */,
+				EDC132AC27D8D64E00AFD833 /* RSGroupTests.swift in Sources */,
+				EDC132AE27D9104700AFD833 /* RSBlackListedEventsTest.swift in Sources */,
+				EDC132A627D8D5F300AFD833 /* RSIdentifyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
