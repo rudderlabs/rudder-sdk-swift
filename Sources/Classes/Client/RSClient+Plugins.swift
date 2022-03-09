@@ -20,7 +20,6 @@ extension RSClient {
         add(plugin: RSIntegrationPlugin())
         add(plugin: RudderDestinationPlugin())
         add(plugin: RSGDPRPlugin())
-        add(plugin: RSEventFilterPlugin())
         
         if let platformPlugins = platformPlugins() {
             for plugin in platformPlugins {

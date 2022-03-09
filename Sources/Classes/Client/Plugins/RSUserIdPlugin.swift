@@ -17,11 +17,11 @@ class RSUserIdPlugin: RSPlatformPlugin {
     required init() { }
     
     func execute<T: RSMessage>(message: T?) -> T? {
-        guard var workingEvent = message else { return message }
+        guard var workingMessage = message else { return message }
         if let userId = userId {
-            workingEvent.userId = userId
+            workingMessage.userId = userId
         }
-        return workingEvent
+        return workingMessage
     }
 }
 

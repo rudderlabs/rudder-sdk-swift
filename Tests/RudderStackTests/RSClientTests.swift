@@ -118,6 +118,8 @@ class RSClientTests: XCTestCase {
         
         XCTAssertTrue(trackEvent?.event == "simple_track")
         XCTAssertTrue(trackEvent?.type == .track)
+        XCTAssertNil(trackEvent?.properties)
+        XCTAssertNil(trackEvent?.option)
     }
     
     func testTrackWithProperties() {
@@ -134,6 +136,8 @@ class RSClientTests: XCTestCase {
         
         XCTAssertTrue(trackEvent?.event == "simple_track_with_props")
         XCTAssertTrue(trackEvent?.type == .track)
+        XCTAssertNotNil(trackEvent?.properties)
+        XCTAssertNil(trackEvent?.option)
         
         let properties = trackEvent?.properties
         
@@ -176,6 +180,75 @@ class RSClientTests: XCTestCase {
         
         XCTAssertTrue(traits?["email"] == "abc@def.com")
         XCTAssertFalse(traits?["name"] == "name")
+    }
+    
+    // swiftlint:disable inclusive_language
+    // make sure you select 'Blacklist' for 'Client-side Events Filtering' section in
+    // Configuration from RudderStack dashboard. It will take 5 min to be affected.
+    func testBlackListedSuccess() {
+        let expectation = XCTestExpectation(description: "Firebase Expectation")
+        let myDestination = FirebaseDestination {
+            expectation.fulfill()
+            return true
+        }
+        
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
+        client.add(destination: myDestination)
+        waitUntilServerConfigDownloaded(client: client)
+        waitUntilStarted(client: client)
+        client.track("track_blacklist_1")
+        XCTExpectFailure {
+            wait(for: [expectation], timeout: 2.0)
+        }
+    }
+    
+    func testBlackListedFailure() {
+        let expectation = XCTestExpectation(description: "Firebase Expectation")
+        let myDestination = FirebaseDestination {
+            expectation.fulfill()
+            return true
+        }
+        
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
+        client.add(destination: myDestination)
+        waitUntilServerConfigDownloaded(client: client)
+        waitUntilStarted(client: client)
+        client.track("track_blacklist_2")
+        wait(for: [expectation], timeout: 2.0)
+    }
+    
+    // make sure you select 'Whitelist' for 'Client-side Events Filtering' section in
+    // Configuration from RudderStack dashboard. It will take 5 min to be affected.
+    func testWhiteListedSuccess() {
+        let expectation = XCTestExpectation(description: "Firebase Expectation")
+        let myDestination = FirebaseDestination {
+            expectation.fulfill()
+            return true
+        }
+        
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
+        client.add(destination: myDestination)
+        waitUntilServerConfigDownloaded(client: client)
+        waitUntilStarted(client: client)
+        client.track("track_whitelist_1")
+        wait(for: [expectation], timeout: 2.0)
+    }
+    
+    func testWhiteListedFailure() {
+        let expectation = XCTestExpectation(description: "Firebase Expectation")
+        let myDestination = FirebaseDestination {
+            expectation.fulfill()
+            return true
+        }
+        
+        let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
+        client.add(destination: myDestination)
+        waitUntilServerConfigDownloaded(client: client)
+        waitUntilStarted(client: client)
+        client.track("track_whitelist_2")
+        XCTExpectFailure {
+            wait(for: [expectation], timeout: 2.0)
+        }
     }
 }
 

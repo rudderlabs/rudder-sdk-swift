@@ -17,13 +17,13 @@ class RSAdvertisingIdPlugin: RSPlatformPlugin {
     required init() { }
     
     func execute<T: RSMessage>(message: T?) -> T? {
-        guard var workingEvent = message else { return message }
-        if var context = workingEvent.context, let advertisingId = advertisingId {
+        guard var workingMessage = message else { return message }
+        if var context = workingMessage.context, let advertisingId = advertisingId {
             context[keyPath: "device.advertisingId"] = advertisingId
             context[keyPath: "device.adTrackingEnabled"] = true
-            workingEvent.context = context
+            workingMessage.context = context
         }
-        return workingEvent
+        return workingMessage
     }
 }
 

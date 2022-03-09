@@ -208,6 +208,44 @@ extension RSDestinationPlugin {
         
         return (hasSettings == true && customerDisabled == false)
     }
+    
+    // swiftlint:disable inclusive_language
+    func isEventAllowed(message: RSMessage) -> Bool {
+        func isAllowed(message: RSMessage, list: [String]) -> Bool {
+            switch message {
+            case let e as TrackMessage:
+                if let event = e.event {
+                    return list.contains(event)
+                }
+            case let e as ScreenMessage:
+                if let name = e.name {
+                    return list.contains(name)
+                }
+            default:
+                break
+            }
+            return true
+        }
+        
+        var isEventAllowed = true
+        if let destinations = client?.serverConfig?.destinations {
+            if let destination = destinations.first(where: { $0.destinationDefinition?.displayName == self.key }) {
+                switch destination.eventFilteringOption {
+                case .disabled:
+                    break
+                case .blackListed:
+                    if let blackListedEvents = destination.blackListedEvents {
+                        isEventAllowed = !isAllowed(message: message, list: blackListedEvents)
+                    }
+                case .whiteListed:
+                    if let whiteListedEvents = destination.whiteListedEvents {
+                        isEventAllowed = isAllowed(message: message, list: whiteListedEvents)
+                    }
+                }
+            }
+        }
+        return isEventAllowed
+    }
 
     func process<E: RSMessage>(incomingEvent: E) -> E? {
         // This will process plugins (think destination middleware) that are tied
@@ -216,30 +254,33 @@ extension RSDestinationPlugin {
         var result: E?
         
         if isDestinationEnabled(message: incomingEvent) {
-            // apply .before and .enrichment types first ...
-            let beforeResult = controller.applyPlugins(type: .before, event: incomingEvent)
-            let enrichmentResult = controller.applyPlugins(type: .enrichment, event: beforeResult)
-            
-            // now we execute any overrides we may have made.  basically, the idea is to take an
-            // incoming event, like identify, and map it to whatever is appropriate for this destination.
-            var destinationResult: E?
-            switch enrichmentResult {
-            case let e as IdentifyMessage:
-                destinationResult = identify(message: e) as? E
-            case let e as TrackMessage:
-                destinationResult = track(message: e) as? E
-            case let e as ScreenMessage:
-                destinationResult = screen(message: e) as? E
-            case let e as GroupMessage:
-                destinationResult = group(message: e) as? E
-            case let e as AliasMessage:
-                destinationResult = alias(message: e) as? E
-            default:
-                break
+            // check event is allowed
+            if isEventAllowed(message: incomingEvent) {
+                // apply .before and .enrichment types first ...
+                let beforeResult = controller.applyPlugins(type: .before, event: incomingEvent)
+                let enrichmentResult = controller.applyPlugins(type: .enrichment, event: beforeResult)
+                
+                // now we execute any overrides we may have made.  basically, the idea is to take an
+                // incoming event, like identify, and map it to whatever is appropriate for this destination.
+                var destinationResult: E?
+                switch enrichmentResult {
+                case let e as IdentifyMessage:
+                    destinationResult = identify(message: e) as? E
+                case let e as TrackMessage:
+                    destinationResult = track(message: e) as? E
+                case let e as ScreenMessage:
+                    destinationResult = screen(message: e) as? E
+                case let e as GroupMessage:
+                    destinationResult = group(message: e) as? E
+                case let e as AliasMessage:
+                    destinationResult = alias(message: e) as? E
+                default:
+                    break
+                }
+                
+                // apply .after plugins ...
+                result = controller.applyPlugins(type: .after, event: destinationResult)
             }
-            
-            // apply .after plugins ...
-            result = controller.applyPlugins(type: .after, event: destinationResult)
         }
         
         return result

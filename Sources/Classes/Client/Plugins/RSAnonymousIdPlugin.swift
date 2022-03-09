@@ -17,15 +17,15 @@ class RSAnonymousIdPlugin: RSPlatformPlugin {
     required init() { }
     
     func execute<T: RSMessage>(message: T?) -> T? {
-        guard var workingEvent = message else { return message }
+        guard var workingMessage = message else { return message }
         if let anonymousId = anonymousId {
-            workingEvent.anonymousId = anonymousId
-            if var context = workingEvent.context {
+            workingMessage.anonymousId = anonymousId
+            if var context = workingMessage.context {
                 context[keyPath: "traits.anonymousId"] = anonymousId
-                workingEvent.context = context
+                workingMessage.context = context
             }
         }
-        return workingEvent
+        return workingMessage
     }
 }
 

@@ -17,12 +17,12 @@ class RSDeviceTokenPlugin: RSPlatformPlugin {
     required init() { }
     
     func execute<T: RSMessage>(message: T?) -> T? {
-        guard var workingEvent = message else { return message }
-        if var context = workingEvent.context, let token = token {
+        guard var workingMessage = message else { return message }
+        if var context = workingMessage.context, let token = token {
             context[keyPath: "device.token"] = token
-            workingEvent.context = context
+            workingMessage.context = context
         }
-        return workingEvent
+        return workingMessage
     }
 }
 

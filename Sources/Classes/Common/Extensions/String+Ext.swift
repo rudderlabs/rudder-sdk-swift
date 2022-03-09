@@ -31,4 +31,12 @@ extension String {
         let start = index(startIndex, offsetBy: max(0, range.lowerBound))
         return String(self[start...])
     }
+    
+    var trimmedString: String {
+        return trimmingCharacters(in: .whitespaces)
+    }
+    
+    var isNotEmpty: Bool {
+        return !isEmpty
+    }
 }

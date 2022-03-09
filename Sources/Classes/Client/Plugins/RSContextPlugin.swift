@@ -18,13 +18,13 @@ class RSContextPlugin: RSPlatformPlugin {
     private static var device = Vendor.current
     
     func execute<T: RSMessage>(message: T?) -> T? {
-        guard var workingEvent = message else { return message }        
+        guard var workingMessage = message else { return message }        
         var context = staticContext
         insertDynamicPlatformContextData(context: &context)
-        insertDynamicOptionData(message: workingEvent, context: &context)
-        workingEvent.context = context
+        insertDynamicOptionData(message: workingMessage, context: &context)
+        workingMessage.context = context
         self.context = context
-        return workingEvent
+        return workingMessage
     }
     
     internal static func staticContextData() -> [String: Any] {
