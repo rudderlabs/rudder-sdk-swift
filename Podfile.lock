@@ -79,12 +79,12 @@ PODS:
   - nanopb/encode (1.30906.0)
   - PromisesObjC (1.2.12)
   - Protobuf (3.19.1)
-  - Rudder (2.0.0)
+  - RudderStack (1.0.0)
 
 DEPENDENCIES:
   - Firebase/Analytics
   - Firebase/Messaging
-  - Rudder (from `.`)
+  - RudderStack (from `.`)
 
 SPEC REPOS:
   trunk:
@@ -103,7 +103,7 @@ SPEC REPOS:
     - Protobuf
 
 EXTERNAL SOURCES:
-  Rudder:
+  RudderStack:
     :path: "."
 
 SPEC CHECKSUMS:
@@ -120,8 +120,8 @@ SPEC CHECKSUMS:
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 3724efa50cb2846d7ccebc8691c574e85fd74471
-  Rudder: 4a12daa354fb31cf560c3fd6c640fc1910402d35
+  RudderStack: 705069efa869eadfe3a5aee0300dd38fa20cfbeb
 
-PODFILE CHECKSUM: b4250b4acb7e2bde75d932479a19a69e3a698534
+PODFILE CHECKSUM: 94eaf74b86ae2b0376e911a03c52d09ac6d2ccb0
 
 COCOAPODS: 1.11.2

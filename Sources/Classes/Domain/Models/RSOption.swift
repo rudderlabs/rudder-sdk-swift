@@ -8,55 +8,45 @@
 
 import Foundation
 
-@objc open class RSOption: NSObject {
-    var externalIds: [[String: Any]]?
-    var integrations: [String: Any]?
+@objc
+open class RSOption: NSObject {
+    var externalIds: [[String: String]]?
+    var integrations: [String: Bool]?
     var customContexts: [String: Any]?
     
     public override init() {
         externalIds = nil
-        integrations = [String: Any]()
+        integrations = [String: Bool]()
         customContexts = nil
     }
     
-    @objc public func putExternalId(_ type: String, withId idValue: String) {
+    @objc
+    public func putExternalId(_ type: String, withId id: String) {
         if externalIds == nil {
-            externalIds = [[String: Any]]()
+            externalIds = [[String: String]]()
         }
-        var dictIndex: Int = -1
-        var externalIdDict: [String: Any]?
-        if let externalIds = externalIds {
-            for index in 0..<externalIds.count {
-                let dict = externalIds[index]
-                if let dictType = dict["type"] as? String, dictType == type {
-                    externalIdDict = dict
-                    dictIndex = index
-                    break
-                }
-            }
-        }
-        if externalIdDict == nil {
-            externalIdDict = ["type": type]
-        }
-        externalIdDict?["id"] = idValue
-        if dictIndex == -1 {
-            if let externalIdDict = externalIdDict {
-                externalIds?.append(externalIdDict)
-            }
+        if let index = externalIds?.firstIndex(where: { dict in
+            return dict["type"] == type
+        }) {
+            externalIds?[index]["id"] = id
         } else {
-            externalIds?[dictIndex]["id"] = idValue
+            let dict = ["type": type, "id": id]
+            externalIds?.append(dict)
         }
     }
     
-    @objc public func putIntegration(_ type: String, isEnabled enabled: Bool) {
+    @objc
+    public func putIntegration(_ type: String, isEnabled enabled: Bool) {
         integrations?[type] = enabled
     }
     
-    func putIntegrationWithFactory(factory: RSIntegrationFactory, isEnabled enabled: Bool) {
-        integrations?[factory.key] = enabled
-    }
+//    @objc
+//    public func putIntegrationWithFactory(_ factory: RSIntegrationFactory, isEnabled enabled: Bool) {
+//        integrations?[factory.key] = enabled
+//    }
     
-    @objc public func putCustomContext(_ context: [String: Any]?, withKey key: String?) {
+    @objc
+    public func putCustomContext(_ context: [String: Any]?, withKey key: String?) {
         if customContexts == nil {
             customContexts = [String: Any]()
         }

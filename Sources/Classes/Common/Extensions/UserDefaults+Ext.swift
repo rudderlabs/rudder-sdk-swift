@@ -41,9 +41,14 @@ extension UserDefaults {
         set { setValue(newValue, forKey: RSConstants.RSTraitsKey) }
     }
     
-    var buildVersionCode: String? {
-        get { string(forKey: RSConstants.RSApplicationInfoKey) }
-        set { setValue(newValue, forKey: RSConstants.RSApplicationInfoKey) }
+    var applicationVersion: String? {
+        get { string(forKey: RSConstants.RSApplicationVersionKey) }
+        set { setValue(newValue, forKey: RSConstants.RSApplicationVersionKey) }
+    }
+    
+    var applicationBuild: String? {
+        get { string(forKey: RSConstants.RSApplicationBuildKey) }
+        set { setValue(newValue, forKey: RSConstants.RSApplicationBuildKey) }
     }
     
     var externalIds: String? {

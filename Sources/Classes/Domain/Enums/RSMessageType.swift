@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum RSMessageType: String {
+public enum RSMessageType: String {
     case track
     case screen
     case identify

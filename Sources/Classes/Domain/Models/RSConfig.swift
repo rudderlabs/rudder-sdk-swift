@@ -8,34 +8,27 @@
 
 import Foundation
 
-@objc open class RSConfig: NSObject {
-    var dataPlaneUrl: String
-    var flushQueueSize: Int
-    var dbCountThreshold: Int
-    var sleepTimeOut: Int
-    var logLevel: RSLogLevel
-    var configRefreshInterval: Int
-    var trackLifecycleEvents: Bool
-    var recordScreenViews: Bool
-    var controlPlaneUrl: String
-    var factories: [RSIntegrationFactory]
-    var customFactories: [RSIntegrationFactory]
+@objc
+open class RSConfig: NSObject {
+    let writeKey: String
+    var anonymousId: String?
+    var dataPlaneUrl: String = RSConstants.RSDataPlaneUrl
+    var flushQueueSize: Int = RSConstants.RSFlushQueueSize
+    var dbCountThreshold: Int = RSConstants.RSDBCountThreshold
+    var sleepTimeOut: Int = RSConstants.RSSleepTimeout
+    var logLevel: RSLogLevel = RSLogLevel.none
+    var configRefreshInterval: Int = RSConstants.RSConfigRefreshInterval
+    var trackLifecycleEvents: Bool = RSConstants.RSTrackLifeCycleEvents
+    var recordScreenViews: Bool = RSConstants.RSRecordScreenViews
+    var controlPlaneUrl: String = RSConstants.RSControlPlaneUrl
     
-    public override init() {
-        dataPlaneUrl = RSConstants.RSDataPlaneUrl
-        flushQueueSize = RSConstants.RSFlushQueueSize
-        dbCountThreshold = RSConstants.RSDBCountThreshold
-        sleepTimeOut = RSConstants.RSSleepTimeout
-        logLevel = .error
-        configRefreshInterval = RSConstants.RSConfigRefreshInterval
-        trackLifecycleEvents = RSConstants.RSTrackLifeCycleEvents
-        recordScreenViews = RSConstants.RSRecordScreenViews
-        controlPlaneUrl = RSConstants.RSControlPlaneUrl
-        factories = [RSIntegrationFactory]()
-        customFactories = [RSIntegrationFactory]()
+    @objc
+    public init(writeKey: String) {
+        self.writeKey = writeKey
     }
     
-    @objc public func withDataPlaneUrl(_ dataPlaneUrl: String) -> RSConfig {
+    @discardableResult @objc
+    public func dataPlaneURL(_ dataPlaneUrl: String) -> RSConfig {
         if let url = URL(string: dataPlaneUrl) {
             if let scheme = url.scheme, let host = url.host {
                 if let port = url.port {
@@ -48,60 +41,56 @@ import Foundation
         return self
     }
     
-    @objc public func withDataPlaneURL(_ dataPlaneURL: URL) -> RSConfig {
-        if let scheme = dataPlaneURL.scheme, let host = dataPlaneURL.host {
-            if let port = dataPlaneURL.port {
-                self.dataPlaneUrl = "\(scheme)://\(host):\(port)"
-            } else {
-                self.dataPlaneUrl = "\(scheme)://\(host)"
-            }
-        }
-        return self
-    }
-    
-    @objc public func withFlushQueueSize(_ flushQueueSize: Int) -> RSConfig {
+    @discardableResult @objc
+    public func anonymousId(_ flushQueueSize: Int) -> RSConfig {
         self.flushQueueSize = flushQueueSize
         return self
     }
     
-    @objc public func withDebug(_ debug: Bool) -> RSConfig {
-        RSClient.shared.logger.configure(logLevel: .verbose)
-        self.logLevel = .verbose
+    @discardableResult @objc
+    public func flushQueueSize(_ anonymousId: String) -> RSConfig {
+        self.anonymousId = anonymousId
         return self
     }
     
-    @objc public func withLoglevel(_ logLevel: RSLogLevel) -> RSConfig {
-        RSClient.shared.logger.configure(logLevel: logLevel)
+    @discardableResult @objc
+    public func loglevel(_ logLevel: RSLogLevel) -> RSConfig {
         self.logLevel = logLevel
         return self
     }
     
-    @objc public func withDBCountThreshold(_ dbCountThreshold: Int) -> RSConfig {
+    @discardableResult @objc
+    public func withDBCountThreshold(_ dbCountThreshold: Int) -> RSConfig {
         self.dbCountThreshold = dbCountThreshold
         return self
     }
     
-    @objc public func withSleepTimeOut(_ sleepTimeOut: Int) -> RSConfig {
+    @discardableResult @objc
+    public func sleepTimeOut(_ sleepTimeOut: Int) -> RSConfig {
         self.sleepTimeOut = sleepTimeOut
         return self
     }
     
-    @objc public func withConfigRefreshInteval(_ configRefreshInterval: Int) -> RSConfig {
+    @discardableResult @objc
+    public func configRefreshInterval(_ configRefreshInterval: Int) -> RSConfig {
         self.configRefreshInterval = configRefreshInterval
         return self
     }
     
-    @objc public func withTrackLifecycleEvens(_ trackLifecycleEvents: Bool) -> RSConfig {
+    @discardableResult @objc
+    public func trackLifecycleEvents(_ trackLifecycleEvents: Bool) -> RSConfig {
         self.trackLifecycleEvents = trackLifecycleEvents
         return self
     }
     
-    @objc public func withRecordScreenViews(_ recordScreenViews: Bool) -> RSConfig {
+    @discardableResult @objc
+    public func recordScreenViews(_ recordScreenViews: Bool) -> RSConfig {
         self.recordScreenViews = recordScreenViews
         return self
     }
     
-    @objc public func withControlPlaneUrl(_ controlPlaneUrl: String) -> RSConfig {
+    @discardableResult @objc
+    public func controlPlaneURL(_ controlPlaneUrl: String) -> RSConfig {
         if let url = URL(string: controlPlaneUrl) {
             if let scheme = url.scheme, let host = url.host {
                 if let port = url.port {
@@ -111,27 +100,6 @@ import Foundation
                 }
             }
         }
-        return self
-    }
-    
-    @objc public func withControlPlaneURL(_ controlPlaneURL: URL) -> RSConfig {
-        if let scheme = controlPlaneURL.scheme, let host = controlPlaneURL.host {
-            if let port = controlPlaneURL.port {
-                self.controlPlaneUrl = "\(scheme)://\(host):\(port)"
-            } else {
-                self.controlPlaneUrl = "\(scheme)://\(host)"
-            }
-        }
-        return self
-    }
-    
-    @objc public func withFactory(_ factory: RSIntegrationFactory) -> RSConfig {
-        factories.append(factory)
-        return self
-    }
-    
-    @objc public func withCustomFactory(_ customFactory: RSIntegrationFactory) -> RSConfig {
-        customFactories.append(customFactory)
         return self
     }
 }

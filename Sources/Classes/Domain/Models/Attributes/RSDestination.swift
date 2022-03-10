@@ -8,9 +8,31 @@
 
 import Foundation
 
-struct RSDestination: Codable {
-    let config: [String: RSAnyCodable]?
-    let secretConfig: [String: RSAnyCodable]?
+// swiftlint:disable inclusive_language
+
+@objc
+public enum EventFilteringOption: Int, CaseIterable {
+    case disabled = 0
+    case blackListed
+    case whiteListed
+}
+
+extension EventFilteringOption {
+    internal init?(rawString: String?) {
+        switch rawString {
+        case "blacklistedEvents":
+            self.init(rawValue: 1)
+        case "whitelistedEvents":
+            self.init(rawValue: 2)
+        default:
+            self.init(rawValue: 0)
+        }
+    }
+}
+
+@objc open class RSDestination: NSObject, Codable {
+    let config: JSON?
+    let secretConfig: JSON?
     
     private let _id: String?
     var id: String {
@@ -45,6 +67,36 @@ struct RSDestination: Codable {
     private let _updatedAt: String?
     var updatedAt: String {
         return _updatedAt ?? ""
+    }
+    
+    var eventFilteringOption: EventFilteringOption {
+        return  EventFilteringOption(rawString: (config?.dictionaryValue?["eventFilteringOption"] as? String)) ?? .disabled
+    }
+    
+    var blackListedEvents: [String]? {
+        var eventList: [String]?
+        if let events = config?.dictionaryValue?["blacklistedEvents"] as? [[String: String]] {
+            eventList = [String]()
+            for event in events {
+                if let eventName = event["eventName"], eventName.isNotEmpty {
+                    eventList?.append(eventName)
+                }
+            }
+        }
+        return eventList
+    }
+    
+    var whiteListedEvents: [String]? {
+        var eventList: [String]?
+        if let events = config?.dictionaryValue?["whitelistedEvents"] as? [[String: String]] {
+            eventList = [String]()
+            for event in events {
+                if let eventName = event["eventName"], eventName.isNotEmpty {
+                    eventList?.append(eventName)
+                }
+            }
+        }
+        return eventList
     }
 
     let destinationDefinition: RSDestinationDefinition?
