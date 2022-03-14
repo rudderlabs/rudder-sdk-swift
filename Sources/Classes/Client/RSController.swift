@@ -214,13 +214,9 @@ extension RSDestinationPlugin {
         func isAllowed(message: RSMessage, list: [String]) -> Bool {
             switch message {
             case let e as TrackMessage:
-                if let event = e.event {
-                    return list.contains(event)
-                }
+                return list.contains(e.event)                
             case let e as ScreenMessage:
-                if let name = e.name {
-                    return list.contains(name)
-                }
+                return list.contains(e.name)
             default:
                 break
             }

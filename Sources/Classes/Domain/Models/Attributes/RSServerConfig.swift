@@ -80,47 +80,47 @@ import Foundation
     
     private let _config: Source?
     
-    var id: String {
+    public var id: String {
         return _config?.id ?? ""
     }
     
-    var name: String {
+    public var name: String {
         return _config?.name ?? ""
     }
     
-    var writeKey: String {
+    public var writeKey: String {
         return _config?.writeKey ?? ""
     }
     
-    var enabled: Bool {
+    public var enabled: Bool {
         return _config?.enabled ?? false
     }
     
-    var sourceDefinitionId: String {
+    public var sourceDefinitionId: String {
         return _config?.sourceDefinitionId ?? ""
     }
     
-    var createdBy: String {
+    public var createdBy: String {
         return _config?.createdBy ?? ""
     }
     
-    var workspaceId: String {
+    public var workspaceId: String {
         return _config?.workspaceId ?? ""
     }
     
-    var deleted: Bool {
+    public var deleted: Bool {
         return _config?.deleted ?? false
     }
     
-    var createdAt: String {
+    public var createdAt: String {
         return _config?.createdAt ?? ""
     }
     
-    var updatedAt: String {
+    public var updatedAt: String {
         return _config?.updatedAt ?? ""
     }
     
-    var destinations: [RSDestination]? {
+    public var destinations: [RSDestination]? {
         return _config?.destinations
     }
     

@@ -113,7 +113,9 @@ extension RSServiceManager {
                        "Authorization": "Basic \(client.config.writeKey.computeAuthToken() ?? "")"]
         switch API {
         case .flushEvents:
-            headers["AnonymousId"] = client.config.anonymousId?.computeAnonymousIdToken() ?? ""
+            if let anonymousIdPlugin = client.find(pluginType: RSAnonymousIdPlugin.self) {
+                headers["AnonymousId"] = anonymousIdPlugin.anonymousId?.computeAnonymousIdToken() ?? ""
+            }            
         default:
             break
         }
