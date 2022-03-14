@@ -33,8 +33,8 @@ public struct TrackMessage: RSMessage {
     public var option: RSOption?
     public var channel: String?
     
-    public var event: String?
-    public var properties: TrackProperties?
+    public let event: String
+    public let properties: TrackProperties?
 
     public func toDict() -> [String: Any] {
         var dictionary = staticDictionary()
@@ -80,7 +80,7 @@ public struct IdentifyMessage: RSMessage {
         dictionary["userId"] = userId
     }
     
-    init(userId: String? = nil, traits: IdentifyTraits? = nil, option: RSOption? = nil) {
+    init(userId: String, traits: IdentifyTraits? = nil, option: RSOption? = nil) {
         self.userId = userId
         self.traits = traits
         self.option = option
@@ -98,8 +98,8 @@ public struct ScreenMessage: RSMessage {
     public var option: RSOption?
     public var channel: String?
 
-    public var name: String?
-    public var properties: ScreenProperties?
+    public let name: String
+    public let properties: ScreenProperties?
 
     public func toDict() -> [String: Any] {
         var dictionary = staticDictionary()
@@ -113,7 +113,7 @@ public struct ScreenMessage: RSMessage {
         dictionary["userId"] = userId
     }
     
-    init(title: String? = nil, properties: ScreenProperties? = nil, option: RSOption? = nil) {
+    init(title: String, properties: ScreenProperties? = nil, option: RSOption? = nil) {
         self.name = title
         self.properties = properties
         self.option = option
@@ -131,8 +131,8 @@ public struct GroupMessage: RSMessage {
     public var option: RSOption?
     public var channel: String?
 
-    public var groupId: String?
-    public var traits: GroupTraits?
+    public let groupId: String
+    public let traits: GroupTraits?
     
     public func toDict() -> [String: Any] {
         var dictionary = staticDictionary()
@@ -146,7 +146,7 @@ public struct GroupMessage: RSMessage {
         dictionary["userId"] = userId
     }
     
-    init(groupId: String? = nil, traits: GroupTraits? = nil, option: RSOption? = nil) {
+    init(groupId: String, traits: GroupTraits? = nil, option: RSOption? = nil) {
         self.groupId = groupId
         self.traits = traits
         self.option = option
@@ -177,7 +177,7 @@ public struct AliasMessage: RSMessage {
         dictionary["previousId"] = previousId
     }
         
-    init(newId: String? = nil, option: RSOption? = nil) {
+    init(newId: String, option: RSOption? = nil) {
         self.userId = newId
         self.option = option
     }    

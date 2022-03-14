@@ -18,44 +18,44 @@ import Foundation
     }
     
     private let _destConfig: Config?
-    var ios: [String]? {
+    public var ios: [String]? {
         return _destConfig?.ios
     }
     
-    var unity: [String]? {
+    public var unity: [String]? {
         return _destConfig?.unity
     }
     
-    var android: [String]? {
+    public var android: [String]? {
         return _destConfig?.android
     }
     
-    var reactnative: [String]? {
+    public var reactnative: [String]? {
         return _destConfig?.reactnative
     }
     
-    var defaultConfig: [String]? {
+    public var defaultConfig: [String]? {
         return _destConfig?.defaultConfig
     }
     
-    let secretKeys: [String]?
-    let excludeKeys: [String]?
-    let includeKeys: [String]?
+    public let secretKeys: [String]?
+    public let excludeKeys: [String]?
+    public let includeKeys: [String]?
     
     private let _transformAt: String?
-    var transformAt: String {
+    public var transformAt: String {
         return _transformAt ?? ""
     }
     
     private let _transformAt1: String?
-    var transformAt1: String {
+    public var transformAt1: String {
         return _transformAt1 ?? ""
     }
     
-    let supportedSourceTypes: [String]?
+    public let supportedSourceTypes: [String]?
     
     private let _saveDestinationResponse: Bool?
-    var saveDestinationResponse: Bool {
+    public var saveDestinationResponse: Bool {
         return _saveDestinationResponse ?? false
     }
     

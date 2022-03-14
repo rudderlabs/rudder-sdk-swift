@@ -19,32 +19,32 @@ import Foundation
     }
     
     private let _id: String?
-    var id: String {
+    public var id: String {
         return _id ?? ""
     }
     
     private let _name: String?
-    var name: String {
+    public var name: String {
         return _name ?? ""
     }    
     
     private let _displayName: String?
-    var displayName: String {
+    public var displayName: String {
         return _displayName ?? ""
     }
     
     private let _createdAt: String?
-    var createdAt: String {
+    public var createdAt: String {
         return _createdAt ?? ""
     }
     
     private let _updatedAt: String?
-    var updatedAt: String {
+    public var updatedAt: String {
         return _updatedAt ?? ""
     }
     
     private let _destinationConfig: Config?
-    var destinationConfig: RSDestinationConfig? {
+    public var destinationConfig: RSDestinationConfig? {
         return _destinationConfig?.config
     }
     

@@ -10,21 +10,59 @@ import Foundation
 
 @objc
 open class RSConfig: NSObject {
-    let writeKey: String
-    var anonymousId: String?
-    var dataPlaneUrl: String = RSConstants.RSDataPlaneUrl
-    var flushQueueSize: Int = RSConstants.RSFlushQueueSize
-    var dbCountThreshold: Int = RSConstants.RSDBCountThreshold
-    var sleepTimeOut: Int = RSConstants.RSSleepTimeout
-    var logLevel: RSLogLevel = RSLogLevel.none
-    var configRefreshInterval: Int = RSConstants.RSConfigRefreshInterval
-    var trackLifecycleEvents: Bool = RSConstants.RSTrackLifeCycleEvents
-    var recordScreenViews: Bool = RSConstants.RSRecordScreenViews
-    var controlPlaneUrl: String = RSConstants.RSControlPlaneUrl
+    let _writeKey: String
+    public var writeKey: String {
+        return _writeKey
+    }
+    
+    private var _dataPlaneUrl: String = RSConstants.RSDataPlaneUrl
+    public var dataPlaneUrl: String {
+        return _dataPlaneUrl
+    }
+    
+    private var _flushQueueSize: Int = RSConstants.RSFlushQueueSize
+    public var flushQueueSize: Int {
+        return _flushQueueSize
+    }
+    
+    private var _dbCountThreshold: Int = RSConstants.RSDBCountThreshold
+    public var dbCountThreshold: Int {
+        return _dbCountThreshold
+    }
+    
+    private var _sleepTimeOut: Int = RSConstants.RSSleepTimeout
+    public var sleepTimeOut: Int {
+        return _sleepTimeOut
+    }
+    
+    private var _logLevel: RSLogLevel = RSLogLevel.none
+    public var logLevel: RSLogLevel {
+        return _logLevel
+    }
+    
+    private var _configRefreshInterval: Int = RSConstants.RSConfigRefreshInterval
+    public var configRefreshInterval: Int {
+        return _configRefreshInterval
+    }
+    
+    private var _trackLifecycleEvents: Bool = RSConstants.RSTrackLifeCycleEvents
+    public var trackLifecycleEvents: Bool {
+        return _trackLifecycleEvents
+    }
+    
+    private var _recordScreenViews: Bool = RSConstants.RSRecordScreenViews
+    public var recordScreenViews: Bool {
+        return _recordScreenViews
+    }
+    
+    private var _controlPlaneUrl: String = RSConstants.RSControlPlaneUrl
+    public var controlPlaneUrl: String {
+        return _controlPlaneUrl
+    }
     
     @objc
     public init(writeKey: String) {
-        self.writeKey = writeKey
+        _writeKey = writeKey
     }
     
     @discardableResult @objc
@@ -32,9 +70,9 @@ open class RSConfig: NSObject {
         if let url = URL(string: dataPlaneUrl) {
             if let scheme = url.scheme, let host = url.host {
                 if let port = url.port {
-                    self.dataPlaneUrl = "\(scheme)://\(host):\(port)"
+                    _dataPlaneUrl = "\(scheme)://\(host):\(port)"
                 } else {
-                    self.dataPlaneUrl = "\(scheme)://\(host)"
+                    _dataPlaneUrl = "\(scheme)://\(host)"
                 }
             }
         }
@@ -42,50 +80,44 @@ open class RSConfig: NSObject {
     }
     
     @discardableResult @objc
-    public func anonymousId(_ flushQueueSize: Int) -> RSConfig {
-        self.flushQueueSize = flushQueueSize
+    public func flushQueueSize(_ flushQueueSize: Int) -> RSConfig {
+        _flushQueueSize = flushQueueSize
         return self
     }
-    
-    @discardableResult @objc
-    public func flushQueueSize(_ anonymousId: String) -> RSConfig {
-        self.anonymousId = anonymousId
-        return self
-    }
-    
+        
     @discardableResult @objc
     public func loglevel(_ logLevel: RSLogLevel) -> RSConfig {
-        self.logLevel = logLevel
+        _logLevel = logLevel
         return self
     }
     
     @discardableResult @objc
     public func withDBCountThreshold(_ dbCountThreshold: Int) -> RSConfig {
-        self.dbCountThreshold = dbCountThreshold
+        _dbCountThreshold = dbCountThreshold
         return self
     }
     
     @discardableResult @objc
     public func sleepTimeOut(_ sleepTimeOut: Int) -> RSConfig {
-        self.sleepTimeOut = sleepTimeOut
+        _sleepTimeOut = sleepTimeOut
         return self
     }
     
     @discardableResult @objc
     public func configRefreshInterval(_ configRefreshInterval: Int) -> RSConfig {
-        self.configRefreshInterval = configRefreshInterval
+        _configRefreshInterval = configRefreshInterval
         return self
     }
     
     @discardableResult @objc
     public func trackLifecycleEvents(_ trackLifecycleEvents: Bool) -> RSConfig {
-        self.trackLifecycleEvents = trackLifecycleEvents
+        _trackLifecycleEvents = trackLifecycleEvents
         return self
     }
     
     @discardableResult @objc
     public func recordScreenViews(_ recordScreenViews: Bool) -> RSConfig {
-        self.recordScreenViews = recordScreenViews
+        _recordScreenViews = recordScreenViews
         return self
     }
     
@@ -94,9 +126,9 @@ open class RSConfig: NSObject {
         if let url = URL(string: controlPlaneUrl) {
             if let scheme = url.scheme, let host = url.host {
                 if let port = url.port {
-                    self.controlPlaneUrl = "\(scheme)://\(host):\(port)"
+                    _controlPlaneUrl = "\(scheme)://\(host):\(port)"
                 } else {
-                    self.controlPlaneUrl = "\(scheme)://\(host)"
+                    _controlPlaneUrl = "\(scheme)://\(host)"
                 }
             }
         }

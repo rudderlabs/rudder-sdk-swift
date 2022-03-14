@@ -31,45 +31,45 @@ extension EventFilteringOption {
 }
 
 @objc open class RSDestination: NSObject, Codable {
-    let config: JSON?
-    let secretConfig: JSON?
+    public let config: JSON?
+    public let secretConfig: JSON?
     
     private let _id: String?
-    var id: String {
+    public var id: String {
         return _id ?? ""
     }
 
     private let _name: String?
-    var name: String {
+    public var name: String {
         return _name ?? ""
     }
 
     private let _enabled: Bool?
-    var enabled: Bool {
+    public var enabled: Bool {
         return _enabled ?? false
     }
     
     private let _workspaceId: String?
-    var workspaceId: String {
+    public var workspaceId: String {
         return _workspaceId ?? ""
     }
     
     private let _deleted: Bool?
-    var deleted: Bool {
+    public var deleted: Bool {
         return _deleted ?? false
     }
     
     private let _createdAt: String?
-    var createdAt: String {
+    public var createdAt: String {
         return _createdAt ?? ""
     }
     
     private let _updatedAt: String?
-    var updatedAt: String {
+    public var updatedAt: String {
         return _updatedAt ?? ""
     }
     
-    var eventFilteringOption: EventFilteringOption {
+    public var eventFilteringOption: EventFilteringOption {
         return  EventFilteringOption(rawString: (config?.dictionaryValue?["eventFilteringOption"] as? String)) ?? .disabled
     }
     
@@ -99,7 +99,7 @@ extension EventFilteringOption {
         return eventList
     }
 
-    let destinationDefinition: RSDestinationDefinition?
+    public let destinationDefinition: RSDestinationDefinition?
     
     enum CodingKeys: String, CodingKey {
         case config, secretConfig

@@ -71,10 +71,11 @@ public extension RSwatchOSLifecycle {
 import Foundation
 import UIKit
 
-protocol RSiOSLifecycle {
+public protocol RSiOSLifecycle {
     func applicationDidEnterBackground(application: UIApplication?)
     func applicationWillEnterForeground(application: UIApplication?)
     func application(_ application: UIApplication?, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?)
+    func application(_ app: UIApplication?, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any])
     func applicationDidBecomeActive(application: UIApplication?)
     func applicationWillResignActive(application: UIApplication?)
     func applicationDidReceiveMemoryWarning(application: UIApplication?)
@@ -83,10 +84,11 @@ protocol RSiOSLifecycle {
     func applicationBackgroundRefreshDidChange(application: UIApplication?, refreshStatus: UIBackgroundRefreshStatus)
 }
 
-extension RSiOSLifecycle {
+public extension RSiOSLifecycle {
     func applicationDidEnterBackground(application: UIApplication?) { }
     func applicationWillEnterForeground(application: UIApplication?) { }
     func application(_ application: UIApplication?, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) { }
+    func application(_ app: UIApplication?, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) { }
     func applicationDidBecomeActive(application: UIApplication?) { }
     func applicationWillResignActive(application: UIApplication?) { }
     func applicationDidReceiveMemoryWarning(application: UIApplication?) { }
