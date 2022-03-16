@@ -123,7 +123,7 @@ open class RSClient: NSObject {
      */
     
     @objc
-    public func identify(_ userId: String, traits: [String: String]? = nil, option: RSOption? = nil) {
+    public func identify(_ userId: String, traits: [String: Any]? = nil, option: RSOption? = nil) {
         let message = IdentifyMessage(userId: userId, traits: traits, option: option)
             .applyRawEventData()
         setUserId(userId)

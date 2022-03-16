@@ -39,7 +39,7 @@ class RSDatabaseManager {
         sqlite3_finalize(createTableStatement)
     }
     
-    func saveEvent(_ message: String) {
+    private func saveEvent(_ message: String) {
         let insertStatementString = "INSERT INTO events (message, updated) VALUES (?, ?);"
         var insertStatement: OpaquePointer?
         if sqlite3_prepare_v2(database, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
@@ -58,7 +58,7 @@ class RSDatabaseManager {
         sqlite3_finalize(insertStatement)
     }
     
-    func clearEvents(_ messageIds: [String]) {
+    private func clearEvents(_ messageIds: [String]) {
         var deleteStatement: OpaquePointer?
         let deleteStatementString = "DELETE FROM events WHERE id IN (\((messageIds as NSArray).componentsJoined(by: ",") as NSString));"
         client.log(message: "deleteEventSQL: \(deleteStatementString)", logLevel: .debug)
@@ -75,7 +75,7 @@ class RSDatabaseManager {
         sqlite3_finalize(deleteStatement)
     }
     
-    func fetchEvents(_ count: Int) -> RSDBMessage? {
+    private func fetchEvents(_ count: Int) -> RSDBMessage? {
         var queryStatement: OpaquePointer?
         var message: RSDBMessage?
         let queryStatementString = "SELECT * FROM events ORDER BY updated ASC LIMIT \(count);"
@@ -100,7 +100,7 @@ class RSDatabaseManager {
         return message
     }
     
-    func getDBRecordCount() -> Int {
+    private func fetchDBRecordCount() -> Int {
         var queryStatement: OpaquePointer?
         let queryStatementString = "SELECT COUNT(*) FROM 'events'"
         client.log(message: "countSQL: \(queryStatementString)", logLevel: .debug)
@@ -118,7 +118,7 @@ class RSDatabaseManager {
         return count
     }
     
-    func clearAllEvents() {
+    private func clearAllEvents() {
         var deleteStatement: OpaquePointer?
         let deleteStatementString = "DELETE FROM 'events';"
         if sqlite3_prepare_v2(database, deleteStatementString, -1, &deleteStatement, nil) == SQLITE_OK {
@@ -159,6 +159,38 @@ extension RSDatabaseManager {
             } catch {
                 client.log(message: "dump: \(error.localizedDescription)", logLevel: .error)
             }
+        }
+    }
+    
+    func removeEvents(_ messageIds: [String]) {
+        syncQueue.sync { [weak self] in
+            guard let self = self else { return }
+            self.clearEvents(messageIds)
+        }
+    }
+    
+    func getEvents(_ count: Int) -> RSDBMessage? {
+        var events: RSDBMessage?
+        syncQueue.sync { [weak self] in
+            guard let self = self else { return }
+            events = self.fetchEvents(count)
+        }
+        return events
+    }
+    
+    func getDBRecordCount() -> Int {
+        var count: Int = 0
+        syncQueue.sync { [weak self] in
+            guard let self = self else { return }
+            count = self.fetchDBRecordCount()
+        }
+        return count
+    }
+    
+    func removeAllEvents() {
+        syncQueue.sync { [weak self] in
+            guard let self = self else { return }
+            self.clearAllEvents()
         }
     }
 }
