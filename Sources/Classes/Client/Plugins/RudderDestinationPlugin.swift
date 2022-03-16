@@ -29,7 +29,7 @@ class RudderDestinationPlugin: RSDestinationPlugin {
         databaseManager = RSDatabaseManager(client: client)
         serviceManager = RSServiceManager(client: client)
         flushTimer = RSQueueTimer(interval: TimeInterval(client.config.sleepTimeOut)) {
-            self.flushMessage()
+            self.flush()
         }
     }
         
@@ -48,7 +48,7 @@ class RudderDestinationPlugin: RSDestinationPlugin {
     
     internal func enterBackground() {
         flushTimer?.suspend()
-        flushMessage()
+        flush()
     }
     
     private func queueEvent<T: RSMessage>(message: T) {
@@ -90,51 +90,40 @@ extension RudderDestinationPlugin {
 
 extension RudderDestinationPlugin {
     
-    // swiftlint:disable cyclomatic_complexity
-    func flushMessage() {
+    func flush() {
         uploadsQueue.sync { [weak self] in
             guard let self = self else { return }
             var errorCode: RSErrorCode?
-            var sleepCount = 0
-            while true {
-                guard let databaseManager = databaseManager, let config = client?.config else {
-                    return
+            guard let databaseManager = databaseManager, let config = client?.config else {
+                return
+            }
+            let recordCount = databaseManager.getDBRecordCount()
+            client?.log(message: "DBRecordCount \(recordCount)", logLevel: .debug)
+            if recordCount > config.dbCountThreshold {
+                client?.log(message: "Old DBRecordCount \(recordCount - config.dbCountThreshold)", logLevel: .debug)
+                let dbMessage = databaseManager.getEvents(recordCount - config.dbCountThreshold)
+                if let messageIds = dbMessage?.messageIds {
+                    databaseManager.removeEvents(messageIds)
                 }
-                let recordCount = databaseManager.getDBRecordCount()
-                client?.log(message: "DBRecordCount \(recordCount)", logLevel: .debug)
-                if recordCount > config.dbCountThreshold {
-                    client?.log(message: "Old DBRecordCount \(recordCount - config.dbCountThreshold)", logLevel: .debug)
-                    let dbMessage = databaseManager.fetchEvents(recordCount - config.dbCountThreshold)
-                    if let messageIds = dbMessage?.messageIds {
-                        databaseManager.clearEvents(messageIds)
+            }
+            client?.log(message: "Fetching events to flush to sever", logLevel: .debug)
+            guard let dbMessage = databaseManager.getEvents(config.flushQueueSize) else {
+                return
+            }
+            if dbMessage.messages.isEmpty == false {
+                let params = RSUtils.getJSON(from: dbMessage)
+                client?.log(message: "Payload: \(params)", logLevel: .debug)
+                client?.log(message: "EventCount: \(dbMessage.messages.count)", logLevel: .debug)
+                if !params.isEmpty {
+                    errorCode = self.flushEventsToServer(params: params)
+                    if errorCode == nil {
+                        client?.log(message: "clearing events from DB", logLevel: .debug)
+                        databaseManager.removeEvents(dbMessage.messageIds)
+                    } else if errorCode == .WRONG_WRITE_KEY {
+                        client?.log(message: "Wrong WriteKey. Aborting.", logLevel: .error)
+                    } else if errorCode == .SERVER_ERROR {
+                        client?.log(message: "Server error. Aborting.", logLevel: .error)
                     }
-                }
-                client?.log(message: "Fetching events to flush to sever", logLevel: .debug)
-                guard let dbMessage = databaseManager.fetchEvents(config.flushQueueSize) else {
-                    return
-                }
-                if dbMessage.messages.isEmpty == false, sleepCount >= config.sleepTimeOut {
-                    let params = RSUtils.getJSON(from: dbMessage)
-                    client?.log(message: "Payload: \(params)", logLevel: .debug)
-                    client?.log(message: "EventCount: \(dbMessage.messages.count)", logLevel: .debug)
-                    if !params.isEmpty {
-                        errorCode = self.flushEventsToServer(params: params)
-                        if errorCode == nil {
-                            client?.log(message: "clearing events from DB", logLevel: .debug)
-                            databaseManager.clearEvents(dbMessage.messageIds)
-                            sleepCount = 0
-                        }
-                    }
-                }
-                client?.log(message: "SleepCount: \(sleepCount)", logLevel: .debug)
-                sleepCount += 1
-                if errorCode == .WRONG_WRITE_KEY {
-                    client?.log(message: "Wrong WriteKey. Aborting.", logLevel: .error)
-                } else if errorCode == .SERVER_ERROR {
-                    client?.log(message: "Retrying in: \(abs(sleepCount - config.sleepTimeOut))s", logLevel: .error)
-                    usleep(useconds_t(abs(sleepCount - config.sleepTimeOut)))
-                } else {
-                    usleep(1000000)
                 }
             }
         }
