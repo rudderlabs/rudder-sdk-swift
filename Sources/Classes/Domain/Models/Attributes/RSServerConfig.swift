@@ -128,3 +128,14 @@ import Foundation
         case _config = "source"
     }
 }
+
+extension RSServerConfig {
+    public func getDestination(by key: String) -> RSDestination? {
+        if let destinations = destinations {
+            if let destination = destinations.first(where: { $0.destinationDefinition?.displayName == key }) {
+                return destination
+            }
+        }
+        return nil
+    }
+}

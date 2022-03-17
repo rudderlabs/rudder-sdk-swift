@@ -154,7 +154,7 @@ extension RSClient {
     
     /// Returns the traits that were specified in the last identify call.
     @objc
-    public var context: [String: Any]? {
+    public var context: MessageContext? {
         if let contextPlugin = self.find(pluginType: RSContextPlugin.self) {
             return contextPlugin.context
         }
