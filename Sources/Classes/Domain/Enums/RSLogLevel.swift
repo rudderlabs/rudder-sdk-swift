@@ -1,6 +1,6 @@
 //
 //  RSLogLevel.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 10/08/21.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -16,7 +16,7 @@ import Foundation
     case error = 1
     case `none` = 0
     
-    func toString() -> String {
+    public func toString() -> String {
         switch self {
         case .verbose:
             return "Verbose"

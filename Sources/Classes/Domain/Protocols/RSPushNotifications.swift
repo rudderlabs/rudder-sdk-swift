@@ -1,6 +1,6 @@
 //
 //  RSPushNotifications.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 03/03/22.
 //  Copyright © 2022 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -12,14 +12,14 @@ import Foundation
 
 import UIKit
 
-protocol RSPushNotifications: RSPlugin {
+public protocol RSPushNotifications: RSPlugin {
     func registeredForRemoteNotifications(deviceToken: Data)
     func failedToRegisterForRemoteNotification(error: Error?)
     func receivedRemoteNotification(userInfo: [AnyHashable: Any])
     func handleAction(identifier: String, userInfo: [String: Any])
 }
 
-extension RSPushNotifications {
+public extension RSPushNotifications {
     func registeredForRemoteNotifications(deviceToken: Data) {}
     func failedToRegisterForRemoteNotification(error: Error?) {}
     func receivedRemoteNotification(userInfo: [AnyHashable: Any]) {}
@@ -32,13 +32,13 @@ extension RSPushNotifications {
 import Foundation
 import WatchKit
 
-protocol RSPushNotifications: RSPlugin {
+public protocol RSPushNotifications: RSPlugin {
     func registeredForRemoteNotifications(deviceToken: Data)
     func failedToRegisterForRemoteNotification(error: Error?)
     func receivedRemoteNotification(userInfo: [AnyHashable: Any])
 }
 
-extension RSPushNotifications {
+public extension RSPushNotifications {
     func registeredForRemoteNotifications(deviceToken: Data) {}
     func failedToRegisterForRemoteNotification(error: Error?) {}
     func receivedRemoteNotification(userInfo: [AnyHashable: Any]) {}

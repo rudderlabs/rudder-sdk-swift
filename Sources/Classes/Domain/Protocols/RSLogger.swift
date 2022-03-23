@@ -1,6 +1,6 @@
 //
-//  LogTarget.swift
-//  Rudder
+//  RSLogger.swift
+//  RudderStack
 //
 //  Created by Pallab Maiti on 24/02/22.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -8,19 +8,19 @@
 
 import Foundation
 
-protocol RSLogger {
+public protocol RSLogger {
     func parseLog(_ log: RSLogMessage)
 }
 
-struct RSLoggingType: Hashable {
+public struct RSLoggingType: Hashable {
     
-    enum LogDestination {
+    public enum LogDestination {
         case log
         case metric
     }
     
-    static let log = RSLoggingType(types: [.log])
-    static let metric = RSLoggingType(types: [.metric])
+    public static let log = RSLoggingType(types: [.log])
+    public static let metric = RSLoggingType(types: [.metric])
     
     init(types: [LogDestination]) {
         self.allTypes = types
@@ -32,7 +32,7 @@ struct RSLoggingType: Hashable {
     }
 }
 
-protocol RSLogMessage {
+public protocol RSLogMessage {
     var logLevel: RSLogLevel { get }
     var title: String? { get }
     var message: String { get }
@@ -116,7 +116,13 @@ extension RSClient {
 }
 
 extension RSClient {
-    func add(target: RSLogger, type: RSLoggingType) {
+    /// Add a logging target to the system. These `targets` can handle logs in various ways. Consider
+    /// sending logs to the console, the OS and a web service. Three targets can handle these scenarios.
+    /// - Parameters:
+    ///   - target: A `LogTarget` that has logic to parse and handle log messages.
+    ///   - type: The type consists of `log`, `metric` or `history`. These correspond to the
+    ///   public API on Analytics.
+    public func add(target: RSLogger, type: RSLoggingType) {
         apply { (potentialLogger) in
             if let logger = potentialLogger as? RSLoggerPlugin {
                 do {
