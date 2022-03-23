@@ -187,7 +187,7 @@ extension RSClient {
     /// - Returns: A string representing the version in "BREAKING.FEATURE.FIX" format.
     @objc
     public var version: String {
-        return RSConstants.RSVersion
+        return RSVersion
     }
     
     /// Retrieve the version of this library in use.

@@ -137,8 +137,8 @@
 		ED3D228627A3F0C100EC8366 /* RSQueueTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSQueueTimer.swift; sourceTree = "<group>"; };
 		ED3D229227A3F0C100EC8366 /* RSMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSMessage.swift; sourceTree = "<group>"; };
 		ED3D22BD27A45B6500EC8366 /* RSTypeAlias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSTypeAlias.swift; sourceTree = "<group>"; };
+		ED488F8627EB141700831594 /* release.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = release.sh; sourceTree = "<group>"; };
 		ED910CDE273BA25100A3EDFF /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		ED910CDF273BA25100A3EDFF /* release.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = release.sh; sourceTree = "<group>"; };
 		ED910CE0273BA25100A3EDFF /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		ED910CE1273BA25100A3EDFF /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ED910CE2273BA25100A3EDFF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -207,7 +207,7 @@
 				ED910CDE273BA25100A3EDFF /* Package.swift */,
 				ED910CE1273BA25100A3EDFF /* Podfile */,
 				ED910CE4273BA25100A3EDFF /* README.md */,
-				ED910CDF273BA25100A3EDFF /* release.sh */,
+				ED488F8627EB141700831594 /* release.sh */,
 				ED910CE3273BA25100A3EDFF /* RudderStack.podspec */,
 				EDA7EF2D2739119600E73142 /* Sources */,
 				EDC1325A27D612B600AFD833 /* Tests */,
@@ -854,8 +854,8 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.Rudder;
+				MARKETING_VERSION = "1.0.0-beta.1";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.RudderStack;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos watchsimulator watchos macosx";
@@ -888,8 +888,8 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.Rudder;
+				MARKETING_VERSION = "1.0.0-beta.1";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.RudderStack;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos watchsimulator watchos macosx";

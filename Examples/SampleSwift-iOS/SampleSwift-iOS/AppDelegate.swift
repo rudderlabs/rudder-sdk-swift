@@ -35,8 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.client?.track("Track 1")
 //        }
         
-        
-        
 //        client?.setDeviceToken("example_device_token")
 //        let messageOption = RSOption()
 //        messageOption.putIntegration("MoEngage", isEnabled: true)

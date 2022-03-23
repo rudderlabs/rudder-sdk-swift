@@ -14,6 +14,6 @@ class RSConsoleLogger: RSLogger {
         if let function = log.function, let line = log.line {
             metadata = " - \(function):\(line)"
         }
-        print("\(RSConstants.TAG):\(log.logLevel.toString()):\(metadata):\(log.message)")
+        print("\(TAG):\(log.logLevel.toString()):\(metadata):\(log.message)")
     }
 }

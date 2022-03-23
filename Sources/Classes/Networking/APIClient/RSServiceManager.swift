@@ -158,7 +158,7 @@ extension RSServiceManager {
         case .flushEvents:
             return "batch"
         case .downloadConfig:
-            return "sourceConfig?p=ios&v=\(RSConstants.RSVersion)"
+            return "sourceConfig?p=ios&v=\(RSVersion)"
         }
     }
 }

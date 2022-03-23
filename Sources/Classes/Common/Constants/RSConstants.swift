@@ -8,29 +8,27 @@
 
 import Foundation
 
-@objc
-open class RSConstants: NSObject {
-    public static let RSConfigRefreshInterval: Int = 2
-    public static let RSDataPlaneUrl: String = "https://hosted.rudderlabs.com"
-    public static let RSFlushQueueSize: Int = 30
-    public static let RSDBCountThreshold: Int = 10000
-    public static let RSSleepTimeout: Int = 10
-    public static let RSControlPlaneUrl: String = "https://api.rudderlabs.com"
-    public static let RSTrackLifeCycleEvents: Bool = true
-    public static let RSRecordScreenViews: Bool = false
-    static let RSVersion: String = "1.5.2"
-    static let TAG = "RStack"
-    static let RSPrefsKey: String = "rl_prefs"
-    static let RSServerConfigKey: String = "rl_server_config"
-    static let RSServerLastUpdatedKey: String = "rl_server_last_updated"
-    static let RSTraitsKey: String = "rl_traits"
-    static let RSApplicationVersionKey: String = "rl_application_info_key"
-    static let RSApplicationBuildKey: String = "rl_application_build_key"
-    static let RSExternalIdKey: String = "rl_external_id"
-    static let RSAnonymousIdKey: String = "rl_anonymous_id"
-    static let RSOptStatusKey: String = "rl_opt_status"
-    static let RSOptInTimeKey: String = "rl_opt_in_time"
-    static let RSOptOutTimeKey = "rl_opt_out_time"
-    static let MAX_EVENT_SIZE: UInt = 32 * 1024
-    static let MAX_BATCH_SIZE: UInt = 500 * 1024
-}
+public let RSConfigRefreshInterval: Int = 2
+public let RSDataPlaneUrl = "https://hosted.rudderlabs.com"
+public let RSFlushQueueSize: Int = 30
+public let RSDBCountThreshold: Int = 10000
+public let RSSleepTimeout: Int = 10
+public let RSControlPlaneUrl = "https://api.rudderlabs.com"
+public let RSTrackLifeCycleEvents = true
+public let RSRecordScreenViews = false
+let TAG = "RudderStack"
+let RSServerConfigKey = "rs_server_config"
+let RSServerLastUpdatedKey = "rs_server_last_updated"
+let RSTraitsKey = "rs_traits"
+let RSApplicationVersionKey = "rs_application_version_key"
+let RSApplicationBuildKey = "rs_application_build_key"
+let RSExternalIdKey = "rs_external_id"
+let RSAnonymousIdKey = "rs_anonymous_id"
+let RSOptStatusKey = "rs_opt_status"
+let RSOptInTimeKey = "rs_opt_in_time"
+let RSOptOutTimeKey = "rs_opt_out_time"
+let MAX_EVENT_SIZE: UInt = 32 * 1024
+let MAX_BATCH_SIZE: UInt = 500 * 1024
+
+// don't move this line
+let RSVersion = "1.0.0-beta.1"

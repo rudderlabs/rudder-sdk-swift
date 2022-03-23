@@ -61,7 +61,7 @@ struct RSUtils {
             var string = message[0..<message.count - 1]
             string += ",\"sentAt\":\"\(sentAt)\"},"
             totalBatchSize += string.getUTF8Length()
-            if totalBatchSize > RSConstants.MAX_BATCH_SIZE {
+            if totalBatchSize > MAX_BATCH_SIZE {
                 break
             }
             jsonString += string

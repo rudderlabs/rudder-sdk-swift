@@ -211,7 +211,7 @@ internal class MacVendor: Vendor {
     
     override var screenSize: ScreenSize {
         let screenSize = NSScreen.main?.frame.size ?? CGSize(width: 0, height: 0)
-        return ScreenSize(width: Double(screenSize.width), height: Double(screenSize.height), density: NSScreen.main?.backingScaleFactor ?? 0)
+        return ScreenSize(width: Double(screenSize.width), height: Double(screenSize.height), density: Double(NSScreen.main?.backingScaleFactor ?? 0))
     }
         
     override var connection: ConnectionStatus {

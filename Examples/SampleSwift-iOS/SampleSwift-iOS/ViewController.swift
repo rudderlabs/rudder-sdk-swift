@@ -49,7 +49,4 @@ class ViewController: UIViewController {
             "url_key": URL(fileURLWithPath: "https://rudderstack.com")
         ])
     }
-
-
 }
-
