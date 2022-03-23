@@ -7,8 +7,8 @@
 <p align="center"><b>The Customer Data Platform for Developers</b></p>
 
 <p align="center">
-  <a href="https://cocoapods.org/pods/Rudder">
-    <img src="https://img.shields.io/cocoapods/v/Rudder.svg?style=flat">
+  <a href="https://cocoapods.org/pods/RudderStack">
+    <img src="https://img.shields.io/cocoapods/v/RudderStack.svg?style=flat">
     </a>
 </p>
 
@@ -26,7 +26,7 @@
 
 # RudderStack iOS SDK
 
-RudderStack's iOS SDK lets you track event data from your **iOS** and **tvOS** applications. After integrating the SDK, you will also be able to send these events to your preferred destinations such as Google Analytics, Amplitude, and more.
+RudderStack's iOS SDK lets you track event data from your **iOS**, **tvOS**, **watchOS** and **macOS** applications. After integrating the SDK, you will also be able to send these events to your preferred destinations such as Google Analytics, Amplitude, and more.
 
 For detailed documentation on the iOS SDK, click [**here**](https://rudderstack.com/docs/stream-sources/rudderstack-sdk-integration-guides/rudderstack-ios-sdk).
 
@@ -39,7 +39,7 @@ The iOS SDK is available through [**CocoaPods**](https://cocoapods.org), [**Cart
 To install the SDK, simply add the following line to your Podfile:
 
 ```xcode
-pod 'Rudder', '1.4.1'
+pod 'RudderStack', '1.0.0-beta.1'
 ```
 
 ### Carthage
@@ -47,13 +47,17 @@ pod 'Rudder', '1.4.1'
 For Carthage support, add the following line to your `Cartfile`:
 
 ```xcode
-github "rudderlabs/rudder-sdk-ios" "v1.4.1"
+github "rudderlabs/rudder-sdk-ios" "v1.0.0-beta.1"
 ```
 
-> Remember to include the following code in all `.m` and `.h` files where you want to refer to or use the RudderStack SDK classes, as shown:
-
-```xcode
-#import <Rudder/Rudder.h>
+> Remember to include the following code where you want to refer to or use the RudderStack SDK classes, as shown:
+##### Objective C
+```objective-c
+@import RudderStack;
+```
+##### Swift
+```swift
+import RudderStack
 ```
 
 ### Swift Package Manager (SPM)
@@ -69,9 +73,9 @@ You can also add the RudderStack iOS SDK via Swift Package Mangaer, via one of t
 
 ![Adding a package](https://user-images.githubusercontent.com/59817155/140903027-286a1d64-f5d5-4041-9827-47b6cef76a46.png)
 
-* Enter the package repository (`git@github.com:rudderlabs/rudder-sdk-ios.git`) in the search bar.
+* Enter the package repository (`git@github.com:rudderlabs/rudder-sdk-cocoa.git`) in the search bar.
 
-* In **Dependency Rule**, select **Up to Next Major Version** and enter `1.4.1` as the value, as shown:
+* In **Dependency Rule**, select **Up to Next Major Version** and enter `1.0.0-beta.1` as the value, as shown:
 
 ![Setting dependency](https://user-images.githubusercontent.com/59817155/145574696-8c849749-13e0-40d5-aacb-3fccb5c8e67d.png)
 
@@ -99,7 +103,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "git@github.com:rudderlabs/rudder-sdk-ios.git", from: "1.4.1")
+        .package(url: "git@github.com:rudderlabs/rudder-sdk-cocoa.git", from: "1.0.0-beta.1")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -107,7 +111,7 @@ let package = Package(
         .target(
             name: "RudderStack",
             dependencies: [
-                .product(name: "Rudder", package: "rudder-sdk-ios")
+                .product(name: "RudderStack", package: "rudder-sdk-cocoa")
             ]),
         .testTarget(
             name: "RudderStackTests",
@@ -118,65 +122,104 @@ let package = Package(
 
 ## Initializing the RudderStack client
 
-To the initialize `RSClient`, place the following code in your `AppDelegate.m` file under the method `didFinishLaunchingWithOptions`:
-
-```xcode
-RSConfigBuilder *builder = [[RSConfigBuilder alloc] init];
-[builder withDataPlaneUrl:<DATA_PLANE_URL>];
-[RSClient getInstance:<WRITE_KEY> config:[builder build]];
+To the initialize `RSClient`, place the following code in your `AppDelegate` file under the method `didFinishLaunchingWithOptions`:
+#### Objective C
+```objective-c
+RSConfig *config = [[RSConfig alloc] initWithWriteKey:WRITE_KEY];
+[config dataPlaneURL:DATA_PLANE_URL];
+[config recordScreenViews:YES];
+RSClient *client = [[RSClient alloc] initWithConfig:config];
 ```
-A shared instance of `RSClient` is accesible after the initialization by `[RSClient sharedInstance]`.
+#### Swift
+```swift
+let config: RSConfig = RSConfig(writeKey: WRITE_KEY)
+            .dataPlaneURL(DATA_PLANE_URL)
+            .loglevel(.debug)
+            .trackLifecycleEvents(true)
+            .recordScreenViews(true)
+let client = RSClient(config: config)
+```
 
 ## Sending Events
 
 ### Track
-
-```xcode
-[[RSClient sharedInstance] track:@"simple_track_event"];
-[[RSClient sharedInstance] track:@"simple_track_with_props" properties:@{
+##### Objective C
+```objective-c
+[client track:@"sample_track_call" properties:NULL option:NULL];
+[client track:@"sample_track_call" properties:@{
     @"key_1" : @"value_1",
     @"key_2" : @"value_2"
-}];
+} option:NULL];
 ```
-
+#### Swift
+```swift
+client.track("sample_track_call")
+client.track("sample_track_call", properties:[
+    "key_1" : "value_1",
+    "key_2" : "value_2"
+])
+```
 ### Screen
-
-```xcode
-[[RSClient sharedInstance] screen:@"Main" properties:@{@"prop_key" : @"prop_value"}];
+##### Objective C
+```objective-c
+[client screen:@"Main" properties:@{@"prop_key" : @"prop_value"} option:NULL];
 ```
-
+#### Swift
+```swift
+client.screen("Main", properties:["prop_key" : "prop_value"]);
+```
 ### Identify
-
-```xcode
-[[RSClient sharedInstance] identify:@"test_user_id"
-                             traits:@{@"foo": @"bar",
-                                      @"foo1": @"bar1",
-                                      @"email": @"test@gmail.com"}
-];
+##### Objective C
+```objective-c
+[client identify:@"test_user_id" traits:@{
+    @"foo": @"bar",
+    @"foo1": @"bar1",
+    @"email": @"test@gmail.com"
+} option:NULL];
 ```
-
+#### Swift
+```swift
+client.identify("test_user_id", traits:[
+    "foo": "bar",
+    "foo1": "bar1",
+    "email": "test@email.com"
+])
+```
 ### Group
-
-```xcode
-[[RSClient sharedInstance] group:@"sample_group_id"
-                          traits:@{@"foo": @"bar",
-                                   @"foo1": @"bar1",
-                                   @"email": @"test@gmail.com"}
-];
+##### Objective C
+```objective-c
+[client group:@"sample_group_id" traits:@{
+    @"foo": @"bar", 
+    @"foo1": @"bar1", 
+    @"email": @"test@gmail.com"
+} option:NULL];
 ```
-
+#### Swift
+```swift
+client.group("sample_group_id" traits:[
+    "foo": "bar", 
+    "foo1": "bar1", 
+    "email": "test@gmail.com"
+])
+```
 ### Alias
-
-```xcode
-[[RSClient sharedInstance] alias:@"new_user_id"];
+##### Objective C
+```objective-c
+[client alias:@"new_user_id" option:NULL];
 ```
-
+#### Swift
+```swift
+client.alias("new_user_id")
+```
 ### Reset
-
-```xcode
-[[RSClient sharedInstance] reset];
+##### Objective C
+```objective-c
+[client reset];
 ```
-
+#### Swift
+```swift
+client.reset()
+```
 For detailed documentation on the iOS SDK, click [**here**](https://rudderstack.com/docs/stream-sources/rudderstack-sdk-integration-guides/rudderstack-ios-sdk).
 
 ## Contribute

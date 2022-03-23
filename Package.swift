@@ -1,23 +1,27 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.3
 
 import PackageDescription
 
 let package = Package(
-    name: "Rudder",
+    name: "RudderStack",
     platforms: [
-        .iOS(.v9), .tvOS(.v9)
+        .iOS("12.0"), .tvOS("11.0"), .macOS("10.13"), .watchOS("7.0")
     ],
     products: [
         .library(
-            name: "Rudder",
-            targets: ["Rudder"]
+            name: "RudderStack",
+            targets: ["RudderStack"]
         )
     ],
     targets: [
         .target(
-            name: "Rudder",
+            name: "RudderStack",
             path: "Sources",
             sources: ["Classes/"]
+        ),
+        .testTarget(
+            name: "RudderStackTests",
+            dependencies: ["RudderStack"]
         )
     ]
 )

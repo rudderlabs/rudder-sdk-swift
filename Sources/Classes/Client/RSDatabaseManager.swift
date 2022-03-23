@@ -1,6 +1,6 @@
 //
 //  RSDatabaseManager.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 10/08/21.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -145,8 +145,8 @@ extension RSDatabaseManager {
                     let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
                     if let jsonString = String(data: jsonData, encoding: .utf8) {
                         client.log(message: "dump: \(jsonString)", logLevel: .debug)
-                        if jsonString.getUTF8Length() > RSConstants.MAX_EVENT_SIZE {
-                            client.log(message: "dump: Event size exceeds the maximum permitted event size \(RSConstants.MAX_EVENT_SIZE)", logLevel: .error)
+                        if jsonString.getUTF8Length() > MAX_EVENT_SIZE {
+                            client.log(message: "dump: Event size exceeds the maximum permitted event size \(MAX_EVENT_SIZE)", logLevel: .error)
                             return
                         }
                         self.saveEvent(jsonString)

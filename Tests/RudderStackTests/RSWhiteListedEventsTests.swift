@@ -9,6 +9,7 @@
 import XCTest
 @testable import RudderStack
 
+// swiftlint:disable inclusive_language
 class RSWhiteListedEventsTests: XCTestCase {
     
     var client: RSClient!

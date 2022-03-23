@@ -1,6 +1,6 @@
 //
 //  RSContextPlugin.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 24/02/22.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -33,7 +33,7 @@ class RSContextPlugin: RSPlatformPlugin {
         // library name
         staticContext["library"] = [
             "name": "rudder_ios_library",
-            "version": RSConstants.RSVersion
+            "version": RSVersion
         ]
         
         // app info

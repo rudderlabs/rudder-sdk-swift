@@ -1,6 +1,6 @@
 //
 //  UserDefaults+Ext.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 13/08/21.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -20,59 +20,59 @@ extension PropertyListDecoder {
 extension UserDefaults {
     var serverConfig: RSServerConfig? {
         get {
-            return PropertyListDecoder().optionalDecode(RSServerConfig.self, from: object(forKey: RSConstants.RSServerConfigKey))
+            return PropertyListDecoder().optionalDecode(RSServerConfig.self, from: object(forKey: RSServerConfigKey))
         }
         set {
             if let newValue = newValue {
-                set(try? PropertyListEncoder().encode(newValue), forKey: RSConstants.RSServerConfigKey)
+                set(try? PropertyListEncoder().encode(newValue), forKey: RSServerConfigKey)
             } else {
-                set(nil, forKey: RSConstants.RSServerConfigKey)
+                set(nil, forKey: RSServerConfigKey)
             }
         }
     }
     
     var lastUpdateTime: Int? {
-        get { integer(forKey: RSConstants.RSServerLastUpdatedKey) }
-        set { setValue(newValue, forKey: RSConstants.RSServerLastUpdatedKey) }
+        get { integer(forKey: RSServerLastUpdatedKey) }
+        set { setValue(newValue, forKey: RSServerLastUpdatedKey) }
     }
     
     var traits: String? {
-        get { string(forKey: RSConstants.RSTraitsKey) }
-        set { setValue(newValue, forKey: RSConstants.RSTraitsKey) }
+        get { string(forKey: RSTraitsKey) }
+        set { setValue(newValue, forKey: RSTraitsKey) }
     }
     
     var applicationVersion: String? {
-        get { string(forKey: RSConstants.RSApplicationVersionKey) }
-        set { setValue(newValue, forKey: RSConstants.RSApplicationVersionKey) }
+        get { string(forKey: RSApplicationVersionKey) }
+        set { setValue(newValue, forKey: RSApplicationVersionKey) }
     }
     
     var applicationBuild: String? {
-        get { string(forKey: RSConstants.RSApplicationBuildKey) }
-        set { setValue(newValue, forKey: RSConstants.RSApplicationBuildKey) }
+        get { string(forKey: RSApplicationBuildKey) }
+        set { setValue(newValue, forKey: RSApplicationBuildKey) }
     }
     
     var externalIds: String? {
-        get { string(forKey: RSConstants.RSExternalIdKey) }
-        set { setValue(newValue, forKey: RSConstants.RSExternalIdKey) }
+        get { string(forKey: RSExternalIdKey) }
+        set { setValue(newValue, forKey: RSExternalIdKey) }
     }
     
     var anonymousId: String? {
-        get { string(forKey: RSConstants.RSAnonymousIdKey) }
-        set { setValue(newValue, forKey: RSConstants.RSAnonymousIdKey) }
+        get { string(forKey: RSAnonymousIdKey) }
+        set { setValue(newValue, forKey: RSAnonymousIdKey) }
     }
     
     var optStatus: Bool? {
-        get { bool(forKey: RSConstants.RSOptStatusKey) }
-        set { setValue(newValue, forKey: RSConstants.RSOptStatusKey) }
+        get { bool(forKey: RSOptStatusKey) }
+        set { setValue(newValue, forKey: RSOptStatusKey) }
     }
     
     var optInTime: Int? {
-        get { integer(forKey: RSConstants.RSOptInTimeKey) }
-        set { setValue(newValue, forKey: RSConstants.RSOptInTimeKey) }
+        get { integer(forKey: RSOptInTimeKey) }
+        set { setValue(newValue, forKey: RSOptInTimeKey) }
     }
     
     var optOutTime: Int? {
-        get { integer(forKey: RSConstants.RSOptOutTimeKey) }
-        set { setValue(newValue, forKey: RSConstants.RSOptOutTimeKey) }
+        get { integer(forKey: RSOptOutTimeKey) }
+        set { setValue(newValue, forKey: RSOptOutTimeKey) }
     }
 }

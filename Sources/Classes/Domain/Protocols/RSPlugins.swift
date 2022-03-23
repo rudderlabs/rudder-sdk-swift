@@ -1,6 +1,6 @@
 //
 //  RSPlugins.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 24/02/22.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.

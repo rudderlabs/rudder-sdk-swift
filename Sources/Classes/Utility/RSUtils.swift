@@ -1,6 +1,6 @@
 //
 //  RSUtils.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Desu Sai Venkat on 06/08/21.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -61,7 +61,7 @@ struct RSUtils {
             var string = message[0..<message.count - 1]
             string += ",\"sentAt\":\"\(sentAt)\"},"
             totalBatchSize += string.getUTF8Length()
-            if totalBatchSize > RSConstants.MAX_BATCH_SIZE {
+            if totalBatchSize > MAX_BATCH_SIZE {
                 break
             }
             jsonString += string

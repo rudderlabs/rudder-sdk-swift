@@ -1,6 +1,6 @@
 //
 //  RSServiceManager.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 05/08/21.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -158,7 +158,7 @@ extension RSServiceManager {
         case .flushEvents:
             return "batch"
         case .downloadConfig:
-            return "sourceConfig?p=ios&v=\(RSConstants.RSVersion)"
+            return "sourceConfig?p=ios&v=\(RSVersion)"
         }
     }
 }

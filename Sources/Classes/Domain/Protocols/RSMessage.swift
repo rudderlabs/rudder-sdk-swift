@@ -1,6 +1,6 @@
 //
 //  RSMessage.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 02/03/22.
 //  Copyright © 2022 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -99,6 +99,7 @@ public struct ScreenMessage: RSMessage {
     public var channel: String?
 
     public let name: String
+    public let category: String?
     public let properties: ScreenProperties?
 
     public func toDict() -> [String: Any] {
@@ -111,10 +112,12 @@ public struct ScreenMessage: RSMessage {
         dictionary["properties"] = properties
         dictionary["event"] = name
         dictionary["userId"] = userId
+        dictionary["category"] = category
     }
     
-    init(title: String, properties: ScreenProperties? = nil, option: RSOption? = nil) {
+    init(title: String, category: String? = nil, properties: ScreenProperties? = nil, option: RSOption? = nil) {
         self.name = title
+        self.category = category
         self.properties = properties
         self.option = option
     }

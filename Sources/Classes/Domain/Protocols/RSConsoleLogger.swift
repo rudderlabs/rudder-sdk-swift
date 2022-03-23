@@ -1,6 +1,6 @@
 //
 //  RSConsoleLogger.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 24/02/22.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -14,6 +14,6 @@ class RSConsoleLogger: RSLogger {
         if let function = log.function, let line = log.line {
             metadata = " - \(function):\(line)"
         }
-        print("\(RSConstants.TAG):\(log.logLevel.toString()):\(metadata):\(log.message)")
+        print("\(TAG):\(log.logLevel.toString()):\(metadata):\(log.message)")
     }
 }

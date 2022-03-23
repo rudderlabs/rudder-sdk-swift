@@ -1,6 +1,6 @@
 //
 //  RSClient.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 05/08/21.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -62,8 +62,8 @@ open class RSClient: NSObject {
      */
     
     @objc
-    public func screen(_ screenName: String, properties: [String: String]? = nil, option: RSOption? = nil) {
-        let message = ScreenMessage(title: screenName, properties: properties, option: option)
+    public func screen(_ screenName: String, category: String? = nil, properties: [String: String]? = nil, option: RSOption? = nil) {
+        let message = ScreenMessage(title: screenName, category: category, properties: properties, option: option)
             .applyRawEventData()
         process(message: message)
     }
@@ -187,7 +187,7 @@ extension RSClient {
     /// - Returns: A string representing the version in "BREAKING.FEATURE.FIX" format.
     @objc
     public var version: String {
-        return RSConstants.RSVersion
+        return RSVersion
     }
     
     /// Retrieve the version of this library in use.

@@ -1,6 +1,6 @@
 //
 //  RSConfig.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 04/08/21.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -15,22 +15,22 @@ open class RSConfig: NSObject {
         return _writeKey
     }
     
-    private var _dataPlaneUrl: String = RSConstants.RSDataPlaneUrl
+    private var _dataPlaneUrl: String = RSDataPlaneUrl
     public var dataPlaneUrl: String {
         return _dataPlaneUrl
     }
     
-    private var _flushQueueSize: Int = RSConstants.RSFlushQueueSize
+    private var _flushQueueSize: Int = RSFlushQueueSize
     public var flushQueueSize: Int {
         return _flushQueueSize
     }
     
-    private var _dbCountThreshold: Int = RSConstants.RSDBCountThreshold
+    private var _dbCountThreshold: Int = RSDBCountThreshold
     public var dbCountThreshold: Int {
         return _dbCountThreshold
     }
     
-    private var _sleepTimeOut: Int = RSConstants.RSSleepTimeout
+    private var _sleepTimeOut: Int = RSSleepTimeout
     public var sleepTimeOut: Int {
         return _sleepTimeOut
     }
@@ -40,22 +40,22 @@ open class RSConfig: NSObject {
         return _logLevel
     }
     
-    private var _configRefreshInterval: Int = RSConstants.RSConfigRefreshInterval
+    private var _configRefreshInterval: Int = RSConfigRefreshInterval
     public var configRefreshInterval: Int {
         return _configRefreshInterval
     }
     
-    private var _trackLifecycleEvents: Bool = RSConstants.RSTrackLifeCycleEvents
+    private var _trackLifecycleEvents: Bool = RSTrackLifeCycleEvents
     public var trackLifecycleEvents: Bool {
         return _trackLifecycleEvents
     }
     
-    private var _recordScreenViews: Bool = RSConstants.RSRecordScreenViews
+    private var _recordScreenViews: Bool = RSRecordScreenViews
     public var recordScreenViews: Bool {
         return _recordScreenViews
     }
     
-    private var _controlPlaneUrl: String = RSConstants.RSControlPlaneUrl
+    private var _controlPlaneUrl: String = RSControlPlaneUrl
     public var controlPlaneUrl: String {
         return _controlPlaneUrl
     }

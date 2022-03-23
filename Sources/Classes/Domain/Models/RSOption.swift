@@ -1,6 +1,6 @@
 //
 //  RSOption.swift
-//  Rudder
+//  RudderStack
 //
 //  Created by Pallab Maiti on 04/08/21.
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
@@ -39,12 +39,7 @@ open class RSOption: NSObject {
     public func putIntegration(_ type: String, isEnabled enabled: Bool) {
         integrations?[type] = enabled
     }
-    
-//    @objc
-//    public func putIntegrationWithFactory(_ factory: RSIntegrationFactory, isEnabled enabled: Bool) {
-//        integrations?[factory.key] = enabled
-//    }
-    
+        
     @objc
     public func putCustomContext(_ context: [String: Any]?, withKey key: String?) {
         if customContexts == nil {
