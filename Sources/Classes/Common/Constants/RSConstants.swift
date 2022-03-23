@@ -31,4 +31,4 @@ let MAX_EVENT_SIZE: UInt = 32 * 1024
 let MAX_BATCH_SIZE: UInt = 500 * 1024
 
 // don't move this line
-let RSVersion = "1.0.0-beta.1"
+let RSVersion = "1.0.0-beta.2"

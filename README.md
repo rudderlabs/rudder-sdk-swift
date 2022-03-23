@@ -39,7 +39,7 @@ The iOS SDK is available through [**CocoaPods**](https://cocoapods.org), [**Cart
 To install the SDK, simply add the following line to your Podfile:
 
 ```xcode
-pod 'RudderStack', '1.0.0-beta.1'
+pod 'RudderStack', '1.0.0-beta.2'
 ```
 
 ### Carthage
@@ -47,7 +47,7 @@ pod 'RudderStack', '1.0.0-beta.1'
 For Carthage support, add the following line to your `Cartfile`:
 
 ```xcode
-github "rudderlabs/rudder-sdk-cocoa" "v1.0.0-beta.1"
+github "rudderlabs/rudder-sdk-swift" "v1.0.0-beta.2"
 ```
 
 > Remember to include the following code where you want to refer to or use the RudderStack SDK classes, as shown:
@@ -73,9 +73,9 @@ You can also add the RudderStack iOS SDK via Swift Package Mangaer, via one of t
 
 ![Adding a package](https://user-images.githubusercontent.com/59817155/140903027-286a1d64-f5d5-4041-9827-47b6cef76a46.png)
 
-* Enter the package repository (`git@github.com:rudderlabs/rudder-sdk-cocoa.git`) in the search bar.
+* Enter the package repository (`git@github.com:rudderlabs/rudder-sdk-swift.git`) in the search bar.
 
-* In **Dependency Rule**, select **Up to Next Major Version** and enter `1.0.0-beta.1` as the value, as shown:
+* In **Dependency Rule**, select **Up to Next Major Version** and enter `1.0.0-beta.2` as the value, as shown:
 
 ![Setting dependency](https://user-images.githubusercontent.com/59817155/145574696-8c849749-13e0-40d5-aacb-3fccb5c8e67d.png)
 
@@ -103,7 +103,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "git@github.com:rudderlabs/rudder-sdk-cocoa.git", from: "1.0.0-beta.1")
+        .package(url: "git@github.com:rudderlabs/rudder-sdk-swift.git", from: "1.0.0-beta.2")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -111,7 +111,7 @@ let package = Package(
         .target(
             name: "RudderStack",
             dependencies: [
-                .product(name: "RudderStack", package: "rudder-sdk-cocoa")
+                .product(name: "RudderStack", package: "rudder-sdk-swift")
             ]),
         .testTarget(
             name: "RudderStackTests",
