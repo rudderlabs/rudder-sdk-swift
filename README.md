@@ -47,7 +47,7 @@ pod 'RudderStack', '1.0.0-beta.1'
 For Carthage support, add the following line to your `Cartfile`:
 
 ```xcode
-github "rudderlabs/rudder-sdk-ios" "v1.0.0-beta.1"
+github "rudderlabs/rudder-sdk-cocoa" "v1.0.0-beta.1"
 ```
 
 > Remember to include the following code where you want to refer to or use the RudderStack SDK classes, as shown:
