@@ -138,4 +138,19 @@ extension RSServerConfig {
         }
         return nil
     }
+    
+    private func getConfig<T: Codable>(forKey key: String) -> T? {
+        var result: T? = nil
+        if let destination = getDestination(by: key) {
+            guard let config = destination.config?.dictionaryValue else { return nil }
+            if let jsonData = try? JSONSerialization.data(withJSONObject: config) {
+                result = try? JSONDecoder().decode(T.self, from: jsonData)
+            }
+        }
+        return result
+    }
+    
+    public func getConfig<T: Codable>(forPlugin plugin: RSDestinationPlugin) -> T? {
+        return getConfig(forKey: plugin.key)
+    }
 }
