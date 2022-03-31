@@ -64,7 +64,7 @@ open class RudderDestination: NSObject {
 
 extension RSClient {
     @objc
-    public func add(destination: RudderDestination) {
+    public func addDestination(_ destination: RudderDestination) {
         if let plugin = destination.plugin {
             add(plugin: plugin)
         }

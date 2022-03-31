@@ -140,7 +140,7 @@ extension RSServerConfig {
     }
     
     private func getConfig<T: Codable>(forKey key: String) -> T? {
-        var result: T? = nil
+        var result: T?
         if let destination = getDestination(by: key) {
             guard let config = destination.config?.dictionaryValue else { return nil }
             if let jsonData = try? JSONSerialization.data(withJSONObject: config) {

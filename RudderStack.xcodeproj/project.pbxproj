@@ -46,6 +46,8 @@
 		ED3D22AF27A3F0C100EC8366 /* RSQueueTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D228627A3F0C100EC8366 /* RSQueueTimer.swift */; };
 		ED3D22BA27A3F0C100EC8366 /* RSMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D229227A3F0C100EC8366 /* RSMessage.swift */; };
 		ED3D22BE27A45B6500EC8366 /* RSTypeAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D22BD27A45B6500EC8366 /* RSTypeAlias.swift */; };
+		ED4EACA927F5EA1F00207AF1 /* RSIdentifyTraitsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4EACA827F5EA1F00207AF1 /* RSIdentifyTraitsPlugin.swift */; };
+		ED4EACAB27F5F03C00207AF1 /* RSAliasIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4EACAA27F5F03C00207AF1 /* RSAliasIdPlugin.swift */; };
 		EDA7EF752739119600E73142 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF332739119600E73142 /* API.swift */; };
 		EDA7EF762739119600E73142 /* RSServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF342739119600E73142 /* RSServiceManager.swift */; };
 		EDA7EF812739119600E73142 /* RSDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA7EF402739119600E73142 /* RSDatabaseManager.swift */; };
@@ -138,6 +140,8 @@
 		ED3D229227A3F0C100EC8366 /* RSMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSMessage.swift; sourceTree = "<group>"; };
 		ED3D22BD27A45B6500EC8366 /* RSTypeAlias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSTypeAlias.swift; sourceTree = "<group>"; };
 		ED488F8627EB141700831594 /* release.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = release.sh; sourceTree = "<group>"; };
+		ED4EACA827F5EA1F00207AF1 /* RSIdentifyTraitsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSIdentifyTraitsPlugin.swift; sourceTree = "<group>"; };
+		ED4EACAA27F5F03C00207AF1 /* RSAliasIdPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAliasIdPlugin.swift; sourceTree = "<group>"; };
 		ED910CDE273BA25100A3EDFF /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		ED910CE0273BA25100A3EDFF /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		ED910CE1273BA25100A3EDFF /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -227,12 +231,14 @@
 		ED3D226327A3F0C100EC8366 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				ED4EACAA27F5F03C00207AF1 /* RSAliasIdPlugin.swift */,
 				ED157C4027CFC33800F22202 /* RSAdvertisementIdPlugin.swift */,
 				ED157C4227CFC6F700F22202 /* RSAnonymousIdPlugin.swift */,
 				ED157C4827CFE6CE00F22202 /* RSAppTrackingConsentPlugin.swift */,
 				ED3D227C27A3F0C100EC8366 /* RSContextPlugin.swift */,
 				ED3D227D27A3F0C100EC8366 /* RSDeviceTokenPlugin.swift */,
 				ED157C5327D0CA6900F22202 /* RSGDPRPlugin.swift */,
+				ED4EACA827F5EA1F00207AF1 /* RSIdentifyTraitsPlugin.swift */,
 				ED157C4427CFD99700F22202 /* RSIntegrationPlugin.swift */,
 				ED3D227827A3F0C100EC8366 /* RSLoggerPlugin.swift */,
 				ED157C4627CFDEC000F22202 /* RSOptionPlugin.swift */,
@@ -658,6 +664,7 @@
 				ED157C3927CE1C0800F22202 /* RSUserIdPlugin.swift in Sources */,
 				ED3D229E27A3F0C100EC8366 /* RSmacOSLifecycleMonitor.swift in Sources */,
 				ED3D229D27A3F0C100EC8366 /* RSiOSLifecycleMonitor.swift in Sources */,
+				ED4EACA927F5EA1F00207AF1 /* RSIdentifyTraitsPlugin.swift in Sources */,
 				EDD3AA4C27C8DABD0048E61E /* RSConsoleLogger.swift in Sources */,
 				ED157C5A27D1010D00F22202 /* RSPushNotifications.swift in Sources */,
 				ED3D22A827A3F0C100EC8366 /* RSController.swift in Sources */,
@@ -674,6 +681,7 @@
 				ED157C5827D0FFA400F22202 /* RSLifeCycle.swift in Sources */,
 				EDA7EF862739119600E73142 /* String+Ext.swift in Sources */,
 				ED3D22AB27A3F0C100EC8366 /* RSPlugins.swift in Sources */,
+				ED4EACAB27F5F03C00207AF1 /* RSAliasIdPlugin.swift in Sources */,
 				EDA7EF9B2739119600E73142 /* RSDestinationDefinition.swift in Sources */,
 				ED3D229427A3F0C100EC8366 /* RSClient.swift in Sources */,
 				ED3D229627A3F0C100EC8366 /* AppleUtils.swift in Sources */,

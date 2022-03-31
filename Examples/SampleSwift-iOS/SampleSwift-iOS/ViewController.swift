@@ -16,26 +16,13 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         let rudder: RSClient? = (UIApplication.shared.delegate as? AppDelegate)?.client
-        
-        rudder?.screen("Story", properties: [
-            "name": "nil"
-        ])
-        
-        rudder?.identify("test_user_id")
-        
+                        
         rudder?.identify("test_user_id", traits: [
             "key_1": "value_1",
             "key_2": "value_2",
             "int_key": 3,
             "float_key": 4.56,
-            "bool_key": true,
-            "null_key": NSNull(),
-            "date_key": Date(),
-            "url_key": URL(fileURLWithPath: "https://rudderstack.com")
-        ])
-        
-        rudder?.identify("test_user_id", traits: [
-            "email": "test@gmail.com"
+            "bool_key": true
         ])
         
         rudder?.track("track_with_props", properties: [
@@ -43,10 +30,11 @@ class ViewController: UIViewController {
             "key_2": "value_2",
             "int_key": 3,
             "float_key": 4.56,
-            "bool_key": true,
-            "null_key": NSNull(),
-            "date_key": Date(),
-            "url_key": URL(fileURLWithPath: "https://rudderstack.com")
+            "bool_key": true
         ])
+        
+        rudder?.alias("new_user_id")
+        
+        rudder?.track("track_with_props_2")
     }
 }

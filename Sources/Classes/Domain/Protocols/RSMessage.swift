@@ -45,7 +45,6 @@ public struct TrackMessage: RSMessage {
     func dynamicDictionary(dictionary: inout [String: Any]) {
         dictionary["event"] = event
         dictionary["properties"] = properties
-        dictionary["userId"] = userId
     }
     
     init(event: String, properties: TrackProperties?, option: RSOption? = nil) {
@@ -75,9 +74,7 @@ public struct IdentifyMessage: RSMessage {
     }
     
     func dynamicDictionary(dictionary: inout [String: Any]) {
-        dictionary[keyPath: "context.traits"] = traits
         dictionary["event"] = "identify"
-        dictionary["userId"] = userId
     }
     
     init(userId: String, traits: IdentifyTraits? = nil, option: RSOption? = nil) {
@@ -111,7 +108,6 @@ public struct ScreenMessage: RSMessage {
     func dynamicDictionary(dictionary: inout [String: Any]) {
         dictionary["properties"] = properties
         dictionary["event"] = name
-        dictionary["userId"] = userId
         dictionary["category"] = category
     }
     
@@ -146,7 +142,6 @@ public struct GroupMessage: RSMessage {
     func dynamicDictionary(dictionary: inout [String: Any]) {
         dictionary["traits"] = traits
         dictionary["groupId"] = groupId
-        dictionary["userId"] = userId
     }
     
     init(groupId: String, traits: GroupTraits? = nil, option: RSOption? = nil) {
@@ -176,7 +171,7 @@ public struct AliasMessage: RSMessage {
     }
 
     func dynamicDictionary(dictionary: inout [String: Any]) {
-        dictionary["userId"] = userId
+        dictionary[keyPath: "context.traits.id"] = userId
         dictionary["previousId"] = previousId
     }
         
@@ -211,7 +206,6 @@ extension RSMessage {
     
     func staticDictionary() -> [String: Any] {
         var dict = ["messageId": messageId ?? "",
-                    "anonymousId": anonymousId ?? "",
                     "channel": channel ?? "",
                     "originalTimestamp": timestamp ?? "",
                     "type": type.rawValue] as [String: Any]
@@ -220,6 +214,12 @@ extension RSMessage {
         }
         if let integrations = integrations {
             dict["integrations"] = integrations
+        }
+        if let userId = userId {
+            dict["userId"] = userId
+        }
+        if let anonymousId = anonymousId {
+            dict["anonymousId"] = anonymousId
         }
         return dict
     }

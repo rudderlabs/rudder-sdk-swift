@@ -39,12 +39,7 @@ open class RSConfig: NSObject {
     public var logLevel: RSLogLevel {
         return _logLevel
     }
-    
-    private var _configRefreshInterval: Int = RSConfigRefreshInterval
-    public var configRefreshInterval: Int {
-        return _configRefreshInterval
-    }
-    
+        
     private var _trackLifecycleEvents: Bool = RSTrackLifeCycleEvents
     public var trackLifecycleEvents: Bool {
         return _trackLifecycleEvents
@@ -92,7 +87,7 @@ open class RSConfig: NSObject {
     }
     
     @discardableResult @objc
-    public func withDBCountThreshold(_ dbCountThreshold: Int) -> RSConfig {
+    public func dbCountThreshold(_ dbCountThreshold: Int) -> RSConfig {
         _dbCountThreshold = dbCountThreshold
         return self
     }
@@ -102,13 +97,7 @@ open class RSConfig: NSObject {
         _sleepTimeOut = sleepTimeOut
         return self
     }
-    
-    @discardableResult @objc
-    public func configRefreshInterval(_ configRefreshInterval: Int) -> RSConfig {
-        _configRefreshInterval = configRefreshInterval
-        return self
-    }
-    
+        
     @discardableResult @objc
     public func trackLifecycleEvents(_ trackLifecycleEvents: Bool) -> RSConfig {
         _trackLifecycleEvents = trackLifecycleEvents

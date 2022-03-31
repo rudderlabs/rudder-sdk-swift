@@ -8,11 +8,12 @@
 
 import UIKit
 import RudderStack
+import AdSupport
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var client: RSClient?
+    var client: RSClient!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -20,25 +21,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let config: RSConfig = RSConfig(writeKey: "1wvsoF3Kx2SczQNlx1dvcqW9ODW")
             .dataPlaneURL("https://rudderstacz.dataplane.rudderstack.com")
             .loglevel(.debug)
-            .trackLifecycleEvents(true)
-            .recordScreenViews(true)
+            .trackLifecycleEvents(false)
+            .recordScreenViews(false)
         
         client = RSClient(config: config)
+                
+        /*client?.addDestination(CustomDestination())
         
         client?.setAppTrackingConsent(.authorize)
         client?.setAnonymousId("example_anonymous_id")
-//        let defaultOption = RSOption()
-//        defaultOption.putIntegration("Amplitude", isEnabled: true)
-//        client?.setOption(defaultOption)
+        client?.setAdvertisingId(getIDFA())
+        client?.setDeviceToken("example_device_token")*/
         
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.client?.track("Track 1")
-//        }
+        /*client?.setOptOutStatus(true)
+        client?.reset()
+                
+        let traits = client?.traits
+        let defaultOption = RSOption()
+        defaultOption.putIntegration("Amplitude", isEnabled: true)
+        client?.setOption(defaultOption)
         
-//        client?.setDeviceToken("example_device_token")
-//        let messageOption = RSOption()
-//        messageOption.putIntegration("MoEngage", isEnabled: true)
-//        client?.track("Track 2", option: messageOption)
+        let messageOption = RSOption()
+        messageOption.putIntegration("MoEngage", isEnabled: true)
+        messageOption.putExternalId("", withId: "")
+        client?.identify("Track 2", traits: ["email": "abc@def.com"], option: messageOption)*/
         
         return true
     }
@@ -55,6 +61,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+    
+    func getIDFA() -> String {
+        return ASIdentifierManager.shared().advertisingIdentifier.uuidString
     }
 }
 

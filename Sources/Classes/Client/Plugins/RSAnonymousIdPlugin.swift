@@ -23,6 +23,7 @@ class RSAnonymousIdPlugin: RSPlatformPlugin {
             if var context = workingMessage.context {
                 context[keyPath: "traits.anonymousId"] = anonymousId
                 workingMessage.context = context
+                client?.updateContext(context)
             }
         }
         return workingMessage
@@ -30,6 +31,15 @@ class RSAnonymousIdPlugin: RSPlatformPlugin {
 }
 
 extension RSClient {
+    /**
+     API for setting unique identifier of every call.
+     - Parameters:
+        - anonymousId: Unique identifier of every event
+     # Example #
+     ```
+     client.setAnonymousId("sample_anonymous_id")
+     ```
+     */
     @objc
     public func setAnonymousId(_ anonymousId: String) {
         RSUserDefaults.saveAnonymousId(anonymousId)

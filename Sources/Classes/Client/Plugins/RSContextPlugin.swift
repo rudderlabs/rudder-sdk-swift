@@ -14,6 +14,13 @@ class RSContextPlugin: RSPlatformPlugin {
     
     var context: MessageContext?
     
+    var traits: MessageTraits? {
+        if let traits = context?["traits"] as? MessageTraits {
+            return traits
+        }
+        return nil
+    }
+    
     private var staticContext = staticContextData()
     private static var device = Vendor.current
     
@@ -123,4 +130,12 @@ class RSContextPlugin: RSPlatformPlugin {
         }
     }
 
+}
+
+extension RSClient {
+    func updateContext(_ context: MessageContext?) {
+        if let contextPlugin = self.find(pluginType: RSContextPlugin.self) {
+            contextPlugin.context = context
+        }
+    }
 }

@@ -21,12 +21,22 @@ class RSDeviceTokenPlugin: RSPlatformPlugin {
         if var context = workingMessage.context, let token = token {
             context[keyPath: "device.token"] = token
             workingMessage.context = context
+            client?.updateContext(context)
         }
         return workingMessage
     }
 }
 
 extension RSClient {
+    /**
+     API for setting token under context.device.token.
+     - Parameters:
+        - token: Token of the device
+     # Example #
+     ```
+     client.setDeviceToken("sample_device_token")
+     ```
+     */
     @objc
     public func setDeviceToken(_ token: String) {
         if let tokenPlugin = self.find(pluginType: RSDeviceTokenPlugin.self) {

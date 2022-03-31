@@ -8,7 +8,6 @@
 
 import Foundation
 
-public let RSConfigRefreshInterval: Int = 2
 public let RSDataPlaneUrl = "https://hosted.rudderlabs.com"
 public let RSFlushQueueSize: Int = 30
 public let RSDBCountThreshold: Int = 10000

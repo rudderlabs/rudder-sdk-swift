@@ -22,12 +22,22 @@ class RSAdvertisingIdPlugin: RSPlatformPlugin {
             context[keyPath: "device.advertisingId"] = advertisingId
             context[keyPath: "device.adTrackingEnabled"] = true
             workingMessage.context = context
+            client?.updateContext(context)
         }
         return workingMessage
     }
 }
 
 extension RSClient {
+    /**
+     API for setting identifier under context.device.advertisingId.
+     - Parameters:
+        - advertisingId: IDFA value
+     # Example #
+     ```
+     client.setAdvertisingId("sample_device_token")
+     ```
+     */
     @objc
     public func setAdvertisingId(_ advertisingId: String) {
         if let advertisingIdPlugin = self.find(pluginType: RSAdvertisingIdPlugin.self) {

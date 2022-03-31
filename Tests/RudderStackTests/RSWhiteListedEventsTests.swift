@@ -33,7 +33,7 @@ class RSWhiteListedEventsTests: XCTestCase {
         }
         
         let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
-        client.add(destination: myDestination)
+        client.addDestination(myDestination)
         waitUntilServerConfigDownloaded(client: client)
         waitUntilStarted(client: client)
         client.track("track_whitelist_1")
@@ -48,7 +48,7 @@ class RSWhiteListedEventsTests: XCTestCase {
         }
         
         let client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
-        client.add(destination: myDestination)
+        client.addDestination(myDestination)
         waitUntilServerConfigDownloaded(client: client)
         waitUntilStarted(client: client)
         client.track("track_whitelist_2")
