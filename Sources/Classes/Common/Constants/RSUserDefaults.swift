@@ -6,9 +6,6 @@
 //  Copyright © 2021 Rudder Labs India Pvt Ltd. All rights reserved.
 //
 
-#if os(iOS) || os(tvOS) || targetEnvironment(macCatalyst)
-import UIKit
-#endif
 import Foundation
 
 class RSUserDefaults {
@@ -27,15 +24,7 @@ class RSUserDefaults {
     static func saveServerConfig(_ serverConfig: RSServerConfig) {
         UserDefaults.standard.serverConfig = serverConfig
     }
-    
-    static func getTraits() -> String? {
-        return UserDefaults.standard.traits
-    }
-    
-    static func saveTraits(_ traits: String?) {
-        UserDefaults.standard.traits = traits
-    }
-    
+        
     static func getApplicationVersion() -> String? {
         return UserDefaults.standard.applicationVersion
     }
@@ -50,36 +39,6 @@ class RSUserDefaults {
     
     static func saveApplicationBuild(_ build: String?) {
         UserDefaults.standard.applicationBuild = build
-    }
-    
-    static func getExternalIds() -> String? {
-        return UserDefaults.standard.externalIds
-    }
-    
-    static func saveExternalIds(_ externalIdsJson: String?) {
-        UserDefaults.standard.externalIds = externalIdsJson
-    }
-    
-    static func clearExternalIds() {
-        UserDefaults.standard.externalIds = nil
-    }
-    
-    static func getAnonymousId() -> String? {
-        if let anonymousId = UserDefaults.standard.anonymousId {
-            return anonymousId
-        } else {
-            #if os(iOS) || os(tvOS) || targetEnvironment(macCatalyst)
-            if let anonymousId = UIDevice.current.identifierForVendor?.uuidString.lowercased() {
-                saveAnonymousId(anonymousId)
-                return anonymousId
-            }
-            #endif
-        }
-        return nil
-    }
-    
-    static func saveAnonymousId(_ anonymousId: String) {
-        UserDefaults.standard.anonymousId = anonymousId
     }
     
     static func getOptStatus() -> Bool? {

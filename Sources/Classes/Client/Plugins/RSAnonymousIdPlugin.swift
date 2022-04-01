@@ -12,19 +12,17 @@ class RSAnonymousIdPlugin: RSPlatformPlugin {
     let type = PluginType.before
     var client: RSClient?
     
-    var anonymousId = RSUserDefaults.getAnonymousId()
+    var anonymousId = UUID().uuidString.lowercased()
 
     required init() { }
     
     func execute<T: RSMessage>(message: T?) -> T? {
         guard var workingMessage = message else { return message }
-        if let anonymousId = anonymousId {
-            workingMessage.anonymousId = anonymousId
-            if var context = workingMessage.context {
-                context[keyPath: "traits.anonymousId"] = anonymousId
-                workingMessage.context = context
-                client?.updateContext(context)
-            }
+        workingMessage.anonymousId = anonymousId
+        if var context = workingMessage.context {
+            context[keyPath: "traits.anonymousId"] = anonymousId
+            workingMessage.context = context
+            client?.updateContext(context)
         }
         return workingMessage
     }
@@ -42,7 +40,6 @@ extension RSClient {
      */
     @objc
     public func setAnonymousId(_ anonymousId: String) {
-        RSUserDefaults.saveAnonymousId(anonymousId)
         if let anonymousIdPlugin = self.find(pluginType: RSAnonymousIdPlugin.self) {
             anonymousIdPlugin.anonymousId = anonymousId
         } else {
