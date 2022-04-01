@@ -34,6 +34,8 @@ All notable changes to this project will be documented in this file.
 - Public APIs for `alias`.
 `func alias(_ newId: String)`
 `func alias(_ newId: String, option: RSOption)`
+- Added empty value check for `track()`, `identify()`, `screen()`, `group()`, `alias()`, `setAdvertisingId()`, `setAnonymousId()`, `setDeviceToken()` of `RSClient`.
+- Added empty value check for `putExternalId()`, `putIntegration()`, `putCustomContext()` of `RSOption`.
 
 ### Fix
 - Fixed `context.traits`.
