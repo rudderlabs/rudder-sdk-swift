@@ -39,6 +39,10 @@ extension RSClient {
      */
     @objc
     public func setDeviceToken(_ token: String) {
+        guard token.isNotEmpty else {
+            log(message: "token can not be empty", logLevel: .warning)
+            return
+        }
         if let tokenPlugin = self.find(pluginType: RSDeviceTokenPlugin.self) {
             tokenPlugin.token = token
         } else {

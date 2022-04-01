@@ -40,6 +40,10 @@ extension RSClient {
      */
     @objc
     public func setAdvertisingId(_ advertisingId: String) {
+        guard advertisingId.isNotEmpty else {
+            log(message: "advertisingId can not be empty", logLevel: .warning)
+            return
+        }
         if let advertisingIdPlugin = self.find(pluginType: RSAdvertisingIdPlugin.self) {
             advertisingIdPlugin.advertisingId = advertisingId
         } else {

@@ -40,6 +40,10 @@ extension RSClient {
      */
     @objc
     public func setAnonymousId(_ anonymousId: String) {
+        guard anonymousId.isNotEmpty else {
+            log(message: "anonymousId can not be empty", logLevel: .warning)
+            return
+        }
         if let anonymousIdPlugin = self.find(pluginType: RSAnonymousIdPlugin.self) {
             anonymousIdPlugin.anonymousId = anonymousId
         } else {

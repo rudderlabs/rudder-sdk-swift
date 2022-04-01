@@ -179,24 +179,40 @@ open class RSClient: NSObject {
 
 extension RSClient {
     internal func _track(_ eventName: String, properties: TrackProperties? = nil, option: RSOption? = nil) {
+        guard eventName.isNotEmpty else {
+            log(message: "eventName can not be empty", logLevel: .warning)
+            return
+        }
         let message = TrackMessage(event: eventName, properties: properties, option: option)
             .applyRawEventData()
         process(message: message)
     }
     
     internal func _screen(_ screenName: String, category: String? = nil, properties: ScreenProperties? = nil, option: RSOption? = nil) {
+        guard screenName.isNotEmpty else {
+            log(message: "screenName can not be empty", logLevel: .warning)
+            return
+        }
         let message = ScreenMessage(title: screenName, category: category, properties: properties, option: option)
             .applyRawEventData()
         process(message: message)
     }
     
     internal func _group(_ groupId: String, traits: [String: String]? = nil, option: RSOption? = nil) {
+        guard groupId.isNotEmpty else {
+            log(message: "groupId can not be empty", logLevel: .warning)
+            return
+        }
         let message = GroupMessage(groupId: groupId, traits: traits, option: option)
             .applyRawEventData()
         process(message: message)
     }
     
     internal func _alias(_ newId: String, option: RSOption? = nil) {
+        guard newId.isNotEmpty else {
+            log(message: "newId can not be empty", logLevel: .warning)
+            return
+        }
         let message = AliasMessage(newId: newId, option: option)
             .applyAlias(newId: newId, client: self)
             .applyRawEventData()
@@ -206,6 +222,10 @@ extension RSClient {
     }
     
     internal func _identify(_ userId: String, traits: IdentifyTraits? = nil, option: RSOption? = nil) {
+        guard userId.isNotEmpty else {
+            log(message: "userId can not be empty", logLevel: .warning)
+            return
+        }
         let message = IdentifyMessage(userId: userId, traits: traits, option: option)
             .applyRawEventData()
         setTraits(traits)
@@ -345,5 +365,5 @@ extension RSClient {
         default:
             break
         }
-    }    
+    }
 }

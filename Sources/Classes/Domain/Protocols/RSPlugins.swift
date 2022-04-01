@@ -91,10 +91,7 @@ public protocol RSDestinationPlugin: RSEventPlugin {
 
 public protocol RSUtilityPlugin: RSEventPlugin { }
 
-// For internal platform-specific bits
 internal protocol RSPlatformPlugin: RSPlugin { }
-
-// MARK: - Adding/Removing Plugins
 
 public extension RSDestinationPlugin {
     func configure(client: RSClient) {
@@ -104,23 +101,10 @@ public extension RSDestinationPlugin {
         }
     }
     
-    /**
-     Applies the supplied closure to the currently loaded set of plugins.
-     
-     - Parameter closure: A closure that takes an plugin to be operated on as a parameter.
-     
-     */
     func apply(closure: (RSPlugin) -> Void) {
         controller.apply(closure)
     }
     
-    /**
-     Adds a new plugin to the currently loaded set.
-     
-     - Parameter plugin: The plugin to be added.
-     - Returns: Returns the name of the supplied plugin.
-     
-     */
     @discardableResult
     func add(plugin: RSPlugin) -> RSPlugin {
         if let client = client {
@@ -130,11 +114,6 @@ public extension RSDestinationPlugin {
         return plugin
     }
     
-    /**
-     Removes and unloads plugins with a matching name from the system.
-     
-     - Parameter pluginName: An plugin name.
-     */
     func remove(plugin: RSPlugin) {
         controller.remove(plugin: plugin)
     }
