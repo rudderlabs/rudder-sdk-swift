@@ -36,6 +36,7 @@ All notable changes to this project will be documented in this file.
 `func alias(_ newId: String, option: RSOption)`
 - Added empty value check for `track()`, `identify()`, `screen()`, `group()`, `alias()`, `setAdvertisingId()`, `setAnonymousId()`, `setDeviceToken()` of `RSClient`.
 - Added empty value check for `putExternalId()`, `putIntegration()`, `putCustomContext()` of `RSOption`.
+- Sleep interval can not be less than 1 second.
 
 ### Fix
 - Fixed `context.traits`.

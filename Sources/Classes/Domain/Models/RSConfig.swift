@@ -94,6 +94,10 @@ open class RSConfig: NSObject {
     
     @discardableResult @objc
     public func sleepTimeOut(_ sleepTimeOut: Int) -> RSConfig {
+        guard sleepTimeOut > 0 else {
+            RSClient.rsLog(message: "sleepTimeOut can not be less than 1 second", logLevel: .warning)
+            return self
+        }
         _sleepTimeOut = sleepTimeOut
         return self
     }
