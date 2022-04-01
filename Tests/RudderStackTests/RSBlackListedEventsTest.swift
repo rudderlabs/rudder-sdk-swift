@@ -32,7 +32,7 @@ class RSBlackListedEventsTest: XCTestCase {
             return true
         }
         
-        client.add(destination: myDestination)
+        client.addDestination(myDestination)
         waitUntilServerConfigDownloaded(client: client)
         waitUntilStarted(client: client)
         client.track("track_blacklist_1")
@@ -48,7 +48,7 @@ class RSBlackListedEventsTest: XCTestCase {
             return true
         }
         
-        client.add(destination: myDestination)
+        client.addDestination(myDestination)
         waitUntilServerConfigDownloaded(client: client)
         waitUntilStarted(client: client)
         client.track("track_blacklist_2")

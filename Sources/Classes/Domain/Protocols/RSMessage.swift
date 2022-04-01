@@ -18,8 +18,7 @@ public protocol RSMessage {
     var integrations: MessageIntegrations? { get set }
     var option: RSOption? { get set }
     var channel: String? { get set }
-    
-    func toDict() -> [String: Any]
+    var dictionaryValue: [String: Any] { get }
 }
 
 public struct TrackMessage: RSMessage {
@@ -36,16 +35,15 @@ public struct TrackMessage: RSMessage {
     public let event: String
     public let properties: TrackProperties?
 
-    public func toDict() -> [String: Any] {
+    public var dictionaryValue: [String : Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
     }
     
-    func dynamicDictionary(dictionary: inout [String: Any]) {
+    private func dynamicDictionary(dictionary: inout [String: Any]) {
         dictionary["event"] = event
         dictionary["properties"] = properties
-        dictionary["userId"] = userId
     }
     
     init(event: String, properties: TrackProperties?, option: RSOption? = nil) {
@@ -68,16 +66,14 @@ public struct IdentifyMessage: RSMessage {
     
     public var traits: IdentifyTraits?
     
-    public func toDict() -> [String: Any] {
+    public var dictionaryValue: [String : Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
     }
     
-    func dynamicDictionary(dictionary: inout [String: Any]) {
-        dictionary[keyPath: "context.traits"] = traits
+    private func dynamicDictionary(dictionary: inout [String: Any]) {
         dictionary["event"] = "identify"
-        dictionary["userId"] = userId
     }
     
     init(userId: String, traits: IdentifyTraits? = nil, option: RSOption? = nil) {
@@ -102,16 +98,15 @@ public struct ScreenMessage: RSMessage {
     public let category: String?
     public let properties: ScreenProperties?
 
-    public func toDict() -> [String: Any] {
+    public var dictionaryValue: [String : Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
     }
     
-    func dynamicDictionary(dictionary: inout [String: Any]) {
+    private func dynamicDictionary(dictionary: inout [String: Any]) {
         dictionary["properties"] = properties
         dictionary["event"] = name
-        dictionary["userId"] = userId
         dictionary["category"] = category
     }
     
@@ -137,16 +132,15 @@ public struct GroupMessage: RSMessage {
     public let groupId: String
     public let traits: GroupTraits?
     
-    public func toDict() -> [String: Any] {
+    public var dictionaryValue: [String : Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
     }
     
-    func dynamicDictionary(dictionary: inout [String: Any]) {
+    private func dynamicDictionary(dictionary: inout [String: Any]) {
         dictionary["traits"] = traits
         dictionary["groupId"] = groupId
-        dictionary["userId"] = userId
     }
     
     init(groupId: String, traits: GroupTraits? = nil, option: RSOption? = nil) {
@@ -169,14 +163,14 @@ public struct AliasMessage: RSMessage {
 
     public var previousId: String?
     
-    public func toDict() -> [String: Any] {
+    public var dictionaryValue: [String : Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
     }
-
-    func dynamicDictionary(dictionary: inout [String: Any]) {
-        dictionary["userId"] = userId
+    
+    private func dynamicDictionary(dictionary: inout [String: Any]) {
+        dictionary[keyPath: "context.traits.id"] = userId
         dictionary["previousId"] = previousId
     }
         
@@ -189,20 +183,8 @@ public struct AliasMessage: RSMessage {
 // MARK: - RawEvent data helpers
 
 extension RSMessage {
-    internal mutating func applyRawMessageData(message: RSMessage?) {
-        if let e = message {
-            anonymousId = e.anonymousId
-            messageId = e.messageId
-            userId = e.userId
-            timestamp = e.timestamp
-            context = e.context
-            integrations = e.integrations
-        }
-    }
-
     internal func applyRawEventData() -> Self {
         var result: Self = self
-        result.anonymousId = RSUserDefaults.getAnonymousId()
         result.messageId = String(format: "%ld-%@", RSUtils.getTimeStamp(), RSUtils.getUniqueId())
         result.timestamp = RSUtils.getTimestampString()
         result.channel = "mobile"
@@ -211,7 +193,6 @@ extension RSMessage {
     
     func staticDictionary() -> [String: Any] {
         var dict = ["messageId": messageId ?? "",
-                    "anonymousId": anonymousId ?? "",
                     "channel": channel ?? "",
                     "originalTimestamp": timestamp ?? "",
                     "type": type.rawValue] as [String: Any]
@@ -220,6 +201,12 @@ extension RSMessage {
         }
         if let integrations = integrations {
             dict["integrations"] = integrations
+        }
+        if let userId = userId {
+            dict["userId"] = userId
+        }
+        if let anonymousId = anonymousId {
+            dict["anonymousId"] = anonymousId
         }
         return dict
     }

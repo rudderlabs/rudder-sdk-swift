@@ -35,6 +35,13 @@ extension RSClient {
         
         plugins.append(RSContextPlugin())
         
+        plugins.append(RSIdentifyTraitsPlugin())
+        plugins.append(RSAliasIdPlugin())
+        plugins.append(RSUserIdPlugin())
+        plugins.append(RSAnonymousIdPlugin())
+        plugins.append(RSAppTrackingConsentPlugin())
+        plugins.append(RSAdvertisingIdPlugin())
+        
         plugins += Vendor.current.requiredPlugins
 
         if config.trackLifecycleEvents {

@@ -18,6 +18,18 @@ class RSOptionPlugin: RSPlatformPlugin {
 }
 
 extension RSClient {
+    /**
+     API for setting enable/disable sending the events across all the event calls made using the SDK to the specified destinations.
+     - Parameters:
+        - option: Options related to every API call
+     # Example #
+     ```
+     let defaultOption = RSOption()
+     defaultOption.putIntegration("Amplitude", isEnabled: true)
+     
+     client.setOption(defaultOption)
+     ```
+     */
     @objc
     public func setOption(_ option: RSOption) {
         if let optionPlugin = self.find(pluginType: RSOptionPlugin.self) {

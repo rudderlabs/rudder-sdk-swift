@@ -52,8 +52,8 @@ class RSIdentifyTests: XCTestCase {
         
         let traits = identifyEvent?.traits
         
-        XCTAssertTrue(traits?["email"] == "abc@def.com")
-        XCTAssertFalse(traits?["name"] == "name")
+        XCTAssertTrue(traits?["email"] as? String == "abc@def.com")
+        XCTAssertFalse(traits?["name"] as? String == "name")
     }
     
     func testUserIdAndTraitsPersistCorrectly() {
@@ -72,8 +72,8 @@ class RSIdentifyTests: XCTestCase {
         
         let traits = identifyEvent?.traits
         
-        XCTAssertTrue(traits?["email"] == "abc@def.com")
-        XCTAssertFalse(traits?["name"] == "name")
+        XCTAssertTrue(traits?["email"] as? String == "abc@def.com")
+        XCTAssertFalse(traits?["name"] as? String == "name")
         
         client.track("simple_track")
         

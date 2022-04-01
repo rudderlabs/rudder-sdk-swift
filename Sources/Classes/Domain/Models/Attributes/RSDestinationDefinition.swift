@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc open class RSDestinationDefinition: NSObject, Codable {
+public class RSDestinationDefinition: NSObject, Codable {
     
     struct Config: Codable {
         let config: RSDestinationConfig?

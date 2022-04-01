@@ -21,12 +21,22 @@ class RSAppTrackingConsentPlugin: RSPlatformPlugin {
         if var context = workingMessage.context, let appTrackingConsent = appTrackingConsent {
             context[keyPath: "device.attTrackingStatus"] = appTrackingConsent.rawValue
             workingMessage.context = context
+            client?.updateContext(context)
         }
         return workingMessage
     }
 }
 
 extension RSClient {
+    /**     
+     API for app tracking consent management.
+     - Parameters:
+        - appTrackingConsent: App tracking consent
+     # Example #
+     ```
+     client.setAppTrackingConsent(.authorize)
+     ```
+     */
     @objc
     public func setAppTrackingConsent(_ appTrackingConsent: RSAppTrackingConsent) {
         if let appTrackingConsentPlugin = self.find(pluginType: RSAppTrackingConsentPlugin.self) {

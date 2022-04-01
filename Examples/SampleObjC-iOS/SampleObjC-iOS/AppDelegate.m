@@ -6,6 +6,8 @@
 //
 
 #import "AppDelegate.h"
+#import "SampleObjC_iOS-Swift.h"
+#import <AdSupport/ASIdentifierManager.h>
 
 @import RudderStack;
 
@@ -22,13 +24,41 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     RSConfig *config = [[RSConfig alloc] initWithWriteKey:WRITE_KEY];
     [config dataPlaneURL:DATA_PLANE_URL];
+    [config loglevel:RSLogLevelDebug];
     [config trackLifecycleEvents:YES];
     [config recordScreenViews:YES];
     RSClient *client = [[RSClient alloc] initWithConfig:config];
-    [client track:@"track 1" properties:nil option:nil];
+    [client addDestination:[[CustomDestination alloc] init]];
+    
+    [client identify:@"user_id" traits:@{@"email": @"abc@def.com"}];
+    [client track:@"track 1" properties:@{@"key_1": @"value_1", @"key_2": @"value_2"}];
+    [client screen:@"ViewController" properties:@{@"key_1": @"value_1", @"key_2": @"value_2"}];
+    [client group:@"sample_group_id" traits:@{@"key_1": @"value_1", @"key_2": @"value_2"}];
+    [client alias:@"user_id"];
+    
+    /*[client reset];
+    [client setDeviceToken:@"example_device_token"];
+    [client setAdvertisingId:[self getIDFA]];
+    [client setAppTrackingConsent:RSAppTrackingConsentAuthorize];
+    [client setAnonymousId:@"example_anonymous_id"];
+    
+    RSOption *defaultOption = [[RSOption alloc] init];
+    [defaultOption putIntegration:@"Amplitude" isEnabled:YES];
+    [client setOption:defaultOption];
+    
+    RSOption *eventOption = [[RSOption alloc] init];
+    [eventOption putIntegration:@"Amplitude" isEnabled:YES];
+    [eventOption putExternalId:@"brazeExternalId" withId:@"some_external_id_1"];
+    [client identify:@"user_id" traits:@{@"email": @"abc@def.com"} option:eventOption];
+    
+    NSDictionary *traits = [client traits];*/
+    
     return YES;
 }
 
+- (NSString*)getIDFA {
+    return [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+}
 
 #pragma mark - UISceneSession lifecycle
 

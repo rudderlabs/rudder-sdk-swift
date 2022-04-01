@@ -140,7 +140,7 @@ extension RSDatabaseManager {
     func write(_ message: RSMessage) {
         syncQueue.sync {
             do {
-                let jsonObject = message.toDict()
+                let jsonObject = message.dictionaryValue
                 if JSONSerialization.isValidJSONObject(jsonObject) {
                     let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
                     if let jsonString = String(data: jsonData, encoding: .utf8) {

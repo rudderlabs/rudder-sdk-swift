@@ -12,3 +12,4 @@
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have added unit tests for the code
 - [ ] I have made corresponding changes to the documentation
+- [ ] Passed `pod lib lint --no-clean --allow-warnings`
