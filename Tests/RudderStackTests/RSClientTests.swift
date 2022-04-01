@@ -37,7 +37,7 @@ class RSClientTests: XCTestCase {
             return true
         }
         
-        client.add(destination: myDestination)
+        client.addDestination(myDestination)
         waitUntilServerConfigDownloaded(client: client)
         waitUntilStarted(client: client)
         client.track("testDestinationEnabled")
@@ -52,7 +52,7 @@ class RSClientTests: XCTestCase {
             return true
         }
 
-        client.add(destination: myDestination)
+        client.addDestination(myDestination)
         waitUntilServerConfigDownloaded(client: client)
         waitUntilStarted(client: client)
         client.track("testDestinationEnabled")
@@ -108,6 +108,19 @@ class RSClientTests: XCTestCase {
         XCTAssertTrue(token != "")
         XCTAssertTrue(token == "device_token")
     }
+    
+    func testContextTraits() {
+        waitUntilStarted(client: client)
+        waitUntilServerConfigDownloaded(client: client)
+        
+        client.identify("user_id", traits: ["email": "abc@def.com"])
+        
+        let traits = client.traits
+        
+        XCTAssertNotNil(traits)
+        XCTAssertTrue(traits?["email"] == "abc@def.com")
+        XCTAssertTrue(traits?["userId"] == "user_id")
+    }    
 }
 
 func waitUntilStarted(client: RSClient?) {

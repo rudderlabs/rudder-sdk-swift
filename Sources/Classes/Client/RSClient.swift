@@ -15,9 +15,18 @@ open class RSClient: NSObject {
     var serverConfig: RSServerConfig?
     var error: NSError?
     
-    /// Initialize this instance of RSClient with a given configuration setup.
-    /// - Parameters:
-    ///    - config: The configuration to use
+    /**
+     Initialize this instance of RSClient with a given configuration setup.
+     - Parameters:
+        - config: The configuration to use
+     # Example #
+     ```
+     let config: RSConfig = RSConfig(writeKey: WRITE_KEY)
+                 .dataPlaneURL(DATA_PLANE_URL)
+            
+     let client = RSClient(config: config)
+     ```
+     */
     @objc
     public init(config: RSConfig) {
         self.config = config
@@ -36,77 +45,23 @@ open class RSClient: NSObject {
         - option: Options related to this track call
      # Example #
      ```
-     let option = RSOption()
-     RSClient.sharedInstance().track("Button clicked", properties: [:], option: option)
+     client.track("simple_track_with_props", properties: ["key_1": "value_1", "key_2": "value_2"], option: RSOption())
      ```
      */
-
+    
     @objc
-    public func track(_ eventName: String, properties: [String: Any]? = nil, option: RSOption? = nil) {
-        let message = TrackMessage(event: eventName, properties: properties, option: option)
-            .applyRawEventData()
-        process(message: message)
+    public func track(_ eventName: String, properties: TrackProperties, option: RSOption) {
+        _track(eventName, properties: properties, option: option)
     }
     
-    /**
-     API for record screen
-     - Parameters:
-        - screenName: Name of the screen
-        - properties: Properties you want to pass with the screen call
-        - option: Options related to this screen call
-     # Example #
-     ```
-     let options = RSOption()
-     RSClient.sharedInstance().screen("MyViewController", properties: [:], options: options)
-     ```
-     */
-    
     @objc
-    public func screen(_ screenName: String, category: String? = nil, properties: [String: String]? = nil, option: RSOption? = nil) {
-        let message = ScreenMessage(title: screenName, category: category, properties: properties, option: option)
-            .applyRawEventData()
-        process(message: message)
+    public func track(_ eventName: String, properties: TrackProperties) {
+        _track(eventName, properties: properties, option: nil)
     }
     
-    /**
-     API for add the user to a group
-     - Parameters:
-        - groupId: Group ID you want your user to attach to
-        - traits: Traits of the group
-        - option: Options related to this group call
-     # Example #
-     ```
-     let options = RSOption()
-     RSClient.sharedInstance().group("A1", traits: [:], options: options)
-     ```
-     */
-    
     @objc
-    public func group(_ groupId: String, traits: [String: String]? = nil, option: RSOption? = nil) {
-        let message = GroupMessage(groupId: groupId, traits: traits, option: option)
-            .applyRawEventData()
-        process(message: message)
-    }
-    
-    /**
-     API for add the user to a group
-     - Parameters:
-        - newId: New userId for the user
-        - option: Options related to this alias call
-     # Example #
-     ```
-     let options = RSOption()
-     RSClient.sharedInstance().group("U1", options: options)
-     ```
-     */
-    
-    @objc
-    public func alias(_ newId: String, option: RSOption? = nil) {
-        let message = AliasMessage(newId: newId, option: option)
-            .applyAlias(newId: newId, client: self)
-            .applyRawEventData()
-        setUserId(newId)
-        process(message: message)
+    public func track(_ eventName: String) {
+        _track(eventName, properties: nil, option: nil)
     }
     
     /**
@@ -117,15 +72,163 @@ open class RSClient: NSObject {
         - option: Options related to this identify call
      # Example #
      ```
-     let options = RSOption()
-     RSClient.sharedInstance().group("U1", traits: [:], options: options)
+     client.identify("user_id", traits: ["email": "abc@def.com"], option: RSOption())
      ```
      */
     
     @objc
-    public func identify(_ userId: String, traits: [String: Any]? = nil, option: RSOption? = nil) {
+    public func identify(_ userId: String, traits: IdentifyTraits, option: RSOption) {
+        _identify(userId, traits: traits, option: option)
+    }
+    
+    @objc
+    public func identify(_ userId: String, traits: IdentifyTraits) {
+        _identify(userId, traits: traits, option: nil)
+    }
+    
+    @objc
+    public func identify(_ userId: String) {
+        _identify(userId, traits: nil, option: nil)
+    }
+    
+    /**
+     API for record screen
+     - Parameters:
+        - screenName: Name of the screen
+        - properties: Properties you want to pass with the screen call
+        - option: Options related to this screen call
+     # Example #
+     ```
+     client.screen("ViewController", properties: ["key_1": "value_1", "key_2": "value_2"], option: RSOption())
+     ```
+     */
+    
+    @objc
+    public func screen(_ screenName: String, category: String, properties: ScreenProperties, option: RSOption) {
+        _screen(screenName, category: category, properties: properties, option: option)
+    }
+    
+    @objc
+    public func screen(_ screenName: String, category: String, properties: ScreenProperties) {
+        _screen(screenName, category: category, properties: properties, option: nil)
+    }
+    
+    @objc
+    public func screen(_ screenName: String, properties: ScreenProperties) {
+        _screen(screenName, category: nil, properties: properties, option: nil)
+    }
+    
+    @objc
+    public func screen(_ screenName: String, category: String) {
+        _screen(screenName, category: category, properties: nil, option: nil)
+    }
+    
+    @objc
+    public func screen(_ screenName: String) {
+        _screen(screenName, category: nil, properties: nil, option: nil)
+    }
+    
+    /**
+     API for add the user to a group
+     - Parameters:
+        - groupId: Group ID you want your user to attach to
+        - traits: Traits of the group
+        - option: Options related to this group call
+     # Example #
+     ```
+     client.group("sample_group_id", traits: ["key_1": "value_1", "key_2": "value_2"], option: RSOption())
+     ```
+     */
+    
+    @objc
+    public func group(_ groupId: String, traits: GroupTraits, option: RSOption) {
+        _group(groupId, traits: traits, option: option)
+    }
+    
+    @objc
+    public func group(_ groupId: String, traits: GroupTraits) {
+        _group(groupId, traits: traits, option: nil)
+    }
+    
+    @objc
+    public func group(_ groupId: String) {
+        _group(groupId, traits: nil, option: nil)
+    }
+    
+    /**
+     API for add the user to a group
+     - Parameters:
+        - newId: New userId for the user
+        - option: Options related to this alias call
+     # Example #
+     ```
+     client.alias("user_id", option: RSOption())
+     ```
+     */
+    
+    @objc
+    public func alias(_ newId: String, option: RSOption) {
+        _alias(newId, option: option)
+    }
+    
+    @objc
+    public func alias(_ newId: String) {
+        _alias(newId, option: nil)
+    }
+}
+
+extension RSClient {
+    internal func _track(_ eventName: String, properties: TrackProperties? = nil, option: RSOption? = nil) {
+        guard eventName.isNotEmpty else {
+            log(message: "eventName can not be empty", logLevel: .warning)
+            return
+        }
+        let message = TrackMessage(event: eventName, properties: properties, option: option)
+            .applyRawEventData()
+        process(message: message)
+    }
+    
+    internal func _screen(_ screenName: String, category: String? = nil, properties: ScreenProperties? = nil, option: RSOption? = nil) {
+        guard screenName.isNotEmpty else {
+            log(message: "screenName can not be empty", logLevel: .warning)
+            return
+        }
+        let message = ScreenMessage(title: screenName, category: category, properties: properties, option: option)
+            .applyRawEventData()
+        process(message: message)
+    }
+    
+    internal func _group(_ groupId: String, traits: [String: String]? = nil, option: RSOption? = nil) {
+        guard groupId.isNotEmpty else {
+            log(message: "groupId can not be empty", logLevel: .warning)
+            return
+        }
+        let message = GroupMessage(groupId: groupId, traits: traits, option: option)
+            .applyRawEventData()
+        process(message: message)
+    }
+    
+    internal func _alias(_ newId: String, option: RSOption? = nil) {
+        guard newId.isNotEmpty else {
+            log(message: "newId can not be empty", logLevel: .warning)
+            return
+        }
+        let message = AliasMessage(newId: newId, option: option)
+            .applyAlias(newId: newId, client: self)
+            .applyRawEventData()
+        setAlias(newId)
+        setUserId(newId)
+        process(message: message)
+    }
+    
+    internal func _identify(_ userId: String, traits: IdentifyTraits? = nil, option: RSOption? = nil) {
+        guard userId.isNotEmpty else {
+            log(message: "userId can not be empty", logLevel: .warning)
+            return
+        }
         let message = IdentifyMessage(userId: userId, traits: traits, option: option)
             .applyRawEventData()
+        setTraits(traits)
         setUserId(userId)
         process(message: message)
     }
@@ -134,16 +237,20 @@ open class RSClient: NSObject {
 // MARK: - System Modifiers
 
 extension RSClient {
-    /// Returns the anonymousId currently in use.
+    /**
+     Returns the anonymousId currently in use.
+     */
     @objc
-    public var anonymousId: String {
-        if let anonymousId = RSUserDefaults.getAnonymousId() {
-            return anonymousId
+    public var anonymousId: String? {
+        if let anonymousIdPlugin = self.find(pluginType: RSAnonymousIdPlugin.self) {
+            return anonymousIdPlugin.anonymousId
         }
-        return ""
+        return nil
     }
     
-    /// Returns the userId that was specified in the last identify call.
+    /**
+     Returns the userId that was specified in the last identify call.
+     */
     @objc
     public var userId: String? {
         if let userIdPlugin = self.find(pluginType: RSUserIdPlugin.self) {
@@ -152,7 +259,9 @@ extension RSClient {
         return nil
     }
     
-    /// Returns the traits that were specified in the last identify call.
+    /**
+     Returns the context that were specified in the last call.
+     */
     @objc
     public var context: MessageContext? {
         if let contextPlugin = self.find(pluginType: RSContextPlugin.self) {
@@ -161,8 +270,20 @@ extension RSClient {
         return nil
     }
     
-    /// Tells this instance of Analytics to flush any queued events. This command will also
-    /// be sent to each plugin present in the system.
+    /**
+     Returns the traits that were specified in the last identify call.
+     */
+    @objc
+    public var traits: MessageTraits? {
+        if let contextPlugin = self.find(pluginType: RSContextPlugin.self) {
+            return contextPlugin.traits
+        }
+        return nil
+    }
+    
+    /**
+     API for flush any queued events. This command will also be sent to each destination present in the system.
+     */
     @objc
     public func flush() {
         apply { plugin in
@@ -172,8 +293,9 @@ extension RSClient {
         }
     }
     
-    /// Resets this instance of Analytics to a clean slate.  Traits, UserID's, anonymousId, etc are all cleared or reset.  This
-    /// command will also be sent to each plugin present in the system.
+    /**
+     API for reset current slate.  Traits, UserID's, anonymousId, etc are all cleared or reset.  This command will also be sent to each destination present in the system.
+     */
     @objc
     public func reset() {
         apply { plugin in
@@ -183,15 +305,17 @@ extension RSClient {
         }
     }
     
-    /// Retrieve the version of this library in use.
-    /// - Returns: A string representing the version in "BREAKING.FEATURE.FIX" format.
+    /**
+     Returns the version ("BREAKING.FEATURE.FIX" format) of this library in use.
+     */
     @objc
     public var version: String {
         return RSVersion
     }
     
-    /// Retrieve the version of this library in use.
-    /// - Returns: A string representing the version in "BREAKING.FEATURE.FIX" format.
+    /**
+     Returns the config set by developer while initialisation.
+     */
     @objc
     public var configuration: RSConfig {
         return config
@@ -199,23 +323,15 @@ extension RSClient {
 }
 
 extension RSClient {
-    /**
-     Applies the supplied closure to the currently loaded set of plugins.
-     NOTE: This does not apply to plugins contained within DestinationPlugins.
-     
-     - Parameter closure: A closure that takes an plugin to be operated on as a parameter.
-     
-     */
     func apply(closure: (RSPlugin) -> Void) {
         controller.apply(closure)
     }
     
     /**
-     Adds a new plugin to the currently loaded set.
-     
-     - Parameter plugin: The plugin to be added.
+     API for adding a new plugin to the currently loaded set.
+     - Parameters:
+        - plugin: The plugin to be added.
      - Returns: Returns the name of the supplied plugin.
-     
      */
     @discardableResult
     public func add(plugin: RSPlugin) -> RSPlugin {
@@ -224,11 +340,6 @@ extension RSClient {
         return plugin
     }
     
-    /**
-     Removes and unloads plugins with a matching name from the system.
-     
-     - Parameter pluginName: An plugin name.
-     */
     func remove(plugin: RSPlugin) {
         controller.remove(plugin: plugin)
     }
@@ -254,5 +365,5 @@ extension RSClient {
         default:
             break
         }
-    }    
+    }
 }

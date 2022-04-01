@@ -8,7 +8,6 @@
 
 import Foundation
 
-public let RSConfigRefreshInterval: Int = 2
 public let RSDataPlaneUrl = "https://hosted.rudderlabs.com"
 public let RSFlushQueueSize: Int = 30
 public let RSDBCountThreshold: Int = 10000
@@ -31,4 +30,4 @@ let MAX_EVENT_SIZE: UInt = 32 * 1024
 let MAX_BATCH_SIZE: UInt = 500 * 1024
 
 // don't move this line
-let RSVersion = "1.0.0-beta.2"
+let RSVersion = "1.0.0-beta.3"

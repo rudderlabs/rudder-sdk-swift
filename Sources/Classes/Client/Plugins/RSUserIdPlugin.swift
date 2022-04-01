@@ -20,6 +20,11 @@ class RSUserIdPlugin: RSPlatformPlugin {
         guard var workingMessage = message else { return message }
         if let userId = userId {
             workingMessage.userId = userId
+            if var context = workingMessage.context {
+                context[keyPath: "traits.userId"] = userId
+                workingMessage.context = context
+                client?.updateContext(context)
+            }
         }
         return workingMessage
     }

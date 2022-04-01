@@ -10,7 +10,6 @@ import Foundation
 
 // swiftlint:disable inclusive_language
 
-@objc
 public enum EventFilteringOption: Int, CaseIterable {
     case disabled = 0
     case blackListed
@@ -30,7 +29,7 @@ extension EventFilteringOption {
     }
 }
 
-@objc open class RSDestination: NSObject, Codable {
+public class RSDestination: NSObject, Codable {
     public let config: JSON?
     public let secretConfig: JSON?
     
