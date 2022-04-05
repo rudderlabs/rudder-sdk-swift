@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## Version - 1.0.0-beta.1 - 2022-03-23
 ### Added
-- Initial commit.
+- First beta release.
 
 ## Version - 1.0.0-beta.2 - 2022-03-23
 ### Fix
@@ -43,4 +43,4 @@ All notable changes to this project will be documented in this file.
 
 ## Version - 1.0.0-beta.4 - 2022-04-05
 ### Changed
-- RSECommerceConstants.swift is RSEventsAndKeys.swift now. 
+- `RSECommerceConstants.swift` is `RSEventsAndKeys.swift` now.
