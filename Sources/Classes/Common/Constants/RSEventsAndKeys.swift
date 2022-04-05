@@ -39,6 +39,7 @@ public struct RSEvents {
         public static let cartShared = "Cart Shared"
         public static let productReviewed = "Product Reviewed"
         public static let spendCredits = "Spend Credits"
+        public static let reserve = "Reserve"
     }
     
     public struct LifeCycle {
