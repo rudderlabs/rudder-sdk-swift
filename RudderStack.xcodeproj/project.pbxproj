@@ -21,7 +21,7 @@
 		ED157C5627D0FCDC00F22202 /* RSmacOSScreenViewEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED157C5527D0FCDC00F22202 /* RSmacOSScreenViewEvents.swift */; };
 		ED157C5827D0FFA400F22202 /* RSLifeCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED157C5727D0FFA400F22202 /* RSLifeCycle.swift */; };
 		ED157C5A27D1010D00F22202 /* RSPushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED157C5927D1010D00F22202 /* RSPushNotifications.swift */; };
-		ED277FA127421B06002A8FEA /* RSECommerceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FA027421B06002A8FEA /* RSECommerceConstants.swift */; };
+		ED277FA127421B06002A8FEA /* RSEventsAndKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FA027421B06002A8FEA /* RSEventsAndKeys.swift */; };
 		ED277FF92744F199002A8FEA /* RSAnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FF82744F199002A8FEA /* RSAnyCodable.swift */; };
 		ED277FFB2744F265002A8FEA /* RSAnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */; };
 		ED277FFD2744F2AD002A8FEA /* RSAnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */; };
@@ -111,7 +111,7 @@
 		ED157C5527D0FCDC00F22202 /* RSmacOSScreenViewEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSmacOSScreenViewEvents.swift; sourceTree = "<group>"; };
 		ED157C5727D0FFA400F22202 /* RSLifeCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSLifeCycle.swift; sourceTree = "<group>"; };
 		ED157C5927D1010D00F22202 /* RSPushNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSPushNotifications.swift; sourceTree = "<group>"; };
-		ED277FA027421B06002A8FEA /* RSECommerceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSECommerceConstants.swift; sourceTree = "<group>"; };
+		ED277FA027421B06002A8FEA /* RSEventsAndKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSEventsAndKeys.swift; sourceTree = "<group>"; };
 		ED277FF82744F199002A8FEA /* RSAnyCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAnyCodable.swift; sourceTree = "<group>"; };
 		ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyDecodable.swift; sourceTree = "<group>"; };
 		ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyEncodable.swift; sourceTree = "<group>"; };
@@ -345,7 +345,7 @@
 			isa = PBXGroup;
 			children = (
 				EDA7EF462739119600E73142 /* RSConstants.swift */,
-				ED277FA027421B06002A8FEA /* RSECommerceConstants.swift */,
+				ED277FA027421B06002A8FEA /* RSEventsAndKeys.swift */,
 				ED3D22BD27A45B6500EC8366 /* RSTypeAlias.swift */,
 				EDA7EF452739119600E73142 /* RSUserDefaults.swift */,
 			);
@@ -647,7 +647,7 @@
 				ED3D22A427A3F0C100EC8366 /* RSReplayQueuePlugin.swift in Sources */,
 				EDA7EF962739119600E73142 /* RSOption.swift in Sources */,
 				ED277FFB2744F265002A8FEA /* RSAnyDecodable.swift in Sources */,
-				ED277FA127421B06002A8FEA /* RSECommerceConstants.swift in Sources */,
+				ED277FA127421B06002A8FEA /* RSEventsAndKeys.swift in Sources */,
 				ED157C4527CFD99700F22202 /* RSIntegrationPlugin.swift in Sources */,
 				ED157C4727CFDEC000F22202 /* RSOptionPlugin.swift in Sources */,
 				ED157C3727CE0EEA00F22202 /* RSmacOSLifecycleEvents.swift in Sources */,
@@ -862,7 +862,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = "1.0.0-beta.3";
+				MARKETING_VERSION = "1.0.0-beta.4";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.RudderStack;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -896,7 +896,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = "1.0.0-beta.3";
+				MARKETING_VERSION = "1.0.0-beta.4";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.RudderStack;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
