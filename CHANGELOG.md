@@ -40,3 +40,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fix
 - Fixed `context.traits`.
+
+## Version - 1.0.0-beta.4 - 2022-04-05
+### Changed
+- RSECommerceConstants.swift is RSEventsAndKeys.swift now. 
