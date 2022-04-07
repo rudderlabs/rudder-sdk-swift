@@ -82,6 +82,8 @@ public struct RSKeys {
         public static let affiliation = "affiliation"
         public static let tax = "tax"
         public static let query = "query"
+        public static let url = "url"
+        public static let image_url = "image_url"
     }
     
     public struct Other {
