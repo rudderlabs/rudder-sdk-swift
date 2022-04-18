@@ -84,6 +84,12 @@ public struct RSKeys {
         public static let query = "query"
         public static let url = "url"
         public static let imageUrl = "image_url"
+        public static let paymentMethod = "payment_method"
+    }
+    
+    public struct Identify {
+        public static let userId = "user_id"
+        public static let currencyCode = "currency_code"        
     }
     
     public struct Other {
