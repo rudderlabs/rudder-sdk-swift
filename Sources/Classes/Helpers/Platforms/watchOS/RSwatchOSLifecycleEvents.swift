@@ -16,7 +16,7 @@ class RSwatchOSLifecycleEvents: RSPlatformPlugin, RSwatchOSLifecycle {
     var client: RSClient?
     
     func applicationDidFinishLaunching(watchExtension: WKExtension) {
-        if client?.config.trackLifecycleEvents == false {
+        if client?.config?.trackLifecycleEvents == false {
             return
         }
         
@@ -51,7 +51,7 @@ class RSwatchOSLifecycleEvents: RSPlatformPlugin, RSwatchOSLifecycle {
     }
     
     func applicationWillEnterForeground(watchExtension: WKExtension) {
-        if client?.config.trackLifecycleEvents == false {
+        if client?.config?.trackLifecycleEvents == false {
             return
         }
         

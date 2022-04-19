@@ -14,7 +14,7 @@ class RSmacOSLifecycleEvents: RSPlatformPlugin, RSmacOSLifecycle {
     var client: RSClient?
 
     func application(didFinishLaunchingWithOptions launchOptions: [String: Any]?) {
-        if client?.config.trackLifecycleEvents == false {
+        if client?.config?.trackLifecycleEvents == false {
             return
         }
         

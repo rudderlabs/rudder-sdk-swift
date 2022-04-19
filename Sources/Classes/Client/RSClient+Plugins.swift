@@ -14,7 +14,7 @@ extension RSClient {
         add(plugin: RSReplayQueuePlugin())
         
         let logPlugin = RSLoggerPlugin()
-        logPlugin.loggingEnabled(config.logLevel != .none)
+        logPlugin.loggingEnabled(config?.logLevel != RSLogLevel.none)
         add(plugin: logPlugin)
         
         add(plugin: RSIntegrationPlugin())
@@ -44,7 +44,7 @@ extension RSClient {
         
         plugins += Vendor.current.requiredPlugins
 
-        if config.trackLifecycleEvents {
+        if config?.trackLifecycleEvents == true {
             #if os(iOS) || os(tvOS) || targetEnvironment(macCatalyst)
             plugins.append(RSiOSLifecycleEvents())
             #endif
@@ -56,7 +56,7 @@ extension RSClient {
             #endif
         }
         
-        if config.recordScreenViews {
+        if config?.recordScreenViews == true {
             #if os(iOS) || os(tvOS) || targetEnvironment(macCatalyst)
             plugins.append(RSiOSScreenViewEvents())
             #endif
@@ -152,15 +152,13 @@ extension RSClient {
     private func fetchServerConfig() -> RSServerConfig? {
         var serverConfig: RSServerConfig?
         let semaphore = DispatchSemaphore(value: 0)
-        let hasSettings = RSUserDefaults.getServerConfig() != nil
-        let updateType = (hasSettings ? UpdateType.refresh : UpdateType.initial)
         let serviceManager = RSServiceManager(client: self)
         serviceManager.downloadServerConfig { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let config):
                 serverConfig = config
-                self.update(serverConfig: config, type: updateType)
+                self.update(serverConfig: config, type: .refresh)
             case .failure(let error):
                 self.error = error
             }

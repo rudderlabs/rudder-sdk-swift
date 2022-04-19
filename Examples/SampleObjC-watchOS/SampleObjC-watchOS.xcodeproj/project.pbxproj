@@ -504,7 +504,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GTGKNDBD23;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "RudderSampleAppwatchOSObjC WatchKit Extension/Info.plist";
+				INFOPLIST_FILE = "SampleObjC-watchOS WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "RudderSampleAppwatchOSObjC WatchKit Extension";
 				INFOPLIST_KEY_CLKComplicationPrincipalClass = ComplicationController;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -535,7 +535,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GTGKNDBD23;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "RudderSampleAppwatchOSObjC WatchKit Extension/Info.plist";
+				INFOPLIST_FILE = "SampleObjC-watchOS WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "RudderSampleAppwatchOSObjC WatchKit Extension";
 				INFOPLIST_KEY_CLKComplicationPrincipalClass = ComplicationController;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";

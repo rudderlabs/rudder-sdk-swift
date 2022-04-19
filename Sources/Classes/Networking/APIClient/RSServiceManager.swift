@@ -110,7 +110,7 @@ extension RSServiceManager {
 extension RSServiceManager {
     func headers(_ API: API) -> [String: String]? {
         var headers = ["Content-Type": "Application/json",
-                       "Authorization": "Basic \(client.config.writeKey.computeAuthToken() ?? "")"]
+                       "Authorization": "Basic \(client.config?.writeKey.computeAuthToken() ?? "")"]
         switch API {
         case .flushEvents:
             if let anonymousIdPlugin = client.find(pluginType: RSAnonymousIdPlugin.self) {
@@ -125,12 +125,12 @@ extension RSServiceManager {
     func baseURL(_ API: API) -> String {
         switch API {
         case .flushEvents:
-            return "\(client.config.dataPlaneUrl)/\(version)/"
+            return "\(client.config?.dataPlaneUrl ?? RSDataPlaneUrl)/\(version)/"
         case .downloadConfig:
-            if client.config.controlPlaneUrl.hasSuffix("/") == true {
-                return "\(client.config.controlPlaneUrl)"
+            if client.config?.controlPlaneUrl.hasSuffix("/") == true {
+                return "\(client.config?.controlPlaneUrl ?? RSControlPlaneUrl)"
             } else {
-                return "\(client.config.controlPlaneUrl)/"
+                return "\(client.config?.controlPlaneUrl ?? RSControlPlaneUrl)/"
             }
         }
     }

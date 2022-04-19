@@ -24,7 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             .trackLifecycleEvents(false)
             .recordScreenViews(false)
         
-        client = RSClient(config: config)
+        client = RSClient.sharedInstance()
+        client.configure(with: config)
                 
         /*client?.addDestination(CustomDestination())
         

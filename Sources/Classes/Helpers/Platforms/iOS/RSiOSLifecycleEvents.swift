@@ -17,7 +17,7 @@ class RSiOSLifecycleEvents: RSPlatformPlugin, RSiOSLifecycle {
     var client: RSClient?
     
     func application(_ application: UIApplication?, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
-        if client?.config.trackLifecycleEvents == false {
+        if client?.config?.trackLifecycleEvents == false {
             return
         }
         
@@ -54,7 +54,7 @@ class RSiOSLifecycleEvents: RSPlatformPlugin, RSiOSLifecycle {
     }
     
     func applicationWillEnterForeground(application: UIApplication?) {
-        if client?.config.trackLifecycleEvents == false {
+        if client?.config?.trackLifecycleEvents == false {
             return
         }
         
@@ -69,7 +69,7 @@ class RSiOSLifecycleEvents: RSPlatformPlugin, RSiOSLifecycle {
     }
     
     func applicationDidEnterBackground(application: UIApplication?) {
-        if client?.config.trackLifecycleEvents == false {
+        if client?.config?.trackLifecycleEvents == false {
             return
         }
         
