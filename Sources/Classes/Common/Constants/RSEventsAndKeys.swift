@@ -116,6 +116,10 @@ public struct RSKeys {
         }
     }
     
+    public struct Screen {
+        public static let screenViewed = "Screen Viewed"
+    }
+    
     public struct Other {
         public static let sorts = "sorts"
         public static let filters = "filters"
