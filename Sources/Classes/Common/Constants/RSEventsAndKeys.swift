@@ -89,7 +89,27 @@ public struct RSKeys {
     
     public struct Identify {
         public static let userId = "user_id"
-        public static let currencyCode = "currency_code"        
+        public static let currencyCode = "currency_code"
+        
+        public struct Traits {
+            public static let id = "id"
+            public static let firstName = "firstName"
+            public static let lastName = "lastName"
+            public static let name = "name"
+            public static let age = "age"
+            public static let email = "email"
+            public static let phone = "phone"
+            public static let address = "address"
+            public static let birthday = "birthday"
+            public static let company = "company"
+            public static let createdAt = "createdAt"
+            public static let description = "description"
+            public static let gender = "gender"
+            public static let title = "title"
+            public static let username = "username"
+            public static let website = "website"
+            public static let avatar = "avatar"
+        }
     }
     
     public struct Other {
