@@ -43,6 +43,10 @@ public struct RSEvents {
     }
     
     public struct LifeCycle {
+        public static let applicationInstalled = "Application Installed"
+        public static let applicationUpdated = "Application Updated"
+        public static let applicationOpened = "Application Opened"
+        public static let applicationBackgrounded = "Application Backgrounded"
         public static let completeRegistration = "Complete Registration"
         public static let completeTutorial = "Complete Tutorial"
         public static let achieveLevel = "Achieve Level"
