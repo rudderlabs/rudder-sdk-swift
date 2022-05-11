@@ -16,8 +16,7 @@ class RSiOSLifecycleEvents: RSPlatformPlugin, RSiOSLifecycle {
     let type = PluginType.before
     var client: RSClient?
     
-    @RSAtomic
-    private var didFinishLaunching = false
+    @RSAtomic private var didFinishLaunching = false
     
     func application(_ application: UIApplication?, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         didFinishLaunching = true

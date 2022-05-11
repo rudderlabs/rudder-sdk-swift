@@ -49,3 +49,6 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Added `url` and `imageUrl` in `RSKeys.Ecommerce` list inside `RSEventsAndKeys.swift`.
 
+## Version - 1.0.0 - 2022-05-12
+### Added
+- Added `url` and `imageUrl` in `RSKeys.Ecommerce` list inside `RSEventsAndKeys.swift`.

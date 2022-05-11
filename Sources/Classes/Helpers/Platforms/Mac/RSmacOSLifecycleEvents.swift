@@ -13,8 +13,7 @@ class RSmacOSLifecycleEvents: RSPlatformPlugin, RSmacOSLifecycle {
     let type = PluginType.before
     var client: RSClient?
 
-    @RSAtomic
-    private var didFinishLaunching = false
+    @RSAtomic private var didFinishLaunching = false
     
     func application(didFinishLaunchingWithOptions launchOptions: [String: Any]?) {
         didFinishLaunching = true
