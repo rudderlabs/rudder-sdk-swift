@@ -16,7 +16,12 @@ class RSiOSLifecycleEvents: RSPlatformPlugin, RSiOSLifecycle {
     let type = PluginType.before
     var client: RSClient?
     
+    @RSAtomic
+    private var didFinishLaunching = false
+    
     func application(_ application: UIApplication?, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+        didFinishLaunching = true
+        
         if client?.config?.trackLifecycleEvents == false {
             return
         }
@@ -74,6 +79,16 @@ class RSiOSLifecycleEvents: RSPlatformPlugin, RSiOSLifecycle {
         }
         
         client?.track("Application Backgrounded")
+    }
+    
+    func applicationDidBecomeActive(application: UIApplication?) {
+        if client?.config?.trackLifecycleEvents == false {
+            return
+        }
+        
+        if didFinishLaunching == false {
+            self.application(nil, didFinishLaunchingWithOptions: nil)
+        }
     }
 }
 

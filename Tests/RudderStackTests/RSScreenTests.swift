@@ -14,7 +14,8 @@ class RSScreenTests: XCTestCase {
     var client: RSClient!
 
     override func setUpWithError() throws {
-        client = RSClient(config: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
+        client = RSClient.sharedInstance()
+        client.configure(with: RSConfig(writeKey: WRITE_KEY).dataPlaneURL(DATA_PLANE_URL))
     }
 
     override func tearDownWithError() throws {
