@@ -27,7 +27,8 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
     [config loglevel:RSLogLevelDebug];
     [config trackLifecycleEvents:YES];
     [config recordScreenViews:YES];
-    RSClient *client = [[RSClient alloc] initWithConfig:config];
+    RSClient *client = [RSClient sharedInstance];
+    [client configureWith:config];
     [client addDestination:[[CustomDestination alloc] init]];
     
     [client identify:@"user_id" traits:@{@"email": @"abc@def.com"}];

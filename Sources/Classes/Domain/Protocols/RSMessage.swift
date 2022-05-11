@@ -35,7 +35,7 @@ public struct TrackMessage: RSMessage {
     public let event: String
     public let properties: TrackProperties?
 
-    public var dictionaryValue: [String : Any] {
+    public var dictionaryValue: [String: Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
@@ -66,7 +66,7 @@ public struct IdentifyMessage: RSMessage {
     
     public var traits: IdentifyTraits?
     
-    public var dictionaryValue: [String : Any] {
+    public var dictionaryValue: [String: Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
@@ -98,7 +98,7 @@ public struct ScreenMessage: RSMessage {
     public let category: String?
     public let properties: ScreenProperties?
 
-    public var dictionaryValue: [String : Any] {
+    public var dictionaryValue: [String: Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
@@ -132,7 +132,7 @@ public struct GroupMessage: RSMessage {
     public let groupId: String
     public let traits: GroupTraits?
     
-    public var dictionaryValue: [String : Any] {
+    public var dictionaryValue: [String: Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary
@@ -163,7 +163,7 @@ public struct AliasMessage: RSMessage {
 
     public var previousId: String?
     
-    public var dictionaryValue: [String : Any] {
+    public var dictionaryValue: [String: Any] {
         var dictionary = staticDictionary()
         dynamicDictionary(dictionary: &dictionary)
         return dictionary

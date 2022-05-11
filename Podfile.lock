@@ -1,5 +1,5 @@
 PODS:
-  - RudderStack (1.0.0-beta.5)
+  - RudderStack (1.0.0-beta.6)
 
 DEPENDENCIES:
   - RudderStack (from `.`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "."
 
 SPEC CHECKSUMS:
-  RudderStack: 151db52fc1d2ccbba421c34c1916041d81cc6658
+  RudderStack: 77457174f98752f9f3b4ce14160938ea06898829
 
 PODFILE CHECKSUM: bcbe09a42bac202112171bc6ae495c5a75d0b40c
 

@@ -49,3 +49,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Added `url` and `imageUrl` in `RSKeys.Ecommerce` list inside `RSEventsAndKeys.swift`.
 
+## Version - 1.0.0-beta.6 - 2022-04-11
+### Added
+- Added `LifeCycleEvents`, `identify` and `screen` keys inside RSEventsAndKeys.swift.
+- Added thread test cases in `RSThreadTests.swift`.
+- Added database test cases in `RSDatabaseTests.swift`.

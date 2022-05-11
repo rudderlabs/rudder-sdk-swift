@@ -10,10 +10,24 @@ import Foundation
 
 @objc
 open class RSClient: NSObject {
-    var config: RSConfig
+    var config: RSConfig?
     var controller: RSController
     var serverConfig: RSServerConfig?
     var error: NSError?
+    static let shared = RSClient()
+    
+    private override init() {
+        serverConfig = RSUserDefaults.getServerConfig()
+        controller = RSController()
+    }
+    
+    /**
+     Returns the instance of RSClient.
+     */
+    @objc
+    public static func sharedInstance() -> RSClient {
+        return shared
+    }
     
     /**
      Initialize this instance of RSClient with a given configuration setup.
@@ -24,16 +38,12 @@ open class RSClient: NSObject {
      let config: RSConfig = RSConfig(writeKey: WRITE_KEY)
                  .dataPlaneURL(DATA_PLANE_URL)
             
-     let client = RSClient(config: config)
+     RSClient.sharedInstance().configure(with: config)
      ```
      */
     @objc
-    public init(config: RSConfig) {
+    public func configure(with config: RSConfig) {
         self.config = config
-        serverConfig = RSUserDefaults.getServerConfig()
-        controller = RSController()
-        
-        super.init()
         addPlugins()
     }
     
@@ -45,7 +55,7 @@ open class RSClient: NSObject {
         - option: Options related to this track call
      # Example #
      ```
-     client.track("simple_track_with_props", properties: ["key_1": "value_1", "key_2": "value_2"], option: RSOption())
+     RSClient.sharedInstance().track("simple_track_with_props", properties: ["key_1": "value_1", "key_2": "value_2"], option: RSOption())
      ```
      */
     
@@ -72,7 +82,7 @@ open class RSClient: NSObject {
         - option: Options related to this identify call
      # Example #
      ```
-     client.identify("user_id", traits: ["email": "abc@def.com"], option: RSOption())
+     RSClient.sharedInstance().identify("user_id", traits: ["email": "abc@def.com"], option: RSOption())
      ```
      */
     
@@ -99,7 +109,7 @@ open class RSClient: NSObject {
         - option: Options related to this screen call
      # Example #
      ```
-     client.screen("ViewController", properties: ["key_1": "value_1", "key_2": "value_2"], option: RSOption())
+     RSClient.sharedInstance().screen("ViewController", properties: ["key_1": "value_1", "key_2": "value_2"], option: RSOption())
      ```
      */
     
@@ -136,7 +146,7 @@ open class RSClient: NSObject {
         - option: Options related to this group call
      # Example #
      ```
-     client.group("sample_group_id", traits: ["key_1": "value_1", "key_2": "value_2"], option: RSOption())
+     RSClient.sharedInstance().group("sample_group_id", traits: ["key_1": "value_1", "key_2": "value_2"], option: RSOption())
      ```
      */
     
@@ -162,7 +172,7 @@ open class RSClient: NSObject {
         - option: Options related to this alias call
      # Example #
      ```
-     client.alias("user_id", option: RSOption())
+     RSClient.sharedInstance().alias("user_id", option: RSOption())
      ```
      */
     
@@ -317,7 +327,7 @@ extension RSClient {
      Returns the config set by developer while initialisation.
      */
     @objc
-    public var configuration: RSConfig {
+    public var configuration: RSConfig? {
         return config
     }
 }

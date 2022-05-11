@@ -13,8 +13,12 @@ class RSmacOSLifecycleEvents: RSPlatformPlugin, RSmacOSLifecycle {
     let type = PluginType.before
     var client: RSClient?
 
+    @RSAtomic private var didFinishLaunching = false
+    
     func application(didFinishLaunchingWithOptions launchOptions: [String: Any]?) {
-        if client?.config.trackLifecycleEvents == false {
+        didFinishLaunching = true
+        
+        if client?.config?.trackLifecycleEvents == false {
             return
         }
         
@@ -46,6 +50,54 @@ class RSmacOSLifecycleEvents: RSPlatformPlugin, RSmacOSLifecycle {
         
         RSUserDefaults.saveApplicationVersion(currentVersion)
         RSUserDefaults.saveApplicationBuild(currentBuild)
+    }
+    
+    func applicationDidUnhide() {
+        if client?.config?.trackLifecycleEvents == false {
+            return
+        }
+        
+        let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+        
+        client?.track("Application Unhidden", properties: [
+            "from_background": true,
+            "version": currentVersion ?? "",
+            "build": currentBuild ?? ""
+        ])
+    }
+    
+    func applicationDidHide() {
+        if client?.config?.trackLifecycleEvents == false {
+            return
+        }
+        
+        client?.track("Application Hidden")
+    }
+    func applicationDidResignActive() {
+        if client?.config?.trackLifecycleEvents == false {
+            return
+        }
+        
+        client?.track("Application Backgrounded")
+    }
+    
+    func applicationDidBecomeActive() {
+        if client?.config?.trackLifecycleEvents == false {
+            return
+        }
+        
+        if didFinishLaunching == false {
+            application(didFinishLaunchingWithOptions: nil)
+        }
+    }
+    
+    func applicationWillTerminate() {
+        if client?.config?.trackLifecycleEvents == false {
+            return
+        }
+        
+        client?.track("Application Terminated")
     }
 }
 #endif

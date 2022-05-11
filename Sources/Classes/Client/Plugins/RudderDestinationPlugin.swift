@@ -25,10 +25,10 @@ class RudderDestinationPlugin: RSDestinationPlugin {
     private var serviceManager: RSServiceManager?
     
     func initialSetup() {
-        guard let client = self.client else { return }
+        guard let client = self.client, let config = client.config else { return }
         databaseManager = RSDatabaseManager(client: client)
         serviceManager = RSServiceManager(client: client)
-        flushTimer = RSQueueTimer(interval: TimeInterval(client.config.sleepTimeOut)) {
+        flushTimer = RSQueueTimer(interval: TimeInterval(config.sleepTimeOut)) {
             self.flush()
         }
     }

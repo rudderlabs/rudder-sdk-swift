@@ -20,8 +20,9 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
     [config dataPlaneURL:DATA_PLANE_URL];
     [config trackLifecycleEvents:YES];
     [config recordScreenViews:YES];
-    RSClient *client = [[RSClient alloc] initWithConfig:config];
-    [client track:@"track 1" properties:nil option:nil];
+    RSClient *client = [RSClient sharedInstance];
+    [client configureWith:config];
+    [client track:@"track 1"];
 }
 
 - (void)applicationDidBecomeActive {

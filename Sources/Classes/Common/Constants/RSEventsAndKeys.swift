@@ -43,6 +43,10 @@ public struct RSEvents {
     }
     
     public struct LifeCycle {
+        public static let applicationInstalled = "Application Installed"
+        public static let applicationUpdated = "Application Updated"
+        public static let applicationOpened = "Application Opened"
+        public static let applicationBackgrounded = "Application Backgrounded"
         public static let completeRegistration = "Complete Registration"
         public static let completeTutorial = "Complete Tutorial"
         public static let achieveLevel = "Achieve Level"
@@ -84,6 +88,36 @@ public struct RSKeys {
         public static let query = "query"
         public static let url = "url"
         public static let imageUrl = "image_url"
+        public static let paymentMethod = "payment_method"
+    }
+    
+    public struct Identify {
+        public static let userId = "user_id"
+        public static let currencyCode = "currency_code"
+        
+        public struct Traits { // swiftlint:disable:this nesting
+            public static let id = "id"
+            public static let firstName = "firstName"
+            public static let lastName = "lastName"
+            public static let name = "name"
+            public static let age = "age"
+            public static let email = "email"
+            public static let phone = "phone"
+            public static let address = "address"
+            public static let birthday = "birthday"
+            public static let company = "company"
+            public static let createdAt = "createdAt"
+            public static let description = "description"
+            public static let gender = "gender"
+            public static let title = "title"
+            public static let username = "username"
+            public static let website = "website"
+            public static let avatar = "avatar"
+        }
+    }
+    
+    public struct Screen {
+        public static let screenViewed = "Screen Viewed"
     }
     
     public struct Other {

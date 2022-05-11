@@ -27,8 +27,9 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
     [config dataPlaneURL:DATA_PLANE_URL];
     [config trackLifecycleEvents:YES];
     [config recordScreenViews:YES];
-    client = [[RSClient alloc] initWithConfig:config];
-    [client track:@"track 1" properties:nil option:nil];
+    client = [RSClient sharedInstance];
+    [client configureWith:config];
+    [client track:@"track 1"];
     return YES;
 }
 
@@ -46,7 +47,7 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
     [client track:@"simple_track_with_props" properties:@{
         @"key_1" : @"value_1",
         @"key_2" : @"value_2"
-    } option:NULL];
+    }];
 
 }
 
@@ -56,7 +57,7 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
 }
 
 - (void) screen {
-    [client screen:@"ViewController" properties:NULL option:NULL];
+    [client screen:@"ViewController"];
 }
 
 - (void) optIn {
