@@ -32,14 +32,14 @@ For detailed documentation on the Swift SDK, click [**here**](https://rudderstac
 
 ## Installing the SDK
 
-The iOS SDK is available through [**CocoaPods**](https://cocoapods.org), [**Carthage**](https://github.com/Carthage/Carthage), and [**Swift Package Manager (SPM)**](https://www.swift.org/package-manager/).
+The SDK is available through [**CocoaPods**](https://cocoapods.org), [**Carthage**](https://github.com/Carthage/Carthage), and [**Swift Package Manager (SPM)**](https://www.swift.org/package-manager/).
 
 ### CocoaPods
 
 To install the SDK, simply add the following line to your Podfile:
 
 ```xcode
-pod 'RudderStack', '1.0.0-beta.6'
+pod 'Rudder', '2.0.0'
 ```
 
 ### Carthage
@@ -47,7 +47,7 @@ pod 'RudderStack', '1.0.0-beta.6'
 For Carthage support, add the following line to your `Cartfile`:
 
 ```xcode
-github "rudderlabs/rudder-sdk-swift" "v1.0.0-beta.6"
+github "rudderlabs/rudder-sdk-ios" "v2.0.0"
 ```
 
 > Remember to include the following code where you want to refer to or use the RudderStack SDK classes, as shown:
@@ -73,9 +73,9 @@ You can also add the RudderStack iOS SDK via Swift Package Mangaer, via one of t
 
 ![Adding a package](https://user-images.githubusercontent.com/59817155/140903027-286a1d64-f5d5-4041-9827-47b6cef76a46.png)
 
-* Enter the package repository (`git@github.com:rudderlabs/rudder-sdk-swift.git`) in the search bar.
+* Enter the package repository (`git@github.com:rudderlabs/rudder-sdk-ios.git`) in the search bar.
 
-* In **Dependency Rule**, select **Up to Next Major Version** and enter `1.0.0-beta.6` as the value, as shown:
+* In **Dependency Rule**, select **Up to Next Major Version** and enter `2.0.0` as the value, as shown:
 
 ![Setting dependency](https://user-images.githubusercontent.com/59817155/145574696-8c849749-13e0-40d5-aacb-3fccb5c8e67d.png)
 
@@ -103,7 +103,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "git@github.com:rudderlabs/rudder-sdk-swift.git", from: "1.0.0-beta.6")
+        .package(url: "git@github.com:rudderlabs/rudder-sdk-ios.git", from: "2.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -111,7 +111,7 @@ let package = Package(
         .target(
             name: "RudderStack",
             dependencies: [
-                .product(name: "RudderStack", package: "rudder-sdk-swift")
+                .product(name: "Rudder", package: "rudder-sdk-ios")
             ]),
         .testTarget(
             name: "RudderStackTests",
@@ -220,7 +220,7 @@ RSClient.sharedInstance().alias("new_user_id")
 ```swift
 RSClient.sharedInstance().reset()
 ```
-For detailed documentation on the iOS SDK, click [**here**](https://rudderstack.com/docs/stream-sources/rudderstack-sdk-integration-guides/rudderstack-ios-sdk).
+For detailed documentation on the Swift SDK, click [**here**](https://rudderstack.com/docs/stream-sources/rudderstack-sdk-integration-guides/rudderstack-ios-sdk).
 
 ## Contribute
 
@@ -234,4 +234,4 @@ More information on RudderStack can be found [**here**](https://github.com/rudde
 
 ## Contact us
 
-For more information on using the RudderStack iOS SDK, you can [**contact us**](https://rudderstack.com/contact/) or start a conversation on our [**Slack**](https://rudderstack.com/join-rudderstack-slack-community) channel.
+For more information on using the RudderStack Swift SDK, you can [**contact us**](https://rudderstack.com/contact/) or start a conversation on our [**Slack**](https://rudderstack.com/join-rudderstack-slack-community) channel.

@@ -3,25 +3,25 @@
 import PackageDescription
 
 let package = Package(
-    name: "RudderStack",
+    name: "Rudder",
     platforms: [
         .iOS("12.0"), .tvOS("11.0"), .macOS("10.13"), .watchOS("7.0")
     ],
     products: [
         .library(
-            name: "RudderStack",
-            targets: ["RudderStack"]
+            name: "Rudder",
+            targets: ["Rudder"]
         )
     ],
     targets: [
         .target(
-            name: "RudderStack",
+            name: "Rudder",
             path: "Sources",
             sources: ["Classes/"]
         ),
         .testTarget(
-            name: "RudderStackTests",
-            dependencies: ["RudderStack"]
+            name: "RudderTests",
+            dependencies: ["Rudder"]
         )
     ]
 )

@@ -1,9 +1,9 @@
-workspace 'RudderStack.xcworkspace'
+workspace 'Rudder.xcworkspace'
 use_frameworks!
 inhibit_all_warnings!
 
 def shared_pods
-    pod 'RudderStack', :path => '.'
+    pod 'Rudder', :path => '.'
 end
 
 

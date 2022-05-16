@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:RudderStack.xcodeproj">
+      location = "group:Rudder.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Examples/SampleObjC-iOS/SampleObjC-iOS.xcodeproj">

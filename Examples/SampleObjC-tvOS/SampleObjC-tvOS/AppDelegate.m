@@ -7,7 +7,7 @@
 
 #import "AppDelegate.h"
 
-@import RudderStack;
+@import Rudder;
 
 @interface AppDelegate () {
     RSClient *client;
@@ -61,11 +61,11 @@ static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";
 }
 
 - (void) optIn {
-//    [[RSClient sharedInstance]optOut:NO];
+    [client setOptOutStatus:NO];
 }
 
 - (void) optOut {
-//    [[RSClient sharedInstance]optOut:YES];
+    [client setOptOutStatus:YES];
     
 }
 

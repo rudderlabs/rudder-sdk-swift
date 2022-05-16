@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RudderStack
+import Rudder
 
 class RSCustomDestination: RSDestinationPlugin {
     var key: String = "Custom"

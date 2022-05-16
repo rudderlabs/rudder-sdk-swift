@@ -7,7 +7,7 @@
 
 #import "ExtensionDelegate.h"
 
-@import RudderStack;
+@import Rudder;
 
 static NSString *DATA_PLANE_URL = @"https://rudderstacz.dataplane.rudderstack.com";
 static NSString *WRITE_KEY = @"1wvsoF3Kx2SczQNlx1dvcqW9ODW";

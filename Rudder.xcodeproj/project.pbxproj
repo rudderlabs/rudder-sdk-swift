@@ -25,7 +25,7 @@
 		ED277FF92744F199002A8FEA /* RSAnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FF82744F199002A8FEA /* RSAnyCodable.swift */; };
 		ED277FFB2744F265002A8FEA /* RSAnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */; };
 		ED277FFD2744F2AD002A8FEA /* RSAnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */; };
-		ED3D225B279EAC2800EC8366 /* RudderStack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABB842630C3CA0097BEFF /* RudderStack.framework */; };
+		ED3D225B279EAC2800EC8366 /* Rudder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06CABB842630C3CA0097BEFF /* Rudder.framework */; };
 		ED3D229427A3F0C100EC8366 /* RSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D226227A3F0C100EC8366 /* RSClient.swift */; };
 		ED3D229527A3F0C100EC8366 /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D226627A3F0C100EC8366 /* Vendor.swift */; };
 		ED3D229627A3F0C100EC8366 /* AppleUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3D226727A3F0C100EC8366 /* AppleUtils.swift */; };
@@ -98,7 +98,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		06CABB842630C3CA0097BEFF /* RudderStack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		06CABB842630C3CA0097BEFF /* Rudder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rudder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED157C3627CE0EEA00F22202 /* RSmacOSLifecycleEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSmacOSLifecycleEvents.swift; sourceTree = "<group>"; };
 		ED157C3827CE1C0800F22202 /* RSUserIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSUserIdPlugin.swift; sourceTree = "<group>"; };
 		ED157C4027CFC33800F22202 /* RSAdvertisementIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAdvertisementIdPlugin.swift; sourceTree = "<group>"; };
@@ -117,7 +117,7 @@
 		ED277FF82744F199002A8FEA /* RSAnyCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSAnyCodable.swift; sourceTree = "<group>"; };
 		ED277FFA2744F265002A8FEA /* RSAnyDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyDecodable.swift; sourceTree = "<group>"; };
 		ED277FFC2744F2AD002A8FEA /* RSAnyEncodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAnyEncodable.swift; sourceTree = "<group>"; };
-		ED3D2257279EAC2800EC8366 /* RudderStackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderStackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED3D2257279EAC2800EC8366 /* RudderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED3D226227A3F0C100EC8366 /* RSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSClient.swift; sourceTree = "<group>"; };
 		ED3D226627A3F0C100EC8366 /* Vendor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vendor.swift; sourceTree = "<group>"; };
 		ED3D226727A3F0C100EC8366 /* AppleUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleUtils.swift; sourceTree = "<group>"; };
@@ -148,7 +148,7 @@
 		ED910CE0273BA25100A3EDFF /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		ED910CE1273BA25100A3EDFF /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ED910CE2273BA25100A3EDFF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		ED910CE3273BA25100A3EDFF /* RudderStack.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RudderStack.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		ED910CE3273BA25100A3EDFF /* Rudder.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Rudder.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ED910CE4273BA25100A3EDFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EDA7EF332739119600E73142 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		EDA7EF342739119600E73142 /* RSServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSServiceManager.swift; sourceTree = "<group>"; };
@@ -200,7 +200,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED3D225B279EAC2800EC8366 /* RudderStack.framework in Frameworks */,
+				ED3D225B279EAC2800EC8366 /* Rudder.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,7 +216,7 @@
 				ED910CE1273BA25100A3EDFF /* Podfile */,
 				ED910CE4273BA25100A3EDFF /* README.md */,
 				ED488F8627EB141700831594 /* release.sh */,
-				ED910CE3273BA25100A3EDFF /* RudderStack.podspec */,
+				ED910CE3273BA25100A3EDFF /* Rudder.podspec */,
 				EDA7EF2D2739119600E73142 /* Sources */,
 				EDC1325A27D612B600AFD833 /* Tests */,
 				06CABB852630C3CA0097BEFF /* Products */,
@@ -226,8 +226,8 @@
 		06CABB852630C3CA0097BEFF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				06CABB842630C3CA0097BEFF /* RudderStack.framework */,
-				ED3D2257279EAC2800EC8366 /* RudderStackTests.xctest */,
+				06CABB842630C3CA0097BEFF /* Rudder.framework */,
+				ED3D2257279EAC2800EC8366 /* RudderTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -399,12 +399,12 @@
 		EDC1325A27D612B600AFD833 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				EDC1325B27D612B600AFD833 /* RudderStackTests */,
+				EDC1325B27D612B600AFD833 /* RudderTests */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		EDC1325B27D612B600AFD833 /* RudderStackTests */ = {
+		EDC1325B27D612B600AFD833 /* RudderTests */ = {
 			isa = PBXGroup;
 			children = (
 				EDC132A927D8D63D00AFD833 /* RSAliasTests.swift */,
@@ -418,7 +418,7 @@
 				EDC132A327D8D55600AFD833 /* RSTrackTests.swift */,
 				EDC132AF27D9106500AFD833 /* RSWhiteListedEventsTests.swift */,
 			);
-			path = RudderStackTests;
+			path = RudderTests;
 			sourceTree = "<group>";
 		};
 		EDD3AA1727C656F90048E61E /* Domain */ = {
@@ -515,9 +515,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		06CABB832630C3CA0097BEFF /* RudderStack */ = {
+		06CABB832630C3CA0097BEFF /* Rudder */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 06CABB982630C3CA0097BEFF /* Build configuration list for PBXNativeTarget "RudderStack" */;
+			buildConfigurationList = 06CABB982630C3CA0097BEFF /* Build configuration list for PBXNativeTarget "Rudder" */;
 			buildPhases = (
 				06CABB7F2630C3CA0097BEFF /* Headers */,
 				06CABB802630C3CA0097BEFF /* Sources */,
@@ -529,14 +529,14 @@
 			);
 			dependencies = (
 			);
-			name = RudderStack;
+			name = Rudder;
 			productName = Rudder;
-			productReference = 06CABB842630C3CA0097BEFF /* RudderStack.framework */;
+			productReference = 06CABB842630C3CA0097BEFF /* Rudder.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		ED3D2256279EAC2800EC8366 /* RudderStackTests */ = {
+		ED3D2256279EAC2800EC8366 /* RudderTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = ED3D225E279EAC2800EC8366 /* Build configuration list for PBXNativeTarget "RudderStackTests" */;
+			buildConfigurationList = ED3D225E279EAC2800EC8366 /* Build configuration list for PBXNativeTarget "RudderTests" */;
 			buildPhases = (
 				ED3D2253279EAC2800EC8366 /* Sources */,
 				ED3D2254279EAC2800EC8366 /* Frameworks */,
@@ -547,9 +547,9 @@
 			dependencies = (
 				ED3D225D279EAC2800EC8366 /* PBXTargetDependency */,
 			);
-			name = RudderStackTests;
+			name = RudderTests;
 			productName = RudderTests;
-			productReference = ED3D2257279EAC2800EC8366 /* RudderStackTests.xctest */;
+			productReference = ED3D2257279EAC2800EC8366 /* RudderTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -572,7 +572,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 06CABB7E2630C3CA0097BEFF /* Build configuration list for PBXProject "RudderStack" */;
+			buildConfigurationList = 06CABB7E2630C3CA0097BEFF /* Build configuration list for PBXProject "Rudder" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -585,8 +585,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				06CABB832630C3CA0097BEFF /* RudderStack */,
-				ED3D2256279EAC2800EC8366 /* RudderStackTests */,
+				06CABB832630C3CA0097BEFF /* Rudder */,
+				ED3D2256279EAC2800EC8366 /* RudderTests */,
 			);
 		};
 /* End PBXProject section */
@@ -725,7 +725,7 @@
 /* Begin PBXTargetDependency section */
 		ED3D225D279EAC2800EC8366 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 06CABB832630C3CA0097BEFF /* RudderStack */;
+			target = 06CABB832630C3CA0097BEFF /* Rudder */;
 			targetProxy = ED3D225C279EAC2800EC8366 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -863,6 +863,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GTGKNDBD23;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -876,7 +877,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = "1.0.0-beta.6";
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.RudderStack;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -896,6 +897,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GTGKNDBD23;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -910,7 +912,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = "1.0.0-beta.6";
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.RudderStack;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -964,7 +966,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		06CABB7E2630C3CA0097BEFF /* Build configuration list for PBXProject "RudderStack" */ = {
+		06CABB7E2630C3CA0097BEFF /* Build configuration list for PBXProject "Rudder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				06CABB962630C3CA0097BEFF /* Debug */,
@@ -973,7 +975,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		06CABB982630C3CA0097BEFF /* Build configuration list for PBXNativeTarget "RudderStack" */ = {
+		06CABB982630C3CA0097BEFF /* Build configuration list for PBXNativeTarget "Rudder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				06CABB992630C3CA0097BEFF /* Debug */,
@@ -982,7 +984,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		ED3D225E279EAC2800EC8366 /* Build configuration list for PBXNativeTarget "RudderStackTests" */ = {
+		ED3D225E279EAC2800EC8366 /* Build configuration list for PBXNativeTarget "RudderTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ED3D225F279EAC2800EC8366 /* Debug */,
