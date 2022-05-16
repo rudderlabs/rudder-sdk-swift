@@ -39,7 +39,7 @@ class RSContextPlugin: RSPlatformPlugin {
         
         // library name
         staticContext["library"] = [
-            "name": "rudder_ios_library",
+            "name": "rudder-swift",
             "version": RSVersion
         ]
         

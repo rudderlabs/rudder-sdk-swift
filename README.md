@@ -128,7 +128,7 @@ To the initialize `RSClient`, place the following code in your `AppDelegate` fil
 RSConfig *config = [[RSConfig alloc] initWithWriteKey:WRITE_KEY];
 [config dataPlaneURL:DATA_PLANE_URL];
 [config recordScreenViews:YES];
-RSClient *client = [[RSClient alloc] initWithConfig:config];
+[[RSClient sharedInstance] configureWith:config];
 ```
 #### Swift
 ```swift
@@ -137,7 +137,7 @@ let config: RSConfig = RSConfig(writeKey: WRITE_KEY)
             .loglevel(.debug)
             .trackLifecycleEvents(true)
             .recordScreenViews(true)
-let client = RSClient(config: config)
+RSClient.sharedInstance().configure(with: config)
 ```
 
 ## Sending Events
@@ -145,16 +145,16 @@ let client = RSClient(config: config)
 ### Track
 ##### Objective C
 ```objective-c
-[client track:@"sample_track_call" properties:NULL option:NULL];
-[client track:@"sample_track_call" properties:@{
+[[RSClient sharedInstance] track:@"sample_track_call" properties:NULL option:NULL];
+[[RSClient sharedInstance] track:@"sample_track_call" properties:@{
     @"key_1" : @"value_1",
     @"key_2" : @"value_2"
 } option:NULL];
 ```
 #### Swift
 ```swift
-client.track("sample_track_call")
-client.track("sample_track_call", properties:[
+RSClient.sharedInstance().track("sample_track_call")
+RSClient.sharedInstance().track("sample_track_call", properties:[
     "key_1" : "value_1",
     "key_2" : "value_2"
 ])
@@ -162,16 +162,16 @@ client.track("sample_track_call", properties:[
 ### Screen
 ##### Objective C
 ```objective-c
-[client screen:@"Main" properties:@{@"prop_key" : @"prop_value"} option:NULL];
+[[RSClient sharedInstance] screen:@"Main" properties:@{@"prop_key" : @"prop_value"} option:NULL];
 ```
 #### Swift
 ```swift
-client.screen("Main", properties:["prop_key" : "prop_value"]);
+RSClient.sharedInstance().screen("Main", properties:["prop_key" : "prop_value"]);
 ```
 ### Identify
 ##### Objective C
 ```objective-c
-[client identify:@"test_user_id" traits:@{
+[[RSClient sharedInstance] identify:@"test_user_id" traits:@{
     @"foo": @"bar",
     @"foo1": @"bar1",
     @"email": @"test@gmail.com"
@@ -179,7 +179,7 @@ client.screen("Main", properties:["prop_key" : "prop_value"]);
 ```
 #### Swift
 ```swift
-client.identify("test_user_id", traits:[
+RSClient.sharedInstance().identify("test_user_id", traits:[
     "foo": "bar",
     "foo1": "bar1",
     "email": "test@email.com"
@@ -188,7 +188,7 @@ client.identify("test_user_id", traits:[
 ### Group
 ##### Objective C
 ```objective-c
-[client group:@"sample_group_id" traits:@{
+[[RSClient sharedInstance] group:@"sample_group_id" traits:@{
     @"foo": @"bar", 
     @"foo1": @"bar1", 
     @"email": @"test@gmail.com"
@@ -196,7 +196,7 @@ client.identify("test_user_id", traits:[
 ```
 #### Swift
 ```swift
-client.group("sample_group_id" traits:[
+RSClient.sharedInstance().group("sample_group_id" traits:[
     "foo": "bar", 
     "foo1": "bar1", 
     "email": "test@gmail.com"
@@ -205,20 +205,20 @@ client.group("sample_group_id" traits:[
 ### Alias
 ##### Objective C
 ```objective-c
-[client alias:@"new_user_id" option:NULL];
+[[RSClient sharedInstance] alias:@"new_user_id" option:NULL];
 ```
 #### Swift
 ```swift
-client.alias("new_user_id")
+RSClient.sharedInstance().alias("new_user_id")
 ```
 ### Reset
 ##### Objective C
 ```objective-c
-[client reset];
+[[RSClient sharedInstance] reset];
 ```
 #### Swift
 ```swift
-client.reset()
+RSClient.sharedInstance().reset()
 ```
 For detailed documentation on the iOS SDK, click [**here**](https://rudderstack.com/docs/stream-sources/rudderstack-sdk-integration-guides/rudderstack-ios-sdk).
 
