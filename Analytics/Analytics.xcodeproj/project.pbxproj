@@ -11,6 +11,8 @@
 		5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */; };
 		5392AB952C6FC78F00369791 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5392AB942C6FC78F00369791 /* Configuration.swift */; };
 		5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5392AB962C6FC84800369791 /* SwiftLogger.swift */; };
+		53A22A3B2C7470400059D6FE /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A22A3A2C7470400059D6FE /* Plugin.swift */; };
+		53A22A3D2C7472850059D6FE /* MessageEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A22A3C2C7472850059D6FE /* MessageEvent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,8 @@
 		5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
 		5392AB942C6FC78F00369791 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		5392AB962C6FC84800369791 /* SwiftLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftLogger.swift; sourceTree = "<group>"; };
+		53A22A3A2C7470400059D6FE /* Plugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		53A22A3C2C7472850059D6FE /* MessageEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEvent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,11 +56,29 @@
 			isa = PBXGroup;
 			children = (
 				5351AA692C6BE95D003C3C47 /* Analytics.h */,
-				5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */,
-				5392AB942C6FC78F00369791 /* Configuration.swift */,
-				5392AB962C6FC84800369791 /* SwiftLogger.swift */,
+				53A22A392C7470190059D6FE /* Base */,
+				53A22A382C74700C0059D6FE /* Logger */,
+				53A22A3A2C7470400059D6FE /* Plugin.swift */,
+				53A22A3C2C7472850059D6FE /* MessageEvent.swift */,
 			);
 			path = Analytics;
+			sourceTree = "<group>";
+		};
+		53A22A382C74700C0059D6FE /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				5392AB962C6FC84800369791 /* SwiftLogger.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
+		53A22A392C7470190059D6FE /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */,
+				5392AB942C6FC78F00369791 /* Configuration.swift */,
+			);
+			path = Base;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,6 +163,8 @@
 			files = (
 				5392AB952C6FC78F00369791 /* Configuration.swift in Sources */,
 				5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */,
+				53A22A3D2C7472850059D6FE /* MessageEvent.swift in Sources */,
+				53A22A3B2C7470400059D6FE /* Plugin.swift in Sources */,
 				5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
