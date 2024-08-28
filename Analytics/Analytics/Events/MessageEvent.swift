@@ -7,8 +7,8 @@
 
 import Foundation
 
-typealias RudderOption = [String: Any]
-typealias RudderProperties = [String: Any]
+public typealias RudderOptions = [String: Any]
+public typealias RudderProperties = [String: Any]
 
 @objc
 public enum EventType: Int {
@@ -36,14 +36,14 @@ public class MessageEvent {
 public class TrackEvent: MessageEvent {
     
     var event: String
-    var options: RudderOption
     var properties: RudderProperties
+    var options: RudderOptions
     
-    init(event: String, options: RudderOption, properties: RudderProperties, 
+    init(event: String, properties: RudderProperties, options: RudderOptions,
          type: EventType = .track, messageId: String = .randomUUIDString, originalTimeStamp: String = .currentTimeStamp) {
         self.event = event
-        self.options = options
         self.properties = properties
+        self.options = options
         
         super.init(type: type, messageId: messageId, originalTimeStamp: originalTimeStamp)
     }
