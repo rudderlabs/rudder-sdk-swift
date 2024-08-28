@@ -27,7 +27,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 }
 
-class AnalyticsManager {
+class AnalyticsManager: Logger {
+    
     static let shared = AnalyticsManager()
     
     var analytics: Analytics?
@@ -35,7 +36,13 @@ class AnalyticsManager {
     private init() {}
     
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "", dataPlaneUrl: "")
+        let config = Configuration(writeKey: "", dataPlaneUrl: "", logger: self)
         self.analytics = Analytics(configuration: config)
+    }
+    
+    var currentLogLevel: LogLevel = .debug
+    
+    func debug(tag: String, log: String) {
+        print("\(tag) : \(log)")
     }
 }

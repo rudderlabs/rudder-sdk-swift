@@ -12,7 +12,13 @@ struct ContentView: View {
     var body: some View {
         VStack {
             Text("Track Event")
-                .onTapGesture {}
+                .font(.title)
+                .padding()
+                .foregroundStyle(.white)
+                .background(.blue)
+                .onTapGesture {
+                    AnalyticsManager.shared.analytics?.track(name: "Track at \(Date())")
+                }
         }
         .padding()
     }

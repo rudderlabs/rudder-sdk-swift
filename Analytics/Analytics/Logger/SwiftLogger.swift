@@ -22,7 +22,7 @@ public protocol Logger {
     func error(tag: String, log: String)
 }
 
-extension Logger {
+public extension Logger {
     var currentLogLevel: LogLevel { get { .none } }
     
     func activate(level: LogLevel) {}
