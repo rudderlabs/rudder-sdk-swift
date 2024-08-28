@@ -14,7 +14,7 @@ public enum PluginType: Int, CaseIterable {
 
 protocol Plugin: AnyObject {
     var pluginType: PluginType { get set }
-    var analytics: Analytics { get set }
+    var analytics: Analytics? { get set }
     
     func setup(analytics: Analytics)
     func execute(event: MessageEvent) -> MessageEvent
@@ -35,3 +35,13 @@ extension Plugin {
 }
 
 
+class POCPlugin: Plugin {
+    var analytics: Analytics?
+    
+    var pluginType: PluginType = .preProcess
+        
+    func execute(event: MessageEvent) -> MessageEvent {
+        self.analytics?.configuration.logger.debug(tag: Constants.logTag, log: "POCPlugin is running...")
+        return event
+    }
+}
