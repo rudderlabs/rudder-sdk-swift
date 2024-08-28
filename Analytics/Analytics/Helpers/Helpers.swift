@@ -7,6 +7,13 @@
 
 import Foundation
 
+public struct Constants {
+    public static let logTag = "Rudder-Analytics"
+    public static let defaultLogLevel = LogLevel.none
+    
+    private init() {}
+}
+
 extension String {
     static var randomUUIDString: String {
         return UUID().uuidString
