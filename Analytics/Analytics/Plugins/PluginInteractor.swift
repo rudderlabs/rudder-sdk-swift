@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - PluginInteractor
 class PluginInteractor {
     
     @Synchronized var pluginList = [Plugin]()

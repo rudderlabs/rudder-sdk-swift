@@ -7,6 +7,14 @@
 
 import Foundation
 
+// MARK: - Typealiases(Public)
+public typealias RudderOptions = [String: Any]
+public typealias RudderProperties = [String: Any]
+
+// MARK: - Typealiases(Internal)
+typealias PluginClosure = (Plugin) -> Void
+
+// MARK: - Constants
 public struct Constants {
     public static let logTag = "Rudder-Analytics"
     public static let defaultLogLevel = LogLevel.none
@@ -14,6 +22,7 @@ public struct Constants {
     private init() {}
 }
 
+// MARK: - Extension: String
 extension String {
     static var randomUUIDString: String {
         return UUID().uuidString
@@ -29,6 +38,7 @@ extension String {
     }
 }
 
+// MARK: - Extension: DateFormatter
 extension DateFormatter {
     static var timeStampFormat: DateFormatter {
         let formatter = DateFormatter()

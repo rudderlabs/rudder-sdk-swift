@@ -8,6 +8,7 @@
 import SwiftUI
 import Analytics
 
+// MARK: - AnalyticsAppApp
 @main
 struct AnalyticsAppApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -19,6 +20,7 @@ struct AnalyticsAppApp: App {
     }
 }
 
+// MARK: - AppDelegate
 class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -27,6 +29,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 }
 
+// MARK: - AnalyticsManager
 class AnalyticsManager: Logger {
     
     static let shared = AnalyticsManager()

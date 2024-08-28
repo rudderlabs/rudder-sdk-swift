@@ -6,7 +6,10 @@
 //
 
 import UIKit
-
+/**
+ This class is responsible for configuring the entire SDK.
+ */
+// MARK: - Configuration
 @objcMembers
 public class Configuration {
     var writeKey: String

@@ -7,6 +7,10 @@
 
 import Foundation
 
+// MARK: - Analytics
+/**
+ This class serves as the main interface to the SDK, allowing user interaction.
+ */
 @objcMembers
 public class Analytics {
     public var configuration: Configuration
@@ -23,14 +27,18 @@ public class Analytics {
         self.setup()
     }
     
-    private func setup() {
-        self.pluginChain = PluginChain(analytics: self)
-        self.pluginChain.add(plugin: POCPlugin())
-    }
-    
+    // MARK: - Track Event
     public func track(name: String, properties: RudderProperties = RudderProperties(), options: RudderOptions = RudderOptions()) {
         let event = TrackEvent(event: name, properties: properties, options: options)
         self.process(event: event)
+    }
+}
+
+// MARK: - Private functions
+extension Analytics {
+    private func setup() {
+        self.pluginChain = PluginChain(analytics: self)
+        self.pluginChain.add(plugin: POCPlugin())
     }
     
     private func process(event: MessageEvent) {

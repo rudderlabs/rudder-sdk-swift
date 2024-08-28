@@ -7,11 +7,13 @@
 
 import UIKit
 
+// MARK: - LogLevel
 @objc
 public enum LogLevel: Int {
     case none, debug, info, warn, error
 }
 
+// MARK: - Logger
 public protocol Logger {
     var currentLogLevel: LogLevel { get }
     
@@ -32,6 +34,7 @@ public extension Logger {
     func error(tag: String, log: String) {}
 }
 
+// MARK: - SwiftLogger
 @objcMembers
 public final class SwiftLogger: Logger {
     

@@ -7,8 +7,7 @@
 
 import Foundation
 
-typealias PluginClosure = (Plugin) -> Void
-
+// MARK: - PluginChain
 class PluginChain {
     
     private var pluginList = [PluginType: PluginInteractor]()
@@ -45,7 +44,10 @@ class PluginChain {
             $0.apply(closure: closure)
         }
     }
-    
+}
+
+// MARK: - Private functions
+extension PluginChain {
     @discardableResult
     private func applyPlugins(pluginType: PluginType, event: MessageEvent) -> MessageEvent {
         guard let mediator = self.pluginList[pluginType] else { return event }

@@ -7,9 +7,7 @@
 
 import Foundation
 
-public typealias RudderOptions = [String: Any]
-public typealias RudderProperties = [String: Any]
-
+// MARK: - EventType
 @objc
 public enum EventType: Int {
     case track, screen, alias, identify, group
@@ -19,6 +17,10 @@ public enum EventType: Int {
     }
 }
 
+// MARK: - MessageEvent
+/**
+ This is base class for all events.
+ */
 @objcMembers
 public class MessageEvent {
     public var type: EventType
@@ -32,6 +34,7 @@ public class MessageEvent {
     }
 }
 
+// MARK: - TrackEvent
 @objcMembers
 public class TrackEvent: MessageEvent {
     

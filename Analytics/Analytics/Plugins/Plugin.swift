@@ -7,11 +7,13 @@
 
 import Foundation
 
+// MARK: - PluginType
 @objc
 public enum PluginType: Int, CaseIterable {
     case preProcess, onProcess, integrations, utility
 }
 
+// MARK: - Plugin
 protocol Plugin: AnyObject {
     var pluginType: PluginType { get set }
     var analytics: Analytics? { get set }
@@ -34,7 +36,7 @@ extension Plugin {
     func teardown() {}
 }
 
-
+// MARK: - POCPlugin
 class POCPlugin: Plugin {
     var analytics: Analytics?
     
