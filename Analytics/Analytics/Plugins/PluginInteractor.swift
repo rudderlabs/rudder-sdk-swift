@@ -1,0 +1,42 @@
+//
+//  PluginInteractor.swift
+//  Analytics
+//
+//  Created by Satheesh Kannan on 27/08/24.
+//
+
+import Foundation
+
+class PluginInteractor {
+    
+    @Synchronized var pluginList = [Plugin]()
+    
+    func add(plugin: Plugin) {
+        self.pluginList.append(plugin)
+    }
+    
+    func remove(plugin: Plugin) {
+        self.pluginList.removeAll { $0 === plugin }
+    }
+    
+    func execute(message: MessageEvent) -> MessageEvent {
+        var result = message
+        self.pluginList.forEach {
+            result = $0.execute(event: result)
+        }
+        return result
+    }
+    
+    func apply(closure: (Plugin)-> Void) {
+        self.pluginList.forEach { closure($0) }
+    }
+    
+    func find<T: Plugin>(_ pluginClass: T.Type) -> T? {
+        return self.findAll(pluginClass).first
+    }
+    
+    func findAll<T: Plugin>(_ pluginClass: T.Type) -> [T] {
+        return pluginList.compactMap { $0 as? T }
+    }
+}
+

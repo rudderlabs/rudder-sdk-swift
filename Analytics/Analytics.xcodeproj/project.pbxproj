@@ -13,6 +13,10 @@
 		5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5392AB962C6FC84800369791 /* SwiftLogger.swift */; };
 		53A22A3B2C7470400059D6FE /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A22A3A2C7470400059D6FE /* Plugin.swift */; };
 		53A22A3D2C7472850059D6FE /* MessageEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A22A3C2C7472850059D6FE /* MessageEvent.swift */; };
+		53A22A502C7C904E0059D6FE /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A22A4F2C7C904E0059D6FE /* Helpers.swift */; };
+		53A22A542C7DBEC10059D6FE /* PluginChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A22A532C7DBEC10059D6FE /* PluginChain.swift */; };
+		53A22A562C7DBFD70059D6FE /* PluginInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A22A552C7DBFD70059D6FE /* PluginInteractor.swift */; };
+		53A22A592C7DC1370059D6FE /* Synchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A22A582C7DC1370059D6FE /* Synchronized.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +27,10 @@
 		5392AB962C6FC84800369791 /* SwiftLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftLogger.swift; sourceTree = "<group>"; };
 		53A22A3A2C7470400059D6FE /* Plugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		53A22A3C2C7472850059D6FE /* MessageEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEvent.swift; sourceTree = "<group>"; };
+		53A22A4F2C7C904E0059D6FE /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		53A22A532C7DBEC10059D6FE /* PluginChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginChain.swift; sourceTree = "<group>"; };
+		53A22A552C7DBFD70059D6FE /* PluginInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginInteractor.swift; sourceTree = "<group>"; };
+		53A22A582C7DC1370059D6FE /* Synchronized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronized.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,8 +66,9 @@
 				5351AA692C6BE95D003C3C47 /* Analytics.h */,
 				53A22A392C7470190059D6FE /* Base */,
 				53A22A382C74700C0059D6FE /* Logger */,
-				53A22A3A2C7470400059D6FE /* Plugin.swift */,
-				53A22A3C2C7472850059D6FE /* MessageEvent.swift */,
+				53A22A512C7DBDB10059D6FE /* Events */,
+				53A22A522C7DBDC40059D6FE /* Plugins */,
+				53A22A572C7DC1050059D6FE /* Helpers */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -79,6 +88,33 @@
 				5392AB942C6FC78F00369791 /* Configuration.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		53A22A512C7DBDB10059D6FE /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				53A22A3C2C7472850059D6FE /* MessageEvent.swift */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		53A22A522C7DBDC40059D6FE /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				53A22A3A2C7470400059D6FE /* Plugin.swift */,
+				53A22A532C7DBEC10059D6FE /* PluginChain.swift */,
+				53A22A552C7DBFD70059D6FE /* PluginInteractor.swift */,
+			);
+			path = Plugins;
+			sourceTree = "<group>";
+		};
+		53A22A572C7DC1050059D6FE /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				53A22A4F2C7C904E0059D6FE /* Helpers.swift */,
+				53A22A582C7DC1370059D6FE /* Synchronized.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -162,7 +198,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				5392AB952C6FC78F00369791 /* Configuration.swift in Sources */,
+				53A22A502C7C904E0059D6FE /* Helpers.swift in Sources */,
 				5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */,
+				53A22A562C7DBFD70059D6FE /* PluginInteractor.swift in Sources */,
+				53A22A542C7DBEC10059D6FE /* PluginChain.swift in Sources */,
+				53A22A592C7DC1370059D6FE /* Synchronized.swift in Sources */,
 				53A22A3D2C7472850059D6FE /* MessageEvent.swift in Sources */,
 				53A22A3B2C7470400059D6FE /* Plugin.swift in Sources */,
 				5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */,
