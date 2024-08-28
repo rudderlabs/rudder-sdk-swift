@@ -19,7 +19,7 @@ class PluginInteractor {
         self.pluginList.removeAll { $0 === plugin }
     }
     
-    func execute(message: MessageEvent) -> MessageEvent {
+    func execute(_ message: MessageEvent) -> MessageEvent {
         var result = message
         self.pluginList.forEach {
             result = $0.execute(event: result)
@@ -27,7 +27,7 @@ class PluginInteractor {
         return result
     }
     
-    func apply(closure: (Plugin)-> Void) {
+    func apply(closure: PluginClosure) {
         self.pluginList.forEach { closure($0) }
     }
     

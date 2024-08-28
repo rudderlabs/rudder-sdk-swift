@@ -8,7 +8,7 @@
 import Foundation
 
 @objc
-public enum PluginType: Int {
+public enum PluginType: Int, CaseIterable {
     case preProcess, onProcess, integrations, utility
 }
 
