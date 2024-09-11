@@ -47,3 +47,10 @@ extension DateFormatter {
         return formatter
     }
 }
+
+extension UserDefaults {
+    static func rudder(_ writeKey: String) -> UserDefaults? {
+        let suiteName = (Bundle.main.bundleIdentifier ?? "com.rudder.poc") + ".analytics." + writeKey
+        return UserDefaults(suiteName: suiteName)
+    }
+}
