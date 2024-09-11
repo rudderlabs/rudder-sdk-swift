@@ -39,7 +39,7 @@ class AnalyticsManager: Logger {
     private init() {}
     
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "", dataPlaneUrl: "", logger: self)
+        let config = Configuration(writeKey: "asdf", dataPlaneUrl: "https://www.asdf.com/dataplaneurl", logger: self)
         self.analytics = Analytics(configuration: config)
     }
     
