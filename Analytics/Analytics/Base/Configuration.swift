@@ -5,7 +5,7 @@
 //  Created by Satheesh Kannan on 16/08/24.
 //
 
-import UIKit
+import Foundation
 /**
  This class is responsible for configuring the entire SDK.
  */
