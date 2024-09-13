@@ -11,15 +11,14 @@ final class BasicStorage: Storage {
     
     let writeKey: String
     let storageMode: StorageMode
-    let defaultsStore: DefaultsStore
-    let diskStore: DiskStore
+    
+    private let dataStore: DataStore
     
     init(writeKey: String, storageMode: StorageMode = .disk) {
         self.writeKey = writeKey
         self.storageMode = storageMode
         
-        self.defaultsStore = DefaultsStore(writeKey: writeKey)
-        self.diskStore = DiskStore(writeKey: writeKey)
+        self.dataStore = storageMode == .disk ? DiskStore(writeKey: writeKey) : DefaultsStore(writeKey: writeKey)
     }
     
     var eventStorageMode: StorageMode {
@@ -29,35 +28,36 @@ final class BasicStorage: Storage {
     func write<T: Codable>(value: T, key: StorageKey) {
         switch key {
         case .event:
-            self.diskStore.retain(value: value)
+            self.dataStore.retain(value: value, reference: "Event")
         case .others(let key):
-            self.defaultsStore.retain(value: value, key: key)
+            self.dataStore.retain(value: value, reference: key)
         }
     }
 }
 
 extension BasicStorage {
     func read<T: Codable>(filePath: String) -> T? {
-        return self.diskStore.retrieve(filePath: filePath)
+        return self.dataStore.retrieve(reference: filePath)
     }
     
     func rollover() {
-        self.diskStore.rollover()
+        #warning("Need clarification...")
+//        self.dataStore.rollover()
     }
     
     func remove(filePath: String) {
-        self.diskStore.remove(filePath: filePath)
+        self.dataStore.remove(reference: filePath)
     }
 }
 
 extension BasicStorage {
     func read<T: Codable>(key: StorageKey) -> T? {
         guard case .others(let key) = key else { return nil }
-        return self.defaultsStore.retrieve(key: key)
+        return self.dataStore.retrieve(reference: key)
     }
     
     func remove(key: StorageKey) {
         guard case .others(let key) = key else { return }
-        self.defaultsStore.remove(key: key)
+        self.dataStore.remove(reference: key)
     }
 }

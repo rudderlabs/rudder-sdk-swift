@@ -18,16 +18,17 @@ final class DefaultsStore {
 }
 
 extension DefaultsStore: DataStore {
-    func retain<T: Codable>(value: T?, key: String) {
+    func retain<T: Codable>(value: T?, reference key: String) {
         if self.isPrimitiveType(value) {
             self.userDefaults?.set(value, forKey: key)
         } else {
             guard let encodedData = try? JSONEncoder().encode(value) else { return }
             self.userDefaults?.set(encodedData, forKey: key)
         }
+        self.userDefaults?.synchronize()
     }
     
-    func retrieve<T: Codable>(key: String) -> T? {
+    func retrieve<T: Codable>(reference key: String) -> T? {
         var result: T? = nil
         let rawValue = self.userDefaults?.object(forKey: key)
         if let rawData = rawValue as? Data {
@@ -39,13 +40,14 @@ extension DefaultsStore: DataStore {
         return result
     }
     
-    func remove(key: String) {
+    func remove(reference key: String) {
         self.userDefaults?.removeObject(forKey: key)
+        self.userDefaults?.synchronize()
     }
 }
 
 extension DefaultsStore {
-    func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
+    private func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
         guard let value = value else { return true } //Since nil is also a primitive, & can be set to UserDefaults..
         
         return switch value {

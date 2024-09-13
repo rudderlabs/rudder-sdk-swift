@@ -24,7 +24,7 @@ final class DiskStore {
         self.userDefaults = UserDefaults.rudder(self.writeKey)
     }
     
-    func store(message: String) {
+    private func store(message: String) {
         var currentFilePath = self.currentFileURL.path()
         var newFile = false
         if !FileManager.default.fileExists(atPath: currentFilePath) {
@@ -42,7 +42,7 @@ final class DiskStore {
         self.writeTo(file: self.currentFileURL, content: content)
     }
     
-    func finish() {
+    private func finish() {
         let currentFilePath = self.currentFileURL.path()
         guard FileManager.default.fileExists(atPath: currentFilePath) else { return }
         
@@ -65,25 +65,25 @@ final class DiskStore {
 }
 
 extension DiskStore {
-    var fileIndexKey: String {
+    private var fileIndexKey: String {
         return Constants.fileIndex + self.writeKey
     }
     
-    var currentFileIndex: Int {
+    private var currentFileIndex: Int {
         return (self.userDefaults?.object(forKey: self.fileIndexKey) as? Int) ?? 0
     }
     
-    var currentFileURL: URL {
+    private var currentFileURL: URL {
         return self.fileStorageURL.appending(path: self.writeKey + "-\(self.currentFileIndex)").appendingPathExtension(Constants.fileType)
     }
     
-    func incrementFileIndex() {
+    private func incrementFileIndex() {
         self.userDefaults?.set(self.currentFileIndex + 1, forKey: self.fileIndexKey)
         self.userDefaults?.synchronize()
     }
     
     @discardableResult
-    func writeTo(file: URL, content: String) -> Bool {
+    private func writeTo(file: URL, content: String) -> Bool {
         do {
             if FileManager.default.fileExists(atPath: file.path()) {
                 let fileHandler = try FileHandle(forWritingTo: file)
@@ -102,24 +102,24 @@ extension DiskStore {
         }
     }
     
-    func readFrom(file filePath: String) -> String? {
+    private func readFrom(file filePath: String) -> String? {
         guard let content = try? String(contentsOfFile: filePath, encoding: .utf8) else { return nil }
         return content
     }
 }
 
 extension DiskStore: DataStore {
-    func retain<T: Codable>(value: T?) {
+    func retain<T: Codable>(value: T?, reference: String){
         FileOperationQueue.addOperation {
             self.store(message: value as? String ?? "")
         }
     }
     
-    func retrieve<T: Codable>(filePath: String) -> T? {
+    func retrieve<T: Codable>(reference filePath: String) -> T? {
         return self.readFrom(file: filePath) as? T
     }
     
-    func remove(filePath: String) {
+    func remove(reference filePath: String) {
         FileManager.delete(file: filePath)
     }
 }
