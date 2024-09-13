@@ -104,6 +104,7 @@ extension FileManager {
         return content.compactMap { URL(fileURLWithPath: $0) }
     }
     
+    @discardableResult
     static func delete(file filePath: String) -> Bool {
         let fileUrl = URL(fileURLWithPath: filePath)
         do {
