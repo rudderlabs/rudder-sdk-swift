@@ -21,6 +21,7 @@
 		53BE94EB2C9220950004E75A /* DiskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94EA2C9220950004E75A /* DiskStore.swift */; };
 		53BE94ED2C941B4B0004E75A /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94EC2C941B4B0004E75A /* DataStore.swift */; };
 		53BE94F02C94A76F0004E75A /* AutoCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94EF2C94A76F0004E75A /* AutoCodable.swift */; };
+		53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94F12C94C75D0004E75A /* BasicStorage.swift */; };
 		53C29E722C918F2400F2A8C3 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C29E712C918F2400F2A8C3 /* Storage.swift */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		53BE94EA2C9220950004E75A /* DiskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskStore.swift; sourceTree = "<group>"; };
 		53BE94EC2C941B4B0004E75A /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		53BE94EF2C94A76F0004E75A /* AutoCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCodable.swift; sourceTree = "<group>"; };
+		53BE94F12C94C75D0004E75A /* BasicStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicStorage.swift; sourceTree = "<group>"; };
 		53C29E712C918F2400F2A8C3 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				53C29E712C918F2400F2A8C3 /* Storage.swift */,
+				53BE94F12C94C75D0004E75A /* BasicStorage.swift */,
 				53BE94EE2C941B640004E75A /* Store */,
 			);
 			path = Storage;
@@ -230,6 +233,7 @@
 			files = (
 				53BE94ED2C941B4B0004E75A /* DataStore.swift in Sources */,
 				5392AB952C6FC78F00369791 /* Configuration.swift in Sources */,
+				53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */,
 				53A22A502C7C904E0059D6FE /* Helpers.swift in Sources */,
 				5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */,
 				53A22A562C7DBFD70059D6FE /* PluginInteractor.swift in Sources */,
