@@ -9,6 +9,7 @@ import Foundation
 
 public protocol DataStore {
     func retain<T: Codable>(value: T?, key: String)
+    func retain<T: Codable>(value: T?)
     func retrieve<T: Codable>(key: String) -> T?
     func retrieve<T: Codable>(filePath: String) -> T?
     func remove(key: String)
@@ -16,6 +17,8 @@ public protocol DataStore {
 }
 
 extension DataStore {
+    func retain<T: Codable>(value: T?, key: String) {}
+    func retain<T: Codable>(value: T?) {}
     func remove(key: String) {}
     func remove(filePath: String) {}
     func retrieve<T: Codable>(key: String) -> T? { return nil }

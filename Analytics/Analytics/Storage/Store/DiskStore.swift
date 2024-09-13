@@ -54,12 +54,7 @@ final class DiskStore {
     
     func readFiles() -> [String] {
         let directory = self.currentFileURL.deletingLastPathComponent()
-        return FileManager.contentsOf(directory: directory.path()).filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }.compactMap { $0.path() }.sorted()
-    }
-    
-    @discardableResult
-    func remove(filePath: String) -> Bool {
-        return FileManager.delete(file: filePath)
+        return FileManager.contentsOf(directory: directory.path()).filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }.compactMap { directory.path() + "/" + $0.path() }.sorted()
     }
     
     func rollover() {
@@ -84,6 +79,7 @@ extension DiskStore {
     
     func incrementFileIndex() {
         self.userDefaults?.set(self.currentFileIndex + 1, forKey: self.fileIndexKey)
+        self.userDefaults?.synchronize()
     }
     
     @discardableResult
@@ -105,16 +101,25 @@ extension DiskStore {
             return false
         }
     }
+    
+    func readFrom(file filePath: String) -> String? {
+        guard let content = try? String(contentsOfFile: filePath, encoding: .utf8) else { return nil }
+        return content
+    }
 }
 
 extension DiskStore: DataStore {
-    func retain<T: Codable>(value: T?, key: String) {
+    func retain<T: Codable>(value: T?) {
         FileOperationQueue.addOperation {
             self.store(message: value as? String ?? "")
         }
     }
     
     func retrieve<T: Codable>(filePath: String) -> T? {
-        return nil
+        return self.readFrom(file: filePath) as? T
+    }
+    
+    func remove(filePath: String) {
+        FileManager.delete(file: filePath)
     }
 }
