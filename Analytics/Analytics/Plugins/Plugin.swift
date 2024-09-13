@@ -38,12 +38,29 @@ extension Plugin {
 
 // MARK: - POCPlugin
 class POCPlugin: Plugin {
-    var analytics: Analytics?
+    var analytics: AnalyticsClient?
     
     var pluginType: PluginType = .preProcess
         
     func execute(event: MessageEvent) -> MessageEvent {
         self.analytics?.configuration.logger.debug(tag: Constants.logTag, log: "POCPlugin is running...")
+        if let json = convertToJSONString(event) {
+            self.analytics?.configuration.storage?.write(value: json, key: .event)
+        }
         return event
+    }
+    
+    func convertToJSONString<T: Codable>(_ object: T) -> String? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted // Optional: for pretty-printed JSON
+        
+        do {
+            let jsonData = try encoder.encode(object)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            return jsonString
+        } catch {
+            print("Error encoding object to JSON: \(error)")
+            return nil
+        }
     }
 }
