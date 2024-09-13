@@ -12,7 +12,7 @@ import Foundation
  This class serves as the main interface to the SDK, allowing user interaction.
  */
 @objcMembers
-public class Analytics {
+public class AnalyticsClient {
     public var configuration: Configuration
     
     private var pluginChain: PluginChain!
@@ -35,7 +35,7 @@ public class Analytics {
 }
 
 // MARK: - Private functions
-extension Analytics {
+extension AnalyticsClient {
     private func setup() {
         self.pluginChain = PluginChain(analytics: self)
         self.pluginChain.add(plugin: POCPlugin())

@@ -34,13 +34,13 @@ class AnalyticsManager: Logger {
     
     static let shared = AnalyticsManager()
     
-    var analytics: Analytics?
+    var analytics: AnalyticsClient?
    
     private init() {}
     
     func initializeAnalyticsSDK() {
         let config = Configuration(writeKey: "asdf", dataPlaneUrl: "https://www.asdf.com/dataplaneurl", logger: self)
-        self.analytics = Analytics(configuration: config)
+        self.analytics = AnalyticsClient(configuration: config)
     }
     
     var currentLogLevel: LogLevel = .debug
