@@ -45,6 +45,10 @@ extension String {
         let formattedDate = DateFormatter.timeStampFormat.string(from: date)
         return formattedDate.replacingOccurrences(of: "+00:00", with: "Z")
     }
+    
+    var utf8Data: Data? {
+        return self.data(using: .utf8)
+    }
 }
 
 // MARK: - Extension: DateFormatter
@@ -108,5 +112,19 @@ extension FileManager {
         } catch {
             return false
         }
+    }
+}
+
+extension KeyedDecodingContainer {
+    func decodeDictionary(forKey key: K) throws -> [String: Any] {
+        let dictionary = try self.decode([String: String].self, forKey: key)
+        return dictionary // or transform as needed
+    }
+}
+
+extension KeyedEncodingContainer {
+    mutating func encode(_ value: [String: Any], forKey key: K) throws {
+        let dictionary = value as? [String: String] ?? [:] // or transform as needed
+        try self.encode(dictionary, forKey: key)
     }
 }
