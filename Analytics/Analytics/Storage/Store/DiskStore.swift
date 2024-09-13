@@ -25,11 +25,11 @@ final class DiskStore {
     }
     
     func store(message: String) {
-        let currentFilePath = self.currentFileURL.path()
+        var currentFilePath = self.currentFileURL.path()
         var newFile = false
-        
         if !FileManager.default.fileExists(atPath: currentFilePath) {
             guard let filePath = FileManager.createFile(at: currentFilePath), self.writeTo(file: self.currentFileURL, content: Constants.batchPrefix) else { return }
+            currentFilePath = filePath
             newFile = true
         }
         
@@ -38,7 +38,7 @@ final class DiskStore {
             self.store(message: message)
         }
         
-        let content = newFile ? message : "," + message
+        let content = newFile ? message : ("," + message)
         self.writeTo(file: self.currentFileURL, content: content)
     }
     
@@ -53,9 +53,11 @@ final class DiskStore {
     }
     
     func readFiles() -> [String] {
-        return FileManager.contentsOf(directory: self.currentFileURL.path()).filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }.compactMap { $0.path() }
+        let directory = self.currentFileURL.deletingLastPathComponent()
+        return FileManager.contentsOf(directory: directory.path()).filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }.compactMap { $0.path() }.sorted()
     }
     
+    @discardableResult
     func remove(filePath: String) -> Bool {
         return FileManager.delete(file: filePath)
     }
@@ -65,7 +67,6 @@ final class DiskStore {
             self.finish()
         }
     }
-    
 }
 
 extension DiskStore {
@@ -88,7 +89,17 @@ extension DiskStore {
     @discardableResult
     func writeTo(file: URL, content: String) -> Bool {
         do {
-            try content.write(to: file, atomically: true, encoding: .utf8)
+            if FileManager.default.fileExists(atPath: file.path()) {
+                let fileHandler = try FileHandle(forWritingTo: file)
+                try fileHandler.seekToEnd()
+                
+                guard let data = content.utf8Data else { return false }
+                try fileHandler.write(contentsOf: data)
+                try fileHandler.close()
+                
+            } else {
+                try content.write(to: file, atomically: true, encoding: .utf8)
+            }
             return true
         } catch {
             return false
@@ -97,14 +108,13 @@ extension DiskStore {
 }
 
 extension DiskStore: DataStore {
-    
     func retain<T: Codable>(value: T?, key: String) {
         FileOperationQueue.addOperation {
             self.store(message: value as? String ?? "")
         }
     }
     
-    func retrieve<T: Codable>(key: String) -> T? {
+    func retrieve<T: Codable>(filePath: String) -> T? {
         return nil
     }
 }

@@ -15,8 +15,10 @@ final class DefaultsStore {
         self.writeKey = writeKey
         self.userDefaults = UserDefaults.rudder(self.writeKey)
     }
-    
-    func writeDefaults<T: Codable>(value: T?, key: String) {
+}
+
+extension DefaultsStore: DataStore {
+    func retain<T: Codable>(value: T?, key: String) {
         if self.isPrimitiveType(value) {
             self.userDefaults?.set(value, forKey: key)
         } else {
@@ -25,7 +27,7 @@ final class DefaultsStore {
         }
     }
     
-    func readDefaults<T: Codable>(key: String) -> T? {
+    func retrieve<T: Codable>(key: String) -> T? {
         var result: T? = nil
         let rawValue = self.userDefaults?.object(forKey: key)
         if let rawData = rawValue as? Data {
@@ -35,6 +37,10 @@ final class DefaultsStore {
             result = rawValue as? T
         }
         return result
+    }
+    
+    func remove(key: String) {
+        self.userDefaults?.removeObject(forKey: key)
     }
 }
 
