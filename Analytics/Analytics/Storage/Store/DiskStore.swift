@@ -13,7 +13,7 @@ final class DiskStore {
     let userDefaults: UserDefaults?
     let fileStorageURL: URL = FileManager.eventStorageURL
     
-    private let FileOperationQueue: OperationQueue = {
+    private let fileOperationQueue: OperationQueue = {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
         queue.qualityOfService = .background
@@ -37,6 +37,7 @@ final class DiskStore {
         if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > Constants.maxBatchSize {
             finish()
             self.store(message: message)
+            return
         }
         
         let content = newFile ? message : ("," + message)
@@ -53,15 +54,9 @@ final class DiskStore {
         self.incrementFileIndex()
     }
     
-    func readFiles() -> [String] {
+    private func collectFiles() -> [String] {
         let directory = self.currentFileURL.deletingLastPathComponent()
         return FileManager.contentsOf(directory: directory.path()).filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }.compactMap { directory.path() + "/" + $0.path() }.sorted()
-    }
-    
-    func rollover() {// Finish the currewnt file, & move to new one...
-        FileOperationQueue.addOperation {
-            self.finish()
-        }
     }
 }
 
@@ -106,7 +101,7 @@ extension DiskStore {
 
 extension DiskStore: DataStore {
     func retain<T: Codable>(value: T?, reference: String){
-        FileOperationQueue.addOperation {
+        self.fileOperationQueue.addOperation {
             self.store(message: value as? String ?? "")
         }
     }
@@ -117,5 +112,11 @@ extension DiskStore: DataStore {
     
     func remove(reference filePath: String) {
         FileManager.delete(file: filePath)
+    }
+    
+    func rollover() {
+        self.fileOperationQueue.addOperation {
+            self.finish()
+        }
     }
 }

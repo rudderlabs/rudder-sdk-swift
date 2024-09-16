@@ -14,10 +14,6 @@ public protocol DataStore {
     func rollover()
 }
 
-public extension DataStore {
-    func rollover() {}
-}
-
 final class StoreProvider {
     private init() {}
     
