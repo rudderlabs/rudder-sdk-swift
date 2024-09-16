@@ -17,8 +17,8 @@ final class DefaultsStore {
     }
 }
 
-extension DefaultsStore: DataStore {
-    func retain<T: Codable>(value: T?, reference key: String) {
+extension DefaultsStore {
+    func save<T: Codable>(value: T?, reference key: String) {
         if self.isPrimitiveType(value) {
             self.userDefaults?.set(value, forKey: key)
         } else {
@@ -28,7 +28,7 @@ extension DefaultsStore: DataStore {
         self.userDefaults?.synchronize()
     }
     
-    func retrieve<T: Codable>(reference key: String) -> T? {
+    func read<T: Codable>(reference key: String) -> T? {
         var result: T? = nil
         let rawValue = self.userDefaults?.object(forKey: key)
         if let rawData = rawValue as? Data {
@@ -40,12 +40,10 @@ extension DefaultsStore: DataStore {
         return result
     }
     
-    func remove(reference key: String) {
+    func delete(reference key: String) {
         self.userDefaults?.removeObject(forKey: key)
         self.userDefaults?.synchronize()
     }
-    
-    func rollover() {}
 }
 
 extension DefaultsStore {
