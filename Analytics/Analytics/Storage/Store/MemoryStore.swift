@@ -46,9 +46,7 @@ class MemoryStore {
         currentDataItem.batch += Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
         currentDataItem.isClosed = true
         self.appendDataItem(currentDataItem)
-        
-        print("Datat: \n: \(currentDataItem.toJSONString ?? "Empty")")
-        
+
         self.userDefaults?.removeObject(forKey: self.currentDataItemKey)
         self.userDefaults?.synchronize()
     }

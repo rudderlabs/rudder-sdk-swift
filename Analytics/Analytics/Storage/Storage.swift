@@ -13,14 +13,14 @@ public protocol DefaultsStorage {
     func remove(key: StorageKey)
 }
 
-public protocol DiskStorage {
+public protocol EventsStorage {
     func write<T: Codable>(value: T, key: StorageKey)
     func read<T: Codable>(filePath: String) -> T?
     func remove(filePath: String)
     func rollover()
 }
 
-public protocol Storage: DefaultsStorage, DiskStorage {
+public protocol Storage: DefaultsStorage, EventsStorage {
     var eventStorageMode: StorageMode { get }
 }
 
