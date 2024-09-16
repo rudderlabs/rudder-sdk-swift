@@ -7,6 +7,8 @@
 
 import Foundation
 
+//"This implementation may be replaced by plist storage..."
+
 final class DefaultsStore {
     let writeKey: String
     let userDefaults: UserDefaults?
