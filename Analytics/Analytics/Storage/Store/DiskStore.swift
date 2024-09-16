@@ -102,11 +102,6 @@ extension DiskStore {
             return false
         }
     }
-    
-    private func readFrom(file filePath: String) -> String? {
-        guard let content = try? String(contentsOfFile: filePath, encoding: .utf8) else { return nil }
-        return content
-    }
 }
 
 extension DiskStore: DataStore {
@@ -117,7 +112,7 @@ extension DiskStore: DataStore {
     }
     
     func retrieve<T: Codable>(reference filePath: String) -> T? {
-        return self.readFrom(file: filePath) as? T
+        return FileManager.contentsOf(file: filePath) as? T
     }
     
     func remove(reference filePath: String) {

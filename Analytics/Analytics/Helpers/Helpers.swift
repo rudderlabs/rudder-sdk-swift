@@ -105,6 +105,11 @@ extension FileManager {
         return content.compactMap { URL(fileURLWithPath: $0) }
     }
     
+    static func contentsOf(file filePath: String) -> String? {
+        guard let content = try? String(contentsOfFile: filePath, encoding: .utf8) else { return nil }
+        return content
+    }
+    
     @discardableResult
     static func delete(file filePath: String) -> Bool {
         let fileUrl = URL(fileURLWithPath: filePath)
