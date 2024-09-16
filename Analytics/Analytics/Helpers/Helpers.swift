@@ -17,7 +17,8 @@ typealias PluginClosure = (Plugin) -> Void
 // MARK: - Constants
 public struct Constants {
     public static let logTag = "Rudder-Analytics"
-    public static let defaultLogLevel = LogLevel.none
+    public static let defaultLogLevel: LogLevel = .none
+    public static let defaultStorageMode: StorageMode = .disk
     
     //Internals
     static let fileIndex = "rudderstack.message.file.index."
@@ -127,5 +128,18 @@ extension KeyedEncodingContainer {
     mutating func encode(_ value: [String: Any], forKey key: K) throws {
         let dictionary = value as? [String: String] ?? [:] // or transform as needed
         try self.encode(dictionary, forKey: key)
+    }
+}
+
+extension Encodable {
+    var toJSONString: String? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted // Optional: for pretty-printed JSON
+        do {
+            let jsonData = try encoder.encode(self)
+            return String(data: jsonData, encoding: .utf8)
+        } catch {
+            return nil
+        }
     }
 }
