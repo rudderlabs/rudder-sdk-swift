@@ -11,5 +11,13 @@ public protocol DataStore {
     func retain<T: Codable>(value: T?, reference: String)
     func retrieve<T: Codable>(reference: String) -> T?
     func remove(reference: String)
+    func rollover()
 }
 
+final class StoreProvider {
+    private init() {}
+    
+    static func prepareProvider(for storageMode: StorageMode, writeKey: String) -> DataStore {
+        return storageMode == .disk ? DiskStore(writeKey: writeKey) : DefaultsStore(writeKey: writeKey)
+    }
+}

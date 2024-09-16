@@ -44,6 +44,8 @@ extension DefaultsStore: DataStore {
         self.userDefaults?.removeObject(forKey: key)
         self.userDefaults?.synchronize()
     }
+    
+    func rollover() {}
 }
 
 extension DefaultsStore {

@@ -16,6 +16,7 @@ final class DiskStore {
     private let FileOperationQueue: OperationQueue = {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
+        queue.qualityOfService = .background
         return queue
     }()
     
@@ -57,7 +58,7 @@ final class DiskStore {
         return FileManager.contentsOf(directory: directory.path()).filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }.compactMap { directory.path() + "/" + $0.path() }.sorted()
     }
     
-    func rollover() {
+    func rollover() {// Finish the currewnt file, & move to new one...
         FileOperationQueue.addOperation {
             self.finish()
         }

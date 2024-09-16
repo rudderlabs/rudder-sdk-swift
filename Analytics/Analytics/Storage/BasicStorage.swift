@@ -14,11 +14,11 @@ final class BasicStorage: Storage {
     
     private let dataStore: DataStore
     
-    init(writeKey: String, storageMode: StorageMode = .disk) {
+    init(writeKey: String, storageMode: StorageMode = Constants.defaultStorageMode) {
         self.writeKey = writeKey
         self.storageMode = storageMode
         
-        self.dataStore = storageMode == .disk ? DiskStore(writeKey: writeKey) : DefaultsStore(writeKey: writeKey)
+        self.dataStore = StoreProvider.prepareProvider(for: storageMode, writeKey: writeKey)
     }
     
     var eventStorageMode: StorageMode {
@@ -41,8 +41,7 @@ extension BasicStorage {
     }
     
     func rollover() {
-        #warning("Need clarification...")
-//        self.dataStore.rollover()
+        self.dataStore.rollover()
     }
     
     func remove(filePath: String) {
