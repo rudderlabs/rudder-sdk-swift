@@ -7,10 +7,10 @@
 
 import Foundation
 
-public protocol DefaultsStorage {
-    func write<T: Codable>(value: T, key: StorageKey)
-    func read<T: Codable>(key: StorageKey) -> T?
-    func remove(key: StorageKey)
+public protocol KeyValueStorage {
+    func write<T: Codable>(value: T, key: String)
+    func read<T: Codable>(key: String) -> T?
+    func remove(key: String)
 }
 
 public protocol EventsStorage {
@@ -20,13 +20,8 @@ public protocol EventsStorage {
     func rollover()
 }
 
-public protocol Storage: DefaultsStorage, EventsStorage {
+public protocol Storage: KeyValueStorage, EventsStorage {
     var eventStorageMode: StorageMode { get }
-}
-
-extension Storage {
-    func read<T: Codable>(key: StorageKey) -> T? { return nil }
-    func read<T: Codable>(filePath: String) -> T? { return nil }
 }
 
 @objc

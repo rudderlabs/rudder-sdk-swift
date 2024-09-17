@@ -9,7 +9,7 @@ import Foundation
 
 //"This implementation may be replaced by plist storage..."
 
-final class DefaultsStore {
+final class KeyValueStore {
     let writeKey: String
     let userDefaults: UserDefaults?
     
@@ -19,7 +19,7 @@ final class DefaultsStore {
     }
 }
 
-extension DefaultsStore {
+extension KeyValueStore {
     func save<T: Codable>(value: T?, reference key: String) {
         if self.isPrimitiveType(value) {
             self.userDefaults?.set(value, forKey: key)
@@ -48,7 +48,7 @@ extension DefaultsStore {
     }
 }
 
-extension DefaultsStore {
+extension KeyValueStore {
     private func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
         guard let value = value else { return true } //Since nil is also a primitive, & can be set to UserDefaults..
         

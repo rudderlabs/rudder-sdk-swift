@@ -49,14 +49,17 @@ extension BasicStorage {
     }
 }
 
+// MARK: - KeyValueStorage
 extension BasicStorage {
-    func read<T: Codable>(key: StorageKey) -> T? {
-        guard case .others(let key) = key else { return nil }
+    func write<T: Codable>(value: T, key: String) {
+        self.dataStore.retain(value: value, reference: key)
+    }
+    
+    func read<T: Codable>(key: String) -> T? {
         return self.dataStore.retrieve(reference: key)
     }
     
-    func remove(key: StorageKey) {
-        guard case .others(let key) = key else { return }
+    func remove(key: String) {
         self.dataStore.remove(reference: key)
     }
 }
