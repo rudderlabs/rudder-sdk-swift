@@ -13,14 +13,14 @@ public protocol KeyValueStorage {
     func remove(key: String)
 }
 
-public protocol EventsStorage {
-    func write<T: Codable>(value: T, key: StorageKey)
-    func read<T: Codable>(filePath: String) -> T?
-    func remove(filePath: String)
+public protocol MessageStorage {
+    func write(message: String)
+    func read() -> MessageDataResult
+    func remove(messageReference: String)
     func rollover()
 }
 
-public protocol Storage: KeyValueStorage, EventsStorage {
+public protocol Storage: KeyValueStorage, MessageStorage {
     var eventStorageMode: StorageMode { get }
 }
 
@@ -28,9 +28,4 @@ public protocol Storage: KeyValueStorage, EventsStorage {
 public enum StorageMode: Int {
     case disk
     case memory
-}
-
-public enum StorageKey {
-    case event
-    case others(key: String)
 }

@@ -179,8 +179,8 @@
 			isa = PBXGroup;
 			children = (
 				53BE94EC2C941B4B0004E75A /* DataStore.swift */,
-				53BE94EA2C9220950004E75A /* DiskStore.swift */,
 				53BE94E82C921B9E0004E75A /* KeyValueStore.swift */,
+				53BE94EA2C9220950004E75A /* DiskStore.swift */,
 				53BE94F32C94D70D0004E75A /* MemoryStore.swift */,
 			);
 			path = Store;

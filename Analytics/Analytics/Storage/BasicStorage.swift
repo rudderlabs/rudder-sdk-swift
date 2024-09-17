@@ -12,6 +12,7 @@ final class BasicStorage: Storage {
     let writeKey: String
     let storageMode: StorageMode
     
+    private let keyValueStore: KeyValueStore
     private let dataStore: DataStore
     
     init(writeKey: String, storageMode: StorageMode = Constants.defaultStorageMode) {
@@ -19,47 +20,46 @@ final class BasicStorage: Storage {
         self.storageMode = storageMode
         
         self.dataStore = StoreProvider.prepareProvider(for: storageMode, writeKey: writeKey)
+        self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
     var eventStorageMode: StorageMode {
         return self.storageMode
     }
-    
-    func write<T: Codable>(value: T, key: StorageKey) {
-        switch key {
-        case .event:
-            self.dataStore.retain(value: value, reference: "Event")
-        case .others(let key):
-            self.dataStore.retain(value: value, reference: key)
-        }
-    }
 }
 
+// MARK: - MessageStorage
 extension BasicStorage {
-    func read<T: Codable>(filePath: String) -> T? {
-        return self.dataStore.retrieve(reference: filePath)
+    
+    func write(message: String) {
+        self.dataStore.retain(value: message)
+    }
+    
+    func read() -> MessageDataResult {
+        let collected = self.dataStore.retrieve()
+        return self.storageMode == .disk ? MessageDataResult(dataFiles: collected as? [URL]) : MessageDataResult(dataItems: collected as? [MessageDataItem])
+    }
+    
+    func remove(messageReference: String) {
+        self.dataStore.remove(reference: messageReference)
     }
     
     func rollover() {
         self.dataStore.rollover()
-    }
-    
-    func remove(filePath: String) {
-        self.dataStore.remove(reference: filePath)
     }
 }
 
 // MARK: - KeyValueStorage
 extension BasicStorage {
     func write<T: Codable>(value: T, key: String) {
-        self.dataStore.retain(value: value, reference: key)
+        self.keyValueStore.save(value: value, reference: key)
     }
     
     func read<T: Codable>(key: String) -> T? {
-        return self.dataStore.retrieve(reference: key)
+        return self.keyValueStore.read(reference: key)
     }
     
     func remove(key: String) {
-        self.dataStore.remove(reference: key)
+        self.keyValueStore.delete(reference: key)
     }
 }

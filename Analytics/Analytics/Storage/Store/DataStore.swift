@@ -8,8 +8,8 @@
 import Foundation
 
 public protocol DataStore {
-    func retain<T: Codable>(value: T?, reference: String)
-    func retrieve<T: Codable>(reference: String) -> T?
+    func retain(value: String)
+    func retrieve() -> [Any]
     func remove(reference: String)
     func rollover()
 }

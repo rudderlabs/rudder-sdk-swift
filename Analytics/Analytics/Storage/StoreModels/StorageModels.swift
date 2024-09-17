@@ -7,11 +7,11 @@
 
 import Foundation
 
-public struct StorageResult: Codable {
+public struct MessageDataResult {
     public let dataFiles: [URL]?
-    public let dataItems: [EventDataItem]?
+    public let dataItems: [MessageDataItem]?
     
-    private init(dataFiles: [URL]?, dataItems: [EventDataItem]?) {
+    private init(dataFiles: [URL]?, dataItems: [MessageDataItem]?) {
         self.dataFiles = dataFiles
         self.dataItems = dataItems
     }
@@ -20,12 +20,12 @@ public struct StorageResult: Codable {
         self.init(dataFiles: dataFiles, dataItems: nil)
     }
     
-    public init(dataItems: [EventDataItem]?) {
+    public init(dataItems: [MessageDataItem]?) {
         self.init(dataFiles: nil, dataItems: dataItems)
     }
 }
 
-public struct EventDataItem: Codable {
+public struct MessageDataItem {
     public let id: String
     public var batch: String
     public var isClosed: Bool

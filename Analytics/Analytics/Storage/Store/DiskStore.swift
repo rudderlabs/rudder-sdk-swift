@@ -10,8 +10,8 @@ import Foundation
 final class DiskStore {
     
     let writeKey: String
-    let userDefaults: UserDefaults?
     let fileStorageURL: URL = FileManager.eventStorageURL
+    private let keyValueStore: KeyValueStore
     
     private let fileOperationQueue: OperationQueue = {
         let queue = OperationQueue()
@@ -22,7 +22,7 @@ final class DiskStore {
     
     init(writeKey: String) {
         self.writeKey = writeKey
-        self.userDefaults = UserDefaults.rudder(self.writeKey)
+        self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
     private func store(message: String) {
@@ -47,7 +47,7 @@ final class DiskStore {
     private func finish() {
         let currentFilePath = self.currentFileURL.path()
         guard FileManager.default.fileExists(atPath: currentFilePath) else { return }
-        
+        print("currentFilePath: \(currentFilePath)")
         let content = Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
         self.writeTo(file: self.currentFileURL, content: content)
         FileManager.removePathExtension(from: currentFilePath)
@@ -66,7 +66,8 @@ extension DiskStore {
     }
     
     private var currentFileIndex: Int {
-        return (self.userDefaults?.object(forKey: self.fileIndexKey) as? Int) ?? 0
+        guard let index: Int = self.keyValueStore.read(reference: self.fileIndexKey) else { return 0 }
+        return index
     }
     
     private var currentFileURL: URL {
@@ -74,8 +75,7 @@ extension DiskStore {
     }
     
     private func incrementFileIndex() {
-        self.userDefaults?.set(self.currentFileIndex + 1, forKey: self.fileIndexKey)
-        self.userDefaults?.synchronize()
+        self.keyValueStore.save(value: self.currentFileIndex + 1, reference: self.fileIndexKey)
     }
     
     @discardableResult
@@ -100,14 +100,14 @@ extension DiskStore {
 }
 
 extension DiskStore: DataStore {
-    func retain<T: Codable>(value: T?, reference: String){
+    func retain(value: String) {
         self.fileOperationQueue.addOperation {
-            self.store(message: value as? String ?? "")
+            self.store(message: value)
         }
     }
     
-    func retrieve<T: Codable>(reference filePath: String) -> T? {
-        return FileManager.contentsOf(file: filePath) as? T
+    func retrieve() -> [Any] {
+        return self.collectFiles().compactMap { URL(fileURLWithPath: $0) }
     }
     
     func remove(reference filePath: String) {

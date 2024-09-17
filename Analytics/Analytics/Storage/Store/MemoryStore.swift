@@ -8,10 +8,9 @@
 import Foundation
 
 class MemoryStore {
-    
     let writeKey: String
-    let userDefaults: UserDefaults?
-    var dataItems: [EventDataItem] = []
+    var dataItems: [MessageDataItem] = []
+    private let keyValueStore: KeyValueStore
     
     private let memoryOperationQueue: OperationQueue = {
         let queue = OperationQueue()
@@ -22,11 +21,11 @@ class MemoryStore {
     
     init(writeKey: String) {
         self.writeKey = writeKey
-        self.userDefaults = UserDefaults.rudder(writeKey)
+        self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
     private func store(message: String) {
-        var dataItem = self.currentDataItem ?? EventDataItem(batch: Constants.batchPrefix)
+        var dataItem = self.currentDataItem ?? MessageDataItem(batch: Constants.batchPrefix)
         let newEntry = dataItem.batch == Constants.batchPrefix
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > Constants.maxBatchSize {
@@ -47,21 +46,20 @@ class MemoryStore {
         currentDataItem.isClosed = true
         self.appendDataItem(currentDataItem)
 
-        self.userDefaults?.removeObject(forKey: self.currentDataItemKey)
-        self.userDefaults?.synchronize()
+        self.keyValueStore.delete(reference: self.currentDataItemKey)
     }
     
-    private func appendDataItem(_ item: EventDataItem) {
+    private func appendDataItem(_ item: MessageDataItem) {
         if let firstIndex = self.dataItems.firstIndex(where: { $0.id == item.id }) {
             self.dataItems[firstIndex] = item
         } else {
             self.dataItems.append(item)
         }
-        self.userDefaults?.set(item.id, forKey: self.currentDataItemKey)
-        self.userDefaults?.synchronize()
+        
+        self.keyValueStore.save(value: item.id, reference: self.currentDataItemKey)
     }
     
-    private func collectItems() -> [EventDataItem] {
+    private func collectDataItems() -> [MessageDataItem] {
         var filtered = self.dataItems.filter { $0.batch.hasSuffix(Constants.batchSuffix) && $0.isClosed }
         
         if let currentDataItem = self.currentDataItem {
@@ -85,25 +83,25 @@ extension MemoryStore {
     }
     
     private var currentDataItemId: String? {
-        guard let currentItemId = self.userDefaults?.object(forKey: self.currentDataItemKey) as? String else { return nil }
+        guard let currentItemId: String = self.keyValueStore.read(reference: self.currentDataItemKey) else { return nil }
         return currentItemId
     }
     
-    private var currentDataItem: EventDataItem? {
+    private var currentDataItem: MessageDataItem? {
         guard let currentItemId = self.currentDataItemId else { return nil }
         return self.dataItems.filter { $0.id == currentItemId }.first
     }
 }
 
 extension MemoryStore: DataStore {
-    func retain<T: Codable>(value: T?, reference: String) {
+    func retain(value: String) {
         self.memoryOperationQueue.addOperation {
-            self.store(message: value as? String ?? "")
+            self.store(message: value)
         }
     }
     
-    func retrieve<T: Codable>(reference: String) -> T? {
-        return self.collectItems() as? T
+    func retrieve() -> [Any] {
+        return self.collectDataItems()
     }
     
     func remove(reference: String) {

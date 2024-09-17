@@ -45,7 +45,7 @@ class POCPlugin: Plugin {
     func execute(event: MessageEvent) -> MessageEvent {
         self.analytics?.configuration.logger.debug(tag: Constants.logTag, log: "POCPlugin is running...")
         if let json = event.toJSONString {
-            self.analytics?.configuration.storage?.write(value: json, key: .event)
+            self.analytics?.configuration.storage?.write(message: json)
         }
         return event
     }
