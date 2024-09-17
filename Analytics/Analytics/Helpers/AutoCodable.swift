@@ -7,7 +7,7 @@
 
 import Foundation
 
-// The class is currently not in use but may be needed in the future.
+// The Property Wrapper is currently not in use but may be needed in the future.
 @propertyWrapper
 public struct AutoCodable<T: Codable>: Codable {
     public var wrappedValue: T
@@ -39,50 +39,59 @@ public struct AutoCodable<T: Codable>: Codable {
     }
 }
 
+// MARK: - CodableValue
 public enum CodableValue: Codable {
     case string(String)
-    case int(Int)
-    case bool(Bool)
-    case double(Double)
-    case array([CodableValue])
+    case number(Double)
+    case boolean(Bool)
     case dictionary([String: CodableValue])
+    case array([CodableValue])
+    case null
     
     public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        
-        if let value = try? container.decode(String.self) {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try? container.decode(String.self, forKey: .stringValue) {
             self = .string(value)
-        } else if let value = try? container.decode(Int.self) {
-            self = .int(value)
-        } else if let value = try? container.decode(Bool.self) {
-            self = .bool(value)
-        } else if let value = try? container.decode(Double.self) {
-            self = .double(value)
-        } else if let value = try? container.decode([CodableValue].self) {
-            self = .array(value)
-        } else if let value = try? container.decode([String: CodableValue].self) {
+        } else if let value = try? container.decode(Double.self, forKey: .numberValue) {
+            self = .number(value)
+        } else if let value = try? container.decode(Bool.self, forKey: .booleanValue) {
+            self = .boolean(value)
+        } else if let value = try? container.decode([String: CodableValue].self, forKey: .dictionaryValue) {
             self = .dictionary(value)
+        } else if let value = try? container.decode([CodableValue].self, forKey: .arrayValue) {
+            self = .array(value)
+        } else if container.contains(.nullValue) {
+            self = .null
         } else {
-            throw DecodingError.typeMismatch(CodableValue.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Unsupported value"))
+            throw DecodingError.dataCorruptedError(forKey: CodingKeys.stringValue, in: container, debugDescription: "Unsupported value type")
         }
     }
     
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        
+        var container = encoder.container(keyedBy: CodingKeys.self)
         switch self {
         case .string(let value):
-            try container.encode(value)
-        case .int(let value):
-            try container.encode(value)
-        case .bool(let value):
-            try container.encode(value)
-        case .double(let value):
-            try container.encode(value)
-        case .array(let value):
-            try container.encode(value)
+            try container.encode(value, forKey: .stringValue)
+        case .number(let value):
+            try container.encode(value, forKey: .numberValue)
+        case .boolean(let value):
+            try container.encode(value, forKey: .booleanValue)
         case .dictionary(let value):
-            try container.encode(value)
+            try container.encode(value, forKey: .dictionaryValue)
+        case .array(let value):
+            try container.encode(value, forKey: .arrayValue)
+        case .null:
+            try container.encodeNil(forKey: .nullValue)
         }
     }
+    
+    private enum CodingKeys: String, CodingKey {
+        case stringValue
+        case numberValue
+        case booleanValue
+        case dictionaryValue
+        case arrayValue
+        case nullValue
+    }
 }
+

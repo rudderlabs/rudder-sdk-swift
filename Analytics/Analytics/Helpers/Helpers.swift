@@ -8,8 +8,8 @@
 import Foundation
 
 // MARK: - Typealiases(Public)
-public typealias RudderOptions = [String: Any]
-public typealias RudderProperties = [String: Any]
+public typealias RudderOptions = [String: CodableValue]
+public typealias RudderProperties = [String: CodableValue]
 
 // MARK: - Typealiases(Internal)
 typealias PluginClosure = (Plugin) -> Void
@@ -18,7 +18,7 @@ typealias PluginClosure = (Plugin) -> Void
 public struct Constants {
     public static let logTag = "Rudder-Analytics"
     public static let defaultLogLevel: LogLevel = .none
-    public static let defaultStorageMode: StorageMode = .disk
+    public static let defaultStorageMode: StorageMode = .memory
     
     //Internals
     static let fileIndex = "rudderstack.message.file.index."

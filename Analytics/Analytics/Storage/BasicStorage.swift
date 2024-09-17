@@ -17,7 +17,7 @@ final class BasicStorage: Storage {
     let storageMode: StorageMode
     
     private let keyValueStore: KeyValueStore
-    private let dataStore: DataStore
+    private let dataStore: any DataStore
     
     init(writeKey: String, storageMode: StorageMode = Constants.defaultStorageMode) {
         self.writeKey = writeKey

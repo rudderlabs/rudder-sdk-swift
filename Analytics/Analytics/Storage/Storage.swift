@@ -40,7 +40,6 @@ public protocol Storage: KeyValueStorage, MessageStorage {
 /**
  Enum values to determine the method of storing message events.
  */
-@objc
 public enum StorageMode: Int {
     case disk
     case memory

@@ -25,7 +25,7 @@ public protocol DataStore {
 final class StoreProvider {
     private init() {}
     
-    static func prepareProvider(for storageMode: StorageMode, writeKey: String) -> DataStore {
+    static func prepareProvider(for storageMode: StorageMode, writeKey: String) -> any DataStore {
         return storageMode == .disk ? DiskStore(writeKey: writeKey) : MemoryStore(writeKey: writeKey)
     }
 }
