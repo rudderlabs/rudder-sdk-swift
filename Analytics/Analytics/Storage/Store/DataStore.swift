@@ -7,6 +7,10 @@
 
 import Foundation
 
+// MARK: - DataStore
+/**
+ A unified protocol designed to manage both disk and memory storage through dependency injection.
+ */
 public protocol DataStore {
     func retain(value: String)
     func retrieve() -> [Any]
@@ -14,6 +18,10 @@ public protocol DataStore {
     func rollover()
 }
 
+// MARK: - StoreProvider
+/**
+ A class responsible for supplying the DataStore object based on the specified storage mode.
+ */
 final class StoreProvider {
     private init() {}
     

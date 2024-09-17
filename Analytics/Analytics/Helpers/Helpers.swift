@@ -63,6 +63,7 @@ extension DateFormatter {
     }
 }
 
+// MARK: - UserDefaults
 extension UserDefaults {
     static func rudder(_ writeKey: String) -> UserDefaults? {
         let suiteName = (Bundle.main.bundleIdentifier ?? "com.rudder.poc") + ".analytics." + writeKey
@@ -70,6 +71,7 @@ extension UserDefaults {
     }
 }
 
+// MARK: - FileManager
 extension FileManager {
     static var eventStorageURL: URL {
         let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -123,6 +125,7 @@ extension FileManager {
     }
 }
 
+// MARK: - KeyedDecodingContainer
 extension KeyedDecodingContainer {
     func decodeDictionary(forKey key: K) throws -> [String: Any] {
         let dictionary = try self.decode([String: String].self, forKey: key)
@@ -130,6 +133,7 @@ extension KeyedDecodingContainer {
     }
 }
 
+// MARK: - KeyedEncodingContainer
 extension KeyedEncodingContainer {
     mutating func encode(_ value: [String: Any], forKey key: K) throws {
         let dictionary = value as? [String: String] ?? [:] // or transform as needed
@@ -137,6 +141,7 @@ extension KeyedEncodingContainer {
     }
 }
 
+// MARK: - Encodable
 extension Encodable {
     var toJSONString: String? {
         let encoder = JSONEncoder()

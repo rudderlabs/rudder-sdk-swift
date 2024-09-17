@@ -7,6 +7,10 @@
 
 import Foundation
 
+// MARK: - MessageDataResult
+/**
+ A data model that contains the stored message event data.
+ */
 public struct MessageDataResult {
     public let dataFiles: [URL]?
     public let dataItems: [MessageDataItem]?
@@ -25,6 +29,10 @@ public struct MessageDataResult {
     }
 }
 
+// MARK: - MessageDataItem
+/**
+ A data model which is used to handle the incoming message event data.
+ */
 public struct MessageDataItem {
     public let id: String
     public var batch: String

@@ -7,6 +7,10 @@
 
 import Foundation
 
+// MARK: - MemoryStore
+/**
+ A class designed to store and retrieve message events using memory storage.
+ */
 class MemoryStore {
     let writeKey: String
     var dataItems: [MessageDataItem] = []
@@ -77,6 +81,10 @@ class MemoryStore {
     }
 }
 
+/**
+ Private variables and functions to manage incoming message events.
+ */
+
 extension MemoryStore {
     private var currentDataItemKey: String {
         return Constants.memoryIndex + self.writeKey
@@ -93,6 +101,10 @@ extension MemoryStore {
     }
 }
 
+// MARK: - DataStore
+/**
+ Implementation of the `DataStore` protocol.
+ */
 extension MemoryStore: DataStore {
     func retain(value: String) {
         self.memoryOperationQueue.addOperation {

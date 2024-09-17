@@ -7,6 +7,10 @@
 
 import Foundation
 
+// MARK: - BasicStorage
+/**
+ The interface of the storage module, capable of handling both `KeyValueStore` and `DataStore` objects.
+ */
 final class BasicStorage: Storage {
     
     let writeKey: String
@@ -29,6 +33,9 @@ final class BasicStorage: Storage {
 }
 
 // MARK: - MessageStorage
+/**
+ Implementation of the `MessageStorage` protocol.
+ */
 extension BasicStorage {
     
     func write(message: String) {
@@ -50,6 +57,9 @@ extension BasicStorage {
 }
 
 // MARK: - KeyValueStorage
+/**
+ Implementation of the `KeyValueStorage` protocol.
+ */
 extension BasicStorage {
     func write<T: Codable>(value: T, key: String) {
         self.keyValueStore.save(value: value, reference: key)

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// The class is currently not in use but may be needed in the future.
 @propertyWrapper
 public struct AutoCodable<T: Codable>: Codable {
     public var wrappedValue: T

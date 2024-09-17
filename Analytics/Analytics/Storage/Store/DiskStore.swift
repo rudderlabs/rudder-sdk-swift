@@ -6,14 +6,17 @@
 //
 
 import Foundation
-
+// MARK: - DiskStore
+/**
+ A class designed to store and retrieve message events using file system storage.
+ */
 final class DiskStore {
     
     let writeKey: String
     let fileStorageURL: URL = FileManager.eventStorageURL
     private let keyValueStore: KeyValueStore
     
-    private let fileOperationQueue: OperationQueue = {
+    private let fileOperationQueue: OperationQueue = { // will be replaced by common queue..
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
         queue.qualityOfService = .background
@@ -60,6 +63,9 @@ final class DiskStore {
     }
 }
 
+/**
+ Private variables and functions to manage incoming message events.
+ */
 extension DiskStore {
     private var fileIndexKey: String {
         return Constants.fileIndex + self.writeKey
@@ -99,6 +105,10 @@ extension DiskStore {
     }
 }
 
+// MARK: - DataStore
+/**
+ Implementation of the `DataStore` protocol.
+ */
 extension DiskStore: DataStore {
     func retain(value: String) {
         self.fileOperationQueue.addOperation {

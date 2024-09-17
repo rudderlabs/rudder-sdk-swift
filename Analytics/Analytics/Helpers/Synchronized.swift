@@ -7,10 +7,10 @@
 
 import Foundation
 
+// MARK: - Synchronized
 /**
  This `propertyWrapper` ensures that the property is `thread-safe`.
  */
-// MARK: - Synchronized
 @propertyWrapper
 public final class Synchronized<T> {
     var value: T

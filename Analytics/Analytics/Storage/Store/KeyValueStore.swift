@@ -6,9 +6,10 @@
 //
 
 import Foundation
-
-//"This implementation may be replaced by plist storage..."
-
+// MARK: - KeyValueStore
+/**
+ This class is designed to store and retrieve values using a custom UserDefaults object.
+ */
 final class KeyValueStore {
     let writeKey: String
     let userDefaults: UserDefaults?
@@ -19,6 +20,9 @@ final class KeyValueStore {
     }
 }
 
+/**
+ Basic operations for storing, retrieving, and deleting values.
+ */
 extension KeyValueStore {
     func save<T: Codable>(value: T?, reference key: String) {
         if self.isPrimitiveType(value) {
@@ -48,6 +52,9 @@ extension KeyValueStore {
     }
 }
 
+/**
+ Function to determine whether the received value is a primitive data type.
+ */
 extension KeyValueStore {
     private func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
         guard let value = value else { return true } //Since nil is also a primitive, & can be set to UserDefaults..
