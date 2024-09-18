@@ -28,8 +28,8 @@ public class AnalyticsClient {
     }
     
     // MARK: - Track Event
-    public func track(name: String, properties: RudderProperties = RudderProperties(), options: RudderOptions = RudderOptions()) {
-        let event = TrackEvent(event: name, properties: properties, options: options)
+    public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
+        let event = TrackEvent(event: name, properties: CodableDictionary(properties), options: CodableDictionary(options))
         self.process(event: event)
     }
 }

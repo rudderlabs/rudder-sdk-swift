@@ -33,10 +33,10 @@ public struct TrackEvent: MessageEvent {
     public var originalTimeStamp: String
     
     public var event: String
-    public var properties: RudderProperties
-    public var options: RudderOptions
+    public var properties: CodableDictionary?
+    public var options: CodableDictionary?
     
-    public init(event: String, properties: RudderProperties, options: RudderOptions) {
+    public init(event: String, properties: CodableDictionary?, options: CodableDictionary?) {
         self.type = .track
         self.messageId = .randomUUIDString
         self.originalTimeStamp = .currentTimeStamp

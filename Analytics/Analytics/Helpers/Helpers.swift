@@ -8,8 +8,8 @@
 import Foundation
 
 // MARK: - Typealiases(Public)
-public typealias RudderOptions = [String: CodableValue]
-public typealias RudderProperties = [String: CodableValue]
+public typealias RudderOptions = [String: Any]
+public typealias RudderProperties = [String: Any]
 
 // MARK: - Typealiases(Internal)
 typealias PluginClosure = (Plugin) -> Void

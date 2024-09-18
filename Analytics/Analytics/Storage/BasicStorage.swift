@@ -11,7 +11,7 @@ import Foundation
 /**
  The interface of the storage module, capable of handling both `KeyValueStore` and `DataStore` objects.
  */
-final class BasicStorage: Storage {
+final public class BasicStorage: Storage {
     
     let writeKey: String
     let storageMode: StorageMode
@@ -19,7 +19,7 @@ final class BasicStorage: Storage {
     private let keyValueStore: KeyValueStore
     private let dataStore: any DataStore
     
-    init(writeKey: String, storageMode: StorageMode = Constants.defaultStorageMode) {
+    public init(writeKey: String, storageMode: StorageMode = Constants.defaultStorageMode) {
         self.writeKey = writeKey
         self.storageMode = storageMode
         
@@ -27,7 +27,7 @@ final class BasicStorage: Storage {
         self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
-    var eventStorageMode: StorageMode {
+    public var eventStorageMode: StorageMode {
         return self.storageMode
     }
 }
@@ -38,20 +38,20 @@ final class BasicStorage: Storage {
  */
 extension BasicStorage {
     
-    func write(message: String) {
+    public func write(message: String) {
         self.dataStore.retain(value: message)
     }
     
-    func read() -> MessageDataResult {
+    public func read() -> MessageDataResult {
         let collected = self.dataStore.retrieve()
         return self.storageMode == .disk ? MessageDataResult(dataFiles: collected as? [URL]) : MessageDataResult(dataItems: collected as? [MessageDataItem])
     }
     
-    func remove(messageReference: String) {
+    public func remove(messageReference: String) {
         self.dataStore.remove(reference: messageReference)
     }
     
-    func rollover() {
+    public func rollover() {
         self.dataStore.rollover()
     }
 }
@@ -61,15 +61,15 @@ extension BasicStorage {
  Implementation of the `KeyValueStorage` protocol.
  */
 extension BasicStorage {
-    func write<T: Codable>(value: T, key: String) {
+    public func write<T: Codable>(value: T, key: String) {
         self.keyValueStore.save(value: value, reference: key)
     }
     
-    func read<T: Codable>(key: String) -> T? {
+    public func read<T: Codable>(key: String) -> T? {
         return self.keyValueStore.read(reference: key)
     }
     
-    func remove(key: String) {
+    public func remove(key: String) {
         self.keyValueStore.delete(reference: key)
     }
 }

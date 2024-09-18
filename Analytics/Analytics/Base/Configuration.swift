@@ -18,11 +18,11 @@ public class Configuration {
     var optOut: Bool
     var storage: Storage?
     
-    public init(writeKey: String, dataPlaneUrl: String, logger: Logger = SwiftLogger(logLevel: Constants.defaultLogLevel), optOut: Bool = false) {
+    public init(writeKey: String, dataPlaneUrl: String, logger: Logger = SwiftLogger(logLevel: Constants.defaultLogLevel), optOut: Bool = false, storage: Storage? = nil) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.logger = logger
         self.optOut = optOut
-        self.storage = BasicStorage(writeKey: writeKey)
+        self.storage = storage ?? BasicStorage(writeKey: writeKey)
     }
 }
