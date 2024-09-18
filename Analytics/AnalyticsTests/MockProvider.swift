@@ -1,0 +1,8 @@
+//
+//  MockProvider.swift
+//  AnalyticsTests
+//
+//  Created by Satheesh Kannan on 18/09/24.
+//
+
+import Foundation
