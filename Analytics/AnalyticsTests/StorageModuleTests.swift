@@ -26,112 +26,117 @@ final class StorageModuleTests: XCTestCase {
         self.analytics_memory = nil
         self.keyValueStore = nil
     }
-}
-
-// MARK: - KeyValueStore
-extension StorageModuleTests {
     
     func test_initialization() {
         XCTAssertTrue(self.analytics_disk?.configuration.storage?.eventStorageMode == .disk)
         XCTAssertTrue(self.analytics_memory?.configuration.storage?.eventStorageMode == .memory)
         XCTAssertNotNil(self.keyValueStore)
     }
+}
+
+// MARK: - KeyValueStore
+extension StorageModuleTests {
     
-    func test_save_primitive() {
-        guard let storage = self.keyValueStore else { XCTFail(); return }
+    func test_write_primitive() {
+        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
         
         let value1 = 1
-        storage.save(value: value1, reference: "IntValue")
-        let stored1: Int? = storage.read(reference: "IntValue")
+        storage.write(value: value1, key: "IntValue")
+        let stored1: Int? = storage.read(key: "IntValue")
         XCTAssertNotNil(stored1)
         
         let value2 = 2.0
-        storage.save(value: value2, reference: "DoubleValue")
-        let stored2: Double? = storage.read(reference: "DoubleValue")
+        storage.write(value: value2, key: "DoubleValue")
+        let stored2: Double? = storage.read(key: "DoubleValue")
         XCTAssertNotNil(stored2)
         
         let value3 = "3"
-        storage.save(value: value3, reference: "StringValue")
-        let stored3: String? = storage.read(reference: "StringValue")
+        storage.write(value: value3, key: "StringValue")
+        let stored3: String? = storage.read(key: "StringValue")
         XCTAssertNotNil(stored3)
         
         let value4 = true
-        storage.save(value: value4, reference: "BoolValue")
-        let stored4: Bool? = storage.read(reference: "BoolValue")
+        storage.write(value: value4, key: "BoolValue")
+        let stored4: Bool? = storage.read(key: "BoolValue")
         XCTAssertNotNil(stored4)
     }
     
-    func test_save_nonPrimitive() {
-        guard let storage = self.keyValueStore else { XCTFail(); return }
+    func test_write_nonPrimitive() {
+        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
     
-        storage.save(value: MockProvider.simpleTrackEvent, reference: "DataModel")
-        let model: TrackEvent? = storage.read(reference: "DataModel")
+        storage.write(value: MockProvider.simpleTrackEvent, key: "DataModel")
+        let model: TrackEvent? = storage.read(key: "DataModel")
         XCTAssertNotNil(model)
     }
     
     func test_read_primitive() {
-        guard let storage = self.keyValueStore else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
         
         let value1 = 1
-        storage.save(value: value1, reference: "IntValue")
-        let stored1: Int? = storage.read(reference: "IntValue")
+        storage.write(value: value1, key: "IntValue")
+        let stored1: Int? = storage.read(key: "IntValue")
         XCTAssertTrue(value1 == stored1)
         
         let value2 = 2.0
-        storage.save(value: value2, reference: "DoubleValue")
-        let stored2: Double? = storage.read(reference: "DoubleValue")
+        storage.write(value: value2, key: "DoubleValue")
+        let stored2: Double? = storage.read(key: "DoubleValue")
         XCTAssertTrue(value2 == stored2)
         
         let value3 = "3"
-        storage.save(value: value3, reference: "StringValue")
-        let stored3: String? = storage.read(reference: "StringValue")
+        storage.write(value: value3, key: "StringValue")
+        let stored3: String? = storage.read(key: "StringValue")
         XCTAssertTrue(value3 == stored3)
         
         let value4 = true
-        storage.save(value: value4, reference: "BoolValue")
-        let stored4: Bool? = storage.read(reference: "BoolValue")
+        storage.write(value: value4, key: "BoolValue")
+        let stored4: Bool? = storage.read(key: "BoolValue")
         XCTAssertTrue(value4 == stored4)
     }
     
     func test_read_nonPrimitive() {
-        guard let storage = self.keyValueStore else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
     
-        storage.save(value: MockProvider.simpleTrackEvent, reference: "DataModel")
-        guard let model: TrackEvent = storage.read(reference: "DataModel") else { XCTFail(); return }
+        storage.write(value: MockProvider.simpleTrackEvent, key: "DataModel")
+        guard let model: TrackEvent = storage.read(key: "DataModel") else { XCTFail(); return }
         XCTAssertTrue(MockProvider.simpleTrackEvent.messageId == model.messageId)
     }
     
     func test_delete() {
-        guard let storage = self.keyValueStore else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
         
         let value1 = 1
-        storage.save(value: value1, reference: "IntValue")
-        storage.delete(reference: "IntValue")
-        let stored1: Int? = storage.read(reference: "IntValue")
+        storage.write(value: value1, key: "IntValue")
+        storage.remove(key: "IntValue")
+        let stored1: Int? = storage.read(key: "IntValue")
         XCTAssertNil(stored1)
         
         let value2 = 2.0
-        storage.save(value: value2, reference: "DoubleValue")
-        storage.delete(reference: "DoubleValue")
-        let stored2: Double? = storage.read(reference: "DoubleValue")
+        storage.write(value: value2, key: "DoubleValue")
+        storage.remove(key: "DoubleValue")
+        let stored2: Double? = storage.read(key: "DoubleValue")
         XCTAssertNil(stored2)
         
         let value3 = "3"
-        storage.save(value: value3, reference: "StringValue")
-        storage.delete(reference: "StringValue")
-        let stored3: String? = storage.read(reference: "StringValue")
+        storage.write(value: value3, key: "StringValue")
+        storage.remove(key: "StringValue")
+        let stored3: String? = storage.read(key: "StringValue")
         XCTAssertNil(stored3)
         
         let value4 = true
-        storage.save(value: value4, reference: "BoolValue")
-        storage.delete(reference: "BoolValue")
-        let stored4: Bool? = storage.read(reference: "BoolValue")
+        storage.write(value: value4, key: "BoolValue")
+        storage.remove(key: "BoolValue")
+        let stored4: Bool? = storage.read(key: "BoolValue")
         XCTAssertNil(stored4)
         
-        storage.save(value: MockProvider.simpleTrackEvent, reference: "DataModel")
-        storage.delete(reference: "DataModel")
-        let model: TrackEvent? = storage.read(reference: "DataModel")
+        storage.write(value: MockProvider.simpleTrackEvent, key: "DataModel")
+        storage.remove(key: "DataModel")
+        let model: TrackEvent? = storage.read(key: "DataModel")
         XCTAssertNil(model)
     }
+    
+}
+
+// MARK: - DiskStore
+extension StorageModuleTests {
     
 }
