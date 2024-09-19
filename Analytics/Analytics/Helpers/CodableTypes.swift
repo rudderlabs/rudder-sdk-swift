@@ -29,39 +29,6 @@ public struct CodableArray: Codable {
     }
 }
 
-// MARK: - AutoCodable
-
-@propertyWrapper
-public struct AutoCodable<T: Codable>: Codable {
-    public var wrappedValue: T
-    
-    public init(wrappedValue: T) {
-        self.wrappedValue = wrappedValue
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        if let codableValue = wrappedValue as? AnyCodable {
-            try codableValue.encode(to: encoder)
-        } else {
-            var container = encoder.singleValueContainer()
-            try container.encode(wrappedValue)
-        }
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        
-        if T.self == AnyCodable.self {
-            // Handle CodableValue specifically
-            let value = try AnyCodable(from: decoder)
-            self.wrappedValue = value as! T
-        } else {
-            // Handle generic Codable types
-            self.wrappedValue = try container.decode(T.self)
-        }
-    }
-}
-
 // MARK: - AnyCodable
 
 public struct AnyCodable: Codable {
