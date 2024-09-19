@@ -141,40 +141,13 @@ extension StorageModuleTests {
 // MARK: - DiskStore
 extension StorageModuleTests {
     
-    private var fileIndexKey: String {
-        return Constants.fileIndex + MockProvider._mockWriteKey
-    }
-    
-    private var currentFileIndex: Int {
-        guard let index: Int = self.keyValueStore?.read(reference: self.fileIndexKey) else { return 0 }
-        return index
-    }
-    
-    private var currentFileURL: URL {
-        return FileManager.eventStorageURL.appending(path: MockProvider._mockWriteKey + "-\(self.currentFileIndex)").appendingPathExtension(Constants.fileType)
-    }
-    
-    private func currentFolderContents() { //This function will be removed in near future....
-        let folderPath = self.currentFileURL.deletingLastPathComponent().path()
-        print("//--------------------------------//")
-        do {
-            let fileManager = FileManager.default
-            let contents = try fileManager.contentsOfDirectory(atPath: folderPath)
-            print("Folder: \(folderPath)")
-            print("Folder contents: \(contents)")
-        } catch {
-            print("Error accessing folder: \(error)")
-        }
-        print("//--------------------------------//")
-    }
-    
     func test_write_event_disk() {
         guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
         
         storage.write(message: eventJson)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1)) // This will helps to finish the async write operation to finish..
         
-        XCTAssertTrue(FileManager.default.fileExists(atPath: self.currentFileURL.path()))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: MockProvider.currentFileURL.path()))
     }
     
     func test_read_event_disk() {
@@ -194,7 +167,7 @@ extension StorageModuleTests {
         storage.write(message: eventJson)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
         
-        XCTAssertTrue(storage.remove(messageReference: self.currentFileURL.path()))
-        XCTAssertFalse(FileManager.default.fileExists(atPath: self.currentFileURL.path()))
+        XCTAssertTrue(storage.remove(messageReference: MockProvider.currentFileURL.path()))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: MockProvider.currentFileURL.path()))
     }
 }
