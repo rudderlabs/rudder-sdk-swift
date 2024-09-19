@@ -18,7 +18,7 @@ typealias PluginClosure = (Plugin) -> Void
 public struct Constants {
     public static let logTag = "Rudder-Analytics"
     public static let defaultLogLevel: LogLevel = .none
-    public static let defaultStorageMode: StorageMode = .memory
+    public static let defaultStorageMode: StorageMode = .disk
     
     //Internals
     static let fileIndex = "rudderstack.message.file.index."

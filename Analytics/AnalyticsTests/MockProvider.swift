@@ -6,12 +6,15 @@
 //
 
 import Foundation
-import Analytics
+@testable import Analytics
 
 final class MockProvider {
     private init() {}
     
-    private static let _mockWriteKey = "MoCk_WrItEkEy"
+    static let _mockWriteKey = "MoCk_WrItEkEy"
+    static var fileIndexKey = Constants.fileIndex + _mockWriteKey
+    static var memoryIndexKey = Constants.memoryIndex + _mockWriteKey
+    static let userDefaults = UserDefaults.rudder(_mockWriteKey)
     
     static let clientWithDiskStorage: AnalyticsClient = {
         let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .disk)
@@ -27,8 +30,10 @@ final class MockProvider {
         return AnalyticsClient(configuration: configuration)
     }()
     
+    static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
+    
     static let simpleTrackEvent: TrackEvent = {
-        let event = TrackEvent(event: "Track_Event", properties: ["Property_1": .string("Value1")], options: ["Property_1": .string("Value1")])
+        let event = TrackEvent(event: "Track_Event", properties: CodableDictionary(["Property_1": "Value1"]), options: CodableDictionary(["Property_1": "Value1"]))
         return event
     }()
 }

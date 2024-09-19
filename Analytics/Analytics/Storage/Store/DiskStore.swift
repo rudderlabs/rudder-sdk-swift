@@ -50,7 +50,7 @@ final class DiskStore {
     private func finish() {
         let currentFilePath = self.currentFileURL.path()
         guard FileManager.default.fileExists(atPath: currentFilePath) else { return }
-        print("currentFilePath: \(currentFilePath)")
+        
         let content = Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
         self.writeTo(file: self.currentFileURL, content: content)
         FileManager.removePathExtension(from: currentFilePath)
