@@ -15,22 +15,19 @@ final class MockProvider {
     static let _mockWriteKey = "MoCk_WrItEkEy"
     static let userDefaults = UserDefaults.rudder(_mockWriteKey)
     
-    static let clientWithMemoryStorage: AnalyticsClient = {
-        let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .memory)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://www.mock-url.com/", storage: storage)
-        
-        return AnalyticsClient(configuration: configuration)
-    }()
-    
-    static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
-    
     static let simpleTrackEvent: TrackEvent = {
         let event = TrackEvent(event: "Track_Event", properties: CodableDictionary(["Property_1": "Value1"]), options: CodableDictionary(["Property_1": "Value1"]))
         return event
     }()
 }
 
-// MARK: - Disk Store
+// MARK: - KeyValueStore
+extension MockProvider {
+    
+    static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
+}
+
+// MARK: - DiskStore
 extension MockProvider {
     
     static let clientWithDiskStorage: AnalyticsClient = {
@@ -65,5 +62,25 @@ extension MockProvider {
             print("Error accessing folder: \(error)")
         }
         print("//--------------------------------//")
+    }
+}
+
+// MARK: - MemoryStore
+extension MockProvider {
+    
+    static let clientWithMemoryStorage: AnalyticsClient = {
+        let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .memory)
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://www.mock-url.com/", storage: storage)
+        
+        return AnalyticsClient(configuration: configuration)
+    }()
+    
+    static var currentDataItemKey: String {
+        return Constants.memoryIndex + _mockWriteKey
+    }
+    
+    static var currentDataItemId: String? {
+        guard let currentItemId: String = self.keyValueStore.read(reference: self.currentDataItemKey) else { return nil }
+        return currentItemId
     }
 }

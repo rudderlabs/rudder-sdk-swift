@@ -13,26 +13,20 @@ final class StorageModuleTests: XCTestCase {
 
     var analytics_disk: AnalyticsClient?
     var analytics_memory: AnalyticsClient?
-    var keyValueStore: KeyValueStore?
-    var basicStorage: BasicStorage?
     
     override func setUpWithError() throws {
         self.analytics_disk = MockProvider.clientWithDiskStorage
         self.analytics_memory = MockProvider.clientWithMemoryStorage
-        self.keyValueStore = MockProvider.keyValueStore
     }
 
     override func tearDownWithError() throws {
         self.analytics_disk = nil
         self.analytics_memory = nil
-        self.keyValueStore = nil
-        self.basicStorage = nil
     }
     
     func test_initialization() {
         XCTAssertTrue(self.analytics_disk?.configuration.storage?.eventStorageMode == .disk)
         XCTAssertTrue(self.analytics_memory?.configuration.storage?.eventStorageMode == .memory)
-        XCTAssertNotNil(self.keyValueStore)
     }
 }
 
@@ -169,5 +163,93 @@ extension StorageModuleTests {
         
         XCTAssertTrue(storage.remove(messageReference: MockProvider.currentFileURL.path()))
         XCTAssertFalse(FileManager.default.fileExists(atPath: MockProvider.currentFileURL.path()))
+    }
+    
+    func test_rollover_event_disk() {
+        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        
+        //clearing all existing files...
+        storage.rollover()
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        guard let files = storage.read().dataFiles else { XCTFail(); return }
+        
+        for file in files {
+            storage.remove(messageReference: file.path())
+        }
+        
+        storage.write(message: eventJson)
+        storage.rollover()
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        
+        guard let files = storage.read().dataFiles else { XCTFail(); return }
+        XCTAssertTrue(files.count == 1)
+    }
+}
+
+// MARK: - MemoryStore
+extension StorageModuleTests {
+    func test_write_event_memory() {
+        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        
+        storage.rollover()
+        let existingResult = storage.read()
+        
+        storage.write(message: eventJson)
+        storage.rollover()
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1)) // This will helps to finish the async write operation to finish..
+        
+        guard let resultItems = storage.read().dataItems, let existingItems = existingResult.dataItems else { XCTFail(); return }
+        XCTAssertTrue(resultItems.count > existingItems.count)
+    }
+    
+    func test_read_event_memory() {
+        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        
+        storage.write(message: eventJson)
+        storage.rollover()
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        
+        guard let resultItems = storage.read().dataItems else { XCTFail(); return }
+        XCTAssertFalse(resultItems.isEmpty)
+    }
+    
+    func test_remove_event_memory() {
+        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        
+        storage.write(message: eventJson)
+        storage.rollover()
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        
+        guard let resultItems = storage.read().dataItems else { XCTFail(); return }
+        for item in resultItems {
+            storage.remove(messageReference: item.id)
+        }
+        
+        guard let resultItems = storage.read().dataItems else { XCTFail(); return }
+        XCTAssertTrue(resultItems.isEmpty)
+    }
+    
+    func test_rollover_event_memory() {
+        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        
+        storage.rollover()
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        
+        guard let resultItems1 = storage.read().dataItems else { XCTFail(); return }
+        for item in resultItems1 {
+            storage.remove(messageReference: item.id)
+        }
+
+        storage.write(message: eventJson)
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        
+        guard let resultItems2 = storage.read().dataItems else { XCTFail(); return }
+        XCTAssertTrue(resultItems2.isEmpty)
+        
+        storage.rollover()
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        
+        guard let resultItems3 = storage.read().dataItems else { XCTFail(); return }
+        XCTAssertFalse(resultItems3.isEmpty)
     }
 }
