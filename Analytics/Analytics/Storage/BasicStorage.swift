@@ -47,8 +47,8 @@ extension BasicStorage {
         return self.storageMode == .disk ? MessageDataResult(dataFiles: collected as? [URL]) : MessageDataResult(dataItems: collected as? [MessageDataItem])
     }
     
-    public func remove(messageReference: String) {
-        self.dataStore.remove(reference: messageReference)
+    public func remove(messageReference: String) -> Bool {
+        return self.dataStore.remove(reference: messageReference)
     }
     
     public func rollover() {

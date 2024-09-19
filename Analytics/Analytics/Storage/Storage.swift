@@ -24,7 +24,8 @@ public protocol KeyValueStorage {
 public protocol MessageStorage {
     func write(message: String)
     func read() -> MessageDataResult
-    func remove(messageReference: String)
+    @discardableResult
+    func remove(messageReference: String) -> Bool
     func rollover()
 }
 

@@ -120,8 +120,8 @@ extension DiskStore: DataStore {
         return self.collectFiles().compactMap { URL(fileURLWithPath: $0) }
     }
     
-    func remove(reference filePath: String) {
-        FileManager.delete(file: filePath)
+    func remove(reference filePath: String) -> Bool {
+        return FileManager.delete(file: filePath)
     }
     
     func rollover() {

@@ -14,6 +14,7 @@ final class StorageModuleTests: XCTestCase {
     var analytics_disk: AnalyticsClient?
     var analytics_memory: AnalyticsClient?
     var keyValueStore: KeyValueStore?
+    var basicStorage: BasicStorage?
     
     override func setUpWithError() throws {
         self.analytics_disk = MockProvider.clientWithDiskStorage
@@ -25,6 +26,7 @@ final class StorageModuleTests: XCTestCase {
         self.analytics_disk = nil
         self.analytics_memory = nil
         self.keyValueStore = nil
+        self.basicStorage = nil
     }
     
     func test_initialization() {
@@ -101,7 +103,7 @@ extension StorageModuleTests {
         XCTAssertTrue(MockProvider.simpleTrackEvent.messageId == model.messageId)
     }
     
-    func test_delete() {
+    func test_delete_values() {
         guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
         
         let value1 = 1
@@ -139,4 +141,60 @@ extension StorageModuleTests {
 // MARK: - DiskStore
 extension StorageModuleTests {
     
+    private var fileIndexKey: String {
+        return Constants.fileIndex + MockProvider._mockWriteKey
+    }
+    
+    private var currentFileIndex: Int {
+        guard let index: Int = self.keyValueStore?.read(reference: self.fileIndexKey) else { return 0 }
+        return index
+    }
+    
+    private var currentFileURL: URL {
+        return FileManager.eventStorageURL.appending(path: MockProvider._mockWriteKey + "-\(self.currentFileIndex)").appendingPathExtension(Constants.fileType)
+    }
+    
+    private func currentFolderContents() { //This function will be removed in near future....
+        let folderPath = self.currentFileURL.deletingLastPathComponent().path()
+        print("//--------------------------------//")
+        do {
+            let fileManager = FileManager.default
+            let contents = try fileManager.contentsOfDirectory(atPath: folderPath)
+            print("Folder: \(folderPath)")
+            print("Folder contents: \(contents)")
+        } catch {
+            print("Error accessing folder: \(error)")
+        }
+        print("//--------------------------------//")
+    }
+    
+    func test_write_event_disk() {
+        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        
+        storage.write(message: eventJson)
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1)) // This will helps to finish the async write operation to finish..
+        
+        XCTAssertTrue(FileManager.default.fileExists(atPath: self.currentFileURL.path()))
+    }
+    
+    func test_read_event_disk() {
+        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        
+        storage.write(message: eventJson)
+        storage.rollover()
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        
+        guard let files = storage.read().dataFiles else { XCTFail(); return }
+        XCTAssertFalse(files.isEmpty)
+    }
+    
+    func test_remove_event_disk() {
+        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        
+        storage.write(message: eventJson)
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        
+        XCTAssertTrue(storage.remove(messageReference: self.currentFileURL.path()))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: self.currentFileURL.path()))
+    }
 }

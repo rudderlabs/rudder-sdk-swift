@@ -116,8 +116,8 @@ extension MemoryStore: DataStore {
         return self.collectDataItems()
     }
     
-    func remove(reference: String) {
-        self.removeItem(using: reference)
+    func remove(reference: String) -> Bool {
+        return self.removeItem(using: reference)
     }
     
     func rollover() {
