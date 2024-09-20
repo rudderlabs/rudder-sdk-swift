@@ -16,16 +16,16 @@ public enum PluginType: Int, CaseIterable {
 // MARK: - Plugin
 protocol Plugin: AnyObject {
     var pluginType: PluginType { get set }
-    var analytics: Analytics? { get set }
+    var analytics: AnalyticsClient? { get set }
     
-    func setup(analytics: Analytics)
+    func setup(analytics: AnalyticsClient)
     func execute(event: MessageEvent) -> MessageEvent
     
     func teardown()
 }
 
 extension Plugin {
-    func setup(analytics: Analytics) {
+    func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
     }
     
@@ -38,12 +38,15 @@ extension Plugin {
 
 // MARK: - POCPlugin
 class POCPlugin: Plugin {
-    var analytics: Analytics?
+    var analytics: AnalyticsClient?
     
     var pluginType: PluginType = .preProcess
         
     func execute(event: MessageEvent) -> MessageEvent {
         self.analytics?.configuration.logger.debug(tag: Constants.logTag, log: "POCPlugin is running...")
+        if let json = event.toJSONString {
+            self.analytics?.configuration.storage?.write(message: json)
+        }
         return event
     }
 }

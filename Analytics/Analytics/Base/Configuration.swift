@@ -5,7 +5,7 @@
 //  Created by Satheesh Kannan on 16/08/24.
 //
 
-import UIKit
+import Foundation
 /**
  This class is responsible for configuring the entire SDK.
  */
@@ -16,11 +16,13 @@ public class Configuration {
     var dataPlaneUrl: String
     var logger: Logger
     var optOut: Bool
+    var storage: Storage?
     
-    public init(writeKey: String, dataPlaneUrl: String, logger: Logger = SwiftLogger(logLevel: Constants.defaultLogLevel), optOut: Bool = false) {
+    public init(writeKey: String, dataPlaneUrl: String, logger: Logger = SwiftLogger(logLevel: Constants.defaultLogLevel), optOut: Bool = false, storage: Storage? = nil) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.logger = logger
         self.optOut = optOut
+        self.storage = storage ?? BasicStorage(writeKey: writeKey)
     }
 }

@@ -11,9 +11,9 @@ import Foundation
 class PluginChain {
     
     private var pluginList = [PluginType: PluginInteractor]()
-    var analytics: Analytics
+    var analytics: AnalyticsClient
     
-    init(analytics: Analytics) {
+    init(analytics: AnalyticsClient) {
         self.analytics = analytics
         PluginType.allCases.forEach { self.pluginList[$0] = PluginInteractor() }
     }

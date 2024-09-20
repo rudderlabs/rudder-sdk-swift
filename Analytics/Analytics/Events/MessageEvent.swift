@@ -8,11 +8,10 @@
 import Foundation
 
 // MARK: - EventType
-@objc
-public enum EventType: Int {
+public enum EventType: String, CaseIterable, Codable {
     case track, screen, alias, identify, group
     
-    public var title: String {
+    public var label: String {
         return String(describing: self).capitalized
     }
 }
@@ -21,33 +20,28 @@ public enum EventType: Int {
 /**
  This is base class for all events.
  */
-@objcMembers
-public class MessageEvent {
+public protocol MessageEvent: Codable {
+    var type: EventType { get set }
+    var messageId: String { get set }
+    var originalTimeStamp: String { get set }
+}
+
+// MARK: - TrackEvent
+public struct TrackEvent: MessageEvent {
     public var type: EventType
     public var messageId: String
     public var originalTimeStamp: String
     
-    init(type: EventType, messageId: String, originalTimeStamp: String) {
-        self.type = type
-        self.messageId = messageId
-        self.originalTimeStamp = originalTimeStamp
-    }
-}
-
-// MARK: - TrackEvent
-@objcMembers
-public class TrackEvent: MessageEvent {
+    public var event: String
+    public var properties: CodableDictionary?
+    public var options: CodableDictionary?
     
-    var event: String
-    var properties: RudderProperties
-    var options: RudderOptions
-    
-    init(event: String, properties: RudderProperties, options: RudderOptions,
-         type: EventType = .track, messageId: String = .randomUUIDString, originalTimeStamp: String = .currentTimeStamp) {
+    public init(event: String, properties: CodableDictionary?, options: CodableDictionary?) {
+        self.type = .track
+        self.messageId = .randomUUIDString
+        self.originalTimeStamp = .currentTimeStamp
         self.event = event
         self.properties = properties
         self.options = options
-        
-        super.init(type: type, messageId: messageId, originalTimeStamp: originalTimeStamp)
     }
 }
