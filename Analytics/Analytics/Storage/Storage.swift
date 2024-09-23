@@ -45,3 +45,20 @@ public enum StorageMode: Int {
     case disk
     case memory
 }
+
+typealias StorageAction = () -> Void
+
+// MARK: - StorageQueue
+/**
+ Class which performs all storage related activities.
+ */
+final class StorageQueue {
+    private init() {}
+    private static let shared = StorageQueue()
+    
+    private let queue = DispatchQueue(label: "rudderstack.storage.message.queue")
+    
+    static func perform(_ action: @escaping StorageAction) {
+        Self.shared.queue.async(execute: action)
+    }
+}

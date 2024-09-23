@@ -107,7 +107,7 @@ extension MemoryStore {
  */
 extension MemoryStore: DataStore {
     func retain(value: String) {
-        self.memoryOperationQueue.addOperation {
+        StorageQueue.perform {
             self.store(message: value)
         }
     }
@@ -121,7 +121,7 @@ extension MemoryStore: DataStore {
     }
     
     func rollover() {
-        self.memoryOperationQueue.addOperation {
+        StorageQueue.perform {
             self.finish()
         }
     }

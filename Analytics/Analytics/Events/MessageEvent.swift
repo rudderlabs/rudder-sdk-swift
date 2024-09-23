@@ -12,7 +12,7 @@ public enum EventType: String, CaseIterable, Codable {
     case track, screen, alias, identify, group
     
     public var label: String {
-        return String(describing: self).capitalized
+        return rawValue.capitalized
     }
 }
 
