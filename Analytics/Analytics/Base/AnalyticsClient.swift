@@ -39,6 +39,8 @@ extension AnalyticsClient {
     private func setup() {
         self.pluginChain = PluginChain(analytics: self)
         self.pluginChain.add(plugin: POCPlugin())
+        
+        self.collectConfiguration()
     }
     
     private func process(event: MessageEvent) {
@@ -48,3 +50,10 @@ extension AnalyticsClient {
     }
 }
 
+// MARK: - Backend Configuration
+extension AnalyticsClient {
+    private func collectConfiguration() {
+        let client = HttpClient(analytics: self)
+        client.getConfiguarationData()
+    }
+}

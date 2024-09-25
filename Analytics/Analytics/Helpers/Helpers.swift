@@ -19,6 +19,8 @@ public struct Constants {
     public static let logTag = "Rudder-Analytics"
     public static let defaultLogLevel: LogLevel = .none
     public static let defaultStorageMode: StorageMode = .disk
+    public static let defaultControlPlaneUrl = "https://api.rudderlabs.com"
+    public static let defaultGZipStatus = true
     
     //Internals
     static let fileIndex = "rudderstack.message.file.index."
@@ -29,6 +31,7 @@ public struct Constants {
     static let batchPrefix = "{\"batch\":["
     static let batchSentAtSuffix = "],\"sentAt\":\""
     static let batchSuffix = "\"}"
+    static let configQueryParams = ["p": "ios", "v": "1.0.0"]
     
     private init() {}
 }
@@ -50,6 +53,14 @@ extension String {
     
     var utf8Data: Data? {
         return self.data(using: .utf8)
+    }
+    
+    var base64Encoded: String? {
+        return self.utf8Data?.base64EncodedString()
+    }
+    
+    var trimmedUrlString: String {
+        return self.hasSuffix("/") ? String(self.dropLast()) : self
     }
 }
 
@@ -148,9 +159,23 @@ extension Encodable {
         encoder.outputFormatting = .prettyPrinted // Optional: for pretty-printed JSON
         do {
             let jsonData = try encoder.encode(self)
-            return String(data: jsonData, encoding: .utf8)
+            return jsonData.toJSONString
         } catch {
             return nil
         }
+    }
+}
+
+extension Data {
+    var toJSONString: String? {
+        return String(data: self, encoding: .utf8)
+    }
+}
+
+extension URL {
+    func appendQueryParameters(_ parameters: [String: String]) -> URL {
+        guard var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false) else { return self }
+        urlComponents.queryItems = parameters.map { URLQueryItem(name: $0, value: $1) }
+        return urlComponents.url ?? self
     }
 }
