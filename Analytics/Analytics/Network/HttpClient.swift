@@ -1,0 +1,116 @@
+//
+//  HttpClient.swift
+//  Analytics
+//
+//  Created by Satheesh Kannan on 24/09/24.
+//
+
+import Foundation
+
+// MARK: - HttpClientRequests
+/**
+ This protocol is designed to execute predefined network requests.
+ */
+protocol HttpClientRequests {
+    func getConfiguarationData()
+    func postBatchEvents(_ batch: String)
+}
+
+// MARK: - HttpClient
+/**
+ This class provides the implementation for the `HttpClientRequests` protocol.
+ */
+final class HttpClient {
+    let analytics: AnalyticsClient
+    
+    init(analytics: AnalyticsClient) {
+        self.analytics = analytics
+    }
+    
+    private func prepareGenericUrlRequest(for requestType: HttpClientRequestType) -> URLRequest? {
+        guard let url = self.prepareRequestUrl(for: requestType) else { return nil }
+        var urlRequest = URLRequest(url:url)
+        urlRequest.httpMethod = requestType.httpMethod
+        urlRequest.allHTTPHeaderFields = requestType.headers(analytics)
+        return urlRequest
+    }
+    
+    private func prepareRequestUrl(for requestType: HttpClientRequestType) -> URL? {
+        guard var url = URL(string: requestType.url(analytics).trimmedUrlString) else { return nil }
+        url = url.appending(path: requestType.endpoint)
+        
+        if requestType == .configuration {
+            url = url.appendQueryParameters(Constants.configQueryParams)
+        }
+        return url
+    }
+    
+    private func runRequset(_ request: URLRequest) {
+        HttpNetwork.perform(request: request) { result in
+            switch result {
+            case .success(let response):
+                print(response.toJSONString ?? "Bad response")
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+}
+
+// MARK: - HttpClientRequests
+
+extension HttpClient: HttpClientRequests {
+    func getConfiguarationData() {
+        guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { return }
+        self.runRequset(urlRequest)
+    }
+    
+    func postBatchEvents(_ batch: String) {
+        guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else { return }
+        urlRequest.httpBody = batch.utf8Data
+        
+        self.runRequset(urlRequest)
+    }
+}
+
+// MARK: - HttpClientRequestType
+/**
+ An enume that provides all network request-related data based on the request type.
+ */
+enum HttpClientRequestType {
+    case configuration
+    case events
+    
+    func url(_ analytics: AnalyticsClient) -> String {
+        return switch self {
+        case .configuration: analytics.configuration.controlPlaneUrl
+        case .events: analytics.configuration.dataPlaneUrl
+        }
+    }
+    
+    var endpoint: String {
+        return switch self {
+        case .configuration: "sourceConfig"
+        case .events: "batch"
+        }
+    }
+    
+    var httpMethod: String {
+        return switch self {
+        case .configuration: "GET"
+        case .events: "POST"
+        }
+    }
+    
+    func headers(_ analytics: AnalyticsClient) -> [String: String] {
+        
+        let encodedAuthString = (analytics.configuration.writeKey + ":").base64Encoded ?? ""
+        var defaultHeaders = ["Content-Type": "application/json", "Authorization": "Basic \(encodedAuthString)"]
+        var specialHeaders = [String: String]() // Need to add AnonymousId
+        
+        if analytics.configuration.gzipEnabled { specialHeaders["Content-Encoding"] = "gzip" }
+        if self == .events { specialHeaders.forEach { defaultHeaders[$0] = $1 } }
+        
+        return defaultHeaders
+    }
+}
