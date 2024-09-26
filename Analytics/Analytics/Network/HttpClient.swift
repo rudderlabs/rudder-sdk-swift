@@ -58,7 +58,7 @@ final class HttpClient {
 }
 
 // MARK: - HttpClientRequests
-
+// TODO: These functions will be updated in the near future to return a response to the calling function.
 extension HttpClient: HttpClientRequests {
     func getConfiguarationData() {
         guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { return }
@@ -91,7 +91,7 @@ enum HttpClientRequestType {
     var endpoint: String {
         return switch self {
         case .configuration: "sourceConfig"
-        case .events: "batch"
+        case .events: "v1/batch"
         }
     }
     
