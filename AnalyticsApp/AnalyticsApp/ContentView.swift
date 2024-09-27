@@ -19,6 +19,19 @@ struct ContentView: View {
                 .onTapGesture {
                     AnalyticsManager.shared.analytics?.track(name: "Track at \(Date())")
                 }
+                .padding()
+            
+            Text("Track Multiple Event")
+                .font(.title)
+                .padding()
+                .foregroundStyle(.white)
+                .background(.blue)
+                .onTapGesture {
+                    for i in 1...50 {
+                        AnalyticsManager.shared.analytics?.track(name: "Track: \(i)")
+                    }
+                }
+                .padding()
         }
         .padding()
     }

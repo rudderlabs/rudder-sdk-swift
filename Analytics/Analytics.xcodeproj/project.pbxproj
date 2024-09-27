@@ -13,6 +13,8 @@
 		533485972C9B6FFB0029F88E /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485962C9B6FFB0029F88E /* PropertyWrappers.swift */; };
 		5351AA6A2C6BE95D003C3C47 /* Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 5351AA692C6BE95D003C3C47 /* Analytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */; };
+		5387E8942CA320FD00DB1C49 /* HttpNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */; };
+		5387E8972CA3233000DB1C49 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5387E8962CA3233000DB1C49 /* HttpClient.swift */; };
 		5392AB952C6FC78F00369791 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5392AB942C6FC78F00369791 /* Configuration.swift */; };
 		5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5392AB962C6FC84800369791 /* SwiftLogger.swift */; };
 		539E54042C98B05300982E95 /* StorageModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539E54032C98B05300982E95 /* StorageModels.swift */; };
@@ -49,6 +51,8 @@
 		5351AA662C6BE95D003C3C47 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5351AA692C6BE95D003C3C47 /* Analytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Analytics.h; sourceTree = "<group>"; };
 		5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
+		5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpNetwork.swift; sourceTree = "<group>"; };
+		5387E8962CA3233000DB1C49 /* HttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		5392AB942C6FC78F00369791 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		5392AB962C6FC84800369791 /* SwiftLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftLogger.swift; sourceTree = "<group>"; };
 		539E54032C98B05300982E95 /* StorageModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModels.swift; sourceTree = "<group>"; };
@@ -114,8 +118,18 @@
 				53A22A522C7DBDC40059D6FE /* Plugins */,
 				53A22A572C7DC1050059D6FE /* Helpers */,
 				53C29E732C918F2900F2A8C3 /* Storage */,
+				5387E8952CA322EC00DB1C49 /* Network */,
 			);
 			path = Analytics;
+			sourceTree = "<group>";
+		};
+		5387E8952CA322EC00DB1C49 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */,
+				5387E8962CA3233000DB1C49 /* HttpClient.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		539E54052C98B05B00982E95 /* StoreModels */ = {
@@ -313,6 +327,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5387E8942CA320FD00DB1C49 /* HttpNetwork.swift in Sources */,
 				53BE94ED2C941B4B0004E75A /* DataStore.swift in Sources */,
 				5392AB952C6FC78F00369791 /* Configuration.swift in Sources */,
 				53BE94F42C94D70D0004E75A /* MemoryStore.swift in Sources */,
@@ -320,6 +335,7 @@
 				539E54042C98B05300982E95 /* StorageModels.swift in Sources */,
 				53A22A502C7C904E0059D6FE /* Helpers.swift in Sources */,
 				533485972C9B6FFB0029F88E /* PropertyWrappers.swift in Sources */,
+				5387E8972CA3233000DB1C49 /* HttpClient.swift in Sources */,
 				5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */,
 				53A22A562C7DBFD70059D6FE /* PluginInteractor.swift in Sources */,
 				53A22A542C7DBEC10059D6FE /* PluginChain.swift in Sources */,

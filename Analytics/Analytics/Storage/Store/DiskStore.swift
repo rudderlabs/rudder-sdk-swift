@@ -15,14 +15,7 @@ final class DiskStore {
     let writeKey: String
     let fileStorageURL: URL = FileManager.eventStorageURL
     private let keyValueStore: KeyValueStore
-    
-    private let fileOperationQueue: OperationQueue = { // will be replaced by common queue..
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        queue.qualityOfService = .background
-        return queue
-    }()
-    
+        
     init(writeKey: String) {
         self.writeKey = writeKey
         self.keyValueStore = KeyValueStore(writeKey: writeKey)
@@ -111,7 +104,7 @@ extension DiskStore {
  */
 extension DiskStore: DataStore {
     func retain(value: String) {
-        self.fileOperationQueue.addOperation {
+        StorageQueue.perform {
             self.store(message: value)
         }
     }
@@ -125,7 +118,7 @@ extension DiskStore: DataStore {
     }
     
     func rollover() {
-        self.fileOperationQueue.addOperation {
+        StorageQueue.perform {
             self.finish()
         }
     }
