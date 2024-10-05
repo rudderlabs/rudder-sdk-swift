@@ -24,7 +24,7 @@ class PluginChain {
         let preProcessedResult = self.applyPlugins(pluginType: .preProcess, event: event)
         let onProcessedResult = self.applyPlugins(pluginType: .onProcess, event: preProcessedResult)
         
-        self.applyPlugins(pluginType: .integrations, event: onProcessedResult)
+        self.applyPlugins(pluginType: .destination, event: onProcessedResult)
     }
     
     func add(plugin: Plugin) {

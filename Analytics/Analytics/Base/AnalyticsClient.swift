@@ -40,7 +40,9 @@ extension AnalyticsClient {
         self.pluginChain = PluginChain(analytics: self)
         self.pluginChain.add(plugin: POCPlugin())
         
-        self.collectConfiguration()
+        self.analyticsQueue.addOperation {
+            self.collectConfiguration()
+        }
     }
     
     private func process(event: MessageEvent) {

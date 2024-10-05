@@ -10,7 +10,7 @@ import Foundation
 // MARK: - PluginType
 @objc
 public enum PluginType: Int, CaseIterable {
-    case preProcess, onProcess, integrations, utility
+    case preProcess, onProcess, destination, after, manual
 }
 
 // MARK: - Plugin
