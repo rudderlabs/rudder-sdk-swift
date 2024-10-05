@@ -1,5 +1,5 @@
 //
-//  MessageEvent.swift
+//  Message.swift
 //  Analytics
 //
 //  Created by Satheesh Kannan on 20/08/24.
@@ -16,18 +16,18 @@ public enum EventType: String, CaseIterable, Codable {
     }
 }
 
-// MARK: - MessageEvent
+// MARK: - Message
 /**
  This is base class for all events.
  */
-public protocol MessageEvent: Codable {
+public protocol Message: Codable {
     var type: EventType { get set }
     var messageId: String { get set }
     var originalTimeStamp: String { get set }
 }
 
 // MARK: - TrackEvent
-public struct TrackEvent: MessageEvent {
+public struct TrackEvent: Message {
     public var type: EventType
     public var messageId: String
     public var originalTimeStamp: String

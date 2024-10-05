@@ -19,7 +19,7 @@ protocol Plugin: AnyObject {
     var analytics: AnalyticsClient? { get set }
     
     func setup(analytics: AnalyticsClient)
-    func execute(event: MessageEvent) -> MessageEvent
+    func execute(event: Message) -> Message
     
     func teardown()
 }
@@ -29,7 +29,7 @@ extension Plugin {
         self.analytics = analytics
     }
     
-    func execute(event: MessageEvent) -> MessageEvent{
+    func execute(event: Message) -> Message{
         return event
     }
     
@@ -42,7 +42,7 @@ class POCPlugin: Plugin {
     
     var pluginType: PluginType = .preProcess
         
-    func execute(event: MessageEvent) -> MessageEvent {
+    func execute(event: Message) -> Message {
         self.analytics?.configuration.logger.debug(tag: Constants.logTag, log: "POCPlugin is running...")
         if let json = event.toJSONString {
             self.analytics?.configuration.storage?.write(message: json)

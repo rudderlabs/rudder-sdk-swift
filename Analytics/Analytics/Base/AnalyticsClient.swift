@@ -45,7 +45,7 @@ extension AnalyticsClient {
         }
     }
     
-    private func process(event: MessageEvent) {
+    private func process(event: Message) {
         self.analyticsQueue.addOperation {
             self.pluginChain.process(event: event)
         }
