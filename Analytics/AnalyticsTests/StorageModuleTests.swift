@@ -25,8 +25,8 @@ final class StorageModuleTests: XCTestCase {
     }
     
     func test_initialization() {
-        XCTAssertTrue(self.analytics_disk?.configuration.storage?.eventStorageMode == .disk)
-        XCTAssertTrue(self.analytics_memory?.configuration.storage?.eventStorageMode == .memory)
+        XCTAssertTrue(self.analytics_disk?.configuration.storage.eventStorageMode == .disk)
+        XCTAssertTrue(self.analytics_memory?.configuration.storage.eventStorageMode == .memory)
     }
 }
 
