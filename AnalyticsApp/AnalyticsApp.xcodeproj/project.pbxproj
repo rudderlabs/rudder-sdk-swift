@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5351AA7D2C6BE9DE003C3C47 /* AnalyticsAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA7C2C6BE9DE003C3C47 /* AnalyticsAppApp.swift */; };
+		5351AA7D2C6BE9DE003C3C47 /* AnalyticsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */; };
 		5351AA7F2C6BE9DE003C3C47 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */; };
 		5351AA812C6BE9E0003C3C47 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5351AA802C6BE9E0003C3C47 /* Assets.xcassets */; };
 		5351AA842C6BE9E0003C3C47 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5351AA832C6BE9E0003C3C47 /* Preview Assets.xcassets */; };
@@ -31,7 +31,7 @@
 
 /* Begin PBXFileReference section */
 		5351AA792C6BE9DE003C3C47 /* AnalyticsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5351AA7C2C6BE9DE003C3C47 /* AnalyticsAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsAppApp.swift; sourceTree = "<group>"; };
+		5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsApp.swift; sourceTree = "<group>"; };
 		5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5351AA802C6BE9E0003C3C47 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5351AA832C6BE9E0003C3C47 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -70,7 +70,7 @@
 		5351AA7B2C6BE9DE003C3C47 /* AnalyticsApp */ = {
 			isa = PBXGroup;
 			children = (
-				5351AA7C2C6BE9DE003C3C47 /* AnalyticsAppApp.swift */,
+				5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */,
 				5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */,
 				5351AA802C6BE9E0003C3C47 /* Assets.xcassets */,
 				5351AA822C6BE9E0003C3C47 /* Preview Content */,
@@ -166,7 +166,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5351AA7F2C6BE9DE003C3C47 /* ContentView.swift in Sources */,
-				5351AA7D2C6BE9DE003C3C47 /* AnalyticsAppApp.swift in Sources */,
+				5351AA7D2C6BE9DE003C3C47 /* AnalyticsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

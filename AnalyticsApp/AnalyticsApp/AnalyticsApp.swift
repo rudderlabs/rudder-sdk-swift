@@ -10,7 +10,7 @@ import Analytics
 
 // MARK: - AnalyticsAppApp
 @main
-struct AnalyticsAppApp: App {
+struct AnalyticsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
@@ -39,7 +39,7 @@ class AnalyticsManager: Logger {
     private init() {}
     
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: <#writeKey#>, dataPlaneUrl: <#dataPlaneUrl#>, controlPlaneUrl: <#controlPlaneUrl#>, logger: self)
+        let config = Configuration(writeKey: "exmple_write_key", dataPlaneUrl: "https://data-plane.example.com", controlPlaneUrl: "https://control-plane.example.com", logger: self)
         self.analytics = AnalyticsClient(configuration: config)
     }
     
