@@ -32,6 +32,7 @@ public struct Constants {
     static let batchSentAtSuffix = "],\"sentAt\":\""
     static let batchSuffix = "\"}"
     static let configQueryParams = ["p": "ios", "v": "1.0.0"]
+    static let uploadSignal = "#!upload!#"
     
     private init() {}
 }

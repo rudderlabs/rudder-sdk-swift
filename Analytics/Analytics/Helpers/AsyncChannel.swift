@@ -1,3 +1,11 @@
+//
+//  AsyncChannel.swift
+//  Analytics
+//
+//  Created by Satheesh Kannan on 08/10/24.
+//
+
+
 final class AsyncChannel<T> {
     
     private let channel: AsyncStream<T>
@@ -15,8 +23,7 @@ final class AsyncChannel<T> {
     }
     
     // Add a value to the channel
-    func send(value: T) {
-        print(Thread.current)
+    func send(_ value: T) {
         queue.async { [weak self] in
             self?.continuation?.yield(value)
         }
@@ -24,7 +31,6 @@ final class AsyncChannel<T> {
     
     // Close the channel
     func closeChannel() {
-        print(Thread.current)
         queue.async { [weak self] in
             self?.continuation?.finish()
         }

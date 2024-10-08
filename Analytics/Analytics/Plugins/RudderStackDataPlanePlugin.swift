@@ -12,32 +12,32 @@ public final class RudderStackDataPlanePlugin: MessagePlugin {
     var pluginType: PluginType = .destination
     var analytics: AnalyticsClient?
     
-    private var messageQueue: DispatchQueue?
+    private var messageManager: MessageManager!
     
     func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
-        self.messageQueue = DispatchQueue(label: "com.rudderlabs.analytics.messageQueue")
-    }
-    
-    func flush() {
-        
+        self.messageManager = MessageManager(analytics: analytics)
     }
 }
 
 extension RudderStackDataPlanePlugin {
     func track(payload: TrackEvent) -> (any Message)? {
-        return nil
+        self.messageManager.put(payload)
+        return payload
     }
     
     func screen(payload: ScreenEvent) -> (any Message)? {
-        return nil
+        self.messageManager.put(payload)
+        return payload
     }
     
     func group(payload: GroupEvent) -> (any Message)? {
-        return nil
+        self.messageManager.put(payload)
+        return payload
     }
     
     func flush(payload: FlushEvent) -> (any Message)? {
-        return nil
+        self.messageManager.put(payload)
+        return payload
     }
 }
