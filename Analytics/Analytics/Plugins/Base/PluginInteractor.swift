@@ -23,7 +23,7 @@ class PluginInteractor {
     func execute(_ message: Message) -> Message? {
         var result = message
         self.pluginList.forEach {
-            result = $0.execute(event: result)
+            if let processed = $0.execute(event: result) { result = processed }
         }
         return result
     }

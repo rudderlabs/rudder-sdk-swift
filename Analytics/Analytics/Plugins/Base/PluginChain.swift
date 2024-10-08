@@ -49,13 +49,14 @@ class PluginChain {
 // MARK: - Private functions
 extension PluginChain {
     @discardableResult
-    private func applyPlugins(pluginType: PluginType, event: Message) -> Message {
+    private func applyPlugins(pluginType: PluginType, event: Message?) -> Message? {
         guard let mediator = self.pluginList[pluginType] else { return event }
         return self.applyPlugins(mediator: mediator, event: event)
     }
     
     @discardableResult
-    private func applyPlugins(mediator: PluginInteractor, event: Message) -> Message {
+    private func applyPlugins(mediator: PluginInteractor, event: Message?) -> Message? {
+        guard let event else { return nil }
         return mediator.execute(event)
     }
 }
