@@ -32,6 +32,10 @@ public class AnalyticsClient {
         let event = TrackEvent(event: name, properties: CodableDictionary(properties), options: CodableDictionary(options))
         self.process(event: event)
     }
+    
+    public func flush() {
+        self.process(event: FlushEvent(messageName: Constants.uploadSignal))
+    }
 }
 
 // MARK: - Private functions
@@ -39,6 +43,7 @@ extension AnalyticsClient {
     private func setup() {
         self.pluginChain = PluginChain(analytics: self)
         self.pluginChain.add(plugin: POCPlugin())
+        self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
         
         self.analyticsQueue.addOperation {
             self.collectConfiguration()
