@@ -32,6 +32,8 @@
 		53FD37782CB1B0C700DBA06B /* PluginChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37742CB1B0C700DBA06B /* PluginChain.swift */; };
 		53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37752CB1B0C700DBA06B /* PluginInteractor.swift */; };
 		53FD377D2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD377C2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift */; };
+		53FD37A02CB5163C00DBA06B /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD379F2CB5163C00DBA06B /* MessageManager.swift */; };
+		53FD37A22CB5258100DBA06B /* AsyncChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37A12CB5258100DBA06B /* AsyncChannel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +73,8 @@
 		53FD37742CB1B0C700DBA06B /* PluginChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginChain.swift; sourceTree = "<group>"; };
 		53FD37752CB1B0C700DBA06B /* PluginInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginInteractor.swift; sourceTree = "<group>"; };
 		53FD377C2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderStackDataPlanePlugin.swift; sourceTree = "<group>"; };
+		53FD379F2CB5163C00DBA06B /* MessageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageManager.swift; sourceTree = "<group>"; };
+		53FD37A12CB5258100DBA06B /* AsyncChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncChannel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				53A22A3C2C7472850059D6FE /* Message.swift */,
+				53FD379F2CB5163C00DBA06B /* MessageManager.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -189,6 +194,7 @@
 		53A22A572C7DC1050059D6FE /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				53FD37A12CB5258100DBA06B /* AsyncChannel.swift */,
 				53A22A4F2C7C904E0059D6FE /* Helpers.swift */,
 				533485942C9AC7C70029F88E /* CodableTypes.swift */,
 				533485962C9B6FFB0029F88E /* PropertyWrappers.swift */,
@@ -342,6 +348,7 @@
 				53BE94ED2C941B4B0004E75A /* DataStore.swift in Sources */,
 				5392AB952C6FC78F00369791 /* Configuration.swift in Sources */,
 				53BE94F42C94D70D0004E75A /* MemoryStore.swift in Sources */,
+				53FD37A22CB5258100DBA06B /* AsyncChannel.swift in Sources */,
 				53FD377D2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift in Sources */,
 				53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */,
 				539E54042C98B05300982E95 /* StorageModels.swift in Sources */,
@@ -356,6 +363,7 @@
 				5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */,
 				53BE94E92C921B9E0004E75A /* KeyValueStore.swift in Sources */,
 				533485952C9AC7C70029F88E /* CodableTypes.swift in Sources */,
+				53FD37A02CB5163C00DBA06B /* MessageManager.swift in Sources */,
 				53BE94EB2C9220950004E75A /* DiskStore.swift in Sources */,
 				53C29E722C918F2400F2A8C3 /* Storage.swift in Sources */,
 			);
