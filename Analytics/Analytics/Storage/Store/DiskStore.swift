@@ -15,7 +15,7 @@ final class DiskStore {
     let writeKey: String
     let fileStorageURL: URL = FileManager.eventStorageURL
     private let keyValueStore: KeyValueStore
-        
+    
     init(writeKey: String) {
         self.writeKey = writeKey
         self.keyValueStore = KeyValueStore(writeKey: writeKey)

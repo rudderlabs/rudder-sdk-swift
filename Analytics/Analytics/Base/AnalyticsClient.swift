@@ -26,13 +26,18 @@ public class AnalyticsClient {
         self.configuration = configuration
         self.setup()
     }
+}
+
+// MARK: - Events
+extension AnalyticsClient {
     
-    // MARK: - Track Event
+    // MARK: - Track
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         let event = TrackEvent(event: name, properties: CodableDictionary(properties), options: CodableDictionary(options))
         self.process(event: event)
     }
     
+    // MARK: - Flush
     public func flush() {
         self.process(event: FlushEvent(messageName: Constants.uploadSignal))
     }

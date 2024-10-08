@@ -30,6 +30,7 @@ extension Plugin {
     func teardown() {}
 }
 
+// MARK: - MessagePlugin
 protocol MessagePlugin: Plugin {
     func track(payload: TrackEvent) -> Message?
     func screen(payload: ScreenEvent) -> Message?
@@ -66,6 +67,7 @@ extension MessagePlugin {
 }
 
 // MARK: - POCPlugin
+// TODO: This is a sample plugin and will be removed in future..
 class POCPlugin: Plugin {
     var analytics: AnalyticsClient?
     

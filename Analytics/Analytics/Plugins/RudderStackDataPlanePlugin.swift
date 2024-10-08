@@ -6,7 +6,10 @@
 //
 
 import Foundation
-
+// MARK: - RudderStackDataPlanePlugin
+/**
+ This class serves as the main plugin responsible for initiating message operations.
+ */
 public final class RudderStackDataPlanePlugin: MessagePlugin {
     
     var pluginType: PluginType = .destination
@@ -19,6 +22,8 @@ public final class RudderStackDataPlanePlugin: MessagePlugin {
         self.messageManager = MessageManager(analytics: analytics)
     }
 }
+
+// MARK: - Message Events
 
 extension RudderStackDataPlanePlugin {
     func track(payload: TrackEvent) -> (any Message)? {

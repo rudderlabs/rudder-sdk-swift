@@ -167,12 +167,14 @@ extension Encodable {
     }
 }
 
+// MARK: - Data
 extension Data {
     var toJSONString: String? {
         return String(data: self, encoding: .utf8)
     }
 }
 
+// MARK: - URL
 extension URL {
     func appendQueryParameters(_ parameters: [String: String]) -> URL {
         guard var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false) else { return self }

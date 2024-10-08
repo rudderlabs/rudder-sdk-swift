@@ -5,9 +5,11 @@
 //  Created by Satheesh Kannan on 08/10/24.
 //
 
-
+// MARK: - AsyncChannel
+/**
+ This class utilizes `AsyncStream` to implement a subscription pattern, along with a dedicated serial queue.
+ */
 final class AsyncChannel<T> {
-    
     private let channel: AsyncStream<T>
     private var continuation: AsyncStream<T>.Continuation?
     
