@@ -15,11 +15,13 @@ final class StorageModuleTests: XCTestCase {
     var analytics_memory: AnalyticsClient?
     
     override func setUpWithError() throws {
+        try super.setUpWithError()
         self.analytics_disk = MockProvider.clientWithDiskStorage
         self.analytics_memory = MockProvider.clientWithMemoryStorage
     }
 
     override func tearDownWithError() throws {
+        try super.tearDownWithError()
         self.analytics_disk = nil
         self.analytics_memory = nil
     }
@@ -34,7 +36,7 @@ final class StorageModuleTests: XCTestCase {
 extension StorageModuleTests {
     
     func test_write_primitive() {
-        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail("Storage not initialized"); return }
         
         let value1 = 1
         storage.write(value: value1, key: "IntValue")
@@ -58,7 +60,7 @@ extension StorageModuleTests {
     }
     
     func test_write_nonPrimitive() {
-        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail("Storage not initialized"); return }
     
         storage.write(value: MockProvider.simpleTrackEvent, key: "DataModel")
         let model: TrackEvent? = storage.read(key: "DataModel")
@@ -66,7 +68,7 @@ extension StorageModuleTests {
     }
     
     func test_read_primitive() {
-        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail("Storage not initialized"); return }
         
         let value1 = 1
         storage.write(value: value1, key: "IntValue")
@@ -90,15 +92,15 @@ extension StorageModuleTests {
     }
     
     func test_read_nonPrimitive() {
-        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail("Storage not initialized"); return }
     
         storage.write(value: MockProvider.simpleTrackEvent, key: "DataModel")
-        guard let model: TrackEvent = storage.read(key: "DataModel") else { XCTFail(); return }
+        guard let model: TrackEvent = storage.read(key: "DataModel") else { XCTFail("Data model not found"); return }
         XCTAssertTrue(MockProvider.simpleTrackEvent.messageId == model.messageId)
     }
     
     func test_delete_values() {
-        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail("Storage not initialized"); return }
         
         let value1 = 1
         storage.write(value: value1, key: "IntValue")

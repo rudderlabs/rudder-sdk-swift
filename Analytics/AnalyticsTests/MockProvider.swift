@@ -23,7 +23,6 @@ final class MockProvider {
 
 // MARK: - KeyValueStore
 extension MockProvider {
-    
     static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
 }
 

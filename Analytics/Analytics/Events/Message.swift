@@ -27,7 +27,7 @@ public struct TrackEvent: Message {
     public var properties: CodableDictionary?
     public var options: CodableDictionary?
     
-    public init(event: String, properties: CodableDictionary?, options: CodableDictionary?) {
+    public init(event: String, properties: CodableDictionary? = nil, options: CodableDictionary? = nil) {
         self.type = .track
         self.messageId = .randomUUIDString
         self.originalTimeStamp = .currentTimeStamp
@@ -48,7 +48,7 @@ public struct ScreenEvent: Message {
     public var properties: CodableDictionary?
     public var options: CodableDictionary?
     
-    public init(screenName: String, properties: CodableDictionary?, options: CodableDictionary?) {
+    public init(screenName: String, properties: CodableDictionary? = nil, options: CodableDictionary? = nil) {
         self.type = .screen
         self.messageId = .randomUUIDString
         self.originalTimeStamp = .currentTimeStamp

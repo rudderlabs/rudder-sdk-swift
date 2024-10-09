@@ -27,8 +27,7 @@ final class MessageManager {
     }
     
     deinit {
-        self.writeChannel.closeChannel()
-        self.uploadChannel.closeChannel()
+        self.stop()
     }
     
     func put(_ message: Message) {
@@ -52,6 +51,11 @@ final class MessageManager {
                 self.startUploading()
             }
         }
+    }
+    
+    func stop() {
+        self.writeChannel.closeChannel()
+        self.uploadChannel.closeChannel()
     }
 }
 
