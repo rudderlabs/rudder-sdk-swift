@@ -38,8 +38,14 @@ public final class Synchronized<T> {
             pthread_rwlock_unlock(&lock)
         }
     }
-}
 
+    // New modify method to perform compound operations atomically
+    public func modify(_ block: (inout T) -> Void) {
+        pthread_rwlock_wrlock(&lock)
+        block(&value)
+        pthread_rwlock_unlock(&lock)
+    }
+}
 
 // MARK: - AutoCodable
 /**
