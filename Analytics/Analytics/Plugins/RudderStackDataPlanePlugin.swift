@@ -10,7 +10,7 @@ import Foundation
 /**
  This class serves as the main plugin responsible for initiating message operations.
  */
-public final class RudderStackDataPlanePlugin: MessagePlugin {
+final class RudderStackDataPlanePlugin: MessagePlugin {
     
     var pluginType: PluginType = .destination
     var analytics: AnalyticsClient?

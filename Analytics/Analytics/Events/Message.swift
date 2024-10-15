@@ -11,14 +11,14 @@ import Foundation
 /**
  This is base class for all events.
  */
-public protocol Message: Codable {
+protocol Message: Codable {
     var type: EventType { get set }
     var messageId: String { get set }
     var originalTimeStamp: String { get set }
 }
 
 // MARK: - TrackEvent
-public struct TrackEvent: Message {
+struct TrackEvent: Message {
     public var type: EventType
     public var messageId: String
     public var originalTimeStamp: String
@@ -39,7 +39,7 @@ public struct TrackEvent: Message {
 }
 
 // MARK: - ScreenEvent
-public struct ScreenEvent: Message {
+struct ScreenEvent: Message {
     public var type: EventType
     public var messageId: String
     public var originalTimeStamp: String
@@ -60,7 +60,7 @@ public struct ScreenEvent: Message {
 }
 
 // MARK: - GroupEvent
-public struct GroupEvent: Message {
+struct GroupEvent: Message {
     public var type: EventType
     public var messageId: String
     public var originalTimeStamp: String
@@ -81,7 +81,7 @@ public struct GroupEvent: Message {
 }
 
 // MARK: - FlushEvent
-public struct FlushEvent: Message {
+struct FlushEvent: Message {
     public var type: EventType
     public var messageId: String
     public var originalTimeStamp: String
@@ -98,7 +98,7 @@ public struct FlushEvent: Message {
 }
 
 // MARK: - EventType
-public enum EventType: String, CaseIterable, Codable {
+enum EventType: String, CaseIterable, Codable {
     case track, screen, group, flush
     
     public var label: String {
