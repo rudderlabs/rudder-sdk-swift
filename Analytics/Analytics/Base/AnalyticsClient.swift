@@ -26,11 +26,20 @@ public class AnalyticsClient {
         self.configuration = configuration
         self.setup()
     }
+}
+
+// MARK: - Events
+extension AnalyticsClient {
     
-    // MARK: - Track Event
+    // MARK: - Track
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         let event = TrackEvent(event: name, properties: CodableDictionary(properties), options: CodableDictionary(options))
         self.process(event: event)
+    }
+    
+    // MARK: - Flush
+    public func flush() {
+        self.process(event: FlushEvent(messageName: Constants.uploadSignal))
     }
 }
 
@@ -39,11 +48,14 @@ extension AnalyticsClient {
     private func setup() {
         self.pluginChain = PluginChain(analytics: self)
         self.pluginChain.add(plugin: POCPlugin())
+        self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
         
-        self.collectConfiguration()
+        self.analyticsQueue.addOperation {
+            self.collectConfiguration()
+        }
     }
     
-    private func process(event: MessageEvent) {
+    private func process(event: Message) {
         self.analyticsQueue.addOperation {
             self.pluginChain.process(event: event)
         }

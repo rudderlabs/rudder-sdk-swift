@@ -18,7 +18,7 @@ public class Configuration {
     var logger: Logger
     var optOut: Bool
     var gzipEnabled: Bool
-    var storage: Storage?
+    var storage: Storage
     
     public init(writeKey: String, dataPlaneUrl: String, controlPlaneUrl: String = Constants.defaultControlPlaneUrl, logger: Logger = SwiftLogger(logLevel: Constants.defaultLogLevel), optOut: Bool = false, gzipEnaabled: Bool = Constants.defaultGZipStatus, storage: Storage? = nil) {
         self.writeKey = writeKey

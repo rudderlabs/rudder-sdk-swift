@@ -32,6 +32,7 @@ public struct Constants {
     static let batchSentAtSuffix = "],\"sentAt\":\""
     static let batchSuffix = "\"}"
     static let configQueryParams = ["p": "ios", "v": "1.0.0"]
+    static let uploadSignal = "#!upload!#"
     
     private init() {}
 }
@@ -166,12 +167,14 @@ extension Encodable {
     }
 }
 
+// MARK: - Data
 extension Data {
     var toJSONString: String? {
         return String(data: self, encoding: .utf8)
     }
 }
 
+// MARK: - URL
 extension URL {
     func appendQueryParameters(_ parameters: [String: String]) -> URL {
         guard var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false) else { return self }
