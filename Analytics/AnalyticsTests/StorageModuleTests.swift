@@ -138,7 +138,7 @@ extension StorageModuleTests {
 extension StorageModuleTests {
     
     func test_write_event_disk() {
-        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         storage.write(message: eventJson)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1)) // This will helps to finish the async write operation to finish..
@@ -147,7 +147,7 @@ extension StorageModuleTests {
     }
     
     func test_read_event_disk() {
-        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         storage.write(message: eventJson)
         storage.rollover()
@@ -158,7 +158,7 @@ extension StorageModuleTests {
     }
     
     func test_remove_event_disk() {
-        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         storage.write(message: eventJson)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
@@ -168,7 +168,7 @@ extension StorageModuleTests {
     }
     
     func test_rollover_event_disk() {
-        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         //clearing all existing files...
         storage.rollover()
@@ -191,7 +191,7 @@ extension StorageModuleTests {
 // MARK: - MemoryStore
 extension StorageModuleTests {
     func test_write_event_memory() {
-        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         storage.rollover()
         let existingResult = storage.read()
@@ -205,7 +205,7 @@ extension StorageModuleTests {
     }
     
     func test_read_event_memory() {
-        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         storage.write(message: eventJson)
         storage.rollover()
@@ -216,7 +216,7 @@ extension StorageModuleTests {
     }
     
     func test_remove_event_memory() {
-        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         storage.write(message: eventJson)
         storage.rollover()
@@ -232,7 +232,7 @@ extension StorageModuleTests {
     }
     
     func test_rollover_event_memory() {
-        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.toJSONString else { XCTFail(); return }
+        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         storage.rollover()
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
