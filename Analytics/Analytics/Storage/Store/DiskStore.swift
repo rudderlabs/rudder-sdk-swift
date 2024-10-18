@@ -21,7 +21,7 @@ final class DiskStore {
         self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
-    private func store(message: String) {
+    private func store(message: String) async {
         var currentFilePath = self.currentFileURL.path()
         var newFile = false
         if !FileManager.default.fileExists(atPath: currentFilePath) {
@@ -31,8 +31,8 @@ final class DiskStore {
         }
         
         if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > Constants.maxBatchSize {
-            finish()
-            self.store(message: message)
+            await self.finish()
+            await self.store(message: message)
             return
         }
         
@@ -40,14 +40,18 @@ final class DiskStore {
         self.writeTo(file: self.currentFileURL, content: content)
     }
     
-    private func finish() {
-        let currentFilePath = self.currentFileURL.path()
-        guard FileManager.default.fileExists(atPath: currentFilePath) else { return }
-        
-        let content = Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
-        self.writeTo(file: self.currentFileURL, content: content)
-        FileManager.removePathExtension(from: currentFilePath)
-        self.incrementFileIndex()
+    private func finish() async {
+        await withCheckedContinuation { continuation in
+            let currentFilePath = self.currentFileURL.path()
+            guard FileManager.default.fileExists(atPath: currentFilePath) else { continuation.resume(); return }
+            
+            let content = Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
+            self.writeTo(file: self.currentFileURL, content: content)
+            FileManager.removePathExtension(from: currentFilePath)
+            self.incrementFileIndex()
+            
+            continuation.resume()
+        }
     }
     
     private func collectFiles() -> [String] {
@@ -103,10 +107,8 @@ extension DiskStore {
  Implementation of the `DataStore` protocol.
  */
 extension DiskStore: DataStore {
-    func retain(value: String) {
-        StorageQueue.perform {
-            self.store(message: value)
-        }
+    func retain(value: String) async {
+        await self.store(message: value)
     }
     
     func retrieve() -> [Any] {
@@ -117,9 +119,7 @@ extension DiskStore: DataStore {
         return FileManager.delete(file: filePath)
     }
     
-    func rollover() {
-        StorageQueue.perform {
-            self.finish()
-        }
+    func rollover() async {
+        await self.finish()
     }
 }

@@ -12,10 +12,10 @@ import Foundation
  A unified protocol designed to manage both disk and memory storage through dependency injection.
  */
 public protocol DataStore {
-    func retain(value: String)
+    func retain(value: String) async
     func retrieve() -> [Any]
     func remove(reference: String) -> Bool
-    func rollover()
+    func rollover() async
 }
 
 // MARK: - StoreProvider

@@ -13,28 +13,21 @@ import Foundation
  */
 class MemoryStore {
     let writeKey: String
-    var dataItems: [MessageDataItem] = []
+    @Synchronized var dataItems: [MessageDataItem] = []
     private let keyValueStore: KeyValueStore
-    
-    private let memoryOperationQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        queue.qualityOfService = .background
-        return queue
-    }()
     
     init(writeKey: String) {
         self.writeKey = writeKey
         self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
-    private func store(message: String) {
+    private func store(message: String) async {
         var dataItem = self.currentDataItem ?? MessageDataItem(batch: Constants.batchPrefix)
         let newEntry = dataItem.batch == Constants.batchPrefix
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > Constants.maxBatchSize {
-            finish()
-            self.store(message: message)
+            await self.finish()
+            await self.store(message: message)
             return
         }
         
@@ -44,13 +37,16 @@ class MemoryStore {
         self.appendDataItem(dataItem)
     }
     
-    private func finish() {
-        guard var currentDataItem = self.currentDataItem else { return }
-        currentDataItem.batch += Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
-        currentDataItem.isClosed = true
-        self.appendDataItem(currentDataItem)
-
-        self.keyValueStore.delete(reference: self.currentDataItemKey)
+    private func finish() async {
+        await withCheckedContinuation { continuation in
+            guard var currentDataItem = self.currentDataItem else { continuation.resume(); return }
+            currentDataItem.batch += Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
+            currentDataItem.isClosed = true
+            self.appendDataItem(currentDataItem)
+            
+            self.keyValueStore.delete(reference: self.currentDataItemKey)
+            continuation.resume()
+        }
     }
     
     private func appendDataItem(_ item: MessageDataItem) {
@@ -77,6 +73,7 @@ class MemoryStore {
     private func removeItem(using id: String) -> Bool {
         guard let firstIndex = self.dataItems.firstIndex(where: { $0.id == id }) else { return false }
         self.dataItems.remove(at: firstIndex)
+        print("Item removed: \(id)")
         return true
     }
 }
@@ -106,10 +103,8 @@ extension MemoryStore {
  Implementation of the `DataStore` protocol.
  */
 extension MemoryStore: DataStore {
-    func retain(value: String) {
-        StorageQueue.perform {
-            self.store(message: value)
-        }
+    func retain(value: String) async {
+        await self.store(message: value)
     }
     
     func retrieve() -> [Any] {
@@ -120,9 +115,7 @@ extension MemoryStore: DataStore {
         return self.removeItem(using: reference)
     }
     
-    func rollover() {
-        StorageQueue.perform {
-            self.finish()
-        }
+    func rollover() async {
+        await self.finish()
     }
 }
