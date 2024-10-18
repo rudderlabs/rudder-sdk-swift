@@ -16,17 +16,20 @@ final class MessageManager {
     //Different channel for different operations..
     private var writeChannel: AsyncChannel<Message>
     private var uploadChannel: AsyncChannel<String>
+    private var httpClient: HttpClient?
     
     init(analytics: AnalyticsClient) {
         self.analytics = analytics
         
         self.writeChannel = AsyncChannel()
         self.uploadChannel = AsyncChannel()
+        self.httpClient = HttpClient(analytics: analytics)
         
         self.start()
     }
     
     deinit {
+        self.httpClient = nil
         self.stop()
     }
     
@@ -40,13 +43,13 @@ final class MessageManager {
     }
     
     private func start() {
-        Task.detached {
+        Task {
             await self.writeChannel.consume { message in
                 self.performStorage(message)
             }
         }
         
-        Task.detached {
+        Task {
             await self.uploadChannel.consume { value in
                 self.startUploading()
             }
@@ -67,28 +70,57 @@ extension MessageManager {
     
     func performStorage(_ message: Message) {
         Task {
-            guard let json = message.toJSONString else { return }
-            self.storage.write(message: json)
+            guard let json = message.jsonString else { return }
+            await self.storage.write(message: json)
         }
     }
 }
 
 // MARK: - Upload
 extension MessageManager {
+    
+    var storageMode: StorageMode {
+        return self.storage.eventStorageMode
+    }
+    
     func startUploading() {
-        // TODO: This section will be completed once the data plane upload implementation is in place.
-        self.storage.rollover()
-        if let received = self.storage.read().dataItems {
-            for item in received {
-                print(item.batch)
+        Task {
+            await self.storage.rollover()
+            
+            if self.storageMode == .disk {
+                if let received = self.storage.read().dataFiles { // disk store
+                    for file in received {
+                        print(file.path())
+                        print(FileManager.contentsOf(file: file.path()) ?? "No contents of file")
+                        
+                        guard let content = FileManager.contentsOf(file: file.path()) else { continue }
+                        await self.uploadBatch(content, file.path())
+                        print("Processed: \(file.path())")
+                    }
+                }
+            } else {
+                if let received = self.storage.read().dataItems { // memory store
+                    if received.count < 3 { return }
+                    for item in received {
+                        print(item.batch)
+                        await self.uploadBatch(item.batch, item.id)
+                        print("Processed: \(item.id)")
+                    }
+                }
             }
+            
         }
-        
-        if let received = self.storage.read().dataFiles {
-            for file in received {
-                print(file.path())
-                print(FileManager.contentsOf(file: file.path()) ?? "No contents of file")
+    }
+    
+    func uploadBatch(_ batch: String, _ reference: String) async {
+        self.httpClient?.postBatchEvents(batch, { result in
+            switch result {
+            case .success(let response):
+                print(response.prettyPrintedString ?? "Bad response")
+                self.storage.remove(messageReference: reference)
+            case .failure(let error):
+                print(error.localizedDescription)
             }
-        }
+        })
     }
 }
