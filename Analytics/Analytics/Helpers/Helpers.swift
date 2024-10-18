@@ -31,7 +31,7 @@ public struct Constants {
     static let batchPrefix = "{\"batch\":["
     static let batchSentAtSuffix = "],\"sentAt\":\""
     static let batchSuffix = "\"}"
-    static let configQueryParams = ["p": "ios", "v": "1.0.0"]
+    static let configQueryParams = ["p": "ios", "v": "1.29.1"]
     static let uploadSignal = "#!upload!#"
     
     private init() {}
@@ -130,6 +130,7 @@ extension FileManager {
         let fileUrl = URL(fileURLWithPath: filePath)
         do {
             try FileManager.default.removeItem(at: fileUrl)
+            print("File deleted: \(filePath)")
             return true
         } catch {
             return false
@@ -155,12 +156,12 @@ extension KeyedEncodingContainer {
 
 // MARK: - Encodable
 extension Encodable {
-    var toJSONString: String? {
+    var jsonString: String? {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted // Optional: for pretty-printed JSON
         do {
             let jsonData = try encoder.encode(self)
-            return jsonData.toJSONString
+            return jsonData.jsonString
         } catch {
             return nil
         }
@@ -169,8 +170,13 @@ extension Encodable {
 
 // MARK: - Data
 extension Data {
-    var toJSONString: String? {
+    var jsonString: String? {
         return String(data: self, encoding: .utf8)
+    }
+    
+    var prettyPrintedString: String? {
+        guard let dict = try? JSONSerialization.jsonObject(with: self, options: []) as? [String: Any], let prettyData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted), let pretty = prettyData.jsonString else { return nil }
+        return pretty
     }
 }
 

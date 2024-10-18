@@ -12,9 +12,11 @@ import Foundation
  This protocol is designed to execute predefined network requests.
  */
 protocol HttpClientRequests {
-    func getConfiguarationData()
-    func postBatchEvents(_ batch: String)
+    func getConfiguarationData(_ completion: @escaping RequestCompletion)
+    func postBatchEvents(_ batch: String ,_ completion: @escaping RequestCompletion)
 }
+
+typealias RequestCompletion = (Result<Data, Error>) -> Void
 
 // MARK: - HttpClient
 /**
@@ -44,32 +46,21 @@ final class HttpClient {
         }
         return url
     }
-    
-    private func runRequset(_ request: URLRequest) {
-        HttpNetwork.perform(request: request) { result in
-            switch result {
-            case .success(let response):
-                print(response.toJSONString ?? "Bad response")
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
 }
 
 // MARK: - HttpClientRequests
 // TODO: These functions will be updated in the near future to return a response to the calling function.
 extension HttpClient: HttpClientRequests {
-    func getConfiguarationData() {
+    func getConfiguarationData(_ completion: @escaping RequestCompletion) {
         guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { return }
-        self.runRequset(urlRequest)
+        HttpNetwork.perform(request: urlRequest, completion: completion)
     }
     
-    func postBatchEvents(_ batch: String) {
+    func postBatchEvents(_ batch: String, _ completion: @escaping RequestCompletion) {
         guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else { return }
         urlRequest.httpBody = batch.utf8Data
         
-        self.runRequset(urlRequest)
+        HttpNetwork.perform(request: urlRequest, completion: completion)
     }
 }
 
@@ -108,8 +99,10 @@ enum HttpClientRequestType {
         var defaultHeaders = ["Content-Type": "application/json", "Authorization": "Basic \(encodedAuthString)"]
         var specialHeaders = [String: String]() // Need to add AnonymousId
         
-        if analytics.configuration.gzipEnabled { specialHeaders["Content-Encoding"] = "gzip" }
-        if self == .events { specialHeaders.forEach { defaultHeaders[$0] = $1 } }
+        if self == .events {
+            if analytics.configuration.gzipEnabled { specialHeaders["Content-Encoding"] = "gzip" }
+            specialHeaders.forEach { defaultHeaders[$0] = $1 }
+        }
         
         return defaultHeaders
     }

@@ -66,6 +66,14 @@ extension AnalyticsClient {
 extension AnalyticsClient {
     private func collectConfiguration() {
         let client = HttpClient(analytics: self)
-        client.getConfiguarationData()
+        client.getConfiguarationData { result in
+            switch result {
+            case .success(let response):
+                print(response.prettyPrintedString ?? "Bad response")
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }
