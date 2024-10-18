@@ -38,8 +38,8 @@ final public class BasicStorage: Storage {
  */
 extension BasicStorage {
     
-    public func write(message: String) {
-        self.dataStore.retain(value: message)
+    public func write(message: String) async {
+        await self.dataStore.retain(value: message)
     }
     
     public func read() -> MessageDataResult {
@@ -51,8 +51,8 @@ extension BasicStorage {
         return self.dataStore.remove(reference: messageReference)
     }
     
-    public func rollover() {
-        self.dataStore.rollover()
+    public func rollover() async {
+        await self.dataStore.rollover()
     }
 }
 

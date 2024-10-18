@@ -22,11 +22,11 @@ public protocol KeyValueStorage {
  This protocol is designed to store and retrieve message events using either disk or memory storage.
  */
 public protocol MessageStorage {
-    func write(message: String)
+    func write(message: String) async
     func read() -> MessageDataResult
     @discardableResult
     func remove(messageReference: String) -> Bool
-    func rollover()
+    func rollover() async
 }
 
 // MARK: - Storage
