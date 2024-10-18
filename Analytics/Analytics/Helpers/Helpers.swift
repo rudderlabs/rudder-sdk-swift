@@ -37,6 +37,12 @@ public struct Constants {
     private init() {}
 }
 
+struct StorageKeys {
+    static let anonymousId = "anonymous_id"
+    
+    private init() {}
+}
+
 // MARK: - Extension: String
 extension String {
     static var randomUUIDString: String {

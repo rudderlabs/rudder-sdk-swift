@@ -97,9 +97,9 @@ enum HttpClientRequestType {
         
         let encodedAuthString = (analytics.configuration.writeKey + ":").base64Encoded ?? ""
         var defaultHeaders = ["Content-Type": "application/json", "Authorization": "Basic \(encodedAuthString)"]
-        var specialHeaders = [String: String]() // Need to add AnonymousId
         
         if self == .events {
+            var specialHeaders = ["AnonymousId": analytics.anonymousId]
             if analytics.configuration.gzipEnabled { specialHeaders["Content-Encoding"] = "gzip" }
             specialHeaders.forEach { defaultHeaders[$0] = $1 }
         }

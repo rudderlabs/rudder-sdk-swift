@@ -16,11 +16,6 @@ public class AnalyticsClient {
     public var configuration: Configuration
     
     private var pluginChain: PluginChain!
-    private let analyticsQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.qualityOfService = .background
-        return queue
-    }()
     
     public init(configuration: Configuration) {
         self.configuration = configuration
@@ -50,13 +45,13 @@ extension AnalyticsClient {
         self.pluginChain.add(plugin: POCPlugin())
         self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
         
-        self.analyticsQueue.addOperation {
+        Task {
             self.collectConfiguration()
         }
     }
     
     private func process(event: Message) {
-        self.analyticsQueue.addOperation {
+        Task {
             self.pluginChain.process(event: event)
         }
     }
@@ -74,6 +69,24 @@ extension AnalyticsClient {
             case .failure(let error):
                 print(error.localizedDescription)
             }
+        }
+    }
+}
+
+extension AnalyticsClient {
+    
+    var anonymousId: String {
+        get {
+            if let id: String = self.configuration.storage.read(key: StorageKeys.anonymousId) {
+                return id
+            } else {
+                let newId = UUID().uuidString
+                self.configuration.storage.write(value: newId, key: StorageKeys.anonymousId)
+                return newId
+            }
+        }
+        set {
+            self.configuration.storage.write(value: newValue, key: StorageKeys.anonymousId)
         }
     }
 }
