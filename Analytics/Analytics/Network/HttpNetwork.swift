@@ -43,6 +43,7 @@ final class HttpNetwork {
             
             let statusCode = httpResponse.statusCode
             guard let data = data, statusCode == 200 else {
+                print(data?.jsonString ?? "No Data..")
                 completion(.failure(HttpNetworkError.requestFailed(statusCode)))
                 return
             }

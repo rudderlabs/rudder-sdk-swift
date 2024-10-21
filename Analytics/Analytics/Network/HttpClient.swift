@@ -60,6 +60,10 @@ extension HttpClient: HttpClientRequests {
         guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else { return }
         urlRequest.httpBody = batch.utf8Data
         
+        if self.analytics.configuration.gzipEnabled, let gzipped = try? urlRequest.httpBody?.gzipped() as? Data {
+            urlRequest.httpBody = gzipped
+        }
+        
         HttpNetwork.perform(request: urlRequest, completion: completion)
     }
 }

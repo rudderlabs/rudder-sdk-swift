@@ -100,7 +100,6 @@ extension MessageManager {
                 }
             } else {
                 if let received = self.storage.read().dataItems { // memory store
-                    if received.count < 3 { return }
                     for item in received {
                         print(item.batch)
                         await self.uploadBatch(item.batch, item.id)
@@ -116,7 +115,7 @@ extension MessageManager {
         self.httpClient?.postBatchEvents(batch, { result in
             switch result {
             case .success(let response):
-                print(response.prettyPrintedString ?? "Bad response")
+                print(response.jsonString ?? "Bad response")
                 self.storage.remove(messageReference: reference)
             case .failure(let error):
                 print(error.localizedDescription)
