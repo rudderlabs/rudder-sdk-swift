@@ -69,10 +69,8 @@ extension MessageManager {
     }
     
     func performStorage(_ message: Message) {
-        Task {
-            guard let json = message.jsonString else { return }
-            await self.storage.write(message: json)
-        }
+        guard let json = message.jsonString else { return }
+        self.storage.write(message: json)
     }
 }
 
@@ -84,9 +82,7 @@ extension MessageManager {
     }
     
     func startUploading() {
-        Task {
-            await self.storage.rollover()
-            
+        self.storage.rollover {
             if self.storageMode == .disk {
                 if let received = self.storage.read().dataFiles { // disk store
                     for file in received {
@@ -94,7 +90,8 @@ extension MessageManager {
                         print(FileManager.contentsOf(file: file.path()) ?? "No contents of file")
                         
                         guard let content = FileManager.contentsOf(file: file.path()) else { continue }
-                        await self.uploadBatch(content, file.path())
+                        self.uploadBatch(content, file.path())
+                        self.isInOrder(content)
                         print("Processed: \(file.path())")
                     }
                 }
@@ -102,16 +99,16 @@ extension MessageManager {
                 if let received = self.storage.read().dataItems { // memory store
                     for item in received {
                         print(item.batch)
-                        await self.uploadBatch(item.batch, item.id)
+                        self.uploadBatch(item.batch, item.id)
+                        self.isInOrder(item.batch)
                         print("Processed: \(item.id)")
                     }
                 }
             }
-            
         }
     }
     
-    func uploadBatch(_ batch: String, _ reference: String) async {
+    func uploadBatch(_ batch: String, _ reference: String) {
         self.httpClient?.postBatchEvents(batch, { result in
             switch result {
             case .success(let response):
@@ -121,5 +118,46 @@ extension MessageManager {
                 print(error.localizedDescription)
             }
         })
+    }
+}
+
+extension MessageManager {
+    func isInOrder(_ batch: String) {
+        if let batchData = batch.utf8Data, let batchObject = try? JSONSerialization.jsonObject(with: batchData, options: []) as? [String: Any], let events = batchObject["batch"] as? [[String: Any]] {
+            if isSortedByTrackKey(array: events) {
+                print("Everything is in order")
+            } else {
+                print("Events are not in order")
+            }
+        }
+    }
+    
+    func extractTrackNumber(from trackString: String) -> Int? {
+        // Extract the number after "Track: "
+        if let numberString = trackString.split(separator: " ").last,
+           let number = Int(numberString) {
+            return number
+        }
+        return nil
+    }
+    
+    func isSortedByTrackKey(array: [[String: Any]]) -> Bool {
+        for (prev, next) in zip(array, array.dropFirst()) {
+            // Safely unwrap the "track" value and ensure it's a String
+            if let prevTrackString = prev["event"] as? String,
+               let nextTrackString = next["event"] as? String,
+               let prevTrack = extractTrackNumber(from: prevTrackString),
+               let nextTrack = extractTrackNumber(from: nextTrackString) {
+                print("Breaking at -->\(prevTrack) :: \(nextTrack)")
+                if nextTrack - 1 != prevTrack {
+                    print("Breaking at -->\(prevTrackString) :: \(nextTrackString)")
+                    return false
+                }
+            } else {
+                // Handle missing or invalid "track" value
+                return false
+            }
+        }
+        return true
     }
 }

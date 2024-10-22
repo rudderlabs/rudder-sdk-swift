@@ -51,9 +51,7 @@ extension AnalyticsClient {
     }
     
     private func process(event: Message) {
-        Task {
-            self.pluginChain.process(event: event)
-        }
+        self.pluginChain.process(event: event)
     }
 }
 
