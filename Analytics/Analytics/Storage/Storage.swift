@@ -22,11 +22,11 @@ public protocol KeyValueStorage {
  This protocol is designed to store and retrieve message events using either disk or memory storage.
  */
 public protocol MessageStorage {
-    func write(message: String) async
+    func write(message: String)
     func read() -> MessageDataResult
     @discardableResult
     func remove(messageReference: String) -> Bool
-    func rollover() async
+    func rollover(_ block: VoidClosure?)
 }
 
 // MARK: - Storage
@@ -48,17 +48,20 @@ public enum StorageMode: Int {
 
 typealias StorageAction = () -> Void
 
-// MARK: - StorageQueue
+// MARK: - SynchronizedQueue
 /**
  Class which performs all storage related activities.
  */
-final class StorageQueue {
+final class SynchronizedQueue {
     private init() {}
-    private static let shared = StorageQueue()
-    
-    private let queue = DispatchQueue(label: "rudderstack.storage.message.queue")
+    private static let semaphore = DispatchSemaphore(value: 1)
+    private static let queue = DispatchQueue(label: "rudderstack.storage.message.queue")
     
     static func perform(_ action: @escaping StorageAction) {
-        Self.shared.queue.async(execute: action)
+        self.queue.async {
+            self.semaphore.wait() // Lock
+            defer { self.semaphore.signal() } // Unlock when done
+            action()
+        }
     }
 }

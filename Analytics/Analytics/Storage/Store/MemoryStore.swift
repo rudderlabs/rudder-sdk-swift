@@ -21,13 +21,14 @@ class MemoryStore {
         self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
-    private func store(message: String) async {
+    private func store(message: String) {
         var dataItem = self.currentDataItem ?? MessageDataItem(batch: Constants.batchPrefix)
         let newEntry = dataItem.batch == Constants.batchPrefix
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > Constants.maxBatchSize {
-            await self.finish()
-            await self.store(message: message)
+            self.finish {
+                self.store(message: message)
+            }
             return
         }
         
@@ -37,16 +38,14 @@ class MemoryStore {
         self.appendDataItem(dataItem)
     }
     
-    private func finish() async {
-        await withCheckedContinuation { continuation in
-            guard var currentDataItem = self.currentDataItem else { continuation.resume(); return }
-            currentDataItem.batch += Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
-            currentDataItem.isClosed = true
-            self.appendDataItem(currentDataItem)
-            
-            self.keyValueStore.delete(reference: self.currentDataItemKey)
-            continuation.resume()
-        }
+    private func finish(_ block: VoidClosure? = nil) {
+        guard var currentDataItem = self.currentDataItem else { block?(); return }
+        currentDataItem.batch += Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
+        currentDataItem.isClosed = true
+        self.appendDataItem(currentDataItem)
+        
+        self.keyValueStore.delete(reference: self.currentDataItemKey)
+        block?()
     }
     
     private func appendDataItem(_ item: MessageDataItem) {
@@ -103,8 +102,10 @@ extension MemoryStore {
  Implementation of the `DataStore` protocol.
  */
 extension MemoryStore: DataStore {
-    func retain(value: String) async {
-        await self.store(message: value)
+    func retain(value: String) {
+        SynchronizedQueue.perform {
+            self.store(message: value)
+        }
     }
     
     func retrieve() -> [Any] {
@@ -115,7 +116,9 @@ extension MemoryStore: DataStore {
         return self.removeItem(using: reference)
     }
     
-    func rollover() async {
-        await self.finish()
+    func rollover(_ block: VoidClosure?) {
+        SynchronizedQueue.perform {
+            self.finish(block)
+        }
     }
 }

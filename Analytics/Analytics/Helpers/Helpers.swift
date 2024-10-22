@@ -10,6 +10,7 @@ import Foundation
 // MARK: - Typealiases(Public)
 public typealias RudderOptions = [String: Any]
 public typealias RudderProperties = [String: Any]
+public typealias VoidClosure = () -> Void
 
 // MARK: - Typealiases(Internal)
 typealias PluginClosure = (Plugin) -> Void
