@@ -13,7 +13,6 @@ final class MockProvider {
     private init() {}
     
     static let _mockWriteKey = "MoCk_WrItEkEy"
-    static let userDefaults = UserDefaults.rudder(_mockWriteKey)
     
     static let simpleTrackEvent: TrackEvent = {
         let event = TrackEvent(event: "Track_Event", properties: CodableDictionary(["Property_1": "Value1"]), options: CodableDictionary(["Property_1": "Value1"]))
@@ -41,7 +40,7 @@ extension MockProvider {
     }
     
     static var currentFileIndex: Int {
-        guard let index = self.userDefaults?.value(forKey: self.fileIndexKey) as? Int else { return 0 }
+        guard let index: Int = self.keyValueStore.read(reference: self.fileIndexKey) else { return 0 }
         return index
     }
     
@@ -62,6 +61,11 @@ extension MockProvider {
         }
         print("//--------------------------------//")
     }
+    
+    static func resetDiskStorage() {
+        FileManager.delete(file: Self.currentFileURL.path())
+        self.keyValueStore.delete(reference: self.fileIndexKey)
+    }
 }
 
 // MARK: - MemoryStore
@@ -81,5 +85,9 @@ extension MockProvider {
     static var currentDataItemId: String? {
         guard let currentItemId: String = self.keyValueStore.read(reference: self.currentDataItemKey) else { return nil }
         return currentItemId
+    }
+    
+    static func resetMemoryStorage() {
+        self.keyValueStore.delete(reference: self.currentDataItemKey)
     }
 }
