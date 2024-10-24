@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		53028E9B2CC97222007C3FDE /* MessageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53028E9A2CC97222007C3FDE /* MessageUploader.swift */; };
 		5334858F2C9AB24E0029F88E /* StorageModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334858E2C9AB24E0029F88E /* StorageModuleTests.swift */; };
 		533485912C9AB3170029F88E /* MockProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485902C9AB3170029F88E /* MockProvider.swift */; };
 		533485952C9AC7C70029F88E /* CodableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485942C9AC7C70029F88E /* CodableTypes.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		53028E9A2CC97222007C3FDE /* MessageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageUploader.swift; sourceTree = "<group>"; };
 		5334858E2C9AB24E0029F88E /* StorageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModuleTests.swift; sourceTree = "<group>"; };
 		533485902C9AB3170029F88E /* MockProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProvider.swift; sourceTree = "<group>"; };
 		533485942C9AC7C70029F88E /* CodableTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTypes.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 			children = (
 				53A22A3C2C7472850059D6FE /* Message.swift */,
 				53FD379F2CB5163C00DBA06B /* MessageManager.swift */,
+				53028E9A2CC97222007C3FDE /* MessageUploader.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -367,6 +370,7 @@
 				53FD37782CB1B0C700DBA06B /* PluginChain.swift in Sources */,
 				53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */,
 				53A22A3D2C7472850059D6FE /* Message.swift in Sources */,
+				53028E9B2CC97222007C3FDE /* MessageUploader.swift in Sources */,
 				5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */,
 				53BE94E92C921B9E0004E75A /* KeyValueStore.swift in Sources */,
 				533485952C9AC7C70029F88E /* CodableTypes.swift in Sources */,
