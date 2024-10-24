@@ -27,6 +27,7 @@ class MemoryStore {
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > Constants.maxBatchSize {
             self.finish {
+                print("Batch size exceeded. Closing the current batch.")
                 self.store(message: message)
             }
             return

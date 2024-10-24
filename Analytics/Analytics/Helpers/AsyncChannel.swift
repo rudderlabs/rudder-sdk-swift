@@ -14,7 +14,7 @@ final class AsyncChannel<T> {
     private var continuation: AsyncStream<T>.Continuation?
     
     // A serial dispatch queue to ensure thread safety
-    private let queue = DispatchQueue(label: "com.asyncchannel.serialqueue")
+    private let queue = DispatchQueue(label: "rudderstack.message.async.queue")
     
     init() {
         var cont: AsyncStream<T>.Continuation?

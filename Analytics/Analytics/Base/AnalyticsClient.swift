@@ -41,13 +41,11 @@ extension AnalyticsClient {
 // MARK: - Private functions
 extension AnalyticsClient {
     private func setup() {
+        self.collectConfiguration()
+        
         self.pluginChain = PluginChain(analytics: self)
         self.pluginChain.add(plugin: POCPlugin())
         self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
-        
-        Task {
-            self.collectConfiguration()
-        }
     }
     
     private func process(event: Message) {
@@ -58,13 +56,12 @@ extension AnalyticsClient {
 // MARK: - Backend Configuration
 extension AnalyticsClient {
     private func collectConfiguration() {
-        let client = HttpClient(analytics: self)
-        client.getConfiguarationData { result in
-            switch result {
-            case .success(let response):
-                print(response.prettyPrintedString ?? "Bad response")
-                
-            case .failure(let error):
+        Task {
+            let client = HttpClient(analytics: self)
+            do {
+                let data = try await client.getConfiguarationData()
+                print(data.prettyPrintedString ?? "Bad response")
+            } catch {
                 print(error.localizedDescription)
             }
         }

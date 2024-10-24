@@ -32,6 +32,7 @@ final class DiskStore {
         
         if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > Constants.maxBatchSize {
             self.finish {
+                print("Batch size exceeded. Closing the current batch.")
                 self.store(message: message)
             }
             return

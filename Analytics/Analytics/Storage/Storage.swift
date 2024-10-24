@@ -55,7 +55,7 @@ typealias StorageAction = () -> Void
 final class SynchronizedQueue {
     private init() {}
     private static let semaphore = DispatchSemaphore(value: 1)
-    private static let queue = DispatchQueue(label: "rudderstack.storage.message.queue")
+    private static let queue = DispatchQueue(label: "rudderstack.message.storage.queue")
     
     static func perform(_ action: @escaping StorageAction) {
         self.queue.async {
