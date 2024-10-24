@@ -29,27 +29,17 @@ final class HttpNetwork {
         return URLSession(configuration: configuration)
     }()
     
-    static func perform(request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void) {
-        session.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(HttpNetworkError.invalidResponse))
-                return
-            }
-            
-            let statusCode = httpResponse.statusCode
-            guard let data = data, statusCode == 200 else {
-                print(data?.jsonString ?? "No Data..")
-                completion(.failure(HttpNetworkError.requestFailed(statusCode)))
-                return
-            }
-            
-            completion(.success(data))
-        }.resume()
+    static func perform(request: URLRequest) async throws -> Data {
+        let (data, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else { throw HttpNetworkError.invalidResponse }
+        
+        let statusCode = httpResponse.statusCode
+        guard statusCode == 200 else {
+            print(data.jsonString ?? "No Data..")
+            throw HttpNetworkError.requestFailed(statusCode)
+        }
+        
+        return data
     }
-    
 }

@@ -12,11 +12,13 @@ import Foundation
  This protocol is designed to execute predefined network requests.
  */
 protocol HttpClientRequests {
-    func getConfiguarationData(_ completion: @escaping RequestCompletion)
-    func postBatchEvents(_ batch: String ,_ completion: @escaping RequestCompletion)
+    func getConfiguarationData() async throws -> Data
+    func postBatchEvents(_ batch: String) async throws -> Data
 }
 
-typealias RequestCompletion = (Result<Data, Error>) -> Void
+enum HttpClientError: Error {
+    case invalidRequest
+}
 
 // MARK: - HttpClient
 /**
@@ -49,22 +51,21 @@ final class HttpClient {
 }
 
 // MARK: - HttpClientRequests
-// TODO: These functions will be updated in the near future to return a response to the calling function.
 extension HttpClient: HttpClientRequests {
-    func getConfiguarationData(_ completion: @escaping RequestCompletion) {
-        guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { return }
-        HttpNetwork.perform(request: urlRequest, completion: completion)
+    func getConfiguarationData() async throws -> Data {
+        guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { throw HttpClientError.invalidRequest }
+        return try await HttpNetwork.perform(request: urlRequest)
     }
     
-    func postBatchEvents(_ batch: String, _ completion: @escaping RequestCompletion) {
-        guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else { return }
+    func postBatchEvents(_ batch: String) async throws -> Data {
+        guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else { throw HttpClientError.invalidRequest }
         urlRequest.httpBody = batch.utf8Data
         
         if self.analytics.configuration.gzipEnabled, let gzipped = try? urlRequest.httpBody?.gzipped() as? Data {
             urlRequest.httpBody = gzipped
         }
         
-        HttpNetwork.perform(request: urlRequest, completion: completion)
+        return try await HttpNetwork.perform(request: urlRequest)
     }
 }
 
