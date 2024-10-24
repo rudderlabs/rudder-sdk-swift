@@ -16,20 +16,27 @@ final class MessageManager {
     //Different channel for different operations..
     private var writeChannel: AsyncChannel<Message>
     private var uploadChannel: AsyncChannel<String>
-    private var httpClient: HttpClient?
+    var responseChannel: AsyncChannel<String>
+    
+    private var uploader: MessageUploader?
+    var httpClient: HttpClient?
     
     init(analytics: AnalyticsClient) {
         self.analytics = analytics
         
         self.writeChannel = AsyncChannel()
         self.uploadChannel = AsyncChannel()
+        self.responseChannel = AsyncChannel()
         self.httpClient = HttpClient(analytics: analytics)
+        
+        self.uploader = MessageUploader(manager: self)
         
         self.start()
     }
     
     deinit {
         self.httpClient = nil
+        self.uploader = nil
         self.stop()
     }
     
@@ -54,11 +61,18 @@ final class MessageManager {
                 self.startUploading()
             }
         }
+        
+        Task {
+            await self.responseChannel.consume { value in
+                self.storage.remove(messageReference: value)
+            }
+        }
     }
     
     func stop() {
         self.writeChannel.closeChannel()
         self.uploadChannel.closeChannel()
+        self.responseChannel.closeChannel()
     }
 }
 
@@ -76,7 +90,6 @@ extension MessageManager {
 
 // MARK: - Upload
 extension MessageManager {
-    
     var storageMode: StorageMode {
         return self.storage.eventStorageMode
     }
@@ -85,79 +98,27 @@ extension MessageManager {
         self.storage.rollover {
             if self.storageMode == .disk {
                 if let received = self.storage.read().dataFiles { // disk store
-                    for file in received {
-                        print(file.path())
-                        print(FileManager.contentsOf(file: file.path()) ?? "No contents of file")
-                        
-                        guard let content = FileManager.contentsOf(file: file.path()) else { continue }
-                        self.uploadBatch(content, file.path())
-                        self.isInOrder(content)
-                        print("Processed: \(file.path())")
+                    received.forEach {
+                        if let content = FileManager.contentsOf(file: $0.path()) {
+                            print(content)
+                            let item = UploadItem(content: content, reference: $0.path())
+                            self.uploader?.addToQueue(item)
+                            print("Processed: \($0.path())")
+                            print("-------------------------------------------->>>")
+                        }
                     }
                 }
             } else {
                 if let received = self.storage.read().dataItems { // memory store
-                    for item in received {
-                        print(item.batch)
-                        self.uploadBatch(item.batch, item.id)
-                        self.isInOrder(item.batch)
-                        print("Processed: \(item.id)")
+                    received.forEach {
+                        print($0.batch)
+                        let item = UploadItem(content: $0.batch, reference: $0.id)
+                        self.uploader?.addToQueue(item)
+                        print("Processed: \($0.id)")
+                        print("-------------------------------------------->>>")
                     }
                 }
             }
         }
-    }
-    
-    func uploadBatch(_ batch: String, _ reference: String) {
-        self.httpClient?.postBatchEvents(batch, { result in
-            switch result {
-            case .success(let response):
-                print(response.jsonString ?? "Bad response")
-                self.storage.remove(messageReference: reference)
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        })
-    }
-}
-
-extension MessageManager {
-    func isInOrder(_ batch: String) {
-        if let batchData = batch.utf8Data, let batchObject = try? JSONSerialization.jsonObject(with: batchData, options: []) as? [String: Any], let events = batchObject["batch"] as? [[String: Any]] {
-            if isSortedByTrackKey(array: events) {
-                print("Everything is in order")
-            } else {
-                print("Events are not in order")
-            }
-        }
-    }
-    
-    func extractTrackNumber(from trackString: String) -> Int? {
-        // Extract the number after "Track: "
-        if let numberString = trackString.split(separator: " ").last,
-           let number = Int(numberString) {
-            return number
-        }
-        return nil
-    }
-    
-    func isSortedByTrackKey(array: [[String: Any]]) -> Bool {
-        for (prev, next) in zip(array, array.dropFirst()) {
-            // Safely unwrap the "track" value and ensure it's a String
-            if let prevTrackString = prev["event"] as? String,
-               let nextTrackString = next["event"] as? String,
-               let prevTrack = extractTrackNumber(from: prevTrackString),
-               let nextTrack = extractTrackNumber(from: nextTrackString) {
-                print("Breaking at -->\(prevTrack) :: \(nextTrack)")
-                if nextTrack - 1 != prevTrack {
-                    print("Breaking at -->\(prevTrackString) :: \(nextTrackString)")
-                    return false
-                }
-            } else {
-                // Handle missing or invalid "track" value
-                return false
-            }
-        }
-        return true
     }
 }
