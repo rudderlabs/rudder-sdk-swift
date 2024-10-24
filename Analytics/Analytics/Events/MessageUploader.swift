@@ -6,7 +6,10 @@
 //
 
 import Foundation
-
+// MARK: - MessageUploader
+/**
+ This class handles sequential batch uploads, ensuring each upload is performed one after the other.
+ */
 class MessageUploader {
     private var manager: MessageManager
     
@@ -53,7 +56,7 @@ class MessageUploader {
                 processNextUpload()
             } else {
                 print("Upload failed: \(nextItem.reference), dropping all pending uploads")
-                clearQueueAndStop()
+                clearQueueAndStop() //Drops all uploads.. Wait for next set of upload actions to ensure the event ordering..
             }
         }
     }
@@ -74,6 +77,10 @@ class MessageUploader {
 }
 
 
+// MARK: - UploadItem
+/**
+ This model facilitates the creation of an upload action.
+ */
 struct UploadItem: Equatable {
     let content: String
     let reference: String

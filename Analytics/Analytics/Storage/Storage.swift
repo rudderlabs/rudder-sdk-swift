@@ -46,18 +46,16 @@ public enum StorageMode: Int {
     case memory
 }
 
-typealias StorageAction = () -> Void
-
 // MARK: - SynchronizedQueue
 /**
- Class which performs all storage related activities.
+ A class that handles all storage-related activities in a synchronized manner.
  */
 final class SynchronizedQueue {
     private init() {}
     private static let semaphore = DispatchSemaphore(value: 1)
     private static let queue = DispatchQueue(label: "rudderstack.message.storage.queue")
     
-    static func perform(_ action: @escaping StorageAction) {
+    static func perform(_ action: @escaping () -> Void) {
         self.queue.async {
             self.semaphore.wait() // Lock
             defer { self.semaphore.signal() } // Unlock when done

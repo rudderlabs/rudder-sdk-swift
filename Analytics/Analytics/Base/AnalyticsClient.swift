@@ -68,8 +68,8 @@ extension AnalyticsClient {
     }
 }
 
+// MARK: - Common Variables
 extension AnalyticsClient {
-    
     var anonymousId: String {
         get {
             if let id: String = self.configuration.storage.read(key: StorageKeys.anonymousId) {
