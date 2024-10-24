@@ -60,6 +60,7 @@ extension AnalyticsClient {
             let client = HttpClient(analytics: self)
             do {
                 let data = try await client.getConfiguarationData()
+                self.configuration.storage.write(value: data.jsonString, key: StorageKeys.sourceConfig)
                 print(data.prettyPrintedString ?? "Bad response")
             } catch {
                 print(error.localizedDescription)

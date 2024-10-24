@@ -155,9 +155,9 @@
 		539E540B2C98CD7D00982E95 /* AnalyticsTests */ = {
 			isa = PBXGroup;
 			children = (
+				533485902C9AB3170029F88E /* MockProvider.swift */,
 				539E540C2C98CD7D00982E95 /* AnalyticsTests.swift */,
 				5334858E2C9AB24E0029F88E /* StorageModuleTests.swift */,
-				533485902C9AB3170029F88E /* MockProvider.swift */,
 				53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */,
 			);
 			path = AnalyticsTests;

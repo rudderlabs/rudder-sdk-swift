@@ -40,6 +40,7 @@ public struct Constants {
 
 struct StorageKeys {
     static let anonymousId = "anonymous_id"
+    static let sourceConfig = "source_config"
     
     private init() {}
 }

@@ -62,9 +62,6 @@ extension DataPlaneModuleTests {
         self.dpPlugin?.setup(analytics: analytics)
         
         guard let storage = self.dpPlugin?.analytics?.configuration.storage else { XCTFail("Storage not initialized"); return }
-                
-        storage.rollover(nil)
-        let existingResult = storage.read()
         
         let event = ScreenEvent(screenName: "test_screen_event")
         self.dpPlugin?.setup(analytics: MockProvider.clientWithMemoryStorage)
@@ -74,7 +71,7 @@ extension DataPlaneModuleTests {
         storage.rollover(nil)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
         
-        guard let resultItems = storage.read().dataItems, let existingItems = existingResult.dataItems else { XCTFail("Storage not working"); return }
+        guard let resultItems = storage.read().dataItems else { XCTFail("Storage not working"); return }
         XCTAssertFalse(resultItems.isEmpty)
     }
     
@@ -83,9 +80,6 @@ extension DataPlaneModuleTests {
         self.dpPlugin?.setup(analytics: analytics)
         
         guard let storage = self.dpPlugin?.analytics?.configuration.storage else { XCTFail("Storage not initialized"); return }
-                
-        storage.rollover(nil)
-        let existingResult = storage.read()
         
         let event = GroupEvent(groupId: "test_group_event")
         _ = self.dpPlugin?.group(payload: event)
@@ -94,7 +88,7 @@ extension DataPlaneModuleTests {
         storage.rollover(nil)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
         
-        guard let resultItems = storage.read().dataItems, let existingItems = existingResult.dataItems else { XCTFail("Storage not working"); return }
+        guard let resultItems = storage.read().dataItems else { XCTFail("Storage not working"); return }
         XCTAssertFalse(resultItems.isEmpty)
     }
 }

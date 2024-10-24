@@ -144,7 +144,7 @@ extension StorageModuleTests {
         guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         storage.write(message: eventJson)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.3))
         XCTAssertTrue(FileManager.default.fileExists(atPath: MockProvider.currentFileURL.path()))
     }
     

@@ -30,7 +30,7 @@ extension MockProvider {
     
     static let clientWithDiskStorage: AnalyticsClient = {
         let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .disk)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://www.mock-url.com/", storage: storage)
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage)
         
         return AnalyticsClient(configuration: configuration)
     }()
@@ -73,7 +73,7 @@ extension MockProvider {
     
     static let clientWithMemoryStorage: AnalyticsClient = {
         let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .memory)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://www.mock-url.com/", storage: storage)
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage)
         
         return AnalyticsClient(configuration: configuration)
     }()
