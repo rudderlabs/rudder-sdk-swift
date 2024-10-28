@@ -104,7 +104,7 @@ extension MemoryStore {
  */
 extension MemoryStore: DataStore {
     func retain(value: String) {
-        SynchronizedQueue.perform {
+        SerializedQueue.perform {
             self.store(message: value)
         }
     }
@@ -118,7 +118,7 @@ extension MemoryStore: DataStore {
     }
     
     func rollover(_ block: VoidClosure?) {
-        SynchronizedQueue.perform {
+        SerializedQueue.perform {
             self.finish(block)
         }
     }

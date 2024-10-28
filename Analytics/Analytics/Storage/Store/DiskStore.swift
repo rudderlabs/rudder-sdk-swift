@@ -108,7 +108,7 @@ extension DiskStore {
  */
 extension DiskStore: DataStore {
     func retain(value: String) {
-        SynchronizedQueue.perform {
+        SerializedQueue.perform {
             self.store(message: value)
         }
     }
@@ -122,7 +122,7 @@ extension DiskStore: DataStore {
     }
     
     func rollover(_ block: VoidClosure?) {
-        SynchronizedQueue.perform {
+        SerializedQueue.perform {
             self.finish(block)
         }
     }

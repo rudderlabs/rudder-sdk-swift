@@ -46,11 +46,11 @@ public enum StorageMode: Int {
     case memory
 }
 
-// MARK: - SynchronizedQueue
+// MARK: - SerializedQueue
 /**
  A class that handles all storage-related activities in a synchronized manner.
  */
-final class SynchronizedQueue {
+final class SerializedQueue {
     private init() {}
     private static let semaphore = DispatchSemaphore(value: 1)
     private static let queue = DispatchQueue(label: "rudderstack.message.storage.queue")
