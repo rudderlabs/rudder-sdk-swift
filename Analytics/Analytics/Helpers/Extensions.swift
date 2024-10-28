@@ -197,7 +197,7 @@ extension Data {
         guard status == Z_OK else { throw GzipError(code: status, msg: stream.msg) }
         
         // Create a mutable data buffer with an initial capacity
-        var data = Data(capacity: 16 * 1024)
+        let data = Data(capacity: 16 * 1024)
         var outputData = data // Create a separate output variable
         
         repeat {

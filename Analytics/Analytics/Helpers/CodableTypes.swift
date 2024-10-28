@@ -7,25 +7,51 @@
 
 import Foundation
 
-// MARK: - CodableDictionary
+// MARK: - CodableCollection
 
-public struct CodableDictionary: Codable {
-    @AutoCodable public var data: [String: AnyCodable]
-    
-    public init?(_ input: [String: Any]?) {
-        guard let input = input else { return nil }
-        self.data = input.mapValues { AnyCodable($0) }
+public struct CodableCollection: Codable {
+    public var array: [AnyCodable]?
+    public var dictionary: [String: AnyCodable]?
+
+    // Initializers for convenience
+    public init?(array: [Any]?) {
+        guard let array else { return nil }
+        self.array = array.map { AnyCodable($0) }
+        self.dictionary = nil
     }
-}
 
-// MARK: - CodableArray
+    public init?(dictionary: [String: Any]?) {
+        guard let dictionary else { return nil }
+        self.dictionary = dictionary.mapValues { AnyCodable($0) }
+        self.array = nil
+    }
 
-public struct CodableArray: Codable {
-    @AutoCodable public var data: [AnyCodable]
-    
-    public init?(_ input: [Any]?) {
-        guard let input = input else { return nil }
-        self.data = input.map { AnyCodable($0) }
+    // Encoding logic
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        
+        if let array = array {
+            try container.encode(array)
+        } else if let dictionary = dictionary {
+            try container.encode(dictionary)
+        } else {
+            throw EncodingError.invalidValue(self, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "No values present in CodableCollection"))
+        }
+    }
+
+    // Decoding logic
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        
+        if let array = try? container.decode([AnyCodable].self) {
+            self.array = array
+            self.dictionary = nil
+        } else if let dictionary = try? container.decode([String: AnyCodable].self) {
+            self.dictionary = dictionary
+            self.array = nil
+        } else {
+            throw DecodingError.typeMismatch(CodableCollection.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Expected array or dictionary"))
+        }
     }
 }
 
@@ -33,14 +59,14 @@ public struct CodableArray: Codable {
 
 public struct AnyCodable: Codable {
     let value: Any
-
+    
     public init(_ value: Any) {
         self.value = value
     }
-
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-
+        
         if let intValue = try? container.decode(Int.self) {
             value = intValue
         } else if let doubleValue = try? container.decode(Double.self) {
@@ -57,10 +83,10 @@ public struct AnyCodable: Codable {
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported type")
         }
     }
-
+    
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-
+        
         if let intValue = value as? Int {
             try container.encode(intValue)
         } else if let doubleValue = value as? Double {
