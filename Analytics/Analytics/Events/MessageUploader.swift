@@ -82,10 +82,6 @@ class MessageUploader {
  This model facilitates the creation of an upload action.
  */
 struct UploadItem: Equatable {
+    @AutoEquatable var reference: String
     let content: String
-    let reference: String
-    
-    static func == (lhs: UploadItem, rhs: UploadItem) -> Bool {
-        return lhs.reference == rhs.reference
-    }
 }

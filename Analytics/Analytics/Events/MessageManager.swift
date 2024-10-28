@@ -101,7 +101,7 @@ extension MessageManager {
                     received.forEach {
                         if let content = FileManager.contentsOf(file: $0.path()) {
                             print(content)
-                            let item = UploadItem(content: content, reference: $0.path())
+                            let item = UploadItem(reference: $0.path(), content: content)
                             self.uploader?.addToQueue(item)
                             print("Processed: \($0.path())")
                             print("-------------------------------------------->>>")
@@ -112,7 +112,7 @@ extension MessageManager {
                 if let received = self.storage.read().dataItems { // memory store
                     received.forEach {
                         print($0.batch)
-                        let item = UploadItem(content: $0.batch, reference: $0.id)
+                        let item = UploadItem(reference: $0.id, content: $0.batch)
                         self.uploader?.addToQueue(item)
                         print("Processed: \($0.id)")
                         print("-------------------------------------------->>>")
