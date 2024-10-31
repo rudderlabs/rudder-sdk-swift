@@ -20,6 +20,7 @@ final class MessageManager {
     
     private var uploader: MessageUploader?
     var httpClient: HttpClient?
+    var flushFacade: FlushPolicyFacade?
     
     init(analytics: AnalyticsClient) {
         self.analytics = analytics
@@ -30,6 +31,7 @@ final class MessageManager {
         self.httpClient = HttpClient(analytics: analytics)
         
         self.uploader = MessageUploader(manager: self)
+        self.flushFacade = FlushPolicyFacade(analytics: analytics)
         
         self.start()
     }
@@ -47,9 +49,13 @@ final class MessageManager {
     
     private func flush() {
         self.uploadChannel.send(Constants.uploadSignal)
+        self.flushFacade?.resetCount()
     }
     
     private func start() {
+        
+        self.flushFacade?.startSchedule() //Frequency based flush policy..
+        
         Task {
             await self.writeChannel.consume { message in
                 self.performStorage(message)
@@ -73,6 +79,8 @@ final class MessageManager {
         self.writeChannel.closeChannel()
         self.uploadChannel.closeChannel()
         self.responseChannel.closeChannel()
+        
+        self.flushFacade?.cancelSchedule()
     }
 }
 
@@ -85,6 +93,12 @@ extension MessageManager {
     func performStorage(_ message: Message) {
         guard let json = message.jsonString else { return }
         self.storage.write(message: json)
+        
+        self.flushFacade?.updateCount()
+        
+        if self.flushFacade?.shouldFlush() ?? false {
+            self.flush()
+        }
     }
 }
 
