@@ -45,6 +45,11 @@ public enum FlushEventCount: Int {
     case max = 100
 }
 
+public enum FlushInterval: Int {
+    case `default` = 10_000 // 10 seconds..
+    case min = 1
+}
+
 struct StorageKeys {
     static let anonymousId = "anonymous_id"
     static let sourceConfig = "source_config"

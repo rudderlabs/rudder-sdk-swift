@@ -35,3 +35,31 @@ public final class CountFlushPolicy: FlushPolicy {
         self.eventCount = 0
     }
 }
+
+public final class FrequencyFlushPolicy: FlushPolicy {
+    private var analytics: AnalyticsClient?
+    private var flushIntervalInMillis: Int
+    private var flushTimer: Timer?
+    
+    public init(flushIntervalInMillis: Int = FlushInterval.default.rawValue) {
+        self.flushIntervalInMillis = max(flushIntervalInMillis, FlushInterval.min.rawValue)
+    }
+    
+    public func scheduleFlush(analytics: AnalyticsClient) {
+        self.analytics = analytics
+        self.flushTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(flushIntervalInMillis) / 1000.0, repeats: true, block: { [weak analytics] _ in
+            SerializedQueue.perform {
+                analytics?.flush()
+            }
+        })
+    }
+    
+    public func cancelScheduleFlush() {
+        flushTimer?.invalidate()
+        flushTimer = nil
+    }
+    
+    deinit {
+        cancelScheduleFlush()
+    }
+}
