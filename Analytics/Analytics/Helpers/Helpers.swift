@@ -17,11 +17,12 @@ typealias PluginClosure = (Plugin) -> Void
 
 // MARK: - Constants
 public struct Constants {
-    public static let logTag = "Rudder-Analytics"
+    public static let logTag: String = "Rudder-Analytics"
     public static let defaultLogLevel: LogLevel = .none
     public static let defaultStorageMode: StorageMode = .disk
-    public static let defaultControlPlaneUrl = "https://api.rudderlabs.com"
-    public static let defaultGZipStatus = true
+    public static let defaultControlPlaneUrl: String = "https://api.rudderlabs.com"
+    public static let defaultGZipStatus: Bool = true
+    public static let defaultFlushPolicies: [FlushPolicy] = [StartupFlushPolicy(), FrequencyFlushPolicy(), CountFlushPolicy()]
     
     //Internals
     static let fileIndex = "rudderstack.message.file.index."

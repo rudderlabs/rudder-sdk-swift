@@ -73,3 +73,40 @@ public final class StartupFlushPolicy: FlushPolicy {
         return true
     }
 }
+
+final class FlushPolicyFacade {
+    private var analytics: AnalyticsClient
+    
+    init(analytics: AnalyticsClient) {
+        self.analytics = analytics
+    }
+    
+    var activePolicies: [FlushPolicy] {
+        return self.analytics.configuration.flushPolicies
+    }
+    
+    func shouldFlush() -> Bool {
+        return self.activePolicies.contains { ($0 is StartupFlushPolicy || $0 is CountFlushPolicy) && $0.shouldFlush() }
+    }
+    
+    func startSchedule() {
+        self.activePolicies.compactMap { $0 as? FrequencyFlushPolicy }.forEach { $0.scheduleFlush(analytics: self.analytics) }
+        
+        if self.shouldFlush() { // Startup flush policy..
+            print("Startup flush policy triggered. Flushing...")
+            self.analytics.flush()
+        }
+    }
+    
+    func cancelSchedule() {
+        self.activePolicies.compactMap { $0 as? FrequencyFlushPolicy }.forEach { $0.cancelScheduleFlush() }
+    }
+    
+    func updateCount() {
+        self.activePolicies.compactMap { $0 as? CountFlushPolicy }.forEach { $0.updateEventCount() }
+    }
+    
+    func resetCount() {
+        self.activePolicies.compactMap { $0 as? CountFlushPolicy }.forEach { $0.reset() }
+    }
+}
