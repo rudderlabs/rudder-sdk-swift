@@ -63,3 +63,13 @@ public final class FrequencyFlushPolicy: FlushPolicy {
         cancelScheduleFlush()
     }
 }
+
+public final class StartupFlushPolicy: FlushPolicy {
+    private var flushedAtStartup: Bool = false
+    
+    public func shouldFlush() -> Bool {
+        guard !self.flushedAtStartup else { return false }
+        self.flushedAtStartup = true
+        return true
+    }
+}
