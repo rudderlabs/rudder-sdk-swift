@@ -39,6 +39,12 @@ public struct Constants {
     private init() {}
 }
 
+public enum FlushEventCount: Int {
+    case `default` = 30
+    case min = 1
+    case max = 100
+}
+
 struct StorageKeys {
     static let anonymousId = "anonymous_id"
     static let sourceConfig = "source_config"
