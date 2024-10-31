@@ -13,15 +13,8 @@ import Foundation
  */
 class MemoryStore {
     let writeKey: String
-    var dataItems: [MessageDataItem] = []
+    @Synchronized var dataItems: [MessageDataItem] = []
     private let keyValueStore: KeyValueStore
-    
-    private let memoryOperationQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        queue.qualityOfService = .background
-        return queue
-    }()
     
     init(writeKey: String) {
         self.writeKey = writeKey
@@ -33,8 +26,10 @@ class MemoryStore {
         let newEntry = dataItem.batch == Constants.batchPrefix
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > Constants.maxBatchSize {
-            finish()
-            self.store(message: message)
+            self.finish {
+                print("Batch size exceeded. Closing the current batch.")
+                self.store(message: message)
+            }
             return
         }
         
@@ -44,13 +39,14 @@ class MemoryStore {
         self.appendDataItem(dataItem)
     }
     
-    private func finish() {
-        guard var currentDataItem = self.currentDataItem else { return }
+    private func finish(_ block: VoidClosure? = nil) {
+        guard var currentDataItem = self.currentDataItem else { block?(); return }
         currentDataItem.batch += Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
         currentDataItem.isClosed = true
         self.appendDataItem(currentDataItem)
-
+        
         self.keyValueStore.delete(reference: self.currentDataItemKey)
+        block?()
     }
     
     private func appendDataItem(_ item: MessageDataItem) {
@@ -77,6 +73,7 @@ class MemoryStore {
     private func removeItem(using id: String) -> Bool {
         guard let firstIndex = self.dataItems.firstIndex(where: { $0.id == id }) else { return false }
         self.dataItems.remove(at: firstIndex)
+        print("Item removed: \(id)")
         return true
     }
 }
@@ -107,7 +104,7 @@ extension MemoryStore {
  */
 extension MemoryStore: DataStore {
     func retain(value: String) {
-        StorageQueue.perform {
+        SerializedQueue.perform {
             self.store(message: value)
         }
     }
@@ -120,9 +117,9 @@ extension MemoryStore: DataStore {
         return self.removeItem(using: reference)
     }
     
-    func rollover() {
-        StorageQueue.perform {
-            self.finish()
+    func rollover(_ block: VoidClosure?) {
+        SerializedQueue.perform {
+            self.finish(block)
         }
     }
 }

@@ -16,11 +16,6 @@ public class AnalyticsClient {
     public var configuration: Configuration
     
     private var pluginChain: PluginChain!
-    private let analyticsQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.qualityOfService = .background
-        return queue
-    }()
     
     public init(configuration: Configuration) {
         self.configuration = configuration
@@ -33,7 +28,19 @@ extension AnalyticsClient {
     
     // MARK: - Track
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        let event = TrackEvent(event: name, properties: CodableDictionary(properties), options: CodableDictionary(options))
+        let event = TrackEvent(event: name, properties: CodableCollection(dictionary: properties), options: CodableCollection(dictionary: options))
+        self.process(event: event)
+    }
+    
+    // MARK: - Screen
+    public func screen(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
+        let event = ScreenEvent(screenName: name, properties: CodableCollection(dictionary: properties), options: CodableCollection(dictionary: options))
+        self.process(event: event)
+    }
+    
+    // MARK: - Group
+    public func group(id: String, traits: RudderProperties? = nil, options: RudderOptions? = nil) {
+        let event = GroupEvent(groupId: id, traits: CodableCollection(dictionary: traits), options: CodableCollection(dictionary: options))
         self.process(event: event)
     }
     
@@ -46,26 +53,48 @@ extension AnalyticsClient {
 // MARK: - Private functions
 extension AnalyticsClient {
     private func setup() {
+        self.collectConfiguration()
+        
         self.pluginChain = PluginChain(analytics: self)
         self.pluginChain.add(plugin: POCPlugin())
         self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
-        
-        self.analyticsQueue.addOperation {
-            self.collectConfiguration()
-        }
     }
     
     private func process(event: Message) {
-        self.analyticsQueue.addOperation {
-            self.pluginChain.process(event: event)
-        }
+        self.pluginChain.process(event: event)
     }
 }
 
 // MARK: - Backend Configuration
 extension AnalyticsClient {
     private func collectConfiguration() {
-        let client = HttpClient(analytics: self)
-        client.getConfiguarationData()
+        Task {
+            let client = HttpClient(analytics: self)
+            do {
+                let data = try await client.getConfiguarationData()
+                self.configuration.storage.write(value: data.jsonString, key: StorageKeys.sourceConfig)
+                print(data.prettyPrintedString ?? "Bad response")
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+}
+
+// MARK: - Common Variables
+extension AnalyticsClient {
+    var anonymousId: String {
+        get {
+            if let id: String = self.configuration.storage.read(key: StorageKeys.anonymousId) {
+                return id
+            } else {
+                let newId = UUID().uuidString
+                self.configuration.storage.write(value: newId, key: StorageKeys.anonymousId)
+                return newId
+            }
+        }
+        set {
+            self.configuration.storage.write(value: newValue, key: StorageKeys.anonymousId)
+        }
     }
 }

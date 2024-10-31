@@ -24,10 +24,10 @@ struct TrackEvent: Message {
     public var originalTimeStamp: String
     
     public var event: String
-    public var properties: CodableDictionary?
-    public var options: CodableDictionary?
+    public var properties: CodableCollection?
+    public var options: CodableCollection?
     
-    public init(event: String, properties: CodableDictionary? = nil, options: CodableDictionary? = nil) {
+    public init(event: String, properties: CodableCollection? = nil, options: CodableCollection? = nil) {
         self.type = .track
         self.messageId = .randomUUIDString
         self.originalTimeStamp = .currentTimeStamp
@@ -45,10 +45,10 @@ struct ScreenEvent: Message {
     public var originalTimeStamp: String
     
     public var screenName: String
-    public var properties: CodableDictionary?
-    public var options: CodableDictionary?
+    public var properties: CodableCollection?
+    public var options: CodableCollection?
     
-    public init(screenName: String, properties: CodableDictionary? = nil, options: CodableDictionary? = nil) {
+    public init(screenName: String, properties: CodableCollection? = nil, options: CodableCollection? = nil) {
         self.type = .screen
         self.messageId = .randomUUIDString
         self.originalTimeStamp = .currentTimeStamp
@@ -66,10 +66,10 @@ struct GroupEvent: Message {
     public var originalTimeStamp: String
     
     public var groupId: String
-    public var traits: CodableDictionary?
-    public var options: CodableDictionary?
+    public var traits: CodableCollection?
+    public var options: CodableCollection?
     
-    init(groupId: String, traits: CodableDictionary? = nil, options: CodableDictionary? = nil) {
+    init(groupId: String, traits: CodableCollection? = nil, options: CodableCollection? = nil) {
         self.type = .group
         self.messageId = .randomUUIDString
         self.originalTimeStamp = .currentTimeStamp

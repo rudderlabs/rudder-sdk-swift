@@ -26,7 +26,7 @@ public protocol MessageStorage {
     func read() -> MessageDataResult
     @discardableResult
     func remove(messageReference: String) -> Bool
-    func rollover()
+    func rollover(_ block: VoidClosure?)
 }
 
 // MARK: - Storage
@@ -46,19 +46,20 @@ public enum StorageMode: Int {
     case memory
 }
 
-typealias StorageAction = () -> Void
-
-// MARK: - StorageQueue
+// MARK: - SerializedQueue
 /**
- Class which performs all storage related activities.
+ A class that handles all storage-related activities in a synchronized manner.
  */
-final class StorageQueue {
+final class SerializedQueue {
     private init() {}
-    private static let shared = StorageQueue()
+    private static let semaphore = DispatchSemaphore(value: 1)
+    private static let queue = DispatchQueue(label: "rudderstack.message.storage.queue")
     
-    private let queue = DispatchQueue(label: "rudderstack.storage.message.queue")
-    
-    static func perform(_ action: @escaping StorageAction) {
-        Self.shared.queue.async(execute: action)
+    static func perform(_ action: @escaping () -> Void) {
+        self.queue.async {
+            self.semaphore.wait() // Lock
+            defer { self.semaphore.signal() } // Unlock when done
+            action()
+        }
     }
 }

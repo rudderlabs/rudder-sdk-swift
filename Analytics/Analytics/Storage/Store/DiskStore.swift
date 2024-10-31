@@ -31,8 +31,10 @@ final class DiskStore {
         }
         
         if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > Constants.maxBatchSize {
-            finish()
-            self.store(message: message)
+            self.finish {
+                print("Batch size exceeded. Closing the current batch.")
+                self.store(message: message)
+            }
             return
         }
         
@@ -40,14 +42,16 @@ final class DiskStore {
         self.writeTo(file: self.currentFileURL, content: content)
     }
     
-    private func finish() {
+    private func finish(_ block: VoidClosure? = nil) {
         let currentFilePath = self.currentFileURL.path()
-        guard FileManager.default.fileExists(atPath: currentFilePath) else { return }
+        guard FileManager.default.fileExists(atPath: currentFilePath) else { block?(); return }
         
         let content = Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
         self.writeTo(file: self.currentFileURL, content: content)
         FileManager.removePathExtension(from: currentFilePath)
         self.incrementFileIndex()
+        
+        block?()
     }
     
     private func collectFiles() -> [String] {
@@ -104,7 +108,7 @@ extension DiskStore {
  */
 extension DiskStore: DataStore {
     func retain(value: String) {
-        StorageQueue.perform {
+        SerializedQueue.perform {
             self.store(message: value)
         }
     }
@@ -117,9 +121,9 @@ extension DiskStore: DataStore {
         return FileManager.delete(file: filePath)
     }
     
-    func rollover() {
-        StorageQueue.perform {
-            self.finish()
+    func rollover(_ block: VoidClosure?) {
+        SerializedQueue.perform {
+            self.finish(block)
         }
     }
 }

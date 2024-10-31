@@ -51,8 +51,8 @@ extension BasicStorage {
         return self.dataStore.remove(reference: messageReference)
     }
     
-    public func rollover() {
-        self.dataStore.rollover()
+    public func rollover(_ block: VoidClosure?) {
+        self.dataStore.rollover(block)
     }
 }
 

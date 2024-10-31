@@ -16,17 +16,27 @@ final class MessageManager {
     //Different channel for different operations..
     private var writeChannel: AsyncChannel<Message>
     private var uploadChannel: AsyncChannel<String>
+    var responseChannel: AsyncChannel<String>
+    
+    private var uploader: MessageUploader?
+    var httpClient: HttpClient?
     
     init(analytics: AnalyticsClient) {
         self.analytics = analytics
         
         self.writeChannel = AsyncChannel()
         self.uploadChannel = AsyncChannel()
+        self.responseChannel = AsyncChannel()
+        self.httpClient = HttpClient(analytics: analytics)
+        
+        self.uploader = MessageUploader(manager: self)
         
         self.start()
     }
     
     deinit {
+        self.httpClient = nil
+        self.uploader = nil
         self.stop()
     }
     
@@ -40,15 +50,21 @@ final class MessageManager {
     }
     
     private func start() {
-        Task.detached {
+        Task {
             await self.writeChannel.consume { message in
                 self.performStorage(message)
             }
         }
         
-        Task.detached {
+        Task {
             await self.uploadChannel.consume { value in
                 self.startUploading()
+            }
+        }
+        
+        Task {
+            await self.responseChannel.consume { value in
+                self.storage.remove(messageReference: value)
             }
         }
     }
@@ -56,6 +72,7 @@ final class MessageManager {
     func stop() {
         self.writeChannel.closeChannel()
         self.uploadChannel.closeChannel()
+        self.responseChannel.closeChannel()
     }
 }
 
@@ -66,28 +83,41 @@ extension MessageManager {
     }
     
     func performStorage(_ message: Message) {
-        Task {
-            guard let json = message.toJSONString else { return }
-            self.storage.write(message: json)
-        }
+        guard let json = message.jsonString else { return }
+        self.storage.write(message: json)
     }
 }
 
 // MARK: - Upload
 extension MessageManager {
+    var storageMode: StorageMode {
+        return self.storage.eventStorageMode
+    }
+    
     func startUploading() {
-        // TODO: This section will be completed once the data plane upload implementation is in place.
-        self.storage.rollover()
-        if let received = self.storage.read().dataItems {
-            for item in received {
-                print(item.batch)
-            }
-        }
-        
-        if let received = self.storage.read().dataFiles {
-            for file in received {
-                print(file.path())
-                print(FileManager.contentsOf(file: file.path()) ?? "No contents of file")
+        self.storage.rollover {
+            if self.storageMode == .disk {
+                if let received = self.storage.read().dataFiles { // disk store
+                    received.forEach {
+                        if let content = FileManager.contentsOf(file: $0.path()) {
+                            print(content)
+                            let item = UploadItem(reference: $0.path(), content: content)
+                            self.uploader?.addToQueue(item)
+                            print("Processed: \($0.path())")
+                            print("-------------------------------------------->>>")
+                        }
+                    }
+                }
+            } else {
+                if let received = self.storage.read().dataItems { // memory store
+                    received.forEach {
+                        print($0.batch)
+                        let item = UploadItem(reference: $0.id, content: $0.batch)
+                        self.uploader?.addToQueue(item)
+                        print("Processed: \($0.id)")
+                        print("-------------------------------------------->>>")
+                    }
+                }
             }
         }
     }

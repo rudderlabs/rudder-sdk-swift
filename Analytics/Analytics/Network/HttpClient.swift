@@ -12,8 +12,12 @@ import Foundation
  This protocol is designed to execute predefined network requests.
  */
 protocol HttpClientRequests {
-    func getConfiguarationData()
-    func postBatchEvents(_ batch: String)
+    func getConfiguarationData() async throws -> Data
+    func postBatchEvents(_ batch: String) async throws -> Data
+}
+
+enum HttpClientError: Error {
+    case invalidRequest
 }
 
 // MARK: - HttpClient
@@ -44,32 +48,24 @@ final class HttpClient {
         }
         return url
     }
-    
-    private func runRequset(_ request: URLRequest) {
-        HttpNetwork.perform(request: request) { result in
-            switch result {
-            case .success(let response):
-                print(response.toJSONString ?? "Bad response")
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
 }
 
 // MARK: - HttpClientRequests
-// TODO: These functions will be updated in the near future to return a response to the calling function.
 extension HttpClient: HttpClientRequests {
-    func getConfiguarationData() {
-        guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { return }
-        self.runRequset(urlRequest)
+    func getConfiguarationData() async throws -> Data {
+        guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { throw HttpClientError.invalidRequest }
+        return try await HttpNetwork.perform(request: urlRequest)
     }
     
-    func postBatchEvents(_ batch: String) {
-        guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else { return }
+    func postBatchEvents(_ batch: String) async throws -> Data {
+        guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else { throw HttpClientError.invalidRequest }
         urlRequest.httpBody = batch.utf8Data
         
-        self.runRequset(urlRequest)
+        if self.analytics.configuration.gzipEnabled, let gzipped = try? urlRequest.httpBody?.gzipped() as? Data {
+            urlRequest.httpBody = gzipped
+        }
+        
+        return try await HttpNetwork.perform(request: urlRequest)
     }
 }
 
@@ -106,10 +102,12 @@ enum HttpClientRequestType {
         
         let encodedAuthString = (analytics.configuration.writeKey + ":").base64Encoded ?? ""
         var defaultHeaders = ["Content-Type": "application/json", "Authorization": "Basic \(encodedAuthString)"]
-        var specialHeaders = [String: String]() // Need to add AnonymousId
         
-        if analytics.configuration.gzipEnabled { specialHeaders["Content-Encoding"] = "gzip" }
-        if self == .events { specialHeaders.forEach { defaultHeaders[$0] = $1 } }
+        if self == .events {
+            var specialHeaders = ["AnonymousId": analytics.anonymousId]
+            if analytics.configuration.gzipEnabled { specialHeaders["Content-Encoding"] = "gzip" }
+            specialHeaders.forEach { defaultHeaders[$0] = $1 }
+        }
         
         return defaultHeaders
     }

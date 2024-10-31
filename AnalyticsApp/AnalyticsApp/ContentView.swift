@@ -11,41 +11,32 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            
             HStack {
-                Text("Track")
-                    .font(.title3)
-                    .padding()
-                    .foregroundStyle(.white)
-                    .background(.blue)
-                    .onTapGesture {
-                        AnalyticsManager.shared.analytics?.track(name: "Track at \(Date())")
-                    }
-                    .padding()
+                CustomButton(title: "Track") {
+                    AnalyticsManager.shared.analytics?.track(name: "Track at \(Date())", properties: ["key": "value"], options: ["option": "value"])
+                }
                 
-                Text("Multiple Track")
-                    .font(.title3)
-                    .padding()
-                    .foregroundStyle(.white)
-                    .background(.blue)
-                    .onTapGesture {
-                        for i in 1...50 {
-                            AnalyticsManager.shared.analytics?.track(name: "Track: \(i)")
-                        }
+                CustomButton(title: "Multiple Track") {
+                    for i in 1...50 {
+                        AnalyticsManager.shared.analytics?.track(name: "Track: \(i)")
                     }
-                    .padding()
+                }
             }
             
             HStack {
-                Text("Flush")
-                    .font(.title3)
-                    .padding()
-                    .foregroundStyle(.white)
-                    .background(.blue)
-                    .onTapGesture {
-                        AnalyticsManager.shared.analytics?.flush()
-                    }
-                    .padding()
+                CustomButton(title: "Screen") {
+                    AnalyticsManager.shared.analytics?.screen(name: "Analytics Screen", properties: ["key": "value"], options: ["option": "value"])
+                }
+                
+                CustomButton(title: "Group") {
+                    AnalyticsManager.shared.analytics?.group(id: "group_id", traits: ["key": "value"], options: ["option": "value"])
+                }
+            }
+            
+            HStack {
+                CustomButton(title: "Flush") {
+                    AnalyticsManager.shared.analytics?.flush()
+                }
             }
         }
     }
@@ -53,4 +44,27 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+}
+
+
+
+struct CustomButton: View {
+    
+    let title: String
+    let action: () -> Void
+    
+    init(title: String, action: @escaping () -> Void) {
+        self.title = title
+        self.action = action
+    }
+    
+    var body: some View {
+        Text(title)
+            .font(.title3)
+            .padding()
+            .foregroundStyle(.white)
+            .background(.blue)
+            .onTapGesture { action() }
+            .padding()
+    }
 }

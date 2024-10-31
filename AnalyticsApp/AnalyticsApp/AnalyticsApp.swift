@@ -39,7 +39,7 @@ class AnalyticsManager: Logger {
     private init() {}
     
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "exmple_write_key", dataPlaneUrl: "https://data-plane.example.com", controlPlaneUrl: "https://control-plane.example.com", logger: self)
+        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logger: self)
         self.analytics = AnalyticsClient(configuration: config)
     }
     

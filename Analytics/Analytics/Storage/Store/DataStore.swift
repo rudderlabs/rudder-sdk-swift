@@ -15,7 +15,7 @@ public protocol DataStore {
     func retain(value: String)
     func retrieve() -> [Any]
     func remove(reference: String) -> Bool
-    func rollover()
+    func rollover(_ block: VoidClosure?)
 }
 
 // MARK: - StoreProvider
