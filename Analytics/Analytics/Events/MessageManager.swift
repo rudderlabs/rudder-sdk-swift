@@ -13,31 +13,25 @@ import Foundation
 final class MessageManager {
     var analytics: AnalyticsClient
     
-    //Different channel for different operations..
     private var writeChannel: AsyncChannel<Message>
-    private var uploadChannel: AsyncChannel<String>
-    var responseChannel: AsyncChannel<String>
-    
     private var uploader: MessageUploader?
-    var httpClient: HttpClient?
+    private var flushedReferences = [String]()
+    
+    
     var flushFacade: FlushPolicyFacade?
     
     init(analytics: AnalyticsClient) {
         self.analytics = analytics
         
         self.writeChannel = AsyncChannel()
-        self.uploadChannel = AsyncChannel()
-        self.responseChannel = AsyncChannel()
-        self.httpClient = HttpClient(analytics: analytics)
         
-        self.uploader = MessageUploader(manager: self)
+        self.uploader = MessageUploader(analytics: analytics)
+        self.uploader?.delegate = self
         self.flushFacade = FlushPolicyFacade(analytics: analytics)
-        
         self.start()
     }
     
     deinit {
-        self.httpClient = nil
         self.uploader = nil
         self.stop()
     }
@@ -48,38 +42,28 @@ final class MessageManager {
     }
     
     private func flush() {
-        self.uploadChannel.send(Constants.uploadSignal)
+        self.startUploading()
         self.flushFacade?.resetCount()
     }
     
     private func start() {
-        
         self.flushFacade?.startSchedule() //Frequency based flush policy..
+        self.shouldFlush()
         
         Task {
             await self.writeChannel.consume { message in
                 self.performStorage(message)
             }
         }
-        
-        Task {
-            await self.uploadChannel.consume { value in
-                self.startUploading()
-            }
-        }
-        
-        Task {
-            await self.responseChannel.consume { value in
-                self.storage.remove(messageReference: value)
-            }
-        }
+    }
+    
+    private func shouldFlush() {
+        guard self.flushFacade?.shouldFlush() ?? false else { return }
+        self.flush()
     }
     
     func stop() {
         self.writeChannel.closeChannel()
-        self.uploadChannel.closeChannel()
-        self.responseChannel.closeChannel()
-        
         self.flushFacade?.cancelSchedule()
     }
 }
@@ -95,10 +79,7 @@ extension MessageManager {
         self.storage.write(message: json)
         
         self.flushFacade?.updateCount()
-        
-        if self.flushFacade?.shouldFlush() ?? false {
-            self.flush()
-        }
+        self.shouldFlush()
     }
 }
 
@@ -116,7 +97,11 @@ extension MessageManager {
                         if let content = FileManager.contentsOf(file: $0.path()) {
                             print(content)
                             let item = UploadItem(reference: $0.path(), content: content)
-                            self.uploader?.addToQueue(item)
+                            if !self.flushedReferences.contains(item.reference) {
+                                self.flushedReferences.append(item.reference)
+                                self.uploader?.addToQueue(item)
+                            }
+                            
                             print("Processed: \($0.path())")
                             print("-------------------------------------------->>>")
                         }
@@ -127,12 +112,27 @@ extension MessageManager {
                     received.forEach {
                         print($0.batch)
                         let item = UploadItem(reference: $0.id, content: $0.batch)
-                        self.uploader?.addToQueue(item)
+                        if !self.flushedReferences.contains(item.reference) {
+                            self.flushedReferences.append(item.reference)
+                            self.uploader?.addToQueue(item)
+                        }
                         print("Processed: \($0.id)")
                         print("-------------------------------------------->>>")
                     }
                 }
             }
         }
+    }
+}
+
+extension MessageManager: MessageUploaderDelegate {
+    
+    func didFinishUploading(item: UploadItem) {
+        self.storage.remove(messageReference: item.reference)
+    }
+    
+    func resetReferenceCache(_ pendingUploads: [UploadItem]) {
+        pendingUploads.forEach { upload in
+            self.flushedReferences.removeAll(where: { $0 == upload.reference }) }
     }
 }

@@ -91,11 +91,6 @@ final class FlushPolicyFacade {
     
     func startSchedule() {
         self.activePolicies.compactMap { $0 as? FrequencyFlushPolicy }.forEach { $0.scheduleFlush(analytics: self.analytics) }
-        
-        if self.shouldFlush() { // Startup flush policy..
-            print("Startup flush policy triggered. Flushing...")
-            self.analytics.flush()
-        }
     }
     
     func cancelSchedule() {
