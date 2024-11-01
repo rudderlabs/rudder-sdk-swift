@@ -17,7 +17,6 @@ final class MessageManager {
     private var uploader: MessageUploader?
     private var flushedReferences = [String]()
     
-    
     var flushFacade: FlushPolicyFacade?
     
     init(analytics: AnalyticsClient) {
@@ -48,7 +47,7 @@ final class MessageManager {
     
     private func start() {
         self.flushFacade?.startSchedule() //Frequency based flush policy..
-        self.shouldFlush()
+        self.shouldFlush() //Startup flush policy
         
         Task {
             await self.writeChannel.consume { message in
@@ -90,36 +89,20 @@ extension MessageManager {
     }
     
     func startUploading() {
+        print("From: \(#function) && Thread: \(Thread.current)")
         self.storage.rollover {
-            if self.storageMode == .disk {
-                if let received = self.storage.read().dataFiles { // disk store
-                    received.forEach {
-                        if let content = FileManager.contentsOf(file: $0.path()) {
-                            print(content)
-                            let item = UploadItem(reference: $0.path(), content: content)
-                            if !self.flushedReferences.contains(item.reference) {
-                                self.flushedReferences.append(item.reference)
-                                self.uploader?.addToQueue(item)
-                            }
-                            
-                            print("Processed: \($0.path())")
-                            print("-------------------------------------------->>>")
-                        }
-                    }
+            let received = self.storage.read().dataItems
+            guard !received.isEmpty else { return }
+            
+            for item in received {
+                print(item.batch)
+                let uItem = UploadItem(reference: item.reference, content: item.batch)
+                if !self.flushedReferences.contains(item.reference) {
+                    self.flushedReferences.append(item.reference)
+                    self.uploader?.addToQueue(uItem)
                 }
-            } else {
-                if let received = self.storage.read().dataItems { // memory store
-                    received.forEach {
-                        print($0.batch)
-                        let item = UploadItem(reference: $0.id, content: $0.batch)
-                        if !self.flushedReferences.contains(item.reference) {
-                            self.flushedReferences.append(item.reference)
-                            self.uploader?.addToQueue(item)
-                        }
-                        print("Processed: \($0.id)")
-                        print("-------------------------------------------->>>")
-                    }
-                }
+                print("Processed: \(item.reference)")
+                print("-------------------------------------------->>>")
             }
         }
     }

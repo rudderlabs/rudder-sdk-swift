@@ -48,9 +48,7 @@ public final class FrequencyFlushPolicy: FlushPolicy {
     public func scheduleFlush(analytics: AnalyticsClient) {
         self.analytics = analytics
         self.flushTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(flushIntervalInMillis) / 1000.0, repeats: true, block: { [weak analytics] _ in
-            SerializedQueue.perform {
-                analytics?.flush()
-            }
+            analytics?.flush()
         })
     }
     
