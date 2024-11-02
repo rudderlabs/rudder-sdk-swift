@@ -66,6 +66,7 @@ class MessageUploader {
                 processNextUpload()
             } else {
                 print("Upload failed: \(nextItem.reference), dropping all pending uploads")
+                pendingUploads.insert(nextItem, at: 0)
                 clearQueueAndStop() //Drops all uploads.. Wait for next set of upload actions to ensure the event ordering..
             }
         }
@@ -78,6 +79,7 @@ class MessageUploader {
     }
     
     private func upload(item: UploadItem) async -> Bool {
+        print("From: \(#function) && Thread: \(Thread.current)")
         do {
             _ = try await self.httpClient?.postBatchEvents(item.content)
             return true

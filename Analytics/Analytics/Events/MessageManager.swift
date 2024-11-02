@@ -89,7 +89,6 @@ extension MessageManager {
     }
     
     func startUploading() {
-        print("From: \(#function) && Thread: \(Thread.current)")
         self.storage.rollover {
             let received = self.storage.read().dataItems
             guard !received.isEmpty else { return }
