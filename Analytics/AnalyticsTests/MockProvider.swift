@@ -15,7 +15,7 @@ final class MockProvider {
     static let _mockWriteKey = "MoCk_WrItEkEy"
     
     static let simpleTrackEvent: TrackEvent = {
-        let event = TrackEvent(event: "Track_Event", properties: CodableDictionary(["Property_1": "Value1"]), options: CodableDictionary(["Property_1": "Value1"]))
+        let event = TrackEvent(event: "Track_Event", properties: CodableCollection(dictionary: ["Property_1": "Value1"]), options: CodableCollection(dictionary: ["Property_1": "Value1"]))
         return event
     }()
 }

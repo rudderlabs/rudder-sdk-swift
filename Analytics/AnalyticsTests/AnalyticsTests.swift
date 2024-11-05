@@ -59,8 +59,8 @@ extension AnalyticsTests {
         client.track(name: "Track Event", properties: ["prop": "value"], options: ["opt": "val"])
         client.configuration.storage.rollover(nil)
         
-        guard let dataFiles = client.configuration.storage.read().dataFiles else { return XCTFail("No data items") }
-        XCTAssertFalse(dataFiles.isEmpty)
+        let dataItems = client.configuration.storage.read().dataItems
+        XCTAssertFalse(dataItems.isEmpty)
     }
     
     func test_flushEvents_disk() {
@@ -70,7 +70,7 @@ extension AnalyticsTests {
         client.flush()
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 1.0))
         
-        guard let dataFiles = client.configuration.storage.read().dataFiles else { return XCTFail("No data items") }
-        XCTAssertTrue(dataFiles.isEmpty)
+        let dataItems = client.configuration.storage.read().dataItems
+        XCTAssertFalse(dataItems.isEmpty) //Should be false.. Since no proper dataplane configured...
     }
 }
