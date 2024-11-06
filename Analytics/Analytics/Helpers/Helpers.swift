@@ -40,17 +40,20 @@ public struct Constants {
     private init() {}
 }
 
+// MARK: - FlushEventCount
 public enum FlushEventCount: Int {
     case `default` = 30
     case min = 1
     case max = 100
 }
 
-public enum FlushInterval: Int {
+// MARK: - FlushInterval
+public enum FlushInterval: Double {
     case `default` = 10_000 // 10 seconds..
     case min = 1
 }
 
+// MARK: - StorageKeys
 struct StorageKeys {
     static let anonymousId = "anonymous_id"
     static let sourceConfig = "source_config"

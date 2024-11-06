@@ -7,11 +7,6 @@
 
 import Foundation
 
-protocol MessageUploaderDelegate {
-    func didFinishUploading(item: UploadItem)
-    func resetReferenceCache(_ pendingUploads: [UploadItem])
-}
-
 // MARK: - MessageUploader
 /**
  This class handles sequential batch uploads, ensuring each upload is performed one after the other.
@@ -79,7 +74,6 @@ class MessageUploader {
     }
     
     private func upload(item: UploadItem) async -> Bool {
-        print("From: \(#function) && Thread: \(Thread.current)")
         do {
             _ = try await self.httpClient?.postBatchEvents(item.content)
             return true
@@ -97,4 +91,11 @@ class MessageUploader {
 struct UploadItem: Equatable {
     @AutoEquatable var reference: String
     let content: String
+}
+
+
+// MARK: - MessageUploaderDelegate
+protocol MessageUploaderDelegate {
+    func didFinishUploading(item: UploadItem)
+    func resetReferenceCache(_ pendingUploads: [UploadItem])
 }

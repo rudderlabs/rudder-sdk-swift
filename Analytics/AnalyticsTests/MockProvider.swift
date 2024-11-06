@@ -5,7 +5,7 @@
 //  Created by Satheesh Kannan on 18/09/24.
 //
 
-import Foundation
+import XCTest
 @testable import Analytics
 
 // MARK: - MockProvider
@@ -89,5 +89,50 @@ extension MockProvider {
     
     static func resetMemoryStorage() {
         self.keyValueStore.delete(reference: self.currentDataItemKey)
+    }
+}
+
+// MARK: - MockHelper
+struct MockHelper {
+    private init() {}
+    
+    static func seconds(from millis: Double) -> Double {
+        return Double(millis) / 1000
+    }
+    
+    static func milliseconds(from seconds: Double) -> Double {
+        return Double(seconds * 1000)
+    }
+}
+
+// MARK: - MockAnalyticsClient
+class MockAnalyticsClient: AnalyticsClient {
+    var isFlushed: Bool = false
+    
+    init() {
+        let config = Configuration(writeKey: "_sample_write_key_", dataPlaneUrl: "https://www.datap_lane.com")
+        super.init(configuration: config)
+    }
+    
+    override func flush() {
+        self.isFlushed = true
+    }
+}
+
+// MARK: - Given_When_Then
+extension XCTestCase {
+    func given(_ description: String = "", closure: () -> Void) {
+        if !description.isEmpty { print("Given \(description)") }
+        closure()
+    }
+
+    func when(_ description: String = "", closure: () -> Void) {
+        if !description.isEmpty { print("When \(description)") }
+        closure()
+    }
+
+    func then(_ description: String = "", closure: () -> Void) {
+        if !description.isEmpty { print("Then \(description)") }
+        closure()
     }
 }

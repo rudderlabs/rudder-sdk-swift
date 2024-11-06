@@ -15,7 +15,7 @@ final class MessageManager {
     
     private var writeChannel: AsyncChannel<Message>
     private var uploader: MessageUploader?
-    private var flushedReferences = [String]()
+    @Synchronized private var flushedReferences = [String]()
     
     var flushFacade: FlushPolicyFacade?
     
@@ -107,8 +107,8 @@ extension MessageManager {
     }
 }
 
+// MARK: - MessageUploaderDelegate
 extension MessageManager: MessageUploaderDelegate {
-    
     func didFinishUploading(item: UploadItem) {
         self.storage.remove(messageReference: item.reference)
     }

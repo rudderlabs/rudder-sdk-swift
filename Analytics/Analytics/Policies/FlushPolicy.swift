@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - FlushPolicy
 public protocol FlushPolicy {
     func shouldFlush() -> Bool
 }
@@ -15,8 +16,10 @@ extension FlushPolicy {
     public func shouldFlush() -> Bool { false }
 }
 
+// MARK: - CountFlushPolicy
+
 public final class CountFlushPolicy: FlushPolicy {
-    private var flushCount: Int
+    private(set) var flushCount: Int
     @Synchronized private var eventCount: Int = 0
     
     public init(flushCount: Int = FlushEventCount.default.rawValue) {
@@ -36,12 +39,14 @@ public final class CountFlushPolicy: FlushPolicy {
     }
 }
 
+// MARK: - FrequencyFlushPolicy
+
 public final class FrequencyFlushPolicy: FlushPolicy {
     private var analytics: AnalyticsClient?
-    private var flushIntervalInMillis: Int
     private var flushTimer: Timer?
+    private(set) var flushIntervalInMillis: Double
     
-    public init(flushIntervalInMillis: Int = FlushInterval.default.rawValue) {
+    public init(flushIntervalInMillis: Double = FlushInterval.default.rawValue) {
         self.flushIntervalInMillis = max(flushIntervalInMillis, FlushInterval.min.rawValue)
     }
     
@@ -62,6 +67,8 @@ public final class FrequencyFlushPolicy: FlushPolicy {
     }
 }
 
+// MARK: - StartupFlushPolicy
+
 public final class StartupFlushPolicy: FlushPolicy {
     private var flushedAtStartup: Bool = false
     
@@ -74,6 +81,7 @@ public final class StartupFlushPolicy: FlushPolicy {
     }
 }
 
+// MARK: - FlushPolicyFacade
 final class FlushPolicyFacade {
     private var analytics: AnalyticsClient
     

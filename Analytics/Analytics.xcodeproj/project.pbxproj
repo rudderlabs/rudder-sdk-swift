@@ -32,6 +32,7 @@
 		53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94F12C94C75D0004E75A /* BasicStorage.swift */; };
 		53BE94F42C94D70D0004E75A /* MemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94F32C94D70D0004E75A /* MemoryStore.swift */; };
 		53C29E722C918F2400F2A8C3 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C29E712C918F2400F2A8C3 /* Storage.swift */; };
+		53F4B6652CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */; };
 		53FD37772CB1B0C700DBA06B /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37732CB1B0C700DBA06B /* Plugin.swift */; };
 		53FD37782CB1B0C700DBA06B /* PluginChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37742CB1B0C700DBA06B /* PluginChain.swift */; };
 		53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37752CB1B0C700DBA06B /* PluginInteractor.swift */; };
@@ -77,6 +78,7 @@
 		53BE94F12C94C75D0004E75A /* BasicStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicStorage.swift; sourceTree = "<group>"; };
 		53BE94F32C94D70D0004E75A /* MemoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryStore.swift; sourceTree = "<group>"; };
 		53C29E712C918F2400F2A8C3 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushPolicyModuleTests.swift; sourceTree = "<group>"; };
 		53FD37732CB1B0C700DBA06B /* Plugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		53FD37742CB1B0C700DBA06B /* PluginChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginChain.swift; sourceTree = "<group>"; };
 		53FD37752CB1B0C700DBA06B /* PluginInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginInteractor.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				539E540C2C98CD7D00982E95 /* AnalyticsTests.swift */,
 				5334858E2C9AB24E0029F88E /* StorageModuleTests.swift */,
 				53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */,
+				53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */,
 			);
 			path = AnalyticsTests;
 			sourceTree = "<group>";
@@ -399,6 +402,7 @@
 				53859EE72CB66C3200EAE483 /* DataPlaneModuleTests.swift in Sources */,
 				539E540D2C98CD7D00982E95 /* AnalyticsTests.swift in Sources */,
 				5334858F2C9AB24E0029F88E /* StorageModuleTests.swift in Sources */,
+				53F4B6652CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift in Sources */,
 				533485912C9AB3170029F88E /* MockProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
