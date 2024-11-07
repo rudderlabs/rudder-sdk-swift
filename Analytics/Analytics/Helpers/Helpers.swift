@@ -17,11 +17,12 @@ typealias PluginClosure = (Plugin) -> Void
 
 // MARK: - Constants
 public struct Constants {
-    public static let logTag = "Rudder-Analytics"
+    public static let logTag: String = "Rudder-Analytics"
     public static let defaultLogLevel: LogLevel = .none
     public static let defaultStorageMode: StorageMode = .disk
-    public static let defaultControlPlaneUrl = "https://api.rudderlabs.com"
-    public static let defaultGZipStatus = true
+    public static let defaultControlPlaneUrl: String = "https://api.rudderlabs.com"
+    public static let defaultGZipStatus: Bool = true
+    public static let defaultFlushPolicies: [FlushPolicy] = [StartupFlushPolicy(), FrequencyFlushPolicy(), CountFlushPolicy()]
     
     //Internals
     static let fileIndex = "rudderstack.message.file.index."
@@ -39,6 +40,20 @@ public struct Constants {
     private init() {}
 }
 
+// MARK: - FlushEventCount
+public enum FlushEventCount: Int {
+    case `default` = 30
+    case min = 1
+    case max = 100
+}
+
+// MARK: - FlushInterval
+public enum FlushInterval: Double {
+    case `default` = 10_000 // 10 seconds..
+    case min = 1
+}
+
+// MARK: - StorageKeys
 struct StorageKeys {
     static let anonymousId = "anonymous_id"
     static let sourceConfig = "source_config"

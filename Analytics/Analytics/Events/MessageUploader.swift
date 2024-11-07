@@ -6,19 +6,24 @@
 //
 
 import Foundation
+
 // MARK: - MessageUploader
 /**
  This class handles sequential batch uploads, ensuring each upload is performed one after the other.
  */
 class MessageUploader {
-    private var manager: MessageManager
-    
+    private var analytics: AnalyticsClient
     private var uploadQueue = DispatchQueue(label: "rudderstack.message.upload.queue")
-    @Synchronized private var pendingUploads: [UploadItem] = []
     private var isUploading = false
+    private var httpClient: HttpClient?
     
-    init(manager: MessageManager) {
-        self.manager = manager
+    @Synchronized private var pendingUploads: [UploadItem] = []
+    
+    var delegate: MessageUploaderDelegate?
+    
+    init(analytics: AnalyticsClient) {
+        self.analytics = analytics
+        self.httpClient = HttpClient(analytics: analytics)
     }
     
     func addToQueue(_ item: UploadItem) {
@@ -52,23 +57,25 @@ class MessageUploader {
             let success = await upload(item: nextItem)
             if success {
                 print("Uploaded successfully: \(nextItem.reference)")
-                self.manager.responseChannel.send(nextItem.reference)
+                self.delegate?.didFinishUploading(item: nextItem)
                 processNextUpload()
             } else {
                 print("Upload failed: \(nextItem.reference), dropping all pending uploads")
+                pendingUploads.insert(nextItem, at: 0)
                 clearQueueAndStop() //Drops all uploads.. Wait for next set of upload actions to ensure the event ordering..
             }
         }
     }
     
     private func clearQueueAndStop() {
+        self.delegate?.resetReferenceCache(pendingUploads)
         pendingUploads.removeAll()
         isUploading = false
     }
     
     private func upload(item: UploadItem) async -> Bool {
         do {
-            _ = try await self.manager.httpClient?.postBatchEvents(item.content)
+            _ = try await self.httpClient?.postBatchEvents(item.content)
             return true
         } catch {
             return false
@@ -84,4 +91,11 @@ class MessageUploader {
 struct UploadItem: Equatable {
     @AutoEquatable var reference: String
     let content: String
+}
+
+
+// MARK: - MessageUploaderDelegate
+protocol MessageUploaderDelegate {
+    func didFinishUploading(item: UploadItem)
+    func resetReferenceCache(_ pendingUploads: [UploadItem])
 }

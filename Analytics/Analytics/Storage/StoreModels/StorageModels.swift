@@ -12,20 +12,10 @@ import Foundation
  A data model that contains the stored message event data.
  */
 public struct MessageDataResult {
-    public let dataFiles: [URL]?
-    public let dataItems: [MessageDataItem]?
+    public let dataItems: [MessageDataItem]
     
-    private init(dataFiles: [URL]?, dataItems: [MessageDataItem]?) {
-        self.dataFiles = dataFiles
+    init(dataItems: [MessageDataItem]) {
         self.dataItems = dataItems
-    }
-    
-    public init(dataFiles: [URL]?) {
-        self.init(dataFiles: dataFiles, dataItems: nil)
-    }
-    
-    public init(dataItems: [MessageDataItem]?) {
-        self.init(dataFiles: nil, dataItems: dataItems)
     }
 }
 
@@ -34,12 +24,12 @@ public struct MessageDataResult {
  A data model which is used to handle the incoming message event data.
  */
 public struct MessageDataItem {
-    public let id: String
+    public var reference: String
     public var batch: String
     public var isClosed: Bool
     
     init(batch: String) {
-        self.id = UUID().uuidString
+        self.reference = UUID().uuidString
         self.batch = batch
         self.isClosed = false
     }

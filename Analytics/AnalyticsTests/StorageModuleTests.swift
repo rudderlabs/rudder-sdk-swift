@@ -154,7 +154,8 @@ extension StorageModuleTests {
         storage.write(message: eventJson)
         storage.rollover(nil)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        guard let files = storage.read().dataFiles else { XCTFail(); return }
+        
+        let files = storage.read().dataItems
         XCTAssertFalse(files.isEmpty)
     }
     
@@ -172,17 +173,18 @@ extension StorageModuleTests {
         
         //clearing all existing files...
         storage.rollover(nil)
-        guard let files = storage.read().dataFiles else { XCTFail(); return }
+        let files = storage.read().dataItems
         
         for file in files {
-            storage.remove(messageReference: file.path())
+            storage.remove(messageReference: file.reference)
         }
         
         storage.write(message: eventJson)
         storage.rollover(nil)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        guard let files = storage.read().dataFiles else { XCTFail(); return }
-        XCTAssertTrue(files.count == 1)
+        
+        let dataItems = storage.read().dataItems
+        XCTAssertTrue(dataItems.count == 1)
     }
 }
 
@@ -197,7 +199,9 @@ extension StorageModuleTests {
         storage.write(message: eventJson)
         storage.rollover(nil)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        guard let resultItems = storage.read().dataItems, let existingItems = existingResult.dataItems else { XCTFail(); return }
+        
+        let resultItems = storage.read().dataItems
+        let existingItems = existingResult.dataItems
         XCTAssertTrue(resultItems.count > existingItems.count)
     }
     
@@ -207,7 +211,8 @@ extension StorageModuleTests {
         storage.write(message: eventJson)
         storage.rollover(nil)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        guard let resultItems = storage.read().dataItems else { XCTFail(); return }
+        
+        let resultItems = storage.read().dataItems
         XCTAssertFalse(resultItems.isEmpty)
     }
     
@@ -217,13 +222,13 @@ extension StorageModuleTests {
         storage.write(message: eventJson)
         storage.rollover(nil)
         
-        guard let resultItems = storage.read().dataItems else { XCTFail(); return }
+        let resultItems = storage.read().dataItems
         for item in resultItems {
-            storage.remove(messageReference: item.id)
+            storage.remove(messageReference: item.reference)
         }
         
-        guard let resultItems = storage.read().dataItems else { XCTFail(); return }
-        XCTAssertTrue(resultItems.isEmpty)
+        let dataItems = storage.read().dataItems
+        XCTAssertTrue(dataItems.isEmpty)
     }
     
     func test_rollover_event_memory() {
@@ -231,19 +236,21 @@ extension StorageModuleTests {
         
         storage.rollover(nil)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        guard let resultItems1 = storage.read().dataItems else { XCTFail(); return }
+        
+        let resultItems1 = storage.read().dataItems
         for item in resultItems1 {
-            storage.remove(messageReference: item.id)
+            storage.remove(messageReference: item.reference)
         }
 
         storage.write(message: eventJson)
         
-        guard let resultItems2 = storage.read().dataItems else { XCTFail(); return }
+        let resultItems2 = storage.read().dataItems
         XCTAssertTrue(resultItems2.isEmpty)
         
         storage.rollover(nil)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        guard let resultItems3 = storage.read().dataItems else { XCTFail(); return }
+        
+        let resultItems3 = storage.read().dataItems
         XCTAssertFalse(resultItems3.isEmpty)
     }
 }

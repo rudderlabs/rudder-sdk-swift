@@ -43,8 +43,7 @@ extension BasicStorage {
     }
     
     public func read() -> MessageDataResult {
-        let collected = self.dataStore.retrieve()
-        return self.storageMode == .disk ? MessageDataResult(dataFiles: collected as? [URL]) : MessageDataResult(dataItems: collected as? [MessageDataItem])
+        return MessageDataResult(dataItems: self.dataStore.retrieve())
     }
     
     public func remove(messageReference: String) -> Bool {

@@ -113,8 +113,18 @@ extension DiskStore: DataStore {
         }
     }
     
-    func retrieve() -> [Any] {
-        return self.collectFiles().compactMap { URL(fileURLWithPath: $0) }
+    func retrieve() -> [MessageDataItem] {
+        var dataItems = [MessageDataItem]()
+        for file in self.collectFiles() {
+            guard let batch = FileManager.contentsOf(file: file) else { continue }
+            
+            var item = MessageDataItem(batch: batch)
+            item.reference = file
+            item.isClosed = true
+            
+            dataItems.append(item)
+        }
+        return dataItems
     }
     
     func remove(reference filePath: String) -> Bool {

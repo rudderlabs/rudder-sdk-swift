@@ -13,7 +13,7 @@ import Foundation
  */
 public protocol DataStore {
     func retain(value: String)
-    func retrieve() -> [Any]
+    func retrieve() -> [MessageDataItem]
     func remove(reference: String) -> Bool
     func rollover(_ block: VoidClosure?)
 }

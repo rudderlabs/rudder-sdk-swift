@@ -50,20 +50,20 @@ class MemoryStore {
     }
     
     private func appendDataItem(_ item: MessageDataItem) {
-        if let firstIndex = self.dataItems.firstIndex(where: { $0.id == item.id }) {
+        if let firstIndex = self.dataItems.firstIndex(where: { $0.reference == item.reference }) {
             self.dataItems[firstIndex] = item
         } else {
             self.dataItems.append(item)
         }
         
-        self.keyValueStore.save(value: item.id, reference: self.currentDataItemKey)
+        self.keyValueStore.save(value: item.reference, reference: self.currentDataItemKey)
     }
     
     private func collectDataItems() -> [MessageDataItem] {
         var filtered = self.dataItems.filter { $0.batch.hasSuffix(Constants.batchSuffix) && $0.isClosed }
         
         if let currentDataItem = self.currentDataItem {
-            filtered = filtered.filter { $0.id != currentDataItem.id }
+            filtered = filtered.filter { $0.reference != currentDataItem.reference }
         }
         
         return filtered
@@ -71,7 +71,7 @@ class MemoryStore {
     
     @discardableResult
     private func removeItem(using id: String) -> Bool {
-        guard let firstIndex = self.dataItems.firstIndex(where: { $0.id == id }) else { return false }
+        guard let firstIndex = self.dataItems.firstIndex(where: { $0.reference == id }) else { return false }
         self.dataItems.remove(at: firstIndex)
         print("Item removed: \(id)")
         return true
@@ -94,7 +94,7 @@ extension MemoryStore {
     
     private var currentDataItem: MessageDataItem? {
         guard let currentItemId = self.currentDataItemId else { return nil }
-        return self.dataItems.filter { $0.id == currentItemId }.first
+        return self.dataItems.filter { $0.reference == currentItemId }.first
     }
 }
 
@@ -109,7 +109,7 @@ extension MemoryStore: DataStore {
         }
     }
     
-    func retrieve() -> [Any] {
+    func retrieve() -> [MessageDataItem] {
         return self.collectDataItems()
     }
     
