@@ -28,19 +28,19 @@ extension AnalyticsClient {
     
     // MARK: - Track
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        let event = TrackEvent(event: name, properties: CodableCollection(dictionary: properties), options: CodableCollection(dictionary: options))
+        let event = TrackEvent(event: name, properties: properties, options: options)
         self.process(event: event)
     }
     
     // MARK: - Screen
     public func screen(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        let event = ScreenEvent(screenName: name, properties: CodableCollection(dictionary: properties), options: CodableCollection(dictionary: options))
+        let event = ScreenEvent(screenName: name, properties: properties, options: options)
         self.process(event: event)
     }
     
     // MARK: - Group
     public func group(id: String, traits: RudderProperties? = nil, options: RudderOptions? = nil) {
-        let event = GroupEvent(groupId: id, traits: CodableCollection(dictionary: traits), options: CodableCollection(dictionary: options))
+        let event = GroupEvent(groupId: id, traits: traits, options: options)
         self.process(event: event)
     }
     

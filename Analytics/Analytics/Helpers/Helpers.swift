@@ -8,7 +8,6 @@
 import Foundation
 
 // MARK: - Typealiases(Public)
-public typealias RudderOptions = [String: Any]
 public typealias RudderProperties = [String: Any]
 public typealias VoidClosure = () -> Void
 
@@ -37,6 +36,7 @@ public struct Constants {
     static let configQueryParams = ["p": "ios", "v": "1.29.1"]
     static let uploadSignal = "#!upload!#"
     
+    static let defaultChannel = "mobile"
     private init() {}
 }
 
