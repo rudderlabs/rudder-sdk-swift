@@ -15,12 +15,7 @@ extension String {
     }
     
     static var currentTimeStamp: String {
-        return String.timeStampFromDate(Date()).replacingOccurrences(of: "+00:00", with: "Z")
-    }
-    
-    static func timeStampFromDate(_ date: Date) -> String {
-        let formattedDate = DateFormatter.timeStampFormat.string(from: date)
-        return formattedDate.replacingOccurrences(of: "+00:00", with: "Z")
+        return Date().iso8601TimeStamp
     }
     
     var utf8Data: Data? {
@@ -38,11 +33,21 @@ extension String {
 
 // MARK: - DateFormatter
 extension DateFormatter {
-    static var timeStampFormat: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
-        formatter.timeZone = TimeZone(abbreviation: "UTC")
+    static var timeStampFormat: ISO8601DateFormatter {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter
+    }
+}
+
+// MARK: - Date
+extension Date {
+    var iso8601TimeStamp: String {
+        return DateFormatter.timeStampFormat.string(from: self)
+    }
+    
+    func date(from timeStamp: String) -> Date? {
+        return DateFormatter.timeStampFormat.date(from: timeStamp)
     }
 }
 
