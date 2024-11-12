@@ -37,6 +37,9 @@ public struct Constants {
     static let uploadSignal = "#!upload!#"
     
     static let defaultChannel = "mobile"
+    static let defaultIntegration = ["All": true]
+    static let defaultSentAtPlaceholder = "{{_RSA_DEF_SENT_AT_TS_}}"
+    
     private init() {}
 }
 

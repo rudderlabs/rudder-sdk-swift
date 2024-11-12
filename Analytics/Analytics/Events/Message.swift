@@ -14,15 +14,24 @@ import Foundation
 protocol Message: Codable {
     var anonymousId: String? { get set }
     var channel: String? { get set }
+    var integrations: [String: Bool]? { get set }
     var sentAt: String? { get set }
-    
-//    var context: AnalyticsContext { get set }
-//    var userId: String? { get set }
-//    var integrations: [String: Bool]? { get set }
+    var context: [String: CodableCollection]? { get set }
     
     var type: EventType { get set }
     var messageId: String { get set }
     var originalTimeStamp: String { get set }
+}
+
+extension Message {
+    mutating func addDefaultValues() {
+        self.channel = Constants.defaultChannel
+        self.sentAt = Constants.defaultSentAtPlaceholder
+        
+        // TODO: Needs to be modified in future..
+        self.anonymousId = .randomUUIDString
+        //context
+    }
 }
 
 // MARK: - TrackEvent
@@ -33,16 +42,22 @@ struct TrackEvent: Message {
     
     var anonymousId: String?
     var channel: String?
+    var integrations: [String: Bool]?
     var sentAt: String?
+    var context: [String: CodableCollection]?
     
     var event: String
     var properties: CodableCollection?
-    var options: RudderOptions?
     
     init(event: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         self.event = event
         self.properties = CodableCollection(dictionary: properties)
-        self.options = options
+        self.integrations = options?.integrations
+        
+        self.context = options?.customContext?.isEmpty == false ?
+            options?.customContext?.compactMapValues { CodableCollection(dictionary: $0) } : nil
+        
+        self.addDefaultValues()
     }
 }
 
@@ -54,16 +69,19 @@ struct ScreenEvent: Message {
     
     var anonymousId: String?
     var channel: String?
+    var integrations: [String: Bool]?
     var sentAt: String?
+    var context: [String: CodableCollection]?
     
     var screenName: String
     var properties: CodableCollection?
-    var options: RudderOptions?
     
     init(screenName: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         self.screenName = screenName
         self.properties = CodableCollection(dictionary: properties)
-        self.options = options
+        self.integrations = options?.integrations
+        
+        self.addDefaultValues()
     }
 }
 
@@ -75,16 +93,19 @@ struct GroupEvent: Message {
     
     var anonymousId: String?
     var channel: String?
+    var integrations: [String: Bool]?
     var sentAt: String?
+    var context: [String: CodableCollection]?
     
     var groupId: String
     var traits: CodableCollection?
-    var options: RudderOptions?
     
     init(groupId: String, traits: RudderProperties? = nil, options: RudderOptions? = nil) {
         self.groupId = groupId
         self.traits = CodableCollection(dictionary: traits)
-        self.options = options
+        self.integrations = options?.integrations
+        
+        self.addDefaultValues()
     }
 }
 
@@ -96,7 +117,9 @@ struct FlushEvent: Message {
     
     var anonymousId: String?
     var channel: String?
+    var integrations: [String: Bool]?
     var sentAt: String?
+    var context: [String: CodableCollection]?
     
     var messageName: String
     
@@ -111,53 +134,5 @@ enum EventType: String, CaseIterable, Codable {
     
     public var label: String {
         return rawValue.capitalized
-    }
-}
-
-// MARK: - RudderOptionType
-protocol RudderOptionType: Codable {
-    var integrations: [String: Bool]? { get set }
-    var customContext: CodableCollection? { get set }
-}
-
-// MARK: - RudderOptions
-public struct RudderOptions: RudderOptionType {
-    var integrations: [String: Bool]?
-    var customContext: CodableCollection?
-    
-    public init?(integrations: [String : Bool]? = nil, customContext: CodableCollection? = nil) {
-        guard integrations != nil || customContext != nil else { return nil }
-        self.integrations = integrations
-        self.customContext = customContext
-    }
-}
-
-// MARK: - RudderIdentifyOptionType
-protocol RudderIdentifyOptionType: RudderOptionType {
-    var externalIds: [ExternalId]? { get set }
-}
-
-// MARK: - RudderIdentifyOptions
-public struct RudderIdentifyOptions: RudderIdentifyOptionType {
-    var integrations: [String: Bool]?
-    var customContext: CodableCollection?
-    var externalIds: [ExternalId]?
-    
-    public init?(integrations: [String : Bool]? = nil, customContext: [String : Any]? = nil, externalIds: [ExternalId]? = nil) {
-        guard integrations != nil || externalIds != nil || customContext != nil else { return nil }
-        self.integrations = integrations
-        self.externalIds = externalIds
-        self.customContext = CodableCollection(dictionary: customContext)
-    }
-}
-
-// MARK: - ExternalId
-public struct ExternalId: Codable {
-    var type: String
-    var id: String
-    
-    public init(type: String, id: String) {
-        self.type = type
-        self.id = id
     }
 }

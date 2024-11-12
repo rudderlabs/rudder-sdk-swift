@@ -1,0 +1,100 @@
+//
+//  MessageOptions.swift
+//  Analytics
+//
+//  Created by Satheesh Kannan on 12/11/24.
+//
+
+import Foundation
+
+// MARK: - RudderOptionType
+protocol RudderOptionType {
+    var integrations: [String: Bool]? { get set }
+    var customContext: [String: [String: Any]]? { get }
+    
+    func addIntegration(_ integration: String, isEnabled: Bool) -> Self
+    func addCustomContext(_ context: [String: Any], key: String) -> Self
+}
+
+extension RudderOptionType {
+    func addIntegration(_ integrations: inout [String: Bool]?, values: [String: Bool]) {
+        if integrations == nil { integrations = Constants.defaultIntegration }
+        integrations?.merge(values, uniquingKeysWith: { $1 })
+    }
+    
+    func addCustomContext(_ context: inout [String: [String: Any]]?, values: [String: [String: Any]]) {
+        if context == nil { context = [:] }
+        context?.merge(values, uniquingKeysWith: { $1 })
+    }
+}
+
+// MARK: - RudderOptions
+public class RudderOptions: RudderOptionType {
+    internal(set) public var integrations: [String: Bool]?
+    private(set) public var customContext: [String: [String: Any]]?
+    
+    public init() {
+        self.integrations = Constants.defaultIntegration
+    }
+    
+    @discardableResult
+    public func addIntegration(_ integration: String, isEnabled: Bool) -> Self {
+        self.addIntegration(&self.integrations, values: [integration: isEnabled])
+        return self
+    }
+    
+    @discardableResult
+    public func addCustomContext(_ context:[String: Any], key: String) -> Self {
+        self.addCustomContext(&self.customContext, values: [key: context])
+        return self
+    }
+}
+
+
+// MARK: - RudderIdentifyOptionType
+protocol RudderIdentifyOptionType: RudderOptionType {
+    var externalIds: [ExternalId]? { get }
+}
+
+// MARK: - RudderIdentifyOptions
+public class RudderIdentifyOptions: RudderIdentifyOptionType {
+    internal(set) public var integrations: [String: Bool]?
+    private(set) public var customContext: [String: [String: Any]]?
+    private(set) public var externalIds: [ExternalId]?
+    
+    public init() {
+        self.integrations = Constants.defaultIntegration
+    }
+    
+    @discardableResult
+    public func addIntegration(_ integration: String, isEnabled: Bool) -> Self {
+        self.addIntegration(&self.integrations, values: [integration: isEnabled])
+        return self
+    }
+    
+    @discardableResult
+    public func addCustomContext(_ context:[String: Any], key: String) -> Self {
+        self.addCustomContext(&self.customContext, values: [key: context])
+        return self
+    }
+    
+    @discardableResult
+    public func addExternalId(_ id: ExternalId) -> Self {
+        if self.integrations == nil { self.externalIds = [] }
+        
+        self.externalIds?.append(id)
+        return self
+    }
+}
+
+
+// MARK: - ExternalId
+public struct ExternalId: Codable {
+    var type: String
+    var id: String
+    
+    public init(type: String, id: String) {
+        self.type = type
+        self.id = id
+    }
+}
