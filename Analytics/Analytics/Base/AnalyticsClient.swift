@@ -44,7 +44,7 @@ extension AnalyticsClient {
     }
     
     // MARK: - Group
-    public func group(id: String, traits: RudderProperties? = nil, options: RudderOptions? = nil) {
+    public func group(id: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         let event = GroupEvent(groupId: id, traits: traits, options: options)
         self.process(event: event)
     }

@@ -9,6 +9,7 @@ import Foundation
 
 // MARK: - Typealiases(Public)
 public typealias RudderProperties = [String: Any]
+public typealias RudderTraits = [String: Any]
 public typealias VoidClosure = () -> Void
 
 // MARK: - Typealiases(Internal)

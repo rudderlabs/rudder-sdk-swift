@@ -10,10 +10,10 @@ import Foundation
 // MARK: - RudderOptionType
 protocol RudderOptionType {
     var integrations: [String: Bool]? { get set }
-    var customContext: [String: [String: Any]]? { get }
+    var customContext: [String: Any]? { get }
     
     func addIntegration(_ integration: String, isEnabled: Bool) -> Self
-    func addCustomContext(_ context: [String: Any], key: String) -> Self
+    func addCustomContext(_ context: Any, key: String) -> Self
 }
 
 extension RudderOptionType {
@@ -22,7 +22,7 @@ extension RudderOptionType {
         integrations?.merge(values, uniquingKeysWith: { $1 })
     }
     
-    func addCustomContext(_ context: inout [String: [String: Any]]?, values: [String: [String: Any]]) {
+    func addCustomContext(_ context: inout [String: Any]?, values: [String: Any]) {
         if context == nil { context = [:] }
         context?.merge(values, uniquingKeysWith: { $1 })
     }
@@ -31,7 +31,7 @@ extension RudderOptionType {
 // MARK: - RudderOptions
 public class RudderOptions: RudderOptionType {
     internal(set) public var integrations: [String: Bool]?
-    private(set) public var customContext: [String: [String: Any]]?
+    private(set) public var customContext: [String: Any]?
     
     public init() {
         self.integrations = Constants.defaultIntegration
@@ -44,7 +44,7 @@ public class RudderOptions: RudderOptionType {
     }
     
     @discardableResult
-    public func addCustomContext(_ context:[String: Any], key: String) -> Self {
+    public func addCustomContext(_ context:Any, key: String) -> Self {
         self.addCustomContext(&self.customContext, values: [key: context])
         return self
     }
@@ -59,7 +59,7 @@ protocol RudderIdentifyOptionType: RudderOptionType {
 // MARK: - RudderIdentifyOptions
 public class RudderIdentifyOptions: RudderIdentifyOptionType {
     internal(set) public var integrations: [String: Bool]?
-    private(set) public var customContext: [String: [String: Any]]?
+    private(set) public var customContext: [String: Any]?
     private(set) public var externalIds: [ExternalId]?
     
     public init() {
@@ -73,7 +73,7 @@ public class RudderIdentifyOptions: RudderIdentifyOptionType {
     }
     
     @discardableResult
-    public func addCustomContext(_ context:[String: Any], key: String) -> Self {
+    public func addCustomContext(_ context:Any, key: String) -> Self {
         self.addCustomContext(&self.customContext, values: [key: context])
         return self
     }

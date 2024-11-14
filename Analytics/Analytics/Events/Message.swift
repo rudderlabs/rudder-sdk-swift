@@ -16,7 +16,7 @@ protocol Message: Codable {
     var channel: String? { get set }
     var integrations: [String: Bool]? { get set }
     var sentAt: String? { get set }
-    var context: [String: CodableCollection]? { get set }
+    var context: [String: AnyCodable]? { get set }
     
     var type: EventType { get set }
     var messageId: String { get set }
@@ -44,7 +44,7 @@ struct TrackEvent: Message {
     var channel: String?
     var integrations: [String: Bool]?
     var sentAt: String?
-    var context: [String: CodableCollection]?
+    var context: [String: AnyCodable]?
     
     var event: String
     var properties: CodableCollection?
@@ -55,7 +55,7 @@ struct TrackEvent: Message {
         self.integrations = options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
-            options?.customContext?.compactMapValues { CodableCollection(dictionary: $0) } : nil
+        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
         
         self.addDefaultValues()
     }
@@ -71,7 +71,7 @@ struct ScreenEvent: Message {
     var channel: String?
     var integrations: [String: Bool]?
     var sentAt: String?
-    var context: [String: CodableCollection]?
+    var context: [String: AnyCodable]?
     
     var event: String
     var properties: CodableCollection?
@@ -82,7 +82,7 @@ struct ScreenEvent: Message {
         self.integrations = options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
-            options?.customContext?.compactMapValues { CodableCollection(dictionary: $0) } : nil
+            options?.customContext?.compactMapValues { AnyCodable($0) } : nil
         
         self.addDefaultValues()
     }
@@ -98,17 +98,23 @@ struct GroupEvent: Message {
     var channel: String?
     var integrations: [String: Bool]?
     var sentAt: String?
-    var context: [String: CodableCollection]?
+    var context: [String: AnyCodable]?
     
     var groupId: String
     var traits: CodableCollection?
     
-    init(groupId: String, traits: RudderProperties? = nil, options: RudderOptions? = nil) {
+    init(groupId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         self.groupId = groupId
-        self.traits = CodableCollection(dictionary: traits)
+        self.addDefaultValues()
+        
+        var updatedTraits = traits ?? RudderTraits()
+        updatedTraits["anonymousId"] = self.anonymousId
+        
+        self.traits = CodableCollection(dictionary: updatedTraits)
         self.integrations = options?.integrations
         
-        self.addDefaultValues()
+        self.context = options?.customContext?.isEmpty == false ?
+            options?.customContext?.compactMapValues { AnyCodable($0) } : nil
     }
 }
 
@@ -122,7 +128,7 @@ struct FlushEvent: Message {
     var channel: String?
     var integrations: [String: Bool]?
     var sentAt: String?
-    var context: [String: CodableCollection]?
+    var context: [String: AnyCodable]?
     
     var messageName: String
     

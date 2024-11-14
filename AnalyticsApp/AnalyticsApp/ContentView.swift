@@ -17,8 +17,12 @@ struct ContentView: View {
                     let option = RudderOptions()
                     .addIntegration("SDK", isEnabled: true)
                     .addIntegration("Segment", isEnabled: false)
-                    .addCustomContext(["Key123": "Value123"], key: "SK123")
-                    .addCustomContext(["Key1234": "Value1234"], key: "SK1234")
+                    .addCustomContext(["Key1": "Value1"], key: "SK1")
+                    .addCustomContext(["value1", "value2"], key: "SK2")
+                    .addCustomContext("Value3", key: "SK3")
+                    .addCustomContext(1234, key: "SK4")
+                    .addCustomContext(5678.9, key: "SK5")
+                    .addCustomContext(true, key: "SK6")
                     
                     AnalyticsManager.shared.analytics?.track(name: "Track at \(Date())", properties: ["key": "value"], options: option)
                 }
