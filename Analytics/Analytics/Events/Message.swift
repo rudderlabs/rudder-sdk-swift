@@ -73,13 +73,16 @@ struct ScreenEvent: Message {
     var sentAt: String?
     var context: [String: CodableCollection]?
     
-    var screenName: String
+    var event: String
     var properties: CodableCollection?
     
     init(screenName: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        self.screenName = screenName
+        self.event = screenName
         self.properties = CodableCollection(dictionary: properties)
         self.integrations = options?.integrations
+        
+        self.context = options?.customContext?.isEmpty == false ?
+            options?.customContext?.compactMapValues { CodableCollection(dictionary: $0) } : nil
         
         self.addDefaultValues()
     }
