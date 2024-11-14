@@ -56,7 +56,7 @@ extension AnalyticsTests {
     
     func test_trackEvent_disk() {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
-        client.track(name: "Track Event", properties: ["prop": "value"], options: ["opt": "val"])
+        client.track(name: "Track Event", properties: ["prop": "value"])
         client.configuration.storage.rollover(nil)
         
         let dataItems = client.configuration.storage.read().dataItems
@@ -66,7 +66,7 @@ extension AnalyticsTests {
     func test_flushEvents_disk() {
         MockProvider.resetDiskStorage()
         guard let client = analytics_disk else { return XCTFail("No disk client") }
-        client.track(name: "Track Event", properties: ["prop": "value"], options: ["opt": "val"])
+        client.track(name: "Track Event", properties: ["prop": "value"])
         client.flush()
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 1.0))
         
