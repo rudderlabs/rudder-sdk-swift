@@ -15,8 +15,8 @@ struct ContentView: View {
             HStack {
                 CustomButton(title: "Track") {
                     let option = RudderOptions()
-                    .addIntegration("SDK", isEnabled: true)
-                    .addIntegration("Segment", isEnabled: false)
+                    .addIntegration("Amplitude", isEnabled: true)
+                    .addIntegration("CleverTap", isEnabled: false)
                     .addCustomContext(["Key1": "Value1"], key: "SK1")
                     .addCustomContext(["value1", "value2"], key: "SK2")
                     .addCustomContext("Value3", key: "SK3")
@@ -29,8 +29,8 @@ struct ContentView: View {
                 
                 CustomButton(title: "Multiple Track") {
                     let option = RudderOptions()
-                    .addIntegration("SDK", isEnabled: true)
-                    .addIntegration("Segment", isEnabled: false)
+                    .addIntegration("Amplitude", isEnabled: true)
+                    .addIntegration("CleverTap", isEnabled: false)
                     .addCustomContext(["Key123": "Value123"], key: "SK123")
                     
                     for i in 1...50 {
@@ -50,7 +50,7 @@ struct ContentView: View {
                 CustomButton(title: "Group") {
                     let option = RudderOptions()
                         .addCustomContext(["Key1": "Value1"], key: "SK")
-                        .addIntegration("MySDK", isEnabled: false)
+                        .addIntegration("Firebase", isEnabled: false)
                     AnalyticsManager.shared.analytics?.group(id: "group_id", traits: ["key": "value"], options: option)
                 }
             }
