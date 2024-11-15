@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Message
 /**
- This is base class for all events.
+ This is base protocol for all events.
  */
 protocol Message: Codable {
     var anonymousId: String? { get set }
@@ -24,6 +24,9 @@ protocol Message: Codable {
 }
 
 extension Message {
+    /**
+     This function will serve as a shared utility for adding default or standard values.
+     */
     mutating func addDefaultValues() {
         self.channel = Constants.defaultChannel
         self.sentAt = Constants.defaultSentAtPlaceholder
@@ -35,6 +38,9 @@ extension Message {
 }
 
 // MARK: - TrackEvent
+/**
+ This model is based on the `Message` protocol and is designed for creating `Track` events.
+ */
 struct TrackEvent: Message {
     var type: EventType = .track
     var messageId: String = .randomUUIDString
@@ -62,6 +68,9 @@ struct TrackEvent: Message {
 }
 
 // MARK: - ScreenEvent
+/**
+ This model is based on the `Message` protocol and is designed for creating `Screen` events.
+ */
 struct ScreenEvent: Message {
     var type: EventType = .screen
     var messageId: String = .randomUUIDString
@@ -89,6 +98,9 @@ struct ScreenEvent: Message {
 }
 
 // MARK: - GroupEvent
+/**
+ This model is based on the `Message` protocol and is designed for creating `Group` events.
+ */
 struct GroupEvent: Message {
     var type: EventType = .group
     var messageId: String = .randomUUIDString
@@ -119,6 +131,9 @@ struct GroupEvent: Message {
 }
 
 // MARK: - FlushEvent
+/**
+ This model is based on the `Message` protocol and is designed for creating `Flush` events.
+ */
 struct FlushEvent: Message {
     var type: EventType = .flush
     var messageId: String = .randomUUIDString
@@ -138,6 +153,9 @@ struct FlushEvent: Message {
 }
 
 // MARK: - EventType
+/**
+ Enum values used to specify the type of message event.
+ */
 enum EventType: String, CaseIterable, Codable {
     case track, screen, group, flush
     
