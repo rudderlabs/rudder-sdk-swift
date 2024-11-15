@@ -8,6 +8,9 @@
 import Foundation
 
 // MARK: - RudderOptionType
+/**
+ This is a base protocol for managing Rudder options.
+ */
 protocol RudderOptionType {
     var integrations: [String: Bool]? { get set }
     var customContext: [String: Any]? { get }
@@ -29,6 +32,9 @@ extension RudderOptionType {
 }
 
 // MARK: - RudderOptions
+/**
+ This class implements the `RudderOptionType` protocol, which is used to add options to message events.
+ */
 public class RudderOptions: RudderOptionType {
     internal(set) public var integrations: [String: Bool]?
     private(set) public var customContext: [String: Any]?
@@ -47,54 +53,5 @@ public class RudderOptions: RudderOptionType {
     public func addCustomContext(_ context:Any, key: String) -> Self {
         self.addCustomContext(&self.customContext, values: [key: context])
         return self
-    }
-}
-
-
-// MARK: - RudderIdentifyOptionType
-protocol RudderIdentifyOptionType: RudderOptionType {
-    var externalIds: [ExternalId]? { get }
-}
-
-// MARK: - RudderIdentifyOptions
-public class RudderIdentifyOptions: RudderIdentifyOptionType {
-    internal(set) public var integrations: [String: Bool]?
-    private(set) public var customContext: [String: Any]?
-    private(set) public var externalIds: [ExternalId]?
-    
-    public init() {
-        self.integrations = Constants.defaultIntegration
-    }
-    
-    @discardableResult
-    public func addIntegration(_ integration: String, isEnabled: Bool) -> Self {
-        self.addIntegration(&self.integrations, values: [integration: isEnabled])
-        return self
-    }
-    
-    @discardableResult
-    public func addCustomContext(_ context:Any, key: String) -> Self {
-        self.addCustomContext(&self.customContext, values: [key: context])
-        return self
-    }
-    
-    @discardableResult
-    public func addExternalId(_ id: ExternalId) -> Self {
-        if self.integrations == nil { self.externalIds = [] }
-        
-        self.externalIds?.append(id)
-        return self
-    }
-}
-
-
-// MARK: - ExternalId
-public struct ExternalId: Codable {
-    var type: String
-    var id: String
-    
-    public init(type: String, id: String) {
-        self.type = type
-        self.id = id
     }
 }
