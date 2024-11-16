@@ -29,6 +29,17 @@ extension String {
     var trimmedUrlString: String {
         return self.hasSuffix("/") ? String(self.dropLast()) : self
     }
+    
+    var asDictionary: [String: Any]? {
+        guard let data = self.utf8Data else { return nil }
+        do {
+            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+            return jsonObject as? [String: Any]
+        } catch {
+            print("Error converting string to dictionary: \(error)")
+            return nil
+        }
+    }
 }
 
 // MARK: - DateFormatter
