@@ -34,12 +34,7 @@ extension AnalyticsClient {
     
     // MARK: - Screen
     public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        
-        var updatedProperties = properties ?? RudderProperties()
-        updatedProperties["category"] = category?.isEmpty ?? true ? nil : category
-        updatedProperties["name"] = name.isEmpty ? nil : name
-        
-        let event = ScreenEvent(screenName: name, properties: updatedProperties, options: options)
+        let event = ScreenEvent(screenName: name, category: category, properties: properties, options: options)
         self.process(event: event)
     }
     

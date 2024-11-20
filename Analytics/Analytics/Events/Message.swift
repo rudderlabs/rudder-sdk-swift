@@ -83,11 +83,17 @@ struct ScreenEvent: Message {
     var context: [String: AnyCodable]?
     
     var event: String
+    var category: String?
     var properties: CodableCollection?
     
-    init(screenName: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
+    init(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         self.event = screenName
-        self.properties = CodableCollection(dictionary: properties)
+        
+        var updatedProperties = properties ?? RudderProperties()
+        updatedProperties["category"] = category?.isEmpty ?? true ? nil : category
+        updatedProperties["name"] = screenName.isEmpty ? nil : screenName
+        
+        self.properties = CodableCollection(dictionary: updatedProperties)
         self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
