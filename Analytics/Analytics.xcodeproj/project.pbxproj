@@ -19,6 +19,11 @@
 		53859EE72CB66C3200EAE483 /* DataPlaneModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */; };
 		5387E8942CA320FD00DB1C49 /* HttpNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */; };
 		5387E8972CA3233000DB1C49 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5387E8962CA3233000DB1C49 /* HttpClient.swift */; };
+		538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538E2B1C2CECD52400B550BC /* TrackEventTests.swift */; };
+		538E2B1F2CECE70B00B550BC /* track_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */; };
+		538E2B222CED044400B550BC /* track_with_properties.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B212CED044400B550BC /* track_with_properties.json */; };
+		538E2B262CED07C800B550BC /* track_with_options.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B252CED07C800B550BC /* track_with_options.json */; };
+		538E2B2A2CED086A00B550BC /* track_with_properties_options.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B292CED086A00B550BC /* track_with_properties_options.json */; };
 		5392AB952C6FC78F00369791 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5392AB942C6FC78F00369791 /* Configuration.swift */; };
 		5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5392AB962C6FC84800369791 /* SwiftLogger.swift */; };
 		539E54042C98B05300982E95 /* StorageModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539E54032C98B05300982E95 /* StorageModels.swift */; };
@@ -67,6 +72,11 @@
 		53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPlaneModuleTests.swift; sourceTree = "<group>"; };
 		5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpNetwork.swift; sourceTree = "<group>"; };
 		5387E8962CA3233000DB1C49 /* HttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
+		538E2B1C2CECD52400B550BC /* TrackEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackEventTests.swift; sourceTree = "<group>"; };
+		538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_default_arguments.json; sourceTree = "<group>"; };
+		538E2B212CED044400B550BC /* track_with_properties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_properties.json; sourceTree = "<group>"; };
+		538E2B252CED07C800B550BC /* track_with_options.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_options.json; sourceTree = "<group>"; };
+		538E2B292CED086A00B550BC /* track_with_properties_options.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_properties_options.json; sourceTree = "<group>"; };
 		5392AB942C6FC78F00369791 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		5392AB962C6FC84800369791 /* SwiftLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftLogger.swift; sourceTree = "<group>"; };
 		539E54032C98B05300982E95 /* StorageModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModels.swift; sourceTree = "<group>"; };
@@ -161,6 +171,34 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
+		538E2B202CECFFF700B550BC /* MockResources */ = {
+			isa = PBXGroup;
+			children = (
+				538E2B2C2CEDA5F400B550BC /* Track */,
+			);
+			path = MockResources;
+			sourceTree = "<group>";
+		};
+		538E2B2B2CEDA5E000B550BC /* EventTests */ = {
+			isa = PBXGroup;
+			children = (
+				53C52C782CE486A000A2BD31 /* MessageModuleTests.swift */,
+				538E2B1C2CECD52400B550BC /* TrackEventTests.swift */,
+			);
+			path = EventTests;
+			sourceTree = "<group>";
+		};
+		538E2B2C2CEDA5F400B550BC /* Track */ = {
+			isa = PBXGroup;
+			children = (
+				538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */,
+				538E2B212CED044400B550BC /* track_with_properties.json */,
+				538E2B252CED07C800B550BC /* track_with_options.json */,
+				538E2B292CED086A00B550BC /* track_with_properties_options.json */,
+			);
+			path = Track;
+			sourceTree = "<group>";
+		};
 		539E54052C98B05B00982E95 /* StoreModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -177,7 +215,8 @@
 				5334858E2C9AB24E0029F88E /* StorageModuleTests.swift */,
 				53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */,
 				53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */,
-				53C52C782CE486A000A2BD31 /* MessageModuleTests.swift */,
+				538E2B2B2CEDA5E000B550BC /* EventTests */,
+				538E2B202CECFFF700B550BC /* MockResources */,
 			);
 			path = AnalyticsTests;
 			sourceTree = "<group>";
@@ -363,6 +402,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				538E2B262CED07C800B550BC /* track_with_options.json in Resources */,
+				538E2B2A2CED086A00B550BC /* track_with_properties_options.json in Resources */,
+				538E2B222CED044400B550BC /* track_with_properties.json in Resources */,
+				538E2B1F2CECE70B00B550BC /* track_with_default_arguments.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +450,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				53859EE72CB66C3200EAE483 /* DataPlaneModuleTests.swift in Sources */,
+				538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */,
 				53C52C792CE486A000A2BD31 /* MessageModuleTests.swift in Sources */,
 				539E540D2C98CD7D00982E95 /* AnalyticsTests.swift in Sources */,
 				5334858F2C9AB24E0029F88E /* StorageModuleTests.swift in Sources */,
