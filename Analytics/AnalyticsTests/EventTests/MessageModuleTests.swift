@@ -25,7 +25,7 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertFalse(track.originalTimeStamp.isEmpty)
                     XCTAssertNotNil(track.anonymousId)
                     XCTAssertEqual(track.channel, Constants.defaultChannel)
-                    XCTAssertNil(track.integrations)
+                    XCTAssertNotNil(track.integrations)
                     XCTAssertFalse(track.sentAt?.isEmpty ?? true)
                     XCTAssertNil(track.properties)
                 }
@@ -52,7 +52,7 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertEqual(track.channel, Constants.defaultChannel)
                     XCTAssertFalse(track.sentAt?.isEmpty ?? true)
                     
-                    XCTAssertNil(track.integrations)
+                    XCTAssertNotNil(track.integrations)
                     XCTAssertNotNil(track.properties)
                 }
                 
@@ -164,9 +164,9 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertFalse(screen.originalTimeStamp.isEmpty)
                     XCTAssertNotNil(screen.anonymousId)
                     XCTAssertEqual(screen.channel, Constants.defaultChannel)
-                    XCTAssertNil(screen.integrations)
+                    XCTAssertNotNil(screen.integrations)
                     XCTAssertFalse(screen.sentAt?.isEmpty ?? true)
-                    XCTAssertNil(screen.properties)
+                    XCTAssertNotNil(screen.properties)
                 }
             }
         }
@@ -191,7 +191,7 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertEqual(screen.channel, Constants.defaultChannel)
                     XCTAssertFalse(screen.sentAt?.isEmpty ?? true)
                     
-                    XCTAssertNil(screen.integrations)
+                    XCTAssertNotNil(screen.integrations)
                     XCTAssertNotNil(screen.properties)
                 }
                 
@@ -220,7 +220,7 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertFalse(screen.integrations?.isEmpty ?? true)
                     XCTAssertFalse(screen.sentAt?.isEmpty ?? true)
                     XCTAssertFalse(screen.context?.isEmpty ?? true)
-                    XCTAssertNil(screen.properties)
+                    XCTAssertNotNil(screen.properties)
                 }
                 
             }
@@ -303,7 +303,7 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertFalse(group.originalTimeStamp.isEmpty)
                     XCTAssertNotNil(group.anonymousId)
                     XCTAssertEqual(group.channel, Constants.defaultChannel)
-                    XCTAssertNil(group.integrations)
+                    XCTAssertNotNil(group.integrations)
                     XCTAssertFalse(group.sentAt?.isEmpty ?? true)
                     XCTAssertNotNil(group.traits)
                     XCTAssertTrue((group.traits?.dictionary?.count == 1))
@@ -331,7 +331,7 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertEqual(group.channel, Constants.defaultChannel)
                     XCTAssertFalse(group.sentAt?.isEmpty ?? true)
                     
-                    XCTAssertNil(group.integrations)
+                    XCTAssertNotNil(group.integrations)
                     XCTAssertNotNil(group.traits)
                     XCTAssertTrue((group.traits?.dictionary?.count == 2))
                 }
