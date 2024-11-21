@@ -149,13 +149,6 @@ struct MockHelper {
         event.messageId = "<message-id>"
         event.anonymousId = "<anonymous-id>"
         event.originalTimeStamp = "<original-timestamp>"
-        
-        if let traits = event.traits?.dictionary {
-            var processedTraits = [String: Any]()
-            traits.forEach { processedTraits[$0.key] = $0.value.value }
-            processedTraits["anonymousId"] = "<anonymous-id>"
-            event.traits = CodableCollection(dictionary: processedTraits)
-        }
     }
 }
 

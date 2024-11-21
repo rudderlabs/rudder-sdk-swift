@@ -8,8 +8,5 @@
   "messageId" : "<message-id>",
   "originalTimeStamp" : "<original-timestamp>",
   "sentAt" : "{{_RSA_DEF_SENT_AT_TS_}}",
-  "traits" : {
-    "anonymousId" : "<anonymous-id>"
-  },
   "type" : "group"
 }

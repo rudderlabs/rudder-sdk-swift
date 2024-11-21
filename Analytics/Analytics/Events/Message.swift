@@ -128,10 +128,7 @@ struct GroupEvent: Message {
         self.groupId = groupId
         self.addDefaultValues()
         
-        var updatedTraits = traits ?? RudderTraits()
-        updatedTraits["anonymousId"] = self.anonymousId
-        
-        self.traits = CodableCollection(dictionary: updatedTraits)
+        self.traits = CodableCollection(dictionary: traits)
         self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?

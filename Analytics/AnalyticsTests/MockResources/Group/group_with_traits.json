@@ -9,7 +9,6 @@
   "originalTimeStamp" : "<original-timestamp>",
   "sentAt" : "{{_RSA_DEF_SENT_AT_TS_}}",
   "traits" : {
-    "anonymousId" : "<anonymous-id>",
     "key-1" : "String value",
     "key-10" : [
       "String value",
