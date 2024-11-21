@@ -15,7 +15,7 @@ final class MockProvider {
     static let _mockWriteKey = "MoCk_WrItEkEy"
     
     static let simpleTrackEvent: TrackEvent = {
-        let event = TrackEvent(event: "Track_Event", properties: CodableCollection(dictionary: ["Property_1": "Value1"]), options: CodableCollection(dictionary: ["Property_1": "Value1"]))
+        let event = TrackEvent(event: "Track_Event", properties: ["Property_1": "Value1"], options: RudderOptions().addCustomContext(["context_key": "context_value"], key: "custom_context"))
         return event
     }()
 }

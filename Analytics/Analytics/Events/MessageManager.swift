@@ -95,7 +95,10 @@ extension MessageManager {
             
             for item in received {
                 print(item.batch)
-                let uItem = UploadItem(reference: item.reference, content: item.batch)
+                
+                let processed = item.batch.replacingOccurrences(of: Constants.defaultSentAtPlaceholder, with: Date().iso8601TimeStamp)
+                
+                let uItem = UploadItem(reference: item.reference, content: processed)
                 if !self.flushedReferences.contains(item.reference) {
                     self.flushedReferences.append(item.reference)
                     self.uploader?.addToQueue(uItem)

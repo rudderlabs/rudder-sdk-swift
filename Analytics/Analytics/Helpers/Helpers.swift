@@ -8,8 +8,8 @@
 import Foundation
 
 // MARK: - Typealiases(Public)
-public typealias RudderOptions = [String: Any]
 public typealias RudderProperties = [String: Any]
+public typealias RudderTraits = [String: Any]
 public typealias VoidClosure = () -> Void
 
 // MARK: - Typealiases(Internal)
@@ -36,6 +36,10 @@ public struct Constants {
     // TODO: Version number updation will be automated in future..
     static let configQueryParams = ["p": "ios", "v": "1.29.1"]
     static let uploadSignal = "#!upload!#"
+    
+    static let defaultChannel = "mobile"
+    static let defaultIntegration = ["All": true]
+    static let defaultSentAtPlaceholder = "{{_RSA_DEF_SENT_AT_TS_}}"
     
     private init() {}
 }

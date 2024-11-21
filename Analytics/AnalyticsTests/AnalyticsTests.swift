@@ -20,7 +20,7 @@ final class AnalyticsTests: XCTestCase {
         
         self.analytics_disk?.configuration.storage.remove(key: StorageKeys.anonymousId)
     }
-
+    
     override func tearDownWithError() throws {
         try super.tearDownWithError()
         
@@ -56,19 +56,48 @@ extension AnalyticsTests {
     
     func test_trackEvent_disk() {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
-        client.track(name: "Track Event", properties: ["prop": "value"], options: ["opt": "val"])
-        client.configuration.storage.rollover(nil)
-        
-        let dataItems = client.configuration.storage.read().dataItems
-        XCTAssertFalse(dataItems.isEmpty)
+        client.track(name: "Track Event", properties: ["prop": "value"])
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.3))
+        client.configuration.storage.rollover {
+            let dataItems = client.configuration.storage.read().dataItems
+            XCTAssertFalse(dataItems.isEmpty)
+            dataItems.forEach { client.configuration.storage.remove(messageReference: $0.reference) }
+        }
+    }
+    
+    func test_screenEvent_disk() {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        client.screen(name: "Screen Event", category: "Main", properties: ["prop": "value"])
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.3))
+        client.configuration.storage.rollover {
+            let dataItems = client.configuration.storage.read().dataItems
+            XCTAssertFalse(dataItems.isEmpty)
+            
+            guard let dictionary = dataItems.first?.batch.asDictionary as? [String: Any] else { XCTFail(); return }
+            
+            guard let properties = dictionary["properties"] as? [String: Any] else { XCTFail(); return }
+            
+            XCTAssertEqual(properties["category"] as? String, "Main")
+            dataItems.forEach { client.configuration.storage.remove(messageReference: $0.reference) }
+        }
+    }
+    
+    func test_groupEvent_disk() {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        client.group(id: "group_id", traits: ["prop": "value"])
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.3))
+        client.configuration.storage.rollover {
+            let dataItems = client.configuration.storage.read().dataItems
+            XCTAssertFalse(dataItems.isEmpty)
+            dataItems.forEach { client.configuration.storage.remove(messageReference: $0.reference) }
+        }
     }
     
     func test_flushEvents_disk() {
         MockProvider.resetDiskStorage()
         guard let client = analytics_disk else { return XCTFail("No disk client") }
-        client.track(name: "Track Event", properties: ["prop": "value"], options: ["opt": "val"])
+        client.track(name: "Track Event", properties: ["prop": "value"])
         client.flush()
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 1.0))
         
         let dataItems = client.configuration.storage.read().dataItems
         XCTAssertFalse(dataItems.isEmpty) //Should be false.. Since no proper dataplane configured...
