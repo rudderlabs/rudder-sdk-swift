@@ -122,7 +122,7 @@ final class MessageModuleTests: XCTestCase {
             let event = "Sample Event"
             let option = RudderOptions()
             .addIntegration("SDK", isEnabled: true)
-            .addIntegration("Segment", isEnabled: false)
+            .addIntegration("Facebook", isEnabled: false)
             .addCustomContext(["Key1": "Value1"], key: "SK1")
             .addCustomContext(["value1", "value2"], key: "SK2")
             .addCustomContext("Value3", key: "SK3")
@@ -261,7 +261,7 @@ final class MessageModuleTests: XCTestCase {
             let name = "Sample Screen Event"
             let option = RudderOptions()
             .addIntegration("SDK", isEnabled: true)
-            .addIntegration("Segment", isEnabled: false)
+            .addIntegration("Facebook", isEnabled: false)
             .addCustomContext(["Key1": "Value1"], key: "SK1")
             .addCustomContext(["value1", "value2"], key: "SK2")
             .addCustomContext("Value3", key: "SK3")
@@ -403,7 +403,7 @@ final class MessageModuleTests: XCTestCase {
             let groupId = "Sample_Group_Id"
             let option = RudderOptions()
             .addIntegration("SDK", isEnabled: true)
-            .addIntegration("Segment", isEnabled: false)
+            .addIntegration("Facebook", isEnabled: false)
             .addCustomContext(["Key1": "Value1"], key: "SK1")
             .addCustomContext(["value1", "value2"], key: "SK2")
             .addCustomContext("Value3", key: "SK3")

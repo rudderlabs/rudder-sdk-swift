@@ -43,7 +43,7 @@ struct ContentView: View {
                 CustomButton(title: "Screen") {
                     let option = RudderOptions()
                         .addCustomContext(["Key1": "Value1"], key: "SK")
-                        .addIntegration("Segment", isEnabled: false)
+                        .addIntegration("Facebook", isEnabled: false)
                     AnalyticsManager.shared.analytics?.screen(name: "Analytics Screen", properties: ["key": "value"], options: option)
                 }
                 
