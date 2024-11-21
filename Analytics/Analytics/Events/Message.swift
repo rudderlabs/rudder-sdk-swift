@@ -17,6 +17,7 @@ protocol Message: Codable {
     var integrations: [String: Bool]? { get set }
     var sentAt: String? { get set }
     var context: [String: AnyCodable]? { get set }
+    var traits: CodableCollection? { get set }
     
     var type: EventType { get set }
     var messageId: String { get set }
@@ -51,6 +52,7 @@ struct TrackEvent: Message {
     var integrations: [String: Bool]?
     var sentAt: String?
     var context: [String: AnyCodable]?
+    var traits: CodableCollection?
     
     var event: String
     var properties: CodableCollection?
@@ -81,6 +83,7 @@ struct ScreenEvent: Message {
     var integrations: [String: Bool]?
     var sentAt: String?
     var context: [String: AnyCodable]?
+    var traits: CodableCollection?
     
     var event: String
     var category: String?
@@ -125,10 +128,7 @@ struct GroupEvent: Message {
         self.groupId = groupId
         self.addDefaultValues()
         
-        var updatedTraits = traits ?? RudderTraits()
-        updatedTraits["anonymousId"] = self.anonymousId
-        
-        self.traits = CodableCollection(dictionary: updatedTraits)
+        self.traits = CodableCollection(dictionary: traits)
         self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
@@ -150,6 +150,7 @@ struct FlushEvent: Message {
     var integrations: [String: Bool]?
     var sentAt: String?
     var context: [String: AnyCodable]?
+    var traits: CodableCollection?
     
     var messageName: String
     
