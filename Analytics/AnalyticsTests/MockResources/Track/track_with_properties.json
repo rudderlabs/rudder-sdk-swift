@@ -1,0 +1,33 @@
+{
+  "anonymousId" : "<anonymous-id>",
+  "channel" : "mobile",
+  "event" : "Sample_Track_Event",
+  "integrations" : {
+    "All" : true
+  },
+  "messageId" : "<message-id>",
+  "originalTimeStamp" : "<original-timestamp>",
+  "properties" : {
+    "key-1" : "String value",
+    "key-10" : [
+      "String value",
+      123,
+      true,
+      123.456
+    ],
+    "key-11" : {
+
+    },
+    "key-2" : 123,
+    "key-3" : true,
+    "key-4" : 123.456,
+    "key-5" : {
+      "key-6" : "String value",
+      "key-7" : 123,
+      "key-8" : true,
+      "key-9" : 123.456
+    }
+  },
+  "sentAt" : "{{_RSA_DEF_SENT_AT_TS_}}",
+  "type" : "track"
+}

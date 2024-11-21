@@ -40,6 +40,18 @@ extension String {
             return nil
         }
     }
+    
+    var trimmed: String {
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}
+
+// MARK: - [String: Any]
+extension [String: Any] {
+    var asData: Data? {
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: self, options: []) else { return nil }
+        return jsonData
+    }
 }
 
 // MARK: - DateFormatter
@@ -145,7 +157,7 @@ extension KeyedEncodingContainer {
 extension Encodable {
     var jsonString: String? {
         let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted // Optional: for pretty-printed JSON
+        encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
         do {
             let jsonData = try encoder.encode(self)
             return jsonData.jsonString

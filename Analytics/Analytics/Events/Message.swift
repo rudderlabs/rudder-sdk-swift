@@ -58,7 +58,7 @@ struct TrackEvent: Message {
     init(event: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         self.event = event
         self.properties = CodableCollection(dictionary: properties)
-        self.integrations = options?.integrations
+        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
         options?.customContext?.compactMapValues { AnyCodable($0) } : nil
@@ -88,7 +88,7 @@ struct ScreenEvent: Message {
     init(screenName: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         self.event = screenName
         self.properties = CodableCollection(dictionary: properties)
-        self.integrations = options?.integrations
+        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
             options?.customContext?.compactMapValues { AnyCodable($0) } : nil
@@ -123,10 +123,10 @@ struct GroupEvent: Message {
         updatedTraits["anonymousId"] = self.anonymousId
         
         self.traits = CodableCollection(dictionary: updatedTraits)
-        self.integrations = options?.integrations
+        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
-            options?.customContext?.compactMapValues { AnyCodable($0) } : nil
+        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
     }
 }
 

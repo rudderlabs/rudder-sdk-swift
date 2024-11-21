@@ -68,6 +68,41 @@ extension MockProvider {
     }
 }
 
+extension MockProvider {
+    struct SampleEventName {
+        private init() {}
+        static let track = "Sample_Track_Event"
+        static let screen = "Sample_Screen_Event"
+        static let group = "Sample_Group_Event"
+    }
+    
+    static let sampleEventproperties: [String: Any] = [
+        "key-1": "String value",
+        "key-2": 123,
+        "key-3": true,
+        "key-4": 123.456,
+        "key-5": [
+            "key-6": "String value",
+            "key-7": 123,
+            "key-8": true,
+            "key-9": 123.456
+        ],
+        "key-10": [
+            "String value",
+            123,
+            true,
+            123.456
+        ],
+        "key-11": [:]
+    ]
+    
+    static let sampleEventIntegrations: [String: Bool] = [
+        "Amplitude": true,
+        "Firebase": true,
+        "Braze": false
+    ]
+}
+
 // MARK: - MemoryStore
 extension MockProvider {
     
@@ -103,6 +138,12 @@ struct MockHelper {
     static func milliseconds(from seconds: Double) -> Double {
         return Double(seconds * 1000)
     }
+    
+    static func readJson(from file: String) -> String? {
+        let bundle = Bundle(for: MockProvider.self)
+        guard let fileUrl = bundle.url(forResource: file, withExtension: "json"), let data = try? Data(contentsOf: fileUrl) else { return nil }
+        return data.jsonString
+    }
 }
 
 // MARK: - MockAnalyticsClient
@@ -125,12 +166,12 @@ extension XCTestCase {
         if !description.isEmpty { print("Given \(description)") }
         closure()
     }
-
+    
     func when(_ description: String = "", closure: () -> Void) {
         if !description.isEmpty { print("When \(description)") }
         closure()
     }
-
+    
     func then(_ description: String = "", closure: () -> Void) {
         if !description.isEmpty { print("Then \(description)") }
         closure()
