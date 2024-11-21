@@ -144,6 +144,12 @@ struct MockHelper {
         guard let fileUrl = bundle.url(forResource: file, withExtension: "json"), let data = try? Data(contentsOf: fileUrl) else { return nil }
         return data.jsonString
     }
+    
+    static func resetDynamicValues(_ event: inout Message) {
+        event.messageId = "<message-id>"
+        event.anonymousId = "<anonymous-id>"
+        event.originalTimeStamp = "<original-timestamp>"
+    }
 }
 
 // MARK: - MockAnalyticsClient

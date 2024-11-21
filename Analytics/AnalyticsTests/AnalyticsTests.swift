@@ -74,7 +74,6 @@ extension AnalyticsTests {
             XCTAssertFalse(dataItems.isEmpty)
             
             guard let dictionary = dataItems.first?.batch.asDictionary as? [String: Any] else { XCTFail(); return }
-            
             guard let properties = dictionary["properties"] as? [String: Any] else { XCTFail(); return }
             
             XCTAssertEqual(properties["category"] as? String, "Main")

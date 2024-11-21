@@ -12,8 +12,8 @@ final class TrackEventTests: XCTestCase {
     
     func test_defaultTrackEvent() {
         given("A track event with default values..") {
-            var event = TrackEvent(event: MockProvider.SampleEventName.track)
-            self.resetDynamicValues(&event)
+            var event: Message = TrackEvent(event: MockProvider.SampleEventName.track)
+            MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
                 guard let json = event.jsonString?.trimmed else { XCTFail("Failed to serialize the event."); return }
@@ -28,8 +28,8 @@ final class TrackEventTests: XCTestCase {
     
     func test_trackEvent_properties() {
         given("A track event with properties..") {
-            var event = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties)
-            self.resetDynamicValues(&event)
+            var event: Message = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties)
+            MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
                 guard let json = event.jsonString?.trimmed else { XCTFail("Failed to serialize the event."); return }
@@ -50,8 +50,8 @@ final class TrackEventTests: XCTestCase {
                 option.addIntegration(integration.key, isEnabled: integration.value)
             }
             
-            var event = TrackEvent(event: MockProvider.SampleEventName.track, options: option)
-            self.resetDynamicValues(&event)
+            var event: Message = TrackEvent(event: MockProvider.SampleEventName.track, options: option)
+            MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
                 guard let json = event.jsonString?.trimmed else { XCTFail("Failed to serialize the event."); return }
@@ -72,8 +72,8 @@ final class TrackEventTests: XCTestCase {
                 option.addIntegration(integration.key, isEnabled: integration.value)
             }
             
-            var event = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties, options: option)
-            self.resetDynamicValues(&event)
+            var event: Message = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties, options: option)
+            MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
                 guard let json = event.jsonString?.trimmed else { XCTFail("Failed to serialize the event."); return }
@@ -83,14 +83,5 @@ final class TrackEventTests: XCTestCase {
                 }
             }
         }
-    }
-}
-
-extension TrackEventTests {
-    
-    func resetDynamicValues(_ event: inout TrackEvent) {
-        event.messageId = "<message-id>"
-        event.anonymousId = "<anonymous-id>"
-        event.originalTimeStamp = "<original-timestamp>"
     }
 }
