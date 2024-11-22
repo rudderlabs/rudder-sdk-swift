@@ -26,6 +26,10 @@ final class RudderStackDataPlanePlugin: MessagePlugin {
         self.messageManager?.stop()
         self.messageManager = nil
     }
+    
+    func flush() {
+        self.messageManager?.flush()
+    }
 }
 
 // MARK: - Message Events

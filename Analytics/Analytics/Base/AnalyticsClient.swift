@@ -46,7 +46,11 @@ extension AnalyticsClient {
     
     // MARK: - Flush
     public func flush() {
-        self.process(event: FlushEvent(messageName: Constants.uploadSignal))
+        self.pluginChain.apply { plugin in
+            if let plugin = plugin as? RudderStackDataPlanePlugin {
+                plugin.flush()
+            }
+        }
     }
 }
 
