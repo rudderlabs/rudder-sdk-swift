@@ -41,6 +41,7 @@ final class MessageManager {
     }
     
     func flush() {
+        // TODO: Need optimisation on creating below object..
         let flush = FlushEvent(messageName: Constants.uploadSignal)
         self.put(flush)
     }
