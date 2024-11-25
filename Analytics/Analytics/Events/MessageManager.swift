@@ -36,11 +36,17 @@ final class MessageManager {
     }
     
     func put(_ message: Message) {
-        guard message.type != .flush else { self.flush(); return }
+        guard message.type != .flush else { self.performFlush(); return }
         self.writeChannel.send(message)
     }
     
-    private func flush() {
+    func flush() {
+        // TODO: Need optimisation on creating below object..
+        let flush = FlushEvent(messageName: Constants.uploadSignal)
+        self.put(flush)
+    }
+    
+    private func performFlush() {
         self.startUploading()
         self.flushFacade?.resetCount()
     }
@@ -58,7 +64,7 @@ final class MessageManager {
     
     private func shouldFlush() {
         guard self.flushFacade?.shouldFlush() ?? false else { return }
-        self.flush()
+        self.performFlush()
     }
     
     func stop() {
