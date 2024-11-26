@@ -38,20 +38,20 @@ final public class BasicStorage: Storage {
  */
 extension BasicStorage {
     
-    public func write(message: String) {
-        self.dataStore.retain(value: message)
+    public func write(message: String) async {
+        await self.dataStore.retain(value: message)
     }
     
-    public func read() -> MessageDataResult {
-        return MessageDataResult(dataItems: self.dataStore.retrieve())
+    public func read() async -> MessageDataResult {
+        return await MessageDataResult(dataItems: self.dataStore.retrieve())
     }
     
-    public func remove(messageReference: String) -> Bool {
-        return self.dataStore.remove(reference: messageReference)
+    public func remove(messageReference: String) async -> Bool {
+        return await self.dataStore.remove(reference: messageReference)
     }
     
-    public func rollover(_ block: VoidClosure?) {
-        self.dataStore.rollover(block)
+    public func rollover() async {
+        await self.dataStore.rollover()
     }
 }
 
