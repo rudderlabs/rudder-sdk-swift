@@ -10,7 +10,7 @@ import Foundation
 /**
  A class designed to store and retrieve message events using file system storage.
  */
-final class DiskStore {
+final actor DiskStore {
     
     let writeKey: String
     let fileStorageURL: URL = FileManager.eventStorageURL
@@ -31,10 +31,9 @@ final class DiskStore {
         }
         
         if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > Constants.maxBatchSize {
-            self.finish {
-                print("Batch size exceeded. Closing the current batch.")
-                self.store(message: message)
-            }
+            self.finish()
+            print("Batch size exceeded. Closing the current batch.")
+            self.store(message: message)
             return
         }
         
@@ -42,16 +41,14 @@ final class DiskStore {
         self.writeTo(file: self.currentFileURL, content: content)
     }
     
-    private func finish(_ block: VoidClosure? = nil) {
+    private func finish() {
         let currentFilePath = self.currentFileURL.path()
-        guard FileManager.default.fileExists(atPath: currentFilePath) else { block?(); return }
+        guard FileManager.default.fileExists(atPath: currentFilePath) else { return }
         
         let content = Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
         self.writeTo(file: self.currentFileURL, content: content)
         FileManager.removePathExtension(from: currentFilePath)
         self.incrementFileIndex()
-        
-        block?()
     }
     
     private func collectFiles() -> [String] {
@@ -107,33 +104,39 @@ extension DiskStore {
  Implementation of the `DataStore` protocol.
  */
 extension DiskStore: DataStore {
-    func retain(value: String) {
-        SerializedQueue.perform {
+    func retain(value: String) async {
+        await withCheckedContinuation { continuation in
             self.store(message: value)
+            continuation.resume()
         }
     }
     
-    func retrieve() -> [MessageDataItem] {
-        var dataItems = [MessageDataItem]()
-        for file in self.collectFiles() {
-            guard let batch = FileManager.contentsOf(file: file) else { continue }
-            
-            var item = MessageDataItem(batch: batch)
-            item.reference = file
-            item.isClosed = true
-            
-            dataItems.append(item)
+    func retrieve() async -> [MessageDataItem] {
+        await withCheckedContinuation { continuation in
+            var dataItems = [MessageDataItem]()
+            for file in self.collectFiles() {
+                guard let batch = FileManager.contentsOf(file: file) else { continue }
+                
+                var item = MessageDataItem(batch: batch)
+                item.reference = file
+                item.isClosed = true
+                
+                dataItems.append(item)
+            }
+            continuation.resume(returning: dataItems)
         }
-        return dataItems
     }
     
-    func remove(reference filePath: String) -> Bool {
-        return FileManager.delete(file: filePath)
+    func remove(reference filePath: String) async -> Bool {
+        await withCheckedContinuation { continuation in
+            continuation.resume(returning: FileManager.delete(file: filePath))
+        }
     }
     
-    func rollover(_ block: VoidClosure?) {
-        SerializedQueue.perform {
-            self.finish(block)
+    func rollover() async{
+        await withCheckedContinuation { continuation in
+            self.finish()
+            continuation.resume()
         }
     }
 }
