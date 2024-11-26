@@ -15,6 +15,7 @@ final class MessageManager {
     private let flushPolicyFacade: FlushPolicyFacade
     private let httpClient: HttpClient
     private let messageChannel: AsyncChannel<Message>
+    private let flushEvent = FlushEvent(messageName: Constants.uploadSignal)
     
     private var storage: Storage {
         return self.analytics.configuration.storage
@@ -53,7 +54,7 @@ extension MessageManager {
     
     func flush() {
         print("Flush triggered...")
-        self.messageChannel.send(FlushEvent(messageName: Constants.uploadSignal))
+        self.messageChannel.send(self.flushEvent)
     }
     
     func stop() {
