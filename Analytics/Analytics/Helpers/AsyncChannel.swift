@@ -39,9 +39,12 @@ final class AsyncChannel<T> {
     }
     
     // Consume the stream with a block
-    func consume(_ block: @escaping (T) -> Void) async {
+    func consume(_ block: @escaping (T) async -> Void) async {
         for await value in channel {
-            block(value)
+            // Run the async block inside a Task to ensure asynchronous execution
+            await Task {
+                await block(value) // Make sure the block is awaited here
+            }.value
         }
     }
 }
