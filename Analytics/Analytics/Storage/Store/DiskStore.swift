@@ -8,7 +8,7 @@
 import Foundation
 // MARK: - DiskStore
 /**
- A class designed to store and retrieve message events using file system storage.
+ An actor designed to store and retrieve message events using file system storage.
  */
 final actor DiskStore {
     

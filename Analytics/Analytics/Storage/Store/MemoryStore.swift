@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - MemoryStore
 /**
- A class designed to store and retrieve message events using memory storage.
+ An actor designed to store and retrieve message events using memory storage.
  */
 final actor MemoryStore {
     
