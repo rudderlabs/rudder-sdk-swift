@@ -11,13 +11,12 @@ import XCTest
 final class AnalyticsTests: XCTestCase {
     var analytics_disk: AnalyticsClient?
     var analytics_memory: AnalyticsClient?
-    
+
     override func setUpWithError() throws {
         try super.setUpWithError()
         
         self.analytics_disk = MockProvider.clientWithDiskStorage
         self.analytics_memory = MockProvider.clientWithMemoryStorage
-        
         self.analytics_disk?.configuration.storage.remove(key: StorageKeys.anonymousId)
     }
     
@@ -26,9 +25,6 @@ final class AnalyticsTests: XCTestCase {
         
         self.analytics_disk = nil
         self.analytics_memory = nil
-        
-        MockProvider.resetDiskStorage()
-        MockProvider.resetMemoryStorage()
     }
     
     func test_sourceConfiguration() {
@@ -93,7 +89,6 @@ extension AnalyticsTests {
     }
     
     func test_flushEvents_disk() async {
-        MockProvider.resetDiskStorage()
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         client.track(name: "Track Event", properties: ["prop": "value"])
         client.flush()

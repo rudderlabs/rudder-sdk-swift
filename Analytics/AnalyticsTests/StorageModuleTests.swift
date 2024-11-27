@@ -24,9 +24,6 @@ final class StorageModuleTests: XCTestCase {
         try super.tearDownWithError()
         self.analytics_disk = nil
         self.analytics_memory = nil
-        
-        MockProvider.resetDiskStorage()
-        MockProvider.resetMemoryStorage()
     }
     
     func test_initialization() {
@@ -143,7 +140,9 @@ extension StorageModuleTests {
         guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         await storage.write(message: eventJson)
-        XCTAssertTrue(FileManager.default.fileExists(atPath: MockProvider.currentFileURL.path()))
+        await storage.rollover()
+        let result = await storage.read().dataItems
+        XCTAssertFalse(result.isEmpty)
     }
     
     func test_read_event_disk() async {
@@ -160,9 +159,13 @@ extension StorageModuleTests {
         guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
         await storage.write(message: eventJson)
-        let isRemoved = await storage.remove(messageReference: MockProvider.currentFileURL.path())
+        await storage.rollover()
+        let result = await storage.read().dataItems
+        
+        guard let item = result.first else { XCTFail(); return }
+        
+        let isRemoved = await storage.remove(messageReference: item.reference)
         XCTAssertTrue(isRemoved)
-        XCTAssertFalse(FileManager.default.fileExists(atPath: MockProvider.currentFileURL.path()))
     }
     
     func test_rollover_event_disk() async {

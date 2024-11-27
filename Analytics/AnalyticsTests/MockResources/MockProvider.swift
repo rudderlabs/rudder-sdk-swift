@@ -15,62 +15,28 @@ final class MockProvider {
     static var _mockWriteKey: String {
         return UUID().uuidString
     }
+    static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
+
+    static var clientWithDiskStorage: AnalyticsClient {
+        let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .disk)
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage, flushPolicies: [])
+        return AnalyticsClient(configuration: configuration)
+    }
+    
+    static var clientWithMemoryStorage: AnalyticsClient {
+        let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .memory)
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage, flushPolicies: [])
+        return AnalyticsClient(configuration: configuration)
+    }
+}
+
+extension MockProvider {
     
     static let simpleTrackEvent: TrackEvent = {
         let event = TrackEvent(event: "Track_Event", properties: ["Property_1": "Value1"], options: RudderOptions().addCustomContext(["context_key": "context_value"], key: "custom_context"))
         return event
     }()
-}
-
-// MARK: - KeyValueStore
-extension MockProvider {
-    static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
-}
-
-// MARK: - DiskStore
-extension MockProvider {
     
-    static var clientWithDiskStorage: AnalyticsClient {
-        let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .disk)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage, flushPolicies: [])
-        
-        return AnalyticsClient(configuration: configuration)
-    }
-    
-    static var fileIndexKey: String {
-        return Constants.fileIndex + MockProvider._mockWriteKey
-    }
-    
-    static var currentFileIndex: Int {
-        guard let index: Int = self.keyValueStore.read(reference: self.fileIndexKey) else { return 0 }
-        return index
-    }
-    
-    static var currentFileURL: URL {
-        return FileManager.eventStorageURL.appending(path: MockProvider._mockWriteKey + "-\(self.currentFileIndex)").appendingPathExtension(Constants.fileType)
-    }
-    
-    static func currentFolderContents() { //This function will be removed in near future....
-        let folderPath = self.currentFileURL.deletingLastPathComponent().path()
-        print("//--------------------------------//")
-        do {
-            let fileManager = FileManager.default
-            let contents = try fileManager.contentsOfDirectory(atPath: folderPath)
-            print("Folder: \(folderPath)")
-            print("Folder contents: \(contents)")
-        } catch {
-            print("Error accessing folder: \(error)")
-        }
-        print("//--------------------------------//")
-    }
-    
-    static func resetDiskStorage() {
-        FileManager.delete(file: Self.currentFileURL.path())
-        self.keyValueStore.delete(reference: self.fileIndexKey)
-    }
-}
-
-extension MockProvider {
     struct SampleEventName {
         private init() {}
         static let track = "Sample_Track_Event"
@@ -103,29 +69,6 @@ extension MockProvider {
         "Firebase": true,
         "Braze": false
     ]
-}
-
-// MARK: - MemoryStore
-extension MockProvider {
-    
-    static var clientWithMemoryStorage: AnalyticsClient {
-        let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .memory)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage, flushPolicies: [])
-        return AnalyticsClient(configuration: configuration)
-    }
-    
-    static var currentDataItemKey: String {
-        return Constants.memoryIndex + _mockWriteKey
-    }
-    
-    static var currentDataItemId: String? {
-        guard let currentItemId: String = self.keyValueStore.read(reference: self.currentDataItemKey) else { return nil }
-        return currentItemId
-    }
-    
-    static func resetMemoryStorage() {
-        self.keyValueStore.delete(reference: self.currentDataItemKey)
-    }
 }
 
 // MARK: - MockHelper
@@ -182,5 +125,11 @@ extension XCTestCase {
     func then(_ description: String = "", closure: () -> Void) {
         if !description.isEmpty { print("Then \(description)") }
         closure()
+    }
+}
+
+extension String {
+    var trimmed: String {
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
