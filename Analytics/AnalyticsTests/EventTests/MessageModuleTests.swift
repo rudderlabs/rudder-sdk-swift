@@ -305,8 +305,7 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertEqual(group.channel, Constants.defaultChannel)
                     XCTAssertNotNil(group.integrations)
                     XCTAssertFalse(group.sentAt?.isEmpty ?? true)
-                    XCTAssertNotNil(group.traits)
-                    XCTAssertTrue((group.traits?.dictionary?.count == 1))
+                    XCTAssertNil(group.traits)
                 }
             }
         }
@@ -333,7 +332,7 @@ final class MessageModuleTests: XCTestCase {
                     
                     XCTAssertNotNil(group.integrations)
                     XCTAssertNotNil(group.traits)
-                    XCTAssertTrue((group.traits?.dictionary?.count == 2))
+                    XCTAssertTrue((group.traits?.dictionary?.count == traits.count))
                 }
                 
             }
@@ -361,7 +360,7 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertFalse(group.integrations?.isEmpty ?? true)
                     XCTAssertFalse(group.sentAt?.isEmpty ?? true)
                     XCTAssertFalse(group.context?.isEmpty ?? true)
-                    XCTAssertNotNil(group.traits)
+                    XCTAssertNil(group.traits)
                 }
                 
             }
@@ -391,7 +390,7 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertFalse(group.sentAt?.isEmpty ?? true)
                     XCTAssertFalse(group.context?.isEmpty ?? true)
                     XCTAssertNotNil(group.traits)
-                    XCTAssertTrue((group.traits?.dictionary?.count == 2))
+                    XCTAssertTrue((group.traits?.dictionary?.count == traits.count))
                 }
                 
             }
@@ -425,8 +424,7 @@ final class MessageModuleTests: XCTestCase {
                     XCTAssertFalse(group.integrations?.isEmpty ?? true)
                     XCTAssertFalse(group.sentAt?.isEmpty ?? true)
                     XCTAssertFalse(group.context?.isEmpty ?? true)
-                    XCTAssertNotNil(group.traits)
-                    XCTAssertTrue((group.traits?.dictionary?.count == 1))
+                    XCTAssertNil(group.traits)
                 }
             }
         }
