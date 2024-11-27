@@ -12,7 +12,9 @@ import XCTest
 final class MockProvider {
     private init() {}
     
-    static let _mockWriteKey = "MoCk_WrItEkEy"
+    static var _mockWriteKey: String {
+        return UUID().uuidString
+    }
     
     static let simpleTrackEvent: TrackEvent = {
         let event = TrackEvent(event: "Track_Event", properties: ["Property_1": "Value1"], options: RudderOptions().addCustomContext(["context_key": "context_value"], key: "custom_context"))
@@ -28,12 +30,12 @@ extension MockProvider {
 // MARK: - DiskStore
 extension MockProvider {
     
-    static let clientWithDiskStorage: AnalyticsClient = {
+    static var clientWithDiskStorage: AnalyticsClient {
         let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .disk)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage)
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage, flushPolicies: [])
         
         return AnalyticsClient(configuration: configuration)
-    }()
+    }
     
     static var fileIndexKey: String {
         return Constants.fileIndex + MockProvider._mockWriteKey
@@ -106,12 +108,11 @@ extension MockProvider {
 // MARK: - MemoryStore
 extension MockProvider {
     
-    static let clientWithMemoryStorage: AnalyticsClient = {
+    static var clientWithMemoryStorage: AnalyticsClient {
         let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .memory)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage)
-        
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage, flushPolicies: [])
         return AnalyticsClient(configuration: configuration)
-    }()
+    }
     
     static var currentDataItemKey: String {
         return Constants.memoryIndex + _mockWriteKey
