@@ -26,7 +26,7 @@ protocol Plugin: AnyObject {
 
 extension Plugin {
     func setup(analytics: AnalyticsClient) { self.analytics = analytics }
-    func execute(event: Message) -> Message? { return event }
+    func execute(event: Message) -> Message? { event }
     func teardown() {}
 }
 
@@ -39,21 +39,10 @@ protocol MessagePlugin: Plugin {
 }
 
 extension MessagePlugin {
-    func track(payload: TrackEvent) -> Message? {
-        return payload
-    }
-    
-    func screen(payload: TrackEvent) -> Message? {
-        return payload
-    }
-    
-    func group(payload: TrackEvent) -> Message? {
-        return payload
-    }
-    
-    func flush(payload: TrackEvent) -> Message? {
-        return payload
-    }
+    func track(payload: TrackEvent) -> Message? { payload }
+    func screen(payload: TrackEvent) -> Message? { payload }
+    func group(payload: TrackEvent) -> Message? { payload }
+    func flush(payload: TrackEvent) -> Message? { payload }
     
     func execute(event: any Message) -> (any Message)? {
         return switch event {
