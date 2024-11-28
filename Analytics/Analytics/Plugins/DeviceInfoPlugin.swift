@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 
+// MARK: - DeviceInfoPlugin
+/**
+ A plugin created to append device information to the message context.
+ */
 final class DeviceInfoPlugin: Plugin {
     
     var pluginType: PluginType = .preProcess
@@ -23,6 +27,8 @@ final class DeviceInfoPlugin: Plugin {
         return self.attachDeviceInfo(to: event)
     }
 }
+
+// MARK: - Information Provider
 
 extension DeviceInfoPlugin {
     private func attachDeviceInfo(to event: any Message) -> any Message {

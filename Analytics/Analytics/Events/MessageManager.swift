@@ -63,7 +63,7 @@ extension MessageManager {
     }
 }
 
-// MARK: - Storage
+// MARK: - Message Processing
 extension MessageManager {
     func startProcessingMessage() {
         Task {
