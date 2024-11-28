@@ -12,6 +12,7 @@
 		533485912C9AB3170029F88E /* MockProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485902C9AB3170029F88E /* MockProvider.swift */; };
 		533485952C9AC7C70029F88E /* CodableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485942C9AC7C70029F88E /* CodableTypes.swift */; };
 		533485972C9B6FFB0029F88E /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485962C9B6FFB0029F88E /* PropertyWrappers.swift */; };
+		5346B9E62CF78CBD00934D72 /* DeviceInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5346B9E52CF78CBD00934D72 /* DeviceInfoPlugin.swift */; };
 		5351AA6A2C6BE95D003C3C47 /* Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 5351AA692C6BE95D003C3C47 /* Analytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */; };
 		537356ED2CC68B7D008023CE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537356EC2CC68B7D008023CE /* Extensions.swift */; };
@@ -74,6 +75,7 @@
 		533485902C9AB3170029F88E /* MockProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProvider.swift; sourceTree = "<group>"; };
 		533485942C9AC7C70029F88E /* CodableTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTypes.swift; sourceTree = "<group>"; };
 		533485962C9B6FFB0029F88E /* PropertyWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
+		5346B9E52CF78CBD00934D72 /* DeviceInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoPlugin.swift; sourceTree = "<group>"; };
 		5351AA662C6BE95D003C3C47 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5351AA692C6BE95D003C3C47 /* Analytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Analytics.h; sourceTree = "<group>"; };
 		5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 			children = (
 				53FD37762CB1B0C700DBA06B /* Base */,
 				53FD377C2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift */,
+				5346B9E52CF78CBD00934D72 /* DeviceInfoPlugin.swift */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -487,6 +490,7 @@
 				5387E8972CA3233000DB1C49 /* HttpClient.swift in Sources */,
 				5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */,
 				53FD37772CB1B0C700DBA06B /* Plugin.swift in Sources */,
+				5346B9E62CF78CBD00934D72 /* DeviceInfoPlugin.swift in Sources */,
 				53FD37782CB1B0C700DBA06B /* PluginChain.swift in Sources */,
 				53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */,
 				53A22A3D2C7472850059D6FE /* Message.swift in Sources */,
