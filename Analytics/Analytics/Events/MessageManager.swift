@@ -42,10 +42,6 @@ extension MessageManager {
     private func start() {
         self.flushPolicyFacade.startSchedule() //Frequency based flush policy..
         self.startProcessingMessage()
-        
-        if self.flushPolicyFacade.shouldFlush() {
-            self.flush() //Startup flush policy
-        }
     }
     
     func put(_ message: Message) {
@@ -69,7 +65,7 @@ extension MessageManager {
         Task {
             await self.messageChannel.consume { message in
                 let isFlushSignal = message.type == .flush
-
+                
                 if !isFlushSignal {
                     if let json = message.jsonString {
                         await self.storage.write(message: json)
@@ -78,34 +74,32 @@ extension MessageManager {
                 }
                 
                 if isFlushSignal || self.flushPolicyFacade.shouldFlush() {
-                    await self.storage.rollover()
-                    
-                    let dataItems = await self.storage.read().dataItems
-                    for item in dataItems {
-                        print("Upload started: \(item.reference)")
-                        let isUploaded = await self.upload(item: item)
-                        
-                        if isUploaded {
-                            await self.storage.remove(messageReference: item.reference)
-                            print("Upload completed: \(item.reference)")
-                        } else {
-                            print("Upload failed: \(item.reference)")
-                        }
-                    }
-                    self.flushPolicyFacade.resetCount()
+                    await self.startUploadingMessage()
                 }
             }
         }
     }
     
-    private func upload(item: MessageDataItem) async -> Bool {
-        do {
-            let processed = item.batch.replacingOccurrences(of: Constants.defaultSentAtPlaceholder, with: Date().iso8601TimeStamp)
-            print("Uploading: \(processed)")
-            _ = try await self.httpClient.postBatchEvents(processed)
-            return true
-        } catch {
-            return false
+    private func startUploadingMessage() async {
+        
+        await self.storage.rollover()
+        
+        let dataItems = await self.storage.read().dataItems
+        for item in dataItems {
+            print("Upload started: \(item.reference)")
+            do {
+                let processed = item.batch.replacingOccurrences(of: Constants.defaultSentAtPlaceholder, with: Date().iso8601TimeStamp)
+                print("Uploading: \(processed)")
+                
+                _ = try await self.httpClient.postBatchEvents(processed)
+                
+                await self.storage.remove(messageReference: item.reference)
+                print("Upload completed: \(item.reference)")
+            } catch {
+                print("Upload failed: \(item.reference)")
+            }
+            
         }
+        self.flushPolicyFacade.resetCount()
     }
 }

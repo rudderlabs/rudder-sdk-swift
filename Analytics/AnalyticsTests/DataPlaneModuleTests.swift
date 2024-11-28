@@ -41,7 +41,6 @@ final class DataPlaneModuleTests: XCTestCase {
 extension DataPlaneModuleTests {
     
     func test_trackEvent_memory() async {
-        print("\(#function)")
         guard let analytics = self.analytics_memory else { XCTFail("Analytics not initialized"); return }
         self.dpPlugin?.setup(analytics: analytics)
         
