@@ -7,44 +7,81 @@
 
 // MARK: - AsyncChannel
 /**
- This class utilizes `AsyncStream` to implement a subscription pattern, along with a dedicated serial queue.
+ This class utilizes `AsyncStream` to implement a subscription pattern.
  */
+
 final class AsyncChannel<T> {
-    private let channel: AsyncStream<T>
-    private var continuation: AsyncStream<T>.Continuation?
-    
-    // A serial dispatch queue to ensure thread safety
-    private let queue = DispatchQueue(label: "rudderstack.message.async.queue")
-    
-    init() {
-        var cont: AsyncStream<T>.Continuation?
-        channel = AsyncStream { continuation in
-            cont = continuation
+    private let continuation: AsyncStream<T>.Continuation
+    private let bufferCapacity: Int
+    private var buffer: [T] = []
+    private var isClosed = false
+    private let lock = NSLock()
+
+    init(capacity: Int = 0) {
+        precondition(capacity >= 0, "Capacity must be non-negative")
+        self.bufferCapacity = capacity
+        
+        var continuation: AsyncStream<T>.Continuation!
+        let stream = AsyncStream<T> { cont in
+            continuation = cont
         }
-        continuation = cont
+        self.continuation = continuation
+        self.stream = stream
     }
     
-    // Add a value to the channel
-    func send(_ value: T) {
-        queue.async { [weak self] in
-            self?.continuation?.yield(value)
+    /// The async sequence to receive elements.
+    let stream: AsyncStream<T>
+
+    /// Sends an element to the channel.
+    func send(_ element: T) async throws {
+        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
+            lock.lock()
+            defer { lock.unlock() }
+            
+            guard !isClosed else {
+                cont.resume(throwing: ChannelError.closed)
+                return
+            }
+
+            if bufferCapacity == 0 || buffer.count < bufferCapacity {
+                buffer.append(element)
+                continuation.yield(element)
+                cont.resume()
+            } else {
+                Task.detached {
+                    await self.waitUntilSpaceAvailable()
+                    try await self.send(element)
+                    cont.resume()
+                }
+            }
         }
     }
-    
-    // Close the channel
-    func closeChannel() {
-        queue.async { [weak self] in
-            self?.continuation?.finish()
+
+    /// Closes the channel, signaling no more sends.
+    func close() {
+        lock.lock()
+        defer { lock.unlock() }
+        isClosed = true
+        continuation.finish()
+    }
+
+    /// A helper to wait for space in the buffer.
+    private func waitUntilSpaceAvailable() async {
+        await withCheckedContinuation { cont in
+            lock.lock()
+            defer { lock.unlock() }
+            if buffer.count < bufferCapacity {
+                cont.resume()
+            } else {
+                DispatchQueue.global().asyncAfter(deadline: .now() + 0.01) {
+                    cont.resume()
+                }
+            }
         }
     }
-    
-    // Consume the stream with a block
-    func consume(_ block: @escaping (T) async -> Void) async {
-        for await value in channel {
-            // Run the async block inside a Task to ensure asynchronous execution
-            await Task {
-                await block(value) // Make sure the block is awaited here
-            }.value
-        }
-    }
+}
+
+/// Errors that can occur when using the channel.
+enum ChannelError: Error {
+    case closed
 }
