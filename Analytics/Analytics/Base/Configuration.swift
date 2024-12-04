@@ -30,7 +30,7 @@ public class Configuration {
                 gzipEnaabled: Bool = Constants.defaultGZipStatus,
                 storage: Storage? = nil,
                 flushPolicies: [FlushPolicy] = Constants.defaultFlushPolicies,
-                collectDeviceId: Bool = true) {
+                collectDeviceId: Bool = Constants.defaultCollectDeviceId) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
