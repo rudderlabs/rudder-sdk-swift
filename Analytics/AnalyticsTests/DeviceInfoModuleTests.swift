@@ -27,6 +27,34 @@ final class DeviceInfoModuleTests: XCTestCase {
     }
     
     func test_execute_trackEvent() {
-        
+        given("An simple track event to the device info plugin..") {
+            let plugin = DeviceInfoPlugin()
+            let track = TrackEvent(event: "Track")
+            
+            when("execute is called..") {
+                let executedEvent = plugin.execute(event: track)
+                
+                then("track event should have the device info details..") {
+                    guard let context = executedEvent?.context else { XCTFail("No context found"); return }
+                    XCTAssertNotNil(context["device"])
+                }
+            }
+        }
+    }
+    
+    func test_execute_groupEvent() {
+        given("An simple group event to the device info plugin..") {
+            let plugin = DeviceInfoPlugin()
+            let group = GroupEvent(groupId: "group_id")
+            
+            when("execute is called..") {
+                let executedEvent = plugin.execute(event: group)
+                
+                then("group event should have the device info details..") {
+                    guard let context = executedEvent?.context else { XCTFail("No context found"); return }
+                    XCTAssertNotNil(context["device"])
+                }
+            }
+        }
     }
 }
