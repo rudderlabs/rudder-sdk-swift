@@ -14,8 +14,9 @@ final class MessageManager {
     private let analytics: AnalyticsClient
     private let flushPolicyFacade: FlushPolicyFacade
     private let httpClient: HttpClient
-    private let messageChannel: AsyncChannel<Message>
     private let flushEvent = FlushEvent(messageName: Constants.uploadSignal)
+    private let writeChannel: AsyncChannel<Message>
+    private let uploadChannel: AsyncChannel<String>
     
     private var storage: Storage {
         return self.analytics.configuration.storage
@@ -26,7 +27,9 @@ final class MessageManager {
         
         self.flushPolicyFacade = FlushPolicyFacade(analytics: analytics)
         self.httpClient = HttpClient(analytics: analytics)
-        self.messageChannel = AsyncChannel()
+        
+        self.writeChannel = AsyncChannel(capacity: Int.max)
+        self.uploadChannel = AsyncChannel(capacity: Int.max)
         
         self.start()
     }
@@ -41,33 +44,36 @@ extension MessageManager {
     
     private func start() {
         self.flushPolicyFacade.startSchedule() //Frequency based flush policy..
-        self.startProcessingMessage()
         
-        if self.flushPolicyFacade.shouldFlush() {
-            self.flush() //Startup flush policy
-        }
+        self.write()
+        self.upload()
     }
     
     func put(_ message: Message) {
-        self.messageChannel.send(message)
+        Task {
+            try await self.writeChannel.send(message)
+        }
     }
     
     func flush() {
         print("Flush triggered...")
-        self.messageChannel.send(self.flushEvent)
+        Task {
+            try await self.writeChannel.send(self.flushEvent)
+        }
     }
     
     func stop() {
-        self.messageChannel.closeChannel()
         self.flushPolicyFacade.cancelSchedule()
+        self.writeChannel.close()
+        self.uploadChannel.close()
     }
 }
 
 // MARK: - Message Processing
 extension MessageManager {
-    func startProcessingMessage() {
+    func write(){
         Task {
-            await self.messageChannel.consume { message in
+            for await message in self.writeChannel.stream {
                 let isFlushSignal = message.type == .flush
 
                 if !isFlushSignal {
@@ -78,34 +84,39 @@ extension MessageManager {
                 }
                 
                 if isFlushSignal || self.flushPolicyFacade.shouldFlush() {
-                    await self.storage.rollover()
-                    
-                    let dataItems = await self.storage.read().dataItems
-                    for item in dataItems {
-                        print("Upload started: \(item.reference)")
-                        let isUploaded = await self.upload(item: item)
-                        
-                        if isUploaded {
-                            await self.storage.remove(messageReference: item.reference)
-                            print("Upload completed: \(item.reference)")
-                        } else {
-                            print("Upload failed: \(item.reference)")
-                        }
+                    do {
+                        self.flushPolicyFacade.resetCount()
+                        await self.storage.rollover() // Needs to investicate...
+                        try await self.uploadChannel.send(Constants.uploadSignal)
+                    } catch {
+                        print("Error on upload signal: \(error)")
                     }
-                    self.flushPolicyFacade.resetCount()
                 }
             }
         }
+        
     }
     
-    private func upload(item: MessageDataItem) async -> Bool {
-        do {
-            let processed = item.batch.replacingOccurrences(of: Constants.defaultSentAtPlaceholder, with: Date().iso8601TimeStamp)
-            print("Uploading: \(processed)")
-            _ = try await self.httpClient.postBatchEvents(processed)
-            return true
-        } catch {
-            return false
+    func upload(){
+        Task {
+            for await _ in self.uploadChannel.stream {
+                
+                let dataItems = await self.storage.read().dataItems
+                for item in dataItems {
+                    print("Upload started: \(item.reference)")
+                    do {
+                        let processed = item.batch.replacingOccurrences(of: Constants.defaultSentAtPlaceholder, with: Date().iso8601TimeStamp)
+                        print("Uploading: \(processed)")
+                        
+                        _ = try await self.httpClient.postBatchEvents(processed)
+                        
+                        await self.storage.remove(messageReference: item.reference)
+                        print("Upload completed: \(item.reference)")
+                    } catch {
+                        print("Upload failed: \(item.reference)")
+                    }
+                }
+            }
         }
     }
 }
