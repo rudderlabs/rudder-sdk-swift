@@ -86,7 +86,7 @@ extension MessageManager {
                 if isFlushSignal || self.flushPolicyFacade.shouldFlush() {
                     do {
                         self.flushPolicyFacade.resetCount()
-                        await self.storage.rollover() // Needs to investicate...
+                        await self.storage.rollover()
                         try await self.uploadChannel.send(Constants.uploadSignal)
                     } catch {
                         print("Error on upload signal: \(error)")
@@ -100,7 +100,6 @@ extension MessageManager {
     func upload(){
         Task {
             for await _ in self.uploadChannel.stream {
-                
                 let dataItems = await self.storage.read().dataItems
                 for item in dataItems {
                     print("Upload started: \(item.reference)")

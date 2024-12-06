@@ -29,6 +29,7 @@ public struct Constants {
     //Internals
     static let fileIndex = "rudderstack.message.file.index."
     static let memoryIndex = "rudderstack.message.memory.index."
+    static let fileNameSeparator: String = "-"
     static let maxPayloadSize: Int64 = 32 * 1024 //32kb
     static let maxBatchSize: Int64 = 500 * 1024 //500 kb
     static let fileType = "tmp"
