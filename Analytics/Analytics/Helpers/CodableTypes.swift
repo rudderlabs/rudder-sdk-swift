@@ -76,7 +76,7 @@ public struct AnyCodable: Codable {
         } else if let boolValue = try? container.decode(Bool.self) {
             value = boolValue
         } else if let stringValue = try? container.decode(String.self) {
-            value = stringValue
+            value = Date.date(from: stringValue) ?? stringValue
         } else if let arrayValue = try? container.decode([AnyCodable].self) {
             value = arrayValue.map { $0.value }
         } else if let dictionaryValue = try? container.decode([String: AnyCodable].self) {
@@ -97,6 +97,8 @@ public struct AnyCodable: Codable {
             try container.encode(cgfloatValue)
         } else if let boolValue = value as? Bool {
             try container.encode(boolValue)
+        } else if let dateValue = value as? Date {
+            try container.encode(dateValue.iso8601TimeStamp)
         } else if let stringValue = value as? String {
             try container.encode(stringValue)
         } else if let arrayValue = value as? [Any] {
