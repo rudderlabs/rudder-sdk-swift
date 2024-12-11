@@ -20,6 +20,7 @@
 		53859EE72CB66C3200EAE483 /* DataPlaneModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */; };
 		5387E8942CA320FD00DB1C49 /* HttpNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */; };
 		5387E8972CA3233000DB1C49 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5387E8962CA3233000DB1C49 /* HttpClient.swift */; };
+		5388D5A02D0A09A5000966AB /* LocaleInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D59F2D0A09A5000966AB /* LocaleInfoPlugin.swift */; };
 		538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538E2B1C2CECD52400B550BC /* TrackEventTests.swift */; };
 		538E2B1F2CECE70B00B550BC /* track_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */; };
 		538E2B222CED044400B550BC /* track_with_properties.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B212CED044400B550BC /* track_with_properties.json */; };
@@ -85,6 +86,7 @@
 		53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPlaneModuleTests.swift; sourceTree = "<group>"; };
 		5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpNetwork.swift; sourceTree = "<group>"; };
 		5387E8962CA3233000DB1C49 /* HttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
+		5388D59F2D0A09A5000966AB /* LocaleInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaleInfoPlugin.swift; sourceTree = "<group>"; };
 		538E2B1C2CECD52400B550BC /* TrackEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackEventTests.swift; sourceTree = "<group>"; };
 		538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_default_arguments.json; sourceTree = "<group>"; };
 		538E2B212CED044400B550BC /* track_with_properties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_properties.json; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 				53FD37762CB1B0C700DBA06B /* Base */,
 				53FD377C2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift */,
 				5346B9E52CF78CBD00934D72 /* DeviceInfoPlugin.swift */,
+				5388D59F2D0A09A5000966AB /* LocaleInfoPlugin.swift */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -500,6 +503,7 @@
 				5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */,
 				53BE94E92C921B9E0004E75A /* KeyValueStore.swift in Sources */,
 				533485952C9AC7C70029F88E /* CodableTypes.swift in Sources */,
+				5388D5A02D0A09A5000966AB /* LocaleInfoPlugin.swift in Sources */,
 				53FD37A02CB5163C00DBA06B /* MessageManager.swift in Sources */,
 				53BE94EB2C9220950004E75A /* DiskStore.swift in Sources */,
 				53C29E722C918F2400F2A8C3 /* Storage.swift in Sources */,
