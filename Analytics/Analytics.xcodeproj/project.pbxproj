@@ -26,6 +26,7 @@
 		5388D5A72D0A12F5000966AB /* ScreenInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5A62D0A12F5000966AB /* ScreenInfoPlugin.swift */; };
 		5388D5A92D0A1364000966AB /* TimeZoneInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5A82D0A1364000966AB /* TimeZoneInfoPlugin.swift */; };
 		5388D5AB2D0A14DA000966AB /* OSInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5AA2D0A14DA000966AB /* OSInfoPluginTests.swift */; };
+		5388D5AD2D0A1869000966AB /* ScreenInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5AC2D0A1869000966AB /* ScreenInfoPluginTests.swift */; };
 		538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538E2B1C2CECD52400B550BC /* TrackEventTests.swift */; };
 		538E2B1F2CECE70B00B550BC /* track_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */; };
 		538E2B222CED044400B550BC /* track_with_properties.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B212CED044400B550BC /* track_with_properties.json */; };
@@ -97,6 +98,7 @@
 		5388D5A62D0A12F5000966AB /* ScreenInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenInfoPlugin.swift; sourceTree = "<group>"; };
 		5388D5A82D0A1364000966AB /* TimeZoneInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeZoneInfoPlugin.swift; sourceTree = "<group>"; };
 		5388D5AA2D0A14DA000966AB /* OSInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSInfoPluginTests.swift; sourceTree = "<group>"; };
+		5388D5AC2D0A1869000966AB /* ScreenInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenInfoPluginTests.swift; sourceTree = "<group>"; };
 		538E2B1C2CECD52400B550BC /* TrackEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackEventTests.swift; sourceTree = "<group>"; };
 		538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_default_arguments.json; sourceTree = "<group>"; };
 		538E2B212CED044400B550BC /* track_with_properties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_properties.json; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				5346B9E72CF8597300934D72 /* DeviceInfoPluginTests.swift */,
 				5388D5A12D0A10AE000966AB /* LocaleInfoPluginTests.swift */,
 				5388D5AA2D0A14DA000966AB /* OSInfoPluginTests.swift */,
+				5388D5AC2D0A1869000966AB /* ScreenInfoPluginTests.swift */,
 			);
 			path = PluginTests;
 			sourceTree = "<group>";
@@ -545,6 +548,7 @@
 				538E2B3D2CEE403500B550BC /* GroupEventTests.swift in Sources */,
 				538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */,
 				53C52C792CE486A000A2BD31 /* MessageModuleTests.swift in Sources */,
+				5388D5AD2D0A1869000966AB /* ScreenInfoPluginTests.swift in Sources */,
 				539E540D2C98CD7D00982E95 /* AnalyticsTests.swift in Sources */,
 				5388D5AB2D0A14DA000966AB /* OSInfoPluginTests.swift in Sources */,
 				5334858F2C9AB24E0029F88E /* StorageModuleTests.swift in Sources */,
