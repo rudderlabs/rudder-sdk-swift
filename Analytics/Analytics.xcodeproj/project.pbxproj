@@ -24,6 +24,7 @@
 		5388D5A22D0A10AE000966AB /* LocaleInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5A12D0A10AE000966AB /* LocaleInfoPluginTests.swift */; };
 		5388D5A52D0A12AD000966AB /* OSInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5A42D0A12AD000966AB /* OSInfoPlugin.swift */; };
 		5388D5A72D0A12F5000966AB /* ScreenInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5A62D0A12F5000966AB /* ScreenInfoPlugin.swift */; };
+		5388D5A92D0A1364000966AB /* TimeZoneInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5A82D0A1364000966AB /* TimeZoneInfoPlugin.swift */; };
 		538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538E2B1C2CECD52400B550BC /* TrackEventTests.swift */; };
 		538E2B1F2CECE70B00B550BC /* track_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */; };
 		538E2B222CED044400B550BC /* track_with_properties.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B212CED044400B550BC /* track_with_properties.json */; };
@@ -93,6 +94,7 @@
 		5388D5A12D0A10AE000966AB /* LocaleInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaleInfoPluginTests.swift; sourceTree = "<group>"; };
 		5388D5A42D0A12AD000966AB /* OSInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSInfoPlugin.swift; sourceTree = "<group>"; };
 		5388D5A62D0A12F5000966AB /* ScreenInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenInfoPlugin.swift; sourceTree = "<group>"; };
+		5388D5A82D0A1364000966AB /* TimeZoneInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeZoneInfoPlugin.swift; sourceTree = "<group>"; };
 		538E2B1C2CECD52400B550BC /* TrackEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackEventTests.swift; sourceTree = "<group>"; };
 		538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_default_arguments.json; sourceTree = "<group>"; };
 		538E2B212CED044400B550BC /* track_with_properties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_properties.json; sourceTree = "<group>"; };
@@ -326,6 +328,7 @@
 				5388D59F2D0A09A5000966AB /* LocaleInfoPlugin.swift */,
 				5388D5A42D0A12AD000966AB /* OSInfoPlugin.swift */,
 				5388D5A62D0A12F5000966AB /* ScreenInfoPlugin.swift */,
+				5388D5A82D0A1364000966AB /* TimeZoneInfoPlugin.swift */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -510,6 +513,7 @@
 				53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */,
 				5388D5A52D0A12AD000966AB /* OSInfoPlugin.swift in Sources */,
 				539E54042C98B05300982E95 /* StorageModels.swift in Sources */,
+				5388D5A92D0A1364000966AB /* TimeZoneInfoPlugin.swift in Sources */,
 				53A22A502C7C904E0059D6FE /* Helpers.swift in Sources */,
 				533485972C9B6FFB0029F88E /* PropertyWrappers.swift in Sources */,
 				5387E8972CA3233000DB1C49 /* HttpClient.swift in Sources */,
