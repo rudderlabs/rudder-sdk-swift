@@ -71,6 +71,7 @@ extension AnalyticsClient {
         self.pluginChain.add(plugin: DeviceInfoPlugin())
         self.pluginChain.add(plugin: LocaleInfoPlugin())
         self.pluginChain.add(plugin: OSInfoPlugin())
+        self.pluginChain.add(plugin: ScreenInfoPlugin())
     }
     
     private func process(event: Message) {
