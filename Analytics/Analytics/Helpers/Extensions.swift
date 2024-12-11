@@ -153,6 +153,13 @@ extension URL {
     }
 }
 
+// MARK: - [String: AnyCodable]
+extension [String: AnyCodable] {
+    static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
+        return lhs.merging(rhs) { (_, new) in new }
+    }
+}
+
 // MARK: - Data
 extension Data {
     var jsonString: String? {
