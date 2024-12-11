@@ -13,7 +13,7 @@
 		533485952C9AC7C70029F88E /* CodableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485942C9AC7C70029F88E /* CodableTypes.swift */; };
 		533485972C9B6FFB0029F88E /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485962C9B6FFB0029F88E /* PropertyWrappers.swift */; };
 		5346B9E62CF78CBD00934D72 /* DeviceInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5346B9E52CF78CBD00934D72 /* DeviceInfoPlugin.swift */; };
-		5346B9E82CF8597300934D72 /* DeviceInfoModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5346B9E72CF8597300934D72 /* DeviceInfoModuleTests.swift */; };
+		5346B9E82CF8597300934D72 /* DeviceInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5346B9E72CF8597300934D72 /* DeviceInfoPluginTests.swift */; };
 		5351AA6A2C6BE95D003C3C47 /* Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 5351AA692C6BE95D003C3C47 /* Analytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */; };
 		537356ED2CC68B7D008023CE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537356EC2CC68B7D008023CE /* Extensions.swift */; };
@@ -21,6 +21,7 @@
 		5387E8942CA320FD00DB1C49 /* HttpNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */; };
 		5387E8972CA3233000DB1C49 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5387E8962CA3233000DB1C49 /* HttpClient.swift */; };
 		5388D5A02D0A09A5000966AB /* LocaleInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D59F2D0A09A5000966AB /* LocaleInfoPlugin.swift */; };
+		5388D5A22D0A10AE000966AB /* LocaleInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5A12D0A10AE000966AB /* LocaleInfoPluginTests.swift */; };
 		538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538E2B1C2CECD52400B550BC /* TrackEventTests.swift */; };
 		538E2B1F2CECE70B00B550BC /* track_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */; };
 		538E2B222CED044400B550BC /* track_with_properties.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B212CED044400B550BC /* track_with_properties.json */; };
@@ -78,7 +79,7 @@
 		533485942C9AC7C70029F88E /* CodableTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTypes.swift; sourceTree = "<group>"; };
 		533485962C9B6FFB0029F88E /* PropertyWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
 		5346B9E52CF78CBD00934D72 /* DeviceInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoPlugin.swift; sourceTree = "<group>"; };
-		5346B9E72CF8597300934D72 /* DeviceInfoModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoModuleTests.swift; sourceTree = "<group>"; };
+		5346B9E72CF8597300934D72 /* DeviceInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoPluginTests.swift; sourceTree = "<group>"; };
 		5351AA662C6BE95D003C3C47 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5351AA692C6BE95D003C3C47 /* Analytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Analytics.h; sourceTree = "<group>"; };
 		5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
@@ -87,6 +88,7 @@
 		5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpNetwork.swift; sourceTree = "<group>"; };
 		5387E8962CA3233000DB1C49 /* HttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
 		5388D59F2D0A09A5000966AB /* LocaleInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaleInfoPlugin.swift; sourceTree = "<group>"; };
+		5388D5A12D0A10AE000966AB /* LocaleInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaleInfoPluginTests.swift; sourceTree = "<group>"; };
 		538E2B1C2CECD52400B550BC /* TrackEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackEventTests.swift; sourceTree = "<group>"; };
 		538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_default_arguments.json; sourceTree = "<group>"; };
 		538E2B212CED044400B550BC /* track_with_properties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_properties.json; sourceTree = "<group>"; };
@@ -197,6 +199,15 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
+		5388D5A32D0A10DA000966AB /* PluginTests */ = {
+			isa = PBXGroup;
+			children = (
+				5346B9E72CF8597300934D72 /* DeviceInfoPluginTests.swift */,
+				5388D5A12D0A10AE000966AB /* LocaleInfoPluginTests.swift */,
+			);
+			path = PluginTests;
+			sourceTree = "<group>";
+		};
 		538E2B202CECFFF700B550BC /* MockResources */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,8 +278,8 @@
 				539E540C2C98CD7D00982E95 /* AnalyticsTests.swift */,
 				5334858E2C9AB24E0029F88E /* StorageModuleTests.swift */,
 				53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */,
-				5346B9E72CF8597300934D72 /* DeviceInfoModuleTests.swift */,
 				53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */,
+				5388D5A32D0A10DA000966AB /* PluginTests */,
 				538E2B2B2CEDA5E000B550BC /* EventTests */,
 				538E2B202CECFFF700B550BC /* MockResources */,
 			);
@@ -515,7 +526,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				53859EE72CB66C3200EAE483 /* DataPlaneModuleTests.swift in Sources */,
-				5346B9E82CF8597300934D72 /* DeviceInfoModuleTests.swift in Sources */,
+				5346B9E82CF8597300934D72 /* DeviceInfoPluginTests.swift in Sources */,
 				538E2B3D2CEE403500B550BC /* GroupEventTests.swift in Sources */,
 				538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */,
 				53C52C792CE486A000A2BD31 /* MessageModuleTests.swift in Sources */,
@@ -523,6 +534,7 @@
 				5334858F2C9AB24E0029F88E /* StorageModuleTests.swift in Sources */,
 				53F4B6652CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift in Sources */,
 				538E2B2E2CEDE1AC00B550BC /* ScreenEventTests.swift in Sources */,
+				5388D5A22D0A10AE000966AB /* LocaleInfoPluginTests.swift in Sources */,
 				533485912C9AB3170029F88E /* MockProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
