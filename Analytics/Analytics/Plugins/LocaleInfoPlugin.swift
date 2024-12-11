@@ -21,7 +21,7 @@ final class LocaleInfoPlugin: ContextInfoPlugin {
     
     func execute(event: any Message) -> (any Message)? {
         guard let localeInfo = self.preparedLocaleInfo else { return event }
-        return self.append(info: ["locale": AnyCodable(localeInfo)], to: event)
+        return self.append(info: ["locale": localeInfo], to: event)
     }
     
     private var preparedLocaleInfo: String? {

@@ -20,7 +20,7 @@ final class ScreenInfoPlugin: ContextInfoPlugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return self.append(info: ["screen" : AnyCodable(self.preparedScreenInfo)], to: event)
+        return self.append(info: ["screen" : self.preparedScreenInfo], to: event)
     }
     
     private var preparedScreenInfo: [String: Any] {

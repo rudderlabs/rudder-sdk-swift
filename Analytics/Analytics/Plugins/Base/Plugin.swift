@@ -57,17 +57,16 @@ extension MessagePlugin {
 
 // MARK: - ContextInfoPlugin
 protocol ContextInfoPlugin: Plugin {
-    func append(info: [String: AnyCodable], to message: Message) -> Message
+    func append(info: [String: Any], to message: Message) -> Message
 }
 
 extension ContextInfoPlugin {
-    func append(info: [String: AnyCodable], to event: Message) -> Message {
+    func append(info: [String: Any], to event: Message) -> Message {
         var message = event
         var context = event.context ?? [:]
         
-        context = context + info
+        context = context + info.mapValues { AnyCodable($0) }
         message.context = context
-        
         return message
     }
 }

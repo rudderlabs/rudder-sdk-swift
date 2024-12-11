@@ -20,7 +20,7 @@ final class TimeZoneInfoPlugin: ContextInfoPlugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return self.append(info: ["timezone": AnyCodable(self.preparedTimezoneInfo)], to: event)
+        return self.append(info: ["timezone": self.preparedTimezoneInfo], to: event)
     }
     
     private var preparedTimezoneInfo: String {

@@ -20,7 +20,7 @@ final class OSInfoPlugin: ContextInfoPlugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return self.append(info: ["os": AnyCodable(self.preparedOSInfo)], to: event)
+        return self.append(info: ["os": self.preparedOSInfo], to: event)
     }
     
     private var preparedOSInfo: [String: Any] {
