@@ -46,7 +46,7 @@ extension Date {
         return DateFormatter.timeStampFormat.string(from: self)
     }
     
-    func date(from timeStamp: String) -> Date? {
+    static func date(from timeStamp: String) -> Date? {
         return DateFormatter.timeStampFormat.date(from: timeStamp)
     }
 }
@@ -139,6 +139,7 @@ extension Encodable {
             let jsonData = try encoder.encode(self)
             return jsonData.jsonString
         } catch {
+            print("Error encoding JSON: \(error)")
             return nil
         }
     }
