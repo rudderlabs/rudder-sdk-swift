@@ -7,11 +7,11 @@
 
 import Foundation
 
-// MARK: - TimezoneInfoPlugin
+// MARK: - TimeZoneInfoPlugin
 /**
  A plugin created to append timezone information to the message context.
  */
-final class TimezoneInfoPlugin: ContextInfoPlugin {
+final class TimeZoneInfoPlugin: ContextInfoPlugin {
     var pluginType: PluginType = .preProcess
     var analytics: AnalyticsClient?
     
