@@ -62,6 +62,7 @@ extension AnalyticsClient {
         self.pluginChain = PluginChain(analytics: self)
         self.pluginChain.add(plugin: POCPlugin())
         self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
+        self.pluginChain.add(plugin: DeviceInfoPlugin())
     }
     
     private func process(event: Message) {

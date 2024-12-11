@@ -20,8 +20,17 @@ public class Configuration {
     var gzipEnabled: Bool
     var storage: Storage
     var flushPolicies: [FlushPolicy]
+    var collectDeviceId: Bool
     
-    public init(writeKey: String, dataPlaneUrl: String, controlPlaneUrl: String = Constants.defaultControlPlaneUrl, logger: Logger = SwiftLogger(logLevel: Constants.defaultLogLevel), optOut: Bool = false, gzipEnaabled: Bool = Constants.defaultGZipStatus, storage: Storage? = nil, flushPolicies: [FlushPolicy] = Constants.defaultFlushPolicies) {
+    public init(writeKey: String,
+                dataPlaneUrl: String,
+                controlPlaneUrl: String = Constants.defaultControlPlaneUrl,
+                logger: Logger = SwiftLogger(logLevel: Constants.defaultLogLevel),
+                optOut: Bool = false,
+                gzipEnaabled: Bool = Constants.defaultGZipStatus,
+                storage: Storage? = nil,
+                flushPolicies: [FlushPolicy] = Constants.defaultFlushPolicies,
+                collectDeviceId: Bool = Constants.defaultCollectDeviceId) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
@@ -30,5 +39,6 @@ public class Configuration {
         self.gzipEnabled = gzipEnaabled
         self.storage = storage ?? BasicStorage(writeKey: writeKey)
         self.flushPolicies = flushPolicies
+        self.collectDeviceId = collectDeviceId
     }
 }
