@@ -9,11 +9,12 @@ import Foundation
 
 // MARK: - MemoryStore
 /**
- A class designed to store and retrieve message events using memory storage.
+ An actor designed to store and retrieve message events using memory storage.
  */
-class MemoryStore {
+final actor MemoryStore {
+    
     let writeKey: String
-    @Synchronized var dataItems: [MessageDataItem] = []
+    var dataItems: [MessageDataItem] = []
     private let keyValueStore: KeyValueStore
     
     init(writeKey: String) {
@@ -26,10 +27,9 @@ class MemoryStore {
         let newEntry = dataItem.batch == Constants.batchPrefix
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > Constants.maxBatchSize {
-            self.finish {
-                print("Batch size exceeded. Closing the current batch.")
-                self.store(message: message)
-            }
+            self.finish()
+            print("Batch size exceeded. Closing the current batch.")
+            self.store(message: message)
             return
         }
         
@@ -39,14 +39,13 @@ class MemoryStore {
         self.appendDataItem(dataItem)
     }
     
-    private func finish(_ block: VoidClosure? = nil) {
-        guard var currentDataItem = self.currentDataItem else { block?(); return }
+    private func finish() {
+        guard var currentDataItem = self.currentDataItem else { return }
         currentDataItem.batch += Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
         currentDataItem.isClosed = true
         self.appendDataItem(currentDataItem)
         
         self.keyValueStore.delete(reference: self.currentDataItemKey)
-        block?()
     }
     
     private func appendDataItem(_ item: MessageDataItem) {
@@ -103,23 +102,29 @@ extension MemoryStore {
  Implementation of the `DataStore` protocol.
  */
 extension MemoryStore: DataStore {
-    func retain(value: String) {
-        SerializedQueue.perform {
+    func retain(value: String) async {
+        await withCheckedContinuation { continuation in
             self.store(message: value)
+            continuation.resume()
         }
     }
     
-    func retrieve() -> [MessageDataItem] {
-        return self.collectDataItems()
+    func retrieve() async -> [MessageDataItem] {
+        await withCheckedContinuation { continuation in
+            continuation.resume(returning: self.collectDataItems())
+        }
     }
     
-    func remove(reference: String) -> Bool {
-        return self.removeItem(using: reference)
+    func remove(reference: String) async -> Bool {
+        await withCheckedContinuation { continuation in
+            continuation.resume(returning: self.removeItem(using: reference))
+        }
     }
     
-    func rollover(_ block: VoidClosure?) {
-        SerializedQueue.perform {
-            self.finish(block)
+    func rollover() async {
+        await withCheckedContinuation { continuation in
+            self.finish()
+            continuation.resume()
         }
     }
 }

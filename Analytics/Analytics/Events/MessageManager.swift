@@ -11,119 +11,111 @@ import Foundation
  This class manages messages and their operations, such as storing and uploading them.
  */
 final class MessageManager {
-    var analytics: AnalyticsClient
+    private let analytics: AnalyticsClient
+    private let flushPolicyFacade: FlushPolicyFacade
+    private let httpClient: HttpClient
+    private let flushEvent = FlushEvent(messageName: Constants.uploadSignal)
+    private let writeChannel: AsyncChannel<Message>
+    private let uploadChannel: AsyncChannel<String>
     
-    private var writeChannel: AsyncChannel<Message>
-    private var uploader: MessageUploader?
-    @Synchronized private var flushedReferences = [String]()
-    
-    var flushFacade: FlushPolicyFacade?
+    private var storage: Storage {
+        return self.analytics.configuration.storage
+    }
     
     init(analytics: AnalyticsClient) {
         self.analytics = analytics
         
-        self.writeChannel = AsyncChannel()
+        self.flushPolicyFacade = FlushPolicyFacade(analytics: analytics)
+        self.httpClient = HttpClient(analytics: analytics)
         
-        self.uploader = MessageUploader(analytics: analytics)
-        self.uploader?.delegate = self
-        self.flushFacade = FlushPolicyFacade(analytics: analytics)
+        self.writeChannel = AsyncChannel(capacity: Int.max)
+        self.uploadChannel = AsyncChannel(capacity: Int.max)
+        
         self.start()
     }
     
     deinit {
-        self.uploader = nil
         self.stop()
+    }
+}
+
+// MARK: - Operations
+extension MessageManager {
+    
+    private func start() {
+        self.flushPolicyFacade.startSchedule() //Frequency based flush policy..
+        
+        self.write()
+        self.upload()
     }
     
     func put(_ message: Message) {
-        guard message.type != .flush else { self.performFlush(); return }
-        self.writeChannel.send(message)
-    }
-    
-    func flush() {
-        // TODO: Need optimisation on creating below object..
-        let flush = FlushEvent(messageName: Constants.uploadSignal)
-        self.put(flush)
-    }
-    
-    private func performFlush() {
-        self.startUploading()
-        self.flushFacade?.resetCount()
-    }
-    
-    private func start() {
-        self.flushFacade?.startSchedule() //Frequency based flush policy..
-        self.shouldFlush() //Startup flush policy
-        
         Task {
-            await self.writeChannel.consume { message in
-                self.performStorage(message)
-            }
+            try await self.writeChannel.send(message)
         }
     }
     
-    private func shouldFlush() {
-        guard self.flushFacade?.shouldFlush() ?? false else { return }
-        self.performFlush()
+    func flush() {
+        print("Flush triggered...")
+        Task {
+            try await self.writeChannel.send(self.flushEvent)
+        }
     }
     
     func stop() {
-        self.writeChannel.closeChannel()
-        self.flushFacade?.cancelSchedule()
+        self.flushPolicyFacade.cancelSchedule()
+        self.writeChannel.close()
+        self.uploadChannel.close()
     }
 }
 
 // MARK: - Storage
 extension MessageManager {
-    var storage: Storage {
-        return self.analytics.configuration.storage
-    }
-    
-    func performStorage(_ message: Message) {
-        guard let json = message.jsonString else { return }
-        self.storage.write(message: json)
-        
-        self.flushFacade?.updateCount()
-        self.shouldFlush()
-    }
-}
+    func write(){
+        Task {
+            for await message in self.writeChannel.stream {
+                let isFlushSignal = message.type == .flush
 
-// MARK: - Upload
-extension MessageManager {
-    var storageMode: StorageMode {
-        return self.storage.eventStorageMode
-    }
-    
-    func startUploading() {
-        self.storage.rollover {
-            let received = self.storage.read().dataItems
-            guard !received.isEmpty else { return }
-            
-            for item in received {
-                print(item.batch)
-                
-                let processed = item.batch.replacingOccurrences(of: Constants.defaultSentAtPlaceholder, with: Date().iso8601TimeStamp)
-                
-                let uItem = UploadItem(reference: item.reference, content: processed)
-                if !self.flushedReferences.contains(item.reference) {
-                    self.flushedReferences.append(item.reference)
-                    self.uploader?.addToQueue(uItem)
+                if !isFlushSignal {
+                    if let json = message.jsonString {
+                        await self.storage.write(message: json)
+                        self.flushPolicyFacade.updateCount()
+                    }
                 }
-                print("Processed: \(item.reference)")
-                print("-------------------------------------------->>>")
+                
+                if isFlushSignal || self.flushPolicyFacade.shouldFlush() {
+                    do {
+                        self.flushPolicyFacade.resetCount()
+                        await self.storage.rollover()
+                        try await self.uploadChannel.send(Constants.uploadSignal)
+                    } catch {
+                        print("Error on upload signal: \(error)")
+                    }
+                }
             }
         }
-    }
-}
-
-// MARK: - MessageUploaderDelegate
-extension MessageManager: MessageUploaderDelegate {
-    func didFinishUploading(item: UploadItem) {
-        self.storage.remove(messageReference: item.reference)
+        
     }
     
-    func resetReferenceCache(_ pendingUploads: [UploadItem]) {
-        pendingUploads.forEach { upload in
-            self.flushedReferences.removeAll(where: { $0 == upload.reference }) }
+    func upload(){
+        Task {
+            for await _ in self.uploadChannel.stream {
+                let dataItems = await self.storage.read().dataItems
+                for item in dataItems {
+                    print("Upload started: \(item.reference)")
+                    do {
+                        let processed = item.batch.replacingOccurrences(of: Constants.defaultSentAtPlaceholder, with: Date().iso8601TimeStamp)
+                        print("Uploading: \(processed)")
+                        
+                        _ = try await self.httpClient.postBatchEvents(processed)
+                        
+                        await self.storage.remove(messageReference: item.reference)
+                        print("Upload completed: \(item.reference)")
+                    } catch {
+                        print("Upload failed: \(item.reference)")
+                    }
+                }
+            }
+        }
     }
 }

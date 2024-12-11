@@ -40,44 +40,37 @@ final class DataPlaneModuleTests: XCTestCase {
 // MARK: - Memory Store
 extension DataPlaneModuleTests {
     
-    func test_trackEvent_memory() {
+    func test_trackEvent_memory() async {
         guard let analytics = self.analytics_memory else { XCTFail("Analytics not initialized"); return }
         self.dpPlugin?.setup(analytics: analytics)
         
         guard let storage = self.dpPlugin?.analytics?.configuration.storage else { XCTFail("Storage not initialized"); return }
         
         let event = TrackEvent(event: "test_track_event")
-        self.dpPlugin?.setup(analytics: MockProvider.clientWithMemoryStorage)
-        
         _ = self.dpPlugin?.track(payload: event)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        try? await Task.sleep(nanoseconds: 300_000_000)
         
-        storage.rollover(nil)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.3))
-        
-        let resultItems = storage.read().dataItems
+        await storage.rollover()
+        let resultItems = await storage.read().dataItems
         XCTAssertFalse(resultItems.isEmpty)
     }
     
-    func test_screenEvent_memory() {
+    func test_screenEvent_memory() async {
         guard let analytics = self.analytics_memory else { XCTFail("Analytics not initialized"); return }
         self.dpPlugin?.setup(analytics: analytics)
         
         guard let storage = self.dpPlugin?.analytics?.configuration.storage else { XCTFail("Storage not initialized"); return }
         
         let event = ScreenEvent(screenName: "test_screen_event")
-        self.dpPlugin?.setup(analytics: MockProvider.clientWithMemoryStorage)
         _ = self.dpPlugin?.screen(payload: event)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        try? await Task.sleep(nanoseconds: 300_000_000)
         
-        storage.rollover(nil)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.3))
-        
-        let resultItems = storage.read().dataItems
+        await storage.rollover()
+        let resultItems = await storage.read().dataItems
         XCTAssertFalse(resultItems.isEmpty)
     }
     
-    func test_groupEvent_memory() {
+    func test_groupEvent_memory() async {
         guard let analytics = self.analytics_memory else { XCTFail("Analytics not initialized"); return }
         self.dpPlugin?.setup(analytics: analytics)
         
@@ -85,12 +78,10 @@ extension DataPlaneModuleTests {
         
         let event = GroupEvent(groupId: "test_group_event")
         _ = self.dpPlugin?.group(payload: event)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        try? await Task.sleep(nanoseconds: 300_000_000)
         
-        storage.rollover(nil)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.3))
-        
-        let resultItems = storage.read().dataItems
+        await storage.rollover()
+        let resultItems = await storage.read().dataItems
         XCTAssertFalse(resultItems.isEmpty)
     }
 }
@@ -98,44 +89,38 @@ extension DataPlaneModuleTests {
 
 // MARK: - Disk Store
 extension DataPlaneModuleTests {
-    
-    func test_trackEvent_disk() {
+
+    func test_trackEvent_disk() async {
         guard let analytics = self.analytics_disk else { XCTFail("Analytics not initialized"); return }
         self.dpPlugin?.setup(analytics: analytics)
         
         guard let storage = self.dpPlugin?.analytics?.configuration.storage else { XCTFail("Storage not initialized"); return }
         
         let event = TrackEvent(event: "test_track_event")
-        self.dpPlugin?.setup(analytics: MockProvider.clientWithMemoryStorage)
         _ = self.dpPlugin?.track(payload: event)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        try? await Task.sleep(nanoseconds: 300_000_000)
         
-        storage.rollover(nil)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        
-        let resultItems = storage.read().dataItems
+        await storage.rollover()
+        let resultItems = await storage.read().dataItems
         XCTAssertFalse(resultItems.isEmpty)
     }
     
-    func test_screenEvent_disk() {
+    func test_screenEvent_disk() async {
         guard let analytics = self.analytics_disk else { XCTFail("Analytics not initialized"); return }
         self.dpPlugin?.setup(analytics: analytics)
         
         guard let storage = self.dpPlugin?.analytics?.configuration.storage else { XCTFail("Storage not initialized"); return }
         
         let event = ScreenEvent(screenName: "test_screen_event")
-        self.dpPlugin?.setup(analytics: MockProvider.clientWithMemoryStorage)
         _ = self.dpPlugin?.screen(payload: event)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        try? await Task.sleep(nanoseconds: 300_000_000)
         
-        storage.rollover(nil)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        
-        let resultItems = storage.read().dataItems
+        await storage.rollover()
+        let resultItems = await storage.read().dataItems
         XCTAssertFalse(resultItems.isEmpty)
     }
     
-    func test_groupEvent_disk() {
+    func test_groupEvent_disk() async {
         guard let analytics = self.analytics_disk else { XCTFail("Analytics not initialized"); return }
         self.dpPlugin?.setup(analytics: analytics)
         
@@ -143,12 +128,10 @@ extension DataPlaneModuleTests {
         
         let event = GroupEvent(groupId: "test_group_event")
         _ = self.dpPlugin?.group(payload: event)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        try? await Task.sleep(nanoseconds: 300_000_000)
         
-        storage.rollover(nil)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        
-        let resultItems = storage.read().dataItems
+        await storage.rollover()
+        let resultItems = await storage.read().dataItems
         XCTAssertFalse(resultItems.isEmpty)
     }
 }

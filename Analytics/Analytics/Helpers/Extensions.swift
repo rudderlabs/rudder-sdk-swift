@@ -29,29 +29,6 @@ extension String {
     var trimmedUrlString: String {
         return self.hasSuffix("/") ? String(self.dropLast()) : self
     }
-    
-    var asDictionary: [String: Any]? {
-        guard let data = self.utf8Data else { return nil }
-        do {
-            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-            return jsonObject as? [String: Any]
-        } catch {
-            print("Error converting string to dictionary: \(error)")
-            return nil
-        }
-    }
-    
-    var trimmed: String {
-        return self.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-}
-
-// MARK: - [String: Any]
-extension [String: Any] {
-    var asData: Data? {
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: self, options: []) else { return nil }
-        return jsonData
-    }
 }
 
 // MARK: - DateFormatter
