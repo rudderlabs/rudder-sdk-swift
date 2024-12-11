@@ -44,7 +44,7 @@ extension DeviceInfoPlugin {
     var preparedDeviceInfo: [String: Any] {
         var deviceInfo = [String: Any]()
         
-        deviceInfo["id"] = self.collectDeviceId ? UIDevice.current.identifierForVendor?.uuidString : self.analytics?.anonymousId
+        deviceInfo["id"] = self.collectDeviceId ? UIDevice.current.identifierForVendor?.uuidString : nil
         deviceInfo["manufacturer"] = "Apple"
         deviceInfo["model"] = self.deviceModelIdentifier
         deviceInfo["name"] = UIDevice.current.name
