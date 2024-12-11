@@ -63,6 +63,7 @@ extension AnalyticsClient {
         self.pluginChain.add(plugin: POCPlugin())
         self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
         self.pluginChain.add(plugin: DeviceInfoPlugin())
+        self.pluginChain.add(plugin: LocaleInfoPlugin())
     }
     
     private func process(event: Message) {
