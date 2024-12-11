@@ -71,6 +71,8 @@ public struct AnyCodable: Codable {
             value = intValue
         } else if let doubleValue = try? container.decode(Double.self) {
             value = doubleValue
+        } else if let cgfloatValue = try? container.decode(CGFloat.self) {
+            value = cgfloatValue
         } else if let boolValue = try? container.decode(Bool.self) {
             value = boolValue
         } else if let stringValue = try? container.decode(String.self) {
@@ -91,6 +93,8 @@ public struct AnyCodable: Codable {
             try container.encode(intValue)
         } else if let doubleValue = value as? Double {
             try container.encode(doubleValue)
+        } else if let cgfloatValue = value as? CGFloat {
+            try container.encode(cgfloatValue)
         } else if let boolValue = value as? Bool {
             try container.encode(boolValue)
         } else if let stringValue = value as? String {
