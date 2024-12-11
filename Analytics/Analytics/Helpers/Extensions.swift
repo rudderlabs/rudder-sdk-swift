@@ -134,7 +134,7 @@ extension KeyedEncodingContainer {
 extension Encodable {
     var jsonString: String? {
         let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
+        encoder.outputFormatting = [.sortedKeys, .prettyPrinted, .withoutEscapingSlashes]
         do {
             let jsonData = try encoder.encode(self)
             return jsonData.jsonString
