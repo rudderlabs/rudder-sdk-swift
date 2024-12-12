@@ -55,22 +55,6 @@ extension MessagePlugin {
     }
 }
 
-// MARK: - ContextInfoPlugin
-protocol ContextInfoPlugin: Plugin {
-    func append(info: [String: Any], to message: Message) -> Message
-}
-
-extension ContextInfoPlugin {
-    func append(info: [String: Any], to event: Message) -> Message {
-        var message = event
-        var context = event.context ?? [:]
-        
-        context = context + info.mapValues { AnyCodable($0) }
-        message.context = context
-        return message
-    }
-}
-
 // MARK: - POCPlugin
 // TODO: This is a sample plugin and will be removed in future..
 class POCPlugin: Plugin {
