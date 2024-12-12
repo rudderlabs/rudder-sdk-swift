@@ -11,7 +11,7 @@ import UIKit
 /**
  A plugin created to append OS information to the message context.
  */
-final class OSInfoPlugin: ContextInfoPlugin {
+final class OSInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: AnalyticsClient?
     
@@ -20,7 +20,7 @@ final class OSInfoPlugin: ContextInfoPlugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return self.append(info: ["os": self.preparedOSInfo], to: event)
+        return event.append(info: ["os": self.preparedOSInfo])
     }
     
     private var preparedOSInfo: [String: Any] {

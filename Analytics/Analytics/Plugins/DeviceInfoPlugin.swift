@@ -12,7 +12,7 @@ import UIKit
 /**
  A plugin created to append device information to the message context.
  */
-final class DeviceInfoPlugin: ContextInfoPlugin {
+final class DeviceInfoPlugin: Plugin {
     
     var pluginType: PluginType = .preProcess
     var analytics: AnalyticsClient?
@@ -24,16 +24,13 @@ final class DeviceInfoPlugin: ContextInfoPlugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return self.attachDeviceInfo(to: event)
+        return event.append(info: ["device": self.preparedDeviceInfo])
     }
 }
 
 // MARK: - Information Provider
 
 extension DeviceInfoPlugin {
-    private func attachDeviceInfo(to event: any Message) -> any Message {
-        return self.append(info: ["device": self.preparedDeviceInfo], to: event)
-    }
     
     var preparedDeviceInfo: [String: Any] {
         var deviceInfo = [String: Any]()

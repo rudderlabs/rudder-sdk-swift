@@ -36,6 +36,17 @@ extension Message {
         self.anonymousId = .randomUUIDString
         //context
     }
+    
+    /**
+     This function will append the context info to the message payload
+     */
+    func append(info: [String: Any]) -> any Message {
+        var mutableSelf = self
+        var context = mutableSelf.context ?? [:]
+        context = context + info.mapValues { AnyCodable($0) }
+        mutableSelf.context = context
+        return mutableSelf
+    }
 }
 
 // MARK: - TrackEvent

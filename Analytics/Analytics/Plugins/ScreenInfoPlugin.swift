@@ -11,7 +11,7 @@ import UIKit
 /**
  A plugin created to append screen information to the message context.
  */
-final class ScreenInfoPlugin: ContextInfoPlugin {
+final class ScreenInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: AnalyticsClient?
     
@@ -20,7 +20,7 @@ final class ScreenInfoPlugin: ContextInfoPlugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return self.append(info: ["screen" : self.preparedScreenInfo], to: event)
+        return event.append(info: ["screen" : self.preparedScreenInfo])
     }
     
     private var preparedScreenInfo: [String: Any] {

@@ -11,7 +11,7 @@ import Foundation
 /**
  A plugin created to append locale information to the message context.
  */
-final class LocaleInfoPlugin: ContextInfoPlugin {
+final class LocaleInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: AnalyticsClient?
     
@@ -21,7 +21,7 @@ final class LocaleInfoPlugin: ContextInfoPlugin {
     
     func execute(event: any Message) -> (any Message)? {
         guard let localeInfo = self.preparedLocaleInfo else { return event }
-        return self.append(info: ["locale": localeInfo], to: event)
+        return event.append(info: ["locale": localeInfo])
     }
     
     private var preparedLocaleInfo: String? {
