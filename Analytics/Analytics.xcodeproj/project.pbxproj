@@ -32,6 +32,7 @@
 		5388D5B32D0C2081000966AB /* LibraryInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B22D0C2081000966AB /* LibraryInfoPlugin.swift */; };
 		5388D5B52D0C24A3000966AB /* RSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B42D0C24A3000966AB /* RSVersion.swift */; };
 		5388D5B72D0C4DF5000966AB /* AppInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B62D0C4DF5000966AB /* AppInfoPluginTests.swift */; };
+		5388D5B92D0C4EA6000966AB /* LibraryInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B82D0C4EA6000966AB /* LibraryInfoPluginTests.swift */; };
 		538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538E2B1C2CECD52400B550BC /* TrackEventTests.swift */; };
 		538E2B1F2CECE70B00B550BC /* track_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */; };
 		538E2B222CED044400B550BC /* track_with_properties.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B212CED044400B550BC /* track_with_properties.json */; };
@@ -109,6 +110,7 @@
 		5388D5B22D0C2081000966AB /* LibraryInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryInfoPlugin.swift; sourceTree = "<group>"; };
 		5388D5B42D0C24A3000966AB /* RSVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSVersion.swift; sourceTree = "<group>"; };
 		5388D5B62D0C4DF5000966AB /* AppInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoPluginTests.swift; sourceTree = "<group>"; };
+		5388D5B82D0C4EA6000966AB /* LibraryInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryInfoPluginTests.swift; sourceTree = "<group>"; };
 		538E2B1C2CECD52400B550BC /* TrackEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackEventTests.swift; sourceTree = "<group>"; };
 		538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_default_arguments.json; sourceTree = "<group>"; };
 		538E2B212CED044400B550BC /* track_with_properties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_properties.json; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				5388D5AC2D0A1869000966AB /* ScreenInfoPluginTests.swift */,
 				5388D5AE2D0A1EBD000966AB /* TimeZoneInfoPluginTests.swift */,
 				5388D5B62D0C4DF5000966AB /* AppInfoPluginTests.swift */,
+				5388D5B82D0C4EA6000966AB /* LibraryInfoPluginTests.swift */,
 			);
 			path = PluginTests;
 			sourceTree = "<group>";
@@ -571,6 +574,7 @@
 				539E540D2C98CD7D00982E95 /* AnalyticsTests.swift in Sources */,
 				5388D5AB2D0A14DA000966AB /* OSInfoPluginTests.swift in Sources */,
 				5334858F2C9AB24E0029F88E /* StorageModuleTests.swift in Sources */,
+				5388D5B92D0C4EA6000966AB /* LibraryInfoPluginTests.swift in Sources */,
 				53F4B6652CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift in Sources */,
 				538E2B2E2CEDE1AC00B550BC /* ScreenEventTests.swift in Sources */,
 				5388D5A22D0A10AE000966AB /* LocaleInfoPluginTests.swift in Sources */,
