@@ -23,7 +23,7 @@ final class ScreenInfoPlugin: Plugin {
         return event.append(info: ["screen" : self.preparedScreenInfo])
     }
     
-    private var preparedScreenInfo: [String: Any] {
+    private var preparedScreenInfo: [String: Any] = {
         return ["density": UIScreen.main.scale, "width": UIScreen.main.bounds.size.width, "height": UIScreen.main.bounds.size.height]
-    }
+    }()
 }

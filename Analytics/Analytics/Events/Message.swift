@@ -42,9 +42,7 @@ extension Message {
      */
     func append(info: [String: Any]) -> any Message {
         var mutableSelf = self
-        var context = mutableSelf.context ?? [:]
-        context = context + info.mapValues { AnyCodable($0) }
-        mutableSelf.context = context
+        mutableSelf.context = (mutableSelf.context ?? [:]) + info.mapValues { AnyCodable($0) }
         return mutableSelf
     }
 }

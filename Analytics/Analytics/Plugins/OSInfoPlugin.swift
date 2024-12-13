@@ -23,7 +23,7 @@ final class OSInfoPlugin: Plugin {
         return event.append(info: ["os": self.preparedOSInfo])
     }
     
-    private var preparedOSInfo: [String: Any] {
+    private var preparedOSInfo: [String: Any] = {
         return ["name": UIDevice.current.systemName, "version": UIDevice.current.systemVersion]
-    }
+    }()
 }
