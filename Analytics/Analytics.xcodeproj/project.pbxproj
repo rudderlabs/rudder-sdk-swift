@@ -29,6 +29,7 @@
 		5388D5AD2D0A1869000966AB /* ScreenInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5AC2D0A1869000966AB /* ScreenInfoPluginTests.swift */; };
 		5388D5AF2D0A1EBD000966AB /* TimeZoneInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5AE2D0A1EBD000966AB /* TimeZoneInfoPluginTests.swift */; };
 		5388D5B12D0C203C000966AB /* AppInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B02D0C203C000966AB /* AppInfoPlugin.swift */; };
+		5388D5B32D0C2081000966AB /* LibraryInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B22D0C2081000966AB /* LibraryInfoPlugin.swift */; };
 		538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538E2B1C2CECD52400B550BC /* TrackEventTests.swift */; };
 		538E2B1F2CECE70B00B550BC /* track_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */; };
 		538E2B222CED044400B550BC /* track_with_properties.json in Resources */ = {isa = PBXBuildFile; fileRef = 538E2B212CED044400B550BC /* track_with_properties.json */; };
@@ -103,6 +104,7 @@
 		5388D5AC2D0A1869000966AB /* ScreenInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenInfoPluginTests.swift; sourceTree = "<group>"; };
 		5388D5AE2D0A1EBD000966AB /* TimeZoneInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeZoneInfoPluginTests.swift; sourceTree = "<group>"; };
 		5388D5B02D0C203C000966AB /* AppInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoPlugin.swift; sourceTree = "<group>"; };
+		5388D5B22D0C2081000966AB /* LibraryInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryInfoPlugin.swift; sourceTree = "<group>"; };
 		538E2B1C2CECD52400B550BC /* TrackEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackEventTests.swift; sourceTree = "<group>"; };
 		538E2B1E2CECE70B00B550BC /* track_with_default_arguments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_default_arguments.json; sourceTree = "<group>"; };
 		538E2B212CED044400B550BC /* track_with_properties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_properties.json; sourceTree = "<group>"; };
@@ -341,6 +343,7 @@
 				5388D5A62D0A12F5000966AB /* ScreenInfoPlugin.swift */,
 				5388D5A82D0A1364000966AB /* TimeZoneInfoPlugin.swift */,
 				5388D5B02D0C203C000966AB /* AppInfoPlugin.swift */,
+				5388D5B22D0C2081000966AB /* LibraryInfoPlugin.swift */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -514,6 +517,7 @@
 			files = (
 				537356ED2CC68B7D008023CE /* Extensions.swift in Sources */,
 				5387E8942CA320FD00DB1C49 /* HttpNetwork.swift in Sources */,
+				5388D5B32D0C2081000966AB /* LibraryInfoPlugin.swift in Sources */,
 				5388D5A72D0A12F5000966AB /* ScreenInfoPlugin.swift in Sources */,
 				53BE94ED2C941B4B0004E75A /* DataStore.swift in Sources */,
 				5392AB952C6FC78F00369791 /* Configuration.swift in Sources */,
