@@ -23,7 +23,7 @@ final class LibraryInfoPlugin: Plugin {
         return event.append(info: ["library": self.preparedLibraryInfo])
     }
     
-    private var preparedLibraryInfo: [String: Any] {
+    private var preparedLibraryInfo: [String: Any] = {
         return ["name": "rudder-ios-library", "version": "\(RSVersion)"]
-    }
+    }()
 }
