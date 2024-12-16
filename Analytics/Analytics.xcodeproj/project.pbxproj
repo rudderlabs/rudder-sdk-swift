@@ -64,6 +64,7 @@
 		53C29E722C918F2400F2A8C3 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C29E712C918F2400F2A8C3 /* Storage.swift */; };
 		53C52C772CE34FF400A2BD31 /* MessageOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C52C762CE34FF400A2BD31 /* MessageOptions.swift */; };
 		53C52C792CE486A000A2BD31 /* MessageModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C52C782CE486A000A2BD31 /* MessageModuleTests.swift */; };
+		53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */; };
 		53F4B6652CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */; };
 		53FD37772CB1B0C700DBA06B /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37732CB1B0C700DBA06B /* Plugin.swift */; };
 		53FD37782CB1B0C700DBA06B /* PluginChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37742CB1B0C700DBA06B /* PluginChain.swift */; };
@@ -142,6 +143,7 @@
 		53C29E712C918F2400F2A8C3 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		53C52C762CE34FF400A2BD31 /* MessageOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOptions.swift; sourceTree = "<group>"; };
 		53C52C782CE486A000A2BD31 /* MessageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModuleTests.swift; sourceTree = "<group>"; };
+		53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPlugin.swift; sourceTree = "<group>"; };
 		53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushPolicyModuleTests.swift; sourceTree = "<group>"; };
 		53FD37732CB1B0C700DBA06B /* Plugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		53FD37742CB1B0C700DBA06B /* PluginChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginChain.swift; sourceTree = "<group>"; };
@@ -352,6 +354,7 @@
 				5388D5A82D0A1364000966AB /* TimeZoneInfoPlugin.swift */,
 				5388D5B02D0C203C000966AB /* AppInfoPlugin.swift */,
 				5388D5B22D0C2081000966AB /* LibraryInfoPlugin.swift */,
+				53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -537,6 +540,7 @@
 				53FD377D2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift in Sources */,
 				5388D5B12D0C203C000966AB /* AppInfoPlugin.swift in Sources */,
 				53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */,
+				53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */,
 				5388D5A52D0A12AD000966AB /* OSInfoPlugin.swift in Sources */,
 				539E54042C98B05300982E95 /* StorageModels.swift in Sources */,
 				5388D5A92D0A1364000966AB /* TimeZoneInfoPlugin.swift in Sources */,
