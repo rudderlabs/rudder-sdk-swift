@@ -46,7 +46,7 @@ extension Date {
         return DateFormatter.timeStampFormat.string(from: self)
     }
     
-    func date(from timeStamp: String) -> Date? {
+    static func date(from timeStamp: String) -> Date? {
         return DateFormatter.timeStampFormat.date(from: timeStamp)
     }
 }
@@ -134,11 +134,12 @@ extension KeyedEncodingContainer {
 extension Encodable {
     var jsonString: String? {
         let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
+        encoder.outputFormatting = [.sortedKeys, .prettyPrinted, .withoutEscapingSlashes]
         do {
             let jsonData = try encoder.encode(self)
             return jsonData.jsonString
         } catch {
+            print("Error encoding JSON: \(error)")
             return nil
         }
     }
@@ -150,6 +151,13 @@ extension URL {
         guard var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false) else { return self }
         urlComponents.queryItems = parameters.map { URLQueryItem(name: $0, value: $1) }
         return urlComponents.url ?? self
+    }
+}
+
+// MARK: - [String: AnyCodable]
+extension [String: AnyCodable] {
+    static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
+        return lhs.merging(rhs) { (_, new) in new }
     }
 }
 

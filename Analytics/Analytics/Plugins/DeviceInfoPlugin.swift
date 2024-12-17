@@ -24,22 +24,13 @@ final class DeviceInfoPlugin: Plugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return self.attachDeviceInfo(to: event)
+        return event.append(info: ["device": self.preparedDeviceInfo])
     }
 }
 
 // MARK: - Information Provider
 
 extension DeviceInfoPlugin {
-    private func attachDeviceInfo(to event: any Message) -> any Message {
-        var message = event
-        var context = message.context ?? [:]
-        
-        context["device"] = AnyCodable(self.preparedDeviceInfo)
-        message.context = context
-        
-        return message
-    }
     
     var preparedDeviceInfo: [String: Any] {
         var deviceInfo = [String: Any]()

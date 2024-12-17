@@ -60,9 +60,19 @@ extension AnalyticsClient {
         self.collectConfiguration()
         
         self.pluginChain = PluginChain(analytics: self)
+        
+        //Sample plugin..
         self.pluginChain.add(plugin: POCPlugin())
+        
+        //Message plugin..
         self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
+        
+        //ContextInfo plugin..
         self.pluginChain.add(plugin: DeviceInfoPlugin())
+        self.pluginChain.add(plugin: LocaleInfoPlugin())
+        self.pluginChain.add(plugin: OSInfoPlugin())
+        self.pluginChain.add(plugin: ScreenInfoPlugin())
+        self.pluginChain.add(plugin: TimeZoneInfoPlugin())
     }
     
     private func process(event: Message) {

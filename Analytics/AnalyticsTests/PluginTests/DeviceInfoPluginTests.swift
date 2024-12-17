@@ -8,7 +8,7 @@
 import XCTest
 @testable import Analytics
 
-final class DeviceInfoModuleTests: XCTestCase {
+final class DeviceInfoPluginTests: XCTestCase {
     
     func test_pluginInitialization() {
         given("An analytics object given..") {
