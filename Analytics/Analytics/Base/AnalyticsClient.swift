@@ -73,6 +73,8 @@ extension AnalyticsClient {
         self.pluginChain.add(plugin: OSInfoPlugin())
         self.pluginChain.add(plugin: ScreenInfoPlugin())
         self.pluginChain.add(plugin: TimeZoneInfoPlugin())
+        self.pluginChain.add(plugin: AppInfoPlugin())
+        self.pluginChain.add(plugin: LibraryInfoPlugin())
     }
     
     private func process(event: Message) {
