@@ -7,7 +7,6 @@
 
 import Foundation
 import Network
-import CoreBluetooth
 
 // MARK: - NetworkInfoPlugin
 /**
@@ -17,6 +16,7 @@ final class NetworkInfoPlugin: Plugin {
     
     var pluginType: PluginType = .preProcess
     var analytics: AnalyticsClient?
+    var bluetoothManager = BluetoothStatusManager()
     
     func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
@@ -75,6 +75,6 @@ extension NetworkInfoPlugin {
     }
     
     var isBluetoothAvailable: Bool {
-        return CBCentralManager().state == .poweredOn && CBManager.authorization == .allowedAlways
+        return bluetoothManager.isBluetoothEnabled
     }
 }
