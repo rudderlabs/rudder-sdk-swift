@@ -22,7 +22,7 @@ public struct Constants {
     public static let defaultLogLevel: LogLevel = .none
     public static let defaultStorageMode: StorageMode = .disk
     public static let defaultControlPlaneUrl: String = "https://api.rudderlabs.com"
-    public static let defaultGZipStatus: Bool = true
+    public static let defaultGZipStatus: Bool = false
     public static let defaultFlushPolicies: [FlushPolicy] = [StartupFlushPolicy(), FrequencyFlushPolicy(), CountFlushPolicy()]
     public static let defaultCollectDeviceId: Bool = true
     
