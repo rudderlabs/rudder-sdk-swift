@@ -8,6 +8,9 @@
 import Foundation
 import CoreBluetooth
 
+/**
+ This class will be used to check the availability status of Bluetooth.
+ */
 final class BluetoothStatusManager: NSObject, CBCentralManagerDelegate {
     var isBluetoothEnabled = false
     
