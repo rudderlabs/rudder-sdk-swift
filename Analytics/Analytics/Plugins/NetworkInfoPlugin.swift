@@ -16,7 +16,7 @@ final class NetworkInfoPlugin: Plugin {
     
     var pluginType: PluginType = .preProcess
     var analytics: AnalyticsClient?
-    var bluetoothManager = BluetoothStatusManager()
+    var networkInfoUtils = NetworkInfoPluginUtils()
     
     func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
@@ -29,49 +29,15 @@ final class NetworkInfoPlugin: Plugin {
     private var preparedNetworkInfo: [String: Any] {
         var networkInfo = [String: Any]()
         
-        let (cellular, wifi) = self.checkNetworkConnectivity()
+        let (cellular, wifi) = self.networkInfoUtils.checkNetworkConnectivity()
         
-        networkInfo["wifi"] = wifi
-        networkInfo["cellular"] = cellular
+        networkInfo["wifi"] = cellular
+        networkInfo["cellular"] = wifi
         
-        if self.bluetoothManager.isBluetoothAvailable {
-            networkInfo["bluetooth"] = self.bluetoothManager.isBluetoothEnabled }
+        if self.networkInfoUtils.isBluetoothAvailable {
+            networkInfo["bluetooth"] = self.networkInfoUtils.isBluetoothEnabled
+        }
         
         return networkInfo
-    }
-}
-
-extension NetworkInfoPlugin {
-    
-    func checkNetworkConnectivity() -> (cellular: Bool, wifi: Bool) {
-        let monitor = NWPathMonitor()
-        let queue = DispatchQueue(label: "NetworkMonitor")
-
-        var cellular = false
-        var wifi = false
-
-        let semaphore = DispatchSemaphore(value: 0)
-
-        monitor.pathUpdateHandler = { path in
-            if path.status == .satisfied {
-                wifi = path.usesInterfaceType(.wifi)
-                
-                #if os(iOS) || os(macOS) || os(watchOS)
-                cellular = path.usesInterfaceType(.cellular)
-                #else
-                cellular = false
-                #endif
-            } else {
-                cellular = false
-                wifi = false
-            }
-            semaphore.signal()
-        }
-
-        monitor.start(queue: queue)
-        semaphore.wait()
-        monitor.cancel()
-
-        return (cellular, wifi)
     }
 }
