@@ -9,6 +9,9 @@ import Foundation
 import CoreBluetooth
 import Network
 
+/**
+ A utility class for retrieving Bluetooth and network connectivity information.
+ */
 final class NetworkInfoPluginUtils: NSObject {
     var isBluetoothEnabled = false
     var bluetoothManager: CBCentralManager?
@@ -30,7 +33,6 @@ extension NetworkInfoPluginUtils: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         self.isBluetoothEnabled = central.state == .poweredOn
     }
-    
 }
 
 // MARK: - Network Connectivity
@@ -53,6 +55,9 @@ extension NetworkInfoPluginUtils {
 }
 
 // MARK: - NetworkMonitorProtocol
+/**
+ A protocol defining the interface for monitoring network connectivity.
+ */
 protocol NetworkMonitorProtocol {
     var status: NWPath.Status { get }
     func usesInterfaceType(_ type: NWInterface.InterfaceType) -> Bool
@@ -61,6 +66,9 @@ protocol NetworkMonitorProtocol {
 }
 
 // MARK: - NetworkMonitor
+/**
+ This class monitors the network connectivity status and interfaces using the Network framework.
+ */
 class NetworkMonitor: NetworkMonitorProtocol {
     private let monitor = NWPathMonitor()
     private let semaphore = DispatchSemaphore(value: 0)
