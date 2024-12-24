@@ -14,6 +14,10 @@ import CoreBluetooth
 final class BluetoothStatusManager: NSObject, CBCentralManagerDelegate {
     var isBluetoothEnabled = false
     
+    var isBluetoothAvailable: Bool {
+        return CBManager.authorization == .allowedAlways
+    }
+    
     private var centralManager: CBCentralManager!
     
     override init() {

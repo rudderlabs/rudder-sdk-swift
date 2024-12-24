@@ -34,7 +34,8 @@ final class NetworkInfoPlugin: Plugin {
         networkInfo["wifi"] = wifi
         networkInfo["cellular"] = cellular
         
-        if self.isBluetoothAvailable { networkInfo["bluetooth"] = true }
+        if self.bluetoothManager.isBluetoothAvailable {
+            networkInfo["bluetooth"] = self.bluetoothManager.isBluetoothEnabled }
         
         return networkInfo
     }
@@ -72,9 +73,5 @@ extension NetworkInfoPlugin {
         monitor.cancel()
 
         return (cellular, wifi)
-    }
-    
-    var isBluetoothAvailable: Bool {
-        return bluetoothManager.isBluetoothEnabled
     }
 }
