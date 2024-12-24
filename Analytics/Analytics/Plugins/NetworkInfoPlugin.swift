@@ -31,8 +31,8 @@ final class NetworkInfoPlugin: Plugin {
         
         let (cellular, wifi) = self.networkInfoUtils.checkNetworkConnectivity()
         
-        networkInfo["wifi"] = cellular
-        networkInfo["cellular"] = wifi
+        networkInfo["wifi"] = wifi
+        networkInfo["cellular"] = cellular
         
         if self.networkInfoUtils.isBluetoothAvailable {
             networkInfo["bluetooth"] = self.networkInfoUtils.isBluetoothEnabled
