@@ -24,7 +24,7 @@ final class DeviceInfoPlugin: Plugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return event.append(info: ["device": self.preparedDeviceInfo])
+        return event.appendToContext(info: ["device": self.preparedDeviceInfo])
     }
 }
 

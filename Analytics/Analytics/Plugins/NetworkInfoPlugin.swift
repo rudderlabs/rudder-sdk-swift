@@ -23,7 +23,7 @@ final class NetworkInfoPlugin: Plugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return event.append(info: ["network": self.preparedNetworkInfo])
+        return event.appendToContext(info: ["network": self.preparedNetworkInfo])
     }
     
     private var preparedNetworkInfo: [String: Any] {

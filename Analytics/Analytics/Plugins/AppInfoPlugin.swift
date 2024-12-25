@@ -21,7 +21,7 @@ final class AppInfoPlugin: Plugin {
     
     func execute(event: any Message) -> (any Message)? {
         guard let info = self.preparedAppInfo else { return event }
-        return event.append(info: ["app": info])
+        return event.appendToContext(info: ["app": info])
     }
     
     private var preparedAppInfo: [String: Any]? = {
