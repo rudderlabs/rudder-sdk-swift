@@ -61,9 +61,6 @@ extension AnalyticsClient {
         
         self.pluginChain = PluginChain(analytics: self)
         
-        //Sample plugin..
-        self.pluginChain.add(plugin: POCPlugin())
-        
         //Message plugin..
         self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
         

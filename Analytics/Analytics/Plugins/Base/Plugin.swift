@@ -54,16 +54,3 @@ extension MessagePlugin {
         }
     }
 }
-
-// MARK: - POCPlugin
-// TODO: This is a sample plugin and will be removed in future..
-class POCPlugin: Plugin {
-    var analytics: AnalyticsClient?
-    
-    var pluginType: PluginType = .preProcess
-    
-    func execute(event: Message) -> Message? {
-        self.analytics?.configuration.logger.debug(tag: Constants.logTag, log: "POCPlugin is running...")
-        return event
-    }
-}
