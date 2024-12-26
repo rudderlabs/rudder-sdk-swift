@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Network
 @testable import Analytics
 
 // MARK: - MockProvider
@@ -16,7 +17,7 @@ final class MockProvider {
         return UUID().uuidString
     }
     static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
-
+    
     static var clientWithDiskStorage: AnalyticsClient {
         let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .disk)
         let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage, flushPolicies: [])
@@ -131,5 +132,27 @@ extension XCTestCase {
 extension String {
     var trimmed: String {
         return self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}
+
+class MockNetworkMonitor: NetworkMonitorProtocol {
+    var status: NWPath.Status
+    var interfaces: [NWInterface.InterfaceType]
+    
+    init(status: NWPath.Status, interfaces: [NWInterface.InterfaceType]) {
+        self.status = status
+        self.interfaces = interfaces
+    }
+    
+    func usesInterfaceType(_ type: NWInterface.InterfaceType) -> Bool {
+        return interfaces.contains(type)
+    }
+    
+    func start(queue: DispatchQueue) {
+        // Simulate path update
+    }
+    
+    func cancel() {
+        // Simulate cancel behavior
     }
 }
