@@ -58,7 +58,7 @@ public struct CodableCollection: Codable {
 // MARK: - AnyCodable
 
 public struct AnyCodable: Codable {
-    let value: Any
+    public let value: Any
     
     public init(_ value: Any) {
         self.value = value

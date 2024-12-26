@@ -9,12 +9,12 @@ import Foundation
 
 // MARK: - PluginType
 @objc
-enum PluginType: Int, CaseIterable {
+public enum PluginType: Int, CaseIterable {
     case preProcess, onProcess, destination, after, manual
 }
 
 // MARK: - Plugin
-protocol Plugin: AnyObject {
+public protocol Plugin: AnyObject {
     var pluginType: PluginType { get set }
     var analytics: AnalyticsClient? { get set }
     

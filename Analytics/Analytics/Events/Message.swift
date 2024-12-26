@@ -11,7 +11,7 @@ import Foundation
 /**
  This is base protocol for all events.
  */
-protocol Message: Codable {
+public protocol Message: Codable {
     var anonymousId: String? { get set }
     var channel: String? { get set }
     var integrations: [String: Bool]? { get set }
@@ -172,7 +172,7 @@ struct FlushEvent: Message {
 /**
  Enum values used to specify the type of message event.
  */
-enum EventType: String, CaseIterable, Codable {
+public enum EventType: String, CaseIterable, Codable {
     case track, screen, group, flush
     
     public var label: String {
