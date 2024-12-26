@@ -54,6 +54,13 @@ extension AnalyticsClient {
     }
 }
 
+// MARK: - Plugin
+extension AnalyticsClient {
+    public func addPlugin(_ plugin: Plugin) {
+        self.pluginChain.add(plugin: plugin)
+    }
+}
+
 // MARK: - Private functions
 extension AnalyticsClient {
     private func setup() {
