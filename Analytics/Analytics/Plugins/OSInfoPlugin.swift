@@ -20,7 +20,7 @@ final class OSInfoPlugin: Plugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return event.appendToContext(info: ["os": self.preparedOSInfo])
+        return event.addToContext(info: ["os": self.preparedOSInfo])
     }
     
     private var preparedOSInfo: [String: Any] = {
