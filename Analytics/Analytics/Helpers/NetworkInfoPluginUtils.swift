@@ -14,20 +14,44 @@ import Network
  */
 final class NetworkInfoPluginUtils: NSObject {
     var isBluetoothEnabled = false
+    var isBluetoothInitialized: Bool = false
     var bluetoothManager: CBCentralManager?
     var networkMonitor: NetworkMonitorProtocol
     
     init(monitor: NetworkMonitorProtocol = NetworkMonitor()) {
         self.networkMonitor = monitor
         super.init()
-        self.bluetoothManager = CBCentralManager(delegate: self, queue: nil)
+        self.initializeBluetooth()
     }
 }
 
 // MARK: - Bluetooth
 extension NetworkInfoPluginUtils: CBCentralManagerDelegate {
+    
+    var canInitializeBluetooth: Bool {
+        #if os(iOS) || os(watchOS) || os(visionOS)
+            let permissionKey = "NSBluetoothAlwaysUsageDescription"
+        #elseif os(macOS)
+            let permissionKey = "NSBluetoothPeripheralUsageDescription"
+        #else
+            return false
+        #endif
+
+        guard Bundle.main.object(forInfoDictionaryKey: permissionKey) != nil else {
+            print("\(permissionKey) is missing. Skipping Bluetooth initialization.")
+            return false
+        }
+        return true
+    }
+    
     var isBluetoothAvailable: Bool {
-        return CBManager.authorization == .allowedAlways
+        return self.isBluetoothInitialized && CBManager.authorization == .allowedAlways
+    }
+    
+    func initializeBluetooth() {
+        guard self.canInitializeBluetooth else { return }
+        self.bluetoothManager = CBCentralManager(delegate: self, queue: nil)
+        self.isBluetoothInitialized = true
     }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -45,9 +69,9 @@ extension NetworkInfoPluginUtils {
         wifi = path.usesInterfaceType(.wifi)
         
         #if os(iOS) || os(macOS) || os(watchOS)
-        cellular = path.usesInterfaceType(.cellular)
+            cellular = path.usesInterfaceType(.cellular)
         #else
-        cellular = false
+            cellular = false
         #endif
         
         return (cellular, wifi)
