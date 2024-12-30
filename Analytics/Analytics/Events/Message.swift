@@ -38,9 +38,9 @@ extension Message {
     }
     
     /**
-     This function will append the context info to the message payload
+     This function will add the context info to the message payload
      */
-    func appendToContext(info: [String: Any]) -> any Message {
+    func addToContext(info: [String: Any]) -> any Message {
         var mutableSelf = self
         mutableSelf.context = (mutableSelf.context ?? [:]) + info.mapValues { AnyCodable($0) }
         return mutableSelf
