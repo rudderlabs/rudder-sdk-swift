@@ -11,7 +11,7 @@ import Foundation
 /**
  The interface of the storage module, capable of handling both `KeyValueStore` and `DataStore` objects.
  */
-final public class BasicStorage: Storage {
+final class BasicStorage: Storage {
     
     let writeKey: String
     let storageMode: StorageMode
