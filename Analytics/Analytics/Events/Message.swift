@@ -38,7 +38,7 @@ extension Message {
     }
     
     /**
-     This function will append the context info to the message payload
+     This function will add the context info to the message payload
      */
     func addToContext(info: [String: Any]) -> any Message {
         var mutableSelf = self
