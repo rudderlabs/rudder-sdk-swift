@@ -20,7 +20,7 @@ final class LibraryInfoPlugin: Plugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return event.append(info: ["library": self.preparedLibraryInfo])
+        return event.addToContext(info: ["library": self.preparedLibraryInfo])
     }
     
     private var preparedLibraryInfo: [String: Any] = {

@@ -21,7 +21,7 @@ final class LocaleInfoPlugin: Plugin {
     
     func execute(event: any Message) -> (any Message)? {
         guard let localeInfo = self.preparedLocaleInfo else { return event }
-        return event.append(info: ["locale": localeInfo])
+        return event.addToContext(info: ["locale": localeInfo])
     }
     
     private var preparedLocaleInfo: String? {
