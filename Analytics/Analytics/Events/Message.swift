@@ -106,37 +106,6 @@ extension Message {
     }
 }
 
-// MARK: - TrackEvent
-/**
- This model is based on the `Message` protocol and is designed for creating `Track` events.
- */
-struct TrackEvent: Message {
-    var type: EventType = .track
-    var messageId: String = .randomUUIDString
-    var originalTimeStamp: String = .currentTimeStamp
-    
-    var anonymousId: String?
-    var channel: String?
-    var integrations: [String: Bool]?
-    var sentAt: String?
-    var context: [String: AnyCodable]?
-    var traits: CodableCollection?
-    
-    var event: String
-    var properties: CodableCollection?
-    
-    init(event: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        self.event = event
-        self.properties = CodableCollection(dictionary: properties)
-        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
-        
-        self.context = options?.customContext?.isEmpty == false ?
-        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-        
-        self.addDefaultValues()
-    }
-}
-
 // MARK: - ScreenEvent
 /**
  This model is based on the `Message` protocol and is designed for creating `Screen` events.
