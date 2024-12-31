@@ -106,29 +106,6 @@ extension Message {
     }
 }
 
-// MARK: - FlushEvent
-/**
- This model is based on the `Message` protocol and is designed for creating `Flush` events.
- */
-struct FlushEvent: Message {
-    var type: EventType = .flush
-    var messageId: String = .randomUUIDString
-    var originalTimeStamp: String = .currentTimeStamp
-    
-    var anonymousId: String?
-    var channel: String?
-    var integrations: [String: Bool]?
-    var sentAt: String?
-    var context: [String: AnyCodable]?
-    var traits: CodableCollection?
-    
-    var messageName: String
-    
-    init(messageName: String) {
-        self.messageName = messageName
-    }
-}
-
 // MARK: - EventType
 /**
  Represents the type of events supported by the analytics system.
