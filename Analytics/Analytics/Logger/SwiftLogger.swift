@@ -81,6 +81,40 @@ public protocol Logger {
     func error(tag: String, log: String)
 }
 
+public extension Logger {
+    /**
+     The current log level of the logger.
+     */
+    var currentLogLevel: LogLevel {
+        get { .none }
+    }
+
+    /**
+     Activates the logger with the specified log level.
+     */
+    func activate(level: LogLevel) {}
+
+    /**
+     Logs an informational message.
+     */
+    func info(tag: String, log: String) {}
+
+    /**
+     Logs a debug message.
+     */
+    func debug(tag: String, log: String) {}
+
+    /**
+     Logs a warning message.
+     */
+    func warn(tag: String, log: String) {}
+
+    /**
+     Logs an error message.
+     */
+    func error(tag: String, log: String) {}
+}
+
 // MARK: - SwiftLogger
 
 /**
