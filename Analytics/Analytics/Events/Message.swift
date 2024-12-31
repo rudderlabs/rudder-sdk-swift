@@ -106,36 +106,6 @@ extension Message {
     }
 }
 
-// MARK: - GroupEvent
-/**
- This model is based on the `Message` protocol and is designed for creating `Group` events.
- */
-struct GroupEvent: Message {
-    var type: EventType = .group
-    var messageId: String = .randomUUIDString
-    var originalTimeStamp: String = .currentTimeStamp
-    
-    var anonymousId: String?
-    var channel: String?
-    var integrations: [String: Bool]?
-    var sentAt: String?
-    var context: [String: AnyCodable]?
-    
-    var groupId: String
-    var traits: CodableCollection?
-    
-    init(groupId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
-        self.groupId = groupId
-        self.addDefaultValues()
-        
-        self.traits = CodableCollection(dictionary: traits)
-        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
-        
-        self.context = options?.customContext?.isEmpty == false ?
-        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-    }
-}
-
 // MARK: - FlushEvent
 /**
  This model is based on the `Message` protocol and is designed for creating `Flush` events.
