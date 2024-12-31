@@ -106,43 +106,6 @@ extension Message {
     }
 }
 
-// MARK: - ScreenEvent
-/**
- This model is based on the `Message` protocol and is designed for creating `Screen` events.
- */
-struct ScreenEvent: Message {
-    var type: EventType = .screen
-    var messageId: String = .randomUUIDString
-    var originalTimeStamp: String = .currentTimeStamp
-    
-    var anonymousId: String?
-    var channel: String?
-    var integrations: [String: Bool]?
-    var sentAt: String?
-    var context: [String: AnyCodable]?
-    var traits: CodableCollection?
-    
-    var event: String
-    var category: String?
-    var properties: CodableCollection?
-    
-    init(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        self.event = screenName
-        
-        var updatedProperties = properties ?? RudderProperties()
-        updatedProperties["category"] = category?.isEmpty ?? true ? nil : category
-        updatedProperties["name"] = screenName.isEmpty ? nil : screenName
-        
-        self.properties = CodableCollection(dictionary: updatedProperties)
-        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
-        
-        self.context = options?.customContext?.isEmpty == false ?
-            options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-        
-        self.addDefaultValues()
-    }
-}
-
 // MARK: - GroupEvent
 /**
  This model is based on the `Message` protocol and is designed for creating `Group` events.
