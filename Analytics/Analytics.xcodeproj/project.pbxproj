@@ -72,6 +72,9 @@
 		53F864B82D23EB960078D68E /* ScreenEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864B72D23EB960078D68E /* ScreenEvent.swift */; };
 		53F864BA2D23EC430078D68E /* GroupEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864B92D23EC430078D68E /* GroupEvent.swift */; };
 		53F864BC2D23ECAE0078D68E /* FlushEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864BB2D23ECAE0078D68E /* FlushEvent.swift */; };
+		53F864BE2D26EAE00078D68E /* CountFlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864BD2D26EAE00078D68E /* CountFlushPolicy.swift */; };
+		53F864C02D26EB330078D68E /* FrequencyFlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864BF2D26EB330078D68E /* FrequencyFlushPolicy.swift */; };
+		53F864C22D26EBE70078D68E /* StartupFlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864C12D26EBE70078D68E /* StartupFlushPolicy.swift */; };
 		53FD37772CB1B0C700DBA06B /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37732CB1B0C700DBA06B /* Plugin.swift */; };
 		53FD37782CB1B0C700DBA06B /* PluginChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37742CB1B0C700DBA06B /* PluginChain.swift */; };
 		53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37752CB1B0C700DBA06B /* PluginInteractor.swift */; };
@@ -157,6 +160,9 @@
 		53F864B72D23EB960078D68E /* ScreenEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenEvent.swift; sourceTree = "<group>"; };
 		53F864B92D23EC430078D68E /* GroupEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEvent.swift; sourceTree = "<group>"; };
 		53F864BB2D23ECAE0078D68E /* FlushEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushEvent.swift; sourceTree = "<group>"; };
+		53F864BD2D26EAE00078D68E /* CountFlushPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountFlushPolicy.swift; sourceTree = "<group>"; };
+		53F864BF2D26EB330078D68E /* FrequencyFlushPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyFlushPolicy.swift; sourceTree = "<group>"; };
+		53F864C12D26EBE70078D68E /* StartupFlushPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupFlushPolicy.swift; sourceTree = "<group>"; };
 		53FD37732CB1B0C700DBA06B /* Plugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		53FD37742CB1B0C700DBA06B /* PluginChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginChain.swift; sourceTree = "<group>"; };
 		53FD37752CB1B0C700DBA06B /* PluginInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginInteractor.swift; sourceTree = "<group>"; };
@@ -188,6 +194,9 @@
 			isa = PBXGroup;
 			children = (
 				5304C9172CD3FF37003AFCC2 /* FlushPolicy.swift */,
+				53F864C12D26EBE70078D68E /* StartupFlushPolicy.swift */,
+				53F864BD2D26EAE00078D68E /* CountFlushPolicy.swift */,
+				53F864BF2D26EB330078D68E /* FrequencyFlushPolicy.swift */,
 			);
 			path = Policies;
 			sourceTree = "<group>";
@@ -557,6 +566,8 @@
 				53C52C772CE34FF400A2BD31 /* MessageOptions.swift in Sources */,
 				5304C9182CD3FF37003AFCC2 /* FlushPolicy.swift in Sources */,
 				53FD377D2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift in Sources */,
+				53F864C22D26EBE70078D68E /* StartupFlushPolicy.swift in Sources */,
+				53F864BE2D26EAE00078D68E /* CountFlushPolicy.swift in Sources */,
 				5388D5B12D0C203C000966AB /* AppInfoPlugin.swift in Sources */,
 				53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */,
 				53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */,
@@ -565,6 +576,7 @@
 				5388D5A52D0A12AD000966AB /* OSInfoPlugin.swift in Sources */,
 				539E54042C98B05300982E95 /* StorageModels.swift in Sources */,
 				5388D5A92D0A1364000966AB /* TimeZoneInfoPlugin.swift in Sources */,
+				53F864C02D26EB330078D68E /* FrequencyFlushPolicy.swift in Sources */,
 				53A22A502C7C904E0059D6FE /* Helpers.swift in Sources */,
 				533485972C9B6FFB0029F88E /* PropertyWrappers.swift in Sources */,
 				5387E8972CA3233000DB1C49 /* HttpClient.swift in Sources */,
