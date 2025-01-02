@@ -19,7 +19,7 @@ final class BasicStorage: Storage {
     private let keyValueStore: KeyValueStore
     private let dataStore: any DataStore
     
-    public init(writeKey: String, storageMode: StorageMode = Constants.defaultStorageMode) {
+    init(writeKey: String, storageMode: StorageMode = Constants.defaultStorageMode) {
         self.writeKey = writeKey
         self.storageMode = storageMode
         
@@ -27,7 +27,7 @@ final class BasicStorage: Storage {
         self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
-    public var eventStorageMode: StorageMode {
+    var eventStorageMode: StorageMode {
         return self.storageMode
     }
 }
@@ -38,19 +38,19 @@ final class BasicStorage: Storage {
  */
 extension BasicStorage {
     
-    public func write(message: String) async {
+    func write(message: String) async {
         await self.dataStore.retain(value: message)
     }
     
-    public func read() async -> MessageDataResult {
+    func read() async -> MessageDataResult {
         return await MessageDataResult(dataItems: self.dataStore.retrieve())
     }
     
-    public func remove(messageReference: String) async -> Bool {
+    func remove(messageReference: String) async -> Bool {
         return await self.dataStore.remove(reference: messageReference)
     }
     
-    public func rollover() async {
+    func rollover() async {
         await self.dataStore.rollover()
     }
 }
@@ -60,15 +60,15 @@ extension BasicStorage {
  Implementation of the `KeyValueStorage` protocol.
  */
 extension BasicStorage {
-    public func write<T: Codable>(value: T, key: String) {
+    func write<T: Codable>(value: T, key: String) {
         self.keyValueStore.save(value: value, reference: key)
     }
     
-    public func read<T: Codable>(key: String) -> T? {
+    func read<T: Codable>(key: String) -> T? {
         return self.keyValueStore.read(reference: key)
     }
     
-    public func remove(key: String) {
+    func remove(key: String) {
         self.keyValueStore.delete(reference: key)
     }
 }
