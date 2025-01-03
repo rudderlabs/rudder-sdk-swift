@@ -22,7 +22,7 @@ final actor DiskStore {
     }
     
     private func store(message: String) {
-        var currentFilePath = self.currentFileURL.path()
+        var currentFilePath = self.currentFileURL.path
         var newFile = false
         if !FileManager.default.fileExists(atPath: currentFilePath) {
             guard let filePath = FileManager.createFile(at: currentFilePath), self.writeTo(file: self.currentFileURL, content: Constants.batchPrefix) else { return }
@@ -42,7 +42,7 @@ final actor DiskStore {
     }
     
     private func finish() {
-        let currentFilePath = self.currentFileURL.path()
+        let currentFilePath = self.currentFileURL.path
         guard FileManager.default.fileExists(atPath: currentFilePath) else { return }
         
         let content = Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
@@ -53,12 +53,12 @@ final actor DiskStore {
     
     private func collectFiles() -> [String] {
         let directory = self.currentFileURL.deletingLastPathComponent()
-        return FileManager.contentsOf(directory: directory.path())
+        return FileManager.contentsOf(directory: directory.path)
             .filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }
-            .map { directory.appendingPathComponent($0.path()).path }
+            .map { directory.appendingPathComponent($0.path).path }
             .sorted {
-                let idx1 = Int($0.split(separator: Constants.fileNameSeparator).last ?? "") ?? 0
-                let idx2 = Int($1.split(separator: Constants.fileNameSeparator).last ?? "") ?? 0
+                let idx1 = Int($0.components(separatedBy: Constants.fileNameSeparator).last ?? "") ?? 0
+                let idx2 = Int($1.components(separatedBy: Constants.fileNameSeparator).last ?? "") ?? 0
                 return idx1 < idx2
             }
     }
@@ -78,7 +78,7 @@ extension DiskStore {
     }
     
     private var currentFileURL: URL {
-        return self.fileStorageURL.appending(path: self.writeKey + "\(Constants.fileNameSeparator)\(self.currentFileIndex)").appendingPathExtension(Constants.fileType)
+        return self.fileStorageURL.appendingPathComponent(self.writeKey + "\(Constants.fileNameSeparator)\(self.currentFileIndex)").appendingPathExtension(Constants.fileType)
     }
     
     private func incrementFileIndex() {
@@ -88,7 +88,7 @@ extension DiskStore {
     @discardableResult
     private func writeTo(file: URL, content: String) -> Bool {
         do {
-            if FileManager.default.fileExists(atPath: file.path()) {
+            if FileManager.default.fileExists(atPath: file.path) {
                 let fileHandler = try FileHandle(forWritingTo: file)
                 try fileHandler.seekToEnd()
                 

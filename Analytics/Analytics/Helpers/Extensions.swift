@@ -63,7 +63,7 @@ extension UserDefaults {
 extension FileManager {
     static var eventStorageURL: URL {
         let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let storageURL = directory[0].appending(path: "rudder/analytics/events", directoryHint: .isDirectory)
+        let storageURL = directory[0].appendingPathComponent("rudder/analytics/events", isDirectory: true)
         
         try? FileManager.default.createDirectory(at: storageURL, withIntermediateDirectories: true, attributes: nil)
         return storageURL
@@ -84,7 +84,7 @@ extension FileManager {
     static func removePathExtension(from filePath: String) -> Bool {
         let fileUrl = URL(fileURLWithPath: filePath)
         do {
-            try FileManager.default.moveItem(atPath: fileUrl.path(), toPath: fileUrl.deletingPathExtension().path())
+            try FileManager.default.moveItem(atPath: fileUrl.path, toPath: fileUrl.deletingPathExtension().path)
             return true
         } catch {
             return false
