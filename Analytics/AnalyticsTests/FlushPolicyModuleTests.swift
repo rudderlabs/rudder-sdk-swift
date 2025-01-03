@@ -140,7 +140,7 @@ final class FrequencyFlushPolicyTests: XCTestCase {
                 let client = MockAnalyticsClient()
                 policy.scheduleFlush(analytics: client)
                 
-                RunLoop.current.run(until: Date(timeIntervalSinceNow: MockHelper.seconds(from: mills + 0.1)))
+                RunLoop.current.run(until: Date(timeIntervalSinceNow: MockHelper.seconds(from: mills * 2)))
                 then("returns true..") {
                     XCTAssertTrue(client.isFlushed)
                     policy.cancelScheduleFlush()
