@@ -25,14 +25,19 @@ final class LocaleInfoPlugin: Plugin {
     }
     
     private var preparedLocaleInfo: String? {
+        let locale = Locale.current
+        let languageCode: String?
+        let regionCode: String?
+        
         if #available(iOS 16.0, *) {
-            let locale = Locale.current
-            guard let languageCode = locale.language.languageCode?.identifier, let regionCode = locale.region?.identifier else { return nil }
-            return "\(languageCode)-\(regionCode)"
+            languageCode = locale.language.languageCode?.identifier
+            regionCode = locale.region?.identifier
         } else {
-            let locale = Locale.current
-            guard let languageCode = locale.languageCode, let regionCode = locale.regionCode else { return nil }
-            return "\(languageCode)-\(regionCode)"
+            languageCode = locale.languageCode
+            regionCode = locale.regionCode
         }
+        
+        guard let language = languageCode, let region = regionCode else { return nil }
+        return "\(language)-\(region)"
     }
 }
