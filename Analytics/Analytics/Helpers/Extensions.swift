@@ -29,6 +29,11 @@ extension String {
     var trimmedUrlString: String {
         return self.hasSuffix("/") ? String(self.dropLast()) : self
     }
+    
+    var toDictionary: [String: Any]? {
+        guard let data = self.utf8Data else { return nil }
+        return try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+    }
 }
 
 // MARK: - DateFormatter
@@ -170,6 +175,13 @@ extension Data {
     var prettyPrintedString: String? {
         guard let dict = try? JSONSerialization.jsonObject(with: self, options: []) as? [String: Any], let prettyData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted), let pretty = prettyData.jsonString else { return nil }
         return pretty
+    }
+}
+
+// MARK: - [String: Any]
+extension [String: Any] {
+    var jsonString: String? {
+        return try? JSONSerialization.data(withJSONObject: self, options: []).jsonString
     }
 }
 
