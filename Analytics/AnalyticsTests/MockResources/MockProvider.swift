@@ -157,6 +157,8 @@ class MockNetworkMonitor: NetworkMonitorProtocol {
     }
 }
 
+// MARK: - MockKeyValueStorage
+
 class MockKeyValueStorage: KeyValueStorage {
     
     private var userDefaults: UserDefaults?
@@ -167,7 +169,7 @@ class MockKeyValueStorage: KeyValueStorage {
     
     deinit {
         for key in self.userDefaults?.dictionaryRepresentation().keys ?? [:].keys {
-            self.userDefaults?.removeObject(forKey: key)
+            self.remove(key: key)
         }
         self.userDefaults?.synchronize()
         self.userDefaults = nil
