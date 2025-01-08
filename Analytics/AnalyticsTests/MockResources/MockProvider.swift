@@ -161,7 +161,7 @@ class MockNetworkMonitor: NetworkMonitorProtocol {
 }
 
 // MARK: - MockFlowAction
-struct MockFlowAction<T>: Action {
+struct MockFlowAction<T>: StateAction {
     let mockReduce: (T) -> T
 
     func reduce(currentState: T) -> T {

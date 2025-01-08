@@ -19,7 +19,7 @@ protocol State: AnyObject {
     /**
      Dispatches an action to update the state.
      */
-    func dispatch<ActionType: Action>(action: ActionType) where ActionType.T == T
+    func dispatch<ActionType: StateAction>(action: ActionType) where ActionType.T == T
 }
 
 /**
@@ -34,9 +34,9 @@ func createFlowState<T>(initialState: T) -> StateImpl<T> {
 /**
  A protocol that represents an action that can modify the state.
 
- The `Action` protocol defines a generic interface for actions that transform the current state into a new state.
+ The `StateAction` protocol defines a generic interface for actions that transform the current state into a new state.
  */
-protocol Action {
+protocol StateAction {
     
     associatedtype T
     /**
@@ -64,7 +64,7 @@ class StateImpl<T>: State {
     /**
      Dispatches an action to update the state.
      */
-    func dispatch<ActionType: Action>(action: ActionType) where ActionType.T == T {
+    func dispatch<ActionType: StateAction>(action: ActionType) where ActionType.T == T {
         let currentState = state.value
         let newState = action.reduce(currentState: currentState)
         state.send(newState)
