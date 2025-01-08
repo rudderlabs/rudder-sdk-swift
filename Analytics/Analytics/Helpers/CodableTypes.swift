@@ -8,7 +8,18 @@
 import Foundation
 
 // MARK: - CodableCollection
+/**
+ A type that supports encoding and decoding collections of heterogeneous data.
 
+ The `CodableCollection` struct is designed to handle both arrays and dictionaries with elements of varying types, enabling flexible encoding and decoding of complex data structures. This is particularly useful for handling dynamic JSON payloads.
+
+ - Features:
+   - Supports encoding and decoding of arrays and dictionaries.
+   - Handles mixed data types through the use of `AnyCodable`.
+
+ - Usage:
+   Use the provided initializers to create instances with either an array or a dictionary. When encoding, the type of collection is preserved, and decoding automatically determines whether the collection is an array or a dictionary.
+ */
 public struct CodableCollection: Codable {
     public var array: [AnyCodable]?
     public var dictionary: [String: AnyCodable]?
@@ -56,9 +67,24 @@ public struct CodableCollection: Codable {
 }
 
 // MARK: - AnyCodable
+/**
+ A wrapper type to enable encoding and decoding of heterogeneous data.
 
+ The `AnyCodable` struct encapsulates a value of any type, providing support for encoding and decoding into and from JSON. This makes it possible to handle dynamic and mixed data types in scenarios where the structure of the data isn't known at compile time.
+
+ - Features:
+   - Supports a wide range of data types, including primitives, arrays, and dictionaries.
+   - Handles encoding and decoding of custom types like `Date` and `CGFloat`.
+   - Useful for dynamic JSON serialization and deserialization.
+
+ - Usage:
+   Initialize with any value and encode or decode it as needed. When decoding, it determines the type dynamically based on the JSON structure.
+
+ - Note:
+   Unsupported types during encoding or decoding will throw an error.
+ */
 public struct AnyCodable: Codable {
-    let value: Any
+    public let value: Any
     
     public init(_ value: Any) {
         self.value = value

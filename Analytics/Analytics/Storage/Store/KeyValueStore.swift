@@ -10,7 +10,7 @@ import Foundation
 /**
  This class is designed to store and retrieve values using a custom UserDefaults object.
  */
-final public class KeyValueStore {
+final class KeyValueStore {
     private let writeKey: String
     private let userDefaults: UserDefaults?
     

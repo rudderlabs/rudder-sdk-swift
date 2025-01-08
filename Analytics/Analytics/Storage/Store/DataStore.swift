@@ -11,7 +11,8 @@ import Foundation
 /**
  A unified protocol designed to manage both disk and memory storage through dependency injection.
  */
-public protocol DataStore {
+
+protocol DataStore {
     func retain(value: String) async
     func retrieve() async -> [MessageDataItem]
     func remove(reference: String) async -> Bool
