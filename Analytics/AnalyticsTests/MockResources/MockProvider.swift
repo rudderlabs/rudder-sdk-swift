@@ -156,3 +156,60 @@ class MockNetworkMonitor: NetworkMonitorProtocol {
         // Simulate cancel behavior
     }
 }
+
+class MockKeyValueStorage: KeyValueStorage {
+    
+    private var userDefaults: UserDefaults?
+    
+    init() {
+        self.userDefaults = UserDefaults(suiteName: "MockKeyValueStorage")
+    }
+    
+    deinit {
+        for key in self.userDefaults?.dictionaryRepresentation().keys ?? [:].keys {
+            self.userDefaults?.removeObject(forKey: key)
+        }
+        self.userDefaults?.synchronize()
+        self.userDefaults = nil
+    }
+    
+    func write<T>(value: T, key: String) where T : Decodable, T : Encodable {
+        if self.isPrimitiveType(value) {
+            self.userDefaults?.set(value, forKey: key)
+        } else {
+            guard let encodedData = try? JSONEncoder().encode(value) else { return }
+            self.userDefaults?.set(encodedData, forKey: key)
+        }
+        self.userDefaults?.synchronize()
+    }
+    
+    func read<T>(key: String) -> T? where T : Decodable, T : Encodable {
+        var result: T? = nil
+        let rawValue = self.userDefaults?.object(forKey: key)
+        if let rawData = rawValue as? Data {
+            guard let decodedValue = try? JSONDecoder().decode(T.self, from: rawData) else { return nil }
+            result = decodedValue
+        } else {
+            result = rawValue as? T
+        }
+        return result
+    }
+    
+    func remove(key: String) {
+        self.userDefaults?.removeObject(forKey: key)
+        self.userDefaults?.synchronize()
+    }
+    
+    private func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
+        guard let value = value else { return true } //Since nil is also a primitive, & can be set to UserDefaults..
+        
+        return switch value {
+        case is Int, is Double, is Float, is NSNumber, is Bool, is String, is Character,
+            is [Int], is [Double], is [Float], is [NSNumber], is [Bool], is [String], is [Character]:
+            true
+        default:
+            false
+        }
+    }
+}
+
