@@ -9,36 +9,95 @@ import Foundation
 
 // MARK: - Message
 /**
- This is base protocol for all events.
+ A base protocol for all events in the analytics system.
+
+ The `Message` protocol defines the common properties and behaviors required for all types of event messages.
+ It conforms to the `Codable` protocol, enabling easy encoding and decoding for storage or network transmission.
  */
-protocol Message: Codable {
+public protocol Message: Codable {
+
+    // MARK: - Properties
+
+    /**
+     The unique identifier for an anonymous user.
+     
+     This property is optional and may be used to track events for anonymous users.
+     */
     var anonymousId: String? { get set }
+
+    /**
+     The channel through which the event was triggered.
+     */
     var channel: String? { get set }
+
+    /**
+     A dictionary specifying the integrations involved in this event.
+    */
     var integrations: [String: Bool]? { get set }
+
+    /**
+     The timestamp when the event was sent, in ISO 8601 format.
+     */
     var sentAt: String? { get set }
+
+    /**
+     Additional contextual information associated with the event.
+     
+     The context is represented as a dictionary of key-value pairs, where values are of type `AnyCodable`.
+     */
     var context: [String: AnyCodable]? { get set }
+
+    /**
+     A collection of traits or attributes associated with the event.
+     
+     These traits can be user properties or additional metadata.
+     */
     var traits: CodableCollection? { get set }
-    
+
+    /**
+     The type of event, defined by the `EventType` enumeration.
+     */
     var type: EventType { get set }
+
+    /**
+     A unique identifier for the message.
+     
+     This ensures each message can be tracked individually.
+     */
     var messageId: String { get set }
+
+    /**
+     The original timestamp when the event occurred, in ISO 8601 format.
+     */
     var originalTimeStamp: String { get set }
 }
 
 extension Message {
+
     /**
-     This function will serve as a shared utility for adding default or standard values.
+     Adds default or standard values to the `Message` object.
+
+     It ensures that each event has consistent base data.
+
+     - Note: The `anonymousId` generation is a placeholder and may be updated in the future.
      */
     mutating func addDefaultValues() {
         self.channel = Constants.defaultChannel
         self.sentAt = Constants.defaultSentAtPlaceholder
-        
-        // TODO: Needs to be modified in future..
+
+        // TODO: Needs to be modified in the future.
         self.anonymousId = .randomUUIDString
-        //context
     }
-    
+
     /**
-     This function will add the context info to the message payload
+     Appends additional context information to the `Message` payload.
+
+     This method takes a dictionary of key-value pairs and merges it with the existing `context` property. The values are wrapped in `AnyCodable` to ensure type compatibility.
+
+     - Parameter info: A dictionary containing context information to append.
+     - Returns: A new `Message` instance with the updated context.
+
+     - Note: If the `context` property is `nil`, it is initialized with the provided context.
      */
     func addToContext(info: [String: Any]) -> any Message {
         var mutableSelf = self
@@ -47,134 +106,32 @@ extension Message {
     }
 }
 
-// MARK: - TrackEvent
-/**
- This model is based on the `Message` protocol and is designed for creating `Track` events.
- */
-struct TrackEvent: Message {
-    var type: EventType = .track
-    var messageId: String = .randomUUIDString
-    var originalTimeStamp: String = .currentTimeStamp
-    
-    var anonymousId: String?
-    var channel: String?
-    var integrations: [String: Bool]?
-    var sentAt: String?
-    var context: [String: AnyCodable]?
-    var traits: CodableCollection?
-    
-    var event: String
-    var properties: CodableCollection?
-    
-    init(event: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        self.event = event
-        self.properties = CodableCollection(dictionary: properties)
-        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
-        
-        self.context = options?.customContext?.isEmpty == false ?
-        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-        
-        self.addDefaultValues()
-    }
-}
-
-// MARK: - ScreenEvent
-/**
- This model is based on the `Message` protocol and is designed for creating `Screen` events.
- */
-struct ScreenEvent: Message {
-    var type: EventType = .screen
-    var messageId: String = .randomUUIDString
-    var originalTimeStamp: String = .currentTimeStamp
-    
-    var anonymousId: String?
-    var channel: String?
-    var integrations: [String: Bool]?
-    var sentAt: String?
-    var context: [String: AnyCodable]?
-    var traits: CodableCollection?
-    
-    var event: String
-    var category: String?
-    var properties: CodableCollection?
-    
-    init(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        self.event = screenName
-        
-        var updatedProperties = properties ?? RudderProperties()
-        updatedProperties["category"] = category?.isEmpty ?? true ? nil : category
-        updatedProperties["name"] = screenName.isEmpty ? nil : screenName
-        
-        self.properties = CodableCollection(dictionary: updatedProperties)
-        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
-        
-        self.context = options?.customContext?.isEmpty == false ?
-            options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-        
-        self.addDefaultValues()
-    }
-}
-
-// MARK: - GroupEvent
-/**
- This model is based on the `Message` protocol and is designed for creating `Group` events.
- */
-struct GroupEvent: Message {
-    var type: EventType = .group
-    var messageId: String = .randomUUIDString
-    var originalTimeStamp: String = .currentTimeStamp
-    
-    var anonymousId: String?
-    var channel: String?
-    var integrations: [String: Bool]?
-    var sentAt: String?
-    var context: [String: AnyCodable]?
-    
-    var groupId: String
-    var traits: CodableCollection?
-    
-    init(groupId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
-        self.groupId = groupId
-        self.addDefaultValues()
-        
-        self.traits = CodableCollection(dictionary: traits)
-        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
-        
-        self.context = options?.customContext?.isEmpty == false ?
-        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-    }
-}
-
-// MARK: - FlushEvent
-/**
- This model is based on the `Message` protocol and is designed for creating `Flush` events.
- */
-struct FlushEvent: Message {
-    var type: EventType = .flush
-    var messageId: String = .randomUUIDString
-    var originalTimeStamp: String = .currentTimeStamp
-    
-    var anonymousId: String?
-    var channel: String?
-    var integrations: [String: Bool]?
-    var sentAt: String?
-    var context: [String: AnyCodable]?
-    var traits: CodableCollection?
-    
-    var messageName: String
-    
-    init(messageName: String) {
-        self.messageName = messageName
-    }
-}
-
 // MARK: - EventType
 /**
- Enum values used to specify the type of message event.
+ Represents the type of events supported by the analytics system.
+
+ The `EventType` enum defines various event types such as `track`, `screen`, `group`, and `flush`.
+ It conforms to `CaseIterable` for easy iteration and `Codable` for seamless encoding and decoding.
  */
-enum EventType: String, CaseIterable, Codable {
-    case track, screen, group, flush
-    
+public enum EventType: String, CaseIterable, Codable {
+
+    /// Represents a "track" event.
+    case track
+
+    /// Represents a "screen" event.
+    case screen
+
+    /// Represents a "group" event.
+    case group
+
+    /// Represents a "flush" event.
+    case flush
+
+    /**
+     A computed property that returns a human-readable label for the event type.
+
+     - Returns: The event type string with its first letter capitalized.
+     */
     public var label: String {
         return rawValue.capitalized
     }
