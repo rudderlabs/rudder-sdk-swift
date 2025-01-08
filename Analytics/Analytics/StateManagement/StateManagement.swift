@@ -10,16 +10,16 @@ import Combine
 /**
  A protocol that represents a reactive state container.
 
- The `FlowState` protocol defines a generic interface for managing and updating state using actions. It uses a `CurrentValueSubject` to hold the current state and notify subscribers about changes.
+ The `State` protocol defines a generic interface for managing and updating state using actions. It uses a `CurrentValueSubject` to hold the current state and notify subscribers about changes.
  */
-protocol FlowState: AnyObject {
+protocol State: AnyObject {
     
     associatedtype T
     var state: CurrentValueSubject<T, Never> { get }
     /**
      Dispatches an action to update the state.
      */
-    func dispatch<Action: FlowAction>(action: Action) where Action.T == T
+    func dispatch<ActionType: Action>(action: ActionType) where ActionType.T == T
 }
 
 /**
@@ -27,16 +27,16 @@ protocol FlowState: AnyObject {
 
  This function provides a convenient way to create a `FlowStateImpl` instance with the given initial state.
  */
-func createFlowState<T>(initialState: T) -> FlowStateImpl<T> {
-    return FlowStateImpl(initialState: initialState)
+func createFlowState<T>(initialState: T) -> StateImpl<T> {
+    return StateImpl(initialState: initialState)
 }
 
 /**
  A protocol that represents an action that can modify the state.
 
- The `FlowAction` protocol defines a generic interface for actions that transform the current state into a new state.
+ The `Action` protocol defines a generic interface for actions that transform the current state into a new state.
  */
-protocol FlowAction {
+protocol Action {
     
     associatedtype T
     /**
@@ -46,16 +46,16 @@ protocol FlowAction {
 }
 
 /**
- A concrete implementation of the `FlowState` protocol.
+ A concrete implementation of the `State` protocol.
 
- `FlowStateImpl` is a generic class that manages a reactive state container using Combine's `CurrentValueSubject`. It supports dispatching actions to update the state.
+ `StateImpl` is a generic class that manages a reactive state container using Combine's `CurrentValueSubject`. It supports dispatching actions to update the state.
  */
-class FlowStateImpl<T>: FlowState {
+class StateImpl<T>: State {
     typealias T = T
     var state: CurrentValueSubject<T, Never>
 
     /**
-     Initializes a new instance of `FlowStateImpl` with the given initial state.
+     Initializes a new instance of `StateImpl` with the given initial state.
      */
     init(initialState: T) {
         self.state = CurrentValueSubject<T, Never>(initialState)
@@ -64,7 +64,7 @@ class FlowStateImpl<T>: FlowState {
     /**
      Dispatches an action to update the state.
      */
-    func dispatch<Action: FlowAction>(action: Action) where Action.T == T {
+    func dispatch<ActionType: Action>(action: ActionType) where ActionType.T == T {
         let currentState = state.value
         let newState = action.reduce(currentState: currentState)
         state.send(newState)
