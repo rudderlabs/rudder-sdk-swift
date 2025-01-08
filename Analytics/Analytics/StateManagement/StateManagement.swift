@@ -23,11 +23,11 @@ protocol State: AnyObject {
 }
 
 /**
- Creates a new instance of `FlowStateImpl`.
+ Creates a new instance of `StateImpl`.
 
- This function provides a convenient way to create a `FlowStateImpl` instance with the given initial state.
+ This function provides a convenient way to create a `StateImpl` instance with the given initial state.
  */
-func createFlowState<T>(initialState: T) -> StateImpl<T> {
+func createState<T>(initialState: T) -> StateImpl<T> {
     return StateImpl(initialState: initialState)
 }
 
