@@ -41,7 +41,7 @@ final class HttpClient {
     
     private func prepareRequestUrl(for requestType: HttpClientRequestType) -> URL? {
         guard var url = URL(string: requestType.url(analytics).trimmedUrlString) else { return nil }
-        url = url.appending(path: requestType.endpoint)
+        url = url.appendingPathComponent(requestType.endpoint)
         
         if requestType == .configuration {
             url = url.appendQueryParameters(Constants.configQueryParams)
