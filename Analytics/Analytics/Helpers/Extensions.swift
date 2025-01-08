@@ -63,7 +63,7 @@ extension UserDefaults {
 extension FileManager {
     static var eventStorageURL: URL {
         let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let storageURL = directory[0].appending(path: "rudder/analytics/events", directoryHint: .isDirectory)
+        let storageURL = directory[0].appendingPathComponent("rudder/analytics/events", isDirectory: true)
         
         try? FileManager.default.createDirectory(at: storageURL, withIntermediateDirectories: true, attributes: nil)
         return storageURL
@@ -84,7 +84,7 @@ extension FileManager {
     static func removePathExtension(from filePath: String) -> Bool {
         let fileUrl = URL(fileURLWithPath: filePath)
         do {
-            try FileManager.default.moveItem(atPath: fileUrl.path(), toPath: fileUrl.deletingPathExtension().path())
+            try FileManager.default.moveItem(atPath: fileUrl.path, toPath: fileUrl.deletingPathExtension().path)
             return true
         } catch {
             return false
@@ -176,22 +176,22 @@ extension Data {
 // MARK: - Gzip
 
 enum Gzip {
-    public static let maxWindowBits = MAX_WBITS
+    static let maxWindowBits = MAX_WBITS
 }
 
 struct CompressionLevel: RawRepresentable, Sendable {
-    public let rawValue: Int32
-    public static let noCompression = Self(rawValue: Z_NO_COMPRESSION)
-    public static let bestSpeed = Self(rawValue: Z_BEST_SPEED)
-    public static let bestCompression = Self(rawValue: Z_BEST_COMPRESSION)
-    public static let defaultCompression = Self(rawValue: Z_DEFAULT_COMPRESSION)
+    let rawValue: Int32
+    static let noCompression = Self(rawValue: Z_NO_COMPRESSION)
+    static let bestSpeed = Self(rawValue: Z_BEST_SPEED)
+    static let bestCompression = Self(rawValue: Z_BEST_COMPRESSION)
+    static let defaultCompression = Self(rawValue: Z_DEFAULT_COMPRESSION)
     
-    public init(rawValue: Int32) { self.rawValue = rawValue }
+    init(rawValue: Int32) { self.rawValue = rawValue }
 }
 
 struct GzipError: Swift.Error, Sendable {
-    public let message: String
-    public init(code: Int32, msg: UnsafePointer<CChar>?) {
+    let message: String
+    init(code: Int32, msg: UnsafePointer<CChar>?) {
         self.message = msg.flatMap { String(validatingUTF8: $0) } ?? "Unknown gzip error"
     }
 }

@@ -8,9 +8,12 @@
 import Foundation
 // MARK: - MessageManager
 /**
- This class manages messages and their operations, such as storing and uploading them.
+ A class responsible for managing messages and handling their processing, storage, and uploading in the analytics system.
+
+ This class integrates with the analytics client, manages flush policies, and ensures smooth message flow using asynchronous channels.
  */
 final class MessageManager {
+    
     private let analytics: AnalyticsClient
     private let flushPolicyFacade: FlushPolicyFacade
     private let httpClient: HttpClient
@@ -24,13 +27,10 @@ final class MessageManager {
     
     init(analytics: AnalyticsClient) {
         self.analytics = analytics
-        
         self.flushPolicyFacade = FlushPolicyFacade(analytics: analytics)
         self.httpClient = HttpClient(analytics: analytics)
-        
         self.writeChannel = AsyncChannel(capacity: Int.max)
         self.uploadChannel = AsyncChannel(capacity: Int.max)
-        
         self.start()
     }
     
@@ -43,8 +43,7 @@ final class MessageManager {
 extension MessageManager {
     
     private func start() {
-        self.flushPolicyFacade.startSchedule() //Frequency based flush policy..
-        
+        self.flushPolicyFacade.startSchedule()
         self.write()
         self.upload()
     }
@@ -71,7 +70,7 @@ extension MessageManager {
 
 // MARK: - Message Processing
 extension MessageManager {
-    func write(){
+    func write() {
         Task {
             for await message in self.writeChannel.stream {
                 let isFlushSignal = message.type == .flush
@@ -82,7 +81,7 @@ extension MessageManager {
                         self.flushPolicyFacade.updateCount()
                     }
                 }
-                
+
                 if isFlushSignal || self.flushPolicyFacade.shouldFlush() {
                     do {
                         self.flushPolicyFacade.resetCount()
@@ -94,10 +93,9 @@ extension MessageManager {
                 }
             }
         }
-        
     }
     
-    func upload(){
+    func upload() {
         Task {
             for await _ in self.uploadChannel.stream {
                 let dataItems = await self.storage.read().dataItems
