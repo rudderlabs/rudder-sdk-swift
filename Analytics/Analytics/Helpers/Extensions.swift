@@ -29,11 +29,6 @@ extension String {
     var trimmedUrlString: String {
         return self.hasSuffix("/") ? String(self.dropLast()) : self
     }
-    
-    var toDictionary: [String: Any]? {
-        guard let data = self.utf8Data else { return nil }
-        return try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-    }
 }
 
 // MARK: - DateFormatter
@@ -163,13 +158,6 @@ extension URL {
 extension [String: AnyCodable] {
     static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
         return lhs.merging(rhs) { (_, new) in new }
-    }
-}
-
-// MARK: - [String: Any]
-extension [String: Any] {
-    var jsonString: String? {
-        return try? JSONSerialization.data(withJSONObject: self, options: []).jsonString
     }
 }
 
