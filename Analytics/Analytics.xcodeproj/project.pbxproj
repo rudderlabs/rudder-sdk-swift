@@ -65,13 +65,15 @@
 		53C29E722C918F2400F2A8C3 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C29E712C918F2400F2A8C3 /* Storage.swift */; };
 		53C52C772CE34FF400A2BD31 /* MessageOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C52C762CE34FF400A2BD31 /* MessageOptions.swift */; };
 		53C52C792CE486A000A2BD31 /* MessageModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C52C782CE486A000A2BD31 /* MessageModuleTests.swift */; };
+		53C7A7652D2D9CDE00F1325E /* StateManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A7642D2D9CDE00F1325E /* StateManagement.swift */; };
+		53C7A7682D2DA2C400F1325E /* StateManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */; };
+		53C7A76A2D2EEB1800F1325E /* FlushEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864BB2D23ECAE0078D68E /* FlushEvent.swift */; };
 		53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */; };
 		53CF353D2D1050CA0062096B /* NetworkInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */; };
 		53F4B6652CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */; };
 		53F864B62D23EAD30078D68E /* TrackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864B52D23EAD30078D68E /* TrackEvent.swift */; };
 		53F864B82D23EB960078D68E /* ScreenEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864B72D23EB960078D68E /* ScreenEvent.swift */; };
 		53F864BA2D23EC430078D68E /* GroupEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864B92D23EC430078D68E /* GroupEvent.swift */; };
-		53F864BC2D23ECAE0078D68E /* FlushEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864BB2D23ECAE0078D68E /* FlushEvent.swift */; };
 		53F864BE2D26EAE00078D68E /* CountFlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864BD2D26EAE00078D68E /* CountFlushPolicy.swift */; };
 		53F864C02D26EB330078D68E /* FrequencyFlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864BF2D26EB330078D68E /* FrequencyFlushPolicy.swift */; };
 		53F864C22D26EBE70078D68E /* StartupFlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864C12D26EBE70078D68E /* StartupFlushPolicy.swift */; };
@@ -153,6 +155,8 @@
 		53C29E712C918F2400F2A8C3 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		53C52C762CE34FF400A2BD31 /* MessageOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOptions.swift; sourceTree = "<group>"; };
 		53C52C782CE486A000A2BD31 /* MessageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModuleTests.swift; sourceTree = "<group>"; };
+		53C7A7642D2D9CDE00F1325E /* StateManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagement.swift; sourceTree = "<group>"; };
+		53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagementTests.swift; sourceTree = "<group>"; };
 		53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPlugin.swift; sourceTree = "<group>"; };
 		53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPluginTests.swift; sourceTree = "<group>"; };
 		53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushPolicyModuleTests.swift; sourceTree = "<group>"; };
@@ -231,6 +235,7 @@
 				53A22A572C7DC1050059D6FE /* Helpers */,
 				53C29E732C918F2900F2A8C3 /* Storage */,
 				5387E8952CA322EC00DB1C49 /* Network */,
+				53C7A7662D2D9CE400F1325E /* StateManagement */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -332,6 +337,7 @@
 				53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */,
 				5388D5A32D0A10DA000966AB /* PluginTests */,
 				538E2B2B2CEDA5E000B550BC /* EventTests */,
+				53C7A7692D2DA2CB00F1325E /* StateManagementTests */,
 				538E2B202CECFFF700B550BC /* MockResources */,
 			);
 			path = AnalyticsTests;
@@ -419,6 +425,22 @@
 				539E54052C98B05B00982E95 /* StoreModels */,
 			);
 			path = Storage;
+			sourceTree = "<group>";
+		};
+		53C7A7662D2D9CE400F1325E /* StateManagement */ = {
+			isa = PBXGroup;
+			children = (
+				53C7A7642D2D9CDE00F1325E /* StateManagement.swift */,
+			);
+			path = StateManagement;
+			sourceTree = "<group>";
+		};
+		53C7A7692D2DA2CB00F1325E /* StateManagementTests */ = {
+			isa = PBXGroup;
+			children = (
+				53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */,
+			);
+			path = StateManagementTests;
 			sourceTree = "<group>";
 		};
 		53FD37762CB1B0C700DBA06B /* Base */ = {
@@ -569,6 +591,7 @@
 				53F864C22D26EBE70078D68E /* StartupFlushPolicy.swift in Sources */,
 				53F864BE2D26EAE00078D68E /* CountFlushPolicy.swift in Sources */,
 				5388D5B12D0C203C000966AB /* AppInfoPlugin.swift in Sources */,
+				53C7A76A2D2EEB1800F1325E /* FlushEvent.swift in Sources */,
 				53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */,
 				53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */,
 				53F864B62D23EAD30078D68E /* TrackEvent.swift in Sources */,
@@ -583,7 +606,7 @@
 				5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */,
 				53FD37772CB1B0C700DBA06B /* Plugin.swift in Sources */,
 				5346B9E62CF78CBD00934D72 /* DeviceInfoPlugin.swift in Sources */,
-				53F864BC2D23ECAE0078D68E /* FlushEvent.swift in Sources */,
+				53C7A7652D2D9CDE00F1325E /* StateManagement.swift in Sources */,
 				53FD37782CB1B0C700DBA06B /* PluginChain.swift in Sources */,
 				53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */,
 				5388D5B52D0C24A3000966AB /* RSVersion.swift in Sources */,
@@ -605,6 +628,7 @@
 			files = (
 				53859EE72CB66C3200EAE483 /* DataPlaneModuleTests.swift in Sources */,
 				5388D5AF2D0A1EBD000966AB /* TimeZoneInfoPluginTests.swift in Sources */,
+				53C7A7682D2DA2C400F1325E /* StateManagementTests.swift in Sources */,
 				5346B9E82CF8597300934D72 /* DeviceInfoPluginTests.swift in Sources */,
 				538E2B3D2CEE403500B550BC /* GroupEventTests.swift in Sources */,
 				538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */,

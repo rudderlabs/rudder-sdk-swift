@@ -31,6 +31,7 @@ final class MockProvider {
     }
 }
 
+// MARK: - MockProvider(Extension)
 extension MockProvider {
     
     static let simpleTrackEvent: TrackEvent = {
@@ -129,12 +130,14 @@ extension XCTestCase {
     }
 }
 
+// MARK: - String(Extension)
 extension String {
     var trimmed: String {
         return self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 
+// MARK: - MockNetworkMonitor
 class MockNetworkMonitor: NetworkMonitorProtocol {
     var status: NWPath.Status
     var interfaces: [NWInterface.InterfaceType]
@@ -154,5 +157,14 @@ class MockNetworkMonitor: NetworkMonitorProtocol {
     
     func cancel() {
         // Simulate cancel behavior
+    }
+}
+
+// MARK: - MockStateAction
+struct MockStateAction<T>: StateAction {
+    let mockReduce: (T) -> T
+
+    func reduce(currentState: T) -> T {
+        return mockReduce(currentState)
     }
 }
