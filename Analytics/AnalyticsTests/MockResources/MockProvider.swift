@@ -160,11 +160,16 @@ class MockNetworkMonitor: NetworkMonitorProtocol {
     }
 }
 
-// MARK: - MockKeyValueStorage
 // MARK: - MockStateAction
 struct MockStateAction<T>: StateAction {
     let mockReduce: (T) -> T
+    
+    func reduce(currentState: T) -> T {
+        return mockReduce(currentState)
+    }
+}
 
+// MARK: - MockKeyValueStorage
 class MockKeyValueStorage: KeyValueStorage {
     
     private var userDefaults: UserDefaults?
@@ -218,8 +223,5 @@ class MockKeyValueStorage: KeyValueStorage {
         default:
             false
         }
-    func reduce(currentState: T) -> T {
-        return mockReduce(currentState)
     }
 }
-

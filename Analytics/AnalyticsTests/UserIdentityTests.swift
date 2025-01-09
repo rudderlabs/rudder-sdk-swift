@@ -42,6 +42,7 @@ final class UserIdentityTests: XCTestCase {
             guard let storage else { XCTFail("Storage is not initialized."); return }
             
             let expectedAnonymousId = "test-anonymous-id"
+            storage.write(value: expectedAnonymousId, key: StorageKeys.anonymousId)
             
             when("UserIdentity initialized.") {
                 let userIdentity = UserIdentity.initializeState(storage)
