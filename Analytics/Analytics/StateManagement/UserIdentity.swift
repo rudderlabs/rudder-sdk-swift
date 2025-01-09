@@ -16,7 +16,8 @@ import Foundation
  - Methods:
    - `initializeState(_:)`: Creates and initializes a `UserIdentity` instance by reading stored data from a key-value storage.
  */
-public struct UserIdentity {
+
+struct UserIdentity {
     /// A unique identifier for the user when they are not logged in.
     var anonymousId = ""
 
@@ -29,7 +30,7 @@ public struct UserIdentity {
     static func initializeState(_ storage: KeyValueStorage) -> UserIdentity {
         var identity = UserIdentity()
 
-        identity.anonymousId = storage.read(key: StorageKeys.anonymousId) ?? UUID().uuidString
+        identity.anonymousId = storage.read(key: StorageKeys.anonymousId) ?? .randomUUIDString
 
         return identity
     }
