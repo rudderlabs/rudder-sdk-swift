@@ -70,11 +70,6 @@ public protocol Message: Codable {
      The original timestamp when the event occurred, in ISO 8601 format.
      */
     var originalTimeStamp: String { get set }
-    
-    /**
-     Integration settings and custom context data for event messages.
-     */
-    var options: RudderOptions? { get set }
 }
 
 extension Message {
@@ -86,19 +81,12 @@ extension Message {
 
      - Note: The `anonymousId` generation is a placeholder and may be updated in the future.
      */
-    func prepareEventValues() -> Message {
-        var mutableSelf = self
-        mutableSelf.channel = Constants.defaultChannel
-        mutableSelf.sentAt = Constants.defaultSentAtPlaceholder
+    mutating func addDefaultValues() {
+        self.channel = Constants.defaultChannel
+        self.sentAt = Constants.defaultSentAtPlaceholder
 
         // TODO: Needs to be modified in the future.
-        mutableSelf.anonymousId = .randomUUIDString
-        
-        mutableSelf.integrations = self.options == nil ? Constants.defaultIntegration : self.options?.integrations
-        mutableSelf.context = options?.customContext?.isEmpty == false ?
-        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-        
-        return mutableSelf
+        self.anonymousId = .randomUUIDString
     }
 
     /**

@@ -54,9 +54,6 @@ struct ScreenEvent: Message {
     /// Additional properties or metadata for the screen event.
     var properties: CodableCollection?
 
-    /// Integration settings and custom context data for event messages.
-    var options: RudderOptions?
-    
     /**
      Initializes a `ScreenEvent` with the specified screen name, category, properties, and options.
 
@@ -76,22 +73,11 @@ struct ScreenEvent: Message {
         updatedProperties["name"] = screenName.isEmpty ? nil : screenName
         
         self.properties = CodableCollection(dictionary: updatedProperties)
-        self.options = options
+        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
-    }
-    
-    enum CodingKeys: CodingKey {
-        case type
-        case messageId
-        case originalTimeStamp
-        case anonymousId
-        case channel
-        case integrations
-        case sentAt
-        case context
-        case traits
-        case event
-        case category
-        case properties
+        self.context = options?.customContext?.isEmpty == false ?
+            options?.customContext?.compactMapValues { AnyCodable($0) } : nil
+        
+        self.addDefaultValues()
     }
 }

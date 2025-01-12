@@ -51,9 +51,6 @@ struct TrackEvent: Message {
     /// Additional properties or metadata for the event.
     var properties: CodableCollection?
 
-    /// Integration settings and custom context data for event messages.
-    var options: RudderOptions?
-    
     /**
      Initializes a `TrackEvent` with the specified event name, properties, and options.
 
@@ -67,20 +64,11 @@ struct TrackEvent: Message {
     init(event: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         self.event = event
         self.properties = CodableCollection(dictionary: properties)
-        self.options = options
-    }
-    
-    enum CodingKeys: CodingKey {
-        case type
-        case messageId
-        case originalTimeStamp
-        case anonymousId
-        case channel
-        case integrations
-        case sentAt
-        case context
-        case traits
-        case event
-        case properties
+        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
+        
+        self.context = options?.customContext?.isEmpty == false ?
+        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
+        
+        self.addDefaultValues()
     }
 }

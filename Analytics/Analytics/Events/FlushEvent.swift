@@ -49,9 +49,6 @@ struct FlushEvent: Message {
     /// The name of the message, indicating its specific purpose within the system.
     var messageName: String
 
-    /// Integration settings and custom context data for event messages.
-    var options: RudderOptions?
-    
     /**
      Initializes a `FlushEvent` with a specified message name.
 
@@ -59,18 +56,5 @@ struct FlushEvent: Message {
      */
     init(messageName: String) {
         self.messageName = messageName
-    }
-    
-    enum CodingKeys: CodingKey {
-        case type
-        case messageId
-        case originalTimeStamp
-        case anonymousId
-        case channel
-        case integrations
-        case sentAt
-        case context
-        case traits
-        case messageName
     }
 }

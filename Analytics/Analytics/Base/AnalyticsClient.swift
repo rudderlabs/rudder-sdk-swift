@@ -13,23 +13,18 @@ import Foundation
  */
 @objcMembers
 public class AnalyticsClient {
-    
+
     /**
      The configuration object for the analytics client. It contains settings and storage mechanisms
      required for the analytics system.
      */
     public var configuration: Configuration
-    
+
     /**
      The chain of plugins used for processing events and managing additional analytics functionality.
      */
     private var pluginChain: PluginChain!
-    
-    /**
-     A private asynchronous channel for queuing and processing `Message` events.
-     */
-    private var processEventChannel: AsyncChannel<Message>
-    
+
     /**
      Initializes the `AnalyticsClient` with the given configuration.
      
@@ -37,7 +32,6 @@ public class AnalyticsClient {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
-        self.processEventChannel = AsyncChannel(capacity: Int.max)
         self.setup()
     }
 }
@@ -45,47 +39,47 @@ public class AnalyticsClient {
 // MARK: - Events
 
 extension AnalyticsClient {
-    
+
     /**
      Tracks a custom event with the specified name and optional properties and options.
      
      - Parameters:
-     - name: The name of the event to track.
-     - properties: An optional object containing event-specific properties.
-     - options: An optional object for providing additional options.
+       - name: The name of the event to track.
+       - properties: An optional object containing event-specific properties.
+       - options: An optional object for providing additional options.
      */
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         let event = TrackEvent(event: name, properties: properties, options: options)
         self.process(event: event)
     }
-    
+
     /**
      Tracks a screen view event with the specified name, category, and optional properties and options.
      
      - Parameters:
-     - name: The name of the screen.
-     - category: An optional category associated with the screen.
-     - properties: An Optional properties associated with the screen view.
-     - options: An Optional options for additional customization.
+       - name: The name of the screen.
+       - category: An optional category associated with the screen.
+       - properties: An Optional properties associated with the screen view.
+       - options: An Optional options for additional customization.
      */
     public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         let event = ScreenEvent(screenName: name, category: category, properties: properties, options: options)
         self.process(event: event)
     }
-    
+
     /**
      Tracks a group event with the specified group ID, traits, and options.
      
      - Parameters:
-     - id: The unique identifier of the group.
-     - traits: An Optional traits associated with the group.
-     - options: An Optional options for additional customization.
+       - id: The unique identifier of the group.
+       - traits: An Optional traits associated with the group.
+       - options: An Optional options for additional customization.
      */
     public func group(id: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         let event = GroupEvent(groupId: id, traits: traits, options: options)
         self.process(event: event)
     }
-    
+
     /**
      Flushes all pending events by triggering the flush method on all plugins in the plugin chain.
      */
@@ -101,7 +95,7 @@ extension AnalyticsClient {
 // MARK: - Plugin Management
 
 extension AnalyticsClient {
-    
+
     /**
      Adds a custom plugin to the plugin chain for processing events and extending functionality.
      
@@ -115,16 +109,15 @@ extension AnalyticsClient {
 // MARK: - Private Functions
 
 extension AnalyticsClient {
-    
+
     /**
      Sets up the analytics client by collecting configuration data and initializing the plugin chain.
      */
     private func setup() {
-        self.processEvents()
         self.collectConfiguration()
-        
+
         self.pluginChain = PluginChain(analytics: self)
-        
+
         // Add default plugins
         self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
         self.pluginChain.add(plugin: DeviceInfoPlugin())
@@ -136,35 +129,21 @@ extension AnalyticsClient {
         self.pluginChain.add(plugin: LibraryInfoPlugin())
         self.pluginChain.add(plugin: NetworkInfoPlugin())
     }
-    
+
     /**
      Processes an event by passing it through the plugin chain.
      
      - Parameter event: The event to be processed.
      */
     private func process(event: Message) {
-        Task {
-            try await self.processEventChannel.send(event)
-        }
-    }
-    
-    /**
-     Listens to events asynchronously from the `processEventChannel` and passes them to the `pluginChain` for processing.
-     */
-    private func processEvents() {
-        Task {
-            for await message in self.processEventChannel.stream {
-                let event = message.prepareEventValues()
-                self.pluginChain.process(event: event)
-            }
-        }
+        self.pluginChain.process(event: event)
     }
 }
 
 // MARK: - Backend Configuration
 
 extension AnalyticsClient {
-    
+
     /**
      Collects configuration data from the backend and saves it in the storage.
      */
@@ -185,7 +164,7 @@ extension AnalyticsClient {
 // MARK: - Common Variables
 
 extension AnalyticsClient {
-    
+
     /**
      The unique anonymous ID for the user. If not already set, a new UUID is generated and stored.
      */
