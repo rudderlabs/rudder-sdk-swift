@@ -26,12 +26,20 @@ public class AnalyticsClient {
     private var pluginChain: PluginChain!
 
     /**
+     The property used to manage and observe changes to the user's identity state within the application.
+     */
+    var userIdentityState: StateImpl<UserIdentity>
+    
+    /**
      Initializes the `AnalyticsClient` with the given configuration.
      
      - Parameter configuration: The configuration object containing settings and storage details.
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
+        
+        self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
+        
         self.setup()
     }
 }
@@ -49,7 +57,7 @@ extension AnalyticsClient {
        - options: An optional object for providing additional options.
      */
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        let event = TrackEvent(event: name, properties: properties, options: options)
+        let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
 
