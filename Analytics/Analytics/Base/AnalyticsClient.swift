@@ -174,20 +174,14 @@ extension AnalyticsClient {
 extension AnalyticsClient {
 
     /**
-     The unique anonymous ID for the user. If not already set, a new UUID is generated and stored.
+     Retrieves the `anonymousId` from the current user identity state.
+
+     This function accesses the `userIdentityState`'s current value and returns the `anonymousId`
+     property of the `UserIdentity` object.
+
+     - Returns: The `anonymousId` of type `String` from the current user identity state.
      */
-    var anonymousId: String {
-        get {
-            if let id: String = self.configuration.storage.read(key: StorageKeys.anonymousId) {
-                return id
-            } else {
-                let newId = UUID().uuidString
-                self.configuration.storage.write(value: newId, key: StorageKeys.anonymousId)
-                return newId
-            }
-        }
-        set {
-            self.configuration.storage.write(value: newValue, key: StorageKeys.anonymousId)
-        }
+    func getAnonymousId() -> String {
+        return self.userIdentityState.state.value.anonymousId
     }
 }
