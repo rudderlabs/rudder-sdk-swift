@@ -68,6 +68,8 @@
 		53C7A7652D2D9CDE00F1325E /* StateManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A7642D2D9CDE00F1325E /* StateManagement.swift */; };
 		53C7A7682D2DA2C400F1325E /* StateManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */; };
 		53C7A76A2D2EEB1800F1325E /* FlushEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864BB2D23ECAE0078D68E /* FlushEvent.swift */; };
+		53C7A76C2D2EEE3200F1325E /* UserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A76B2D2EEE3200F1325E /* UserIdentity.swift */; };
+		53C7A76E2D2EF2A200F1325E /* UserIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A76D2D2EF2A200F1325E /* UserIdentityTests.swift */; };
 		53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */; };
 		53CF353D2D1050CA0062096B /* NetworkInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */; };
 		53F4B6652CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */; };
@@ -157,6 +159,8 @@
 		53C52C782CE486A000A2BD31 /* MessageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModuleTests.swift; sourceTree = "<group>"; };
 		53C7A7642D2D9CDE00F1325E /* StateManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagement.swift; sourceTree = "<group>"; };
 		53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagementTests.swift; sourceTree = "<group>"; };
+		53C7A76B2D2EEE3200F1325E /* UserIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdentity.swift; sourceTree = "<group>"; };
+		53C7A76D2D2EF2A200F1325E /* UserIdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdentityTests.swift; sourceTree = "<group>"; };
 		53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPlugin.swift; sourceTree = "<group>"; };
 		53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPluginTests.swift; sourceTree = "<group>"; };
 		53F4B6642CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushPolicyModuleTests.swift; sourceTree = "<group>"; };
@@ -431,6 +435,7 @@
 			isa = PBXGroup;
 			children = (
 				53C7A7642D2D9CDE00F1325E /* StateManagement.swift */,
+				53C7A76B2D2EEE3200F1325E /* UserIdentity.swift */,
 			);
 			path = StateManagement;
 			sourceTree = "<group>";
@@ -439,6 +444,7 @@
 			isa = PBXGroup;
 			children = (
 				53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */,
+				53C7A76D2D2EF2A200F1325E /* UserIdentityTests.swift */,
 			);
 			path = StateManagementTests;
 			sourceTree = "<group>";
@@ -589,6 +595,7 @@
 				5304C9182CD3FF37003AFCC2 /* FlushPolicy.swift in Sources */,
 				53FD377D2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift in Sources */,
 				53F864C22D26EBE70078D68E /* StartupFlushPolicy.swift in Sources */,
+				53C7A76C2D2EEE3200F1325E /* UserIdentity.swift in Sources */,
 				53F864BE2D26EAE00078D68E /* CountFlushPolicy.swift in Sources */,
 				5388D5B12D0C203C000966AB /* AppInfoPlugin.swift in Sources */,
 				53C7A76A2D2EEB1800F1325E /* FlushEvent.swift in Sources */,
@@ -637,6 +644,7 @@
 				539E540D2C98CD7D00982E95 /* AnalyticsTests.swift in Sources */,
 				5388D5AB2D0A14DA000966AB /* OSInfoPluginTests.swift in Sources */,
 				5334858F2C9AB24E0029F88E /* StorageModuleTests.swift in Sources */,
+				53C7A76E2D2EF2A200F1325E /* UserIdentityTests.swift in Sources */,
 				5388D5B92D0C4EA6000966AB /* LibraryInfoPluginTests.swift in Sources */,
 				53F4B6652CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift in Sources */,
 				538E2B2E2CEDE1AC00B550BC /* ScreenEventTests.swift in Sources */,
