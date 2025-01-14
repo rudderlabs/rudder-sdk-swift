@@ -57,7 +57,7 @@ extension AnalyticsClient {
        - options: An optional object for providing additional options.
      */
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
+        let event = TrackEvent(event: name, userIdentity: self.userIdentityState.state.value, properties: properties, options: options)
         self.process(event: event)
     }
 
@@ -71,7 +71,7 @@ extension AnalyticsClient {
        - options: An Optional options for additional customization.
      */
     public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
-        let event = ScreenEvent(screenName: name, category: category, properties: properties, options: options)
+        let event = ScreenEvent(screenName: name, userIdentity: self.userIdentityState.state.value, category: category, properties: properties, options: options)
         self.process(event: event)
     }
 
@@ -84,7 +84,7 @@ extension AnalyticsClient {
        - options: An Optional options for additional customization.
      */
     public func group(id: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
-        let event = GroupEvent(groupId: id, traits: traits, options: options)
+        let event = GroupEvent(groupId: id, userIdentity: self.userIdentityState.state.value, traits: traits, options: options)
         self.process(event: event)
     }
 

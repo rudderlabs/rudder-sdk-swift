@@ -62,7 +62,7 @@ struct TrackEvent: Message {
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(event: String, properties: RudderProperties? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(event: String, userIdentity: UserIdentity, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         self.event = event
         self.properties = CodableCollection(dictionary: properties)
         self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
