@@ -7,6 +7,7 @@
 
 import Combine
 
+// MARK: - State
 /**
  A protocol that represents a reactive state container.
 
@@ -31,6 +32,8 @@ func createState<T>(initialState: T) -> StateImpl<T> {
     return StateImpl(initialState: initialState)
 }
 
+
+// MARK: - StateAction
 /**
  A protocol that represents an action that can modify the state.
 
@@ -45,6 +48,8 @@ protocol StateAction {
     func reduce(currentState: T) -> T
 }
 
+
+// MARK: - StateImpl
 /**
  A concrete implementation of the `State` protocol.
 

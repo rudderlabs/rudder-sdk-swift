@@ -13,18 +13,18 @@ import Foundation
  */
 @objcMembers
 public class AnalyticsClient {
-
+    
     /**
      The configuration object for the analytics client. It contains settings and storage mechanisms
      required for the analytics system.
      */
     public var configuration: Configuration
-
+    
     /**
      The chain of plugins used for processing events and managing additional analytics functionality.
      */
     private var pluginChain: PluginChain!
-
+    
     /**
      The property used to manage and observe changes to the user's identity state within the application.
      */
@@ -47,47 +47,47 @@ public class AnalyticsClient {
 // MARK: - Events
 
 extension AnalyticsClient {
-
+    
     /**
      Tracks a custom event with the specified name and optional properties and options.
      
      - Parameters:
-       - name: The name of the event to track.
-       - properties: An optional object containing event-specific properties.
-       - options: An optional object for providing additional options.
+     - name: The name of the event to track.
+     - properties: An optional object containing event-specific properties.
+     - options: An optional object for providing additional options.
      */
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         let event = TrackEvent(event: name, userIdentity: self.userIdentityState.state.value, properties: properties, options: options)
         self.process(event: event)
     }
-
+    
     /**
      Tracks a screen view event with the specified name, category, and optional properties and options.
      
      - Parameters:
-       - name: The name of the screen.
-       - category: An optional category associated with the screen.
-       - properties: An Optional properties associated with the screen view.
-       - options: An Optional options for additional customization.
+     - name: The name of the screen.
+     - category: An optional category associated with the screen.
+     - properties: An Optional properties associated with the screen view.
+     - options: An Optional options for additional customization.
      */
     public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         let event = ScreenEvent(screenName: name, userIdentity: self.userIdentityState.state.value, category: category, properties: properties, options: options)
         self.process(event: event)
     }
-
+    
     /**
      Tracks a group event with the specified group ID, traits, and options.
      
      - Parameters:
-       - id: The unique identifier of the group.
-       - traits: An Optional traits associated with the group.
-       - options: An Optional options for additional customization.
+     - id: The unique identifier of the group.
+     - traits: An Optional traits associated with the group.
+     - options: An Optional options for additional customization.
      */
     public func group(id: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         let event = GroupEvent(groupId: id, userIdentity: self.userIdentityState.state.value, traits: traits, options: options)
         self.process(event: event)
     }
-
+    
     /**
      Flushes all pending events by triggering the flush method on all plugins in the plugin chain.
      */
@@ -103,7 +103,7 @@ extension AnalyticsClient {
 // MARK: - Plugin Management
 
 extension AnalyticsClient {
-
+    
     /**
      Adds a custom plugin to the plugin chain for processing events and extending functionality.
      
@@ -117,15 +117,16 @@ extension AnalyticsClient {
 // MARK: - Private Functions
 
 extension AnalyticsClient {
-
+    
     /**
      Sets up the analytics client by collecting configuration data and initializing the plugin chain.
      */
     private func setup() {
+        self.storeAnonymousId()
         self.collectConfiguration()
-
+        
         self.pluginChain = PluginChain(analytics: self)
-
+        
         // Add default plugins
         self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
         self.pluginChain.add(plugin: DeviceInfoPlugin())
@@ -137,7 +138,7 @@ extension AnalyticsClient {
         self.pluginChain.add(plugin: LibraryInfoPlugin())
         self.pluginChain.add(plugin: NetworkInfoPlugin())
     }
-
+    
     /**
      Processes an event by passing it through the plugin chain.
      
@@ -146,12 +147,21 @@ extension AnalyticsClient {
     private func process(event: Message) {
         self.pluginChain.process(event: event)
     }
+    
+    /**
+     Persists the current `anonymousId` to the storage.
+
+     This method retrieves the current value of `anonymousId` from the `userIdentityState` and stores it in the configured storage.
+     */
+    private func storeAnonymousId() {
+        self.userIdentityState.state.value.storeAnonymousId(self.configuration.storage)
+    }
 }
 
 // MARK: - Backend Configuration
 
 extension AnalyticsClient {
-
+    
     /**
      Collects configuration data from the backend and saves it in the storage.
      */
@@ -172,16 +182,24 @@ extension AnalyticsClient {
 // MARK: - Common Variables
 
 extension AnalyticsClient {
-
+    
     /**
-     Retrieves the `anonymousId` from the current user identity state.
+     A computed property for accessing and updating the `anonymousId` in the user identity state.
 
-     This function accesses the `userIdentityState`'s current value and returns the `anonymousId`
-     property of the `UserIdentity` object.
+     - **Getter:**
+        Retrieves the current `anonymousId` value from the `userIdentityState`.
 
-     - Returns: The `anonymousId` of type `String` from the current user identity state.
+     - **Setter:**
+        Updates the `anonymousId` in the `userIdentityState` by dispatching a `SetAnonymousIdAction`.
+        Additionally, persists the updated value by calling `storeAnonymousId`.
      */
-    func getAnonymousId() -> String {
-        return self.userIdentityState.state.value.anonymousId
+    public var anonymousId: String {
+        get {
+            return self.userIdentityState.state.value.anonymousId
+        }
+        set {
+            self.userIdentityState.dispatch(action: SetAnonymousIdAction(anonymousId: newValue))
+            self.storeAnonymousId()
+        }
     }
 }
