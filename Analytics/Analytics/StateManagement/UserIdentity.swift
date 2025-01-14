@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - UserIdentity
 /**
  A struct representing the identity of a user.
 
@@ -33,5 +34,16 @@ struct UserIdentity {
         identity.anonymousId = storage.read(key: StorageKeys.anonymousId) ?? .randomUUIDString
 
         return identity
+    }
+    
+    /**
+     Stores the current `anonymousId` in the specified storage.
+
+     This method writes the value of `anonymousId` to the provided `KeyValueStorage` instance under the key defined in `StorageKeys.anonymousId`.
+
+     - Parameter storage: The storage instance where the `anonymousId` will be saved.
+     */
+    func storeAnonymousId(_ storage: KeyValueStorage) {
+        storage.write(value: anonymousId, key: StorageKeys.anonymousId)
     }
 }
