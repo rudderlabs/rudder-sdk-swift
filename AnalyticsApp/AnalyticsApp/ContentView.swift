@@ -60,6 +60,14 @@ struct ContentView: View {
                     AnalyticsManager.shared.analytics?.flush()
                 }
             }
+            
+            CustomButton(title: "Update AnonymousId") {
+                AnalyticsManager.shared.analytics?.anonymousId = "new_anonymous_id"
+            }
+            
+            CustomButton(title: "Read AnonymousId") {
+                print("Current Anonymous Id: \(String(describing: AnalyticsManager.shared.analytics?.anonymousId))")
+            }
         }
     }
 }
@@ -83,6 +91,7 @@ struct CustomButton: View {
     var body: some View {
         Text(title)
             .font(.title3)
+            .multilineTextAlignment(.center)
             .padding()
             .foregroundStyle(.white)
             .background(.blue)

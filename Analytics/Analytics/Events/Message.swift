@@ -84,9 +84,6 @@ extension Message {
     mutating func addDefaultValues() {
         self.channel = Constants.defaultChannel
         self.sentAt = Constants.defaultSentAtPlaceholder
-
-        // TODO: Needs to be modified in the future.
-        self.anonymousId = .randomUUIDString
     }
 
     /**

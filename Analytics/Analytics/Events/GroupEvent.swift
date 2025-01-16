@@ -49,16 +49,17 @@ struct GroupEvent: Message {
     var traits: CodableCollection?
 
     /**
-     Initializes a `GroupEvent` with the specified group identifier, traits, and options.
+     Initializes a `GroupEvent` with the specified group identifier, traits, and options and user identity values.
 
      - Parameters:
         - groupId: The unique identifier of the group being associated with the user.
         - traits: Custom traits or attributes associated with the group. Defaults to `nil`.
         - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to a empty instance of `UserIdentity`.
 
      This initializer also processes and includes default values, such as default integrations and context if they are not provided.
      */
-    init(groupId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
+    init(groupId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.groupId = groupId
         self.addDefaultValues()
         
@@ -67,5 +68,7 @@ struct GroupEvent: Message {
         
         self.context = options?.customContext?.isEmpty == false ?
             options?.customContext?.compactMapValues { AnyCodable($0) } : nil
+        
+        self.anonymousId = userIdentity.anonymousId
     }
 }

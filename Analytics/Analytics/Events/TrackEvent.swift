@@ -52,22 +52,25 @@ struct TrackEvent: Message {
     var properties: CodableCollection?
 
     /**
-     Initializes a `TrackEvent` with the specified event name, properties, and options.
+     Initializes a `TrackEvent` with the specified event name, properties, options and user identity values.
 
      - Parameters:
         - event: The name of the event being tracked.
         - properties: Additional properties or metadata associated with the event. Defaults to `nil`.
         - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to a empty instance of `UserIdentity`.
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(event: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
+    init(event: String, properties: RudderProperties? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.event = event
         self.properties = CodableCollection(dictionary: properties)
         self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
         options?.customContext?.compactMapValues { AnyCodable($0) } : nil
+        
+        self.anonymousId = userIdentity.anonymousId
         
         self.addDefaultValues()
     }
