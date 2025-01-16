@@ -28,7 +28,7 @@ public class AnalyticsClient {
     /**
      The property used to manage and observe changes to the user's identity state within the application.
      */
-    var userIdentityState: StateImpl<UserIdentity>
+    private var userIdentityState: StateImpl<UserIdentity>
     
     /**
      Initializes the `AnalyticsClient` with the given configuration.
