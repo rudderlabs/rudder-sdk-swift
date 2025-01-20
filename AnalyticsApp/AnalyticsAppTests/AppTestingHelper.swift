@@ -8,6 +8,7 @@
 import Foundation
 import Analytics
 
+// MARK: - MockEvent
 class MockEvent: Message {
     var anonymousId: String?
     var channel: String?
