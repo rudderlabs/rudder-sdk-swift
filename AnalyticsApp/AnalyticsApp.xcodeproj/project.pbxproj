@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,6 +16,16 @@
 		5383D2C72D3E95FC00291B00 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2C62D3E95FC00291B00 /* AnalyticsManager.swift */; };
 		5383D2C92D3E97C700291B00 /* AdvertisingIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5383D2D22D3EAC0C00291B00 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5351AA712C6BE9DE003C3C47 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5351AA782C6BE9DE003C3C47;
+			remoteInfo = AnalyticsApp;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		5351AA8E2C6BEA02003C3C47 /* Embed Frameworks */ = {
@@ -40,7 +50,12 @@
 		5351AA8B2C6BEA02003C3C47 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5383D2C62D3E95FC00291B00 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 		5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPlugin.swift; sourceTree = "<group>"; };
+		5383D2CE2D3EAC0C00291B00 /* AnalyticsAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnalyticsAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5383D2CF2D3EAC0C00291B00 /* AnalyticsAppTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AnalyticsAppTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		5351AA762C6BE9DE003C3C47 /* Frameworks */ = {
@@ -51,6 +66,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5383D2CB2D3EAC0C00291B00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -58,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				5351AA7B2C6BE9DE003C3C47 /* AnalyticsApp */,
+				5383D2CF2D3EAC0C00291B00 /* AnalyticsAppTests */,
 				5351AA7A2C6BE9DE003C3C47 /* Products */,
 				5351AA8A2C6BEA02003C3C47 /* Frameworks */,
 			);
@@ -67,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				5351AA792C6BE9DE003C3C47 /* AnalyticsApp.app */,
+				5383D2CE2D3EAC0C00291B00 /* AnalyticsAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,6 +145,29 @@
 			productReference = 5351AA792C6BE9DE003C3C47 /* AnalyticsApp.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5383D2CD2D3EAC0C00291B00 /* AnalyticsAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "AnalyticsAppTests" */;
+			buildPhases = (
+				5383D2CA2D3EAC0C00291B00 /* Sources */,
+				5383D2CB2D3EAC0C00291B00 /* Frameworks */,
+				5383D2CC2D3EAC0C00291B00 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5383D2D32D3EAC0C00291B00 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5383D2CF2D3EAC0C00291B00 /* AnalyticsAppTests */,
+			);
+			name = AnalyticsAppTests;
+			packageProductDependencies = (
+			);
+			productName = AnalyticsAppTests;
+			productReference = 5383D2CE2D3EAC0C00291B00 /* AnalyticsAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -128,11 +175,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1540;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					5351AA782C6BE9DE003C3C47 = {
 						CreatedOnToolsVersion = 15.4;
+					};
+					5383D2CD2D3EAC0C00291B00 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 5351AA782C6BE9DE003C3C47;
 					};
 				};
 			};
@@ -150,6 +201,7 @@
 			projectRoot = "";
 			targets = (
 				5351AA782C6BE9DE003C3C47 /* AnalyticsApp */,
+				5383D2CD2D3EAC0C00291B00 /* AnalyticsAppTests */,
 			);
 		};
 /* End PBXProject section */
@@ -161,6 +213,13 @@
 			files = (
 				5351AA842C6BE9E0003C3C47 /* Preview Assets.xcassets in Resources */,
 				5351AA812C6BE9E0003C3C47 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5383D2CC2D3EAC0C00291B00 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,7 +237,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5383D2CA2D3EAC0C00291B00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5383D2D32D3EAC0C00291B00 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5351AA782C6BE9DE003C3C47 /* AnalyticsApp */;
+			targetProxy = 5383D2D22D3EAC0C00291B00 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		5351AA852C6BE9E0003C3C47 /* Debug */ = {
@@ -362,6 +436,50 @@
 			};
 			name = Release;
 		};
+		5383D2D52D3EAC0C00291B00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnalyticsApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AnalyticsApp";
+				XROS_DEPLOYMENT_TARGET = 2.2;
+			};
+			name = Debug;
+		};
+		5383D2D62D3EAC0C00291B00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnalyticsApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AnalyticsApp";
+				XROS_DEPLOYMENT_TARGET = 2.2;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -379,6 +497,15 @@
 			buildConfigurations = (
 				5351AA882C6BE9E0003C3C47 /* Debug */,
 				5351AA892C6BE9E0003C3C47 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "AnalyticsAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5383D2D52D3EAC0C00291B00 /* Debug */,
+				5383D2D62D3EAC0C00291B00 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
