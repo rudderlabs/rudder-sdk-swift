@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Analytics
+import AdSupport
+import AppTrackingTransparency
 
 struct ContentView: View {
     
@@ -15,26 +17,26 @@ struct ContentView: View {
             HStack {
                 CustomButton(title: "Track") {
                     let option = RudderOptions()
-                    .addIntegration("Amplitude", isEnabled: true)
-                    .addIntegration("CleverTap", isEnabled: false)
-                    .addCustomContext(["Key1": "Value1"], key: "SK1")
-                    .addCustomContext(["value1", "value2"], key: "SK2")
-                    .addCustomContext("Value3", key: "SK3")
-                    .addCustomContext(1234, key: "SK4")
-                    .addCustomContext(5678.9, key: "SK5")
-                    .addCustomContext(true, key: "SK6")
+                        .addIntegration("Amplitude", isEnabled: true)
+                        .addIntegration("CleverTap", isEnabled: false)
+                        .addCustomContext(["Key1": "Value1"], key: "SK1")
+                        .addCustomContext(["value1", "value2"], key: "SK2")
+                        .addCustomContext("Value3", key: "SK3")
+                        .addCustomContext(1234, key: "SK4")
+                        .addCustomContext(5678.9, key: "SK5")
+                        .addCustomContext(true, key: "SK6")
                     
-                    AnalyticsManager.shared.analytics?.track(name: "Track at \(Date())", properties: ["key": "value"], options: option)
+                    AnalyticsManager.shared.track(name: "Track at \(Date())", properties: ["key": "value"], options: option)
                 }
                 
                 CustomButton(title: "Multiple Track") {
                     let option = RudderOptions()
-                    .addIntegration("Amplitude", isEnabled: true)
-                    .addIntegration("CleverTap", isEnabled: false)
-                    .addCustomContext(["Key123": "Value123"], key: "SK123")
+                        .addIntegration("Amplitude", isEnabled: true)
+                        .addIntegration("CleverTap", isEnabled: false)
+                        .addCustomContext(["Key123": "Value123"], key: "SK123")
                     
                     for i in 1...50 {
-                        AnalyticsManager.shared.analytics?.track(name: "Track: \(i)", options: option)
+                        AnalyticsManager.shared.track(name: "Track: \(i)", options: option)
                     }
                 }
             }
@@ -44,29 +46,49 @@ struct ContentView: View {
                     let option = RudderOptions()
                         .addCustomContext(["Key1": "Value1"], key: "SK")
                         .addIntegration("Facebook", isEnabled: false)
-                    AnalyticsManager.shared.analytics?.screen(name: "Analytics Screen", properties: ["key": "value"], options: option)
+                    AnalyticsManager.shared.screen(name: "Analytics Screen", properties: ["key": "value"], options: option)
                 }
                 
                 CustomButton(title: "Group") {
                     let option = RudderOptions()
                         .addCustomContext(["Key1": "Value1"], key: "SK")
                         .addIntegration("Firebase", isEnabled: false)
-                    AnalyticsManager.shared.analytics?.group(id: "group_id", traits: ["key": "value"], options: option)
+                    AnalyticsManager.shared.group(id: "group_id", traits: ["key": "value"], options: option)
                 }
             }
             
             HStack {
                 CustomButton(title: "Flush") {
-                    AnalyticsManager.shared.analytics?.flush()
+                    AnalyticsManager.shared.flush()
                 }
             }
             
             CustomButton(title: "Update AnonymousId") {
-                AnalyticsManager.shared.analytics?.anonymousId = "new_anonymous_id"
+                AnalyticsManager.shared.anonymousId = "new_anonymous_id"
             }
             
             CustomButton(title: "Read AnonymousId") {
-                print("Current Anonymous Id: \(String(describing: AnalyticsManager.shared.analytics?.anonymousId))")
+                print("Current Anonymous Id: \(String(describing: AnalyticsManager.shared.anonymousId))")
+            }
+        }
+        .onAppear {
+            self.confirmTrackingPermission()
+        }
+    }
+}
+
+extension ContentView {
+    func confirmTrackingPermission() {
+        print("Requesting Tracking Permission...")
+        Task {
+            let status = await ATTrackingManager.requestTrackingAuthorization()
+            print("Tracking Status: \(status.rawValue)")
+            
+            if status == .authorized {
+                let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
+                print("IDFA: \(idfa)")
+            } else {
+                print("Tracking not authorized.")
             }
         }
     }
