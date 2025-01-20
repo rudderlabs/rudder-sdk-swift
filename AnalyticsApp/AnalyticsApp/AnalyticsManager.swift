@@ -19,6 +19,9 @@ class AnalyticsManager {
     func initializeAnalyticsSDK() {
         let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logger: self)
         self.analytics = AnalyticsClient(configuration: config)
+        
+        //Add external plugin to analytics..
+        self.analytics?.addPlugin(AdvertisingIdPlugin())
     }
 }
 
