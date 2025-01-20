@@ -40,6 +40,8 @@ class AdvertisingIdPlugin: Plugin {
         
         // Add the IDFA to the device context
         deviceContent["advertisingId"] = advertisingId
+        deviceContent["adTrackingEnabled"] = true
+        
         return event.addToContext(info: ["device": deviceContent])
     }
 }
