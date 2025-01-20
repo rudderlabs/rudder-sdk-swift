@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Analytics
 
 // MARK: - AnalyticsAppApp
 @main
@@ -26,26 +25,5 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         AnalyticsManager.shared.initializeAnalyticsSDK()
         return true
-    }
-}
-
-// MARK: - AnalyticsManager
-class AnalyticsManager: Logger {
-    
-    static let shared = AnalyticsManager()
-    
-    var analytics: AnalyticsClient?
-   
-    private init() {}
-    
-    func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logger: self)
-        self.analytics = AnalyticsClient(configuration: config)
-    }
-    
-    var currentLogLevel: LogLevel = .debug
-    
-    func debug(tag: String, log: String) {
-        print("\(tag) : \(log)")
     }
 }
