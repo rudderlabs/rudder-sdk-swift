@@ -9,6 +9,10 @@ import Analytics
 import AdSupport
 import AppTrackingTransparency
 
+// MARK: - AdvertisingIdPlugin
+/**
+ This class is a pre-processing plugin that retrieves the IDFA (Identifier for Advertisers) when tracking is authorized and adds it to the context of an event.
+ */
 class AdvertisingIdPlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: AnalyticsClient?
