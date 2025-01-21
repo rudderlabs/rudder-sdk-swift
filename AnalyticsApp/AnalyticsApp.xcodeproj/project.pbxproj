@@ -382,7 +382,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AnalyticsApp/Preview Content\"";
-				DEVELOPMENT_TEAM = UT5XGH477Q;
+				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app needs Bluetooth access to enhance your experience.";
@@ -413,7 +413,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AnalyticsApp/Preview Content\"";
-				DEVELOPMENT_TEAM = UT5XGH477Q;
+				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app needs Bluetooth access to enhance your experience.";
