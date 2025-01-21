@@ -7,28 +7,55 @@
 
 import Foundation
 
+/**
+ Represents an identify event in the analytics system.
+
+ This struct conforms to the `Message` protocol and is used to associate user data, such as traits and identifiers.
+
+ - Conforms to: `Message`
+ */
 struct IdentifyEvent: Message {
-    
+
+    /// The type of the event, defaulting to `.identify`.
     var type: EventType = .identify
-    
+
+    /// A unique identifier for the message, initialized with a random UUID string.
     var messageId: String = .randomUUIDString
-    
+
+    /// The timestamp of when the event occurred, defaulting to the current time.
     var originalTimeStamp: String = .currentTimeStamp
-    
+
+    /// The anonymous identifier for the user associated with the event.
     var anonymousId: String?
-    
+
+    /// The channel through which the event was sent (e.g., "mobile" or "web").
     var channel: String?
-    
-    var integrations: [String : Bool]?
-    
+
+    /// A dictionary of integration settings for the event.
+    var integrations: [String: Bool]?
+
+    /// The timestamp of when the event was sent.
     var sentAt: String?
-    
-    var context: [String : AnyCodable]?
-    
+
+    /// Additional context information for the event, provided as a dictionary.
+    var context: [String: AnyCodable]?
+
+    /// Custom traits or attributes associated with the user profile.
     var traits: CodableCollection?
-    
+
+    /// The unique identifier for the user.
     var userId: String?
-    
+
+    /**
+     Initializes an `IdentifyEvent` with the specified traits, options, and user identity values.
+
+     - Parameters:
+        - traits: Custom traits or attributes for the user. Defaults to `nil`.
+        - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to an empty instance of `UserIdentity`.
+
+     This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
+     */
     init(traits: RudderTraits? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.userId = userIdentity.userId
         self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
