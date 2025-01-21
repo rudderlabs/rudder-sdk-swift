@@ -17,17 +17,17 @@ struct AdvertisingIdPluginTests {
             let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
             let analytics = AnalyticsClient(configuration: config)
             
-            let plugin = AdvertisingIdPlugin()
-            analytics.addPlugin(plugin)
+            let advertisingIdPlugin = AdvertisingIdPlugin()
+            analytics.addPlugin(advertisingIdPlugin)
             
             let mockIdfa = "mock_idfa_1234"
             let event = MockEvent()
             
-            plugin.trackingAuthorizationStatus = { .authorized }
-            plugin.getAdvertisingId = { mockIdfa }
+            advertisingIdPlugin.trackingAuthorizationStatus = { .authorized }
+            advertisingIdPlugin.getAdvertisingId = { mockIdfa }
             
             when("execute the plugin using mock event..") {
-                let result = plugin.execute(event: event)
+                let result = advertisingIdPlugin.execute(event: event)
                 
                 then("check the result if advertisingId is added or not..") {
                     #expect(result != nil)
@@ -45,8 +45,8 @@ struct AdvertisingIdPluginTests {
             let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
             let analytics = AnalyticsClient(configuration: config)
             
-            let plugin = AdvertisingIdPlugin()
-            analytics.addPlugin(plugin)
+            let advertisingIdPlugin = AdvertisingIdPlugin()
+            analytics.addPlugin(advertisingIdPlugin)
             
             let mockIdfa = "mock_idfa_1234"
             var event = MockEvent()
@@ -54,11 +54,11 @@ struct AdvertisingIdPluginTests {
                 event = modified
             }
             
-            plugin.trackingAuthorizationStatus = { .denied }
-            plugin.getAdvertisingId = { mockIdfa }
+            advertisingIdPlugin.trackingAuthorizationStatus = { .denied }
+            advertisingIdPlugin.getAdvertisingId = { mockIdfa }
             
             when("execute the plugin using mock event..") {
-                let result = plugin.execute(event: event)
+                let result = advertisingIdPlugin.execute(event: event)
                 
                 then("check the result if advertisingId is added or not..") {
                     #expect(result != nil)
