@@ -107,11 +107,14 @@ extension Message {
 /**
  Represents the type of events supported by the analytics system.
 
- The `EventType` enum defines various event types such as `track`, `screen`, `group`, and `flush`.
+ The `EventType` enum defines various event types such as `identify`, `track`, `screen`, `group`, and `flush`.
  It conforms to `CaseIterable` for easy iteration and `Codable` for seamless encoding and decoding.
  */
 public enum EventType: String, CaseIterable, Codable {
 
+    /// Represents a "identify" event.
+    case identify
+    
     /// Represents a "track" event.
     case track
 
