@@ -26,10 +26,10 @@ struct AdvertisingIdPluginTests {
             plugin.trackingAuthorizationStatus = { .authorized }
             plugin.getAdvertisingId = { mockIdfa }
             
-            when("execute the plugin..") {
+            when("execute the plugin using mock event..") {
                 let result = plugin.execute(event: event)
                 
-                then("check the result..") {
+                then("check the result if advertisingId is added or not..") {
                     #expect(result != nil)
                     guard let deviceContent = result?.context?["device"]?.value as? [String: Any],
                           let idfa = deviceContent["advertisingId"] as? String else { #expect(1 == 0, "advertisingId not found.."); return}
@@ -57,10 +57,10 @@ struct AdvertisingIdPluginTests {
             plugin.trackingAuthorizationStatus = { .denied }
             plugin.getAdvertisingId = { mockIdfa }
             
-            when("execute the plugin..") {
+            when("execute the plugin using mock event..") {
                 let result = plugin.execute(event: event)
                 
-                then("check the result..") {
+                then("check the result if advertisingId is added or not..") {
                     #expect(result != nil)
                     guard let deviceContent = result?.context?["device"]?.value as? [String: Any] else { #expect(1 == 0, "deviceContent not found.."); return}
                     #expect(deviceContent["advertisingId"] == nil)
