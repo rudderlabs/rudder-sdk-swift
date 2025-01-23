@@ -98,7 +98,7 @@ extension AnalyticsClient {
      */
     public func identify(userId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         
-        self.userIdentityState.dispatch(action: SetUserIdTraitsAndExternalIdsAction(userId: userId, traits: traits ?? RudderTraits(), externalIds: options?.externalIds ?? []))
+        self.userIdentityState.dispatch(action: SetUserIdTraitsAndExternalIdsAction(userId: userId, traits: traits ?? RudderTraits(), externalIds: options?.externalIds ?? [], analytics: self))
         
         Task.detached {
             self.userIdentityState.state.value.storeUserIdTraitsAndExternalIds(self.configuration.storage)
