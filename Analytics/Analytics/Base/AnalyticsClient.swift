@@ -97,6 +97,13 @@ extension AnalyticsClient {
         - options: Custom options for the event, including integrations and context. Defaults to `nil`.
      */
     public func identify(userId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
+        
+        self.userIdentityState.dispatch(action: SetUserIdTraitsAndExternalIdsAction(userId: userId, traits: traits ?? RudderTraits(), externalIds: options?.externalIds ?? []))
+        
+        Task.detached {
+            self.userIdentityState.state.value.storeUserIdTraitsAndExternalIds(self.configuration.storage)
+        }
+        
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
