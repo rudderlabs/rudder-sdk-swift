@@ -74,6 +74,25 @@ struct UserIdentity {
     func storeAnonymousId(_ storage: KeyValueStorage) {
         storage.write(value: anonymousId, key: StorageKeys.anonymousId)
     }
+    
+    /**
+     Stores the user ID, traits, and external IDs into the specified key-value storage.
+
+     - Parameters:
+        - storage: An instance of `KeyValueStorage` where the values will be stored.
+     
+     The method performs the following:
+     1. Writes the `userId` to the storage using the `StorageKeys.userId` key.
+     2. Serializes the `traits` into a JSON string and writes it to the storage using the `StorageKeys.traits` key.
+     3. Serializes each `externalId` into a JSON string (if possible), then writes the resulting array to the storage using the `StorageKeys.externalIds` key.
+     */
+    func storeUserIdTraitsAndExternalIds(_ storage: KeyValueStorage) {
+        storage.write(value: userId, key: StorageKeys.userId)
+        storage.write(value: traits.jsonString, key: StorageKeys.traits)
+        
+        let ids = externalIds.compactMap { $0.jsonString }
+        storage.write(value: ids, key: StorageKeys.externalIds)
+    }
 }
 
 
