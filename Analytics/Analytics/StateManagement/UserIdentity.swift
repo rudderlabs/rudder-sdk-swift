@@ -93,6 +93,23 @@ struct UserIdentity {
         let ids = externalIds.compactMap { $0.jsonString }
         storage.write(value: ids, key: StorageKeys.externalIds)
     }
+    
+    /**
+     Removes the user ID, traits, and external IDs from the specified key-value storage.
+
+     - Parameters:
+        - storage: An instance of `KeyValueStorage` where the values will be removed.
+     
+     The method performs the following:
+     1. Removes the `userId` from the storage using the `StorageKeys.userId` key.
+     2. Removes the `traits` from the storage using the `StorageKeys.traits` key.
+     3. Removes the `externalIds` from the storage using the `StorageKeys.externalIds` key.
+     */
+    func resetUserIdTraitsAndExternalIds(_ storage: KeyValueStorage) {
+        storage.remove(key: StorageKeys.userId)
+        storage.remove(key: StorageKeys.traits)
+        storage.remove(key: StorageKeys.externalIds)
+    }
 }
 
 
