@@ -21,6 +21,7 @@
 		536DEF572D37B218000BB30B /* AnonymousIdActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536DEF562D37B218000BB30B /* AnonymousIdActionTests.swift */; };
 		537356ED2CC68B7D008023CE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537356EC2CC68B7D008023CE /* Extensions.swift */; };
 		5383D2E82D40133700291B00 /* IdentifyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2E72D40133700291B00 /* IdentifyEvent.swift */; };
+		5383D2F02D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2EF2D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift */; };
 		53859EE72CB66C3200EAE483 /* DataPlaneModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */; };
 		5387E8942CA320FD00DB1C49 /* HttpNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */; };
 		5387E8972CA3233000DB1C49 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5387E8962CA3233000DB1C49 /* HttpClient.swift */; };
@@ -116,6 +117,7 @@
 		536DEF562D37B218000BB30B /* AnonymousIdActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnonymousIdActionTests.swift; sourceTree = "<group>"; };
 		537356EC2CC68B7D008023CE /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		5383D2E72D40133700291B00 /* IdentifyEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyEvent.swift; sourceTree = "<group>"; };
+		5383D2EF2D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUserIdTraitsAndExternalIdsAction.swift; sourceTree = "<group>"; };
 		53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPlaneModuleTests.swift; sourceTree = "<group>"; };
 		5387E8932CA320FD00DB1C49 /* HttpNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpNetwork.swift; sourceTree = "<group>"; };
 		5387E8962CA3233000DB1C49 /* HttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
@@ -444,6 +446,7 @@
 				53C7A7642D2D9CDE00F1325E /* StateManagement.swift */,
 				53C7A76B2D2EEE3200F1325E /* UserIdentity.swift */,
 				536DEF542D36B371000BB30B /* SetAnonymousIdAction.swift */,
+				5383D2EF2D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift */,
 			);
 			path = StateManagement;
 			sourceTree = "<group>";
@@ -612,6 +615,7 @@
 				53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */,
 				53F864B62D23EAD30078D68E /* TrackEvent.swift in Sources */,
 				53F864BA2D23EC430078D68E /* GroupEvent.swift in Sources */,
+				5383D2F02D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift in Sources */,
 				5388D5A52D0A12AD000966AB /* OSInfoPlugin.swift in Sources */,
 				539E54042C98B05300982E95 /* StorageModels.swift in Sources */,
 				5388D5A92D0A1364000966AB /* TimeZoneInfoPlugin.swift in Sources */,
