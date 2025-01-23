@@ -159,8 +159,8 @@ extension URL {
     }
 }
 
-// MARK: - [String: AnyCodable]
-extension [String: AnyCodable] {
+// MARK: - Dictionary
+extension Dictionary where Key == String  {
     static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
         return lhs.merging(rhs) { (_, new) in new }
     }
@@ -170,6 +170,20 @@ extension [String: AnyCodable] {
 extension [String: Any] {
     var jsonString: String? {
         return try? JSONSerialization.data(withJSONObject: self, options: []).jsonString
+    }
+}
+
+extension Array where Element == ExternalId {
+    func mergeWithHigherPriorityTo(_ other: [ExternalId]) -> [ExternalId] {
+        var merged = self
+        for item in other {
+            if let index = merged.firstIndex(where: { $0.type == item.type }) {
+                merged[index].id = item.id
+            } else {
+                merged.append(item)
+            }
+        }
+        return merged
     }
 }
 
