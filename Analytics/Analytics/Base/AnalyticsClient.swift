@@ -89,6 +89,19 @@ extension AnalyticsClient {
     }
     
     /**
+     Identifies a user and associates traits and other metadata with their profile.
+
+     - Parameters:
+        - userId: A unique identifier for the user being identified.
+        - traits: Custom traits or attributes associated with the user. Defaults to `nil`.
+        - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+     */
+    public func identify(userId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
+        let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
+        self.process(event: event)
+    }
+    
+    /**
      Flushes all pending events by triggering the flush method on all plugins in the plugin chain.
      */
     public func flush() {

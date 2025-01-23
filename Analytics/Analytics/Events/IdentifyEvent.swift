@@ -56,8 +56,9 @@ struct IdentifyEvent: Message {
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(traits: RudderTraits? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.userId = userIdentity.userId
+        self.traits = CodableCollection(dictionary: userIdentity.traits)
         self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
