@@ -96,7 +96,7 @@ extension Message {
 
      - Note: If the `context` property is `nil`, it is initialized with the provided context.
      */
-    func addToContext(info: [String: Any]) -> any Message {
+    public func addToContext(info: [String: Any]) -> any Message {
         var mutableSelf = self
         mutableSelf.context = (mutableSelf.context ?? [:]) + info.mapValues { AnyCodable($0) }
         return mutableSelf
