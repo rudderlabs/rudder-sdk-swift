@@ -11,25 +11,29 @@ import Foundation
 /**
  A struct representing the identity of a user.
  
- - Properties:
- - `anonymousId`: A unique identifier for the user when they are not logged in. Defaults to an empty string.
- 
- - Methods:
- - `initializeState(_:)`: Creates and initializes a `UserIdentity` instance by reading stored data from a key-value storage.
- */
+ This structure is used to manage the identification of a user, including both anonymous and logged-in states, as well as associated traits and external identifiers.
 
-struct UserIdentity {
-    /// A unique identifier for the user when they are not logged in.
-    var anonymousId = ""
+ - Properties:
+   - `anonymousId`: A unique identifier for the user when they are not logged in. Defaults to an empty string.
+   - `userId`: The identifier for the user when they are logged in. Defaults to an empty string.
+   - `traits`: A dictionary of user-specific traits, used to store additional metadata about the user.
+   - `externalIds`: An array of external identifiers associated with the user, allowing integration with external systems or platforms.
+
+ - Methods:
+   - `initializeState(_:)`: Creates and initializes a `UserIdentity` instance by reading stored data from a key-value storage.
+ */
+public struct UserIdentity {
+    /// A unique identifier for the user when they are not logged in. Defaults to an empty string.
+    public internal(set) var anonymousId = ""
     
-    /// The identifier for the logged-in user.
-    var userId = ""
+    /// The identifier for the user when they are logged in. Defaults to an empty string.
+    public internal(set) var userId = ""
     
-    /// A dictionary of user-specific traits.
-    var traits = RudderTraits()
+    /// A dictionary of user-specific traits, used to store additional metadata about the user.
+    public internal(set) var traits = RudderTraits()
     
-    /// An array of external identifiers associated with the user.
-    var externalIds = [ExternalId]()
+    /// An array of external identifiers associated with the user, allowing integration with external systems or platforms.
+    public internal(set) var externalIds = [ExternalId]()
     
     /**
      Creates and initializes a `UserIdentity` instance by reading data from the provided key-value storage.
