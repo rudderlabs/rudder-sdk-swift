@@ -15,7 +15,13 @@ struct ContentView: View {
     var body: some View {
         VStack {
             CustomButton(title: "Identify") {
-                AnalyticsManager.shared.identify(userId: "12345")
+                let options = RudderOptions()
+                    .addIntegration("Amplitude", isEnabled: false)
+                    .addCustomContext("identify_key1", key: "identify_value1")
+                    .addExternalId(ExternalId(type: "idCardNumber", id: "12791"))
+                
+                
+                AnalyticsManager.shared.identify(userId: "12345", traits: ["IdentifyTraits_key1": "IdentifyTraits_value1"], options: options)
             }
             
             HStack {
