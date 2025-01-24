@@ -52,9 +52,9 @@ extension AnalyticsClient {
      Tracks a custom event with the specified name and optional properties and options.
      
      - Parameters:
-     - name: The name of the event to track.
-     - properties: An optional object containing event-specific properties.
-     - options: An optional object for providing additional options.
+        - name: The name of the event to track.
+        - properties: An optional object containing event-specific properties.
+        - options: An optional object for providing additional options.
      */
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
@@ -65,10 +65,10 @@ extension AnalyticsClient {
      Tracks a screen view event with the specified name, category, and optional properties and options.
      
      - Parameters:
-     - name: The name of the screen.
-     - category: An optional category associated with the screen.
-     - properties: An Optional properties associated with the screen view.
-     - options: An Optional options for additional customization.
+        - name: The name of the screen.
+        - category: An optional category associated with the screen.
+        - properties: An Optional properties associated with the screen view.
+        - options: An Optional options for additional customization.
      */
     public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         let event = ScreenEvent(screenName: name, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
@@ -79,9 +79,9 @@ extension AnalyticsClient {
      Tracks a group event with the specified group ID, traits, and options.
      
      - Parameters:
-     - id: The unique identifier of the group.
-     - traits: An Optional traits associated with the group.
-     - options: An Optional options for additional customization.
+        - id: The unique identifier of the group.
+        - traits: An Optional traits associated with the group.
+        - options: An Optional options for additional customization.
      */
     public func group(id: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         let event = GroupEvent(groupId: id, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
