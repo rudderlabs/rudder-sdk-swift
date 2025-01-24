@@ -14,6 +14,10 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            CustomButton(title: "Identify") {
+                AnalyticsManager.shared.identify(userId: "12345")
+            }
+            
             HStack {
                 CustomButton(title: "Track") {
                     let option = RudderOptions()
