@@ -133,4 +133,18 @@ public struct ExternalId: Codable {
     
     /// The value of the external identifier.
     var id: String
+    
+    /**
+     Initializes a new instance of `ExternalId` with the given `type` and `id`.
+     
+     - Parameters:
+        - type: The type of the external identifier (e.g., "google", "facebook").
+        - id: The value of the external identifier (e.g., "user_12345").
+     
+     - Returns: A new `ExternalId` instance.
+     */
+    public init(type: String, id: String) {
+        self.type = type
+        self.id = id
+    }
 }
