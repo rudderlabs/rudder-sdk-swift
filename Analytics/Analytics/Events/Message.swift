@@ -89,10 +89,13 @@ extension Message {
 
      It ensures that each event has consistent base data.
      */
+    mutating func addDefaultValues() {
+        self.channel = Constants.defaultChannel
+        self.sentAt = Constants.defaultSentAtPlaceholder
+    }
+    
     func updateEventData() -> Message {
         var mutableSelf: Message = self
-        mutableSelf.channel = Constants.defaultChannel
-        mutableSelf.sentAt = Constants.defaultSentAtPlaceholder
         
         mutableSelf.anonymousId = self.userIdentity?.anonymousId
         mutableSelf.userId = self.userIdentity?.userId.isEmpty == true ? nil : self.userIdentity?.userId

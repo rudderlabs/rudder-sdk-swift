@@ -77,6 +77,8 @@ struct TrackEvent: Message {
         options?.customContext?.compactMapValues { AnyCodable($0) } : nil
         
         self.userIdentity = userIdentity
+        
+        self.addDefaultValues()
     }
     
     enum CodingKeys: CodingKey {

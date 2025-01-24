@@ -65,6 +65,8 @@ struct IdentifyEvent: Message {
         
         self.context = options?.customContext?.isEmpty == false ?
         options?.customContext?.compactMapValues { AnyCodable($0) } : nil
+        
+        self.addDefaultValues()
     }
     
     enum CodingKeys: CodingKey {
