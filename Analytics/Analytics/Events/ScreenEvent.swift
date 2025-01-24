@@ -45,6 +45,9 @@ struct ScreenEvent: Message {
     /// Custom traits or attributes associated with the event.
     var traits: CodableCollection?
     
+    /// The unique identifier for the user.
+    var userId: String?
+    
     /// The name of the screen or page being tracked.
     var event: String
     
@@ -54,6 +57,9 @@ struct ScreenEvent: Message {
     /// Additional properties or metadata for the screen event.
     var properties: CodableCollection?
 
+    /// The identity values of the user associated with the event.
+    var userIdentity: UserIdentity?
+    
     /**
      Initializes a `ScreenEvent` with the specified screen name, category, properties, options and user identity values.
 
@@ -78,9 +84,23 @@ struct ScreenEvent: Message {
         
         self.context = options?.customContext?.isEmpty == false ?
             options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-        
-        self.anonymousId = userIdentity.anonymousId
-        
-        self.addDefaultValues()
+                
+        self.userIdentity = userIdentity
+    }
+    
+    enum CodingKeys: CodingKey {
+        case type
+        case messageId
+        case originalTimeStamp
+        case anonymousId
+        case channel
+        case integrations
+        case sentAt
+        case context
+        case traits
+        case event
+        case category
+        case properties
+        case userId
     }
 }

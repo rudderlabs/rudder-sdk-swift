@@ -165,7 +165,8 @@ extension AnalyticsClient {
      - Parameter event: The event to be processed.
      */
     private func process(event: Message) {
-        self.pluginChain.process(event: event)
+        let updatedEvent = event.updateEventData()
+        self.pluginChain.process(event: updatedEvent)
     }
     
     /**

@@ -48,9 +48,15 @@ struct TrackEvent: Message {
     /// The name of the event being tracked.
     var event: String
     
+    /// The unique identifier for the user.
+    var userId: String?
+    
     /// Additional properties or metadata for the event.
     var properties: CodableCollection?
 
+    /// The identity values of the user associated with the event.
+    var userIdentity: UserIdentity?
+    
     /**
      Initializes a `TrackEvent` with the specified event name, properties, options and user identity values.
 
@@ -70,8 +76,21 @@ struct TrackEvent: Message {
         self.context = options?.customContext?.isEmpty == false ?
         options?.customContext?.compactMapValues { AnyCodable($0) } : nil
         
-        self.anonymousId = userIdentity.anonymousId
-        
-        self.addDefaultValues()
+        self.userIdentity = userIdentity
+    }
+    
+    enum CodingKeys: CodingKey {
+        case type
+        case messageId
+        case originalTimeStamp
+        case anonymousId
+        case channel
+        case integrations
+        case sentAt
+        case context
+        case traits
+        case event
+        case properties
+        case userId
     }
 }

@@ -15,7 +15,7 @@ import Foundation
  - Conforms to: `Message`
  */
 struct IdentifyEvent: Message {
-
+    
     /// The type of the event, defaulting to `.identify`.
     var type: EventType = .identify
 
@@ -46,6 +46,9 @@ struct IdentifyEvent: Message {
     /// The unique identifier for the user.
     var userId: String?
 
+    /// The identity values of the user associated with the event.
+    var userIdentity: UserIdentity?
+
     /**
      Initializes an `IdentifyEvent` with the specified traits, options, and user identity values.
 
@@ -57,14 +60,23 @@ struct IdentifyEvent: Message {
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
     init(options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
-        self.userId = userIdentity.userId
-        self.traits = CodableCollection(dictionary: userIdentity.traits)
+        self.userIdentity = userIdentity
         self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
         options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-        
-        self.anonymousId = userIdentity.anonymousId
-        self.addDefaultValues()
+    }
+    
+    enum CodingKeys: CodingKey {
+        case type
+        case messageId
+        case originalTimeStamp
+        case anonymousId
+        case channel
+        case integrations
+        case sentAt
+        case context
+        case traits
+        case userId
     }
 }

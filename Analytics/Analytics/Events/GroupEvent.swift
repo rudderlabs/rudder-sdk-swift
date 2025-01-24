@@ -42,12 +42,18 @@ struct GroupEvent: Message {
     /// Additional context information for the event, provided as a dictionary.
     var context: [String: AnyCodable]?
     
+    /// The unique identifier for the user.
+    var userId: String?
+    
     /// The unique identifier of the group being associated with the user.
     var groupId: String
     
     /// Custom traits or attributes associated with the group.
     var traits: CodableCollection?
 
+    /// The identity values of the user associated with the event.
+    var userIdentity: UserIdentity?
+    
     /**
      Initializes a `GroupEvent` with the specified group identifier, traits, and options and user identity values.
 
@@ -61,14 +67,27 @@ struct GroupEvent: Message {
      */
     init(groupId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.groupId = groupId
-        self.addDefaultValues()
-        
+
         self.traits = CodableCollection(dictionary: traits)
         self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
             options?.customContext?.compactMapValues { AnyCodable($0) } : nil
         
-        self.anonymousId = userIdentity.anonymousId
+        self.userIdentity = userIdentity
+    }
+    
+    enum CodingKeys: CodingKey {
+        case type
+        case messageId
+        case originalTimeStamp
+        case anonymousId
+        case channel
+        case integrations
+        case sentAt
+        case context
+        case groupId
+        case traits
+        case userId
     }
 }
