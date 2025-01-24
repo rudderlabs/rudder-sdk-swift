@@ -35,6 +35,12 @@ final class RudderStackDataPlanePlugin: MessagePlugin {
 // MARK: - Message Events
 
 extension RudderStackDataPlanePlugin {
+    
+    func identify(payload: IdentifyEvent) -> (any Message)? {
+        self.messageManager?.put(payload)
+        return payload
+    }
+    
     func track(payload: TrackEvent) -> (any Message)? {
         self.messageManager?.put(payload)
         return payload
