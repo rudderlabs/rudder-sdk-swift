@@ -17,15 +17,10 @@ import Foundation
    - `userId`: The user identifier that will be set in the `UserIdentity` state.
    - `traits`: A dictionary containing user attributes or metadata that will be added to the user's traits.
    - `externalIds`: An array of `ExternalId` objects representing external identifiers associated with the user.
-   - `analytics`: An instance of `AnalyticsClient` used for interacting with storage and configuration.
+   - `storage`: An instance of `KeyValueStorage` used for storage operations.
 
  - Methods:
    - `reduce(currentState:)`: This method modifies the `currentState` (`UserIdentity`) by updating the `userId`, `traits`, and `externalIds`. If the `userId` has changed, it resets the previous traits and external IDs. Otherwise, it merges the new traits and external IDs with the existing ones.
-
- - See Also:
-   - `UserIdentity`: Represents the user's identity, including traits, external identifiers, and user state.
-   - `ExternalId`: Represents an external identifier associated with the user.
-   - `AnalyticsClient`: Responsible for handling analytics-related functionality and storage.
 
  */
 struct SetUserIdTraitsAndExternalIdsAction: StateAction {
@@ -41,7 +36,7 @@ struct SetUserIdTraitsAndExternalIdsAction: StateAction {
     private let externalIds: [ExternalId]
     
     /// The analytics client used to interact with the analytics system.
-    private let analytics: AnalyticsClient
+    private let storage: KeyValueStorage
     
     /**
      Initializes the action with the specified user ID, traits, external IDs, and analytics client.
@@ -50,13 +45,13 @@ struct SetUserIdTraitsAndExternalIdsAction: StateAction {
         - userId: The user ID to be set in the state.
         - traits: A dictionary containing the user's traits.
         - externalIds: A list of external identifiers associated with the user.
-        - analytics: The analytics client to interact with storage.
+        - storage: The key-value storage instance to perform storage operations.
      */
-    init(userId: String, traits: [String : Any], externalIds: [ExternalId], analytics: AnalyticsClient) {
+    init(userId: String, traits: [String : Any], externalIds: [ExternalId], storage: KeyValueStorage) {
         self.userId = userId
         self.traits = traits
         self.externalIds = externalIds
-        self.analytics = analytics
+        self.storage = storage
     }
     
     /**
@@ -76,7 +71,7 @@ struct SetUserIdTraitsAndExternalIdsAction: StateAction {
         let isUserIdChanged = currentState.userId != userId
         
         if isUserIdChanged {
-            currentState.resetUserIdTraitsAndExternalIds(self.analytics.configuration.storage)
+            currentState.resetUserIdTraitsAndExternalIds(self.storage)
         
             newState.traits = traits
             newState.externalIds = externalIds
