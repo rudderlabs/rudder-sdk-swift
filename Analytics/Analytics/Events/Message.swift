@@ -102,6 +102,10 @@ extension Message {
             mutableSelf = mutableSelf.addToContext(info: ["traits": traits])
         }
         
+        if let externalIds = self.userIdentity?.externalIds, !externalIds.isEmpty {
+            mutableSelf = mutableSelf.addToContext(info: ["externalId": externalIds.compactMap { $0.dictionary }])
+        }
+        
         return mutableSelf
     }
 
