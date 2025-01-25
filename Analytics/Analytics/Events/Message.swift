@@ -94,6 +94,11 @@ extension Message {
         self.sentAt = Constants.defaultSentAtPlaceholder
     }
     
+    /**
+     Updates the event data with user identity information.
+
+     - Returns: A `Message` object with the updated event data.
+     */
     func updateEventData() -> Message {
         var mutableSelf: Message = self
         
