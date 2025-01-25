@@ -23,6 +23,7 @@
 		537E10B32D450303002074AE /* identify_with_traits.json in Resources */ = {isa = PBXBuildFile; fileRef = 537E10B22D450303002074AE /* identify_with_traits.json */; };
 		537E10B52D45046F002074AE /* identify_with_options.json in Resources */ = {isa = PBXBuildFile; fileRef = 537E10B42D45046F002074AE /* identify_with_options.json */; };
 		537E10B72D450566002074AE /* identify_with_all_values.json in Resources */ = {isa = PBXBuildFile; fileRef = 537E10B62D450566002074AE /* identify_with_all_values.json */; };
+		537E10B92D456385002074AE /* AliasEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537E10B82D456385002074AE /* AliasEvent.swift */; };
 		5383D2E82D40133700291B00 /* IdentifyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2E72D40133700291B00 /* IdentifyEvent.swift */; };
 		5383D2F02D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2EF2D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift */; };
 		5383D3122D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D3112D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift */; };
@@ -125,6 +126,7 @@
 		537E10B22D450303002074AE /* identify_with_traits.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = identify_with_traits.json; sourceTree = "<group>"; };
 		537E10B42D45046F002074AE /* identify_with_options.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = identify_with_options.json; sourceTree = "<group>"; };
 		537E10B62D450566002074AE /* identify_with_all_values.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = identify_with_all_values.json; sourceTree = "<group>"; };
+		537E10B82D456385002074AE /* AliasEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasEvent.swift; sourceTree = "<group>"; };
 		5383D2E72D40133700291B00 /* IdentifyEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyEvent.swift; sourceTree = "<group>"; };
 		5383D2EF2D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUserIdTraitsAndExternalIdsAction.swift; sourceTree = "<group>"; };
 		5383D3112D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdTraitsExternalIdsActionTests.swift; sourceTree = "<group>"; };
@@ -408,6 +410,7 @@
 				53F864B72D23EB960078D68E /* ScreenEvent.swift */,
 				53F864B92D23EC430078D68E /* GroupEvent.swift */,
 				53F864BB2D23ECAE0078D68E /* FlushEvent.swift */,
+				537E10B82D456385002074AE /* AliasEvent.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -647,6 +650,7 @@
 				53F864BA2D23EC430078D68E /* GroupEvent.swift in Sources */,
 				5383D2F02D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift in Sources */,
 				5388D5A52D0A12AD000966AB /* OSInfoPlugin.swift in Sources */,
+				537E10B92D456385002074AE /* AliasEvent.swift in Sources */,
 				539E54042C98B05300982E95 /* StorageModels.swift in Sources */,
 				5388D5A92D0A1364000966AB /* TimeZoneInfoPlugin.swift in Sources */,
 				53F864C02D26EB330078D68E /* FrequencyFlushPolicy.swift in Sources */,
