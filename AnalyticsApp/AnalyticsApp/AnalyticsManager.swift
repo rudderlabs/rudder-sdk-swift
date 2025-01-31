@@ -43,6 +43,10 @@ extension AnalyticsManager {
         self.analytics?.group(id: id, traits: traits, options: options)
     }
     
+    func alias(newId: String, previousId: String? = nil, options: RudderOptions? = nil) {
+        self.analytics?.alias(newId: newId, previousId: previousId, options: options)
+    }
+    
     func flush() {
         self.analytics?.flush()
     }
