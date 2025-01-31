@@ -100,11 +100,28 @@ extension AnalyticsClient {
         
         self.userIdentityState.dispatch(action: SetUserIdTraitsAndExternalIdsAction(userId: userId, traits: traits ?? RudderTraits(), externalIds: options?.externalIds ?? [], storage: self.configuration.storage))
         
-        Task.detached {
-            self.userIdentityState.state.value.storeUserIdTraitsAndExternalIds(self.configuration.storage)
-        }
+        self.userIdentityState.state.value.storeUserIdTraitsAndExternalIds(self.configuration.storage)
         
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
+        self.process(event: event)
+    }
+    
+    /**
+     Alias a new user identifier with the existing user identity.
+
+     - Parameters:
+        - newId: The new user ID that should be associated with the previous ID.
+        - previousId: The existing or previous user ID. If `nil`, the method resolves a preferred previous ID.
+        - options: Additional options for customization, such as integrations and context. Defaults to `nil`.
+     */
+    public func alias(newId: String, previousId: String?, options: RudderOptions? = nil) {
+        let preferedPreviousId = self.userIdentityState.state.value.resolvePreferredPreviousId(previousId ?? "")
+        
+        self.userIdentityState.dispatch(action: SetUserIdAction(userId: newId))
+        
+        self.userIdentityState.state.value.storeUserId(self.configuration.storage)
+        
+        let event = AliasEvent(previousId: preferedPreviousId, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
     
