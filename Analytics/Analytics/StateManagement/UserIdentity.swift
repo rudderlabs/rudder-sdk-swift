@@ -24,10 +24,10 @@ import Foundation
  */
 public struct UserIdentity {
     /// A unique identifier for the user when they are not logged in. Defaults to an empty string.
-    public internal(set) var anonymousId = ""
+    public internal(set) var anonymousId = String.empty
     
     /// The identifier for the user when they are logged in. Defaults to an empty string.
-    public internal(set) var userId = ""
+    public internal(set) var userId = String.empty
     
     /// A dictionary of user-specific traits, used to store additional metadata about the user.
     public internal(set) var traits = RudderTraits()
@@ -52,7 +52,7 @@ public struct UserIdentity {
         var identity = UserIdentity()
         
         identity.anonymousId = storage.read(key: StorageKeys.anonymousId) ?? .randomUUIDString
-        identity.userId = storage.read(key: StorageKeys.userId) ?? ""
+        identity.userId = storage.read(key: StorageKeys.userId) ?? String.empty
         
         if let traitsString: String = storage.read(key: StorageKeys.traits), let traits = traitsString.toDictionary {
             identity.traits = traits

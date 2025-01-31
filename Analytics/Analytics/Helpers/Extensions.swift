@@ -10,6 +10,8 @@ import zlib
 
 // MARK: - String
 extension String {
+    static let empty: String = ""
+    
     static var randomUUIDString: String {
         return UUID().uuidString
     }
