@@ -105,7 +105,7 @@ extension Message {
         mutableSelf.anonymousId = self.userIdentity?.anonymousId
         mutableSelf.userId = self.userIdentity?.userId.isEmpty == true ? nil : self.userIdentity?.userId
         
-        if var traits = self.userIdentity?.traits, !traits.isEmpty {
+        if let traits = self.userIdentity?.traits, !traits.isEmpty {
             mutableSelf = mutableSelf.addToContext(info: ["traits": traits])
         }
         

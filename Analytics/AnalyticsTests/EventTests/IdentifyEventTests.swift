@@ -11,7 +11,7 @@ import XCTest
 final class IdentifyEventTests: XCTestCase {
     
     func test_defaultIdentifyEvent() {
-        given("A identify event with default values..") {
+        given("A identify event with userId provided without any options..") {
             var event: Message = IdentifyEvent(userIdentity: UserIdentity(userId: "Test_User_Id"))
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
@@ -28,7 +28,7 @@ final class IdentifyEventTests: XCTestCase {
     }
 
      func test_identifyEvent_traits() {
-         given("A identify event with trait values..") {
+         given("A identify event with userId and traits without any options..") {
              var event: Message = IdentifyEvent(userIdentity: UserIdentity(userId: "Test_User_Id", traits: MockProvider.sampleEventproperties))
              event = event.updateEventData()
              MockHelper.resetDynamicValues(&event)
@@ -45,7 +45,7 @@ final class IdentifyEventTests: XCTestCase {
      }
      
      func test_identifyEvent_options() {
-         given("A identify event with options..") {
+         given("A identify event with userId and options..") {
              let option = RudderOptions().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
              
              MockProvider.sampleEventIntegrations.forEach { integration in
@@ -68,7 +68,7 @@ final class IdentifyEventTests: XCTestCase {
      }
      
      func test_identifyEvent_traits_options() {
-         given("A identify event with all values..") {
+         given("A identify event with userId, traits, externalIds and options..") {
              let option = RudderOptions().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
              
              MockProvider.sampleEventIntegrations.forEach { integration in
