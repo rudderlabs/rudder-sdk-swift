@@ -23,7 +23,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
     }
     
     func test_updateAction_singleUserId() {
-        given("Prepare test anonymous ID state and action..") {
+        given("Prepare test UserIdentity state with initial set of values and action with expected set of values...") {
             guard let storage else { XCTFail("Storage is not initialized."); return }
             
             let initialUserId = "initial_test_user_id"
@@ -50,7 +50,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
     }
     
     func test_updateAction_appendValues() {
-        given("Prepare test anonymous ID state and action..") {
+        given("Prepare test UserIdentity state with first set of values and action with second set of values...") {
             guard let storage else { XCTFail("Storage is not initialized."); return }
             
             let firstUserId = "first_test_user_id"
