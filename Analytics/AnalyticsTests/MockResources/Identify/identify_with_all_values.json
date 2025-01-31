@@ -48,10 +48,10 @@
         "key-7" : 123,
         "key-8" : true,
         "key-9" : 123.456
-      },
-      "userId" : "Test_User_Id"
+      }
     }
   },
+  "event" : "identify",
   "integrations" : {
     "All" : true,
     "Amplitude" : true,

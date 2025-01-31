@@ -1,11 +1,7 @@
 {
   "anonymousId" : "<anonymous-id>",
   "channel" : "mobile",
-  "context" : {
-    "traits" : {
-      "userId" : "Test_User_Id"
-    }
-  },
+  "event" : "identify",
   "integrations" : {
     "All" : true
   },

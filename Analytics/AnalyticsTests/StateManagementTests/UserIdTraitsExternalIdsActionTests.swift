@@ -23,7 +23,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
     }
     
     func test_updateAction_singleUserId() {
-        given("Prepare test anonymous ID state and action..") {
+        given("Prepare test UserIdentity state with initial set of values and action with expected set of values...") {
             guard let storage else { XCTFail("Storage is not initialized."); return }
             
             let initialUserId = "initial_test_user_id"
@@ -37,7 +37,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
             let state = createState(initialState: UserIdentity(userId: initialUserId, traits: initialTraits, externalIds: initialExternalIds))
             let action = SetUserIdTraitsAndExternalIdsAction(userId: expectedUserId, traits: expectedTraits, externalIds: expectedExternalIds, storage: storage)
             
-            when("Update state with action") {
+            when("Update initial state of UserIdentity with expected values..") {
                 state.dispatch(action: action)
                 
                 then("UserIdentity updated with expected values") {
@@ -50,7 +50,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
     }
     
     func test_updateAction_appendValues() {
-        given("Prepare test anonymous ID state and action..") {
+        given("Prepare test UserIdentity state with first set of values and action with second set of values...") {
             guard let storage else { XCTFail("Storage is not initialized."); return }
             
             let firstUserId = "first_test_user_id"
@@ -64,7 +64,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
             let state = createState(initialState: UserIdentity(userId: firstUserId, traits: firstTraits, externalIds: firstExternalIds))
             let action = SetUserIdTraitsAndExternalIdsAction(userId: secondUserId, traits: secondTraits, externalIds: secondExternalIds, storage: storage)
             
-            when("Update state with action") {
+            when("Update initial state of UserIdentity with second set of values..") {
                 state.dispatch(action: action)
                 
                 then("UserIdentity updated with expected values") {
@@ -76,7 +76,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
                 when("append the values with same userId..") {
                     let newAction = SetUserIdTraitsAndExternalIdsAction(userId: secondUserId, traits: firstTraits, externalIds: firstExternalIds, storage: storage)
                     
-                    when("Update state with action") {
+                    when("Update current state of UserIdentity with added set of values..") {
                         state.dispatch(action: newAction)
                         
                         then("UserIdentity updated with expected values") {
