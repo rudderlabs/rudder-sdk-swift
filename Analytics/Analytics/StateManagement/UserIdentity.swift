@@ -80,6 +80,17 @@ public struct UserIdentity {
     }
     
     /**
+     Stores the current `userId` in the specified storage.
+     
+     This method writes the value of `userId` to the provided `KeyValueStorage` instance under the key defined in `StorageKeys.userId`.
+     
+     - Parameter storage: The storage instance where the `userId` will be saved.
+     */
+    func storeUserId(_ storage: KeyValueStorage) {
+        storage.write(value: userId, key: StorageKeys.userId)
+    }
+    
+    /**
      Stores the user ID, traits, and external IDs into the specified key-value storage.
 
      - Parameters:
@@ -113,6 +124,26 @@ public struct UserIdentity {
         storage.remove(key: StorageKeys.userId)
         storage.remove(key: StorageKeys.traits)
         storage.remove(key: StorageKeys.externalIds)
+    }
+    
+    /**
+     Resolves the preferred previous identifier for the user.
+
+     This function determines the appropriate identifier to use based on the following priority:
+     1. If the provided `previousId` is not empty, it is returned.
+     2. If the instance's `userId` is not empty, it is returned.
+     3. If both are empty, the instance's `anonymousId` is returned.
+
+     - Parameter previousId: The provided previous identifier to evaluate.
+     - Returns: A `String` representing the resolved identifier.
+     */
+    func resolvePreferredPreviousId(_ previousId: String) -> String {
+        if !previousId.isEmpty {
+            return previousId
+        } else if !self.userId.isEmpty {
+            return self.userId
+        }
+        return self.anonymousId
     }
 }
 
