@@ -43,6 +43,9 @@ struct IdentifyEvent: Message {
     /// Custom traits or attributes associated with the user profile.
     var traits: CodableCollection?
 
+    /// The name of the event being tracked.
+    var event: String
+    
     /// The unique identifier for the user.
     var userId: String?
 
@@ -62,7 +65,7 @@ struct IdentifyEvent: Message {
     init(options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.userIdentity = userIdentity
         self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
-        
+        self.event = self.type.rawValue
         self.context = options?.customContext?.isEmpty == false ?
         options?.customContext?.compactMapValues { AnyCodable($0) } : nil
         
@@ -80,5 +83,6 @@ struct IdentifyEvent: Message {
         case context
         case traits
         case userId
+        case event
     }
 }
