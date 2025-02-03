@@ -135,6 +135,15 @@ extension AnalyticsClient {
             }
         }
     }
+    
+    /**
+     Resets the user identity state by clearing stored identifiers and traits.
+
+     - Parameter clearAnonymousId: A boolean flag indicating whether the anonymous ID should be stored before resetting. Defaults to `false`.
+    */
+    public func reset(clearAnonymousId: Bool = false) {
+        self.userIdentityState.state.value.resetUserIdentity(clearAnonymousId: clearAnonymousId, storage: self.configuration.storage)
+    }
 }
 
 // MARK: - Plugin Management
