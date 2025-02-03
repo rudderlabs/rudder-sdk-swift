@@ -90,6 +90,16 @@ struct ContentView: View {
             CustomButton(title: "Read AnonymousId") {
                 print("Current Anonymous Id: \(String(describing: AnalyticsManager.shared.anonymousId))")
             }
+            
+            HStack {
+                CustomButton(title: "Reset") {
+                    AnalyticsManager.shared.reset(false)
+                }
+                
+                CustomButton(title: "Reset (AnonymousId)") {
+                    AnalyticsManager.shared.reset(true)
+                }
+            }
         }
         .onAppear {
             self.confirmTrackingPermission()
