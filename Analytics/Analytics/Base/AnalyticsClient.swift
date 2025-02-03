@@ -115,7 +115,7 @@ extension AnalyticsClient {
         - options: Additional options for customization, such as integrations and context. Defaults to `nil`.
      */
     public func alias(newId: String, previousId: String?, options: RudderOptions? = nil) {
-        let preferedPreviousId = self.userIdentityState.state.value.resolvePreferredPreviousId(previousId ?? "")
+        let preferedPreviousId = self.userIdentityState.state.value.resolvePreferredPreviousId(previousId ?? String.empty)
         
         self.userIdentityState.dispatch(action: SetUserIdAction(userId: newId))
         
