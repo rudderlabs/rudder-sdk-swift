@@ -68,6 +68,11 @@ public struct UserIdentity {
         return identity
     }
     
+}
+
+// MARK: - Helpers
+
+extension UserIdentity {
     /**
      Stores the current `anonymousId` in the specified storage.
      
@@ -102,7 +107,7 @@ public struct UserIdentity {
      3. Serializes each `externalId` into a JSON string (if possible), then writes the resulting array to the storage using the `StorageKeys.externalIds` key.
      */
     func storeUserIdTraitsAndExternalIds(_ storage: KeyValueStorage) {
-        storage.write(value: userId, key: StorageKeys.userId)
+        self.storeUserId(storage)
         storage.write(value: traits.jsonString, key: StorageKeys.traits)
         
         let ids = externalIds.compactMap { $0.jsonString }
@@ -124,6 +129,23 @@ public struct UserIdentity {
         storage.remove(key: StorageKeys.userId)
         storage.remove(key: StorageKeys.traits)
         storage.remove(key: StorageKeys.externalIds)
+    }
+    
+    /**
+     Resets the user identity by clearing stored identifiers and traits.
+
+     - Parameters:
+       - clearAnonymousId: A boolean flag indicating whether the anonymous ID should be stored before resetting.
+       - storage: The storage instance used to remove user-related data.
+
+     If `clearAnonymousId` is `true`, the function stores the current anonymous ID before resetting other user identity-related data, such as user ID, traits, and external IDs.
+    */
+    func resetUserIdentity(clearAnonymousId: Bool, storage: Storage) {
+        if clearAnonymousId {
+            self.storeAnonymousId(storage)
+        }
+        
+        self.resetUserIdTraitsAndExternalIds(storage)
     }
     
     /**
