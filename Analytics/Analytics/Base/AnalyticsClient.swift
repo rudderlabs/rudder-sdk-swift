@@ -98,9 +98,9 @@ extension AnalyticsClient {
      */
     public func identify(userId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         
-        self.userIdentityState.dispatch(action: SetUserIdTraitsAndExternalIdsAction(userId: userId, traits: traits ?? RudderTraits(), externalIds: options?.externalIds ?? [], storage: self.configuration.storage))
+        self.userIdentityState.dispatch(action: SetUserIdTraitsAndExternalIdsAction(userId: userId, traits: traits ?? RudderTraits(), externalIds: options?.externalIds ?? [], storage: self.storage))
         
-        self.userIdentityState.state.value.storeUserIdTraitsAndExternalIds(self.configuration.storage)
+        self.userIdentityState.state.value.storeUserIdTraitsAndExternalIds(self.storage)
         
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -119,7 +119,7 @@ extension AnalyticsClient {
         
         self.userIdentityState.dispatch(action: SetUserIdAction(userId: newId))
         
-        self.userIdentityState.state.value.storeUserId(self.configuration.storage)
+        self.userIdentityState.state.value.storeUserId(self.storage)
         
         let event = AliasEvent(previousId: preferedPreviousId, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -142,7 +142,7 @@ extension AnalyticsClient {
      - Parameter clearAnonymousId: A boolean flag indicating whether the anonymous ID should be stored before resetting. Defaults to `false`.
     */
     public func reset(clearAnonymousId: Bool = false) {
-        self.userIdentityState.state.value.resetUserIdentity(clearAnonymousId: clearAnonymousId, storage: self.configuration.storage)
+        self.userIdentityState.state.value.resetUserIdentity(clearAnonymousId: clearAnonymousId, storage: self.storage)
     }
 }
 
@@ -201,7 +201,7 @@ extension AnalyticsClient {
      This method retrieves the current value of `anonymousId` from the `userIdentityState` and stores it in the configured storage.
      */
     private func storeAnonymousId() {
-        self.userIdentityState.state.value.storeAnonymousId(self.configuration.storage)
+        self.userIdentityState.state.value.storeAnonymousId(self.storage)
     }
 }
 
@@ -217,7 +217,7 @@ extension AnalyticsClient {
             let client = HttpClient(analytics: self)
             do {
                 let data = try await client.getConfiguarationData()
-                self.configuration.storage.write(value: data.jsonString, key: StorageKeys.sourceConfig)
+                self.storage.write(value: data.jsonString, key: StorageKeys.sourceConfig)
                 print(data.prettyPrintedString ?? "Bad response")
             } catch {
                 print(error.localizedDescription)
@@ -249,4 +249,13 @@ extension AnalyticsClient {
             self.storeAnonymousId()
         }
     }
+    
+    /**
+     A computed property that provides access to the storage instance from the configuration.
+
+     This property retrieves the `Storage` instance associated with the current configuration.
+
+     - Returns: The `Storage` instance from `self.configuration`.
+     */
+    var storage: Storage { self.configuration.storage }
 }
