@@ -142,6 +142,7 @@ extension AnalyticsClient {
      - Parameter clearAnonymousId: A boolean flag indicating whether the anonymous ID should be stored before resetting. Defaults to `false`.
     */
     public func reset(clearAnonymousId: Bool = false) {
+        self.userIdentityState.dispatch(action: ResetUserIdentityAction(clearAnonymousId: clearAnonymousId))
         self.userIdentityState.state.value.resetUserIdentity(clearAnonymousId: clearAnonymousId, storage: self.storage)
     }
 }
