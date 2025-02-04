@@ -50,6 +50,19 @@ extension AnalyticsTests {
         XCTAssertEqual(client.anonymousId, testId)
     }
     
+    func test_identify_disk() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        client.identify(userId: "user_id", traits: ["prop": "value"])
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        await client.configuration.storage.rollover()
+        let dataItems = await client.configuration.storage.read().dataItems
+        XCTAssertFalse(dataItems.isEmpty)
+        
+        for item in dataItems {
+            await client.configuration.storage.remove(messageReference: item.reference)
+        }
+    }
+    
     func test_trackEvent_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         client.track(name: "Track Event", properties: ["prop": "value"])
