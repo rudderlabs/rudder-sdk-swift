@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5304C9182CD3FF37003AFCC2 /* FlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5304C9172CD3FF37003AFCC2 /* FlushPolicy.swift */; };
+		531744742D528F7500E98C03 /* ResetUserIdentityActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531744732D528F7500E98C03 /* ResetUserIdentityActionTests.swift */; };
 		5334858F2C9AB24E0029F88E /* StorageModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334858E2C9AB24E0029F88E /* StorageModuleTests.swift */; };
 		533485912C9AB3170029F88E /* MockProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485902C9AB3170029F88E /* MockProvider.swift */; };
 		533485952C9AC7C70029F88E /* CodableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485942C9AC7C70029F88E /* CodableTypes.swift */; };
@@ -116,6 +117,7 @@
 
 /* Begin PBXFileReference section */
 		5304C9172CD3FF37003AFCC2 /* FlushPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushPolicy.swift; sourceTree = "<group>"; };
+		531744732D528F7500E98C03 /* ResetUserIdentityActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetUserIdentityActionTests.swift; sourceTree = "<group>"; };
 		5334858E2C9AB24E0029F88E /* StorageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModuleTests.swift; sourceTree = "<group>"; };
 		533485902C9AB3170029F88E /* MockProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProvider.swift; sourceTree = "<group>"; };
 		533485942C9AC7C70029F88E /* CodableTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTypes.swift; sourceTree = "<group>"; };
@@ -512,6 +514,7 @@
 				536DEF562D37B218000BB30B /* AnonymousIdActionTests.swift */,
 				5383D3112D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift */,
 				537E10BC2D4E9BC7002074AE /* UserIdActionTests.swift */,
+				531744732D528F7500E98C03 /* ResetUserIdentityActionTests.swift */,
 			);
 			path = StateManagementTests;
 			sourceTree = "<group>";
@@ -712,6 +715,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				531744742D528F7500E98C03 /* ResetUserIdentityActionTests.swift in Sources */,
 				53859EE72CB66C3200EAE483 /* DataPlaneModuleTests.swift in Sources */,
 				5388D5AF2D0A1EBD000966AB /* TimeZoneInfoPluginTests.swift in Sources */,
 				5383D3142D441B2300291B00 /* IdentifyEventTests.swift in Sources */,
