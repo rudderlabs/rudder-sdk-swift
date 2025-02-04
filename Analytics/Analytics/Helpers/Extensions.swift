@@ -168,7 +168,7 @@ extension URL {
 
 // MARK: - Dictionary
 extension Dictionary where Key == String  {
-    static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
+    public static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
         return lhs.merging(rhs) { (_, new) in new }
     }
 }
