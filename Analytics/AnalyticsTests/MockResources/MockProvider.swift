@@ -137,6 +137,13 @@ extension String {
     }
 }
 
+// MARK: - Dictionary(Extension)
+extension Dictionary where Key == String  {
+    static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
+        return lhs.merging(rhs) { (_, new) in new }
+    }
+}
+
 // MARK: - MockNetworkMonitor
 class MockNetworkMonitor: NetworkMonitorProtocol {
     var status: NWPath.Status
