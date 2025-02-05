@@ -148,6 +148,14 @@ protocol MessagePlugin: Plugin {
     func group(payload: GroupEvent) -> Message?
     
     /**
+     Processes a `AliasEvent` payload.
+     
+     - Parameter payload: The `AliasEvent` payload to be processed.
+     - Returns: A modified `Message` or `nil` if the event is to be filtered out.
+     */
+    func alias(payload: AliasEvent) -> Message?
+    
+    /**
      Processes a `FlushEvent` payload.
      
      - Parameter payload: The `FlushEvent` payload to be processed.
@@ -166,12 +174,14 @@ extension MessagePlugin {
     
     func group(payload: GroupEvent) -> Message? { payload }
     
+    func alias(payload: AliasEvent) -> Message? { payload }
+    
     func flush(payload: FlushEvent) -> Message? { payload }
     
     /**
      Executes the appropriate method based on the event type.
 
-     This method checks the type of the incoming `Message` and delegates it to the corresponding event handler method such as `identify`, `track`, `screen`, `group`, or `flush`.
+     This method checks the type of the incoming `Message` and delegates it to the corresponding event handler method such as `identify`, `track`, `screen`, `group`, `alias` or `flush`.
      
      If the event type is unknown, it returns `nil`.
 
@@ -188,6 +198,8 @@ extension MessagePlugin {
             return self.screen(payload: event)
         case let event as GroupEvent:
             return self.group(payload: event)
+        case let event as AliasEvent:
+            return self.alias(payload: event)
         case let event as FlushEvent:
             return self.flush(payload: event)
         default:

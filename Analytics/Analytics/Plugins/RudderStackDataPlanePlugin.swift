@@ -56,6 +56,11 @@ extension RudderStackDataPlanePlugin {
         return payload
     }
     
+    func alias(payload: AliasEvent) -> (any Message)? {
+        self.messageManager?.put(payload)
+        return payload
+    }
+    
     func flush(payload: FlushEvent) -> (any Message)? {
         self.messageManager?.put(payload)
         return payload
