@@ -101,6 +101,29 @@ extension AnalyticsTests {
         }
     }
     
+    func test_reset_disk() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        client.storage.write(value: "test_user_id", key: StorageKeys.userId)
+        client.storage.write(value: ["prop": "value"].jsonString, key: StorageKeys.traits)
+        
+        let id = ExternalId(type: "email", id: "email@test.email.com").jsonString ?? String.empty
+        client.storage.write(value: id, key: StorageKeys.externalIds)
+        
+        client.reset()
+        
+        let anonymousId = client.anonymousId
+        let userId: String? = client.storage.read(key: StorageKeys.userId)
+        XCTAssertTrue(userId == nil)
+        let trits: String? = client.storage.read(key: StorageKeys.traits)
+        XCTAssertTrue(trits == nil)
+        let externalId: String? = client.storage.read(key: StorageKeys.externalIds)
+        XCTAssertTrue(externalId == nil)
+        
+        client.reset(clearAnonymousId: true)
+        XCTAssertFalse(anonymousId == client.anonymousId)
+    }
+    
     func test_flushEvents_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         client.track(name: "Track Event", properties: ["prop": "value"])

@@ -51,6 +51,10 @@ extension AnalyticsManager {
         self.analytics?.flush()
     }
     
+    func reset(_ clearAnonymousId: Bool) {
+        self.analytics?.reset(clearAnonymousId: clearAnonymousId)
+    }
+    
     var anonymousId: String? {
         get { self.analytics?.anonymousId }
         set { if let newId = newValue { self.analytics?.anonymousId = newId } }
