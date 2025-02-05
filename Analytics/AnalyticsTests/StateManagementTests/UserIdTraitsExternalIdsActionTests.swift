@@ -43,7 +43,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
                 then("UserIdentity updated with expected values") {
                     XCTAssertEqual(processingState.state.value.userId, expectedUserId, "The userId should be updated to the new value.")
                     XCTAssertEqual(processingState.state.value.traits as? [String : String], expectedTraits, "The traits should be updated to the new value.")
-                    XCTAssertEqual(processingState.state.value.externalIds.count, expectedExternalIds.count, "The externalIds should be updated to the new value.")
+                    XCTAssertEqual(processingState.state.value.externalIds, expectedExternalIds, "The externalIds should be updated to the new value.")
                 }
             }
         }
@@ -68,7 +68,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
                 
                 then("UserIdentity updated with appended values...") {
                     XCTAssertEqual(processingState.state.value.traits as? [String : String], firstTraits + secondTraits, "The traits should be updated with the added values.")
-                    XCTAssertEqual(processingState.state.value.externalIds.count, (firstExternalIds + secondExternalIds).count, "The externalIds should be updated with the added values.")
+                    XCTAssertEqual(processingState.state.value.externalIds, (firstExternalIds + secondExternalIds), "The externalIds should be updated with the added values.")
                 }
             }
         }
