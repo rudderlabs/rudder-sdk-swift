@@ -19,6 +19,21 @@ class MockEvent: Message {
     var type: Analytics.EventType = .track
     var messageId: String = UUID().uuidString
     var originalTimeStamp: String = Date().description
+    var userId: String?
+    var userIdentity: Analytics.UserIdentity?
+    
+    enum CodingKeys: String, CodingKey {
+        case anonymousId
+        case channel
+        case integrations
+        case sentAt
+        case context
+        case traits
+        case type
+        case messageId
+        case originalTimeStamp
+        case userId
+    }
 }
 
 
