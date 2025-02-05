@@ -127,7 +127,7 @@ public struct UserIdentity {
  - Conformance:
  - `Codable`: Allows the `ExternalId` to be encoded and decoded using `JSONEncoder` and `JSONDecoder`.
  */
-public struct ExternalId: Codable {
+public struct ExternalId: Codable, Equatable {
     /// The type of the external identifier.
     var type: String
     
