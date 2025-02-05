@@ -49,6 +49,12 @@ struct FlushEvent: Message {
     /// The name of the message, indicating its specific purpose within the system.
     var messageName: String
 
+    /// The unique identifier for the user.
+    var userId: String?
+    
+    /// The identity values of the user associated with the event.
+    var userIdentity: UserIdentity?
+    
     /**
      Initializes a `FlushEvent` with a specified message name.
 
@@ -56,5 +62,19 @@ struct FlushEvent: Message {
      */
     init(messageName: String) {
         self.messageName = messageName
+    }
+    
+    enum CodingKeys: CodingKey {
+        case type
+        case messageId
+        case originalTimeStamp
+        case anonymousId
+        case channel
+        case integrations
+        case sentAt
+        case context
+        case traits
+        case messageName
+        case userId
     }
 }

@@ -26,6 +26,11 @@ public protocol Message: Codable {
     var anonymousId: String? { get set }
 
     /**
+     The unique identifier for the user.
+     */
+    var userId: String? { get set }
+    
+    /**
      The channel through which the event was triggered.
      */
     var channel: String? { get set }
@@ -70,6 +75,11 @@ public protocol Message: Codable {
      The original timestamp when the event occurred, in ISO 8601 format.
      */
     var originalTimeStamp: String { get set }
+    
+    /**
+     The identity values of the user associated with the event.
+     */
+    var userIdentity: UserIdentity? { get set }
 }
 
 extension Message {
@@ -78,12 +88,32 @@ extension Message {
      Adds default or standard values to the `Message` object.
 
      It ensures that each event has consistent base data.
-
-     - Note: The `anonymousId` generation is a placeholder and may be updated in the future.
      */
     mutating func addDefaultValues() {
         self.channel = Constants.defaultChannel
         self.sentAt = Constants.defaultSentAtPlaceholder
+    }
+    
+    /**
+     Updates the event data with user identity information.
+
+     - Returns: A `Message` object with the updated event data.
+     */
+    func updateEventData() -> Message {
+        var mutableSelf: Message = self
+        
+        mutableSelf.anonymousId = self.userIdentity?.anonymousId
+        mutableSelf.userId = self.userIdentity?.userId.isEmpty == true ? nil : self.userIdentity?.userId
+        
+        if let traits = self.userIdentity?.traits, !traits.isEmpty {
+            mutableSelf = mutableSelf.addToContext(info: ["traits": traits])
+        }
+        
+        if let externalIds = self.userIdentity?.externalIds, !externalIds.isEmpty {
+            mutableSelf = mutableSelf.addToContext(info: ["externalId": externalIds.compactMap { $0.dictionary }])
+        }
+        
+        return mutableSelf
     }
 
     /**
@@ -96,7 +126,7 @@ extension Message {
 
      - Note: If the `context` property is `nil`, it is initialized with the provided context.
      */
-    public func addToContext(info: [String: Any]) -> any Message {
+    public func addToContext(info: [String: Any]) -> Message {
         var mutableSelf = self
         mutableSelf.context = (mutableSelf.context ?? [:]) + info.mapValues { AnyCodable($0) }
         return mutableSelf
@@ -107,11 +137,14 @@ extension Message {
 /**
  Represents the type of events supported by the analytics system.
 
- The `EventType` enum defines various event types such as `track`, `screen`, `group`, and `flush`.
+ The `EventType` enum defines various event types such as `identify`, `track`, `screen`, `group`, and `flush`.
  It conforms to `CaseIterable` for easy iteration and `Codable` for seamless encoding and decoding.
  */
 public enum EventType: String, CaseIterable, Codable {
 
+    /// Represents a "identify" event.
+    case identify
+    
     /// Represents a "track" event.
     case track
 

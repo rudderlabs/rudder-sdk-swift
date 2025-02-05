@@ -10,6 +10,8 @@ import zlib
 
 // MARK: - String
 extension String {
+    static let empty: String = ""
+    
     static var randomUUIDString: String {
         return UUID().uuidString
     }
@@ -28,6 +30,11 @@ extension String {
     
     var trimmedUrlString: String {
         return self.hasSuffix("/") ? String(self.dropLast()) : self
+    }
+    
+    var toDictionary: [String: Any]? {
+        guard let data = self.utf8Data else { return nil }
+        return try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
     }
 }
 
@@ -143,6 +150,11 @@ extension Encodable {
             return nil
         }
     }
+    
+    var dictionary: [String: Any]? {
+        guard let data = try? JSONEncoder().encode(self) else { return nil }
+        return (try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)) as? [String: Any]
+    }
 }
 
 // MARK: - URL
@@ -154,10 +166,31 @@ extension URL {
     }
 }
 
-// MARK: - [String: AnyCodable]
-extension [String: AnyCodable] {
-    static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
+// MARK: - Dictionary
+extension Dictionary where Key == String  {
+    public static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
         return lhs.merging(rhs) { (_, new) in new }
+    }
+}
+
+// MARK: - [String: Any]
+extension [String: Any] {
+    var jsonString: String? {
+        return try? JSONSerialization.data(withJSONObject: self, options: []).jsonString
+    }
+}
+
+extension Array where Element == ExternalId {
+    func mergeWithHigherPriorityTo(_ other: [ExternalId]) -> [ExternalId] {
+        var merged = self
+        for item in other {
+            if let index = merged.firstIndex(where: { $0.type == item.type }) {
+                merged[index].id = item.id
+            } else {
+                merged.append(item)
+            }
+        }
+        return merged
     }
 }
 

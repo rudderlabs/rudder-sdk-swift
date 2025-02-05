@@ -114,6 +114,15 @@ public extension Plugin {
  - Conforms to: `Plugin`
  */
 protocol MessagePlugin: Plugin {
+    
+    /**
+     Processes a `IdentifyEvent` payload.
+     
+     - Parameter payload: The `IdentifyEvent` payload to be processed.
+     - Returns: A modified `Message` or `nil` if the event is to be filtered out.
+     */
+    func identify(payload: IdentifyEvent) -> Message?
+    
     /**
      Processes a `TrackEvent` payload.
      
@@ -149,6 +158,8 @@ protocol MessagePlugin: Plugin {
 
 extension MessagePlugin {
     
+    func identify(payload: IdentifyEvent) -> Message? { payload }
+    
     func track(payload: TrackEvent) -> Message? { payload }
     
     func screen(payload: ScreenEvent) -> Message? { payload }
@@ -160,7 +171,7 @@ extension MessagePlugin {
     /**
      Executes the appropriate method based on the event type.
 
-     This method checks the type of the incoming `Message` and delegates it to the corresponding event handler method such as `track`, `screen`, `group`, or `flush`.
+     This method checks the type of the incoming `Message` and delegates it to the corresponding event handler method such as `identify`, `track`, `screen`, `group`, or `flush`.
      
      If the event type is unknown, it returns `nil`.
 
@@ -169,6 +180,8 @@ extension MessagePlugin {
      */
     func execute(event: any Message) -> (any Message)? {
         switch event {
+        case let event as IdentifyEvent:
+            return self.identify(payload: event)
         case let event as TrackEvent:
             return self.track(payload: event)
         case let event as ScreenEvent:

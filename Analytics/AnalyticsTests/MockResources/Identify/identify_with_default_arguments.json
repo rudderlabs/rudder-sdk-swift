@@ -1,0 +1,13 @@
+{
+  "anonymousId" : "<anonymous-id>",
+  "channel" : "mobile",
+  "event" : "identify",
+  "integrations" : {
+    "All" : true
+  },
+  "messageId" : "<message-id>",
+  "originalTimeStamp" : "<original-timestamp>",
+  "sentAt" : "{{_RSA_DEF_SENT_AT_TS_}}",
+  "type" : "identify",
+  "userId" : "Test_User_Id"
+}

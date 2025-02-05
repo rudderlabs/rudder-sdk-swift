@@ -63,6 +63,9 @@ public enum FlushInterval: Double {
 // MARK: - StorageKeys
 struct StorageKeys {
     static let anonymousId = "anonymous_id"
+    static let userId = "user_id"
+    static let traits = "traits"
+    static let externalIds = "external_ids"
     static let sourceConfig = "source_config"
     
     private init() {}
