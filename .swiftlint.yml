@@ -2,3 +2,7 @@ disabled_rules: # Disable all default rules
   - all
 
 opt_in_rules: [] # No optional rules enabled
+   
+excluded:
+    - '**/Analytics/AnalyticsTests/**'
+    - '**/AnalyticsApp/**'
