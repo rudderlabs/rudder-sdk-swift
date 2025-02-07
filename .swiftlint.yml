@@ -1,8 +1,66 @@
-disabled_rules: # Disable all default rules
-  - all
-
-opt_in_rules: [] # No optional rules enabled
+# Disable Specific Rules
+disabled_rules:
+  - line_length
+  - function_parameter_count
+  - type_body_length
+  - file_length
+  - cyclomatic_complexity
+  - empty_parameters
+  - empty_enum_arguments
+  - redundant_optional_initialization
+  - redundant_discardable_let
+  - redundant_void_return
    
 excluded:
     - '**/Analytics/AnalyticsTests/**'
     - '**/AnalyticsApp/**'
+
+# Complexity Rules
+function_parameter_count:
+  warning: 12
+  error: 15
+type_body_length:
+  warning: 200
+  error: 300
+file_length:
+  warning: 400
+  error: 500
+  
+# Naming Rules
+identifier_name:
+  min_length:
+    warning: 3
+  max_length:
+    warning: 40
+  excluded:
+    - id
+    - x
+    - y
+
+# Performance Rules
+redundant_optional_initialization: warning
+redundant_discardable_let: warning
+redundant_void_return: warning
+
+# Style Rules
+return_arrow_whitespace: warning
+trailing_newline: warning
+empty_enum_arguments: warning
+empty_parameters: warning
+empty_parentheses_with_trailing_closure: warning
+
+# Formatting Rules
+opt_in_rules:
+  - indentation_width
+  - first_where
+  - closure_spacing
+  - contains_over_first_not_nil
+  - redundant_nil_coalescing
+
+indentation_width: 4
+
+line_length:
+  warning: 125
+  error: 150
+  ignores_comments: true
+  ignores_urls: true
