@@ -18,6 +18,8 @@ opt_in_rules:
     - multiline_parameters_brackets # Parameters should be on multi-lines when line length exceeds
     - multiline_arguments # Parameter alignment for long list parameters in the method call
     - attributes # Property formating attributes
+    - function_default_parameter_at_end
+    - no_magic_numbers
 
 # File and Directory Exclusions
 excluded:
