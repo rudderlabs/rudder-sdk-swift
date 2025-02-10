@@ -12,9 +12,12 @@ opt_in_rules:
     - redundant_nil_coalescing  # Detects unnecessary nil coalescing (`?? nil`)
     - fatal_error_message  # Detects empty fatal errors without message
     - empty_count # Detects irrelavant empty checks
-    - identifier_name # Naming conventions rule for variables, Default
-    - nesting # Related to nested types and methods, Default
     - no_empty_block # Discourages having empty blocks
+    - sorted_imports # Imports will be in sorted order
+    - return_arrow_whitespace # White space around the return type
+    - multiline_parameters_brackets # Parameters should be on multi-lines when line length exceeds
+    - multiline_arguments # Parameter alignment for long list parameters in the method call
+    - attributes # Property formating attributes
 
 # File and Directory Exclusions
 excluded:
@@ -35,12 +38,6 @@ force_try:
 large_tuple:
     warning: 3
     error: 6
-
-line_length:
-    warning: 250
-    error: 300
-    ignores_comments: true
-    ignores_function_declarations: true
   
 type_name:
     excluded: ["T"]
@@ -53,9 +50,17 @@ type_body_length:
     warning: 600
     
 function_body_length:
-    warning: 60
+    warning: 125
 
 # Number of parameters allowed in the function
 function_parameter_count:
     warning: 8
     error: 12
+
+# Formatting
+line_length:
+    warning: 250
+    error: 300
+    ignores_urls: true
+    ignores_comments: true
+    ignores_function_declarations: true
