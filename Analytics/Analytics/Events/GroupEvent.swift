@@ -69,7 +69,7 @@ struct GroupEvent: Message {
         self.groupId = groupId
 
         self.traits = CodableCollection(dictionary: traits)
-        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
+        self.integrations = options == nil ? RSConstants.Payload.integration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
             options?.customContext?.compactMapValues { AnyCodable($0) } : nil

@@ -102,7 +102,7 @@ extension MessageManager {
                 for item in dataItems {
                     print("Upload started: \(item.reference)")
                     do {
-                        let processed = item.batch.replacingOccurrences(of: Constants.defaultSentAtPlaceholder, with: Date().iso8601TimeStamp)
+                        let processed = item.batch.replacingOccurrences(of: RSConstants.Payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
                         print("Uploading: \(processed)")
                         
                         _ = try await self.httpClient.postBatchEvents(processed)

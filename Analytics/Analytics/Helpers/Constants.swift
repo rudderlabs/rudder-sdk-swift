@@ -16,6 +16,7 @@ extension RSConstants {
     public struct Log {
         public static let tag: String = "Rudder-Analytics"
         public static let defaultLevel: LogLevel = .none
+        
         private init() {}
     }
 }
@@ -29,9 +30,10 @@ extension RSConstants {
             public static let traits = "traits"
             public static let externalIds = "external_ids"
             public static let sourceConfig = "source_config"
+            
             private init() {}
         }
-
+        
         static let fileIndex = "rudderstack.message.file.index."
         static let memoryIndex = "rudderstack.message.memory.index."
         static let fileNameSeparator: String = "-"
@@ -44,7 +46,7 @@ extension RSConstants {
 // MARK: - Flush Policies
 extension RSConstants {
     public struct Flush {
-
+        
         public struct EventCount {
             public static let `default` = 30
             public static let min = 1
@@ -52,15 +54,15 @@ extension RSConstants {
             
             private init() {}
         }
-
+        
         public struct Interval {
             public static let `default`: Double = 10_000 // 10 seconds
             public static let min: Double = 1
         }
-
+        
         private init() {}
     }
-
+    
 }
 
 // MARK: - Payload
@@ -74,6 +76,7 @@ extension RSConstants {
         static let sentAtPlaceholder = "{{_RSA_DEF_SENT_AT_TS_}}"
         static let channel = "mobile"
         static let integration = ["All": true]
+        
         private init() {}
     }
 }
@@ -88,5 +91,7 @@ extension RSConstants {
         public static let willCollectDeviceId: Bool = true
         static let queryParams = ["p": "ios", "v": "\(RSVersion)"]
         static let uploadSignal = "#!upload!#"
+        
+        private init() {}
     }
 }

@@ -77,7 +77,7 @@ extension RudderOptionType {
      - Parameter values: A dictionary of integration names and their enabled states.
      */
     func addIntegration(_ integrations: inout [String: Bool]?, values: [String: Bool]) {
-        if integrations == nil { integrations = Constants.defaultIntegration }
+        if integrations == nil { integrations = RSConstants.Payload.integration }
         integrations?.merge(values, uniquingKeysWith: { $1 })
     }
     
@@ -125,10 +125,10 @@ public class RudderOptions: RudderOptionType {
     /**
      Initializes a new instance of `RudderOptions`.
 
-     The initial integrations are set to the default integrations defined in `Constants.defaultIntegration`.
+     The initial integrations are set to the default integrations defined in `RSConstants.Payload.integration`.
      */
     public init() {
-        self.integrations = Constants.defaultIntegration
+        self.integrations = RSConstants.Payload.integration
     }
 
     /**
