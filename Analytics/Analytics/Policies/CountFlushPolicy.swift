@@ -40,11 +40,11 @@ public final class CountFlushPolicy: FlushPolicy {
     /**
      Initializes a new `CountFlushPolicy`.
 
-     - Parameter flushCount: The number of events required to trigger a flush. Defaults to `FlushEventCount.default.rawValue`.
-     - Note: The flush count is clamped between `FlushEventCount.min.rawValue` and `FlushEventCount.max.rawValue`.
+     - Parameter flushCount: The number of events required to trigger a flush. Defaults to `RSConstants.Flush.EventCount.default`.
+     - Note: The flush count is clamped between `RSConstants.Flush.EventCount.min` and `RSConstants.Flush.EventCount.max`.
      */
-    public init(flushCount: Int = FlushEventCount.default.rawValue) {
-        self.flushCount = min(FlushEventCount.max.rawValue, max(flushCount, FlushEventCount.min.rawValue))
+    public init(flushCount: Int = RSConstants.Flush.EventCount.default) {
+        self.flushCount = min(RSConstants.Flush.EventCount.max, max(flushCount, RSConstants.Flush.EventCount.min))
     }
 
     /**
