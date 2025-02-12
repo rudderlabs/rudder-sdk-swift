@@ -85,7 +85,7 @@ public class Configuration {
                 gzipEnaabled: Bool = Constants.defaultGZipStatus,
                 storage: Storage? = nil,
                 flushPolicies: [FlushPolicy] = Constants.defaultFlushPolicies,
-                collectDeviceId: Bool = Constants.defaultCollectDeviceId) {
+                collectDeviceId: Bool = RSConstants.DefaultConfig.willCollectDeviceId) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl

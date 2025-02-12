@@ -30,7 +30,7 @@ final actor DiskStore {
             newFile = true
         }
         
-        if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > Constants.maxBatchSize {
+        if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > RSConstants.Payload.maxBatchSize {
             self.finish()
             print("Batch size exceeded. Closing the current batch.")
             self.store(message: message)
