@@ -49,12 +49,12 @@ final class UserIdentityTests: XCTestCase {
             let expectedTraits = ["traits_key": "traits_value", "traits_key2": "sk@example.com"]
             let externalIds = [ExternalId(type: "sample_type", id: "sample_id")]
             
-            storage.write(value: expectedAnonymousId, key: StorageKeys.anonymousId)
-            storage.write(value: expectedUserId, key: StorageKeys.userId)
-            storage.write(value: expectedTraits.jsonString, key: StorageKeys.traits)
+            storage.write(value: expectedAnonymousId, key: RSConstants.Storage.Keys.anonymousId)
+            storage.write(value: expectedUserId, key: RSConstants.Storage.Keys.userId)
+            storage.write(value: expectedTraits.jsonString, key: RSConstants.Storage.Keys.traits)
             
             let externalIdStrings = externalIds.compactMap { $0.jsonString }
-            storage.write(value: externalIdStrings, key: StorageKeys.externalIds)
+            storage.write(value: externalIdStrings, key: RSConstants.Storage.Keys.externalIds)
             
             when("UserIdentity initialized.") {
                 let userIdentity = UserIdentity.initializeState(storage)
