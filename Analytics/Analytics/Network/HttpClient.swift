@@ -44,7 +44,7 @@ final class HttpClient {
         url = url.appendingPathComponent(requestType.endpoint)
         
         if requestType == .configuration {
-            url = url.appendQueryParameters(Constants.configQueryParams)
+            url = url.appendQueryParameters(RSConstants.DefaultConfig.queryParams)
         }
         return url
     }

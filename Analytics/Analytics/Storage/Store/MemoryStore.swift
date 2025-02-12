@@ -23,8 +23,8 @@ final actor MemoryStore {
     }
     
     private func store(message: String) {
-        var dataItem = self.currentDataItem ?? MessageDataItem(batch: Constants.batchPrefix)
-        let newEntry = dataItem.batch == Constants.batchPrefix
+        var dataItem = self.currentDataItem ?? MessageDataItem(batch: RSConstants.Storage.fileBatchPrefix)
+        let newEntry = dataItem.batch == RSConstants.Storage.fileBatchPrefix
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > Constants.maxBatchSize {
             self.finish()
@@ -41,7 +41,7 @@ final actor MemoryStore {
     
     private func finish() {
         guard var currentDataItem = self.currentDataItem else { return }
-        currentDataItem.batch += Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
+        currentDataItem.batch += RSConstants.Storage.fileBatchSentAtSuffix + String.currentTimeStamp + RSConstants.Storage.fileBatchSuffix
         currentDataItem.isClosed = true
         self.appendDataItem(currentDataItem)
         
@@ -59,7 +59,7 @@ final actor MemoryStore {
     }
     
     private func collectDataItems() -> [MessageDataItem] {
-        var filtered = self.dataItems.filter { $0.batch.hasSuffix(Constants.batchSuffix) && $0.isClosed }
+        var filtered = self.dataItems.filter { $0.batch.hasSuffix(RSConstants.Storage.fileBatchSuffix) && $0.isClosed }
         
         if let currentDataItem = self.currentDataItem {
             filtered = filtered.filter { $0.reference != currentDataItem.reference }
@@ -83,7 +83,7 @@ final actor MemoryStore {
 
 extension MemoryStore {
     private var currentDataItemKey: String {
-        return Constants.memoryIndex + self.writeKey
+        return RSConstants.Storage.memoryIndex + self.writeKey
     }
     
     private var currentDataItemId: String? {

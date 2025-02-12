@@ -34,10 +34,13 @@ extension RSConstants {
             private init() {}
         }
         
-        static let fileIndex = "rudderstack.message.file.index."
         static let memoryIndex = "rudderstack.message.memory.index."
+        static let fileIndex = "rudderstack.message.file.index."
         static let fileNameSeparator: String = "-"
         static let fileType = "tmp"
+        static let fileBatchPrefix = "{\"batch\":["
+        static let fileBatchSentAtSuffix = "],\"sentAt\":\""
+        static let fileBatchSuffix = "\"}"
         
         private init() {}
     }
@@ -70,9 +73,6 @@ extension RSConstants {
     public struct Payload {
         static let maxSize: Int64 = 32 * 1024 // 32 KB
         static let maxBatchSize: Int64 = 500 * 1024 // 500 KB
-        static let batchPrefix = "{\"batch\":["
-        static let batchSentAtSuffix = "],\"sentAt\":\""
-        static let batchSuffix = "\"}"
         static let sentAtPlaceholder = "{{_RSA_DEF_SENT_AT_TS_}}"
         static let channel = "mobile"
         static let integration = ["All": true]
