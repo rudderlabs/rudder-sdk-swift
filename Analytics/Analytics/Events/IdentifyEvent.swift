@@ -64,7 +64,7 @@ struct IdentifyEvent: Message {
      */
     init(options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.userIdentity = userIdentity
-        self.integrations = options == nil ? RSConstants.Payload.integration : options?.integrations
+        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
         self.event = self.type.rawValue
         self.context = options?.customContext?.isEmpty == false ?
         options?.customContext?.compactMapValues { AnyCodable($0) } : nil

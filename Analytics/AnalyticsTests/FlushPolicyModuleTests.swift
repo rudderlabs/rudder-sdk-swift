@@ -70,9 +70,9 @@ final class CountFlushPolicyTests: XCTestCase {
     
     func test_flushCountRange() {
         given("Flush count range...") {
-            let minimum = RSConstants.Flush.EventCount.min
-            let maximum = RSConstants.Flush.EventCount.max
-            let defaultValue = RSConstants.Flush.EventCount.default
+            let minimum = Constants.Flush.EventCount.min
+            let maximum = Constants.Flush.EventCount.max
+            let defaultValue = Constants.Flush.EventCount.default
             
             when("without passing any flush count value...") {
                 let policy = CountFlushPolicy()
@@ -155,7 +155,7 @@ final class FrequencyFlushPolicyTests: XCTestCase {
             
             when("preare the policy...") {
                 let policy = FrequencyFlushPolicy(flushIntervalInMillis: mills)
-                let minimum = RSConstants.Flush.Interval.min
+                let minimum = Constants.Flush.Interval.min
                 
                 then("sets the flush interval to minimum..") {
                     XCTAssertTrue(policy.flushIntervalInMillis == minimum)
@@ -167,7 +167,7 @@ final class FrequencyFlushPolicyTests: XCTestCase {
     func test_defaultFlushFrequency() {
         given("FrequencyFlushPolicy with default flush interval... ") {
             let policy = FrequencyFlushPolicy()
-            let defaultValue = RSConstants.Flush.Interval.default
+            let defaultValue = Constants.Flush.Interval.default
             
             then("sets the flush interval to default..") {
                 XCTAssertTrue(policy.flushIntervalInMillis == defaultValue)

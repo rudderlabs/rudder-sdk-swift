@@ -25,12 +25,12 @@ final actor DiskStore {
         var currentFilePath = self.currentFileURL.path
         var newFile = false
         if !FileManager.default.fileExists(atPath: currentFilePath) {
-            guard let filePath = FileManager.createFile(at: currentFilePath), self.writeTo(file: self.currentFileURL, content: RSConstants.Storage.fileBatchPrefix) else { return }
+            guard let filePath = FileManager.createFile(at: currentFilePath), self.writeTo(file: self.currentFileURL, content: Constants.Storage.fileBatchPrefix) else { return }
             currentFilePath = filePath
             newFile = true
         }
         
-        if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > RSConstants.Payload.maxBatchSize {
+        if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > Constants.Payload.maxBatchSize {
             self.finish()
             print("Batch size exceeded. Closing the current batch.")
             self.store(message: message)
@@ -45,7 +45,7 @@ final actor DiskStore {
         let currentFilePath = self.currentFileURL.path
         guard FileManager.default.fileExists(atPath: currentFilePath) else { return }
         
-        let content = RSConstants.Storage.fileBatchSentAtSuffix + String.currentTimeStamp + RSConstants.Storage.fileBatchSuffix
+        let content = Constants.Storage.fileBatchSentAtSuffix + String.currentTimeStamp + Constants.Storage.fileBatchSuffix
         self.writeTo(file: self.currentFileURL, content: content)
         FileManager.removePathExtension(from: currentFilePath)
         self.incrementFileIndex()
@@ -57,8 +57,8 @@ final actor DiskStore {
             .filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }
             .map { directory.appendingPathComponent($0.lastPathComponent).path }
             .sorted {
-                let idx1 = Int($0.components(separatedBy: RSConstants.Storage.fileNameSeparator).last ?? "") ?? 0
-                let idx2 = Int($1.components(separatedBy: RSConstants.Storage.fileNameSeparator).last ?? "") ?? 0
+                let idx1 = Int($0.components(separatedBy: Constants.Storage.fileNameSeparator).last ?? "") ?? 0
+                let idx2 = Int($1.components(separatedBy: Constants.Storage.fileNameSeparator).last ?? "") ?? 0
                 return idx1 < idx2
             }
     }
@@ -69,7 +69,7 @@ final actor DiskStore {
  */
 extension DiskStore {
     private var fileIndexKey: String {
-        return RSConstants.Storage.fileIndex + self.writeKey
+        return Constants.Storage.fileIndex + self.writeKey
     }
     
     private var currentFileIndex: Int {
@@ -78,7 +78,7 @@ extension DiskStore {
     }
     
     private var currentFileURL: URL {
-        return self.fileStorageURL.appendingPathComponent(self.writeKey + "\(RSConstants.Storage.fileNameSeparator)\(self.currentFileIndex)").appendingPathExtension(RSConstants.Storage.fileType)
+        return self.fileStorageURL.appendingPathComponent(self.writeKey + "\(Constants.Storage.fileNameSeparator)\(self.currentFileIndex)").appendingPathExtension(Constants.Storage.fileType)
     }
     
     private func incrementFileIndex() {

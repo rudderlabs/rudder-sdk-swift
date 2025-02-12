@@ -172,7 +172,7 @@ public final class SwiftLogger: Logger {
      */
     public func info(tag: String, log: String) {
         if self.logLevel.rawValue >= LogLevel.info.rawValue {
-            print(RSConstants.Log.tag + "-info : \(log)")
+            print(Constants.Log.tag + "-info : \(log)")
         }
     }
     
@@ -185,7 +185,7 @@ public final class SwiftLogger: Logger {
      */
     public func debug(tag: String, log: String) {
         if self.logLevel.rawValue >= LogLevel.debug.rawValue {
-            print(RSConstants.Log.tag + "-debug : \(log)")
+            print(Constants.Log.tag + "-debug : \(log)")
         }
     }
     
@@ -198,7 +198,7 @@ public final class SwiftLogger: Logger {
      */
     public func warn(tag: String, log: String) {
         if self.logLevel.rawValue >= LogLevel.warn.rawValue {
-            print(RSConstants.Log.tag + "-warn : \(log)")
+            print(Constants.Log.tag + "-warn : \(log)")
         }
     }
     
@@ -211,7 +211,7 @@ public final class SwiftLogger: Logger {
      */
     public func error(tag: String, log: String) {
         if self.logLevel.rawValue >= LogLevel.error.rawValue {
-            print(RSConstants.Log.tag + "-error : \(log)")
+            print(Constants.Log.tag + "-error : \(log)")
         }
     }
 }

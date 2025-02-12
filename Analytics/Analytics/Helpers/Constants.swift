@@ -7,12 +7,12 @@
 
 import Foundation
 
-public struct RSConstants {
+public struct Constants {
     private init() {} // Prevent instantiation
 }
 
 // MARK: - Log
-extension RSConstants {
+extension Constants {
     public struct Log {
         public static let tag: String = "Rudder-Analytics"
         public static let defaultLevel: LogLevel = .none
@@ -22,7 +22,7 @@ extension RSConstants {
 }
 
 // MARK: - Storage
-extension RSConstants {
+extension Constants {
     public struct Storage {
         public struct Keys {
             public static let anonymousId = "anonymous_id"
@@ -47,7 +47,7 @@ extension RSConstants {
 }
 
 // MARK: - Flush Policies
-extension RSConstants {
+extension Constants {
     public struct Flush {
         
         public struct EventCount {
@@ -69,7 +69,7 @@ extension RSConstants {
 }
 
 // MARK: - Payload
-extension RSConstants {
+extension Constants {
     public struct Payload {
         static let maxSize: Int64 = 32 * 1024 // 32 KB
         static let maxBatchSize: Int64 = 500 * 1024 // 500 KB
@@ -82,7 +82,7 @@ extension RSConstants {
 }
 
 // MARK: - Defaults
-extension RSConstants {
+extension Constants {
     public struct DefaultConfig {
         public static let storageMode: StorageMode = .disk
         public static let controlPlaneUrl: String = "https://api.rudderlabs.com"
