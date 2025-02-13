@@ -22,25 +22,13 @@ extension Constants {
 }
 
 // MARK: - Storage
-extension Constants {
-    public struct Storage {
-        public struct Keys {
-            public static let anonymousId = "anonymous_id"
-            public static let userId = "user_id"
-            public static let traits = "traits"
-            public static let externalIds = "external_ids"
-            public static let sourceConfig = "source_config"
-            
-            private init() {}
-        }
-        
-        static let memoryIndex = "rudderstack.message.memory.index."
-        static let fileIndex = "rudderstack.message.file.index."
-        static let fileNameSeparator: String = "-"
-        static let fileType = "tmp"
-        static let fileBatchPrefix = "{\"batch\":["
-        static let fileBatchSentAtSuffix = "],\"sentAt\":\""
-        static let fileBatchSuffix = "\"}"
+extension Constants { // need changes
+    public struct StorageKeys {
+        public static let anonymousId = "anonymous_id"
+        public static let userId = "user_id"
+        public static let traits = "traits"
+        public static let externalIds = "external_ids"
+        public static let sourceConfig = "source_config"
         
         private init() {}
     }
@@ -49,7 +37,6 @@ extension Constants {
 // MARK: - Flush Policies
 extension Constants {
     public struct Flush {
-        
         public struct EventCount {
             public static let `default` = 30
             public static let min = 1

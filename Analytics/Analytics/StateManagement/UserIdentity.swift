@@ -51,14 +51,14 @@ public struct UserIdentity {
     static func initializeState(_ storage: KeyValueStorage) -> UserIdentity {
         var identity = UserIdentity()
         
-        identity.anonymousId = storage.read(key: Constants.Storage.Keys.anonymousId) ?? .randomUUIDString
-        identity.userId = storage.read(key: Constants.Storage.Keys.userId) ?? String.empty
+        identity.anonymousId = storage.read(key: Constants.StorageKeys.anonymousId) ?? .randomUUIDString
+        identity.userId = storage.read(key: Constants.StorageKeys.userId) ?? String.empty
         
-        if let traitsString: String = storage.read(key: Constants.Storage.Keys.traits), let traits = traitsString.toDictionary {
+        if let traitsString: String = storage.read(key: Constants.StorageKeys.traits), let traits = traitsString.toDictionary {
             identity.traits = traits
         }
         
-        if let idArray: [String] = storage.read(key: Constants.Storage.Keys.externalIds) {
+        if let idArray: [String] = storage.read(key: Constants.StorageKeys.externalIds) {
             identity.externalIds = idArray.compactMap {
                 guard let data = $0.utf8Data else { return nil }
                 return try? JSONDecoder().decode(ExternalId.self, from: data)
@@ -76,23 +76,23 @@ extension UserIdentity {
     /**
      Stores the current `anonymousId` in the specified storage.
      
-     This method writes the value of `anonymousId` to the provided `KeyValueStorage` instance under the key defined in `Constants.Storage.Keys.anonymousId`.
+     This method writes the value of `anonymousId` to the provided `KeyValueStorage` instance under the key defined in `Constants.StorageKeys.anonymousId`.
      
      - Parameter storage: The storage instance where the `anonymousId` will be saved.
      */
     func storeAnonymousId(_ storage: KeyValueStorage) {
-        storage.write(value: anonymousId, key: Constants.Storage.Keys.anonymousId)
+        storage.write(value: anonymousId, key: Constants.StorageKeys.anonymousId)
     }
     
     /**
      Stores the current `userId` in the specified storage.
      
-     This method writes the value of `userId` to the provided `KeyValueStorage` instance under the key defined in `Constants.Storage.Keys.userId`.
+     This method writes the value of `userId` to the provided `KeyValueStorage` instance under the key defined in `Constants.StorageKeys.userId`.
      
      - Parameter storage: The storage instance where the `userId` will be saved.
      */
     func storeUserId(_ storage: KeyValueStorage) {
-        storage.write(value: userId, key: Constants.Storage.Keys.userId)
+        storage.write(value: userId, key: Constants.StorageKeys.userId)
     }
     
     /**
@@ -102,16 +102,16 @@ extension UserIdentity {
         - storage: An instance of `KeyValueStorage` where the values will be stored.
      
      The method performs the following:
-     1. Writes the `userId` to the storage using the `Constants.Storage.Keys.userId` key.
-     2. Serializes the `traits` into a JSON string and writes it to the storage using the `Constants.Storage.Keys.traits` key.
-     3. Serializes each `externalId` into a JSON string (if possible), then writes the resulting array to the storage using the `Constants.Storage.Keys.externalIds` key.
+     1. Writes the `userId` to the storage using the `Constants.StorageKeys.userId` key.
+     2. Serializes the `traits` into a JSON string and writes it to the storage using the `Constants.StorageKeys.traits` key.
+     3. Serializes each `externalId` into a JSON string (if possible), then writes the resulting array to the storage using the `Constants.StorageKeys.externalIds` key.
      */
     func storeUserIdTraitsAndExternalIds(_ storage: KeyValueStorage) {
         self.storeUserId(storage)
-        storage.write(value: traits.jsonString, key: Constants.Storage.Keys.traits)
+        storage.write(value: traits.jsonString, key: Constants.StorageKeys.traits)
         
         let ids = externalIds.compactMap { $0.jsonString }
-        storage.write(value: ids, key: Constants.Storage.Keys.externalIds)
+        storage.write(value: ids, key: Constants.StorageKeys.externalIds)
     }
     
     /**
@@ -121,14 +121,14 @@ extension UserIdentity {
         - storage: An instance of `KeyValueStorage` where the values will be removed.
      
      The method performs the following:
-     1. Removes the `userId` from the storage using the `Constants.Storage.Keys.userId` key.
-     2. Removes the `traits` from the storage using the `Constants.Storage.Keys.traits` key.
-     3. Removes the `externalIds` from the storage using the `Constants.Storage.Keys.externalIds` key.
+     1. Removes the `userId` from the storage using the `Constants.StorageKeys.userId` key.
+     2. Removes the `traits` from the storage using the `Constants.StorageKeys.traits` key.
+     3. Removes the `externalIds` from the storage using the `Constants.StorageKeys.externalIds` key.
      */
     func resetUserIdTraitsAndExternalIds(_ storage: KeyValueStorage) {
-        storage.remove(key: Constants.Storage.Keys.userId)
-        storage.remove(key: Constants.Storage.Keys.traits)
-        storage.remove(key: Constants.Storage.Keys.externalIds)
+        storage.remove(key: Constants.StorageKeys.userId)
+        storage.remove(key: Constants.StorageKeys.traits)
+        storage.remove(key: Constants.StorageKeys.externalIds)
     }
     
     /**
