@@ -57,7 +57,7 @@ extension KeyValueStore {
  */
 extension KeyValueStore {
     private func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
-        guard let value = value else { return true } //Since nil is also a primitive, & can be set to UserDefaults..
+        guard let value = value else { return true } // Since nil is also a primitive, & can be set to UserDefaults..
         
         return switch value {
         case is Int, is Double, is Float, is NSNumber, is Bool, is String, is Character,

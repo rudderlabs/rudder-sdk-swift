@@ -49,7 +49,6 @@
 		5388D5AF2D0A1EBD000966AB /* TimeZoneInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5AE2D0A1EBD000966AB /* TimeZoneInfoPluginTests.swift */; };
 		5388D5B12D0C203C000966AB /* AppInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B02D0C203C000966AB /* AppInfoPlugin.swift */; };
 		5388D5B32D0C2081000966AB /* LibraryInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B22D0C2081000966AB /* LibraryInfoPlugin.swift */; };
-		5388D5B52D0C24A3000966AB /* RSVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B42D0C24A3000966AB /* RSVersion.swift */; };
 		5388D5B72D0C4DF5000966AB /* AppInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B62D0C4DF5000966AB /* AppInfoPluginTests.swift */; };
 		5388D5B92D0C4EA6000966AB /* LibraryInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5388D5B82D0C4EA6000966AB /* LibraryInfoPluginTests.swift */; };
 		538E2B1D2CECD52400B550BC /* TrackEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538E2B1C2CECD52400B550BC /* TrackEventTests.swift */; };
@@ -160,7 +159,6 @@
 		5388D5AE2D0A1EBD000966AB /* TimeZoneInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeZoneInfoPluginTests.swift; sourceTree = "<group>"; };
 		5388D5B02D0C203C000966AB /* AppInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoPlugin.swift; sourceTree = "<group>"; };
 		5388D5B22D0C2081000966AB /* LibraryInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryInfoPlugin.swift; sourceTree = "<group>"; };
-		5388D5B42D0C24A3000966AB /* RSVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSVersion.swift; sourceTree = "<group>"; };
 		5388D5B62D0C4DF5000966AB /* AppInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoPluginTests.swift; sourceTree = "<group>"; };
 		5388D5B82D0C4EA6000966AB /* LibraryInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryInfoPluginTests.swift; sourceTree = "<group>"; };
 		538E2B1C2CECD52400B550BC /* TrackEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackEventTests.swift; sourceTree = "<group>"; };
@@ -468,7 +466,6 @@
 				533485942C9AC7C70029F88E /* CodableTypes.swift */,
 				533485962C9B6FFB0029F88E /* PropertyWrappers.swift */,
 				537356EC2CC68B7D008023CE /* Extensions.swift */,
-				5388D5B42D0C24A3000966AB /* RSVersion.swift */,
 				5369DD9B2D1B2B6B00DEC550 /* NetworkInfoPluginUtils.swift */,
 			);
 			path = Helpers;
@@ -725,7 +722,6 @@
 				53FD37782CB1B0C700DBA06B /* PluginChain.swift in Sources */,
 				536DEF552D36B371000BB30B /* SetAnonymousIdAction.swift in Sources */,
 				53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */,
-				5388D5B52D0C24A3000966AB /* RSVersion.swift in Sources */,
 				53A22A3D2C7472850059D6FE /* Message.swift in Sources */,
 				5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */,
 				53BE94E92C921B9E0004E75A /* KeyValueStore.swift in Sources */,

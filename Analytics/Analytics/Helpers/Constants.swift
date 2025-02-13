@@ -96,3 +96,12 @@ extension Constants {
         }
     }
 }
+
+// MARK: - RSVersion
+/**
+ The version number of the Swift SDK.
+ 
+ **Important:**
+ Do not edit this value unless performing a manual release.
+ */
+let RSVersion: String = "1.31.0"
