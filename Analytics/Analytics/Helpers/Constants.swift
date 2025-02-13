@@ -68,8 +68,6 @@ extension Constants {
 // MARK: - Payload
 extension Constants {
     public struct Payload {
-        static let maxSize: Int64 = 32 * 1024 // 32 KB
-        static let maxBatchSize: Int64 = 500 * 1024 // 500 KB
         static let sentAtPlaceholder = "{{_RSA_DEF_SENT_AT_TS_}}"
         static let channel = "mobile"
         static let integration = ["All": true]

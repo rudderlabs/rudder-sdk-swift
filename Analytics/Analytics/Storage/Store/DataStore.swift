@@ -49,4 +49,15 @@ struct DataStoreConstants {
     static let fileBatchPrefix = "{\"batch\":["
     static let fileBatchSentAtSuffix = "],\"sentAt\":\""
     static let fileBatchSuffix = "\"}"
+    
+    private static let bytesInKilobyte: Int64 = 1024
+    static var maxSize: Int64 {
+        let maxSizeInKilobytes: Int64 = 32
+        return bytesInKilobyte * maxSizeInKilobytes // 32 KB
+    }
+    
+    static var maxBatchSize: Int64 {
+        let maxBatchSizeInKilobytes: Int64 = 500
+        return maxBatchSizeInKilobytes * bytesInKilobyte // 500 KB
+    }
 }

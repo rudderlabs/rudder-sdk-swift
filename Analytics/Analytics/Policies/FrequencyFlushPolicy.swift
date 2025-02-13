@@ -58,8 +58,10 @@ public final class FrequencyFlushPolicy: FlushPolicy {
      */
     func scheduleFlush(analytics: AnalyticsClient) {
         self.analytics = analytics
+        let millisecondsInSecond: TimeInterval = 1000.0
+        
         self.flushTimer = Timer.scheduledTimer(
-            withTimeInterval: TimeInterval(flushIntervalInMillis) / 1000.0,
+            withTimeInterval: TimeInterval(flushIntervalInMillis) / millisecondsInSecond,
             repeats: true,
             block: { [weak analytics] _ in
                 analytics?.flush()

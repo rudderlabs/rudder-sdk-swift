@@ -229,6 +229,7 @@ struct GzipError: Swift.Error, Sendable {
 
 extension Data {
     // swiftlint:disable force_unwrapping
+    // swiftlint:disable no_magic_numbers
     var isGzipped: Bool {
         return self.starts(with: [0x1f, 0x8b])
     }
@@ -325,4 +326,5 @@ extension Data {
         return data
     }
     // swiftlint:enable force_unwrapping
+    // swiftlint:enable no_magic_numbers
 }

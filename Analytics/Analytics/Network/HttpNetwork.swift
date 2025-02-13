@@ -37,11 +37,25 @@ final class HttpNetwork {
         guard let httpResponse = response as? HTTPURLResponse else { throw HttpNetworkError.invalidResponse }
         
         let statusCode = httpResponse.statusCode
-        guard statusCode == 200 else {
+        guard statusCode == HttpStateCode.success else {
             print(data.jsonString ?? "No Data..")
             throw HttpNetworkError.requestFailed(statusCode)
         }
         
         return data
     }
+}
+
+// MARK: - HttpStateCode
+/**
+ Struct representing common HTTP status codes.
+ */
+struct HttpStateCode {
+    
+    private init() {
+        /* Prevent instantiation (no-op) */
+    }
+
+    static let success = 200
+    static let notFound = 404
 }

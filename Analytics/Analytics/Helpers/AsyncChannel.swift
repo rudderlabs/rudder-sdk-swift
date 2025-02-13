@@ -73,7 +73,8 @@ final class AsyncChannel<T> {
             if buffer.count < bufferCapacity {
                 cont.resume()
             } else {
-                DispatchQueue.global().asyncAfter(deadline: .now() + 0.01) {
+                let delay = 0.01
+                DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
                     cont.resume()
                 }
             }
