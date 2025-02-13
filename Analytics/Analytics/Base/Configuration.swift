@@ -79,13 +79,13 @@ public class Configuration {
      */
     public init(writeKey: String,
                 dataPlaneUrl: String,
-                controlPlaneUrl: String = Constants.defaultControlPlaneUrl,
-                logger: Logger = SwiftLogger(logLevel: Constants.defaultLogLevel),
+                controlPlaneUrl: String = Constants.DefaultConfig.controlPlaneUrl,
+                logger: Logger = SwiftLogger(logLevel: Constants.Log.defaultLevel),
                 optOut: Bool = false,
-                gzipEnaabled: Bool = Constants.defaultGZipStatus,
+                gzipEnaabled: Bool = Constants.DefaultConfig.gzipEnabled,
                 storage: Storage? = nil,
-                flushPolicies: [FlushPolicy] = Constants.defaultFlushPolicies,
-                collectDeviceId: Bool = Constants.defaultCollectDeviceId) {
+                flushPolicies: [FlushPolicy] = Constants.DefaultConfig.flushPolicies,
+                collectDeviceId: Bool = Constants.DefaultConfig.willCollectDeviceId) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl

@@ -17,7 +17,7 @@ final class MessageManager {
     private let analytics: AnalyticsClient
     private let flushPolicyFacade: FlushPolicyFacade
     private let httpClient: HttpClient
-    private let flushEvent = FlushEvent(messageName: Constants.uploadSignal)
+    private let flushEvent = FlushEvent(messageName: Constants.DefaultConfig.uploadSignal)
     private let writeChannel: AsyncChannel<Message>
     private let uploadChannel: AsyncChannel<String>
     
@@ -86,7 +86,7 @@ extension MessageManager {
                     do {
                         self.flushPolicyFacade.resetCount()
                         await self.storage.rollover()
-                        try await self.uploadChannel.send(Constants.uploadSignal)
+                        try await self.uploadChannel.send(Constants.DefaultConfig.uploadSignal)
                     } catch {
                         print("Error on upload signal: \(error)")
                     }
@@ -102,7 +102,7 @@ extension MessageManager {
                 for item in dataItems {
                     print("Upload started: \(item.reference)")
                     do {
-                        let processed = item.batch.replacingOccurrences(of: Constants.defaultSentAtPlaceholder, with: Date().iso8601TimeStamp)
+                        let processed = item.batch.replacingOccurrences(of: Constants.Payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
                         print("Uploading: \(processed)")
                         
                         _ = try await self.httpClient.postBatchEvents(processed)

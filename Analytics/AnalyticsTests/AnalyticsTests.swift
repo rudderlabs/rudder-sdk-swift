@@ -17,7 +17,7 @@ final class AnalyticsTests: XCTestCase {
         
         self.analytics_disk = MockProvider.clientWithDiskStorage
         self.analytics_memory = MockProvider.clientWithMemoryStorage
-        self.analytics_disk?.configuration.storage.remove(key: StorageKeys.anonymousId)
+        self.analytics_disk?.configuration.storage.remove(key: Constants.StorageKeys.anonymousId)
     }
     
     override func tearDownWithError() throws {
@@ -34,7 +34,7 @@ final class AnalyticsTests: XCTestCase {
         let client = AnalyticsClient(configuration: configuration)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
         
-        let config: String? = client.configuration.storage.read(key: StorageKeys.sourceConfig)
+        let config: String? = client.configuration.storage.read(key: Constants.StorageKeys.sourceConfig)
         XCTAssertFalse(((config?.isEmpty) != nil))
     }
 }
@@ -104,20 +104,20 @@ extension AnalyticsTests {
     func test_reset_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        client.storage.write(value: "test_user_id", key: StorageKeys.userId)
-        client.storage.write(value: ["prop": "value"].jsonString, key: StorageKeys.traits)
+        client.storage.write(value: "test_user_id", key: Constants.StorageKeys.userId)
+        client.storage.write(value: ["prop": "value"].jsonString, key: Constants.StorageKeys.traits)
         
         let id = ExternalId(type: "email", id: "email@test.email.com").jsonString ?? String.empty
-        client.storage.write(value: id, key: StorageKeys.externalIds)
+        client.storage.write(value: id, key: Constants.StorageKeys.externalIds)
         
         client.reset()
         
         let anonymousId = client.anonymousId
-        let userId: String? = client.storage.read(key: StorageKeys.userId)
+        let userId: String? = client.storage.read(key: Constants.StorageKeys.userId)
         XCTAssertTrue(userId == nil)
-        let trits: String? = client.storage.read(key: StorageKeys.traits)
+        let trits: String? = client.storage.read(key: Constants.StorageKeys.traits)
         XCTAssertTrue(trits == nil)
-        let externalId: String? = client.storage.read(key: StorageKeys.externalIds)
+        let externalId: String? = client.storage.read(key: Constants.StorageKeys.externalIds)
         XCTAssertTrue(externalId == nil)
         
         client.reset(clearAnonymousId: true)

@@ -71,7 +71,7 @@ struct TrackEvent: Message {
     init(event: String, properties: RudderProperties? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.event = event
         self.properties = CodableCollection(dictionary: properties)
-        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
+        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
         options?.customContext?.compactMapValues { AnyCodable($0) } : nil

@@ -90,8 +90,8 @@ extension Message {
      It ensures that each event has consistent base data.
      */
     mutating func addDefaultValues() {
-        self.channel = Constants.defaultChannel
-        self.sentAt = Constants.defaultSentAtPlaceholder
+        self.channel = Constants.Payload.channel
+        self.sentAt = Constants.Payload.sentAtPlaceholder
     }
     
     /**
