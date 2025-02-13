@@ -77,15 +77,17 @@ public class Configuration {
      
      - Returns: An instance of `Configuration` with the specified settings.
      */
-    public init(writeKey: String,
-                dataPlaneUrl: String,
-                controlPlaneUrl: String = Constants.DefaultConfig.controlPlaneUrl,
-                logger: Logger = SwiftLogger(logLevel: Constants.Log.defaultLevel),
-                optOut: Bool = false,
-                gzipEnaabled: Bool = Constants.DefaultConfig.gzipEnabled,
-                storage: Storage? = nil,
-                flushPolicies: [FlushPolicy] = Constants.DefaultConfig.flushPolicies,
-                collectDeviceId: Bool = Constants.DefaultConfig.willCollectDeviceId) {
+    public init(
+        writeKey: String,
+        dataPlaneUrl: String,
+        controlPlaneUrl: String = Constants.DefaultConfig.controlPlaneUrl,
+        logger: Logger = SwiftLogger(logLevel: Constants.Log.defaultLevel),
+        optOut: Bool = false,
+        gzipEnaabled: Bool = Constants.DefaultConfig.gzipEnabled,
+        storage: Storage? = nil,
+        flushPolicies: [FlushPolicy] = Constants.DefaultConfig.flushPolicies,
+        collectDeviceId: Bool = Constants.DefaultConfig.willCollectDeviceId
+    ) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
