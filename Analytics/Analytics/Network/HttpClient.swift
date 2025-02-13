@@ -100,7 +100,7 @@ enum HttpClientRequestType {
     
     func headers(_ analytics: AnalyticsClient) -> [String: String] {
         
-        let encodedAuthString = (analytics.configuration.writeKey + ":").base64Encoded ?? ""
+        let encodedAuthString = (analytics.configuration.writeKey + ":").base64Encoded ?? .empty
         var defaultHeaders = ["Content-Type": "application/json", "Authorization": "Basic \(encodedAuthString)"]
         
         if self == .events {

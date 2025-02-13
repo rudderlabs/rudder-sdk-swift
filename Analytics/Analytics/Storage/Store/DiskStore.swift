@@ -57,8 +57,8 @@ final actor DiskStore {
             .filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }
             .map { directory.appendingPathComponent($0.lastPathComponent).path }
             .sorted {
-                let idx1 = Int($0.components(separatedBy: DataStoreConstants.fileNameSeparator).last ?? "") ?? 0
-                let idx2 = Int($1.components(separatedBy: DataStoreConstants.fileNameSeparator).last ?? "") ?? 0
+                let idx1 = Int($0.components(separatedBy: DataStoreConstants.fileNameSeparator).last ?? .empty) ?? 0
+                let idx2 = Int($1.components(separatedBy: DataStoreConstants.fileNameSeparator).last ?? .empty) ?? 0
                 return idx1 < idx2
             }
     }
