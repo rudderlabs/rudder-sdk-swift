@@ -35,7 +35,7 @@ extension KeyValueStore {
     }
     
     public func read<T: Codable>(reference key: String) -> T? {
-        var result: T? = nil
+        var result: T?
         let rawValue = self.userDefaults?.object(forKey: key)
         if let rawData = rawValue as? Data {
             guard let decodedValue = try? JSONDecoder().decode(T.self, from: rawData) else { return nil }
