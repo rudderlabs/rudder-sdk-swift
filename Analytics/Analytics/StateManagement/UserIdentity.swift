@@ -169,7 +169,6 @@ extension UserIdentity {
     }
 }
 
-
 /**
  A struct representing an external identifier associated with the user.
  
