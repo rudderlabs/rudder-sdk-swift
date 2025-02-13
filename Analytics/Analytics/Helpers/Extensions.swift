@@ -228,7 +228,7 @@ struct GzipError: Swift.Error, Sendable {
 }
 
 extension Data {
-    
+    // swiftlint:disable force_unwrapping
     var isGzipped: Bool {
         return self.starts(with: [0x1f, 0x8b])
     }
@@ -324,4 +324,5 @@ extension Data {
         data.count = Int(stream.total_out)
         return data
     }
+    // swiftlint:enable force_unwrapping
 }

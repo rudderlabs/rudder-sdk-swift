@@ -6,18 +6,17 @@ disabled_rules:
 
 # Enable additional rules
 opt_in_rules:
-    - force_unwrapping  # Discourages using `!`
-    - missing_docs  # Requires documentation for public APIs
-    - explicit_init  # Requires explicit `.init()` for clarity
-    - redundant_nil_coalescing  # Detects unnecessary nil coalescing (`?? nil`)
-    - fatal_error_message  # Detects empty fatal errors without message
-    - empty_count # Detects irrelavant empty checks
-    - no_empty_block # Discourages having empty blocks
-    - sorted_imports # Imports will be in sorted order
-    - return_arrow_whitespace # White space around the return type
-    - multiline_parameters_brackets # Parameters should be on multi-lines when line length exceeds
-    - multiline_arguments # Parameter alignment for long list parameters in the method call
-    - attributes # Property formating attributes
+    - force_unwrapping
+    - missing_docs
+    - explicit_init
+    - redundant_nil_coalescing
+    - fatal_error_message
+    - empty_count
+    - no_empty_block
+    - return_arrow_whitespace
+    - multiline_parameters_brackets
+    - multiline_arguments
+    - attributes
     - function_default_parameter_at_end
     - no_magic_numbers
 
