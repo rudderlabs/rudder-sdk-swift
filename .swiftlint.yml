@@ -66,3 +66,6 @@ line_length:
     ignores_urls: true
     ignores_comments: true
     ignores_function_declarations: true
+
+nesting:
+    type_level: 2

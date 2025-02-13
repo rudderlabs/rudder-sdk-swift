@@ -74,7 +74,9 @@ struct AutoCodable<T: Codable>: Codable {
         if T.self == AnyCodable.self {
             // Handle CodableValue specifically
             let value = try AnyCodable(from: decoder)
+            // swiftlint:disable force_cast
             self.wrappedValue = value as! T
+            // swiftlint:enable force_cast
         } else {
             // Handle generic Codable types
             self.wrappedValue = try container.decode(T.self)
