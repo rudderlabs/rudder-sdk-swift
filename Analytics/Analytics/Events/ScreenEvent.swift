@@ -80,7 +80,7 @@ struct ScreenEvent: Message {
         updatedProperties["name"] = screenName.isEmpty ? nil : screenName
         
         self.properties = CodableCollection(dictionary: updatedProperties)
-        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
+        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
         
         self.context = options?.customContext?.isEmpty == false ?
             options?.customContext?.compactMapValues { AnyCodable($0) } : nil

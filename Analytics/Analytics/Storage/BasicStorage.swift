@@ -19,7 +19,7 @@ final class BasicStorage: Storage {
     private let keyValueStore: KeyValueStore
     private let dataStore: any DataStore
     
-    init(writeKey: String, storageMode: StorageMode = Constants.defaultStorageMode) {
+    init(writeKey: String, storageMode: StorageMode = Constants.DefaultConfig.storageMode) {
         self.writeKey = writeKey
         self.storageMode = storageMode
         

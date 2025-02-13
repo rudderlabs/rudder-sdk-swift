@@ -23,10 +23,10 @@ final actor MemoryStore {
     }
     
     private func store(message: String) {
-        var dataItem = self.currentDataItem ?? MessageDataItem(batch: Constants.batchPrefix)
-        let newEntry = dataItem.batch == Constants.batchPrefix
+        var dataItem = self.currentDataItem ?? MessageDataItem(batch: DataStoreConstants.fileBatchPrefix)
+        let newEntry = dataItem.batch == DataStoreConstants.fileBatchPrefix
         
-        if let existingData = dataItem.batch.utf8Data, existingData.count > Constants.maxBatchSize {
+        if let existingData = dataItem.batch.utf8Data, existingData.count > Constants.Payload.maxBatchSize {
             self.finish()
             print("Batch size exceeded. Closing the current batch.")
             self.store(message: message)
@@ -41,7 +41,7 @@ final actor MemoryStore {
     
     private func finish() {
         guard var currentDataItem = self.currentDataItem else { return }
-        currentDataItem.batch += Constants.batchSentAtSuffix + String.currentTimeStamp + Constants.batchSuffix
+        currentDataItem.batch += DataStoreConstants.fileBatchSentAtSuffix + String.currentTimeStamp + DataStoreConstants.fileBatchSuffix
         currentDataItem.isClosed = true
         self.appendDataItem(currentDataItem)
         
@@ -59,7 +59,7 @@ final actor MemoryStore {
     }
     
     private func collectDataItems() -> [MessageDataItem] {
-        var filtered = self.dataItems.filter { $0.batch.hasSuffix(Constants.batchSuffix) && $0.isClosed }
+        var filtered = self.dataItems.filter { $0.batch.hasSuffix(DataStoreConstants.fileBatchSuffix) && $0.isClosed }
         
         if let currentDataItem = self.currentDataItem {
             filtered = filtered.filter { $0.reference != currentDataItem.reference }
@@ -83,7 +83,7 @@ final actor MemoryStore {
 
 extension MemoryStore {
     private var currentDataItemKey: String {
-        return Constants.memoryIndex + self.writeKey
+        return DataStoreConstants.memoryIndex + self.writeKey
     }
     
     private var currentDataItemId: String? {

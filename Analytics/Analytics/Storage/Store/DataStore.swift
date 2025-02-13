@@ -31,4 +31,18 @@ final class StoreProvider {
     }
 }
 
-
+// MARK: - DataStoreConstants
+/**
+ A struct that contains all the constants used by both the `DiskStore` and `MemoryStore`.
+ */
+struct DataStoreConstants {
+    private init() {}
+    
+    static let memoryIndex = "rudderstack.message.memory.index."
+    static let fileIndex = "rudderstack.message.file.index."
+    static let fileNameSeparator: String = "-"
+    static let fileType = "tmp"
+    static let fileBatchPrefix = "{\"batch\":["
+    static let fileBatchSentAtSuffix = "],\"sentAt\":\""
+    static let fileBatchSuffix = "\"}"
+}

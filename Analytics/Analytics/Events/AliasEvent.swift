@@ -65,7 +65,7 @@ struct AliasEvent: Message {
     init(previousId: String, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.previousId = previousId
 
-        self.integrations = options == nil ? Constants.defaultIntegration : options?.integrations
+        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
 
         self.context = options?.customContext?.isEmpty == false ?
         options?.customContext?.compactMapValues { AnyCodable($0) } : nil
