@@ -27,12 +27,10 @@ excluded:
 
 # Discourages using `as!`
 force_cast:
-    active: true  # Activates the rule for force casting
     severity: warning  # Marks the rule as a warning
   
 # Discourages using `try!`
 force_try:
-    active: true  # Activates the rule for using `try!`
     severity: warning  # Marks the rule as a warning
 
 # Avoids tuples with too many elements
