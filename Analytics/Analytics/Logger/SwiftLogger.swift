@@ -92,27 +92,37 @@ public extension Logger {
     /**
      Activates the logger with the specified log level.
      */
-    func activate(level: LogLevel) {}
+    func activate(level: LogLevel) {
+        /* Default implementation (no-op) */
+    }
 
     /**
      Logs an informational message.
      */
-    func info(tag: String, log: String) {}
+    func info(tag: String, log: String) {
+        /* Default implementation (no-op) */
+    }
 
     /**
      Logs a debug message.
      */
-    func debug(tag: String, log: String) {}
+    func debug(tag: String, log: String) {
+        /* Default implementation (no-op) */
+    }
 
     /**
      Logs a warning message.
      */
-    func warn(tag: String, log: String) {}
+    func warn(tag: String, log: String) {
+        /* Default implementation (no-op) */
+    }
 
     /**
      Logs an error message.
      */
-    func error(tag: String, log: String) {}
+    func error(tag: String, log: String) {
+        /* Default implementation (no-op) */
+    }
 }
 
 // MARK: - SwiftLogger

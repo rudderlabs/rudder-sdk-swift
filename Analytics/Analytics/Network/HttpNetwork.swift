@@ -22,7 +22,9 @@ enum HttpNetworkError: Error {
  */
 final class HttpNetwork {
     
-    private init() {}
+    private init() {
+        /* Prevent instantiation (no-op) */
+    }
     
     private static let session: URLSession = {
         let configuration = URLSessionConfiguration.ephemeral

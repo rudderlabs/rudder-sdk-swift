@@ -30,7 +30,9 @@ public final class StartupFlushPolicy: FlushPolicy {
     private var flushedAtStartup: Bool = false
 
     /// Initializes a new `StartupFlushPolicy`.
-    public init() {}
+    public init() {
+        /* Default implementation (no-op) */
+    }
 
     /**
      Determines if a flush operation should occur.

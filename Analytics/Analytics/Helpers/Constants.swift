@@ -8,7 +8,9 @@
 import Foundation
 
 public struct Constants {
-    private init() {} // Prevent instantiation
+    private init() {
+        /* Prevent instantiation (no-op) */
+    }
 }
 
 // MARK: - Log
@@ -17,7 +19,9 @@ extension Constants {
         public static let tag: String = "Rudder-Analytics"
         public static let defaultLevel: LogLevel = .none
         
-        private init() {}
+        private init() {
+            /* Prevent instantiation (no-op) */
+        }
     }
 }
 
@@ -30,7 +34,9 @@ extension Constants { // need changes
         public static let externalIds = "external_ids"
         public static let sourceConfig = "source_config"
         
-        private init() {}
+        private init() {
+            /* Prevent instantiation (no-op) */
+        }
     }
 }
 
@@ -42,7 +48,9 @@ extension Constants {
             public static let min = 1
             public static let max = 100
             
-            private init() {}
+            private init() {
+                /* Prevent instantiation (no-op) */
+            }
         }
         
         public struct Interval {
@@ -50,7 +58,9 @@ extension Constants {
             public static let min: Double = 1
         }
         
-        private init() {}
+        private init() {
+            /* Prevent instantiation (no-op) */
+        }
     }
     
 }
@@ -64,7 +74,9 @@ extension Constants {
         static let channel = "mobile"
         static let integration = ["All": true]
         
-        private init() {}
+        private init() {
+            /* Prevent instantiation (no-op) */
+        }
     }
 }
 
@@ -79,6 +91,8 @@ extension Constants {
         static let queryParams = ["p": "ios", "v": "\(RSVersion)"]
         static let uploadSignal = "#!upload!#"
         
-        private init() {}
+        private init() {
+            /* Prevent instantiation (no-op) */
+        }
     }
 }
