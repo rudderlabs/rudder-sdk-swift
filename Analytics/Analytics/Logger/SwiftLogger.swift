@@ -86,7 +86,7 @@ public extension Logger {
      The current log level of the logger.
      */
     var currentLogLevel: LogLevel {
-        get { .none }
+        return .none
     }
 
     /**
@@ -136,9 +136,7 @@ public final class SwiftLogger: Logger {
     private var logLevel: LogLevel
     
     public var currentLogLevel: LogLevel {
-        get {
-            return self.logLevel
-        }
+        return self.logLevel
     }
     
     // MARK: - Initialization
