@@ -140,7 +140,7 @@ extension DiskStore: DataStore {
         }
     }
     
-    func rollover() async{
+    func rollover() async {
         await withCheckedContinuation { continuation in
             self.finish()
             continuation.resume()
