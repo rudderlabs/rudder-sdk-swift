@@ -33,7 +33,7 @@ final class HttpClient {
     
     private func prepareGenericUrlRequest(for requestType: HttpClientRequestType) -> URLRequest? {
         guard let url = self.prepareRequestUrl(for: requestType) else { return nil }
-        var urlRequest = URLRequest(url:url)
+        var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = requestType.httpMethod
         urlRequest.allHTTPHeaderFields = requestType.headers(analytics)
         return urlRequest
