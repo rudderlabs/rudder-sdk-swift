@@ -1,70 +1,74 @@
 # Disable unwanted rules
 disabled_rules:
-    - redundant_string_enum_value
-    - file_length
-    - trailing_whitespace
+    - redundant_string_enum_value  # Disables the rule that flags redundant string enum values
+    - file_length  # Disables the rule that flags files that are too large
+    - trailing_whitespace  # Disables the rule that flags trailing whitespace
 
 # Enable additional rules
 opt_in_rules:
-    - force_unwrapping
-    - missing_docs
-    - explicit_init
-    - redundant_nil_coalescing
-    - fatal_error_message
-    - empty_count
-    - no_empty_block
-    - return_arrow_whitespace
-    - multiline_parameters_brackets
-    - multiline_arguments
-    - attributes
-    - function_default_parameter_at_end
-    - no_magic_numbers
+    - force_unwrapping  # Discourages the use of force unwrapping (`!`)
+    - missing_docs  # Requires documentation for public APIs
+    - explicit_init  # Requires explicit `.init()` for clarity
+    - redundant_nil_coalescing  # Detects unnecessary nil coalescing (`?? nil`)
+    - fatal_error_message  # Detects empty fatal errors without a message
+    - empty_count  # Warns on empty code blocks (closures, functions, etc.)
+    - no_empty_block  # Discourages empty blocks of code
+    - return_arrow_whitespace  # Enforces consistency in return arrow spacing
+    - multiline_parameters_brackets  # Enforces multiline formatting for function parameters
+    - multiline_arguments  # Enforces multiline formatting for function arguments
+    - attributes  # Enforces consistency in attribute usage
+    - function_default_parameter_at_end  # Enforces default parameters to appear at the end of functions
+    - no_magic_numbers  # Discourages magic numbers in the code
 
 # File and Directory Exclusions
 excluded:
-    - '**/Analytics/AnalyticsTests/**'
-    - '**/AnalyticsApp/**'
+    - '**/Analytics/AnalyticsTests/**'  # Excludes test files in AnalyticsTests
+    - '**/AnalyticsApp/**'  # Excludes files in the AnalyticsApp directory
 
 # Discourages using `as!`
 force_cast:
-    active: true
-    severity: warning
+    active: true  # Activates the rule for force casting
+    severity: warning  # Marks the rule as a warning
   
 # Discourages using `try!`
 force_try:
-    active: true
-    severity: warning
+    active: true  # Activates the rule for using `try!`
+    severity: warning  # Marks the rule as a warning
 
 # Avoids tuples with too many elements
 large_tuple:
-    warning: 3
-    error: 6
+    warning: 3  # Warns when a tuple has more than 3 elements
+    error: 6  # Errors when a tuple has more than 6 elements
   
+# Validates the name of each type
 type_name:
-    excluded: ["T"]
+    excluded: ["T"]  # Excludes the type name "T" from type name checks
     
-# Complexity Rules:
+# Controls the maximum allowed complexity of a function
 cyclomatic_complexity:
-    ignores_case_statements: true
+    ignores_case_statements: true  # Ignores case statements when calculating cyclomatic complexity
   
+# Limits the length of the body of a type
 type_body_length:
-    warning: 600
-    
+    warning: 600  # Warns if the body of a type exceeds 600 lines
+
+# Limits the length of the body of a function
 function_body_length:
-    warning: 125
+    warning: 125  # Warns if the body of a function exceeds 125 lines
 
 # Number of parameters allowed in the function
 function_parameter_count:
-    warning: 8
-    error: 12
+    warning: 8  # Warns if the function has more than 8 parameters
+    error: 12  # Errors if the function has more than 12 parameters
 
 # Formatting
 line_length:
-    warning: 250
-    error: 300
-    ignores_urls: true
-    ignores_comments: true
-    ignores_function_declarations: true
+    warning: 250  # Warns if a line exceeds 250 characters
+    error: 300  # Errors if a line exceeds 300 characters
+    ignores_urls: true  # Ignores URLs for line length rule
+    ignores_comments: true  # Ignores comments for line length rule
+    ignores_function_declarations: true  # Ignores function declarations for line length rule
 
+# Limits the level of nesting allowed in code
 nesting:
-    type_level: 2
+    type_level: 2  # Limits the nesting level of types to 2
