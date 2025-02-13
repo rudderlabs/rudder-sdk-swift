@@ -218,8 +218,6 @@ struct CompressionLevel: RawRepresentable, Sendable {
     static let bestSpeed = Self(rawValue: Z_BEST_SPEED)
     static let bestCompression = Self(rawValue: Z_BEST_COMPRESSION)
     static let defaultCompression = Self(rawValue: Z_DEFAULT_COMPRESSION)
-    
-    init(rawValue: Int32) { self.rawValue = rawValue }
 }
 
 struct GzipError: Swift.Error, Sendable {

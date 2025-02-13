@@ -90,10 +90,6 @@ struct AutoCodable<T: Codable>: Codable {
 struct AutoEquatable<T: Equatable>: Equatable {
     var wrappedValue: T
     
-    init(wrappedValue: T) {
-        self.wrappedValue = wrappedValue
-    }
-    
     static func == (lhs: AutoEquatable<T>, rhs: AutoEquatable<T>) -> Bool {
         return lhs.wrappedValue == rhs.wrappedValue
     }
