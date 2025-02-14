@@ -34,10 +34,6 @@ final class NetworkInfoPlugin: Plugin {
         networkInfo["wifi"] = wifi
         networkInfo["cellular"] = cellular
         
-        if self.networkInfoUtils.isBluetoothAvailable {
-            networkInfo["bluetooth"] = self.networkInfoUtils.isBluetoothEnabled
-        }
-        
         return networkInfo
     }
 }

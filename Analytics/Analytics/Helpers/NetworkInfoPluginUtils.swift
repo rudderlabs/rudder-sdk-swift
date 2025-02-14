@@ -6,56 +6,17 @@
 //
 
 import Foundation
-import CoreBluetooth
 import Network
 
 /**
- A utility class for retrieving Bluetooth and network connectivity information.
+ A utility class for retrieving network connectivity information.
  */
 final class NetworkInfoPluginUtils: NSObject {
-    var isBluetoothEnabled = false
-    var isBluetoothInitialized: Bool = false
-    var bluetoothManager: CBCentralManager?
     var networkMonitor: NetworkMonitorProtocol
     
     init(monitor: NetworkMonitorProtocol = NetworkMonitor()) {
         self.networkMonitor = monitor
         super.init()
-        self.initializeBluetooth()
-    }
-}
-
-// MARK: - Bluetooth
-extension NetworkInfoPluginUtils: CBCentralManagerDelegate {
-    
-    var canInitializeBluetooth: Bool {
-        #if os(iOS) || os(watchOS) || os(visionOS)
-            let permissionKey = "NSBluetoothAlwaysUsageDescription"
-        #elseif os(macOS)
-            let permissionKey = "NSBluetoothPeripheralUsageDescription"
-        #else
-            return false
-        #endif
-
-        guard Bundle.main.object(forInfoDictionaryKey: permissionKey) != nil else {
-            print("\(permissionKey) is missing. Skipping Bluetooth initialization.")
-            return false
-        }
-        return true
-    }
-    
-    var isBluetoothAvailable: Bool {
-        return self.isBluetoothInitialized && CBManager.authorization == .allowedAlways
-    }
-    
-    func initializeBluetooth() {
-        guard self.canInitializeBluetooth else { return }
-        self.bluetoothManager = CBCentralManager(delegate: self, queue: nil)
-        self.isBluetoothInitialized = true
-    }
-    
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        self.isBluetoothEnabled = central.state == .poweredOn
     }
 }
 
