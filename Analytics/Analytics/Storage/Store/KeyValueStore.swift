@@ -14,7 +14,7 @@ final class KeyValueStore {
     private let writeKey: String
     private let userDefaults: UserDefaults?
     
-    public init(writeKey: String) {
+    init(writeKey: String) {
         self.writeKey = writeKey
         self.userDefaults = UserDefaults.rudder(self.writeKey)
     }
@@ -24,7 +24,7 @@ final class KeyValueStore {
  Basic operations for storing, retrieving, and deleting values.
  */
 extension KeyValueStore {
-    public func save<T: Codable>(value: T?, reference key: String) {
+    func save<T: Codable>(value: T?, reference key: String) {
         if self.isPrimitiveType(value) {
             self.userDefaults?.set(value, forKey: key)
         } else {
@@ -34,8 +34,8 @@ extension KeyValueStore {
         self.userDefaults?.synchronize()
     }
     
-    public func read<T: Codable>(reference key: String) -> T? {
-        var result: T? = nil
+    func read<T: Codable>(reference key: String) -> T? {
+        var result: T?
         let rawValue = self.userDefaults?.object(forKey: key)
         if let rawData = rawValue as? Data {
             guard let decodedValue = try? JSONDecoder().decode(T.self, from: rawData) else { return nil }
@@ -46,7 +46,7 @@ extension KeyValueStore {
         return result
     }
     
-    public func delete(reference key: String) {
+    func delete(reference key: String) {
         self.userDefaults?.removeObject(forKey: key)
         self.userDefaults?.synchronize()
     }
@@ -57,7 +57,7 @@ extension KeyValueStore {
  */
 extension KeyValueStore {
     private func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
-        guard let value = value else { return true } //Since nil is also a primitive, & can be set to UserDefaults..
+        guard let value = value else { return true } // Since nil is also a primitive, & can be set to UserDefaults..
         
         return switch value {
         case is Int, is Double, is Float, is NSNumber, is Bool, is String, is Character,

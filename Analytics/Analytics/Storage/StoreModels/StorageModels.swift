@@ -19,15 +19,6 @@ import Foundation
 public struct MessageDataResult {
     /// An array of MessageDataItem objects representing individual message batches.
     public let dataItems: [MessageDataItem]
-    
-    /**
-     Initializes a new instance of `MessageDataResult` with the provided data items.
-     
-     - Parameter dataItems: An array of `MessageDataItem` objects.
-     */
-    init(dataItems: [MessageDataItem]) {
-        self.dataItems = dataItems
-    }
 }
 
 // MARK: - MessageDataItem

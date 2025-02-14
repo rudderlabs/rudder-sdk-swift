@@ -31,6 +31,6 @@ final class AppInfoPlugin: Plugin {
             "name": bundle["CFBundleName"] as? String,
             "namespace": Bundle.main.bundleIdentifier,
             "version": bundle["CFBundleShortVersionString"] as? String
-        ].compactMapValues{ $0 }
+        ].compactMapValues { $0 }
     }()
 }

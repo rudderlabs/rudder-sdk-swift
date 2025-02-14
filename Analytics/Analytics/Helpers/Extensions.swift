@@ -167,8 +167,8 @@ extension URL {
 }
 
 // MARK: - Dictionary
-extension Dictionary where Key == String  {
-    public static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
+extension Dictionary where Key == String {
+    static func + (lhs: [Key: Value], rhs: [Key: Value]) -> [Key: Value] {
         return lhs.merging(rhs) { (_, new) in new }
     }
 }
@@ -218,8 +218,6 @@ struct CompressionLevel: RawRepresentable, Sendable {
     static let bestSpeed = Self(rawValue: Z_BEST_SPEED)
     static let bestCompression = Self(rawValue: Z_BEST_COMPRESSION)
     static let defaultCompression = Self(rawValue: Z_DEFAULT_COMPRESSION)
-    
-    init(rawValue: Int32) { self.rawValue = rawValue }
 }
 
 struct GzipError: Swift.Error, Sendable {
@@ -230,7 +228,8 @@ struct GzipError: Swift.Error, Sendable {
 }
 
 extension Data {
-    
+    // swiftlint:disable force_unwrapping
+    // swiftlint:disable no_magic_numbers
     var isGzipped: Bool {
         return self.starts(with: [0x1f, 0x8b])
     }
@@ -326,4 +325,6 @@ extension Data {
         data.count = Int(stream.total_out)
         return data
     }
+    // swiftlint:enable force_unwrapping
+    // swiftlint:enable no_magic_numbers
 }

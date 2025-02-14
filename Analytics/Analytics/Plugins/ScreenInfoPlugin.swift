@@ -20,7 +20,7 @@ final class ScreenInfoPlugin: Plugin {
     }
     
     func execute(event: any Message) -> (any Message)? {
-        return event.addToContext(info: ["screen" : self.preparedScreenInfo])
+        return event.addToContext(info: ["screen": self.preparedScreenInfo])
     }
     
     private var preparedScreenInfo: [String: Any] = {

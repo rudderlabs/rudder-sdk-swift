@@ -26,7 +26,7 @@ final actor MemoryStore {
         var dataItem = self.currentDataItem ?? MessageDataItem(batch: DataStoreConstants.fileBatchPrefix)
         let newEntry = dataItem.batch == DataStoreConstants.fileBatchPrefix
         
-        if let existingData = dataItem.batch.utf8Data, existingData.count > Constants.Payload.maxBatchSize {
+        if let existingData = dataItem.batch.utf8Data, existingData.count > DataStoreConstants.maxBatchSize {
             self.finish()
             print("Batch size exceeded. Closing the current batch.")
             self.store(message: message)

@@ -24,7 +24,9 @@ protocol DataStore {
  A class responsible for supplying the DataStore object based on the specified storage mode.
  */
 final class StoreProvider {
-    private init() {}
+    private init() {
+        /* Prevent instantiation (no-op) */
+    }
     
     static func prepareProvider(for storageMode: StorageMode, writeKey: String) -> any DataStore {
         return storageMode == .disk ? DiskStore(writeKey: writeKey) : MemoryStore(writeKey: writeKey)
@@ -36,7 +38,9 @@ final class StoreProvider {
  A struct that contains all the constants used by both the `DiskStore` and `MemoryStore`.
  */
 struct DataStoreConstants {
-    private init() {}
+    private init() {
+        /* Prevent instantiation (no-op) */
+    }
     
     static let memoryIndex = "rudderstack.message.memory.index."
     static let fileIndex = "rudderstack.message.file.index."
@@ -45,4 +49,15 @@ struct DataStoreConstants {
     static let fileBatchPrefix = "{\"batch\":["
     static let fileBatchSentAtSuffix = "],\"sentAt\":\""
     static let fileBatchSuffix = "\"}"
+    
+    private static let bytesInKilobyte: Int64 = 1024
+    static var maxSize: Int64 {
+        let maxSizeInKilobytes: Int64 = 32
+        return bytesInKilobyte * maxSizeInKilobytes // 32 KB
+    }
+    
+    static var maxBatchSize: Int64 {
+        let maxBatchSizeInKilobytes: Int64 = 500
+        return maxBatchSizeInKilobytes * bytesInKilobyte // 500 KB
+    }
 }

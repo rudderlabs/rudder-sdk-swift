@@ -30,7 +30,7 @@ final actor DiskStore {
             newFile = true
         }
         
-        if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > Constants.Payload.maxBatchSize {
+        if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > DataStoreConstants.maxBatchSize {
             self.finish()
             print("Batch size exceeded. Closing the current batch.")
             self.store(message: message)
@@ -57,8 +57,8 @@ final actor DiskStore {
             .filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }
             .map { directory.appendingPathComponent($0.lastPathComponent).path }
             .sorted {
-                let idx1 = Int($0.components(separatedBy: DataStoreConstants.fileNameSeparator).last ?? "") ?? 0
-                let idx2 = Int($1.components(separatedBy: DataStoreConstants.fileNameSeparator).last ?? "") ?? 0
+                let idx1 = Int($0.components(separatedBy: DataStoreConstants.fileNameSeparator).last ?? .empty) ?? 0
+                let idx2 = Int($1.components(separatedBy: DataStoreConstants.fileNameSeparator).last ?? .empty) ?? 0
                 return idx1 < idx2
             }
     }
@@ -140,7 +140,7 @@ extension DiskStore: DataStore {
         }
     }
     
-    func rollover() async{
+    func rollover() async {
         await withCheckedContinuation { continuation in
             self.finish()
             continuation.resume()

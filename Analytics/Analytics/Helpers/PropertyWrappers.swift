@@ -74,7 +74,9 @@ struct AutoCodable<T: Codable>: Codable {
         if T.self == AnyCodable.self {
             // Handle CodableValue specifically
             let value = try AnyCodable(from: decoder)
+            // swiftlint:disable force_cast
             self.wrappedValue = value as! T
+            // swiftlint:enable force_cast
         } else {
             // Handle generic Codable types
             self.wrappedValue = try container.decode(T.self)
@@ -89,10 +91,6 @@ struct AutoCodable<T: Codable>: Codable {
 @propertyWrapper
 struct AutoEquatable<T: Equatable>: Equatable {
     var wrappedValue: T
-    
-    init(wrappedValue: T) {
-        self.wrappedValue = wrappedValue
-    }
     
     static func == (lhs: AutoEquatable<T>, rhs: AutoEquatable<T>) -> Bool {
         return lhs.wrappedValue == rhs.wrappedValue

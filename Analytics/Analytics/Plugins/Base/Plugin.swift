@@ -99,7 +99,9 @@ public extension Plugin {
     /**
      Cleans up resources used by the plugin.
      */
-    func teardown() {}
+    func teardown() {
+        /* Default implementation (no-op) */
+    }
 }
 
 // MARK: - MessagePlugin

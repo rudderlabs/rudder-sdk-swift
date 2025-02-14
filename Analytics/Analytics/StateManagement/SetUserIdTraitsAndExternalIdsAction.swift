@@ -47,7 +47,7 @@ struct SetUserIdTraitsAndExternalIdsAction: StateAction {
         - externalIds: A list of external identifiers associated with the user.
         - storage: The key-value storage instance to perform storage operations.
      */
-    init(userId: String, traits: [String : Any], externalIds: [ExternalId], storage: KeyValueStorage) {
+    init(userId: String, traits: [String: Any], externalIds: [ExternalId], storage: KeyValueStorage) {
         self.userId = userId
         self.traits = traits
         self.externalIds = externalIds

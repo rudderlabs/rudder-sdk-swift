@@ -40,4 +40,3 @@ class PluginInteractor {
         return pluginList.compactMap { $0 as? T }
     }
 }
-
