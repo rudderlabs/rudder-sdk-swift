@@ -7,7 +7,10 @@
 
 import Foundation
 
+// MARK: - Constants
+/// A struct for all constants used throughout the SDK.
 public struct Constants {
+    /// Private initializer to prevent instantiation.
     private init() {
         /* Prevent instantiation (no-op) */
     }
@@ -15,10 +18,15 @@ public struct Constants {
 
 // MARK: - Log
 extension Constants {
+    /// Constants related to logging configurations.
     public struct Log {
+        /// The default log tag used for identifying SDK logs.
         public static let tag: String = "Rudder-Analytics"
+        
+        /// The default log level for the SDK.
         public static let defaultLevel: LogLevel = .none
         
+        /// Private initializer to prevent instantiation.
         private init() {
             /* Prevent instantiation (no-op) */
         }
@@ -26,14 +34,25 @@ extension Constants {
 }
 
 // MARK: - Storage
-extension Constants { // need changes
+extension Constants {
+    /// Constants related to storage keys used within the SDK.
     public struct StorageKeys {
+        /// Key for storing the anonymous user identifier.
         public static let anonymousId = "anonymous_id"
+        
+        /// Key for storing the user identifier.
         public static let userId = "user_id"
+        
+        /// Key for storing user traits.
         public static let traits = "traits"
+        
+        /// Key for storing external identifiers.
         public static let externalIds = "external_ids"
+        
+        /// Key for storing source configuration data.
         public static let sourceConfig = "source_config"
         
+        /// Private initializer to prevent instantiation.
         private init() {
             /* Prevent instantiation (no-op) */
         }
@@ -42,36 +61,55 @@ extension Constants { // need changes
 
 // MARK: - Flush Policies
 extension Constants {
+    /// Constants related to flush configurations.
     public struct Flush {
+        /// Constants for event count-based flush triggers.
         public struct EventCount {
+            /// Default number of events before triggering a flush.
             public static let `default` = 30
+            
+            /// Minimum number of events allowed before triggering a flush.
             public static let min = 1
+            
+            /// Maximum number of events allowed before triggering a flush.
             public static let max = 100
             
+            /// Private initializer to prevent instantiation.
             private init() {
                 /* Prevent instantiation (no-op) */
             }
         }
         
+        /// Constants for time interval-based flush triggers.
         public struct Interval {
+            /// Default time interval for triggering a flush (in milliseconds).
             public static let `default`: Double = 10_000 // 10 seconds
+            
+            /// Minimum time interval for triggering a flush (in milliseconds).
             public static let min: Double = 1
         }
         
+        /// Private initializer to prevent instantiation.
         private init() {
             /* Prevent instantiation (no-op) */
         }
     }
-    
 }
 
 // MARK: - Payload
 extension Constants {
-    public struct Payload {
+    /// Constants used when creating payloads for network requests.
+    struct Payload {
+        /// Placeholder used for adding sent-at timestamps.
         static let sentAtPlaceholder = "{{_RSA_DEF_SENT_AT_TS_}}"
+        
+        /// Channel identifier for the SDK.
         static let channel = "mobile"
+        
+        /// Default integration settings.
         static let integration = ["All": true]
         
+        /// Private initializer to prevent instantiation.
         private init() {
             /* Prevent instantiation (no-op) */
         }
@@ -80,15 +118,34 @@ extension Constants {
 
 // MARK: - Defaults
 extension Constants {
+    /// Default configuration values used in the SDK.
     public struct DefaultConfig {
+        /// Default storage mode for persisting data.
         public static let storageMode: StorageMode = .disk
+        
+        /// Default control plane URL for the SDK.
         public static let controlPlaneUrl: String = "https://api.rudderlabs.com"
+        
+        /// Default setting for enabling GZIP compression.
         public static let gzipEnabled: Bool = true
-        public static let flushPolicies: [FlushPolicy] = [StartupFlushPolicy(), FrequencyFlushPolicy(), CountFlushPolicy()]
+        
+        /// Default flush policies applied when sending events.
+        public static let flushPolicies: [FlushPolicy] = [
+            StartupFlushPolicy(),
+            FrequencyFlushPolicy(),
+            CountFlushPolicy()
+        ]
+        
+        /// Default setting for collecting device identifiers.
         public static let willCollectDeviceId: Bool = true
+        
+        /// Default query parameters added to requests.
         static let queryParams = ["p": "ios", "v": "\(RSVersion)"]
+        
+        /// Signal used to trigger uploads.
         static let uploadSignal = "#!upload!#"
         
+        /// Private initializer to prevent instantiation.
         private init() {
             /* Prevent instantiation (no-op) */
         }
