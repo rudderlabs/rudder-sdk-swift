@@ -7,6 +7,9 @@
 
 import Foundation
 
+// MARK: - Typealiases
+typealias PluginClosure = (Plugin) -> Void
+
 // MARK: - PluginChain
 class PluginChain {
     

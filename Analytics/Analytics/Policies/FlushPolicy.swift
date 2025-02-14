@@ -33,8 +33,13 @@ public protocol FlushPolicy {
 }
 
 public extension FlushPolicy {
+    /**
+     Determines whether a flush operation should be triggered1.
+
+     - Returns: A `Bool` indicating if the flush condition is met (`true`) or not (`false`).
+     */
     func shouldFlush() -> Bool {
-        false
+        return false
     }
 }
 

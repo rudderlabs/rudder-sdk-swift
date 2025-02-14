@@ -260,3 +260,14 @@ extension AnalyticsClient {
      */
     var storage: Storage { self.configuration.storage }
 }
+
+// MARK: - Typealiases (Public)
+/**
+ A dictionary representing event properties with string keys and any values
+ */
+public typealias RudderProperties = [String: Any]
+
+/**
+ // A dictionary representing user traits with string keys and any values
+ */
+public typealias RudderTraits = [String: Any]
