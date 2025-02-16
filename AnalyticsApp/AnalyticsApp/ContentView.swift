@@ -7,8 +7,6 @@
 
 import SwiftUI
 import Analytics
-import AdSupport
-import AppTrackingTransparency
 
 struct ContentView: View {
     
@@ -129,27 +127,6 @@ struct ContentView: View {
                 CustomButton(title: "Reset (AnonymousId)") {
                     AnalyticsManager.shared.reset(true)
                 }
-            }
-        }
-        .onAppear {
-            self.confirmTrackingPermission()
-        }
-    }
-}
-
-extension ContentView {
-    func confirmTrackingPermission() {
-        print("Requesting Tracking Permission...")
-        Task.detached {
-            let status = await ATTrackingManager.requestTrackingAuthorization()
-            print("Tracking Status: \(status.rawValue)")
-            
-            if status == .authorized {
-                let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
-                print("IDFA: \(idfa)")
-                print("Tracking authorized.")
-            } else {
-                print("Tracking not authorized.")
             }
         }
     }
