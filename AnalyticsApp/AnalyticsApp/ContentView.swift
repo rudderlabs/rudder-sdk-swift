@@ -14,36 +14,6 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            CustomButton(title: "Identify") {
-                let options = RudderOptions()
-                    .addIntegration("Amplitude", isEnabled: false)
-                    .addCustomContext("identify_key1", key: "identify_value1")
-                    .addExternalId(ExternalId(type: "idCardNumber", id: "12791"))
-                
-                
-                AnalyticsManager.shared.identify(userId: "12345", traits: ["IdentifyTraits_key1": "IdentifyTraits_value1"], options: options)
-            }
-            
-            HStack {
-                CustomButton(title: "Identify") {
-                    let options = RudderOptions()
-                        .addIntegration("Amplitude", isEnabled: false)
-                        .addCustomContext("identify_key1", key: "identify_value1")
-                        .addExternalId(ExternalId(type: "idCardNumber", id: "12791"))
-                    
-                    AnalyticsManager.shared.identify(userId: "12345", traits: ["IdentifyTraits_key1": "IdentifyTraits_value1"], options: options)
-                }
-                
-                CustomButton(title: "Alias") {
-                    let options = RudderOptions()
-                        .addIntegration("Amplitude", isEnabled: false)
-                        .addCustomContext("identify_key1", key: "identify_value1")
-                        .addExternalId(ExternalId(type: "idCardNumber", id: "12791"))
-                    
-                    AnalyticsManager.shared.alias(newId: "123_alias_123", options: options)
-                }
-            }
-            
             HStack {
                 CustomButton(title: "Identify") {
                     let options = RudderOptions()
@@ -105,9 +75,7 @@ struct ContentView: View {
                         .addIntegration("Firebase", isEnabled: false)
                     AnalyticsManager.shared.group(id: "group_id", traits: ["key": "value"], options: option)
                 }
-            }
-            
-            HStack {
+                
                 CustomButton(title: "Flush") {
                     AnalyticsManager.shared.flush()
                 }
@@ -131,6 +99,7 @@ struct ContentView: View {
                 }
             }
         }
+        .ignoresSafeArea(.all)
         .onAppear {
             self.confirmTrackingPermission()
         }
@@ -159,8 +128,6 @@ extension ContentView {
     ContentView()
 }
 
-
-
 struct CustomButton: View {
     
     let title: String
@@ -172,13 +139,15 @@ struct CustomButton: View {
     }
     
     var body: some View {
-        Text(title)
-            .font(.title3)
-            .multilineTextAlignment(.center)
-            .padding()
-            .foregroundStyle(.white)
-            .background(.blue)
-            .onTapGesture { action() }
-            .padding()
+        Button(action: action) {
+            Text(title)
+                .fontWeight(.semibold)
+                .padding(.vertical, 15)
+                .padding(.horizontal, 20)
+                .background(Color.blue.opacity(0.2))
+                .cornerRadius(8)
+                .foregroundColor(.blue)
+        }
+        .padding(5)
     }
 }
