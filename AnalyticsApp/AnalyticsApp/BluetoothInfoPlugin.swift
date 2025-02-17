@@ -21,12 +21,12 @@ class BluetoothInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    var isBluetoothAvailable: Bool {
-        return CBManager.authorization == .allowedAlways
+    var bluetoothAuthorizationStatus: () -> CBManagerAuthorization = {
+        return CBManager.authorization
     }
     
     func execute(event: any Message) -> (any Message)? {
-        let isBluetoothAvailable = self.isBluetoothAvailable
+        let isBluetoothAvailable = self.bluetoothAuthorizationStatus() == .allowedAlways
         guard isBluetoothAvailable else { return event }
         
         var networkContent = [String: Any]()
