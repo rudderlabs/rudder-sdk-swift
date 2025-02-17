@@ -8,9 +8,9 @@
 import Analytics
 import CoreBluetooth
 
-// MARK: - AdvertisingIdPlugin
+// MARK: - BluetoothInfoPlugin
 /**
- This class is a pre-processing plugin that retrieves the statee of bluetooth and adds it to the context of an event.
+ This class is a preprocessing plugin that retrieves the Bluetooth state and adds it to an event’s context.
  */
 
 class BluetoothInfoPlugin: Plugin {
