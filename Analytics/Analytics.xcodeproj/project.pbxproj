@@ -32,7 +32,7 @@
 		537E10CC2D4EA108002074AE /* alias_with_options.json in Resources */ = {isa = PBXBuildFile; fileRef = 537E10CB2D4EA108002074AE /* alias_with_options.json */; };
 		537E10DC2D5149C2002074AE /* ResetUserIdentityAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537E10DB2D5149C2002074AE /* ResetUserIdentityAction.swift */; };
 		5383D2E82D40133700291B00 /* IdentifyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2E72D40133700291B00 /* IdentifyEvent.swift */; };
-		5383D2F02D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2EF2D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift */; };
+		5383D2F02D4141AD00291B00 /* SetUserIdAndTraitsAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2EF2D4141AD00291B00 /* SetUserIdAndTraitsAction.swift */; };
 		5383D3122D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D3112D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift */; };
 		5383D3142D441B2300291B00 /* IdentifyEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D3132D441B2300291B00 /* IdentifyEventTests.swift */; };
 		5383D3162D441C8500291B00 /* identify_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 5383D3152D441C8500291B00 /* identify_with_default_arguments.json */; };
@@ -141,7 +141,7 @@
 		537E10CB2D4EA108002074AE /* alias_with_options.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = alias_with_options.json; sourceTree = "<group>"; };
 		537E10DB2D5149C2002074AE /* ResetUserIdentityAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetUserIdentityAction.swift; sourceTree = "<group>"; };
 		5383D2E72D40133700291B00 /* IdentifyEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyEvent.swift; sourceTree = "<group>"; };
-		5383D2EF2D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUserIdTraitsAndExternalIdsAction.swift; sourceTree = "<group>"; };
+		5383D2EF2D4141AD00291B00 /* SetUserIdAndTraitsAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUserIdAndTraitsAction.swift; sourceTree = "<group>"; };
 		5383D3112D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdTraitsExternalIdsActionTests.swift; sourceTree = "<group>"; };
 		5383D3132D441B2300291B00 /* IdentifyEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyEventTests.swift; sourceTree = "<group>"; };
 		5383D3152D441C8500291B00 /* identify_with_default_arguments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = identify_with_default_arguments.json; sourceTree = "<group>"; };
@@ -496,7 +496,7 @@
 				53C7A7642D2D9CDE00F1325E /* StateManagement.swift */,
 				53C7A76B2D2EEE3200F1325E /* UserIdentity.swift */,
 				536DEF542D36B371000BB30B /* SetAnonymousIdAction.swift */,
-				5383D2EF2D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift */,
+				5383D2EF2D4141AD00291B00 /* SetUserIdAndTraitsAction.swift */,
 				537E10BA2D4D3D04002074AE /* SetUserIdAction.swift */,
 				537E10DB2D5149C2002074AE /* ResetUserIdentityAction.swift */,
 			);
@@ -701,7 +701,7 @@
 				53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */,
 				53F864B62D23EAD30078D68E /* TrackEvent.swift in Sources */,
 				53F864BA2D23EC430078D68E /* GroupEvent.swift in Sources */,
-				5383D2F02D4141AD00291B00 /* SetUserIdTraitsAndExternalIdsAction.swift in Sources */,
+				5383D2F02D4141AD00291B00 /* SetUserIdAndTraitsAction.swift in Sources */,
 				5388D5A52D0A12AD000966AB /* OSInfoPlugin.swift in Sources */,
 				537E10B92D456385002074AE /* AliasEvent.swift in Sources */,
 				539E54042C98B05300982E95 /* StorageModels.swift in Sources */,
