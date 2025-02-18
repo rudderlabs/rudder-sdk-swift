@@ -15,7 +15,7 @@ import Foundation
  The `RudderOptionType` protocol defines methods and properties for managing options like integrations, custom context and externalIds that can be added to event messages. Conforming types are expected to implement the logic for adding these options.
 
  - Properties:
-    - `integrations`: A dictionary of integrations and their enabled/disabled state.
+    - `integrations`: A dictionary of integrations and their enabled/disabled state details.
     - `customContext`: A dictionary of custom context values associated with the event.
     - `externalIds`: An array of external IDs to be included with the event message.
  */
@@ -46,13 +46,13 @@ protocol RudderOptionType {
  This class is useful for customizing the event payload with additional metadata or toggling integrations on or off.
 
  - Properties:
-    - `integrations`: A dictionary of integrations and their enabled/disabled state.
+    - `integrations`: A dictionary of integrations and their enabled/disabled state details.
     - `customContext`: A dictionary of custom context values associated with the event.
     - `externalIds`: An array of external IDs associated with the event.
  */
 public class RudderOption: RudderOptionType {
     
-    /// A dictionary of integration names as keys and their enabled state as boolean values.
+    /// A dictionary of integration names as keys and their state values.
     private(set) public var integrations: [String: Any]?
     
     /// A dictionary of custom context values associated with the event message.
