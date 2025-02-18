@@ -28,23 +28,23 @@ class AnalyticsManager {
 
 // MARK: - Rudder methods
 extension AnalyticsManager {
-    func identify(userId: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    func identify(userId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         self.analytics?.identify(userId: userId, traits: traits, options: options)
     }
     
-    func track(name: String, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         self.analytics?.track(name: name, properties: properties, options: options)
     }
     
-    func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         self.analytics?.screen(name: name, category: category, properties: properties, options: options)
     }
     
-    func group(id: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    func group(id: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         self.analytics?.group(id: id, traits: traits, options: options)
     }
     
-    func alias(newId: String, previousId: String? = nil, options: RudderOption? = nil) {
+    func alias(newId: String, previousId: String? = nil, options: RudderOptions? = nil) {
         self.analytics?.alias(newId: newId, previousId: previousId, options: options)
     }
     

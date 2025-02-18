@@ -62,7 +62,7 @@ struct AliasEvent: Message {
 
      This initializer also applies default values for integrations and context if they are not explicitly provided.
      */
-    init(previousId: String, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(previousId: String, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.previousId = previousId
 
         self.integrations = options == nil ? Constants.Payload.integration : options?.integrations

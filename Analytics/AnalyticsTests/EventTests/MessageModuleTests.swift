@@ -61,7 +61,7 @@ final class MessageModuleTests: XCTestCase {
     func test_track_event_options() {
         given("Parameters to create a track event") {
             let event = "Sample Event"
-            let options = RudderOption()
+            let options = RudderOptions()
                 .addIntegration("SampleIntegration", isEnabled: false)
                 .addCustomContext(["userContext": "content"], key: "customContext")
             
@@ -89,7 +89,7 @@ final class MessageModuleTests: XCTestCase {
         given("Parameters to create a track event") {
             let event = "Sample Event"
             let properties: [String: String] = ["property": "value"]
-            let options = RudderOption()
+            let options = RudderOptions()
                 .addIntegration("SampleIntegration", isEnabled: false)
                 .addCustomContext(["userContext": "content"], key: "customContext")
             
@@ -116,7 +116,7 @@ final class MessageModuleTests: XCTestCase {
     func test_track_event_custom_context() {
         given("Fully loaded custom context option") {
             let event = "Sample Event"
-            let option = RudderOption()
+            let option = RudderOptions()
             .addIntegration("SDK", isEnabled: true)
             .addIntegration("Facebook", isEnabled: false)
             .addCustomContext(["Key1": "Value1"], key: "SK1")
@@ -195,7 +195,7 @@ final class MessageModuleTests: XCTestCase {
     func test_screen_event_options() {
         given("Parameters to create a screen event") {
             let name = "Sample Screen Event"
-            let options = RudderOption()
+            let options = RudderOptions()
                 .addIntegration("SampleIntegration", isEnabled: false)
                 .addCustomContext(["userContext": "content"], key: "customContext")
             
@@ -223,7 +223,7 @@ final class MessageModuleTests: XCTestCase {
         given("Parameters to create a screen event") {
             let name = "Sample Screen Event"
             let properties: [String: String] = ["property": "value"]
-            let options = RudderOption()
+            let options = RudderOptions()
                 .addIntegration("SampleIntegration", isEnabled: false)
                 .addCustomContext(["userContext": "content"], key: "customContext")
             
@@ -250,7 +250,7 @@ final class MessageModuleTests: XCTestCase {
     func test_screen_event_custom_context() {
         given("Fully loaded custom context option") {
             let name = "Sample Screen Event"
-            let option = RudderOption()
+            let option = RudderOptions()
             .addIntegration("SDK", isEnabled: true)
             .addIntegration("Facebook", isEnabled: false)
             .addCustomContext(["Key1": "Value1"], key: "SK1")
@@ -330,7 +330,7 @@ final class MessageModuleTests: XCTestCase {
     func test_group_event_options() {
         given("Parameters to create a group event") {
             let groupId = "Sample_Group_Id"
-            let options = RudderOption()
+            let options = RudderOptions()
                 .addIntegration("SampleIntegration", isEnabled: false)
                 .addCustomContext(["userContext": "content"], key: "customContext")
             
@@ -358,7 +358,7 @@ final class MessageModuleTests: XCTestCase {
         given("Parameters to create a group event") {
             let groupId = "Sample_Group_Id"
             let traits = ["property": "value"]
-            let options = RudderOption()
+            let options = RudderOptions()
                 .addIntegration("SampleIntegration", isEnabled: false)
                 .addCustomContext(["userContext": "content"], key: "customContext")
             
@@ -386,7 +386,7 @@ final class MessageModuleTests: XCTestCase {
     func test_group_event_custom_context() {
         given("Fully loaded custom context option") {
             let groupId = "Sample_Group_Id"
-            let option = RudderOption()
+            let option = RudderOptions()
             .addIntegration("SDK", isEnabled: true)
             .addIntegration("Facebook", isEnabled: false)
             .addCustomContext(["Key1": "Value1"], key: "SK1")

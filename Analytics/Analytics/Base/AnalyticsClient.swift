@@ -56,7 +56,7 @@ extension AnalyticsClient {
         - properties: An optional object containing event-specific properties.
         - options: An optional object for providing additional options.
      */
-    public func track(name: String, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    public func track(name: String, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -70,7 +70,7 @@ extension AnalyticsClient {
         - properties: An Optional properties associated with the screen view.
         - options: An Optional options for additional customization.
      */
-    public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil) {
         let event = ScreenEvent(screenName: name, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -83,7 +83,7 @@ extension AnalyticsClient {
         - traits: An Optional traits associated with the group.
         - options: An Optional options for additional customization.
      */
-    public func group(id: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    public func group(id: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         let event = GroupEvent(groupId: id, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -96,7 +96,7 @@ extension AnalyticsClient {
         - traits: Custom traits or attributes associated with the user. Defaults to `nil`.
         - options: Custom options for the event, including integrations and context. Defaults to `nil`.
      */
-    public func identify(userId: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    public func identify(userId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         
         self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId, traits: traits ?? RudderTraits(), storage: self.storage))
         
@@ -114,7 +114,7 @@ extension AnalyticsClient {
         - previousId: The existing or previous user ID. If `nil`, the method resolves a preferred previous ID.
         - options: Additional options for customization, such as integrations and context. Defaults to `nil`.
      */
-    public func alias(newId: String, previousId: String?, options: RudderOption? = nil) {
+    public func alias(newId: String, previousId: String?, options: RudderOptions? = nil) {
         let preferedPreviousId = self.userIdentityState.state.value.resolvePreferredPreviousId(previousId ?? String.empty)
         
         self.userIdentityState.dispatch(action: SetUserIdAction(userId: newId))

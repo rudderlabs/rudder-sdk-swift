@@ -44,7 +44,7 @@ final class GroupEventTests: XCTestCase {
     
     func test_groupEvent_options() {
         given("A group event with options..") {
-            let option = RudderOption().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
+            let option = RudderOptions().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
             
             MockProvider.sampleEventIntegrations.forEach { integration in
                 option.addIntegration(integration.key, isEnabled: integration.value)
@@ -66,7 +66,7 @@ final class GroupEventTests: XCTestCase {
     
     func test_groupEvent_traits_options() {
         given("A group event with all values..") {
-            let option = RudderOption().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
+            let option = RudderOptions().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
             
             MockProvider.sampleEventIntegrations.forEach { integration in
                 option.addIntegration(integration.key, isEnabled: integration.value)

@@ -79,7 +79,7 @@
 		53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94F12C94C75D0004E75A /* BasicStorage.swift */; };
 		53BE94F42C94D70D0004E75A /* MemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94F32C94D70D0004E75A /* MemoryStore.swift */; };
 		53C29E722C918F2400F2A8C3 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C29E712C918F2400F2A8C3 /* Storage.swift */; };
-		53C52C772CE34FF400A2BD31 /* RudderOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C52C762CE34FF400A2BD31 /* RudderOption.swift */; };
+		53C52C772CE34FF400A2BD31 /* MessageOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C52C762CE34FF400A2BD31 /* MessageOptions.swift */; };
 		53C52C792CE486A000A2BD31 /* MessageModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C52C782CE486A000A2BD31 /* MessageModuleTests.swift */; };
 		53C7A7652D2D9CDE00F1325E /* StateManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A7642D2D9CDE00F1325E /* StateManagement.swift */; };
 		53C7A7682D2DA2C400F1325E /* StateManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */; };
@@ -188,7 +188,7 @@
 		53BE94F12C94C75D0004E75A /* BasicStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicStorage.swift; sourceTree = "<group>"; };
 		53BE94F32C94D70D0004E75A /* MemoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryStore.swift; sourceTree = "<group>"; };
 		53C29E712C918F2400F2A8C3 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
-		53C52C762CE34FF400A2BD31 /* RudderOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderOption.swift; sourceTree = "<group>"; };
+		53C52C762CE34FF400A2BD31 /* MessageOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOptions.swift; sourceTree = "<group>"; };
 		53C52C782CE486A000A2BD31 /* MessageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModuleTests.swift; sourceTree = "<group>"; };
 		53C7A7642D2D9CDE00F1325E /* StateManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagement.swift; sourceTree = "<group>"; };
 		53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagementTests.swift; sourceTree = "<group>"; };
@@ -427,7 +427,7 @@
 			isa = PBXGroup;
 			children = (
 				53A22A3C2C7472850059D6FE /* Message.swift */,
-				53C52C762CE34FF400A2BD31 /* RudderOption.swift */,
+				53C52C762CE34FF400A2BD31 /* MessageOptions.swift */,
 				5383D2E72D40133700291B00 /* IdentifyEvent.swift */,
 				53F864B52D23EAD30078D68E /* TrackEvent.swift */,
 				53F864B72D23EB960078D68E /* ScreenEvent.swift */,
@@ -689,7 +689,7 @@
 				5392AB952C6FC78F00369791 /* Configuration.swift in Sources */,
 				53BE94F42C94D70D0004E75A /* MemoryStore.swift in Sources */,
 				53FD37A22CB5258100DBA06B /* AsyncChannel.swift in Sources */,
-				53C52C772CE34FF400A2BD31 /* RudderOption.swift in Sources */,
+				53C52C772CE34FF400A2BD31 /* MessageOptions.swift in Sources */,
 				5304C9182CD3FF37003AFCC2 /* FlushPolicy.swift in Sources */,
 				53FD377D2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift in Sources */,
 				53F864C22D26EBE70078D68E /* StartupFlushPolicy.swift in Sources */,

@@ -72,7 +72,7 @@ struct ScreenEvent: Message {
 
      This initializer also processes and includes default properties such as the screen name and category in the event's properties, if they are provided.
      */
-    init(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.event = screenName
         
         var updatedProperties = properties ?? RudderProperties()
