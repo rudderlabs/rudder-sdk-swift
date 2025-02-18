@@ -98,9 +98,9 @@ extension AnalyticsClient {
      */
     public func identify(userId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil) {
         
-        self.userIdentityState.dispatch(action: SetUserIdTraitsAndExternalIdsAction(userId: userId, traits: traits ?? RudderTraits(), externalIds: options?.externalIds ?? [], storage: self.storage))
+        self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId, traits: traits ?? RudderTraits(), storage: self.storage))
         
-        self.userIdentityState.state.value.storeUserIdTraitsAndExternalIds(self.storage)
+        self.userIdentityState.state.value.storeUserIdAndTraits(self.storage)
         
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)

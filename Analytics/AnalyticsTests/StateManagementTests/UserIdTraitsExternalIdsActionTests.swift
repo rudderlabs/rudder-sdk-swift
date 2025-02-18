@@ -35,7 +35,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
             let expectedExternalIds = [ExternalId(type: "sample_type1", id: "sample_id1"), ExternalId(type: "sample_type2", id: "sample_id2")]
             
             let processingState = createState(initialState: UserIdentity(userId: initialUserId, traits: initialTraits, externalIds: initialExternalIds))
-            let action = SetUserIdTraitsAndExternalIdsAction(userId: expectedUserId, traits: expectedTraits, externalIds: expectedExternalIds, storage: storage)
+            let action = SetUserIdAndTraitsAction(userId: expectedUserId, traits: expectedTraits, externalIds: expectedExternalIds, storage: storage)
             
             when("Update initial state of UserIdentity with expected values..") {
                 processingState.dispatch(action: action)
@@ -63,7 +63,7 @@ final class UserIdTraitsExternalIdsActionTests: XCTestCase {
             let processingState = createState(initialState: UserIdentity(userId: firstUserId, traits: firstTraits, externalIds: firstExternalIds))
             
             when("Update current state of UserIdentity with added set of values and same userId...") {
-                let newAction = SetUserIdTraitsAndExternalIdsAction(userId: firstUserId, traits: secondTraits, externalIds: secondExternalIds, storage: storage)
+                let newAction = SetUserIdAndTraitsAction(userId: firstUserId, traits: secondTraits, externalIds: secondExternalIds, storage: storage)
                 processingState.dispatch(action: newAction)
                 
                 then("UserIdentity updated with appended values...") {

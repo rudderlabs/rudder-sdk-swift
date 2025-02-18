@@ -35,7 +35,7 @@ struct SetUserIdAndTraitsAction: StateAction {
     private let storage: KeyValueStorage
     
     /**
-     Initializes the action with the specified user ID, traits, external IDs, and analytics client.
+     Initializes the action with the specified user ID, traits and analytics client.
 
      - Parameters:
         - userId: The user ID to be set in the state.
