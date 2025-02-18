@@ -22,6 +22,7 @@ class AnalyticsManager {
         
         //Add external plugin to analytics..
         self.analytics?.addPlugin(AdvertisingIdPlugin())
+        self.analytics?.addPlugin(BluetoothInfoPlugin())
     }
 }
 

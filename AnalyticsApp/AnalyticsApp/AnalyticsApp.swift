@@ -22,8 +22,15 @@ struct AnalyticsApp: App {
 // MARK: - AppDelegate
 class AppDelegate: NSObject, UIApplicationDelegate {
     
+    private let permissionManager = PermissionManager()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        AnalyticsManager.shared.initializeAnalyticsSDK()
+        
+        // Note: Since bluetooth doesn't have a completion block for user response, ask `Bluetooth` permission always at last.
+        self.permissionManager.requestPermissions([.idfa, .bluetooth]) {
+            print("All required permissions requested..")
+            AnalyticsManager.shared.initializeAnalyticsSDK()
+        }
         return true
     }
 }
