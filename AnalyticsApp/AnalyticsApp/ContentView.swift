@@ -14,19 +14,13 @@ struct ContentView: View {
         VStack {
             HStack {
                 CustomButton(title: "Identify") {
-                    let options = RudderOption()
-                        .addIntegration("Amplitude", isEnabled: false)
-                        .addCustomContext("identify_key1", key: "identify_value1")
-                        .addExternalId(ExternalId(type: "idCardNumber", id: "12791"))
+                    let options = RudderOption(integrations: ["Amplitude": false], customContext: ["identify_key1": "identify_value1"], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
                     
                     AnalyticsManager.shared.identify(userId: "12345", traits: ["IdentifyTraits_key1": "IdentifyTraits_value1"], options: options)
                 }
                 
                 CustomButton(title: "Alias") {
-                    let options = RudderOption()
-                        .addIntegration("Amplitude", isEnabled: false)
-                        .addCustomContext("identify_key1", key: "identify_value1")
-                        .addExternalId(ExternalId(type: "idCardNumber", id: "12791"))
+                    let options = RudderOption(integrations: ["Amplitude": false], customContext: ["identify_key1": "identify_value1"], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
                     
                     AnalyticsManager.shared.alias(newId: "123_alias_123", options: options)
                 }
@@ -34,25 +28,13 @@ struct ContentView: View {
             
             HStack {
                 CustomButton(title: "Track") {
-                    let option = RudderOption()
-                        .addIntegration("Amplitude", isEnabled: true)
-                        .addIntegration("CleverTap", isEnabled: false)
-                        .addCustomContext(["Key1": "Value1"], key: "SK1")
-                        .addCustomContext(["value1", "value2"], key: "SK2")
-                        .addCustomContext("Value3", key: "SK3")
-                        .addCustomContext(1234, key: "SK4")
-                        .addCustomContext(5678.9, key: "SK5")
-                        .addCustomContext(true, key: "SK6")
+                    let option = RudderOption(integrations: ["Amplitude": true, "CleverTap": false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
                     
                     AnalyticsManager.shared.track(name: "Track at \(Date())", properties: ["key": "value"], options: option)
                 }
                 
                 CustomButton(title: "Multiple Track") {
-                    let option = RudderOption()
-                        .addIntegration("Amplitude", isEnabled: true)
-                        .addIntegration("CleverTap", isEnabled: false)
-                        .addCustomContext(["Key123": "Value123"], key: "SK123")
-                    
+                    let option = RudderOption(integrations: ["Amplitude": true, "CleverTap": false], customContext: ["SK123": ["Key123": "Value123"]])
                     for i in 1...50 {
                         AnalyticsManager.shared.track(name: "Track: \(i)", options: option)
                     }
@@ -61,16 +43,12 @@ struct ContentView: View {
             
             HStack {
                 CustomButton(title: "Screen") {
-                    let option = RudderOption()
-                        .addCustomContext(["Key1": "Value1"], key: "SK")
-                        .addIntegration("Facebook", isEnabled: false)
+                    let option = RudderOption(integrations: ["Facebook": false], customContext: ["SK": ["Key1": "Value1"]])
                     AnalyticsManager.shared.screen(name: "Analytics Screen", properties: ["key": "value"], options: option)
                 }
                 
                 CustomButton(title: "Group") {
-                    let option = RudderOption()
-                        .addCustomContext(["Key1": "Value1"], key: "SK")
-                        .addIntegration("Firebase", isEnabled: false)
+                    let option = RudderOption(integrations: ["Firebase": false], customContext: ["SK": ["Key1": "Value1"]])
                     AnalyticsManager.shared.group(id: "group_id", traits: ["key": "value"], options: option)
                 }
                 
