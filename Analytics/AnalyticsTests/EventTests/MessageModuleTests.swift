@@ -16,7 +16,10 @@ final class MessageModuleTests: XCTestCase {
             let event = "Sample Event"
             
             when("Create a track event") {
-                let track = TrackEvent(event: event)
+                var track = TrackEvent(event: event)
+                if let updatedTrack = track.updateEventData() as? TrackEvent {
+                    track = updatedTrack
+                }
                 
                 then("Verify the track event") {
                     XCTAssertEqual(track.event, event)
@@ -38,7 +41,10 @@ final class MessageModuleTests: XCTestCase {
             let properties: [String: String] = ["property": "value"]
             
             when("Create a track event") {
-                let track = TrackEvent(event: event, properties: properties)
+                var track = TrackEvent(event: event, properties: properties)
+                if let updatedTrack = track.updateEventData() as? TrackEvent {
+                    track = updatedTrack
+                }
                 
                 then("Verify the track event") {
                     XCTAssertEqual(track.event, event)
@@ -64,7 +70,10 @@ final class MessageModuleTests: XCTestCase {
             let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a track event") {
-                let track = TrackEvent(event: event, options: options)
+                var track = TrackEvent(event: event, options: options)
+                if let updatedTrack = track.updateEventData() as? TrackEvent {
+                    track = updatedTrack
+                }
                 
                 then("Verify the track event") {
                     XCTAssertEqual(track.event, event)
@@ -90,7 +99,10 @@ final class MessageModuleTests: XCTestCase {
             let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a track event") {
-                let track = TrackEvent(event: event, properties: properties, options: options)
+                var track = TrackEvent(event: event, properties: properties, options: options)
+                if let updatedTrack = track.updateEventData() as? TrackEvent {
+                    track = updatedTrack
+                }
                 
                 then("Verify the track event") {
                     XCTAssertEqual(track.event, event)
@@ -115,7 +127,10 @@ final class MessageModuleTests: XCTestCase {
             let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
             
             when("Create a track event") {
-                let track = TrackEvent(event: event, options: option)
+                var track = TrackEvent(event: event, options: option)
+                if let updatedTrack = track.updateEventData() as? TrackEvent {
+                    track = updatedTrack
+                }
                 
                 then("Verify the track event") {
                     XCTAssertEqual(track.event, event)
@@ -138,7 +153,10 @@ final class MessageModuleTests: XCTestCase {
             let name = "Sample Screen Event"
             
             when("Create a screen event") {
-                let screen = ScreenEvent(screenName: name)
+                var screen = ScreenEvent(screenName: name)
+                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
+                    screen = updatedScreen
+                }
                 
                 then("Verify the screen event") {
                     XCTAssertEqual(screen.event, name)
@@ -160,7 +178,10 @@ final class MessageModuleTests: XCTestCase {
             let properties: [String: String] = ["property": "value"]
             
             when("Create a screen event") {
-                let screen = ScreenEvent(screenName: name, properties: properties)
+                var screen = ScreenEvent(screenName: name, properties: properties)
+                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
+                    screen = updatedScreen
+                }
                 
                 then("Verify the screen event") {
                     XCTAssertEqual(screen.event, name)
@@ -186,7 +207,10 @@ final class MessageModuleTests: XCTestCase {
             let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a screen event") {
-                let screen = ScreenEvent(screenName: name, options: options)
+                var screen = ScreenEvent(screenName: name, options: options)
+                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
+                    screen = updatedScreen
+                }
                 
                 then("Verify the screen event") {
                     XCTAssertEqual(screen.event, name)
@@ -212,7 +236,10 @@ final class MessageModuleTests: XCTestCase {
             let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a screen event") {
-                let screen = ScreenEvent(screenName: name, properties: properties, options: options)
+                var screen = ScreenEvent(screenName: name, properties: properties, options: options)
+                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
+                    screen = updatedScreen
+                }
                 
                 then("Verify the screen event") {
                     XCTAssertEqual(screen.event, name)
@@ -237,7 +264,10 @@ final class MessageModuleTests: XCTestCase {
             let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
             
             when("Create a screen event") {
-                let screen = ScreenEvent(screenName: name, options: option)
+                var screen = ScreenEvent(screenName: name, options: option)
+                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
+                    screen = updatedScreen
+                }
                 
                 then("Verify the screen event") {
                     XCTAssertEqual(screen.event, name)
@@ -260,7 +290,10 @@ final class MessageModuleTests: XCTestCase {
             let groupId = "Sample_Group_Id"
             
             when("Create a group event") {
-                let group = GroupEvent(groupId: groupId)
+                var group = GroupEvent(groupId: groupId)
+                if let updatedGroup = group.updateEventData() as? GroupEvent {
+                    group = updatedGroup
+                }
                 
                 then("Verify the group event") {
                     XCTAssertEqual(group.groupId, groupId)
@@ -282,7 +315,10 @@ final class MessageModuleTests: XCTestCase {
             let traits = ["property": "value"]
             
             when("Create a group event") {
-                let group = GroupEvent(groupId: groupId, traits: traits)
+                var group = GroupEvent(groupId: groupId, traits: traits)
+                if let updatedGroup = group.updateEventData() as? GroupEvent {
+                    group = updatedGroup
+                }
                 
                 then("Verify the group event") {
                     XCTAssertEqual(group.groupId, groupId)
@@ -309,7 +345,10 @@ final class MessageModuleTests: XCTestCase {
             let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a group event") {
-                let group = GroupEvent(groupId: groupId, options: options)
+                var group = GroupEvent(groupId: groupId, options: options)
+                if let updatedGroup = group.updateEventData() as? GroupEvent {
+                    group = updatedGroup
+                }
                 
                 then("Verify the group event") {
                     XCTAssertEqual(group.groupId, groupId)
@@ -335,7 +374,10 @@ final class MessageModuleTests: XCTestCase {
             let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a group event") {
-                let group = GroupEvent(groupId: groupId, traits: traits, options: options)
+                var group = GroupEvent(groupId: groupId, traits: traits, options: options)
+                if let updatedGroup = group.updateEventData() as? GroupEvent {
+                    group = updatedGroup
+                }
                 
                 then("Verify the group event") {
                     XCTAssertEqual(group.groupId, groupId)
@@ -361,7 +403,10 @@ final class MessageModuleTests: XCTestCase {
             let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
             
             when("Create a group event") {
-                let group = GroupEvent(groupId: groupId, options: option)
+                var group = GroupEvent(groupId: groupId, options: option)
+                if let updatedGroup = group.updateEventData() as? GroupEvent {
+                    group = updatedGroup
+                }
                 
                 then("Verify the group event") {
                     XCTAssertEqual(group.groupId, groupId)

@@ -13,6 +13,7 @@ final class GroupEventTests: XCTestCase {
     func test_defaultGroupEvent() {
         given("A group event with default values..") {
             var event: Message = GroupEvent(groupId: MockProvider.SampleEventName.group)
+            event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
@@ -29,6 +30,7 @@ final class GroupEventTests: XCTestCase {
     func test_groupEvent_traits() {
         given("A group event with trait values..") {
             var event: Message = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties)
+            event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
@@ -47,6 +49,7 @@ final class GroupEventTests: XCTestCase {
             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
             
             var event: Message = GroupEvent(groupId: MockProvider.SampleEventName.group, options: option)
+            event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
@@ -65,6 +68,7 @@ final class GroupEventTests: XCTestCase {
             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
             
             var event: Message = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties, options: option)
+            event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {

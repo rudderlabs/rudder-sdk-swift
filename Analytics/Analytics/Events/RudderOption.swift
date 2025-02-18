@@ -68,7 +68,7 @@ public class RudderOption: RudderOptionType {
      */
     
     public init(integrations: [String: Any]? = nil, customContext: [String: Any]? = nil, externalIds: [ExternalId]? = nil) {
-        self.integrations = integrations ?? Constants.Payload.integration
+        self.integrations = (integrations ?? [:]) + Constants.Payload.integration
         self.customContext = customContext
         self.externalIds = externalIds
     }

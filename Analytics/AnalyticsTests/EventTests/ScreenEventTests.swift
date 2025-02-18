@@ -13,6 +13,7 @@ final class ScreenEventTests: XCTestCase {
     func test_defaultScreenEvent() {
         given("A screen event with default values..") {
             var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen)
+            event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
@@ -29,6 +30,7 @@ final class ScreenEventTests: XCTestCase {
     func test_screenEvent_category() {
         given("A screen event with category value..") {
             var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main")
+            event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
@@ -45,6 +47,7 @@ final class ScreenEventTests: XCTestCase {
     func test_screenEvent_properties() {
         given("A screen event with property values..") {
             var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, properties: MockProvider.sampleEventproperties)
+            event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
@@ -63,6 +66,7 @@ final class ScreenEventTests: XCTestCase {
             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
             
             var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, options: option)
+            event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
@@ -81,6 +85,7 @@ final class ScreenEventTests: XCTestCase {
             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
             
             var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main", properties: MockProvider.sampleEventproperties, options: option)
+            event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
             when("Serialize the event..") {
