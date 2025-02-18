@@ -14,7 +14,7 @@ struct ContentView: View {
         VStack {
             HStack {
                 CustomButton(title: "Identify") {
-                    let options = RudderOptions()
+                    let options = RudderOption()
                         .addIntegration("Amplitude", isEnabled: false)
                         .addCustomContext("identify_key1", key: "identify_value1")
                         .addExternalId(ExternalId(type: "idCardNumber", id: "12791"))
@@ -23,7 +23,7 @@ struct ContentView: View {
                 }
                 
                 CustomButton(title: "Alias") {
-                    let options = RudderOptions()
+                    let options = RudderOption()
                         .addIntegration("Amplitude", isEnabled: false)
                         .addCustomContext("identify_key1", key: "identify_value1")
                         .addExternalId(ExternalId(type: "idCardNumber", id: "12791"))
@@ -34,7 +34,7 @@ struct ContentView: View {
             
             HStack {
                 CustomButton(title: "Track") {
-                    let option = RudderOptions()
+                    let option = RudderOption()
                         .addIntegration("Amplitude", isEnabled: true)
                         .addIntegration("CleverTap", isEnabled: false)
                         .addCustomContext(["Key1": "Value1"], key: "SK1")
@@ -48,7 +48,7 @@ struct ContentView: View {
                 }
                 
                 CustomButton(title: "Multiple Track") {
-                    let option = RudderOptions()
+                    let option = RudderOption()
                         .addIntegration("Amplitude", isEnabled: true)
                         .addIntegration("CleverTap", isEnabled: false)
                         .addCustomContext(["Key123": "Value123"], key: "SK123")
@@ -61,14 +61,14 @@ struct ContentView: View {
             
             HStack {
                 CustomButton(title: "Screen") {
-                    let option = RudderOptions()
+                    let option = RudderOption()
                         .addCustomContext(["Key1": "Value1"], key: "SK")
                         .addIntegration("Facebook", isEnabled: false)
                     AnalyticsManager.shared.screen(name: "Analytics Screen", properties: ["key": "value"], options: option)
                 }
                 
                 CustomButton(title: "Group") {
-                    let option = RudderOptions()
+                    let option = RudderOption()
                         .addCustomContext(["Key1": "Value1"], key: "SK")
                         .addIntegration("Firebase", isEnabled: false)
                     AnalyticsManager.shared.group(id: "group_id", traits: ["key": "value"], options: option)
