@@ -77,6 +77,11 @@ public protocol Message: Codable {
     var originalTimeStamp: String { get set }
     
     /**
+     Holds the associated values for an event.
+     */
+    var options: RudderOption? { get set }
+    
+    /**
      The identity values of the user associated with the event.
      */
     var userIdentity: UserIdentity? { get set }
@@ -105,11 +110,18 @@ extension Message {
         mutableSelf.anonymousId = self.userIdentity?.anonymousId
         mutableSelf.userId = self.userIdentity?.userId.isEmpty == true ? nil : self.userIdentity?.userId
         
+        //RudderOption
+        mutableSelf.integrations = options == nil ? Constants.Payload.integration : options?.integrations
+        
         if let traits = self.userIdentity?.traits, !traits.isEmpty {
             mutableSelf = mutableSelf.addToContext(info: ["traits": traits])
         }
         
-        if let externalIds = self.userIdentity?.externalIds, !externalIds.isEmpty {
+        if let customContext = self.options?.customContext, !customContext.isEmpty {
+            mutableSelf = mutableSelf.addToContext(info: customContext)
+        }
+        
+        if let externalIds = self.options?.externalIds, !externalIds.isEmpty {
             mutableSelf = mutableSelf.addToContext(info: ["externalId": externalIds.compactMap { $0.dictionary }])
         }
         

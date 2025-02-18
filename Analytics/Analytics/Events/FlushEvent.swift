@@ -52,6 +52,9 @@ struct FlushEvent: Message {
     /// The unique identifier for the user.
     var userId: String?
     
+    /// Holds the associated values for an event.
+    var options: RudderOption?
+    
     /// The identity values of the user associated with the event.
     var userIdentity: UserIdentity?
     
@@ -76,5 +79,6 @@ struct FlushEvent: Message {
         case traits
         case messageName
         case userId
+        case options
     }
 }

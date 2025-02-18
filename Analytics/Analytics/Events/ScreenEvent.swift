@@ -57,6 +57,9 @@ struct ScreenEvent: Message {
     /// Additional properties or metadata for the screen event.
     var properties: CodableCollection?
 
+    /// Holds the associated values for an event.
+    var options: RudderOption?
+    
     /// The identity values of the user associated with the event.
     var userIdentity: UserIdentity?
     
@@ -80,12 +83,8 @@ struct ScreenEvent: Message {
         updatedProperties["name"] = screenName.isEmpty ? nil : screenName
         
         self.properties = CodableCollection(dictionary: updatedProperties)
-        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
-        
-        self.context = options?.customContext?.isEmpty == false ?
-            options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-                
         self.userIdentity = userIdentity
+        self.options = options
         
         self.addDefaultValues()
     }
@@ -104,5 +103,6 @@ struct ScreenEvent: Message {
         case category
         case properties
         case userId
+        case options
     }
 }

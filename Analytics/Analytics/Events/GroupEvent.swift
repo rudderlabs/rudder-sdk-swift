@@ -51,6 +51,9 @@ struct GroupEvent: Message {
     /// Custom traits or attributes associated with the group.
     var traits: CodableCollection?
 
+    /// Holds the associated values for an event.
+    var options: RudderOption?
+    
     /// The identity values of the user associated with the event.
     var userIdentity: UserIdentity?
     
@@ -67,14 +70,9 @@ struct GroupEvent: Message {
      */
     init(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.groupId = groupId
-
         self.traits = CodableCollection(dictionary: traits)
-        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
-        
-        self.context = options?.customContext?.isEmpty == false ?
-            options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-        
         self.userIdentity = userIdentity
+        self.options = options
         
         self.addDefaultValues()
     }
@@ -91,5 +89,6 @@ struct GroupEvent: Message {
         case groupId
         case traits
         case userId
+        case options
     }
 }

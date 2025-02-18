@@ -46,6 +46,9 @@ struct AliasEvent: Message {
     /// Custom traits or attributes associated with the event.
     var traits: CodableCollection?
 
+    /// Holds the associated values for an event.
+    var options: RudderOption?
+    
     /// The user identity object containing user details, such as identifiers and traits.
     var userIdentity: UserIdentity?
 
@@ -64,14 +67,9 @@ struct AliasEvent: Message {
      */
     init(previousId: String, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.previousId = previousId
-
-        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
-
-        self.context = options?.customContext?.isEmpty == false ?
-        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-
         self.userIdentity = userIdentity
-
+        self.options = options
+        
         self.addDefaultValues()
     }
 
@@ -87,5 +85,6 @@ struct AliasEvent: Message {
         case messageId
         case originalTimeStamp
         case previousId
+        case options
     }
 }
