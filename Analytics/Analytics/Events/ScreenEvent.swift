@@ -84,7 +84,7 @@ struct ScreenEvent: Message {
         
         self.properties = CodableCollection(dictionary: updatedProperties)
         self.userIdentity = userIdentity
-        self.options = options
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }

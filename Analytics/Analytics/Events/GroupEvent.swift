@@ -72,7 +72,7 @@ struct GroupEvent: Message {
         self.groupId = groupId
         self.traits = CodableCollection(dictionary: traits)
         self.userIdentity = userIdentity
-        self.options = options
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }

@@ -75,7 +75,7 @@ struct TrackEvent: Message {
         self.event = event
         self.properties = CodableCollection(dictionary: properties)
         self.userIdentity = userIdentity
-        self.options = options
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }

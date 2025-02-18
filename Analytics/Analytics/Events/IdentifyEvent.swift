@@ -68,7 +68,7 @@ struct IdentifyEvent: Message {
     init(options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.userIdentity = userIdentity
         self.event = self.type.rawValue
-        self.options = options
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }

@@ -68,7 +68,7 @@ struct AliasEvent: Message {
     init(previousId: String, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.previousId = previousId
         self.userIdentity = userIdentity
-        self.options = options
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }
