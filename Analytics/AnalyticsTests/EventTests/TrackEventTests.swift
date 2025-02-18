@@ -44,7 +44,7 @@ final class TrackEventTests: XCTestCase {
     
     func test_trackEvent_options() {
         given("A track event with options...") {
-            let option = RudderOptions().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
+            let option = RudderOption().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
             
             MockProvider.sampleEventIntegrations.forEach { integration in
                 option.addIntegration(integration.key, isEnabled: integration.value)
@@ -66,7 +66,7 @@ final class TrackEventTests: XCTestCase {
     
     func test_trackEvent_properties_options() {
         given("A track event with properties & options...") {
-            let option = RudderOptions().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
+            let option = RudderOption().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
             
             MockProvider.sampleEventIntegrations.forEach { integration in
                 option.addIntegration(integration.key, isEnabled: integration.value)

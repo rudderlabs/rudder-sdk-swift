@@ -62,7 +62,7 @@ struct IdentifyEvent: Message {
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.userIdentity = userIdentity
         self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
         self.event = self.type.rawValue

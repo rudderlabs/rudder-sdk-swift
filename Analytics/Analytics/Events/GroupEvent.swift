@@ -65,7 +65,7 @@ struct GroupEvent: Message {
 
      This initializer also processes and includes default values, such as default integrations and context if they are not provided.
      */
-    init(groupId: String, traits: RudderTraits? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.groupId = groupId
 
         self.traits = CodableCollection(dictionary: traits)
