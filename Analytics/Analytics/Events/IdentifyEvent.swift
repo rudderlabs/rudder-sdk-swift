@@ -32,7 +32,7 @@ struct IdentifyEvent: Message {
     var channel: String?
 
     /// A dictionary of integration settings for the event.
-    var integrations: [String: Bool]?
+    var integrations: [String: AnyCodable]?
 
     /// The timestamp of when the event was sent.
     var sentAt: String?
@@ -85,6 +85,5 @@ struct IdentifyEvent: Message {
         case traits
         case userId
         case event
-        case options
     }
 }

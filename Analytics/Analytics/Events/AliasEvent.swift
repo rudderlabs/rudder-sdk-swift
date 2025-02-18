@@ -35,7 +35,7 @@ struct AliasEvent: Message {
     var channel: String?
 
     /// A dictionary specifying integration settings for the event.
-    var integrations: [String: Bool]?
+    var integrations: [String: AnyCodable]?
 
     /// The timestamp of when the event was sent.
     var sentAt: String?
@@ -85,6 +85,5 @@ struct AliasEvent: Message {
         case messageId
         case originalTimeStamp
         case previousId
-        case options
     }
 }
