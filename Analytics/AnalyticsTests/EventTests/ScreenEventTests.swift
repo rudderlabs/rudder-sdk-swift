@@ -60,11 +60,7 @@ final class ScreenEventTests: XCTestCase {
     
     func test_screenEvent_options() {
         given("A screen event with options..") {
-            let option = RudderOption().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
-            
-            MockProvider.sampleEventIntegrations.forEach { integration in
-                option.addIntegration(integration.key, isEnabled: integration.value)
-            }
+            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
             
             var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, options: option)
             MockHelper.resetDynamicValues(&event)
@@ -82,11 +78,7 @@ final class ScreenEventTests: XCTestCase {
     
     func test_screenEvent_category_properties_options() {
         given("A screen event with all values...") {
-            let option = RudderOption().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
-            
-            MockProvider.sampleEventIntegrations.forEach { integration in
-                option.addIntegration(integration.key, isEnabled: integration.value)
-            }
+            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
             
             var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main", properties: MockProvider.sampleEventproperties, options: option)
             MockHelper.resetDynamicValues(&event)

@@ -61,9 +61,7 @@ final class MessageModuleTests: XCTestCase {
     func test_track_event_options() {
         given("Parameters to create a track event") {
             let event = "Sample Event"
-            let options = RudderOption()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a track event") {
                 let track = TrackEvent(event: event, options: options)
@@ -89,9 +87,7 @@ final class MessageModuleTests: XCTestCase {
         given("Parameters to create a track event") {
             let event = "Sample Event"
             let properties: [String: String] = ["property": "value"]
-            let options = RudderOption()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a track event") {
                 let track = TrackEvent(event: event, properties: properties, options: options)
@@ -116,15 +112,7 @@ final class MessageModuleTests: XCTestCase {
     func test_track_event_custom_context() {
         given("Fully loaded custom context option") {
             let event = "Sample Event"
-            let option = RudderOption()
-            .addIntegration("SDK", isEnabled: true)
-            .addIntegration("Facebook", isEnabled: false)
-            .addCustomContext(["Key1": "Value1"], key: "SK1")
-            .addCustomContext(["value1", "value2"], key: "SK2")
-            .addCustomContext("Value3", key: "SK3")
-            .addCustomContext(1234, key: "SK4")
-            .addCustomContext(5678.9, key: "SK5")
-            .addCustomContext(true, key: "SK6")
+            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
             
             when("Create a track event") {
                 let track = TrackEvent(event: event, options: option)
@@ -195,9 +183,7 @@ final class MessageModuleTests: XCTestCase {
     func test_screen_event_options() {
         given("Parameters to create a screen event") {
             let name = "Sample Screen Event"
-            let options = RudderOption()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a screen event") {
                 let screen = ScreenEvent(screenName: name, options: options)
@@ -223,9 +209,7 @@ final class MessageModuleTests: XCTestCase {
         given("Parameters to create a screen event") {
             let name = "Sample Screen Event"
             let properties: [String: String] = ["property": "value"]
-            let options = RudderOption()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a screen event") {
                 let screen = ScreenEvent(screenName: name, properties: properties, options: options)
@@ -250,15 +234,7 @@ final class MessageModuleTests: XCTestCase {
     func test_screen_event_custom_context() {
         given("Fully loaded custom context option") {
             let name = "Sample Screen Event"
-            let option = RudderOption()
-            .addIntegration("SDK", isEnabled: true)
-            .addIntegration("Facebook", isEnabled: false)
-            .addCustomContext(["Key1": "Value1"], key: "SK1")
-            .addCustomContext(["value1", "value2"], key: "SK2")
-            .addCustomContext("Value3", key: "SK3")
-            .addCustomContext(1234, key: "SK4")
-            .addCustomContext(5678.9, key: "SK5")
-            .addCustomContext(true, key: "SK6")
+            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
             
             when("Create a screen event") {
                 let screen = ScreenEvent(screenName: name, options: option)
@@ -330,9 +306,7 @@ final class MessageModuleTests: XCTestCase {
     func test_group_event_options() {
         given("Parameters to create a group event") {
             let groupId = "Sample_Group_Id"
-            let options = RudderOption()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a group event") {
                 let group = GroupEvent(groupId: groupId, options: options)
@@ -358,9 +332,7 @@ final class MessageModuleTests: XCTestCase {
         given("Parameters to create a group event") {
             let groupId = "Sample_Group_Id"
             let traits = ["property": "value"]
-            let options = RudderOption()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a group event") {
                 let group = GroupEvent(groupId: groupId, traits: traits, options: options)
@@ -386,15 +358,7 @@ final class MessageModuleTests: XCTestCase {
     func test_group_event_custom_context() {
         given("Fully loaded custom context option") {
             let groupId = "Sample_Group_Id"
-            let option = RudderOption()
-            .addIntegration("SDK", isEnabled: true)
-            .addIntegration("Facebook", isEnabled: false)
-            .addCustomContext(["Key1": "Value1"], key: "SK1")
-            .addCustomContext(["value1", "value2"], key: "SK2")
-            .addCustomContext("Value3", key: "SK3")
-            .addCustomContext(1234, key: "SK4")
-            .addCustomContext(5678.9, key: "SK5")
-            .addCustomContext(true, key: "SK6")
+            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
             
             when("Create a group event") {
                 let group = GroupEvent(groupId: groupId, options: option)
