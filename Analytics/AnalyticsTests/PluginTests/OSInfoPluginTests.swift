@@ -15,8 +15,8 @@ final class OSInfoPluginTests: XCTestCase {
             let plugin = OSInfoPlugin()
             let track = TrackEvent(event: "Track")
             
-            when("execute is called..") {
-                let executedEvent = plugin.execute(event: track)
+            when("intercept is called..") {
+                let executedEvent = plugin.intercept(event: track)
                 
                 then("track event should have the os info details..") {
                     guard let context = executedEvent?.context else { XCTFail("No context found"); return }
@@ -31,8 +31,8 @@ final class OSInfoPluginTests: XCTestCase {
             let plugin = OSInfoPlugin()
             let group = GroupEvent(groupId: "group_id")
             
-            when("execute is called..") {
-                let executedEvent = plugin.execute(event: group)
+            when("intercept is called..") {
+                let executedEvent = plugin.intercept(event: group)
                 
                 then("group event should have the os info details..") {
                     guard let context = executedEvent?.context else { XCTFail("No context found"); return }

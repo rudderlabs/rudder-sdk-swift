@@ -31,8 +31,8 @@ final class DeviceInfoPluginTests: XCTestCase {
             let plugin = DeviceInfoPlugin()
             let track = TrackEvent(event: "Track")
             
-            when("execute is called..") {
-                let executedEvent = plugin.execute(event: track)
+            when("intercept is called..") {
+                let executedEvent = plugin.intercept(event: track)
                 
                 then("track event should have the device info details..") {
                     guard let context = executedEvent?.context else { XCTFail("No context found"); return }
@@ -47,8 +47,8 @@ final class DeviceInfoPluginTests: XCTestCase {
             let plugin = DeviceInfoPlugin()
             let group = GroupEvent(groupId: "group_id")
             
-            when("execute is called..") {
-                let executedEvent = plugin.execute(event: group)
+            when("intercept is called..") {
+                let executedEvent = plugin.intercept(event: group)
                 
                 then("group event should have the device info details..") {
                     guard let context = executedEvent?.context else { XCTFail("No context found"); return }
