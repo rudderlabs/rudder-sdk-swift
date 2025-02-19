@@ -15,9 +15,8 @@ final class ResetUserIdentityActionTests: XCTestCase {
             let anonymousId = "testAnonymousId"
             let userId = "testUserId"
             let traits = ["testKey": "testValue"]
-            let externalId = [ExternalId(type: "test_type", id: "test_id")]
             
-            let state = createState(initialState: UserIdentity(anonymousId: anonymousId, userId: userId, traits: traits, externalIds: externalId))
+            let state = createState(initialState: UserIdentity(anonymousId: anonymousId, userId: userId, traits: traits))
             let action = ResetUserIdentityAction(clearAnonymousId: false)
             when("Update state with action..") {
                 state.dispatch(action: action)
@@ -26,7 +25,6 @@ final class ResetUserIdentityActionTests: XCTestCase {
                     XCTAssertEqual(state.state.value.anonymousId, anonymousId)
                     XCTAssertTrue(state.state.value.userId.isEmpty)
                     XCTAssertTrue(state.state.value.traits.isEmpty)
-                    XCTAssertTrue(state.state.value.externalIds.isEmpty)
                 }
             }
         }
@@ -37,9 +35,8 @@ final class ResetUserIdentityActionTests: XCTestCase {
             let anonymousId = "testAnonymousId"
             let userId = "testUserId"
             let traits = ["testKey": "testValue"]
-            let externalId = [ExternalId(type: "test_type", id: "test_id")]
             
-            let state = createState(initialState: UserIdentity(anonymousId: anonymousId, userId: userId, traits: traits, externalIds: externalId))
+            let state = createState(initialState: UserIdentity(anonymousId: anonymousId, userId: userId, traits: traits))
             let action = ResetUserIdentityAction(clearAnonymousId: true)
             when("Update state with action..") {
                 state.dispatch(action: action)
@@ -48,7 +45,6 @@ final class ResetUserIdentityActionTests: XCTestCase {
                     XCTAssertNotEqual(state.state.value.anonymousId, anonymousId)
                     XCTAssertTrue(state.state.value.userId.isEmpty)
                     XCTAssertTrue(state.state.value.traits.isEmpty)
-                    XCTAssertTrue(state.state.value.externalIds.isEmpty)
                 }
             }
         }
