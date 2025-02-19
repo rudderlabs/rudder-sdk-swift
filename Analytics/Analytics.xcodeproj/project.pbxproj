@@ -33,7 +33,7 @@
 		537E10DC2D5149C2002074AE /* ResetUserIdentityAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537E10DB2D5149C2002074AE /* ResetUserIdentityAction.swift */; };
 		5383D2E82D40133700291B00 /* IdentifyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2E72D40133700291B00 /* IdentifyEvent.swift */; };
 		5383D2F02D4141AD00291B00 /* SetUserIdAndTraitsAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2EF2D4141AD00291B00 /* SetUserIdAndTraitsAction.swift */; };
-		5383D3122D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D3112D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift */; };
+		5383D3122D44134A00291B00 /* UserIdTraitsActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D3112D44134A00291B00 /* UserIdTraitsActionTests.swift */; };
 		5383D3142D441B2300291B00 /* IdentifyEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D3132D441B2300291B00 /* IdentifyEventTests.swift */; };
 		5383D3162D441C8500291B00 /* identify_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 5383D3152D441C8500291B00 /* identify_with_default_arguments.json */; };
 		53859EE72CB66C3200EAE483 /* DataPlaneModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */; };
@@ -142,7 +142,7 @@
 		537E10DB2D5149C2002074AE /* ResetUserIdentityAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetUserIdentityAction.swift; sourceTree = "<group>"; };
 		5383D2E72D40133700291B00 /* IdentifyEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyEvent.swift; sourceTree = "<group>"; };
 		5383D2EF2D4141AD00291B00 /* SetUserIdAndTraitsAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUserIdAndTraitsAction.swift; sourceTree = "<group>"; };
-		5383D3112D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdTraitsExternalIdsActionTests.swift; sourceTree = "<group>"; };
+		5383D3112D44134A00291B00 /* UserIdTraitsActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdTraitsActionTests.swift; sourceTree = "<group>"; };
 		5383D3132D441B2300291B00 /* IdentifyEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyEventTests.swift; sourceTree = "<group>"; };
 		5383D3152D441C8500291B00 /* identify_with_default_arguments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = identify_with_default_arguments.json; sourceTree = "<group>"; };
 		53859EE62CB66C3200EAE483 /* DataPlaneModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPlaneModuleTests.swift; sourceTree = "<group>"; };
@@ -509,7 +509,7 @@
 				53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */,
 				53C7A76D2D2EF2A200F1325E /* UserIdentityTests.swift */,
 				536DEF562D37B218000BB30B /* AnonymousIdActionTests.swift */,
-				5383D3112D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift */,
+				5383D3112D44134A00291B00 /* UserIdTraitsActionTests.swift */,
 				537E10BC2D4E9BC7002074AE /* UserIdActionTests.swift */,
 				531744732D528F7500E98C03 /* ResetUserIdentityActionTests.swift */,
 			);
@@ -754,7 +754,7 @@
 				5388D5B92D0C4EA6000966AB /* LibraryInfoPluginTests.swift in Sources */,
 				53F4B6652CDA5F6F00AE9B75 /* FlushPolicyModuleTests.swift in Sources */,
 				536DEF572D37B218000BB30B /* AnonymousIdActionTests.swift in Sources */,
-				5383D3122D44134A00291B00 /* UserIdTraitsExternalIdsActionTests.swift in Sources */,
+				5383D3122D44134A00291B00 /* UserIdTraitsActionTests.swift in Sources */,
 				538E2B2E2CEDE1AC00B550BC /* ScreenEventTests.swift in Sources */,
 				5388D5A22D0A10AE000966AB /* LocaleInfoPluginTests.swift in Sources */,
 				53CF353D2D1050CA0062096B /* NetworkInfoPluginTests.swift in Sources */,

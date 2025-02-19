@@ -1,5 +1,5 @@
 //
-//  UserIdTraitsExternalIdsActionTests.swift
+//  UserIdTraitsActionTests.swift
 //  AnalyticsTests
 //
 //  Created by Satheesh Kannan on 24/01/25.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import Analytics
 
-final class UserIdTraitsExternalIdsActionTests: XCTestCase {
+final class UserIdTraitsActionTests: XCTestCase {
     
     private var storage: MockKeyValueStorage?
     
