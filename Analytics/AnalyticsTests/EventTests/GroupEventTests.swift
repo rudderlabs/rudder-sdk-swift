@@ -65,7 +65,7 @@ final class GroupEventTests: XCTestCase {
     
     func test_groupEvent_traits_options() {
         given("A group event with all values..") {
-            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
+            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
             
             var event: Message = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties, options: option)
             event = event.updateEventData()

@@ -65,7 +65,7 @@ final class TrackEventTests: XCTestCase {
     
     func test_trackEvent_properties_options() {
         given("A track event with properties & options...") {
-            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
+            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
             
             var event: Message = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties, options: option)
             event = event.updateEventData()
