@@ -35,7 +35,7 @@ struct FlushEvent: Message {
     var channel: String?
     
     /// A dictionary of integration settings for the event.
-    var integrations: [String: Bool]?
+    var integrations: [String: AnyCodable]?
     
     /// The timestamp of when the event was sent.
     var sentAt: String?
@@ -51,6 +51,9 @@ struct FlushEvent: Message {
 
     /// The unique identifier for the user.
     var userId: String?
+    
+    /// Holds the associated values for an event.
+    var options: RudderOption?
     
     /// The identity values of the user associated with the event.
     var userIdentity: UserIdentity?

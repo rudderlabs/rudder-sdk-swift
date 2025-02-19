@@ -46,11 +46,7 @@ final class IdentifyEventTests: XCTestCase {
      
      func test_identifyEvent_options() {
          given("A identify event with userId and options..") {
-             let option = RudderOptions().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
-             
-             MockProvider.sampleEventIntegrations.forEach { integration in
-                 option.addIntegration(integration.key, isEnabled: integration.value)
-             }
+             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
              
              var event: Message = IdentifyEvent(options: option, userIdentity: UserIdentity(userId: "Test_User_Id"))
              event = event.updateEventData()
@@ -69,11 +65,7 @@ final class IdentifyEventTests: XCTestCase {
      
      func test_identifyEvent_traits_options() {
          given("A identify event with userId, traits, externalIds and options..") {
-             let option = RudderOptions().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
-             
-             MockProvider.sampleEventIntegrations.forEach { integration in
-                 option.addIntegration(integration.key, isEnabled: integration.value)
-             }
+             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
              
              var event: Message = IdentifyEvent(options: option, userIdentity: UserIdentity(userId: "Test_User_Id", traits: MockProvider.sampleEventproperties, externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")]))
              event = event.updateEventData()

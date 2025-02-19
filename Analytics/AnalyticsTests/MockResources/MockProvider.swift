@@ -35,7 +35,7 @@ final class MockProvider {
 extension MockProvider {
     
     static let simpleTrackEvent: TrackEvent = {
-        let event = TrackEvent(event: "Track_Event", properties: ["Property_1": "Value1"], options: RudderOptions().addCustomContext(["context_key": "context_value"], key: "custom_context"))
+        let event = TrackEvent(event: "Track_Event", properties: ["Property_1": "Value1"], options: RudderOption(customContext: ["custom_context": ["context_key": "context_value"]]))
         return event
     }()
     

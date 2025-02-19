@@ -16,7 +16,10 @@ final class MessageModuleTests: XCTestCase {
             let event = "Sample Event"
             
             when("Create a track event") {
-                let track = TrackEvent(event: event)
+                var track = TrackEvent(event: event)
+                if let updatedTrack = track.updateEventData() as? TrackEvent {
+                    track = updatedTrack
+                }
                 
                 then("Verify the track event") {
                     XCTAssertEqual(track.event, event)
@@ -38,7 +41,10 @@ final class MessageModuleTests: XCTestCase {
             let properties: [String: String] = ["property": "value"]
             
             when("Create a track event") {
-                let track = TrackEvent(event: event, properties: properties)
+                var track = TrackEvent(event: event, properties: properties)
+                if let updatedTrack = track.updateEventData() as? TrackEvent {
+                    track = updatedTrack
+                }
                 
                 then("Verify the track event") {
                     XCTAssertEqual(track.event, event)
@@ -61,12 +67,13 @@ final class MessageModuleTests: XCTestCase {
     func test_track_event_options() {
         given("Parameters to create a track event") {
             let event = "Sample Event"
-            let options = RudderOptions()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a track event") {
-                let track = TrackEvent(event: event, options: options)
+                var track = TrackEvent(event: event, options: options)
+                if let updatedTrack = track.updateEventData() as? TrackEvent {
+                    track = updatedTrack
+                }
                 
                 then("Verify the track event") {
                     XCTAssertEqual(track.event, event)
@@ -89,12 +96,13 @@ final class MessageModuleTests: XCTestCase {
         given("Parameters to create a track event") {
             let event = "Sample Event"
             let properties: [String: String] = ["property": "value"]
-            let options = RudderOptions()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a track event") {
-                let track = TrackEvent(event: event, properties: properties, options: options)
+                var track = TrackEvent(event: event, properties: properties, options: options)
+                if let updatedTrack = track.updateEventData() as? TrackEvent {
+                    track = updatedTrack
+                }
                 
                 then("Verify the track event") {
                     XCTAssertEqual(track.event, event)
@@ -116,18 +124,13 @@ final class MessageModuleTests: XCTestCase {
     func test_track_event_custom_context() {
         given("Fully loaded custom context option") {
             let event = "Sample Event"
-            let option = RudderOptions()
-            .addIntegration("SDK", isEnabled: true)
-            .addIntegration("Facebook", isEnabled: false)
-            .addCustomContext(["Key1": "Value1"], key: "SK1")
-            .addCustomContext(["value1", "value2"], key: "SK2")
-            .addCustomContext("Value3", key: "SK3")
-            .addCustomContext(1234, key: "SK4")
-            .addCustomContext(5678.9, key: "SK5")
-            .addCustomContext(true, key: "SK6")
+            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
             
             when("Create a track event") {
-                let track = TrackEvent(event: event, options: option)
+                var track = TrackEvent(event: event, options: option)
+                if let updatedTrack = track.updateEventData() as? TrackEvent {
+                    track = updatedTrack
+                }
                 
                 then("Verify the track event") {
                     XCTAssertEqual(track.event, event)
@@ -150,7 +153,10 @@ final class MessageModuleTests: XCTestCase {
             let name = "Sample Screen Event"
             
             when("Create a screen event") {
-                let screen = ScreenEvent(screenName: name)
+                var screen = ScreenEvent(screenName: name)
+                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
+                    screen = updatedScreen
+                }
                 
                 then("Verify the screen event") {
                     XCTAssertEqual(screen.event, name)
@@ -172,7 +178,10 @@ final class MessageModuleTests: XCTestCase {
             let properties: [String: String] = ["property": "value"]
             
             when("Create a screen event") {
-                let screen = ScreenEvent(screenName: name, properties: properties)
+                var screen = ScreenEvent(screenName: name, properties: properties)
+                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
+                    screen = updatedScreen
+                }
                 
                 then("Verify the screen event") {
                     XCTAssertEqual(screen.event, name)
@@ -195,12 +204,13 @@ final class MessageModuleTests: XCTestCase {
     func test_screen_event_options() {
         given("Parameters to create a screen event") {
             let name = "Sample Screen Event"
-            let options = RudderOptions()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a screen event") {
-                let screen = ScreenEvent(screenName: name, options: options)
+                var screen = ScreenEvent(screenName: name, options: options)
+                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
+                    screen = updatedScreen
+                }
                 
                 then("Verify the screen event") {
                     XCTAssertEqual(screen.event, name)
@@ -223,12 +233,13 @@ final class MessageModuleTests: XCTestCase {
         given("Parameters to create a screen event") {
             let name = "Sample Screen Event"
             let properties: [String: String] = ["property": "value"]
-            let options = RudderOptions()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a screen event") {
-                let screen = ScreenEvent(screenName: name, properties: properties, options: options)
+                var screen = ScreenEvent(screenName: name, properties: properties, options: options)
+                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
+                    screen = updatedScreen
+                }
                 
                 then("Verify the screen event") {
                     XCTAssertEqual(screen.event, name)
@@ -250,18 +261,13 @@ final class MessageModuleTests: XCTestCase {
     func test_screen_event_custom_context() {
         given("Fully loaded custom context option") {
             let name = "Sample Screen Event"
-            let option = RudderOptions()
-            .addIntegration("SDK", isEnabled: true)
-            .addIntegration("Facebook", isEnabled: false)
-            .addCustomContext(["Key1": "Value1"], key: "SK1")
-            .addCustomContext(["value1", "value2"], key: "SK2")
-            .addCustomContext("Value3", key: "SK3")
-            .addCustomContext(1234, key: "SK4")
-            .addCustomContext(5678.9, key: "SK5")
-            .addCustomContext(true, key: "SK6")
+            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
             
             when("Create a screen event") {
-                let screen = ScreenEvent(screenName: name, options: option)
+                var screen = ScreenEvent(screenName: name, options: option)
+                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
+                    screen = updatedScreen
+                }
                 
                 then("Verify the screen event") {
                     XCTAssertEqual(screen.event, name)
@@ -284,7 +290,10 @@ final class MessageModuleTests: XCTestCase {
             let groupId = "Sample_Group_Id"
             
             when("Create a group event") {
-                let group = GroupEvent(groupId: groupId)
+                var group = GroupEvent(groupId: groupId)
+                if let updatedGroup = group.updateEventData() as? GroupEvent {
+                    group = updatedGroup
+                }
                 
                 then("Verify the group event") {
                     XCTAssertEqual(group.groupId, groupId)
@@ -306,7 +315,10 @@ final class MessageModuleTests: XCTestCase {
             let traits = ["property": "value"]
             
             when("Create a group event") {
-                let group = GroupEvent(groupId: groupId, traits: traits)
+                var group = GroupEvent(groupId: groupId, traits: traits)
+                if let updatedGroup = group.updateEventData() as? GroupEvent {
+                    group = updatedGroup
+                }
                 
                 then("Verify the group event") {
                     XCTAssertEqual(group.groupId, groupId)
@@ -330,12 +342,13 @@ final class MessageModuleTests: XCTestCase {
     func test_group_event_options() {
         given("Parameters to create a group event") {
             let groupId = "Sample_Group_Id"
-            let options = RudderOptions()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a group event") {
-                let group = GroupEvent(groupId: groupId, options: options)
+                var group = GroupEvent(groupId: groupId, options: options)
+                if let updatedGroup = group.updateEventData() as? GroupEvent {
+                    group = updatedGroup
+                }
                 
                 then("Verify the group event") {
                     XCTAssertEqual(group.groupId, groupId)
@@ -358,12 +371,13 @@ final class MessageModuleTests: XCTestCase {
         given("Parameters to create a group event") {
             let groupId = "Sample_Group_Id"
             let traits = ["property": "value"]
-            let options = RudderOptions()
-                .addIntegration("SampleIntegration", isEnabled: false)
-                .addCustomContext(["userContext": "content"], key: "customContext")
+            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
             
             when("Create a group event") {
-                let group = GroupEvent(groupId: groupId, traits: traits, options: options)
+                var group = GroupEvent(groupId: groupId, traits: traits, options: options)
+                if let updatedGroup = group.updateEventData() as? GroupEvent {
+                    group = updatedGroup
+                }
                 
                 then("Verify the group event") {
                     XCTAssertEqual(group.groupId, groupId)
@@ -386,18 +400,13 @@ final class MessageModuleTests: XCTestCase {
     func test_group_event_custom_context() {
         given("Fully loaded custom context option") {
             let groupId = "Sample_Group_Id"
-            let option = RudderOptions()
-            .addIntegration("SDK", isEnabled: true)
-            .addIntegration("Facebook", isEnabled: false)
-            .addCustomContext(["Key1": "Value1"], key: "SK1")
-            .addCustomContext(["value1", "value2"], key: "SK2")
-            .addCustomContext("Value3", key: "SK3")
-            .addCustomContext(1234, key: "SK4")
-            .addCustomContext(5678.9, key: "SK5")
-            .addCustomContext(true, key: "SK6")
+            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
             
             when("Create a group event") {
-                let group = GroupEvent(groupId: groupId, options: option)
+                var group = GroupEvent(groupId: groupId, options: option)
+                if let updatedGroup = group.updateEventData() as? GroupEvent {
+                    group = updatedGroup
+                }
                 
                 then("Verify the group event") {
                     XCTAssertEqual(group.groupId, groupId)

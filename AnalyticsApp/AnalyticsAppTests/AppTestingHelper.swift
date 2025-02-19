@@ -12,7 +12,7 @@ import Analytics
 class MockEvent: Message {
     var anonymousId: String?
     var channel: String?
-    var integrations: [String : Bool]?
+    var integrations: [String : Analytics.AnyCodable]?
     var sentAt: String?
     var context: [String : Analytics.AnyCodable]?
     var traits: Analytics.CodableCollection?
@@ -21,6 +21,7 @@ class MockEvent: Message {
     var originalTimeStamp: String = Date().description
     var userId: String?
     var userIdentity: Analytics.UserIdentity?
+    var options: Analytics.RudderOption?
     
     enum CodingKeys: String, CodingKey {
         case anonymousId

@@ -35,7 +35,7 @@ struct AliasEvent: Message {
     var channel: String?
 
     /// A dictionary specifying integration settings for the event.
-    var integrations: [String: Bool]?
+    var integrations: [String: AnyCodable]?
 
     /// The timestamp of when the event was sent.
     var sentAt: String?
@@ -46,6 +46,9 @@ struct AliasEvent: Message {
     /// Custom traits or attributes associated with the event.
     var traits: CodableCollection?
 
+    /// Holds the associated values for an event.
+    var options: RudderOption?
+    
     /// The user identity object containing user details, such as identifiers and traits.
     var userIdentity: UserIdentity?
 
@@ -62,16 +65,11 @@ struct AliasEvent: Message {
 
      This initializer also applies default values for integrations and context if they are not explicitly provided.
      */
-    init(previousId: String, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(previousId: String, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.previousId = previousId
-
-        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
-
-        self.context = options?.customContext?.isEmpty == false ?
-        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-
         self.userIdentity = userIdentity
-
+        self.options = options ?? RudderOption()
+        
         self.addDefaultValues()
     }
 

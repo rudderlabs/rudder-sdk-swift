@@ -34,7 +34,7 @@ struct TrackEvent: Message {
     var channel: String?
     
     /// A dictionary of integration settings for the event.
-    var integrations: [String: Bool]?
+    var integrations: [String: AnyCodable]?
     
     /// The timestamp of when the event was sent.
     var sentAt: String?
@@ -54,6 +54,9 @@ struct TrackEvent: Message {
     /// Additional properties or metadata for the event.
     var properties: CodableCollection?
 
+    /// Holds the associated values for an event.
+    var options: RudderOption?
+    
     /// The identity values of the user associated with the event.
     var userIdentity: UserIdentity?
     
@@ -68,15 +71,11 @@ struct TrackEvent: Message {
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(event: String, properties: RudderProperties? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(event: String, properties: RudderProperties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.event = event
         self.properties = CodableCollection(dictionary: properties)
-        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
-        
-        self.context = options?.customContext?.isEmpty == false ?
-        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-        
         self.userIdentity = userIdentity
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }
