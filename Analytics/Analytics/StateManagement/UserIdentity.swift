@@ -151,35 +151,3 @@ extension UserIdentity {
         return self.anonymousId
     }
 }
-
-/**
- A struct representing an external identifier associated with the user.
- 
- - Properties:
- - `type`: The type of the external identifier
- - `id`: The value of the external identifier.
- 
- - Conformance:
- - `Codable`: Allows the `ExternalId` to be encoded and decoded using `JSONEncoder` and `JSONDecoder`.
- */
-public struct ExternalId: Codable, Equatable {
-    /// The type of the external identifier.
-    var type: String
-    
-    /// The value of the external identifier.
-    var id: String
-    
-    /**
-     Initializes a new instance of `ExternalId` with the given `type` and `id`.
-     
-     - Parameters:
-        - type: The type of the external identifier (e.g., "google", "facebook").
-        - id: The value of the external identifier (e.g., "user_12345").
-     
-     - Returns: A new `ExternalId` instance.
-     */
-    public init(type: String, id: String) {
-        self.type = type
-        self.id = id
-    }
-}
