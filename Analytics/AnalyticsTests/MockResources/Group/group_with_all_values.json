@@ -22,7 +22,13 @@
         "key-8" : true,
         "key-9" : 123.456
       }
-    }
+    },
+    "externalId" : [
+      {
+        "id" : "sample_Id",
+        "type" : "sample_Type"
+      }
+    ]
   },
   "groupId" : "Sample_Group_Event",
   "integrations" : {
