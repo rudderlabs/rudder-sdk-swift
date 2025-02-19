@@ -61,7 +61,7 @@ public protocol Plugin: AnyObject {
     func setup(analytics: AnalyticsClient)
     
     /**
-     Executes the plugin's logic on the provided event.
+     Intercepts the plugin's logic on the provided event.
 
      This method is called during the event processing pipeline. Plugins can modify, filter, or enrich the event as needed.
 
@@ -90,7 +90,7 @@ public extension Plugin {
     }
     
     /**
-     Executes the plugin's logic on the provided event.
+     Intercepts the plugin's logic on the provided event.
      */
     func intercept(event: Message) -> Message? {
         event
@@ -181,7 +181,7 @@ extension MessagePlugin {
     func flush(payload: FlushEvent) -> Message? { payload }
     
     /**
-     Executes the appropriate method based on the event type.
+     Intercepts the appropriate method based on the event type.
 
      This method checks the type of the incoming `Message` and delegates it to the corresponding event handler method such as `identify`, `track`, `screen`, `group`, `alias` or `flush`.
      
