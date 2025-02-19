@@ -120,7 +120,7 @@ extension Message {
             mutableSelf = mutableSelf.addToContext(info: customContext)
         }
         
-        if let externalIds = self.userIdentity?.externalIds, !externalIds.isEmpty {
+        if let externalIds = self.options?.externalIds, !externalIds.isEmpty {
             mutableSelf = mutableSelf.addToContext(info: ["externalId": externalIds.compactMap { $0.dictionary }])
         }
         
