@@ -180,20 +180,6 @@ extension [String: Any] {
     }
 }
 
-extension Array where Element == ExternalId {
-    func mergeWithHigherPriorityTo(_ other: [ExternalId]) -> [ExternalId] {
-        var merged = self
-        for item in other {
-            if let index = merged.firstIndex(where: { $0.type == item.type }) {
-                merged[index].id = item.id
-            } else {
-                merged.append(item)
-            }
-        }
-        return merged
-    }
-}
-
 // MARK: - Data
 extension Data {
     var jsonString: String? {
