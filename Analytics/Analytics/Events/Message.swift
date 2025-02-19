@@ -38,7 +38,7 @@ public protocol Message: Codable {
     /**
      A dictionary specifying the integrations involved in this event.
     */
-    var integrations: [String: Bool]? { get set }
+    var integrations: [String: AnyCodable]? { get set }
 
     /**
      The timestamp when the event was sent, in ISO 8601 format.
@@ -77,6 +77,11 @@ public protocol Message: Codable {
     var originalTimeStamp: String { get set }
     
     /**
+     Holds the associated values for an event.
+     */
+    var options: RudderOption? { get set }
+    
+    /**
      The identity values of the user associated with the event.
      */
     var userIdentity: UserIdentity? { get set }
@@ -104,9 +109,15 @@ extension Message {
         
         mutableSelf.anonymousId = self.userIdentity?.anonymousId
         mutableSelf.userId = self.userIdentity?.userId.isEmpty == true ? nil : self.userIdentity?.userId
-        
+    
         if let traits = self.userIdentity?.traits, !traits.isEmpty {
             mutableSelf = mutableSelf.addToContext(info: ["traits": traits])
+        }
+        
+        mutableSelf.integrations = options?.integrations?.compactMapValues { AnyCodable($0) }
+        
+        if let customContext = self.options?.customContext, !customContext.isEmpty {
+            mutableSelf = mutableSelf.addToContext(info: customContext)
         }
         
         if let externalIds = self.userIdentity?.externalIds, !externalIds.isEmpty {

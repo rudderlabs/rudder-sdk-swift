@@ -29,11 +29,7 @@ final class AliasEventTests: XCTestCase {
     
     func test_aliasEvent_options() {
         given("A alias event with test userId provided with any options..") {
-            let option = RudderOptions().addCustomContext(MockProvider.sampleEventproperties, key: "customContext")
-            
-            MockProvider.sampleEventIntegrations.forEach { integration in
-                option.addIntegration(integration.key, isEnabled: integration.value)
-            }
+            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
             
             var event: Message = AliasEvent(previousId: "test_previous_id", options: option, userIdentity: UserIdentity(userId: "test_user_id"))
             event = event.updateEventData()

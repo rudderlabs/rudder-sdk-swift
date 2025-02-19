@@ -34,7 +34,7 @@ struct ScreenEvent: Message {
     var channel: String?
     
     /// A dictionary of integration settings for the event.
-    var integrations: [String: Bool]?
+    var integrations: [String: AnyCodable]?
     
     /// The timestamp of when the event was sent.
     var sentAt: String?
@@ -57,6 +57,9 @@ struct ScreenEvent: Message {
     /// Additional properties or metadata for the screen event.
     var properties: CodableCollection?
 
+    /// Holds the associated values for an event.
+    var options: RudderOption?
+    
     /// The identity values of the user associated with the event.
     var userIdentity: UserIdentity?
     
@@ -72,7 +75,7 @@ struct ScreenEvent: Message {
 
      This initializer also processes and includes default properties such as the screen name and category in the event's properties, if they are provided.
      */
-    init(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.event = screenName
         
         var updatedProperties = properties ?? RudderProperties()
@@ -80,12 +83,8 @@ struct ScreenEvent: Message {
         updatedProperties["name"] = screenName.isEmpty ? nil : screenName
         
         self.properties = CodableCollection(dictionary: updatedProperties)
-        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
-        
-        self.context = options?.customContext?.isEmpty == false ?
-            options?.customContext?.compactMapValues { AnyCodable($0) } : nil
-                
         self.userIdentity = userIdentity
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }

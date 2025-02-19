@@ -32,7 +32,7 @@ struct IdentifyEvent: Message {
     var channel: String?
 
     /// A dictionary of integration settings for the event.
-    var integrations: [String: Bool]?
+    var integrations: [String: AnyCodable]?
 
     /// The timestamp of when the event was sent.
     var sentAt: String?
@@ -49,6 +49,9 @@ struct IdentifyEvent: Message {
     /// The unique identifier for the user.
     var userId: String?
 
+    /// Holds the associated values for an event.
+    var options: RudderOption?
+    
     /// The identity values of the user associated with the event.
     var userIdentity: UserIdentity?
 
@@ -62,12 +65,10 @@ struct IdentifyEvent: Message {
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(options: RudderOptions? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
         self.userIdentity = userIdentity
-        self.integrations = options == nil ? Constants.Payload.integration : options?.integrations
         self.event = self.type.rawValue
-        self.context = options?.customContext?.isEmpty == false ?
-        options?.customContext?.compactMapValues { AnyCodable($0) } : nil
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }
