@@ -41,7 +41,6 @@ public struct UserIdentity {
      1. Reads the `anonymousId` from storage or generates a new UUID.
      2. Reads the `userId` from storage or sets it to an empty string.
      3. Parses and assigns user traits from the stored JSON string, if available.
-     4. Decodes and assigns external IDs from the stored array of JSON strings.
      */
     
     static func initializeState(_ storage: KeyValueStorage) -> UserIdentity {
