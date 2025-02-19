@@ -19,7 +19,7 @@ final class OSInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func execute(event: any Message) -> (any Message)? {
+    func intercept(event: any Message) -> (any Message)? {
         return event.addToContext(info: ["os": self.preparedOSInfo])
     }
     

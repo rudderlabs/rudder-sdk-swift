@@ -19,7 +19,7 @@ final class ScreenInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func execute(event: any Message) -> (any Message)? {
+    func intercept(event: any Message) -> (any Message)? {
         return event.addToContext(info: ["screen": self.preparedScreenInfo])
     }
     

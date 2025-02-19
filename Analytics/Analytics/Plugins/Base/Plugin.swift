@@ -68,7 +68,7 @@ public protocol Plugin: AnyObject {
      - Parameter event: The `Message` event being processed.
      - Returns: The modified `Message` event, or `nil` to indicate the event should be filtered out.
      */
-    func execute(event: Message) -> Message?
+    func intercept(event: Message) -> Message?
     
     /**
      Cleans up resources used by the plugin.
@@ -92,7 +92,7 @@ public extension Plugin {
     /**
      Executes the plugin's logic on the provided event.
      */
-    func execute(event: Message) -> Message? {
+    func intercept(event: Message) -> Message? {
         event
     }
     
@@ -190,7 +190,7 @@ extension MessagePlugin {
      - Parameter event: The event to be processed.
      - Returns: A processed `Message`, or `nil` if the event type is unsupported.
      */
-    func execute(event: any Message) -> (any Message)? {
+    func intercept(event: any Message) -> (any Message)? {
         switch event {
         case let event as IdentifyEvent:
             return self.identify(payload: event)
