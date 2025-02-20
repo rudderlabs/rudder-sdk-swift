@@ -1,18 +1,18 @@
 //
-//  MessageManager.swift
+//  EventManager.swift
 //  Analytics
 //
 //  Created by Satheesh Kannan on 08/10/24.
 //
 
 import Foundation
-// MARK: - MessageManager
+// MARK: - EventManager
 /**
- A class responsible for managing messages and handling their processing, storage, and uploading in the analytics system.
+ A class responsible for managing events and handling their processing, storage, and uploading in the analytics system.
 
- This class integrates with the analytics client, manages flush policies, and ensures smooth message flow using asynchronous channels.
+ This class integrates with the analytics client, manages flush policies, and ensures smooth event flow using asynchronous channels.
  */
-final class MessageManager {
+final class EventManager {
     
     private let analytics: AnalyticsClient
     private let flushPolicyFacade: FlushPolicyFacade
@@ -40,7 +40,7 @@ final class MessageManager {
 }
 
 // MARK: - Operations
-extension MessageManager {
+extension EventManager {
     
     private func start() {
         self.flushPolicyFacade.startSchedule()
@@ -48,9 +48,9 @@ extension MessageManager {
         self.upload()
     }
     
-    func put(_ message: Event) {
+    func put(_ event: Event) {
         Task {
-            try await self.writeChannel.send(message)
+            try await self.writeChannel.send(event)
         }
     }
     
@@ -69,14 +69,14 @@ extension MessageManager {
 }
 
 // MARK: - Event Processing
-extension MessageManager {
+extension EventManager {
     func write() {
         Task {
-            for await message in self.writeChannel.stream {
-                let isFlushSignal = message.type == .flush
+            for await event in self.writeChannel.stream {
+                let isFlushSignal = event.type == .flush
 
                 if !isFlushSignal {
-                    if let json = message.jsonString {
+                    if let json = event.jsonString {
                         await self.storage.write(message: json)
                         self.flushPolicyFacade.updateCount()
                     }

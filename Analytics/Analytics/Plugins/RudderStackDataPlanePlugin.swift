@@ -15,11 +15,11 @@ final class RudderStackDataPlanePlugin: MessagePlugin {
     var pluginType: PluginType = .destination
     var analytics: AnalyticsClient?
     
-    private var messageManager: MessageManager?
+    private var messageManager: EventManager?
     
     func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
-        self.messageManager = MessageManager(analytics: analytics)
+        self.messageManager = EventManager(analytics: analytics)
     }
     
     deinit {

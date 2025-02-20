@@ -100,7 +100,7 @@
 		53FD37782CB1B0C700DBA06B /* PluginChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37742CB1B0C700DBA06B /* PluginChain.swift */; };
 		53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37752CB1B0C700DBA06B /* PluginInteractor.swift */; };
 		53FD377D2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD377C2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift */; };
-		53FD37A02CB5163C00DBA06B /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD379F2CB5163C00DBA06B /* MessageManager.swift */; };
+		53FD37A02CB5163C00DBA06B /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD379F2CB5163C00DBA06B /* EventManager.swift */; };
 		53FD37A22CB5258100DBA06B /* AsyncChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FD37A12CB5258100DBA06B /* AsyncChannel.swift */; };
 /* End PBXBuildFile section */
 
@@ -209,7 +209,7 @@
 		53FD37742CB1B0C700DBA06B /* PluginChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginChain.swift; sourceTree = "<group>"; };
 		53FD37752CB1B0C700DBA06B /* PluginInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginInteractor.swift; sourceTree = "<group>"; };
 		53FD377C2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderStackDataPlanePlugin.swift; sourceTree = "<group>"; };
-		53FD379F2CB5163C00DBA06B /* MessageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageManager.swift; sourceTree = "<group>"; };
+		53FD379F2CB5163C00DBA06B /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		53FD37A12CB5258100DBA06B /* AsyncChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncChannel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -418,7 +418,7 @@
 			children = (
 				5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */,
 				5392AB942C6FC78F00369791 /* Configuration.swift */,
-				53FD379F2CB5163C00DBA06B /* MessageManager.swift */,
+				53FD379F2CB5163C00DBA06B /* EventManager.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -725,7 +725,7 @@
 				5383D2E82D40133700291B00 /* IdentifyEvent.swift in Sources */,
 				533485952C9AC7C70029F88E /* CodableTypes.swift in Sources */,
 				5388D5A02D0A09A5000966AB /* LocaleInfoPlugin.swift in Sources */,
-				53FD37A02CB5163C00DBA06B /* MessageManager.swift in Sources */,
+				53FD37A02CB5163C00DBA06B /* EventManager.swift in Sources */,
 				53BE94EB2C9220950004E75A /* DiskStore.swift in Sources */,
 				53C29E722C918F2400F2A8C3 /* Storage.swift in Sources */,
 			);
