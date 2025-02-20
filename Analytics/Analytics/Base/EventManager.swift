@@ -13,7 +13,6 @@ import Foundation
  This class integrates with the analytics client, manages flush policies, and ensures smooth event flow using asynchronous channels.
  */
 final class EventManager {
-    
     private let analytics: AnalyticsClient
     private let flushPolicyFacade: FlushPolicyFacade
     private let httpClient: HttpClient
