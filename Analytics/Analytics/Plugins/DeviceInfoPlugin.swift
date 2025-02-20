@@ -23,7 +23,7 @@ final class DeviceInfoPlugin: Plugin {
         self.collectDeviceId = analytics.configuration.collectDeviceId
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         return event.addToContext(info: ["device": self.preparedDeviceInfo])
     }
 }

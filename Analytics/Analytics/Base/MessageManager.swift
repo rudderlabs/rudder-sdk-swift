@@ -18,7 +18,7 @@ final class MessageManager {
     private let flushPolicyFacade: FlushPolicyFacade
     private let httpClient: HttpClient
     private let flushEvent = FlushEvent(messageName: Constants.DefaultConfig.uploadSignal)
-    private let writeChannel: AsyncChannel<Message>
+    private let writeChannel: AsyncChannel<Event>
     private let uploadChannel: AsyncChannel<String>
     
     private var storage: Storage {
@@ -48,7 +48,7 @@ extension MessageManager {
         self.upload()
     }
     
-    func put(_ message: Message) {
+    func put(_ message: Event) {
         Task {
             try await self.writeChannel.send(message)
         }
@@ -68,7 +68,7 @@ extension MessageManager {
     }
 }
 
-// MARK: - Message Processing
+// MARK: - Event Processing
 extension MessageManager {
     func write() {
         Task {

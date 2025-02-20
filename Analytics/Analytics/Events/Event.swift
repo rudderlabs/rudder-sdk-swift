@@ -1,5 +1,5 @@
 //
-//  Message.swift
+//  Event.swift
 //  Analytics
 //
 //  Created by Satheesh Kannan on 20/08/24.
@@ -7,14 +7,14 @@
 
 import Foundation
 
-// MARK: - Message
+// MARK: - Event
 /**
  A base protocol for all events in the analytics system.
 
- The `Message` protocol defines the common properties and behaviors required for all types of event messages.
+ The `Event` protocol defines the common properties and behaviors required for all types of event messages.
  It conforms to the `Codable` protocol, enabling easy encoding and decoding for storage or network transmission.
  */
-public protocol Message: Codable {
+public protocol Event: Codable {
 
     // MARK: - Properties
 
@@ -87,10 +87,10 @@ public protocol Message: Codable {
     var userIdentity: UserIdentity? { get set }
 }
 
-extension Message {
+extension Event {
 
     /**
-     Adds default or standard values to the `Message` object.
+     Adds default or standard values to the `Event` object.
 
      It ensures that each event has consistent base data.
      */
@@ -102,10 +102,10 @@ extension Message {
     /**
      Updates the event data with user identity information.
 
-     - Returns: A `Message` object with the updated event data.
+     - Returns: A `Event` object with the updated event data.
      */
-    func updateEventData() -> Message {
-        var mutableSelf: Message = self
+    func updateEventData() -> Event {
+        var mutableSelf: Event = self
         
         mutableSelf.anonymousId = self.userIdentity?.anonymousId
         mutableSelf.userId = self.userIdentity?.userId.isEmpty == true ? nil : self.userIdentity?.userId
@@ -128,16 +128,16 @@ extension Message {
     }
 
     /**
-     Appends additional context information to the `Message` payload.
+     Appends additional context information to the `Event` payload.
 
      This method takes a dictionary of key-value pairs and merges it with the existing `context` property. The values are wrapped in `AnyCodable` to ensure type compatibility.
 
      - Parameter info: A dictionary containing context information to append.
-     - Returns: A new `Message` instance with the updated context.
+     - Returns: A new `Event` instance with the updated context.
 
      - Note: If the `context` property is `nil`, it is initialized with the provided context.
      */
-    public func addToContext(info: [String: Any]) -> Message {
+    public func addToContext(info: [String: Any]) -> Event {
         var mutableSelf = self
         mutableSelf.context = (mutableSelf.context ?? [:]) + info.mapValues { AnyCodable($0) }
         return mutableSelf

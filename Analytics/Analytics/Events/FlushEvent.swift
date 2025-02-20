@@ -13,11 +13,11 @@ import Foundation
  Represents a flush event in the analytics system.
 
  The `FlushEvent` is a specialized event type used to signal the system to flush stored events for processing and upload.
- It conforms to the `Message` protocol and contains necessary metadata for event management.
+ It conforms to the `Event` protocol and contains necessary metadata for event management.
 
- - Conforms to: `Message`
+ - Conforms to: `Event`
  */
-struct FlushEvent: Message {
+struct FlushEvent: Event {
     
     /// The type of the event, defaulting to `.flush`.
     var type: EventType = .flush

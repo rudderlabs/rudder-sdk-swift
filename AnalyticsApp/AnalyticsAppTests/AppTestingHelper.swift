@@ -9,7 +9,7 @@ import Foundation
 import Analytics
 
 // MARK: - MockEvent
-class MockEvent: Message {
+class MockEvent: Event {
     var anonymousId: String?
     var channel: String?
     var integrations: [String : Analytics.AnyCodable]?

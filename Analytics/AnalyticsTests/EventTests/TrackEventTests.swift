@@ -12,7 +12,7 @@ final class TrackEventTests: XCTestCase {
     
     func test_defaultTrackEvent() {
         given("A track event with default values..") {
-            var event: Message = TrackEvent(event: MockProvider.SampleEventName.track)
+            var event: Event = TrackEvent(event: MockProvider.SampleEventName.track)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
@@ -29,7 +29,7 @@ final class TrackEventTests: XCTestCase {
     
     func test_trackEvent_properties() {
         given("A track event with properties..") {
-            var event: Message = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties)
+            var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
@@ -48,7 +48,7 @@ final class TrackEventTests: XCTestCase {
         given("A track event with options...") {
             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
             
-            var event: Message = TrackEvent(event: MockProvider.SampleEventName.track, options: option)
+            var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, options: option)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
@@ -67,7 +67,7 @@ final class TrackEventTests: XCTestCase {
         given("A track event with properties & options...") {
             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
             
-            var event: Message = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties, options: option)
+            var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties, options: option)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             

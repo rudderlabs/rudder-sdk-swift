@@ -36,32 +36,32 @@ final class RudderStackDataPlanePlugin: MessagePlugin {
 
 extension RudderStackDataPlanePlugin {
     
-    func identify(payload: IdentifyEvent) -> (any Message)? {
+    func identify(payload: IdentifyEvent) -> (any Event)? {
         self.messageManager?.put(payload)
         return payload
     }
     
-    func track(payload: TrackEvent) -> (any Message)? {
+    func track(payload: TrackEvent) -> (any Event)? {
         self.messageManager?.put(payload)
         return payload
     }
     
-    func screen(payload: ScreenEvent) -> (any Message)? {
+    func screen(payload: ScreenEvent) -> (any Event)? {
         self.messageManager?.put(payload)
         return payload
     }
     
-    func group(payload: GroupEvent) -> (any Message)? {
+    func group(payload: GroupEvent) -> (any Event)? {
         self.messageManager?.put(payload)
         return payload
     }
     
-    func alias(payload: AliasEvent) -> (any Message)? {
+    func alias(payload: AliasEvent) -> (any Event)? {
         self.messageManager?.put(payload)
         return payload
     }
     
-    func flush(payload: FlushEvent) -> (any Message)? {
+    func flush(payload: FlushEvent) -> (any Event)? {
         self.messageManager?.put(payload)
         return payload
     }

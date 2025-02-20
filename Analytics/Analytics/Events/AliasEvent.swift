@@ -12,9 +12,9 @@ import Foundation
 
  The `AliasEvent` struct is used to link a new user identifier (`userId`) to an existing identifier (`previousId`), enabling seamless user tracking across multiple identifiers. This event is particularly useful during user sign-in or account merging scenarios.
 
- - Conforms to: `Message`
+ - Conforms to: `Event`
  */
-struct AliasEvent: Message {
+struct AliasEvent: Event {
 
     /// The type of the event, defaulting to `.alias`.
     var type: EventType = .alias

@@ -28,7 +28,7 @@ class AdvertisingIdPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         guard trackingAuthorizationStatus() == .authorized, let advertisingId = getAdvertisingId() else {
             return event
         }

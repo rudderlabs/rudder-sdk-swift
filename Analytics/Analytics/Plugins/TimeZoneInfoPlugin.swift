@@ -19,7 +19,7 @@ final class TimeZoneInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         return event.addToContext(info: ["timezone": self.preparedTimezoneInfo])
     }
     

@@ -65,10 +65,10 @@ public protocol Plugin: AnyObject {
 
      This method is called during the event processing pipeline. Plugins can modify, filter, or enrich the event as needed.
 
-     - Parameter event: The `Message` event being processed.
-     - Returns: The modified `Message` event, or `nil` to indicate the event should be filtered out.
+     - Parameter event: The `Event` event being processed.
+     - Returns: The modified `Event` event, or `nil` to indicate the event should be filtered out.
      */
-    func intercept(event: Message) -> Message?
+    func intercept(event: Event) -> Event?
     
     /**
      Cleans up resources used by the plugin.
@@ -92,7 +92,7 @@ public extension Plugin {
     /**
      Intercepts the plugin's logic on the provided event.
      */
-    func intercept(event: Message) -> Message? {
+    func intercept(event: Event) -> Event? {
         event
     }
     
@@ -121,76 +121,76 @@ protocol MessagePlugin: Plugin {
      Processes a `IdentifyEvent` payload.
      
      - Parameter payload: The `IdentifyEvent` payload to be processed.
-     - Returns: A modified `Message` or `nil` if the event is to be filtered out.
+     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func identify(payload: IdentifyEvent) -> Message?
+    func identify(payload: IdentifyEvent) -> Event?
     
     /**
      Processes a `TrackEvent` payload.
      
      - Parameter payload: The `TrackEvent` payload to be processed.
-     - Returns: A modified `Message` or `nil` if the event is to be filtered out.
+     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func track(payload: TrackEvent) -> Message?
+    func track(payload: TrackEvent) -> Event?
     
     /**
      Processes a `ScreenEvent` payload.
      
      - Parameter payload: The `ScreenEvent` payload to be processed.
-     - Returns: A modified `Message` or `nil` if the event is to be filtered out.
+     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func screen(payload: ScreenEvent) -> Message?
+    func screen(payload: ScreenEvent) -> Event?
     
     /**
      Processes a `GroupEvent` payload.
      
      - Parameter payload: The `GroupEvent` payload to be processed.
-     - Returns: A modified `Message` or `nil` if the event is to be filtered out.
+     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func group(payload: GroupEvent) -> Message?
+    func group(payload: GroupEvent) -> Event?
     
     /**
      Processes a `AliasEvent` payload.
      
      - Parameter payload: The `AliasEvent` payload to be processed.
-     - Returns: A modified `Message` or `nil` if the event is to be filtered out.
+     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func alias(payload: AliasEvent) -> Message?
+    func alias(payload: AliasEvent) -> Event?
     
     /**
      Processes a `FlushEvent` payload.
      
      - Parameter payload: The `FlushEvent` payload to be processed.
-     - Returns: A modified `Message` or `nil` if the event is to be filtered out.
+     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func flush(payload: FlushEvent) -> Message?
+    func flush(payload: FlushEvent) -> Event?
 }
 
 extension MessagePlugin {
     
-    func identify(payload: IdentifyEvent) -> Message? { payload }
+    func identify(payload: IdentifyEvent) -> Event? { payload }
     
-    func track(payload: TrackEvent) -> Message? { payload }
+    func track(payload: TrackEvent) -> Event? { payload }
     
-    func screen(payload: ScreenEvent) -> Message? { payload }
+    func screen(payload: ScreenEvent) -> Event? { payload }
     
-    func group(payload: GroupEvent) -> Message? { payload }
+    func group(payload: GroupEvent) -> Event? { payload }
     
-    func alias(payload: AliasEvent) -> Message? { payload }
+    func alias(payload: AliasEvent) -> Event? { payload }
     
-    func flush(payload: FlushEvent) -> Message? { payload }
+    func flush(payload: FlushEvent) -> Event? { payload }
     
     /**
      Intercepts the appropriate method based on the event type.
 
-     This method checks the type of the incoming `Message` and delegates it to the corresponding event handler method such as `identify`, `track`, `screen`, `group`, `alias` or `flush`.
+     This method checks the type of the incoming `Event` and delegates it to the corresponding event handler method such as `identify`, `track`, `screen`, `group`, `alias` or `flush`.
      
      If the event type is unknown, it returns `nil`.
 
      - Parameter event: The event to be processed.
-     - Returns: A processed `Message`, or `nil` if the event type is unsupported.
+     - Returns: A processed `Event`, or `nil` if the event type is unsupported.
      */
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         switch event {
         case let event as IdentifyEvent:
             return self.identify(payload: event)

@@ -12,11 +12,11 @@ import Foundation
 /**
  Represents a tracking event in the analytics system.
 
- This struct conforms to the `Message` protocol and is used to capture information about a specific event that occurred in the application, such as user interactions or custom events.
+ This struct conforms to the `Event` protocol and is used to capture information about a specific event that occurred in the application, such as user interactions or custom events.
 
- - Conforms to: `Message`
+ - Conforms to: `Event`
  */
-struct TrackEvent: Message {
+struct TrackEvent: Event {
     
     /// The type of the event, defaulting to `.track`.
     var type: EventType = .track

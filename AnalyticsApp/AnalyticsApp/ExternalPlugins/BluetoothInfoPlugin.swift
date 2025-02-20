@@ -25,7 +25,7 @@ class BluetoothInfoPlugin: Plugin {
         return CBManager.authorization
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         let isBluetoothAvailable = self.bluetoothAuthorizationStatus() == .allowedAlways
         guard isBluetoothAvailable else { return event }
         

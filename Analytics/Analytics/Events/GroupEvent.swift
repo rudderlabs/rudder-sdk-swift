@@ -12,11 +12,11 @@ import Foundation
 /**
  Represents a group event in the analytics system.
 
- This struct conforms to the `Message` protocol and is used to associate a user with a specific group, such as a team, organization, or other collection.
+ This struct conforms to the `Event` protocol and is used to associate a user with a specific group, such as a team, organization, or other collection.
 
- - Conforms to: `Message`
+ - Conforms to: `Event`
  */
-struct GroupEvent: Message {
+struct GroupEvent: Event {
     
     /// The type of the event, defaulting to `.group`.
     var type: EventType = .group

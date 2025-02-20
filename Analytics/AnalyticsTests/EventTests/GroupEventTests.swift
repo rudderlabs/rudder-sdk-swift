@@ -12,7 +12,7 @@ final class GroupEventTests: XCTestCase {
     
     func test_defaultGroupEvent() {
         given("A group event with default values..") {
-            var event: Message = GroupEvent(groupId: MockProvider.SampleEventName.group)
+            var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
@@ -29,7 +29,7 @@ final class GroupEventTests: XCTestCase {
     
     func test_groupEvent_traits() {
         given("A group event with trait values..") {
-            var event: Message = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties)
+            var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
@@ -48,7 +48,7 @@ final class GroupEventTests: XCTestCase {
         given("A group event with options..") {
             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
             
-            var event: Message = GroupEvent(groupId: MockProvider.SampleEventName.group, options: option)
+            var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group, options: option)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
@@ -67,7 +67,7 @@ final class GroupEventTests: XCTestCase {
         given("A group event with all values..") {
             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
             
-            var event: Message = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties, options: option)
+            var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties, options: option)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
