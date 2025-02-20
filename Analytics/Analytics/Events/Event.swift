@@ -11,7 +11,7 @@ import Foundation
 /**
  A base protocol for all events in the analytics system.
 
- The `Event` protocol defines the common properties and behaviors required for all types of event messages.
+ The `Event` protocol defines the common properties and behaviors required for all types of incoming events.
  It conforms to the `Codable` protocol, enabling easy encoding and decoding for storage or network transmission.
  */
 public protocol Event: Codable {

@@ -1,5 +1,5 @@
 //
-//  MessageOptions.swift
+//  RudderOption.swift
 //  Analytics
 //
 //  Created by Satheesh Kannan on 12/11/24.
@@ -12,17 +12,17 @@ import Foundation
 /**
  A base protocol for managing Rudder options.
 
- The `RudderOptionType` protocol defines methods and properties for managing options like integrations, custom context and externalIds that can be added to event messages. Conforming types are expected to implement the logic for adding these options.
+ The `RudderOptionType` protocol defines methods and properties for managing options like integrations, custom context and externalIds that can be added to event payload. Conforming types are expected to implement the logic for adding these options.
 
  - Properties:
     - `integrations`: A dictionary of integrations and their enabled/disabled state details.
     - `customContext`: A dictionary of custom context values associated with the event.
-    - `externalIds`: An array of external IDs to be included with the event message.
+    - `externalIds`: An array of external IDs to be included with the event payload.
  */
 protocol RudderOptionType {
     
     /**
-     This property manages the integrations to be included with the event message.
+     This property manages the integrations to be included with the event payload.
      */
     var integrations: [String: Any]? { get }
 
@@ -32,7 +32,7 @@ protocol RudderOptionType {
     var customContext: [String: Any]? { get }
     
     /**
-     This property holds the external IDs to be included with the event message.
+     This property holds the external IDs to be included with the event payload.
      */
     var externalIds: [ExternalId]? { get }
 }
@@ -42,7 +42,7 @@ protocol RudderOptionType {
 /**
  A class that implements the `RudderOptionType` protocol for managing Rudder options.
 
- The `RudderOption` class allows adding and updating integration settings and custom context data for event messages.
+ The `RudderOption` class allows adding and updating integration settings and custom context data for event payload.
  This class is useful for customizing the event payload with additional metadata or toggling integrations on or off.
 
  - Properties:
@@ -55,10 +55,10 @@ public class RudderOption: RudderOptionType {
     /// A dictionary of integration names as keys and their state values.
     private(set) public var integrations: [String: Any]?
     
-    /// A dictionary of custom context values associated with the event message.
+    /// A dictionary of custom context values associated with the event payload.
     private(set) public var customContext: [String: Any]?
     
-    /// An array of external IDs associated with the event message.
+    /// An array of external IDs associated with the event payload.
     private(set) public var externalIds: [ExternalId]?
     
     /**

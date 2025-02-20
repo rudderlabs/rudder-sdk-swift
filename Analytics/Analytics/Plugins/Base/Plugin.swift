@@ -104,18 +104,18 @@ public extension Plugin {
     }
 }
 
-// MARK: - MessagePlugin
+// MARK: - EventPlugin
 
 /**
  Extends the `Plugin` protocol to handle specific types of event payloads.
 
- The `MessagePlugin` protocol is designed for plugins that need to process events with specific payload structures such as `TrackEvent`, `ScreenEvent`, `GroupEvent`, and `FlushEvent`.
+ The `EventPlugin` protocol is designed for plugins that need to process events with specific payload structures such as `TrackEvent`, `ScreenEvent`, `GroupEvent`, and `FlushEvent`.
  
  It builds upon the `Plugin` protocol, adding event-specific methods to facilitate targeted processing.
 
  - Conforms to: `Plugin`
  */
-protocol MessagePlugin: Plugin {
+protocol EventPlugin: Plugin {
     
     /**
      Processes a `IdentifyEvent` payload.
@@ -166,7 +166,7 @@ protocol MessagePlugin: Plugin {
     func flush(payload: FlushEvent) -> Event?
 }
 
-extension MessagePlugin {
+extension EventPlugin {
     
     func identify(payload: IdentifyEvent) -> Event? { payload }
     
