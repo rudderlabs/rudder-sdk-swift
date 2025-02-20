@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - AppInfoPlugin
 /**
- A plugin created to append app information to the message context.
+ A plugin created to append app information to the event context.
  */
 final class AppInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess

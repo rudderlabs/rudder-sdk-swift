@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - LibraryInfoPlugin
 /**
- A plugin created to append library information to the message context.
+ A plugin created to append library information to the event context.
  */
 final class LibraryInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess

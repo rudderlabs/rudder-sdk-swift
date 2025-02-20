@@ -10,7 +10,7 @@ import Network
 
 // MARK: - NetworkInfoPlugin
 /**
- A plugin created to append network information to the message context.
+ A plugin created to append network information to the event context.
  */
 final class NetworkInfoPlugin: Plugin {
     

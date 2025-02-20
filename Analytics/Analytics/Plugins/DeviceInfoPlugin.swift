@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - DeviceInfoPlugin
 /**
- A plugin created to append device information to the message context.
+ A plugin created to append device information to the event context.
  */
 final class DeviceInfoPlugin: Plugin {
     

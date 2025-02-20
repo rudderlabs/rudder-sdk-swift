@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - LocaleInfoPlugin
 /**
- A plugin created to append locale information to the message context.
+ A plugin created to append locale information to the event context.
  */
 final class LocaleInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess

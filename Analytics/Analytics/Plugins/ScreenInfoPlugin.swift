@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - ScreenInfoPlugin
 /**
- A plugin created to append screen information to the message context.
+ A plugin created to append screen information to the event context.
  */
 final class ScreenInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess

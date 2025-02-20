@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - OSInfoPlugin
 /**
- A plugin created to append OS information to the message context.
+ A plugin created to append OS information to the event context.
  */
 final class OSInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess
