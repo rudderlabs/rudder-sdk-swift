@@ -60,9 +60,4 @@ extension RudderStackDataPlanePlugin {
         self.eventManager?.put(payload)
         return payload
     }
-    
-    func flush(payload: FlushEvent) -> (any Event)? {
-        self.eventManager?.put(payload)
-        return payload
-    }
 }
