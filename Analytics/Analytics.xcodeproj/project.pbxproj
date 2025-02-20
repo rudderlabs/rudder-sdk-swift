@@ -83,7 +83,6 @@
 		53C52C792CE486A000A2BD31 /* MessageModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C52C782CE486A000A2BD31 /* MessageModuleTests.swift */; };
 		53C7A7652D2D9CDE00F1325E /* StateManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A7642D2D9CDE00F1325E /* StateManagement.swift */; };
 		53C7A7682D2DA2C400F1325E /* StateManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */; };
-		53C7A76A2D2EEB1800F1325E /* FlushEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F864BB2D23ECAE0078D68E /* FlushEvent.swift */; };
 		53C7A76C2D2EEE3200F1325E /* UserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A76B2D2EEE3200F1325E /* UserIdentity.swift */; };
 		53C7A76E2D2EF2A200F1325E /* UserIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A76D2D2EF2A200F1325E /* UserIdentityTests.swift */; };
 		53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */; };
@@ -201,7 +200,6 @@
 		53F864B52D23EAD30078D68E /* TrackEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackEvent.swift; sourceTree = "<group>"; };
 		53F864B72D23EB960078D68E /* ScreenEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenEvent.swift; sourceTree = "<group>"; };
 		53F864B92D23EC430078D68E /* GroupEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEvent.swift; sourceTree = "<group>"; };
-		53F864BB2D23ECAE0078D68E /* FlushEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushEvent.swift; sourceTree = "<group>"; };
 		53F864BD2D26EAE00078D68E /* CountFlushPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountFlushPolicy.swift; sourceTree = "<group>"; };
 		53F864BF2D26EB330078D68E /* FrequencyFlushPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyFlushPolicy.swift; sourceTree = "<group>"; };
 		53F864C12D26EBE70078D68E /* StartupFlushPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupFlushPolicy.swift; sourceTree = "<group>"; };
@@ -432,7 +430,6 @@
 				53F864B52D23EAD30078D68E /* TrackEvent.swift */,
 				53F864B72D23EB960078D68E /* ScreenEvent.swift */,
 				53F864B92D23EC430078D68E /* GroupEvent.swift */,
-				53F864BB2D23ECAE0078D68E /* FlushEvent.swift */,
 				537E10B82D456385002074AE /* AliasEvent.swift */,
 			);
 			path = Events;
@@ -696,7 +693,6 @@
 				53C7A76C2D2EEE3200F1325E /* UserIdentity.swift in Sources */,
 				53F864BE2D26EAE00078D68E /* CountFlushPolicy.swift in Sources */,
 				5388D5B12D0C203C000966AB /* AppInfoPlugin.swift in Sources */,
-				53C7A76A2D2EEB1800F1325E /* FlushEvent.swift in Sources */,
 				53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */,
 				53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */,
 				53F864B62D23EAD30078D68E /* TrackEvent.swift in Sources */,
