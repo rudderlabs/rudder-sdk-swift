@@ -17,9 +17,9 @@ final class EventManager {
     private let analytics: AnalyticsClient
     private let flushPolicyFacade: FlushPolicyFacade
     private let httpClient: HttpClient
-    private let flushEvent = FlushEvent(messageName: Constants.DefaultConfig.uploadSignal)
-    private let writeChannel: AsyncChannel<Event>
+    private let writeChannel: AsyncChannel<ProcessingEvent>
     private let uploadChannel: AsyncChannel<String>
+    private let flushEvent = ProcessingEvent(type: .flush)
     
     private var storage: Storage {
         return self.analytics.configuration.storage
@@ -50,7 +50,8 @@ extension EventManager {
     
     func put(_ event: Event) {
         Task {
-            try await self.writeChannel.send(event)
+            let processingEvent = ProcessingEvent(type: .message, event: event)
+            try await self.writeChannel.send(processingEvent)
         }
     }
     
@@ -76,7 +77,7 @@ extension EventManager {
                 let isFlushSignal = event.type == .flush
 
                 if !isFlushSignal {
-                    if let json = event.jsonString {
+                    if let json = event.event?.jsonString {
                         await self.storage.write(event: json)
                         self.flushPolicyFacade.updateCount()
                     }
@@ -116,4 +117,21 @@ extension EventManager {
             }
         }
     }
+}
+
+// MARK: - ProcessingEvent
+private class ProcessingEvent {
+    var type: ProcessingEventType
+    var event: Event?
+    
+    init(type: ProcessingEventType, event: Event? = nil) {
+        self.type = type
+        self.event = event
+    }
+}
+
+// MARK: - ProcessingEventType
+private enum ProcessingEventType {
+    case message
+    case flush
 }
