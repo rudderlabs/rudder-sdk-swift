@@ -63,16 +63,16 @@ struct GroupEvent: Message {
      - Parameters:
         - groupId: The unique identifier of the group being associated with the user.
         - traits: Custom traits or attributes associated with the group. Defaults to `nil`.
-        - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+        - options: Custom options for the event, including integrations and context. Defaults to an empty instance of `RudderOption`.
         - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to a empty instance of `UserIdentity`.
 
      This initializer also processes and includes default values, such as default integrations and context if they are not provided.
      */
-    init(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = RudderOption(), userIdentity: UserIdentity = UserIdentity()) {
         self.groupId = groupId
         self.traits = CodableCollection(dictionary: traits)
         self.userIdentity = userIdentity
-        self.options = options ?? RudderOption()
+        self.options = options
         
         self.addDefaultValues()
     }

@@ -60,15 +60,15 @@ struct IdentifyEvent: Message {
 
      - Parameters:
         - traits: Custom traits or attributes for the user. Defaults to `nil`.
-        - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+        - options: Custom options for the event, including integrations and context. Defaults to an empty instance of `RudderOption`.
         - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to an empty instance of `UserIdentity`.
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(options: RudderOption? = RudderOption(), userIdentity: UserIdentity = UserIdentity()) {
         self.userIdentity = userIdentity
         self.event = self.type.rawValue
-        self.options = options ?? RudderOption()
+        self.options = options
         
         self.addDefaultValues()
     }

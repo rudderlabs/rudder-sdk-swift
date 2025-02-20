@@ -64,10 +64,10 @@ final class IdentifyEventTests: XCTestCase {
      }
      
      func test_identifyEvent_traits_options() {
-         given("A identify event with userId, traits, externalIds and options..") {
-             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
+         given("A identify event with userId, traits and options..") {
+             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
              
-             var event: Message = IdentifyEvent(options: option, userIdentity: UserIdentity(userId: "Test_User_Id", traits: MockProvider.sampleEventproperties, externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")]))
+             var event: Message = IdentifyEvent(options: option, userIdentity: UserIdentity(userId: "Test_User_Id", traits: MockProvider.sampleEventproperties))
              event = event.updateEventData()
              MockHelper.resetDynamicValues(&event)
              

@@ -41,14 +41,13 @@ struct ResetUserIdentityAction: StateAction {
      
      - If `clearAnonymousId` is `true`, a new random anonymous ID is assigned.
      - The user ID is set to an empty string.
-     - Traits and external IDs are reset.
+     - Traits value will be cleared.
      */
     func reduce(currentState: UserIdentity) -> UserIdentity {
         var newState = currentState
         newState.anonymousId = clearAnonymousId ? .randomUUIDString : currentState.anonymousId
         newState.userId = String.empty
         newState.traits = RudderTraits()
-        newState.externalIds = [ExternalId]()
         return newState
     }
 }

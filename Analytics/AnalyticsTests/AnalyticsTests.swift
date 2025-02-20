@@ -107,9 +107,6 @@ extension AnalyticsTests {
         client.storage.write(value: "test_user_id", key: Constants.StorageKeys.userId)
         client.storage.write(value: ["prop": "value"].jsonString, key: Constants.StorageKeys.traits)
         
-        let id = ExternalId(type: "email", id: "email@test.email.com").jsonString ?? String.empty
-        client.storage.write(value: id, key: Constants.StorageKeys.externalIds)
-        
         client.reset()
         
         let anonymousId = client.anonymousId
@@ -117,8 +114,6 @@ extension AnalyticsTests {
         XCTAssertTrue(userId == nil)
         let trits: String? = client.storage.read(key: Constants.StorageKeys.traits)
         XCTAssertTrue(trits == nil)
-        let externalId: String? = client.storage.read(key: Constants.StorageKeys.externalIds)
-        XCTAssertTrue(externalId == nil)
         
         client.reset(clearAnonymousId: true)
         XCTAssertFalse(anonymousId == client.anonymousId)

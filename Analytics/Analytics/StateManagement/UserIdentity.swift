@@ -11,13 +11,12 @@ import Foundation
 /**
  A struct representing the identity of a user.
  
- This structure is used to manage the identification of a user, including both anonymous and logged-in states, as well as associated traits and external identifiers.
+ This structure is used to manage the identification of a user, including both anonymous and logged-in states, as well as associated traits.
 
  - Properties:
    - `anonymousId`: A unique identifier for the user when they are not logged in. Defaults to an empty string.
    - `userId`: The identifier for the user when they are logged in. Defaults to an empty string.
    - `traits`: A dictionary of user-specific traits, used to store additional metadata about the user.
-   - `externalIds`: An array of external identifiers associated with the user, allowing integration with external systems or platforms.
 
  - Methods:
    - `initializeState(_:)`: Creates and initializes a `UserIdentity` instance by reading stored data from a key-value storage.
@@ -32,9 +31,6 @@ public struct UserIdentity {
     /// A dictionary of user-specific traits, used to store additional metadata about the user.
     public internal(set) var traits = RudderTraits()
     
-    /// An array of external identifiers associated with the user, allowing integration with external systems or platforms.
-    public internal(set) var externalIds = [ExternalId]()
-    
     /**
      Creates and initializes a `UserIdentity` instance by reading data from the provided key-value storage.
      
@@ -45,7 +41,6 @@ public struct UserIdentity {
      1. Reads the `anonymousId` from storage or generates a new UUID.
      2. Reads the `userId` from storage or sets it to an empty string.
      3. Parses and assigns user traits from the stored JSON string, if available.
-     4. Decodes and assigns external IDs from the stored array of JSON strings.
      */
     
     static func initializeState(_ storage: KeyValueStorage) -> UserIdentity {
@@ -56,13 +51,6 @@ public struct UserIdentity {
         
         if let traitsString: String = storage.read(key: Constants.StorageKeys.traits), let traits = traitsString.toDictionary {
             identity.traits = traits
-        }
-        
-        if let idArray: [String] = storage.read(key: Constants.StorageKeys.externalIds) {
-            identity.externalIds = idArray.compactMap {
-                guard let data = $0.utf8Data else { return nil }
-                return try? JSONDecoder().decode(ExternalId.self, from: data)
-            }
         }
         
         return identity
@@ -96,7 +84,7 @@ extension UserIdentity {
     }
     
     /**
-     Stores the user ID, traits, and external IDs into the specified key-value storage.
+     Stores the user ID, and traits into the specified key-value storage.
 
      - Parameters:
         - storage: An instance of `KeyValueStorage` where the values will be stored.
@@ -104,18 +92,14 @@ extension UserIdentity {
      The method performs the following:
      1. Writes the `userId` to the storage using the `Constants.StorageKeys.userId` key.
      2. Serializes the `traits` into a JSON string and writes it to the storage using the `Constants.StorageKeys.traits` key.
-     3. Serializes each `externalId` into a JSON string (if possible), then writes the resulting array to the storage using the `Constants.StorageKeys.externalIds` key.
      */
-    func storeUserIdTraitsAndExternalIds(_ storage: KeyValueStorage) {
+    func storeUserIdAndTraits(_ storage: KeyValueStorage) {
         self.storeUserId(storage)
         storage.write(value: traits.jsonString, key: Constants.StorageKeys.traits)
-        
-        let ids = externalIds.compactMap { $0.jsonString }
-        storage.write(value: ids, key: Constants.StorageKeys.externalIds)
     }
     
     /**
-     Removes the user ID, traits, and external IDs from the specified key-value storage.
+     Removes the user ID and traits from the specified key-value storage.
 
      - Parameters:
         - storage: An instance of `KeyValueStorage` where the values will be removed.
@@ -123,12 +107,10 @@ extension UserIdentity {
      The method performs the following:
      1. Removes the `userId` from the storage using the `Constants.StorageKeys.userId` key.
      2. Removes the `traits` from the storage using the `Constants.StorageKeys.traits` key.
-     3. Removes the `externalIds` from the storage using the `Constants.StorageKeys.externalIds` key.
      */
-    func resetUserIdTraitsAndExternalIds(_ storage: KeyValueStorage) {
+    func resetUserIdAndTraits(_ storage: KeyValueStorage) {
         storage.remove(key: Constants.StorageKeys.userId)
         storage.remove(key: Constants.StorageKeys.traits)
-        storage.remove(key: Constants.StorageKeys.externalIds)
     }
     
     /**
@@ -138,14 +120,14 @@ extension UserIdentity {
        - clearAnonymousId: A boolean flag indicating whether the anonymous ID should be stored before resetting.
        - storage: The storage instance used to remove user-related data.
 
-     If `clearAnonymousId` is `true`, the function stores the current anonymous ID before resetting other user identity-related data, such as user ID, traits, and external IDs.
+     If `clearAnonymousId` is `true`, the function stores the current anonymous ID before resetting other user identity-related data, such as user ID and traits.
     */
     func resetUserIdentity(clearAnonymousId: Bool, storage: Storage) {
         if clearAnonymousId {
             self.storeAnonymousId(storage)
         }
         
-        self.resetUserIdTraitsAndExternalIds(storage)
+        self.resetUserIdAndTraits(storage)
     }
     
     /**
@@ -166,37 +148,5 @@ extension UserIdentity {
             return self.userId
         }
         return self.anonymousId
-    }
-}
-
-/**
- A struct representing an external identifier associated with the user.
- 
- - Properties:
- - `type`: The type of the external identifier
- - `id`: The value of the external identifier.
- 
- - Conformance:
- - `Codable`: Allows the `ExternalId` to be encoded and decoded using `JSONEncoder` and `JSONDecoder`.
- */
-public struct ExternalId: Codable, Equatable {
-    /// The type of the external identifier.
-    var type: String
-    
-    /// The value of the external identifier.
-    var id: String
-    
-    /**
-     Initializes a new instance of `ExternalId` with the given `type` and `id`.
-     
-     - Parameters:
-        - type: The type of the external identifier (e.g., "google", "facebook").
-        - id: The value of the external identifier (e.g., "user_12345").
-     
-     - Returns: A new `ExternalId` instance.
-     */
-    public init(type: String, id: String) {
-        self.type = type
-        self.id = id
     }
 }

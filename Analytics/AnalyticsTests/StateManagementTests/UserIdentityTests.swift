@@ -34,7 +34,6 @@ final class UserIdentityTests: XCTestCase {
                     XCTAssertFalse(userIdentity.anonymousId.isEmpty, "Anonymous ID should be generated")
                     XCTAssertEqual(userIdentity.userId, "", "User ID should be empty")
                     XCTAssertTrue(userIdentity.traits.isEmpty, "Traits should be empty by default")
-                    XCTAssertTrue(userIdentity.externalIds.isEmpty, "External IDs should be empty by default")
                 }
             }
         }
@@ -47,14 +46,10 @@ final class UserIdentityTests: XCTestCase {
             let expectedAnonymousId = "test-anonymous-id"
             let expectedUserId = "test-user-id"
             let expectedTraits = ["traits_key": "traits_value", "traits_key2": "sk@example.com"]
-            let externalIds = [ExternalId(type: "sample_type", id: "sample_id")]
             
             storage.write(value: expectedAnonymousId, key: Constants.StorageKeys.anonymousId)
             storage.write(value: expectedUserId, key: Constants.StorageKeys.userId)
             storage.write(value: expectedTraits.jsonString, key: Constants.StorageKeys.traits)
-            
-            let externalIdStrings = externalIds.compactMap { $0.jsonString }
-            storage.write(value: externalIdStrings, key: Constants.StorageKeys.externalIds)
             
             when("UserIdentity initialized.") {
                 let userIdentity = UserIdentity.initializeState(storage)
@@ -63,7 +58,6 @@ final class UserIdentityTests: XCTestCase {
                     XCTAssertEqual(userIdentity.anonymousId, expectedAnonymousId, "Anonymous ID should match stored value")
                     XCTAssertEqual(userIdentity.userId, expectedUserId, "User ID should match stored value")
                     XCTAssertEqual(userIdentity.traits as? [String: String], expectedTraits, "Traits should match stored value")
-                    XCTAssertFalse(userIdentity.externalIds.isEmpty, "There should be one external ID")
                 }
             }
         }
