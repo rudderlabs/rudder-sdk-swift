@@ -8,7 +8,7 @@
 import Foundation
 // MARK: - DiskStore
 /**
- An actor designed to store and retrieve message events using file system storage.
+ An actor designed to store and retrieve incoming events using file system storage.
  */
 final actor DiskStore {
     
@@ -21,7 +21,7 @@ final actor DiskStore {
         self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
-    private func store(message: String) {
+    private func store(event: String) {
         var currentFilePath = self.currentFileURL.path
         var newFile = false
         if !FileManager.default.fileExists(atPath: currentFilePath) {
@@ -33,11 +33,11 @@ final actor DiskStore {
         if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > DataStoreConstants.maxBatchSize {
             self.finish()
             print("Batch size exceeded. Closing the current batch.")
-            self.store(message: message)
+            self.store(event: event)
             return
         }
         
-        let content = newFile ? message : ("," + message)
+        let content = newFile ? event : ("," + event)
         self.writeTo(file: self.currentFileURL, content: content)
     }
     
@@ -65,7 +65,7 @@ final actor DiskStore {
 }
 
 /**
- Private variables and functions to manage incoming message events.
+ Private variables and functions to manage incoming events.
  */
 extension DiskStore {
     private var fileIndexKey: String {
@@ -113,18 +113,18 @@ extension DiskStore {
 extension DiskStore: DataStore {
     func retain(value: String) async {
         await withCheckedContinuation { continuation in
-            self.store(message: value)
+            self.store(event: value)
             continuation.resume()
         }
     }
     
-    func retrieve() async -> [MessageDataItem] {
+    func retrieve() async -> [EventDataItem] {
         await withCheckedContinuation { continuation in
-            var dataItems = [MessageDataItem]()
+            var dataItems = [EventDataItem]()
             for file in self.collectFiles() {
                 guard let batch = FileManager.contentsOf(file: file) else { continue }
                 
-                var item = MessageDataItem(batch: batch)
+                var item = EventDataItem(batch: batch)
                 item.reference = file
                 item.isClosed = true
                 

@@ -59,7 +59,7 @@ extension AnalyticsTests {
         XCTAssertFalse(dataItems.isEmpty)
         
         for item in dataItems {
-            await client.configuration.storage.remove(messageReference: item.reference)
+            await client.configuration.storage.remove(eventReference: item.reference)
         }
     }
     
@@ -72,7 +72,7 @@ extension AnalyticsTests {
         XCTAssertFalse(dataItems.isEmpty)
         
         for item in dataItems {
-            await client.configuration.storage.remove(messageReference: item.reference)
+            await client.configuration.storage.remove(eventReference: item.reference)
         }
     }
     
@@ -85,7 +85,7 @@ extension AnalyticsTests {
         XCTAssertFalse(dataItems.isEmpty)
         
         for item in dataItems {
-            await client.configuration.storage.remove(messageReference: item.reference)
+            await client.configuration.storage.remove(eventReference: item.reference)
         }
     }
     
@@ -97,7 +97,7 @@ extension AnalyticsTests {
         let dataItems = await client.configuration.storage.read().dataItems
         XCTAssertFalse(dataItems.isEmpty)
         for item in dataItems {
-            await client.configuration.storage.remove(messageReference: item.reference)
+            await client.configuration.storage.remove(eventReference: item.reference)
         }
     }
     

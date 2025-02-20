@@ -19,7 +19,7 @@ struct IdentifyEvent: Event {
     /// The type of the event, defaulting to `.identify`.
     var type: EventType = .identify
 
-    /// A unique identifier for the message, initialized with a random UUID string.
+    /// A unique identifier for the event, initialized with a random UUID string.
     var messageId: String = .randomUUIDString
 
     /// The timestamp of when the event occurred, defaulting to the current time.

@@ -22,7 +22,7 @@ struct FlushEvent: Event {
     /// The type of the event, defaulting to `.flush`.
     var type: EventType = .flush
     
-    /// A unique identifier for the message.
+    /// A unique identifier for the event.
     var messageId: String = .randomUUIDString
     
     /// The timestamp of when the event occurred, defaulting to the current time.

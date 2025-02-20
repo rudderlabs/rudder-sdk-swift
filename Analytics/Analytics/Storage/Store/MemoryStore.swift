@@ -9,12 +9,12 @@ import Foundation
 
 // MARK: - MemoryStore
 /**
- An actor designed to store and retrieve message events using memory storage.
+ An actor designed to store and retrieve events using memory storage.
  */
 final actor MemoryStore {
     
     let writeKey: String
-    var dataItems: [MessageDataItem] = []
+    var dataItems: [EventDataItem] = []
     private let keyValueStore: KeyValueStore
     
     init(writeKey: String) {
@@ -22,18 +22,18 @@ final actor MemoryStore {
         self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
-    private func store(message: String) {
-        var dataItem = self.currentDataItem ?? MessageDataItem(batch: DataStoreConstants.fileBatchPrefix)
+    private func store(event: String) {
+        var dataItem = self.currentDataItem ?? EventDataItem(batch: DataStoreConstants.fileBatchPrefix)
         let newEntry = dataItem.batch == DataStoreConstants.fileBatchPrefix
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > DataStoreConstants.maxBatchSize {
             self.finish()
             print("Batch size exceeded. Closing the current batch.")
-            self.store(message: message)
+            self.store(event: event)
             return
         }
         
-        let content = newEntry ? message : ("," + message)
+        let content = newEntry ? event : ("," + event)
         dataItem.batch += content
         
         self.appendDataItem(dataItem)
@@ -48,7 +48,7 @@ final actor MemoryStore {
         self.keyValueStore.delete(reference: self.currentDataItemKey)
     }
     
-    private func appendDataItem(_ item: MessageDataItem) {
+    private func appendDataItem(_ item: EventDataItem) {
         if let firstIndex = self.dataItems.firstIndex(where: { $0.reference == item.reference }) {
             self.dataItems[firstIndex] = item
         } else {
@@ -58,7 +58,7 @@ final actor MemoryStore {
         self.keyValueStore.save(value: item.reference, reference: self.currentDataItemKey)
     }
     
-    private func collectDataItems() -> [MessageDataItem] {
+    private func collectDataItems() -> [EventDataItem] {
         var filtered = self.dataItems.filter { $0.batch.hasSuffix(DataStoreConstants.fileBatchSuffix) && $0.isClosed }
         
         if let currentDataItem = self.currentDataItem {
@@ -78,7 +78,7 @@ final actor MemoryStore {
 }
 
 /**
- Private variables and functions to manage incoming message events.
+ Private variables and functions to manage incoming events.
  */
 
 extension MemoryStore {
@@ -91,7 +91,7 @@ extension MemoryStore {
         return currentItemId
     }
     
-    private var currentDataItem: MessageDataItem? {
+    private var currentDataItem: EventDataItem? {
         guard let currentItemId = self.currentDataItemId else { return nil }
         return self.dataItems.filter { $0.reference == currentItemId }.first
     }
@@ -104,12 +104,12 @@ extension MemoryStore {
 extension MemoryStore: DataStore {
     func retain(value: String) async {
         await withCheckedContinuation { continuation in
-            self.store(message: value)
+            self.store(event: value)
             continuation.resume()
         }
     }
     
-    func retrieve() async -> [MessageDataItem] {
+    func retrieve() async -> [EventDataItem] {
         await withCheckedContinuation { continuation in
             continuation.resume(returning: self.collectDataItems())
         }

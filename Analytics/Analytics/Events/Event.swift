@@ -65,9 +65,9 @@ public protocol Event: Codable {
     var type: EventType { get set }
 
     /**
-     A unique identifier for the message.
+     A unique identifier for the event.
      
-     This ensures each message can be tracked individually.
+     This ensures each event can be tracked individually.
      */
     var messageId: String { get set }
 

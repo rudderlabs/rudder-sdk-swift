@@ -14,7 +14,7 @@ import Foundation
 
 protocol DataStore {
     func retain(value: String) async
-    func retrieve() async -> [MessageDataItem]
+    func retrieve() async -> [EventDataItem]
     func remove(reference: String) async -> Bool
     func rollover() async
 }
@@ -42,8 +42,8 @@ struct DataStoreConstants {
         /* Prevent instantiation (no-op) */
     }
     
-    static let memoryIndex = "rudderstack.message.memory.index."
-    static let fileIndex = "rudderstack.message.file.index."
+    static let memoryIndex = "rudderstack.event.memory.index."
+    static let fileIndex = "rudderstack.event.file.index."
     static let fileNameSeparator: String = "-"
     static let fileType = "tmp"
     static let fileBatchPrefix = "{\"batch\":["

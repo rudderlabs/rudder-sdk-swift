@@ -77,7 +77,7 @@ extension EventManager {
 
                 if !isFlushSignal {
                     if let json = event.jsonString {
-                        await self.storage.write(message: json)
+                        await self.storage.write(event: json)
                         self.flushPolicyFacade.updateCount()
                     }
                 }
@@ -107,7 +107,7 @@ extension EventManager {
                         
                         _ = try await self.httpClient.postBatchEvents(processed)
                         
-                        await self.storage.remove(messageReference: item.reference)
+                        await self.storage.remove(eventReference: item.reference)
                         print("Upload completed: \(item.reference)")
                     } catch {
                         print("Upload failed: \(item.reference)")

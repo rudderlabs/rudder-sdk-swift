@@ -32,22 +32,22 @@ final class BasicStorage: Storage {
     }
 }
 
-// MARK: - MessageStorage
+// MARK: - EventStorage
 /**
- Implementation of the `MessageStorage` protocol.
+ Implementation of the `EventStorage` protocol.
  */
 extension BasicStorage {
     
-    func write(message: String) async {
-        await self.dataStore.retain(value: message)
+    func write(event: String) async {
+        await self.dataStore.retain(value: event)
     }
     
-    func read() async -> MessageDataResult {
-        return await MessageDataResult(dataItems: self.dataStore.retrieve())
+    func read() async -> EventDataResult {
+        return await EventDataResult(dataItems: self.dataStore.retrieve())
     }
     
-    func remove(messageReference: String) async -> Bool {
-        return await self.dataStore.remove(reference: messageReference)
+    func remove(eventReference: String) async -> Bool {
+        return await self.dataStore.remove(reference: eventReference)
     }
     
     func rollover() async {
