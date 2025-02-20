@@ -46,9 +46,6 @@ extension Constants {
         /// Key for storing user traits.
         public static let traits = "traits"
         
-        /// Key for storing external identifiers.
-        public static let externalIds = "external_ids"
-        
         /// Key for storing source configuration data.
         public static let sourceConfig = "source_config"
         

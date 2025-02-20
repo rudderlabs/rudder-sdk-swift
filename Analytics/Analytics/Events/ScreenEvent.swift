@@ -70,12 +70,12 @@ struct ScreenEvent: Message {
         - screenName: The name of the screen or page being tracked.
         - category: The category of the screen, if applicable. Defaults to `nil`.
         - properties: Additional properties or metadata associated with the screen event. Defaults to `nil`.
-        - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+        - options: Custom options for the event, including integrations and context. Defaults to an empty instance of `RudderOption`.
         - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to a empty instance of `UserIdentity`.
 
      This initializer also processes and includes default properties such as the screen name and category in the event's properties, if they are provided.
      */
-    init(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity = UserIdentity()) {
+    init(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = RudderOption(), userIdentity: UserIdentity = UserIdentity()) {
         self.event = screenName
         
         var updatedProperties = properties ?? RudderProperties()
@@ -84,7 +84,7 @@ struct ScreenEvent: Message {
         
         self.properties = CodableCollection(dictionary: updatedProperties)
         self.userIdentity = userIdentity
-        self.options = options ?? RudderOption()
+        self.options = options
         
         self.addDefaultValues()
     }

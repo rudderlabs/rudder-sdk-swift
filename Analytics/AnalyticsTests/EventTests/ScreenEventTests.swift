@@ -82,7 +82,7 @@ final class ScreenEventTests: XCTestCase {
     
     func test_screenEvent_category_properties_options() {
         given("A screen event with all values...") {
-            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
+            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
             
             var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main", properties: MockProvider.sampleEventproperties, options: option)
             event = event.updateEventData()
