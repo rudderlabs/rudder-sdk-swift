@@ -31,13 +31,18 @@ public class AnalyticsClient {
     private var userIdentityState: StateImpl<UserIdentity>
     
     /**
+     A private asynchronous channel for queuing and processing events.
+     */
+    private var processEventChannel: AsyncChannel<Event>
+
+    /**
      Initializes the `AnalyticsClient` with the given configuration.
      
      - Parameter configuration: The configuration object containing settings and storage details.
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
-        
+        self.processEventChannel = AsyncChannel(capacity: Int.max)
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         
         self.setup()
@@ -171,6 +176,7 @@ extension AnalyticsClient {
     private func setup() {
         self.storeAnonymousId()
         self.collectConfiguration()
+        self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
         
@@ -187,13 +193,26 @@ extension AnalyticsClient {
     }
     
     /**
-     Processes an event by passing it through the plugin chain.
+     Starts processing events from the `processEventChannel` stream. Processes an event by passing it through the plugin chain.
+     */
+    private func startProcessingEvents() {
+        Task {
+            for await event in self.processEventChannel.stream {
+                let updatedEvent = event.updateEventData()
+                self.pluginChain.process(event: updatedEvent)
+            }
+        }
+    }
+    
+    /**
+     Sends an event to the `processEventChannel` asynchronously.
      
-     - Parameter event: The event to be processed.
+     - Parameter event: The `Event` to be sent.
      */
     private func process(event: Event) {
-        let updatedEvent = event.updateEventData()
-        self.pluginChain.process(event: updatedEvent)
+        Task {
+            try await self.processEventChannel.send(event)
+        }
     }
     
     /**
