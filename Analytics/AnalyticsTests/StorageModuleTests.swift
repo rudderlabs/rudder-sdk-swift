@@ -139,7 +139,7 @@ extension StorageModuleTests {
     func test_write_event_disk() async {
         guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
-        await storage.write(message: eventJson)
+        await storage.write(event: eventJson)
         await storage.rollover()
         let result = await storage.read().dataItems
         XCTAssertFalse(result.isEmpty)
@@ -148,7 +148,7 @@ extension StorageModuleTests {
     func test_read_event_disk() async {
         guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
-        await storage.write(message: eventJson)
+        await storage.write(event: eventJson)
         await storage.rollover()
         
         let files = await storage.read().dataItems
@@ -158,13 +158,13 @@ extension StorageModuleTests {
     func test_remove_event_disk() async {
         guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
-        await storage.write(message: eventJson)
+        await storage.write(event: eventJson)
         await storage.rollover()
         let result = await storage.read().dataItems
         
         guard let item = result.first else { XCTFail(); return }
         
-        let isRemoved = await storage.remove(messageReference: item.reference)
+        let isRemoved = await storage.remove(eventReference: item.reference)
         XCTAssertTrue(isRemoved)
     }
     
@@ -175,10 +175,10 @@ extension StorageModuleTests {
         await storage.rollover()
         let files = await storage.read().dataItems
         for file in files {
-            await storage.remove(messageReference: file.reference)
+            await storage.remove(eventReference: file.reference)
         }
         
-        await storage.write(message: eventJson)
+        await storage.write(event: eventJson)
         await storage.rollover()
         
         let dataItems = await storage.read().dataItems
@@ -195,7 +195,7 @@ extension StorageModuleTests {
         await storage.rollover()
         let existingItems = await storage.read().dataItems
         
-        await storage.write(message: eventJson)
+        await storage.write(event: eventJson)
         await storage.rollover()
         
         let resultItems = await storage.read().dataItems
@@ -205,7 +205,7 @@ extension StorageModuleTests {
     func test_read_event_memory() async {
         guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
-        await storage.write(message: eventJson)
+        await storage.write(event: eventJson)
         await storage.rollover()
         
         let resultItems = await storage.read().dataItems
@@ -215,12 +215,12 @@ extension StorageModuleTests {
     func test_remove_event_memory() async {
         guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
         
-        await storage.write(message: eventJson)
+        await storage.write(event: eventJson)
         await storage.rollover()
         
         let resultItems = await storage.read().dataItems
         for item in resultItems {
-            await storage.remove(messageReference: item.reference)
+            await storage.remove(eventReference: item.reference)
         }
         
         let dataItems = await storage.read().dataItems
@@ -233,10 +233,10 @@ extension StorageModuleTests {
         await storage.rollover()
         let resultItems1 = await storage.read().dataItems
         for item in resultItems1 {
-            await storage.remove(messageReference: item.reference)
+            await storage.remove(eventReference: item.reference)
         }
 
-        await storage.write(message: eventJson)
+        await storage.write(event: eventJson)
         let resultItems2 = await storage.read().dataItems
         XCTAssertTrue(resultItems2.isEmpty)
         

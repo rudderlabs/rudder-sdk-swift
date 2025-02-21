@@ -10,16 +10,16 @@ import Foundation
 /**
  Represents an identify event in the analytics system.
 
- This struct conforms to the `Message` protocol and is used to associate user data, such as traits and identifiers.
+ This struct conforms to the `Event` protocol and is used to associate user data, such as traits and identifiers.
 
- - Conforms to: `Message`
+ - Conforms to: `Event`
  */
-struct IdentifyEvent: Message {
+struct IdentifyEvent: Event {
     
     /// The type of the event, defaulting to `.identify`.
     var type: EventType = .identify
 
-    /// A unique identifier for the message, initialized with a random UUID string.
+    /// A unique identifier for the event, initialized with a random UUID string.
     var messageId: String = .randomUUIDString
 
     /// The timestamp of when the event occurred, defaulting to the current time.

@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - DeviceInfoPlugin
 /**
- A plugin created to append device information to the message context.
+ A plugin created to append device information to the event context.
  */
 final class DeviceInfoPlugin: Plugin {
     
@@ -23,7 +23,7 @@ final class DeviceInfoPlugin: Plugin {
         self.collectDeviceId = analytics.configuration.collectDeviceId
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         return event.addToContext(info: ["device": self.preparedDeviceInfo])
     }
 }

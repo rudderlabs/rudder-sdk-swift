@@ -45,65 +45,65 @@ public protocol KeyValueStorage {
     func remove(key: String)
 }
 
-// MARK: - MessageStorage
+// MARK: - EventStorage
 /**
- A protocol defining the interface for message storage operations.
+ A protocol defining the interface for event storage operations.
 
- This protocol provides methods for storing, retrieving, removing, and managing message data. It is designed for asynchronous operations and supports message rollover for batching or other purposes.
+ This protocol provides methods for storing, retrieving, removing, and managing event data. It is designed for asynchronous operations and supports event rollover for batching or other purposes.
 
  - Methods:
-   - `write(message:)`: Stores a message asynchronously.
-   - `read()`: Retrieves stored messages asynchronously.
-   - `remove(messageReference:)`: Removes a specific message using its reference and returns whether the removal was successful.
-   - `rollover()`: Handles message rollover, typically used to finalize or batch messages for processing.
+   - `write(event:)`: Stores a event asynchronously.
+   - `read()`: Retrieves stored event asynchronously.
+   - `remove(eventReference:)`: Removes a specific event using its reference and returns whether the removal was successful.
+   - `rollover()`: Handles event rollover, typically used to finalize or batch events for processing.
 
  */
-public protocol MessageStorage {
+public protocol EventStorage {
     /**
-     Stores a message in the storage.
+     Stores a event in the storage.
 
-     - Parameter message: The message to store as a `String`.
+     - Parameter event: The event payload to store as a `String`.
      */
-    func write(message: String) async
+    func write(event: String) async
 
     /**
-     Retrieves all stored messages from the storage.
+     Retrieves all stored events from the storage.
 
-     - Returns: A `MessageDataResult` containing the retrieved messages.
+     - Returns: A `EventDataResult` containing the retrieved events.
      */
-    func read() async -> MessageDataResult
+    func read() async -> EventDataResult
 
     /**
-     Removes a specific message from the storage.
+     Removes a specific event from the storage.
 
-     - Parameter messageReference: The reference of the message to be removed.
-     - Returns: A `Bool` indicating whether the message was successfully removed.
+     - Parameter eventReference: The reference of the event to be removed.
+     - Returns: A `Bool` indicating whether the event was successfully removed.
      */
     @discardableResult
-    func remove(messageReference: String) async -> Bool
+    func remove(eventReference: String) async -> Bool
 
     /**
      Performs a rollover operation on the storage.
 
-     This is typically used to finalize or batch stored messages for processing or uploading.
+     This is typically used to finalize or batch stored events for processing or uploading.
      */
     func rollover() async
 }
 
 // MARK: - Storage
 /**
- A protocol that combines key-value storage and message storage functionality.
+ A protocol that combines key-value storage and event storage functionality.
 
- The `Storage` protocol extends both `KeyValueStorage` and `MessageStorage`, offering a unified interface for managing key-value pairs and message data. It also includes a property to specify the storage mode for events.
+ The `Storage` protocol extends both `KeyValueStorage` and `EventStorage`, offering a unified interface for managing key-value pairs and event data. It also includes a property to specify the storage mode for events.
 
  - Conforms to:
    - `KeyValueStorage`: Provides methods for key-value storage operations.
-   - `MessageStorage`: Provides methods for message data management.
+   - `EventStorage`: Provides methods for event data management.
 
  - Properties:
    - `eventStorageMode`: Defines the mode of storage used for events.
  */
-public protocol Storage: KeyValueStorage, MessageStorage {
+public protocol Storage: KeyValueStorage, EventStorage {
     /**
      The mode of storage used for storing events.
 

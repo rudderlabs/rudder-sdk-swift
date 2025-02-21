@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - TimeZoneInfoPlugin
 /**
- A plugin created to append timezone information to the message context.
+ A plugin created to append timezone information to the event context.
  */
 final class TimeZoneInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess
@@ -19,7 +19,7 @@ final class TimeZoneInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         return event.addToContext(info: ["timezone": self.preparedTimezoneInfo])
     }
     

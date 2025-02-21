@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - ScreenInfoPlugin
 /**
- A plugin created to append screen information to the message context.
+ A plugin created to append screen information to the event context.
  */
 final class ScreenInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess
@@ -19,7 +19,7 @@ final class ScreenInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         return event.addToContext(info: ["screen": self.preparedScreenInfo])
     }
     

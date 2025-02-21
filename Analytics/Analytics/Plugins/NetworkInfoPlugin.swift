@@ -10,7 +10,7 @@ import Network
 
 // MARK: - NetworkInfoPlugin
 /**
- A plugin created to append network information to the message context.
+ A plugin created to append network information to the event context.
  */
 final class NetworkInfoPlugin: Plugin {
     
@@ -22,7 +22,7 @@ final class NetworkInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         return event.addToContext(info: ["network": self.preparedNetworkInfo])
     }
     

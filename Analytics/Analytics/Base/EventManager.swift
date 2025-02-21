@@ -1,24 +1,24 @@
 //
-//  MessageManager.swift
+//  EventManager.swift
 //  Analytics
 //
 //  Created by Satheesh Kannan on 08/10/24.
 //
 
 import Foundation
-// MARK: - MessageManager
+// MARK: - EventManager
 /**
- A class responsible for managing messages and handling their processing, storage, and uploading in the analytics system.
+ A class responsible for managing events and handling their processing, storage, and uploading in the analytics system.
 
- This class integrates with the analytics client, manages flush policies, and ensures smooth message flow using asynchronous channels.
+ This class integrates with the analytics client, manages flush policies, and ensures smooth event flow using asynchronous channels.
  */
-final class MessageManager {
+final class EventManager {
     
     private let analytics: AnalyticsClient
     private let flushPolicyFacade: FlushPolicyFacade
     private let httpClient: HttpClient
     private let flushEvent = FlushEvent(messageName: Constants.DefaultConfig.uploadSignal)
-    private let writeChannel: AsyncChannel<Message>
+    private let writeChannel: AsyncChannel<Event>
     private let uploadChannel: AsyncChannel<String>
     
     private var storage: Storage {
@@ -40,7 +40,7 @@ final class MessageManager {
 }
 
 // MARK: - Operations
-extension MessageManager {
+extension EventManager {
     
     private func start() {
         self.flushPolicyFacade.startSchedule()
@@ -48,9 +48,9 @@ extension MessageManager {
         self.upload()
     }
     
-    func put(_ message: Message) {
+    func put(_ event: Event) {
         Task {
-            try await self.writeChannel.send(message)
+            try await self.writeChannel.send(event)
         }
     }
     
@@ -68,16 +68,16 @@ extension MessageManager {
     }
 }
 
-// MARK: - Message Processing
-extension MessageManager {
+// MARK: - Event Processing
+extension EventManager {
     func write() {
         Task {
-            for await message in self.writeChannel.stream {
-                let isFlushSignal = message.type == .flush
+            for await event in self.writeChannel.stream {
+                let isFlushSignal = event.type == .flush
 
                 if !isFlushSignal {
-                    if let json = message.jsonString {
-                        await self.storage.write(message: json)
+                    if let json = event.jsonString {
+                        await self.storage.write(event: json)
                         self.flushPolicyFacade.updateCount()
                     }
                 }
@@ -107,7 +107,7 @@ extension MessageManager {
                         
                         _ = try await self.httpClient.postBatchEvents(processed)
                         
-                        await self.storage.remove(messageReference: item.reference)
+                        await self.storage.remove(eventReference: item.reference)
                         print("Upload completed: \(item.reference)")
                     } catch {
                         print("Upload failed: \(item.reference)")

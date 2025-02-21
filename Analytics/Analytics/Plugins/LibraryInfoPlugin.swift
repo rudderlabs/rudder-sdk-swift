@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - LibraryInfoPlugin
 /**
- A plugin created to append library information to the message context.
+ A plugin created to append library information to the event context.
  */
 final class LibraryInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess
@@ -19,7 +19,7 @@ final class LibraryInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         return event.addToContext(info: ["library": self.preparedLibraryInfo])
     }
     

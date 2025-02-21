@@ -7,45 +7,45 @@
 
 import Foundation
 
-// MARK: - MessageDataResult
+// MARK: - EventDataResult
 /**
- Represents the result of processed message data items.
+ Represents the result of processed event data items.
 
- This struct encapsulates a collection of `MessageDataItem` objects, providing an organized structure for managing and accessing multiple data items at once.
+ This struct encapsulates a collection of `EventDataItem` objects, providing an organized structure for managing and accessing multiple data items at once.
 
  - Properties:
-   - `dataItems`: An array of `MessageDataItem` objects representing individual message batches.
+   - `dataItems`: An array of `EventDataItem` objects representing individual event batches.
  */
-public struct MessageDataResult {
-    /// An array of MessageDataItem objects representing individual message batches.
-    public let dataItems: [MessageDataItem]
+public struct EventDataResult {
+    /// An array of EventDataItem objects representing individual event batches.
+    public let dataItems: [EventDataItem]
 }
 
-// MARK: - MessageDataItem
+// MARK: - EventDataItem
 /**
- Represents a single message data item that contains a batch of messages for processing.
+ Represents a single event data item that contains a batch of events for processing.
 
- This struct is used to manage individual batches of messages, including a unique reference identifier, the batch content, and whether the batch has been closed for further modifications.
+ This struct is used to manage individual batches of events, including a unique reference identifier, the batch content, and whether the batch has been closed for further modifications.
 
  - Properties:
-   - `reference`: A unique identifier for the message batch, generated as a UUID.
-   - `batch`: The batch of messages as a `String` that needs to be processed or uploaded.
+   - `reference`: A unique identifier for the event batch, generated as a UUID.
+   - `batch`: The batch of events as a `String` that needs to be processed or uploaded.
    - `isClosed`: A flag indicating whether the batch is closed for further modifications.
 */
-public struct MessageDataItem {
-    /// A unique identifier for the message batch.
+public struct EventDataItem {
+    /// A unique identifier for the event batch.
     public var reference: String
     
-    /// The batch of messages as a `String`.
+    /// The batch of events as a `String`.
     public var batch: String
     
-    /// The batch of messages as a `String`.
+    /// The status of the events batch as a `String`.
     public var isClosed: Bool
     
     /**
-     Initializes a new instance of `MessageDataItem` with the provided batch content.
+     Initializes a new instance of `EventDataItem` with the provided batch content.
      
-     - Parameter batch: The batch of messages to be stored in this item.
+     - Parameter batch: The batch of events to be stored in this item.
      */
     init(batch: String) {
         self.reference = UUID().uuidString

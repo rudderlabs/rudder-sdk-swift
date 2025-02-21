@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - LocaleInfoPlugin
 /**
- A plugin created to append locale information to the message context.
+ A plugin created to append locale information to the event context.
  */
 final class LocaleInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess
@@ -19,7 +19,7 @@ final class LocaleInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         guard let localeInfo = self.preparedLocaleInfo else { return event }
         return event.addToContext(info: ["locale": localeInfo])
     }

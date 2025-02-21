@@ -12,7 +12,7 @@ final class ScreenEventTests: XCTestCase {
     
     func test_defaultScreenEvent() {
         given("A screen event with default values..") {
-            var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen)
+            var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
@@ -29,7 +29,7 @@ final class ScreenEventTests: XCTestCase {
     
     func test_screenEvent_category() {
         given("A screen event with category value..") {
-            var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main")
+            var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main")
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
@@ -46,7 +46,7 @@ final class ScreenEventTests: XCTestCase {
     
     func test_screenEvent_properties() {
         given("A screen event with property values..") {
-            var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, properties: MockProvider.sampleEventproperties)
+            var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, properties: MockProvider.sampleEventproperties)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
@@ -65,7 +65,7 @@ final class ScreenEventTests: XCTestCase {
         given("A screen event with options..") {
             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
             
-            var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, options: option)
+            var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, options: option)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             
@@ -84,7 +84,7 @@ final class ScreenEventTests: XCTestCase {
         given("A screen event with all values...") {
             let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
             
-            var event: Message = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main", properties: MockProvider.sampleEventproperties, options: option)
+            var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main", properties: MockProvider.sampleEventproperties, options: option)
             event = event.updateEventData()
             MockHelper.resetDynamicValues(&event)
             

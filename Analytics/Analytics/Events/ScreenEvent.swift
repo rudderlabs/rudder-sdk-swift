@@ -12,16 +12,16 @@ import Foundation
 /**
  Represents a screen event in the analytics system.
 
- This struct conforms to the `Message` protocol and is used to track when a user navigates to a specific screen or page in the application.
+ This struct conforms to the `Event` protocol and is used to track when a user navigates to a specific screen or page in the application.
 
- - Conforms to: `Message`
+ - Conforms to: `Event`
  */
-struct ScreenEvent: Message {
+struct ScreenEvent: Event {
     
     /// The type of the event, defaulting to `.screen`.
     var type: EventType = .screen
     
-    /// A unique identifier for the message.
+    /// A unique identifier for the event.
     var messageId: String = .randomUUIDString
     
     /// The timestamp of when the event occurred, defaulting to the current time.

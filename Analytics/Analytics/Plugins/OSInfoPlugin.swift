@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - OSInfoPlugin
 /**
- A plugin created to append OS information to the message context.
+ A plugin created to append OS information to the event context.
  */
 final class OSInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess
@@ -19,7 +19,7 @@ final class OSInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func intercept(event: any Message) -> (any Message)? {
+    func intercept(event: any Event) -> (any Event)? {
         return event.addToContext(info: ["os": self.preparedOSInfo])
     }
     

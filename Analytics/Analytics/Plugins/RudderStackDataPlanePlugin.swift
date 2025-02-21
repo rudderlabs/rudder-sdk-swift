@@ -8,61 +8,61 @@
 import Foundation
 // MARK: - RudderStackDataPlanePlugin
 /**
- This class serves as the main plugin responsible for initiating message operations.
+ This class serves as the main plugin responsible for initiating event operations.
  */
-final class RudderStackDataPlanePlugin: MessagePlugin {
+final class RudderStackDataPlanePlugin: EventPlugin {
     
     var pluginType: PluginType = .destination
     var analytics: AnalyticsClient?
     
-    private var messageManager: MessageManager?
+    private var eventManager: EventManager?
     
     func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
-        self.messageManager = MessageManager(analytics: analytics)
+        self.eventManager = EventManager(analytics: analytics)
     }
     
     deinit {
-        self.messageManager?.stop()
-        self.messageManager = nil
+        self.eventManager?.stop()
+        self.eventManager = nil
     }
     
     func flush() {
-        self.messageManager?.flush()
+        self.eventManager?.flush()
     }
 }
 
-// MARK: - Message Events
+// MARK: - Incoming Events
 
 extension RudderStackDataPlanePlugin {
     
-    func identify(payload: IdentifyEvent) -> (any Message)? {
-        self.messageManager?.put(payload)
+    func identify(payload: IdentifyEvent) -> (any Event)? {
+        self.eventManager?.put(payload)
         return payload
     }
     
-    func track(payload: TrackEvent) -> (any Message)? {
-        self.messageManager?.put(payload)
+    func track(payload: TrackEvent) -> (any Event)? {
+        self.eventManager?.put(payload)
         return payload
     }
     
-    func screen(payload: ScreenEvent) -> (any Message)? {
-        self.messageManager?.put(payload)
+    func screen(payload: ScreenEvent) -> (any Event)? {
+        self.eventManager?.put(payload)
         return payload
     }
     
-    func group(payload: GroupEvent) -> (any Message)? {
-        self.messageManager?.put(payload)
+    func group(payload: GroupEvent) -> (any Event)? {
+        self.eventManager?.put(payload)
         return payload
     }
     
-    func alias(payload: AliasEvent) -> (any Message)? {
-        self.messageManager?.put(payload)
+    func alias(payload: AliasEvent) -> (any Event)? {
+        self.eventManager?.put(payload)
         return payload
     }
     
-    func flush(payload: FlushEvent) -> (any Message)? {
-        self.messageManager?.put(payload)
+    func flush(payload: FlushEvent) -> (any Event)? {
+        self.eventManager?.put(payload)
         return payload
     }
 }
