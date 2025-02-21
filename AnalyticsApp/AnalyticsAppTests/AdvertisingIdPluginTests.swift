@@ -26,8 +26,8 @@ struct AdvertisingIdPluginTests {
             advertisingIdPlugin.trackingAuthorizationStatus = { .authorized }
             advertisingIdPlugin.getAdvertisingId = { mockIdfa }
             
-            when("execute the plugin using mock event..") {
-                let result = advertisingIdPlugin.execute(event: event)
+            when("intercept the plugin using mock event..") {
+                let result = advertisingIdPlugin.intercept(event: event)
                 
                 then("check the result if advertisingId is added or not..") {
                     #expect(result != nil)
@@ -57,8 +57,8 @@ struct AdvertisingIdPluginTests {
             advertisingIdPlugin.trackingAuthorizationStatus = { .denied }
             advertisingIdPlugin.getAdvertisingId = { mockIdfa }
             
-            when("execute the plugin using mock event..") {
-                let result = advertisingIdPlugin.execute(event: event)
+            when("intercept the plugin using mock event..") {
+                let result = advertisingIdPlugin.intercept(event: event)
                 
                 then("check the result if advertisingId is added or not..") {
                     #expect(result != nil)

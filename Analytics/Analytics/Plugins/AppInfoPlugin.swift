@@ -19,7 +19,7 @@ final class AppInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func execute(event: any Message) -> (any Message)? {
+    func intercept(event: any Message) -> (any Message)? {
         guard let info = self.preparedAppInfo else { return event }
         return event.addToContext(info: ["app": info])
     }

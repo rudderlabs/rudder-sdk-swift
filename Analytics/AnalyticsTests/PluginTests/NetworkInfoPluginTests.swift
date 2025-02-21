@@ -10,32 +10,32 @@ import XCTest
 
 final class NetworkInfoPluginTests: XCTestCase {
     
-    func test_execute_trackEvent() {
+    func test_intercept_trackEvent() {
         given("An simple track event to the network info plugin..") {
             let plugin = NetworkInfoPlugin()
             let track = TrackEvent(event: "Track")
             
-            when("execute is called..") {
-                let executedEvent = plugin.execute(event: track)
+            when("intercept is called..") {
+                let interceptedEvent = plugin.intercept(event: track)
                 
                 then("track event should have the network info details..") {
-                    guard let context = executedEvent?.context else { XCTFail("No context found"); return }
+                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
                     XCTAssertNotNil(context["network"])
                 }
             }
         }
     }
     
-    func test_execute_groupEvent() {
+    func test_intercept_groupEvent() {
         given("An simple group event to the network info plugin..") {
             let plugin = NetworkInfoPlugin()
             let group = GroupEvent(groupId: "group_id")
             
-            when("execute is called..") {
-                let executedEvent = plugin.execute(event: group)
+            when("intercept is called..") {
+                let interceptedEvent = plugin.intercept(event: group)
                 
                 then("group event should have the network info details..") {
-                    guard let context = executedEvent?.context else { XCTFail("No context found"); return }
+                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
                     XCTAssertNotNil(context["network"])
                 }
             }
@@ -52,10 +52,10 @@ final class NetworkInfoPluginTests: XCTestCase {
                 let mockUtils = NetworkInfoPluginUtils(monitor: mockMonitor)
                 plugin.networkInfoUtils = mockUtils
                 
-                let executedEvent = plugin.execute(event: track)
+                let interceptedEvent = plugin.intercept(event: track)
                 
                 then("track event should have the network info details..") {
-                    guard let context = executedEvent?.context else { XCTFail("No context found"); return }
+                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
                     XCTAssertNotNil(context["network"])
                     
                     guard let codableInfo = context["network"], let networkInfo = codableInfo.value as? [String: Any] else { XCTFail("No network info found"); return }
@@ -77,10 +77,10 @@ final class NetworkInfoPluginTests: XCTestCase {
                 let mockUtils = NetworkInfoPluginUtils(monitor: mockMonitor)
                 plugin.networkInfoUtils = mockUtils
                 
-                let executedEvent = plugin.execute(event: track)
+                let interceptedEvent = plugin.intercept(event: track)
                 
                 then("track event should have the network info details..") {
-                    guard let context = executedEvent?.context else { XCTFail("No context found"); return }
+                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
                     XCTAssertNotNil(context["network"])
                     
                     guard let codableInfo = context["network"], let networkInfo = codableInfo.value as? [String: Any] else { XCTFail("No network info found"); return }
@@ -102,10 +102,10 @@ final class NetworkInfoPluginTests: XCTestCase {
                 let mockUtils = NetworkInfoPluginUtils(monitor: mockMonitor)
                 plugin.networkInfoUtils = mockUtils
                 
-                let executedEvent = plugin.execute(event: track)
+                let interceptedEvent = plugin.intercept(event: track)
                 
                 then("track event should have the network info details..") {
-                    guard let context = executedEvent?.context else { XCTFail("No context found"); return }
+                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
                     XCTAssertNotNil(context["network"])
                     
                     guard let codableInfo = context["network"], let networkInfo = codableInfo.value as? [String: Any] else { XCTFail("No network info found"); return }
@@ -127,10 +127,10 @@ final class NetworkInfoPluginTests: XCTestCase {
                 let mockUtils = NetworkInfoPluginUtils(monitor: mockMonitor)
                 plugin.networkInfoUtils = mockUtils
                 
-                let executedEvent = plugin.execute(event: track)
+                let interceptedEvent = plugin.intercept(event: track)
                 
                 then("track event should have the network info details..") {
-                    guard let context = executedEvent?.context else { XCTFail("No context found"); return }
+                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
                     XCTAssertNotNil(context["network"])
                     
                     guard let codableInfo = context["network"], let networkInfo = codableInfo.value as? [String: Any] else { XCTFail("No network info found"); return }

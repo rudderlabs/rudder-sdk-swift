@@ -19,7 +19,7 @@ final class LocaleInfoPlugin: Plugin {
         self.analytics = analytics
     }
     
-    func execute(event: any Message) -> (any Message)? {
+    func intercept(event: any Message) -> (any Message)? {
         guard let localeInfo = self.preparedLocaleInfo else { return event }
         return event.addToContext(info: ["locale": localeInfo])
     }

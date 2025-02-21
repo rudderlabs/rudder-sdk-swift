@@ -24,8 +24,8 @@ struct BluetoothInfoPluginTests {
             
             bluetoothInfoPlugin.bluetoothAuthorizationStatus = { .allowedAlways }
             
-            when("execute the plugin using mock event..") {
-                let result = bluetoothInfoPlugin.execute(event: event)
+            when("intercept the plugin using mock event..") {
+                let result = bluetoothInfoPlugin.intercept(event: event)
                 
                 then("check the result if bluetooth status added or not..") {
                     #expect(result != nil)
@@ -52,8 +52,8 @@ struct BluetoothInfoPluginTests {
             
             bluetoothInfoPlugin.bluetoothAuthorizationStatus = { .denied }
             
-            when("execute the plugin using mock event..") {
-                let result = bluetoothInfoPlugin.execute(event: event)
+            when("intercept the plugin using mock event..") {
+                let result = bluetoothInfoPlugin.intercept(event: event)
                 
                 then("check the result if bluetooth status added or not..") {
                     #expect(result != nil)
