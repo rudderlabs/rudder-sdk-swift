@@ -49,6 +49,11 @@ extension Constants {
         /// Key for storing source configuration data.
         public static let sourceConfig = "source_config"
         
+        static let sessionId = "session_id"
+        static let lastActivityTime = "last_activity_time"
+        static let isManualSession = "is_manual_session"
+        static let isSessionStarted = "is_session_started"
+        
         /// Private initializer to prevent instantiation.
         private init() {
             /* Prevent instantiation (no-op) */
