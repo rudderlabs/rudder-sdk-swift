@@ -30,6 +30,8 @@ public class AnalyticsClient {
      */
     private var userIdentityState: StateImpl<UserIdentity>
     
+    private var sessionManager: SessionManager
+    
     /**
      Initializes the `AnalyticsClient` with the given configuration.
      
@@ -37,10 +39,29 @@ public class AnalyticsClient {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
-        
+        self.sessionManager = SessionManager(storage: configuration.storage)
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         
         self.setup()
+    }
+}
+
+// MARK: - Session
+
+extension AnalyticsClient {
+    
+    public func stateSession(sessionId: UInt64? = nil) {
+        if let sessionId, String(sessionId).count > SessionConstants.minSessionIdLength {
+            print("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
+            return
+        }
+        
+        var newSessionId = sessionId ?? SessionManager.generatedSessionId
+        self.sessionManager.startSession(sessionId: newSessionId, isManualSession: true)
+    }
+    
+    public func endSession() {
+        self.sessionManager.endSession()
     }
 }
 
@@ -250,6 +271,8 @@ extension AnalyticsClient {
             self.storeAnonymousId()
         }
     }
+    
+    public var sessionId: UInt64? { self.sessionManager.sessionId }
     
     /**
      A computed property that provides access to the storage instance from the configuration.
