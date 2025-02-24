@@ -30,6 +30,9 @@ public class AnalyticsClient {
      */
     private var userIdentityState: StateImpl<UserIdentity>
     
+    /**
+     The session manager responsible for handling session operations.
+     */
     private var sessionManager: SessionManager
     
     /**
@@ -50,19 +53,34 @@ public class AnalyticsClient {
 
 extension AnalyticsClient {
     
+    /**
+     Starts a session with a given `sessionId`, or generates one if not provided.
+     
+     - Parameter sessionId: An optional `UInt64` session ID. If `nil`, a new session ID is generated.
+     */
     public func stateSession(sessionId: UInt64? = nil) {
         if let sessionId, String(sessionId).count > SessionConstants.minSessionIdLength {
             print("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
             return
         }
         
-        var newSessionId = sessionId ?? SessionManager.generatedSessionId
+        let newSessionId = sessionId ?? SessionManager.generatedSessionId
         self.sessionManager.startSession(sessionId: newSessionId, isManualSession: true)
     }
     
+    /**
+     Ends the current session.
+     */
     public func endSession() {
         self.sessionManager.endSession()
     }
+    
+    /**
+     A computed property which returns the current active session id.
+     
+     - Returns: The `UInt64` value if active session exists else `nil`.
+     */
+    public var sessionId: UInt64? { self.sessionManager.sessionId }
 }
 
 // MARK: - Events
@@ -271,8 +289,6 @@ extension AnalyticsClient {
             self.storeAnonymousId()
         }
     }
-    
-    public var sessionId: UInt64? { self.sessionManager.sessionId }
     
     /**
      A computed property that provides access to the storage instance from the configuration.
