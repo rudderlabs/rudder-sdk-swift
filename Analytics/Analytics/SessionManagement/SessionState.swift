@@ -8,18 +8,18 @@
 import Foundation
 
 struct SessionState {
-    var sessionId: Int64 = 0
-    var lastActivityTime: Int64 = 0
+    var sessionId: UInt64 = 0
+    var lastActivityTime: UInt64 = 0
     var isManualSession: Bool = false
     var isSessionStarted: Bool = false
         
     static func initState(_ storage: KeyValueStorage) -> SessionState {
         var state = SessionState()
         
-        state.sessionId = storage.read(key: Constants.StorageKeys.sessionId) ?? 0
-        state.lastActivityTime = storage.read(key: Constants.StorageKeys.lastActivityTime) ?? 0
-        state.isManualSession = storage.read(key: Constants.StorageKeys.isManualSession) ?? false
-        state.isSessionStarted = storage.read(key: Constants.StorageKeys.isSessionStarted) ?? false
+        state.sessionId = storage.read(key: Constants.StorageKeys.sessionId) ?? SessionConstants.defaultSessionId
+        state.lastActivityTime = storage.read(key: Constants.StorageKeys.lastActivityTime) ?? SessionConstants.defaultLastActivityTime
+        state.isManualSession = storage.read(key: Constants.StorageKeys.isManualSession) ?? SessionConstants.defaultIsManualSession
+        state.isSessionStarted = storage.read(key: Constants.StorageKeys.isSessionStarted) ?? SessionConstants.defaultIsSessionStarted
         
         return state
     }
