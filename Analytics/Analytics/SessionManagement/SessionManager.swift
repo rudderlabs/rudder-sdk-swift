@@ -21,7 +21,7 @@ final class SessionManager {
         self.sessionState = createState(initialState: SessionState.initState(storage))
     }
     
-    func startSession(sessionId: Int64, isManualSession: Bool) {
+    func startSession(sessionId: UInt64, isManualSession: Bool) {
         
     }
     
@@ -29,15 +29,15 @@ final class SessionManager {
         
     }
     
-    var sessionId: Int64? {
+    var sessionId: UInt64? {
         return self.sessionInstance.sessionId == SessionConstants.defaultSessionId ? nil : self.sessionInstance.sessionId
     }
 }
 
 extension SessionManager {
     
-    static var generatedSessionId: Int64 {
-        return Int64(Date().timeIntervalSince1970)
+    static var generatedSessionId: UInt64 {
+        return UInt64(Date().timeIntervalSince1970)
     }
     
     private func withSessionDispatcher(_ block: @escaping () async -> Void) {
@@ -48,8 +48,8 @@ extension SessionManager {
 
 struct SessionConstants {
     static let minSessionIdLength = 10
-    static let defaultSessionId: Int64 = 0
-    static let defaultLastActivityTime: Int64 = 0
+    static let defaultSessionId: UInt64 = 0
+    static let defaultLastActivityTime: UInt64 = 0
     static let defaultIsManualSession: Bool = false
     static let defaultIsSessionStarted: Bool = false
     
