@@ -7,6 +7,9 @@
 
 import Foundation
 
+/**
+ A plugin created to append session information to the event context.
+ */
 final class SessionTrackingPlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: AnalyticsClient?

@@ -15,7 +15,9 @@ enum SessionType {
 }
 
 // MARK: - SessionManager
-
+/**
+ This class handles session management for both manual and automatic types.
+ */
 final class SessionManager {
     
     private var storage: Storage
@@ -46,6 +48,15 @@ final class SessionManager {
         guard self.sessionId != SessionConstants.defaultSessionId else { return }
         self.startSession(id: SessionManager.generatedSessionId, shouldUpdateType: false)
     }
+}
+
+// MARK: - Helpers
+
+extension SessionManager {
+    
+    static var generatedSessionId: UInt64 {
+        return UInt64(Date().timeIntervalSince1970)
+    }
     
     var sessionId: UInt64? {
         return self.sessionInstance.sessionId == SessionConstants.defaultSessionId ? nil : self.sessionInstance.sessionId
@@ -56,13 +67,9 @@ final class SessionManager {
     }
 }
 
-// MARK: - Helpers
+// MARK: - Session Action Handlers
 
 extension SessionManager {
-    
-    static var generatedSessionId: UInt64 {
-        return UInt64(Date().timeIntervalSince1970)
-    }
     
     private func updateSessionId(id: UInt64) {
         self.sessionState.dispatch(action: UpdateSessionIdAction(sessionId: id))
@@ -89,7 +96,6 @@ extension SessionManager {
 struct SessionConstants {
     static let minSessionIdLength = 10
     static let defaultSessionId: UInt64 = 0
-    static let defaultLastActivityTime: UInt64 = 0
     static let defaultSessionType: SessionType = .automatic
     static let defaultIsSessionStart: Bool = false
     

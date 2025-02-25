@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - UpdateSessionIdAction
+
 struct UpdateSessionIdAction: StateAction {
     typealias T = SessionState
     
@@ -22,6 +24,8 @@ struct UpdateSessionIdAction: StateAction {
         return updatedState
     }
 }
+
+// MARK: - UpdateIsSessionStartAction
 
 struct UpdateIsSessionStartAction: StateAction {
     typealias T = SessionState
@@ -39,6 +43,8 @@ struct UpdateIsSessionStartAction: StateAction {
     }
 }
 
+// MARK: - UpdateSessionTypeAction
+
 struct UpdateSessionTypeAction: StateAction {
     typealias T = SessionState
     
@@ -55,10 +61,14 @@ struct UpdateSessionTypeAction: StateAction {
     }
 }
 
+// MARK: - EndSessionAction
+
 struct EndSessionAction: StateAction {
     typealias T = SessionState
     
     func reduce(currentState: SessionState) -> SessionState {
-        return SessionState(sessionId: SessionConstants.defaultSessionId, lastActivityTime: SessionConstants.defaultLastActivityTime, sessionType: SessionConstants.defaultSessionType, isSessionStart: SessionConstants.defaultIsSessionStart)
+        return SessionState(sessionId: SessionConstants.defaultSessionId,
+                            sessionType: SessionConstants.defaultSessionType,
+                            isSessionStart: SessionConstants.defaultIsSessionStart)
     }
 }

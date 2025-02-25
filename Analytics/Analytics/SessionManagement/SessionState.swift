@@ -7,9 +7,12 @@
 
 import Foundation
 
+// MARK: - SessionState
+/**
+ A struct encapsulates session-related information.
+ */
 struct SessionState {
     var sessionId: UInt64 = SessionConstants.defaultSessionId
-    var lastActivityTime: UInt64 = SessionConstants.defaultLastActivityTime
     var sessionType: SessionType = SessionConstants.defaultSessionType
     var isSessionStart: Bool = SessionConstants.defaultIsSessionStart
     
@@ -18,10 +21,6 @@ struct SessionState {
         
         if let sessionIdValue: String = storage.read(key: Constants.StorageKeys.sessionId), let sessionId = UInt64(sessionIdValue) {
             state.sessionId = sessionId
-        }
-        
-        if let lastActivityTimeValue: String = storage.read(key: Constants.StorageKeys.lastActivityTime), let lastActivityTime = UInt64(lastActivityTimeValue) {
-            state.lastActivityTime = lastActivityTime
         }
         
         if let isManualSession: Bool = storage.read(key: Constants.StorageKeys.isManualSession) {
@@ -35,6 +34,8 @@ struct SessionState {
         return state
     }
 }
+
+// MARK: - Storage
 
 extension SessionState {
     
@@ -52,7 +53,6 @@ extension SessionState {
     
     func resetSessionState(storage: KeyValueStorage) {
         storage.remove(key: Constants.StorageKeys.sessionId)
-        storage.remove(key: Constants.StorageKeys.lastActivityTime)
         storage.remove(key: Constants.StorageKeys.isManualSession)
         storage.remove(key: Constants.StorageKeys.isSessionStart)
     }
