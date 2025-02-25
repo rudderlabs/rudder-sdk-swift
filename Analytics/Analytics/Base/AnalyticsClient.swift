@@ -225,6 +225,7 @@ extension AnalyticsClient {
         self.pluginChain.add(plugin: AppInfoPlugin())
         self.pluginChain.add(plugin: LibraryInfoPlugin())
         self.pluginChain.add(plugin: NetworkInfoPlugin())
+        self.pluginChain.add(plugin: SessionTrackingPlugin())
     }
     
     /**
