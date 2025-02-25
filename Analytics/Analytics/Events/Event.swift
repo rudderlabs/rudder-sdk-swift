@@ -148,7 +148,7 @@ extension Event {
 /**
  Represents the type of events supported by the analytics system.
 
- The `EventType` enum defines various event types such as `identify`, `track`, `screen`, `group`, `alias` and `flush`.
+ The `EventType` enum defines various event types such as `identify`, `track`, `screen`, `group` and `alias`.
  It conforms to `CaseIterable` for easy iteration and `Codable` for seamless encoding and decoding.
  */
 public enum EventType: String, CaseIterable, Codable {
@@ -167,9 +167,6 @@ public enum EventType: String, CaseIterable, Codable {
     
     /// Represents a "alias" event.
     case alias
-    
-    /// Represents a "flush" event.
-    case flush
 
     /**
      A computed property that returns a human-readable label for the event type.

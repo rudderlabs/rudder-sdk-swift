@@ -109,7 +109,7 @@ public extension Plugin {
 /**
  Extends the `Plugin` protocol to handle specific types of event payloads.
 
- The `EventPlugin` protocol is designed for plugins that need to process events with specific payload structures such as `TrackEvent`, `ScreenEvent`, `GroupEvent`, and `FlushEvent`.
+ The `EventPlugin` protocol is designed for plugins that need to process events with specific payload structures such as `TrackEvent`, `ScreenEvent` and `GroupEvent`.
  
  It builds upon the `Plugin` protocol, adding event-specific methods to facilitate targeted processing.
 
@@ -156,14 +156,6 @@ protocol EventPlugin: Plugin {
      - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
     func alias(payload: AliasEvent) -> Event?
-    
-    /**
-     Processes a `FlushEvent` payload.
-     
-     - Parameter payload: The `FlushEvent` payload to be processed.
-     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
-     */
-    func flush(payload: FlushEvent) -> Event?
 }
 
 extension EventPlugin {
@@ -177,13 +169,11 @@ extension EventPlugin {
     func group(payload: GroupEvent) -> Event? { payload }
     
     func alias(payload: AliasEvent) -> Event? { payload }
-    
-    func flush(payload: FlushEvent) -> Event? { payload }
-    
+        
     /**
      Intercepts the appropriate method based on the event type.
 
-     This method checks the type of the incoming `Event` and delegates it to the corresponding event handler method such as `identify`, `track`, `screen`, `group`, `alias` or `flush`.
+     This method checks the type of the incoming `Event` and delegates it to the corresponding event handler method such as `identify`, `track`, `screen`, `group` or `alias`.
      
      If the event type is unknown, it returns `nil`.
 
@@ -202,8 +192,6 @@ extension EventPlugin {
             return self.group(payload: event)
         case let event as AliasEvent:
             return self.alias(payload: event)
-        case let event as FlushEvent:
-            return self.flush(payload: event)
         default:
             return nil
         }
