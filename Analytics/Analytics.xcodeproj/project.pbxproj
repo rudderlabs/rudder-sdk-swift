@@ -18,7 +18,7 @@
 		5351AA6A2C6BE95D003C3C47 /* Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 5351AA692C6BE95D003C3C47 /* Analytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5351AA902C6BEB90003C3C47 /* AnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */; };
 		5369DD9C2D1B2B6B00DEC550 /* NetworkInfoPluginUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5369DD9B2D1B2B6B00DEC550 /* NetworkInfoPluginUtils.swift */; };
-		536C99122D6CE4290005F8AD /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C99112D6CE4290005F8AD /* SessionState.swift */; };
+		536C99122D6CE4290005F8AD /* SessionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536C99112D6CE4290005F8AD /* SessionInfo.swift */; };
 		536DEF552D36B371000BB30B /* SetAnonymousIdAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536DEF542D36B371000BB30B /* SetAnonymousIdAction.swift */; };
 		536DEF572D37B218000BB30B /* AnonymousIdActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536DEF562D37B218000BB30B /* AnonymousIdActionTests.swift */; };
 		537356ED2CC68B7D008023CE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537356EC2CC68B7D008023CE /* Extensions.swift */; };
@@ -130,7 +130,7 @@
 		5351AA692C6BE95D003C3C47 /* Analytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Analytics.h; sourceTree = "<group>"; };
 		5351AA8F2C6BEB90003C3C47 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
 		5369DD9B2D1B2B6B00DEC550 /* NetworkInfoPluginUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPluginUtils.swift; sourceTree = "<group>"; };
-		536C99112D6CE4290005F8AD /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
+		536C99112D6CE4290005F8AD /* SessionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInfo.swift; sourceTree = "<group>"; };
 		536DEF542D36B371000BB30B /* SetAnonymousIdAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdAction.swift; sourceTree = "<group>"; };
 		536DEF562D37B218000BB30B /* AnonymousIdActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnonymousIdActionTests.swift; sourceTree = "<group>"; };
 		537356EC2CC68B7D008023CE /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -289,7 +289,7 @@
 			isa = PBXGroup;
 			children = (
 				53BAEF6E2D6CF3460068EF5D /* SessionManager.swift */,
-				536C99112D6CE4290005F8AD /* SessionState.swift */,
+				536C99112D6CE4290005F8AD /* SessionInfo.swift */,
 				53BAEF702D6DA3410068EF5D /* SessionActions.swift */,
 			);
 			path = SessionManagement;
@@ -714,7 +714,7 @@
 				53F864C22D26EBE70078D68E /* StartupFlushPolicy.swift in Sources */,
 				53C7A76C2D2EEE3200F1325E /* UserIdentity.swift in Sources */,
 				53F864BE2D26EAE00078D68E /* CountFlushPolicy.swift in Sources */,
-				536C99122D6CE4290005F8AD /* SessionState.swift in Sources */,
+				536C99122D6CE4290005F8AD /* SessionInfo.swift in Sources */,
 				5388D5B12D0C203C000966AB /* AppInfoPlugin.swift in Sources */,
 				53BE94F22C94C75D0004E75A /* BasicStorage.swift in Sources */,
 				53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */,

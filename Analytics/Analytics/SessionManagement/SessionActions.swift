@@ -10,7 +10,7 @@ import Foundation
 // MARK: - UpdateSessionIdAction
 
 struct UpdateSessionIdAction: StateAction {
-    typealias T = SessionState
+    typealias T = SessionInfo
     
     private let sessionId: UInt64
     
@@ -18,7 +18,7 @@ struct UpdateSessionIdAction: StateAction {
         self.sessionId = sessionId
     }
     
-    func reduce(currentState: SessionState) -> SessionState {
+    func reduce(currentState: SessionInfo) -> SessionInfo {
         var updatedState = currentState
         updatedState.sessionId = sessionId
         return updatedState
@@ -28,7 +28,7 @@ struct UpdateSessionIdAction: StateAction {
 // MARK: - UpdateIsSessionStartAction
 
 struct UpdateIsSessionStartAction: StateAction {
-    typealias T = SessionState
+    typealias T = SessionInfo
     
     private let isSessionStart: Bool
     
@@ -36,7 +36,7 @@ struct UpdateIsSessionStartAction: StateAction {
         self.isSessionStart = isSessionStart
     }
     
-    func reduce(currentState: SessionState) -> SessionState {
+    func reduce(currentState: SessionInfo) -> SessionInfo {
         var updatedState = currentState
         updatedState.isSessionStart = isSessionStart
         return updatedState
@@ -46,7 +46,7 @@ struct UpdateIsSessionStartAction: StateAction {
 // MARK: - UpdateSessionTypeAction
 
 struct UpdateSessionTypeAction: StateAction {
-    typealias T = SessionState
+    typealias T = SessionInfo
     
     private let sessionType: SessionType
     
@@ -54,7 +54,7 @@ struct UpdateSessionTypeAction: StateAction {
         self.sessionType = sessionType
     }
     
-    func reduce(currentState: SessionState) -> SessionState {
+    func reduce(currentState: SessionInfo) -> SessionInfo {
         var updatedState = currentState
         updatedState.sessionType = sessionType
         return updatedState
@@ -64,10 +64,10 @@ struct UpdateSessionTypeAction: StateAction {
 // MARK: - EndSessionAction
 
 struct EndSessionAction: StateAction {
-    typealias T = SessionState
+    typealias T = SessionInfo
     
-    func reduce(currentState: SessionState) -> SessionState {
-        return SessionState(sessionId: SessionConstants.defaultSessionId,
+    func reduce(currentState: SessionInfo) -> SessionInfo {
+        return SessionInfo(sessionId: SessionConstants.defaultSessionId,
                             sessionType: SessionConstants.defaultSessionType,
                             isSessionStart: SessionConstants.defaultIsSessionStart)
     }

@@ -21,14 +21,14 @@ enum SessionType {
 final class SessionManager {
     
     private var storage: Storage
-    private var sessionState: StateImpl<SessionState>
-    private var sessionInstance: SessionState {
+    private var sessionState: StateImpl<SessionInfo>
+    private var sessionInstance: SessionInfo {
         return self.sessionState.state.value
     }
     
     init(storage: Storage) {
         self.storage = storage
-        self.sessionState = createState(initialState: SessionState.initState(storage))
+        self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
     }
     
     func startSession(id: UInt64, type: SessionType = SessionConstants.defaultSessionType, shouldUpdateType: Bool = true) {
