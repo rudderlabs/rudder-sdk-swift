@@ -32,10 +32,12 @@ public class AnalyticsClient {
     
     /**
      A private asynchronous channel for queuing and processing events.
-     The session manager responsible for handling session operations.
      */
     private var processEventChannel: AsyncChannel<Event>
 
+    /**
+     The session manager responsible for handling session operations.
+     */
     internal var sessionManager: SessionManager
     
     /**
