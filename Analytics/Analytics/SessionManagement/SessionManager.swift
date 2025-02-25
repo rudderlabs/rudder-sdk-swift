@@ -20,7 +20,6 @@ final class SessionManager {
     
     private var storage: Storage
     private var sessionState: StateImpl<SessionState>
-    
     private var sessionInstance: SessionState {
         return self.sessionState.state.value
     }
@@ -30,7 +29,7 @@ final class SessionManager {
         self.sessionState = createState(initialState: SessionState.initState(storage))
     }
     
-    func startSession(id: UInt64, type: SessionType, shouldUpdateType: Bool = true) {
+    func startSession(id: UInt64, type: SessionType = SessionConstants.defaultSessionType, shouldUpdateType: Bool = true) {
         self.updateSesstionStart(isSessionStrat: true)
         if shouldUpdateType {
             self.updateSessionType(type: type)
@@ -43,8 +42,17 @@ final class SessionManager {
         self.sessionInstance.resetSessionState(storage: self.storage)
     }
     
+    func refreshSession() {
+        guard self.sessionId != SessionConstants.defaultSessionId else { return }
+        self.startSession(id: SessionManager.generatedSessionId, shouldUpdateType: false)
+    }
+    
     var sessionId: UInt64? {
         return self.sessionInstance.sessionId == SessionConstants.defaultSessionId ? nil : self.sessionInstance.sessionId
+    }
+    
+    var isSessionStart: Bool {
+        return self.sessionInstance.isSessionStart
     }
 }
 
@@ -61,7 +69,7 @@ extension SessionManager {
         self.sessionInstance.storeSessionType(type: .automatic, storage: self.storage)
     }
     
-    private func updateSesstionStart(isSessionStrat: Bool) {
+    func updateSesstionStart(isSessionStrat: Bool) {
         guard self.sessionInstance.isSessionStart != isSessionStrat else { return }
         
         self.sessionState.dispatch(action: UpdateIsSessionStartAction(isSessionStart: isSessionStrat))
