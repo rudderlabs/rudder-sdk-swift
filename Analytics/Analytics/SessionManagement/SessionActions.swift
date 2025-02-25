@@ -54,3 +54,11 @@ struct UpdateSessionType: StateAction {
         return updatedState
     }
 }
+
+struct EndSessionAction: StateAction {
+    typealias T = SessionState
+    
+    func reduce(currentState: SessionState) -> SessionState {
+        return SessionState(sessionId: SessionConstants.defaultSessionId, lastActivityTime: SessionConstants.defaultLastActivityTime, sessionType: SessionConstants.defaultSessionType, isSessionStart: SessionConstants.defaultIsSessionStart)
+    }
+}
