@@ -76,6 +76,7 @@
 		53A22A3D2C7472850059D6FE /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A22A3C2C7472850059D6FE /* Event.swift */; };
 		53BAEF6F2D6CF3460068EF5D /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BAEF6E2D6CF3460068EF5D /* SessionManager.swift */; };
 		53BAEF712D6DA3410068EF5D /* SessionActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BAEF702D6DA3410068EF5D /* SessionActions.swift */; };
+		53BAEF732D6DCEE60068EF5D /* SessionTrackingPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BAEF722D6DCEE60068EF5D /* SessionTrackingPlugin.swift */; };
 		53BE94E92C921B9E0004E75A /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94E82C921B9E0004E75A /* KeyValueStore.swift */; };
 		53BE94EB2C9220950004E75A /* DiskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94EA2C9220950004E75A /* DiskStore.swift */; };
 		53BE94ED2C941B4B0004E75A /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94EC2C941B4B0004E75A /* DataStore.swift */; };
@@ -188,6 +189,7 @@
 		53A22A3C2C7472850059D6FE /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		53BAEF6E2D6CF3460068EF5D /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		53BAEF702D6DA3410068EF5D /* SessionActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionActions.swift; sourceTree = "<group>"; };
+		53BAEF722D6DCEE60068EF5D /* SessionTrackingPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTrackingPlugin.swift; sourceTree = "<group>"; };
 		53BE94E82C921B9E0004E75A /* KeyValueStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueStore.swift; sourceTree = "<group>"; };
 		53BE94EA2C9220950004E75A /* DiskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskStore.swift; sourceTree = "<group>"; };
 		53BE94EC2C941B4B0004E75A /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
@@ -468,6 +470,7 @@
 				5388D5B02D0C203C000966AB /* AppInfoPlugin.swift */,
 				5388D5B22D0C2081000966AB /* LibraryInfoPlugin.swift */,
 				53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */,
+				53BAEF722D6DCEE60068EF5D /* SessionTrackingPlugin.swift */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -706,6 +709,7 @@
 				537E10BB2D4D3D04002074AE /* SetUserIdAction.swift in Sources */,
 				5392AB952C6FC78F00369791 /* Configuration.swift in Sources */,
 				53BE94F42C94D70D0004E75A /* MemoryStore.swift in Sources */,
+				53BAEF732D6DCEE60068EF5D /* SessionTrackingPlugin.swift in Sources */,
 				53FD37A22CB5258100DBA06B /* AsyncChannel.swift in Sources */,
 				53C52C772CE34FF400A2BD31 /* RudderOption.swift in Sources */,
 				5304C9182CD3FF37003AFCC2 /* FlushPolicy.swift in Sources */,
