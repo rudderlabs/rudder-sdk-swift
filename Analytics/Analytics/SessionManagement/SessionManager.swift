@@ -39,7 +39,8 @@ final class SessionManager {
     }
     
     func endSession() {
-        /* temp implementation (no-op) */
+        self.sessionState.dispatch(action: EndSessionAction())
+        self.sessionInstance.resetSessionState(storage: self.storage)
     }
     
     var sessionId: UInt64? {
@@ -57,21 +58,21 @@ extension SessionManager {
     
     private func updateSessionId(id: UInt64) {
         self.sessionState.dispatch(action: UpdateSessionId(sessionId: id))
-        self.sessionState.state.value.storeSessionType(type: .automatic, storage: self.storage)
+        self.sessionInstance.storeSessionType(type: .automatic, storage: self.storage)
     }
     
     private func updateSesstionStart(isSessionStrat: Bool) {
         guard self.sessionInstance.isSessionStart != isSessionStrat else { return }
         
         self.sessionState.dispatch(action: UpdateIsSessionStart(isSessionStart: isSessionStrat))
-        self.sessionState.state.value.storeIsSessionStart(isSessionStart: isSessionStrat, storage: self.storage)
+        self.sessionInstance.storeIsSessionStart(isSessionStart: isSessionStrat, storage: self.storage)
     }
     
     private func updateSessionType(type: SessionType) {
         guard self.sessionInstance.sessionType != type else { return }
         
         self.sessionState.dispatch(action: UpdateSessionType(sessionType: type))
-        self.sessionState.state.value.storeSessionType(type: type, storage: self.storage)
+        self.sessionInstance.storeSessionType(type: type, storage: self.storage)
     }
 }
 
