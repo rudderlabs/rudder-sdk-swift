@@ -33,7 +33,7 @@ public class AnalyticsClient {
     /**
      The session manager responsible for handling session operations.
      */
-    private var sessionManager: SessionManager
+    internal var sessionManager: SessionManager
     
     /**
      Initializes the `AnalyticsClient` with the given configuration.
@@ -183,6 +183,8 @@ extension AnalyticsClient {
     public func reset(clearAnonymousId: Bool = false) {
         self.userIdentityState.dispatch(action: ResetUserIdentityAction(clearAnonymousId: clearAnonymousId))
         self.userIdentityState.state.value.resetUserIdentity(clearAnonymousId: clearAnonymousId, storage: self.storage)
+        
+        self.sessionManager.refreshSession()
     }
 }
 
