@@ -57,21 +57,21 @@ extension SessionManager {
     }
     
     private func updateSessionId(id: UInt64) {
-        self.sessionState.dispatch(action: UpdateSessionId(sessionId: id))
+        self.sessionState.dispatch(action: UpdateSessionIdAction(sessionId: id))
         self.sessionInstance.storeSessionType(type: .automatic, storage: self.storage)
     }
     
     private func updateSesstionStart(isSessionStrat: Bool) {
         guard self.sessionInstance.isSessionStart != isSessionStrat else { return }
         
-        self.sessionState.dispatch(action: UpdateIsSessionStart(isSessionStart: isSessionStrat))
+        self.sessionState.dispatch(action: UpdateIsSessionStartAction(isSessionStart: isSessionStrat))
         self.sessionInstance.storeIsSessionStart(isSessionStart: isSessionStrat, storage: self.storage)
     }
     
     private func updateSessionType(type: SessionType) {
         guard self.sessionInstance.sessionType != type else { return }
         
-        self.sessionState.dispatch(action: UpdateSessionType(sessionType: type))
+        self.sessionState.dispatch(action: UpdateSessionTypeAction(sessionType: type))
         self.sessionInstance.storeSessionType(type: type, storage: self.storage)
     }
 }

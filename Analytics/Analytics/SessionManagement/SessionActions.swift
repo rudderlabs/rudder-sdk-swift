@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UpdateSessionId: StateAction {
+struct UpdateSessionIdAction: StateAction {
     typealias T = SessionState
     
     private let sessionId: UInt64
@@ -23,7 +23,7 @@ struct UpdateSessionId: StateAction {
     }
 }
 
-struct UpdateIsSessionStart: StateAction {
+struct UpdateIsSessionStartAction: StateAction {
     typealias T = SessionState
     
     private let isSessionStart: Bool
@@ -39,7 +39,7 @@ struct UpdateIsSessionStart: StateAction {
     }
 }
 
-struct UpdateSessionType: StateAction {
+struct UpdateSessionTypeAction: StateAction {
     typealias T = SessionState
     
     private let sessionType: SessionType
