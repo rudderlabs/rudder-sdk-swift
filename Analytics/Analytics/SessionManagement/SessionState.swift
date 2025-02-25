@@ -47,6 +47,13 @@ extension SessionState {
     }
     
     func storeSessionType(type: SessionType, storage: KeyValueStorage) {
-        storage.write(value: type == .manual, key: Constants.StorageKeys.sessionId)
+        storage.write(value: type == .manual, key: Constants.StorageKeys.isManualSession)
+    }
+    
+    func resetSessionState(storage: KeyValueStorage) {
+        storage.remove(key: Constants.StorageKeys.sessionId)
+        storage.remove(key: Constants.StorageKeys.lastActivityTime)
+        storage.remove(key: Constants.StorageKeys.isManualSession)
+        storage.remove(key: Constants.StorageKeys.isSessionStart)
     }
 }
