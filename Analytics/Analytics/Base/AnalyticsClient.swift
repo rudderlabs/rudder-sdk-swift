@@ -31,8 +31,11 @@ public class AnalyticsClient {
     private var userIdentityState: StateImpl<UserIdentity>
     
     /**
+     A private asynchronous channel for queuing and processing events.
      The session manager responsible for handling session operations.
      */
+    private var processEventChannel: AsyncChannel<Event>
+
     internal var sessionManager: SessionManager
     
     /**
@@ -43,6 +46,7 @@ public class AnalyticsClient {
     public init(configuration: Configuration) {
         self.configuration = configuration
         self.sessionManager = SessionManager(storage: configuration.storage)
+        self.processEventChannel = AsyncChannel(capacity: Int.max)
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         
         self.setup()
@@ -212,6 +216,7 @@ extension AnalyticsClient {
     private func setup() {
         self.storeAnonymousId()
         self.collectConfiguration()
+        self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
         
@@ -229,13 +234,26 @@ extension AnalyticsClient {
     }
     
     /**
-     Processes an event by passing it through the plugin chain.
+     Starts processing events from the `processEventChannel` stream. Processes an event by passing it through the plugin chain.
+     */
+    private func startProcessingEvents() {
+        Task {
+            for await event in self.processEventChannel.stream {
+                let updatedEvent = event.updateEventData()
+                self.pluginChain.process(event: updatedEvent)
+            }
+        }
+    }
+    
+    /**
+     Sends an event to the `processEventChannel` asynchronously.
      
-     - Parameter event: The event to be processed.
+     - Parameter event: The `Event` to be sent.
      */
     private func process(event: Event) {
-        let updatedEvent = event.updateEventData()
-        self.pluginChain.process(event: updatedEvent)
+        Task {
+            try await self.processEventChannel.send(event)
+        }
     }
     
     /**

@@ -122,6 +122,7 @@ extension AnalyticsTests {
     func test_flushEvents_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         client.track(name: "Track Event", properties: ["prop": "value"])
+        try? await Task.sleep(nanoseconds: 300_000_000)
         client.flush()
         try? await Task.sleep(nanoseconds: 300_000_000)
         let dataItems = await client.configuration.storage.read().dataItems

@@ -20,13 +20,13 @@ final class MockProvider {
     
     static var clientWithDiskStorage: AnalyticsClient {
         let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .disk)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage, flushPolicies: [])
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storage: storage, flushPolicies: [])
         return AnalyticsClient(configuration: configuration)
     }
     
     static var clientWithMemoryStorage: AnalyticsClient {
         let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .memory)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/512911fe-bf84-4742-9492-401c6889c7ba", storage: storage, flushPolicies: [])
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storage: storage, flushPolicies: [])
         return AnalyticsClient(configuration: configuration)
     }
 }
