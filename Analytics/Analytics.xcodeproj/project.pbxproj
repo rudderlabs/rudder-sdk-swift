@@ -75,6 +75,7 @@
 		539E540E2C98CD7D00982E95 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA662C6BE95D003C3C47 /* Analytics.framework */; };
 		53A22A3D2C7472850059D6FE /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A22A3C2C7472850059D6FE /* Event.swift */; };
 		53BAEF6F2D6CF3460068EF5D /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BAEF6E2D6CF3460068EF5D /* SessionManager.swift */; };
+		53BAEF712D6DA3410068EF5D /* SessionActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BAEF702D6DA3410068EF5D /* SessionActions.swift */; };
 		53BE94E92C921B9E0004E75A /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94E82C921B9E0004E75A /* KeyValueStore.swift */; };
 		53BE94EB2C9220950004E75A /* DiskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94EA2C9220950004E75A /* DiskStore.swift */; };
 		53BE94ED2C941B4B0004E75A /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BE94EC2C941B4B0004E75A /* DataStore.swift */; };
@@ -186,6 +187,7 @@
 		539E540C2C98CD7D00982E95 /* AnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsTests.swift; sourceTree = "<group>"; };
 		53A22A3C2C7472850059D6FE /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		53BAEF6E2D6CF3460068EF5D /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		53BAEF702D6DA3410068EF5D /* SessionActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionActions.swift; sourceTree = "<group>"; };
 		53BE94E82C921B9E0004E75A /* KeyValueStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueStore.swift; sourceTree = "<group>"; };
 		53BE94EA2C9220950004E75A /* DiskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskStore.swift; sourceTree = "<group>"; };
 		53BE94EC2C941B4B0004E75A /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
@@ -288,6 +290,7 @@
 			children = (
 				53BAEF6E2D6CF3460068EF5D /* SessionManager.swift */,
 				536C99112D6CE4290005F8AD /* SessionState.swift */,
+				53BAEF702D6DA3410068EF5D /* SessionActions.swift */,
 			);
 			path = SessionManagement;
 			sourceTree = "<group>";
@@ -697,6 +700,7 @@
 				5387E8942CA320FD00DB1C49 /* HttpNetwork.swift in Sources */,
 				5388D5B32D0C2081000966AB /* LibraryInfoPlugin.swift in Sources */,
 				5388D5A72D0A12F5000966AB /* ScreenInfoPlugin.swift in Sources */,
+				53BAEF712D6DA3410068EF5D /* SessionActions.swift in Sources */,
 				53F864B82D23EB960078D68E /* ScreenEvent.swift in Sources */,
 				53BE94ED2C941B4B0004E75A /* DataStore.swift in Sources */,
 				537E10BB2D4D3D04002074AE /* SetUserIdAction.swift in Sources */,
