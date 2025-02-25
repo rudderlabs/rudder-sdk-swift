@@ -65,7 +65,7 @@ extension AnalyticsClient {
         }
         
         let newSessionId = sessionId ?? SessionManager.generatedSessionId
-        self.sessionManager.startSession(sessionId: newSessionId, isManualSession: true)
+        self.sessionManager.startSession(id: newSessionId, type: .manual)
     }
     
     /**
