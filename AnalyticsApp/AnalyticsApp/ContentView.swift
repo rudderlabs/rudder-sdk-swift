@@ -74,6 +74,16 @@ struct ContentView: View {
                     AnalyticsManager.shared.reset(true)
                 }
             }
+            
+            HStack {
+                CustomButton(title: "Start Session") {
+                    AnalyticsManager.shared.startSession()
+                }
+                
+                CustomButton(title: "End Session") {
+                    AnalyticsManager.shared.endSession()
+                }
+            }
         }
     }
 }
