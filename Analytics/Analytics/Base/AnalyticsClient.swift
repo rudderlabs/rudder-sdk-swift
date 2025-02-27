@@ -47,7 +47,7 @@ public class AnalyticsClient {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
-        self.sessionManager = SessionManager(storage: configuration.storage)
+        self.sessionManager = SessionManager(storage: configuration.storage, sessionConfiguration: configuration.sessionConfiguration)
         self.processEventChannel = AsyncChannel(capacity: Int.max)
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         

@@ -21,14 +21,23 @@ enum SessionType {
 final class SessionManager {
     
     private var storage: KeyValueStorage
+    private var sessionCofiguration: SessionConfiguration
     private var sessionState: StateImpl<SessionInfo>
+    
     private var sessionInstance: SessionInfo {
         return self.sessionState.state.value
     }
     
-    init(storage: KeyValueStorage) {
+    private var automaticSessionTimeout: Int {
+        return self.sessionCofiguration.sessionTimeoutInMillis
+    }
+    
+    init(storage: KeyValueStorage, sessionConfiguration: SessionConfiguration) {
         self.storage = storage
+        self.sessionCofiguration = sessionConfiguration
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
+        
+        self.prepareAutomaticSession()
     }
     
     func startSession(id: UInt64, type: SessionType = SessionConstants.defaultSessionType, shouldUpdateType: Bool = true) {
@@ -47,6 +56,10 @@ final class SessionManager {
     func refreshSession() {
         guard self.sessionId != SessionConstants.defaultSessionId else { return }
         self.startSession(id: SessionManager.generatedSessionId, shouldUpdateType: false)
+    }
+    
+    func prepareAutomaticSession() {
+        guard self.sessionCofiguration.automaticSessionTracking else { return }
     }
 }
 
