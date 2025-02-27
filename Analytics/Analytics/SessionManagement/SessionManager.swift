@@ -32,7 +32,7 @@ final class SessionManager {
     }
     
     func startSession(id: UInt64, type: SessionType = SessionConstants.defaultSessionType, shouldUpdateType: Bool = true) {
-        self.updateSesstionStart(isSessionStrat: true)
+        self.updateSessionStart(isSessionStrat: true)
         if shouldUpdateType {
             self.updateSessionType(type: type)
         }
@@ -80,7 +80,7 @@ extension SessionManager {
         self.sessionInstance.storeSessionId(id: id, storage: self.storage)
     }
     
-    func updateSesstionStart(isSessionStrat: Bool) {
+    func updateSessionStart(isSessionStrat: Bool) {
         guard self.sessionInstance.isSessionStart != isSessionStrat else { return }
         
         self.sessionState.dispatch(action: UpdateIsSessionStartAction(isSessionStart: isSessionStrat))
