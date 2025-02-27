@@ -32,6 +32,10 @@ final class SessionTrackingPlugin: Plugin {
             sessionManager.updateSessionStart(isSessionStrat: false)
         }
         
+        if sessionManager.sessionType == .automatic {
+            sessionManager.updateSessionLastActivityTime()
+        }
+        
         return info
     }
 }

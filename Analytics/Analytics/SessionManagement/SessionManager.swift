@@ -122,6 +122,12 @@ extension SessionManager {
         self.sessionState.dispatch(action: UpdateSessionTypeAction(sessionType: type))
         self.sessionInstance.storeSessionType(type: type, storage: self.storage)
     }
+    
+    func updateSessionLastActivityTime() {
+        let lastActivityTime = self.monotonicCurrentTime
+        self.sessionState.dispatch(action: UpdateSessionLastActivityAction(lastActivityTime: lastActivityTime))
+        self.sessionInstance.storeSessionActivity(time: lastActivityTime, storage: self.storage)
+    }
 }
 
 // MARK: - SessionConstants
