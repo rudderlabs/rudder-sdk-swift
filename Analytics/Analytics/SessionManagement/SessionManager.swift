@@ -20,13 +20,13 @@ enum SessionType {
  */
 final class SessionManager {
     
-    private var storage: Storage
+    private var storage: KeyValueStorage
     private var sessionState: StateImpl<SessionInfo>
     private var sessionInstance: SessionInfo {
         return self.sessionState.state.value
     }
     
-    init(storage: Storage) {
+    init(storage: KeyValueStorage) {
         self.storage = storage
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
     }
@@ -64,6 +64,10 @@ extension SessionManager {
     
     var isSessionStart: Bool {
         return self.sessionInstance.isSessionStart
+    }
+    
+    var sessionType: SessionType {
+        return self.sessionInstance.sessionType
     }
 }
 
