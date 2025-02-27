@@ -91,7 +91,8 @@ extension SessionManager {
     }
     
     var monotonicCurrentTime: UInt64 {
-        return UInt64(ProcessInfo.processInfo.systemUptime * 1000)
+        let millisecondsInSecond: TimeInterval = 1000.0
+        return UInt64(ProcessInfo.processInfo.systemUptime * millisecondsInSecond)
     }
     
     var isSessionTimedOut: Bool {
