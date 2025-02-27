@@ -56,6 +56,10 @@ extension SessionInfo {
         storage.write(value: type == .manual, key: Constants.StorageKeys.isManualSession)
     }
     
+    func storeSessionActivity(time: UInt64, storage: KeyValueStorage) {
+        storage.write(value: String(time), key: Constants.StorageKeys.lastActivityTime)
+    }
+    
     func resetSessionState(storage: KeyValueStorage) {
         storage.remove(key: Constants.StorageKeys.sessionId)
         storage.remove(key: Constants.StorageKeys.isManualSession)
