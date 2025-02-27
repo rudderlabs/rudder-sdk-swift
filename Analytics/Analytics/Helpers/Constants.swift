@@ -152,7 +152,7 @@ extension Constants {
         public static let automaticSessionTrackingStatus: Bool = true
         
         /// Default setting for session timeout duration in milliseconds(5 minutes).
-        public static let sessionTimeoutInMillis: Int = 300_000
+        public static let sessionTimeoutInMillis: UInt64 = 300_000
         
         /// Default query parameters added to requests.
         static let queryParams = ["p": "ios", "v": "\(RSVersion)"]
