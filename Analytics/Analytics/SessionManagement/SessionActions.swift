@@ -73,3 +73,21 @@ struct EndSessionAction: StateAction {
                            lastActivityTime: SessionConstants.defaultSessionLastActivityTime)
     }
 }
+
+// MARK: - UpdateSessionLastActivityAction
+
+struct UpdateSessionLastActivityAction: StateAction {
+    typealias T = SessionInfo
+    
+    private let lastActivityTime: UInt64
+    
+    init(lastActivityTime: UInt64) {
+        self.lastActivityTime = lastActivityTime
+    }
+    
+    func reduce(currentState: SessionInfo) -> SessionInfo {
+        var updatedState = currentState
+        updatedState.lastActivityTime = lastActivityTime
+        return updatedState
+    }
+}
