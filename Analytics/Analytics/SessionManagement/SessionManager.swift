@@ -28,7 +28,7 @@ final class SessionManager {
         return self.sessionState.state.value
     }
     
-    private var automaticSessionTimeout: Int {
+    private var automaticSessionTimeout: UInt64 {
         return self.sessionCofiguration.sessionTimeoutInMillis
     }
     
@@ -37,7 +37,7 @@ final class SessionManager {
         self.sessionCofiguration = sessionConfiguration
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
         
-        self.prepareAutomaticSession()
+        self.ensureAutomaticSession()
     }
     
     func startSession(id: UInt64, type: SessionType = SessionConstants.defaultSessionType, shouldUpdateType: Bool = true) {
@@ -58,8 +58,11 @@ final class SessionManager {
         self.startSession(id: SessionManager.generatedSessionId, shouldUpdateType: false)
     }
     
-    func prepareAutomaticSession() {
+    func ensureAutomaticSession() {
         guard self.sessionCofiguration.automaticSessionTracking else { return }
+        if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
+            self.startSession(id: Self.generatedSessionId, type: .automatic)
+        }
     }
 }
 
@@ -81,6 +84,18 @@ extension SessionManager {
     
     var sessionType: SessionType {
         return self.sessionInstance.sessionType
+    }
+    
+    var lastActivityTime: UInt64 {
+        return self.sessionInstance.lastActivityTime
+    }
+    
+    var monotonicCurrentTime: UInt64 {
+        return UInt64(ProcessInfo.processInfo.systemUptime * 1000)
+    }
+    
+    var isSessionTimedOut: Bool {
+        return (self.monotonicCurrentTime - self.lastActivityTime) > self.automaticSessionTimeout
     }
 }
 
