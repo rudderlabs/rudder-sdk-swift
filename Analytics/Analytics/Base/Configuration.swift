@@ -58,6 +58,11 @@ public class Configuration {
      A boolean flag indicating whether the SDK should automatically collect the device ID. Defaults to `true`.
      */
     var collectDeviceId: Bool
+    
+    /**
+     A configuration instance for managing session settings.
+     */
+    var sessionConfiguration: SessionConfiguration
 
     // MARK: - Initialization
 
@@ -74,6 +79,7 @@ public class Configuration {
        - storage: The storage mechanism for persisting data.
        - flushPolicies: The flush policies for event flushing.
        - collectDeviceId: A flag to enable automatic collection of the device ID. Defaults to `true`.
+       - sessionConfiguration: A configuration instance for managing session settings.
      
      - Returns: An instance of `Configuration` with the specified settings.
      */
@@ -86,7 +92,8 @@ public class Configuration {
         gzipEnaabled: Bool = Constants.DefaultConfig.gzipEnabled,
         storage: Storage? = nil,
         flushPolicies: [FlushPolicy] = Constants.DefaultConfig.flushPolicies,
-        collectDeviceId: Bool = Constants.DefaultConfig.willCollectDeviceId
+        collectDeviceId: Bool = Constants.DefaultConfig.willCollectDeviceId,
+        sessionConfiguration: SessionConfiguration = SessionConfiguration()
     ) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
@@ -97,5 +104,35 @@ public class Configuration {
         self.storage = storage ?? BasicStorage(writeKey: writeKey)
         self.flushPolicies = flushPolicies
         self.collectDeviceId = collectDeviceId
+        self.sessionConfiguration = sessionConfiguration
+    }
+}
+
+// MARK: - SessionConfiguration
+/**
+ A configuration class for managing session settings.
+ */
+@objcMembers
+public class SessionConfiguration {
+    /**
+     A flag indicating whether automatic session tracking is enabled.
+     */
+    var automaticSessionTracking: Bool
+    
+    /**
+     The timeout duration for a session, in milliseconds.
+     */
+    var sessionTimeoutInMillis: UInt64
+    
+    /**
+     Initializes a new session configuration instance.
+     
+     - Parameters:
+        - automaticSessionTracking: A boolean indicating whether session tracking should be automatic. Default is `true`.
+        - sessionTimeoutInMillis: The session timeout duration in milliseconds. Default is `300_000` (5 minutes).
+     */
+    public init(automaticSessionTracking: Bool = Constants.DefaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.DefaultConfig.sessionTimeoutInMillis) {
+        self.automaticSessionTracking = automaticSessionTracking
+        self.sessionTimeoutInMillis = sessionTimeoutInMillis
     }
 }
