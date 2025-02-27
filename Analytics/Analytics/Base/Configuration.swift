@@ -122,7 +122,7 @@ public class SessionConfiguration {
     /**
      The timeout duration for a session, in milliseconds.
      */
-    var sessionTimeoutInMillis: UInt64
+    var sessionTimeoutInMillis: Int
     
     /**
      Initializes a new session configuration instance.
@@ -131,7 +131,7 @@ public class SessionConfiguration {
         - automaticSessionTracking: A boolean indicating whether session tracking should be automatic. Default is `true`.
         - sessionTimeoutInMillis: The session timeout duration in milliseconds. Default is `300_000` (5 minutes).
      */
-    public init(automaticSessionTracking: Bool = Constants.DefaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.DefaultConfig.sessionTimeoutInMillis) {
+    public init(automaticSessionTracking: Bool = Constants.DefaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: Int = Constants.DefaultConfig.sessionTimeoutInMillis) {
         self.automaticSessionTracking = automaticSessionTracking
         self.sessionTimeoutInMillis = sessionTimeoutInMillis
     }
