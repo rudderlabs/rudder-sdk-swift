@@ -73,7 +73,7 @@ extension SessionManager {
     
     private func updateSessionId(id: UInt64) {
         self.sessionState.dispatch(action: UpdateSessionIdAction(sessionId: id))
-        self.sessionInstance.storeSessionType(type: .automatic, storage: self.storage)
+        self.sessionInstance.storeSessionId(id: id, storage: self.storage)
     }
     
     func updateSesstionStart(isSessionStrat: Bool) {
