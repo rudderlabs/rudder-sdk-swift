@@ -68,7 +68,8 @@ struct EndSessionAction: StateAction {
     
     func reduce(currentState: SessionInfo) -> SessionInfo {
         return SessionInfo(sessionId: SessionConstants.defaultSessionId,
-                            sessionType: SessionConstants.defaultSessionType,
-                            isSessionStart: SessionConstants.defaultIsSessionStart)
+                           sessionType: SessionConstants.defaultSessionType,
+                           isSessionStart: SessionConstants.defaultIsSessionStart,
+                           lastActivityTime: SessionConstants.defaultSessionLastActivityTime)
     }
 }

@@ -58,6 +58,9 @@ extension Constants {
         /// Key for storing session state.
         static let isSessionStart = "is_session_start"
         
+        /// Key for storing session last activity time.
+        static let lastActivityTime = "last_activity_time"
+        
         /// Private initializer to prevent instantiation.
         private init() {
             /* Prevent instantiation (no-op) */

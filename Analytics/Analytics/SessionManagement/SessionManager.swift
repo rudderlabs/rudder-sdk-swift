@@ -113,6 +113,7 @@ extension SessionManager {
 struct SessionConstants {
     static let minSessionIdLength = 10
     static let defaultSessionId: UInt64 = 0
+    static let defaultSessionLastActivityTime: UInt64 = 0
     static let defaultSessionType: SessionType = .automatic
     static let defaultIsSessionStart: Bool = false
     

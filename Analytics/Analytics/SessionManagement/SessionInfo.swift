@@ -15,6 +15,7 @@ struct SessionInfo {
     var sessionId: UInt64 = SessionConstants.defaultSessionId
     var sessionType: SessionType = SessionConstants.defaultSessionType
     var isSessionStart: Bool = SessionConstants.defaultIsSessionStart
+    var lastActivityTime: UInt64 = SessionConstants.defaultSessionLastActivityTime
     
     static func initializeState(_ storage: KeyValueStorage) -> SessionInfo {
         var state = SessionInfo()
@@ -31,6 +32,10 @@ struct SessionInfo {
             state.isSessionStart = isSessionStart
         }
         
+        if let lastActivityTimeValue: String = storage.read(key: Constants.StorageKeys.lastActivityTime), let lastActivityTime = UInt64(lastActivityTimeValue) {
+            state.lastActivityTime = lastActivityTime
+        }
+
         return state
     }
 }
@@ -55,5 +60,6 @@ extension SessionInfo {
         storage.remove(key: Constants.StorageKeys.sessionId)
         storage.remove(key: Constants.StorageKeys.isManualSession)
         storage.remove(key: Constants.StorageKeys.isSessionStart)
+        storage.remove(key: Constants.StorageKeys.lastActivityTime)
     }
 }
