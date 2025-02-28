@@ -86,6 +86,7 @@ final class SessionManagerTests: XCTestCase {
                 
                 then("A new session ID should be generated") {
                     XCTAssert(manager?.sessionId != sessionId, "A new session ID should be generated")
+                    XCTAssert(manager?.isSessionStart == true, "Session should be marked as started")
                 }
             }
         }
