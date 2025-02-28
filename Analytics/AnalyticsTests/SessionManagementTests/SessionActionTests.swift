@@ -12,7 +12,7 @@ import XCTest
 final class SessionActionTests: XCTestCase {
     
     func test_updateSessionIdAction() {
-        given("Prepare test SessionInfo state with sessionId value and action..") {
+        given("A SessionInfo state with an initial sessionId") {
             
             let initialSessionId: UInt64 = 12341231234
             let expectedSessionId: UInt64 = 43214324321
@@ -20,10 +20,10 @@ final class SessionActionTests: XCTestCase {
             let state = createState(initialState: SessionInfo(sessionId: initialSessionId))
             let action = UpdateSessionIdAction(sessionId: expectedSessionId)
             
-            when("Update state of SessionInfo with expected session ID") {
+            when("Dispatching UpdateSessionIdAction") {
                 state.dispatch(action: action)
                 
-                then("SessionInfo updated with new session ID") {
+                then("The sessionId should update to the new value") {
                     XCTAssertEqual(state.state.value.sessionId, expectedSessionId)
                 }
             }
@@ -31,26 +31,26 @@ final class SessionActionTests: XCTestCase {
     }
     
     func test_updateIsSessionStartAction() {
-        given("Prepare test SessionInfo state with isSessionStart value and action..") {
+        given("A SessionInfo state with an initial isSessionStart value") {
             
-            let isSessionStart_first = false
-            let isSessionStart_second = true
+            let initialIsSessionStart = false
+            let expectedIsSessionStart = true
             
-            let state = createState(initialState: SessionInfo(isSessionStart: isSessionStart_first))
-            let action = UpdateIsSessionStartAction(isSessionStart: isSessionStart_second)
+            let state = createState(initialState: SessionInfo(isSessionStart: initialIsSessionStart))
+            let action = UpdateIsSessionStartAction(isSessionStart: expectedIsSessionStart)
             
-            when("Update state of SessionInfo with expected isSessionStart value") {
+            when("Dispatching UpdateIsSessionStartAction") {
                 state.dispatch(action: action)
                 
-                then("SessionInfo updated with new isSessionStart value") {
-                    XCTAssertEqual(state.state.value.isSessionStart, isSessionStart_second)
+                then("The isSessionStart value should update to the new state") {
+                    XCTAssertEqual(state.state.value.isSessionStart, expectedIsSessionStart)
                 }
             }
         }
     }
     
     func test_updateSessionTypeAction() {
-        given("Prepare test SessionInfo state with session type value and action..") {
+        given("A SessionInfo state with an initial session type") {
             
             let initialSessionType: SessionType = .automatic
             let expectedSessionType: SessionType = .manual
@@ -58,10 +58,10 @@ final class SessionActionTests: XCTestCase {
             let state = createState(initialState: SessionInfo(sessionType: initialSessionType))
             let action = UpdateSessionTypeAction(sessionType: expectedSessionType)
             
-            when("Update state of SessionInfo with expected session type") {
+            when("Dispatching UpdateSessionTypeAction") {
                 state.dispatch(action: action)
                 
-                then("SessionInfo updated with new session type") {
+                then("The session type should update to the new value") {
                     XCTAssertEqual(state.state.value.sessionType, expectedSessionType)
                 }
             }
@@ -69,14 +69,14 @@ final class SessionActionTests: XCTestCase {
     }
     
     func test_endSessionAction() {
-        given("Prepare test SessionInfo state with initial values and action..") {
+        given("A SessionInfo state with an active session") {
             let state = createState(initialState: SessionInfo(sessionId: 12342341234, sessionType: .manual, isSessionStart: true))
             let action = EndSessionAction()
             
-            when("Update state of SessionInfo with end session action") {
+            when("Dispatching EndSessionAction") {
                 state.dispatch(action: action)
                 
-                then("SessionInfo reset to default values") {
+                then("SessionInfo should reset to default values") {
                     XCTAssertEqual(state.state.value.sessionId, SessionConstants.defaultSessionId)
                     XCTAssertEqual(state.state.value.sessionType, SessionConstants.defaultSessionType)
                     XCTAssertEqual(state.state.value.isSessionStart, SessionConstants.defaultIsSessionStart)
