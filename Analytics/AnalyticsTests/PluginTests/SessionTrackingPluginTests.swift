@@ -9,7 +9,7 @@ import XCTest
 @testable import Analytics
 
 final class SessionTrackingPluginTests: XCTestCase {
-
+    
     private var analytics = MockProvider.clientWithMemoryStorage
     
     override func setUpWithError() throws {
@@ -21,14 +21,13 @@ final class SessionTrackingPluginTests: XCTestCase {
     }
     
     func test_intercept_trackEvent() {
-        given("An simple track event to the session tracking plugin..") {
+        given("Manual session is started..") {
+            self.analytics.sessionManager.startSession(id: 1231231234, type: .manual)
             let plugin = SessionTrackingPlugin()
             plugin.setup(analytics: self.analytics)
-            
             let track = TrackEvent(event: "Track")
             
-            when("Start the session and intercept is called..") {
-                self.analytics.sessionManager.startSession(id: 1231231234, type: .manual)
+            when("A simple track event is sent to the session tracking plugin..") {
                 let interceptedEvent = plugin.intercept(event: track)
                 
                 then("Track event should have the session info details..") {
@@ -41,16 +40,15 @@ final class SessionTrackingPluginTests: XCTestCase {
     }
     
     func test_intercept_mulitple_groupEvent() {
-        given("An simple group event to the session tracking plugin..") {
+        given("Start the session and trigger the first group event to the session tracking plugin..") {
+            self.analytics.sessionManager.startSession(id: 1231231234, type: .manual)
             let plugin = SessionTrackingPlugin()
             plugin.setup(analytics: self.analytics)
             
             let group = GroupEvent(groupId: "Group_id")
+            var interceptedEvent = plugin.intercept(event: group)
             
-            when("Start the session, call the intercept and trigger second event..") {
-                self.analytics.sessionManager.startSession(id: 1231231234, type: .manual)
-                var interceptedEvent = plugin.intercept(event: group)
-                
+            when("call the intercept and trigger second event..") {
                 let group2 = GroupEvent(groupId: "Group_id2")
                 interceptedEvent = plugin.intercept(event: group2)
                 

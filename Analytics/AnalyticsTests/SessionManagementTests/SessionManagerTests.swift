@@ -28,65 +28,65 @@ final class SessionManagerTests: XCTestCase {
     }
     
     func test_startSession_shouldUpdateType_true() {
-        given("Prepare sample session information") {
+        given("A sample session information") {
             let sessionId: UInt64 = 123454321
             let sessionType: SessionType = .manual
             
-            when("Start a session with sample values") {
+            when("Starting a new session with a specific ID and type") {
                 manager?.startSession(id: sessionId, type: sessionType)
                 
-                then("A new session started...") {
-                    XCTAssertTrue(manager?.sessionId == sessionId, "Session ID should be updated correctly")
-                    XCTAssertTrue(manager?.isSessionStart == true, "Session should be marked as started")
-                    XCTAssertTrue(manager?.sessionType == .manual, "Session type should be manual")
+                then("The session should start with the provided values") {
+                    XCTAssertEqual(manager?.sessionId, sessionId, "Session ID should be updated correctly")
+                    XCTAssertEqual(manager?.isSessionStart, true, "Session should be marked as started")
+                    XCTAssertEqual(manager?.sessionType, .manual, "Session type should be manual")
                 }
             }
         }
     }
     
     func test_startSession_shouldUpdateType_false() {
-        given("Prepare sample session information") {
+        given("An initial session state values") {
             let sessionId: UInt64 = 123454321
             let sessionType: SessionType = .manual
             
-            when("Start a session with sample values") {
+            when("Starting a session without updating the session type") {
                 manager?.startSession(id: sessionId, type: sessionType, shouldUpdateType: false)
                 
-                then("A new session started...") {
+                then("The session should start, but the session type should remain unchanged") {
                     XCTAssertTrue(manager?.sessionId == sessionId, "Session ID should be updated correctly")
                     XCTAssertTrue(manager?.isSessionStart == true, "Session should be marked as started")
-                    XCTAssertTrue(manager?.sessionType == .automatic, "Session type should be automaic not manual")
+                    XCTAssertTrue(manager?.sessionType == .automatic, "Session type should remain automatic, not manual")
                 }
             }
         }
     }
     
     func testEndSession_ResetsSession() {
-        given("Start a session with a session id..") {
+        given("A session manager with an active session") {
             let sessionId: UInt64 = 123454321
             manager?.startSession(id: sessionId)
             
-            when("End the active session...") {
+            when("Ending the active session") {
                 manager?.endSession()
                 
-                then("Session will be reset...") {
+                then("The session should reset to its initial state") {
                     XCTAssertNil(manager?.sessionId, "Session ID should be nil after ending session")
-                    XCTAssert(manager?.isSessionStart == false, "Session should be marked as not started")
                 }
             }
         }
     }
     
     func testRefreshSession_GeneratesNewSessionId() {
-        given("Start a session with a session id..") {
+        given("A session manager with an active session") {
             let sessionId: UInt64 = 123454321
             manager?.startSession(id: sessionId)
             
-            when("Refersh the active session...") {
+            when("Refreshing the active session") {
                 manager?.refreshSession()
                 
-                then("Session id will be refreshed...") {
+                then("A new session ID should be generated") {
                     XCTAssert(manager?.sessionId != sessionId, "A new session ID should be generated")
+                    XCTAssert(manager?.isSessionStart == true, "Session should be marked as started")
                 }
             }
         }

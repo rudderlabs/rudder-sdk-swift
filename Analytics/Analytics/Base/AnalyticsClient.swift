@@ -64,7 +64,7 @@ extension AnalyticsClient {
      
      - Parameter sessionId: An optional `UInt64` session ID. If `nil`, a new session ID is generated.
      */
-    public func stateSession(sessionId: UInt64? = nil) {
+    public func startSession(sessionId: UInt64? = nil) {
         if let sessionId, String(sessionId).count < SessionConstants.minSessionIdLength {
             print("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
             return

@@ -80,6 +80,20 @@ struct ContentView: View {
                     AnalyticsManager.shared.startSession()
                 }
                 
+                CustomButton(title: "Start Session with SessionId") {
+                    AnalyticsManager.shared.startSession(sessionId: 12312312345)
+                }
+            }
+            
+            HStack {
+                CustomButton(title: "Read SessionId") {
+                    if let sessionId = AnalyticsManager.shared.sessionId {
+                        print("Current Session Id: \(String(sessionId))")
+                    } else {
+                        print("No active session found.")
+                    }
+                }
+                
                 CustomButton(title: "End Session") {
                     AnalyticsManager.shared.endSession()
                 }

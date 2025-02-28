@@ -56,8 +56,8 @@ extension AnalyticsManager {
         self.analytics?.reset(clearAnonymousId: clearAnonymousId)
     }
     
-    func startSession() {
-        self.analytics?.stateSession()
+    func startSession(sessionId: UInt64? = nil) {
+        self.analytics?.startSession(sessionId: sessionId)
     }
     
     func endSession() {
@@ -67,6 +67,10 @@ extension AnalyticsManager {
     var anonymousId: String? {
         get { self.analytics?.anonymousId }
         set { if let newId = newValue { self.analytics?.anonymousId = newId } }
+    }
+    
+    var sessionId: UInt64? {
+        return self.analytics?.sessionId
     }
 }
 
