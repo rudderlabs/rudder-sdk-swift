@@ -57,7 +57,7 @@ extension AnalyticsManager {
     }
     
     func startSession() {
-        self.analytics?.stateSession()
+        self.analytics?.startSession()
     }
     
     func endSession() {
