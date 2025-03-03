@@ -35,7 +35,7 @@ struct SessionInfo {
         if let lastActivityTimeValue: String = storage.read(key: Constants.StorageKeys.lastActivityTime), let lastActivityTime = UInt64(lastActivityTimeValue) {
             state.lastActivityTime = lastActivityTime
         }
-
+      
         return state
     }
 }
