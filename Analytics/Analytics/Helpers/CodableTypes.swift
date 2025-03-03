@@ -95,7 +95,7 @@ public struct AnyCodable: Codable {
         
         if let intValue = try? container.decode(Int.self) {
             value = intValue
-        } else if let intValue = try? container.decode(Int64.self) {
+        } else if let intValue = try? container.decode(UInt64.self) {
             value = intValue
         } else if let doubleValue = try? container.decode(Double.self) {
             value = doubleValue
@@ -119,7 +119,7 @@ public struct AnyCodable: Codable {
         
         if let intValue = value as? Int {
             try container.encode(intValue)
-        } else if let intValue = value as? Int64 {
+        } else if let intValue = value as? UInt64 {
             try container.encode(intValue)
         } else if let doubleValue = value as? Double {
             try container.encode(doubleValue)
