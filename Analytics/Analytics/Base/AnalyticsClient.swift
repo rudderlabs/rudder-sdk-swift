@@ -36,17 +36,57 @@ public class AnalyticsClient {
     private var processEventChannel: AsyncChannel<Event>
 
     /**
+     The session manager responsible for handling session operations.
+     */
+    internal var sessionManager: SessionManager
+    
+    /**
      Initializes the `AnalyticsClient` with the given configuration.
      
      - Parameter configuration: The configuration object containing settings and storage details.
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
+        self.sessionManager = SessionManager(storage: configuration.storage)
         self.processEventChannel = AsyncChannel(capacity: Int.max)
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         
         self.setup()
     }
+}
+
+// MARK: - Session
+
+extension AnalyticsClient {
+    
+    /**
+     Starts a session with a given `sessionId`, or generates one if not provided.
+     
+     - Parameter sessionId: An optional `UInt64` session ID. If `nil`, a new session ID is generated.
+     */
+    public func startSession(sessionId: UInt64? = nil) {
+        if let sessionId, String(sessionId).count < SessionConstants.minSessionIdLength {
+            print("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
+            return
+        }
+        
+        let newSessionId = sessionId ?? SessionManager.generatedSessionId
+        self.sessionManager.startSession(id: newSessionId, type: .manual)
+    }
+    
+    /**
+     Ends the current session.
+     */
+    public func endSession() {
+        self.sessionManager.endSession()
+    }
+    
+    /**
+     A computed property which returns the current active session id.
+     
+     - Returns: The `UInt64` value if active session exists else `nil`.
+     */
+    public var sessionId: UInt64? { self.sessionManager.sessionId }
 }
 
 // MARK: - Events
@@ -149,6 +189,8 @@ extension AnalyticsClient {
     public func reset(clearAnonymousId: Bool = false) {
         self.userIdentityState.dispatch(action: ResetUserIdentityAction(clearAnonymousId: clearAnonymousId))
         self.userIdentityState.state.value.resetUserIdentity(clearAnonymousId: clearAnonymousId, storage: self.storage)
+        
+        self.sessionManager.refreshSession()
     }
 }
 
@@ -190,6 +232,7 @@ extension AnalyticsClient {
         self.pluginChain.add(plugin: AppInfoPlugin())
         self.pluginChain.add(plugin: LibraryInfoPlugin())
         self.pluginChain.add(plugin: NetworkInfoPlugin())
+        self.pluginChain.add(plugin: SessionTrackingPlugin())
     }
     
     /**
