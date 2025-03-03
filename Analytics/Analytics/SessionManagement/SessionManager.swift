@@ -5,7 +5,11 @@
 //  Created by Satheesh Kannan on 25/02/25.
 //
 
-import Foundation
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 // MARK: - SessionType
 
@@ -24,13 +28,12 @@ final class SessionManager {
     private var sessionCofiguration: SessionConfiguration
     private var sessionState: StateImpl<SessionInfo>
     
-    private var sessionInstance: SessionInfo {
-        return self.sessionState.state.value
-    }
+    private var sessionInstance: SessionInfo { self.sessionState.state.value }
+    private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
     
-    private var automaticSessionTimeout: UInt64 {
-        return self.sessionCofiguration.sessionTimeoutInMillis
-    }
+    var backgroundObserver: NSObjectProtocol?
+    var foregroundObserver: NSObjectProtocol?
+    var terminateObserver: NSObjectProtocol?
     
     init(storage: KeyValueStorage, sessionConfiguration: SessionConfiguration) {
         self.storage = storage
@@ -46,11 +49,13 @@ final class SessionManager {
             self.updateSessionType(type: type)
         }
         self.updateSessionId(id: id)
+        self.sessionType == .automatic ? self.attachObservers() : self.detachObservers()
     }
     
     func endSession() {
         self.sessionState.dispatch(action: EndSessionAction())
         self.sessionInstance.resetSessionState(storage: self.storage)
+        self.detachObservers()
     }
     
     func refreshSession() {
@@ -63,6 +68,52 @@ final class SessionManager {
         if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
             self.startSession(id: Self.generatedSessionId, type: .automatic)
         }
+    }
+    
+    deinit {
+        self.detachObservers()
+    }
+}
+
+// MARK: - Observers
+
+extension SessionManager {
+    
+    func attachObservers() {
+        self.detachObservers()  // Prevent duplicate observers
+        
+#if os(macOS)
+        // macOS (AppKit)
+        let backgroundNotification = NSApplication.didResignActiveNotification
+        let terminateNotification = NSApplication.willTerminateNotification
+        let foregroundNotification = NSApplication.didBecomeActiveNotification
+#else
+        // iOS, tvOS, watchOS, and Mac Catalyst (UIKit)
+        let backgroundNotification = UIApplication.didEnterBackgroundNotification
+        let terminateNotification = UIApplication.willTerminateNotification
+        let foregroundNotification = UIApplication.willEnterForegroundNotification
+#endif
+        
+        let handleBackground: (Notification) -> Void = { [weak self] _ in
+            self?.updateSessionLastActivityTime()
+        }
+        
+        let handleForeground: (Notification) -> Void = { [weak self] _ in
+            guard let self = self, self.sessionId != nil, self.sessionType == .automatic, self.isSessionTimedOut else { return }
+            self.startSession(id: Self.generatedSessionId, type: .automatic)
+        }
+        
+        let notificationCenter = NotificationCenter.default
+        self.backgroundObserver = notificationCenter.addObserver(forName: backgroundNotification, object: nil, queue: .main, using: handleBackground)
+        self.foregroundObserver = notificationCenter.addObserver(forName: foregroundNotification, object: nil, queue: .main, using: handleForeground)
+        self.terminateObserver = notificationCenter.addObserver(forName: terminateNotification, object: nil, queue: .main, using: handleBackground)
+    }
+    
+    func detachObservers() {
+        [backgroundObserver, foregroundObserver, terminateObserver].compactMap { $0 }.forEach { NotificationCenter.default.removeObserver($0) }
+        backgroundObserver = nil
+        foregroundObserver = nil
+        terminateObserver = nil
     }
 }
 
