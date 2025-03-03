@@ -43,11 +43,9 @@ final class SessionManager {
         self.ensureAutomaticSession()
     }
     
-    func startSession(id: UInt64, type: SessionType = SessionConstants.defaultSessionType, shouldUpdateType: Bool = true) {
+    func startSession(id: UInt64, type: SessionType) {
         self.updateSessionStart(isSessionStrat: true)
-        if shouldUpdateType {
-            self.updateSessionType(type: type)
-        }
+        self.updateSessionType(type: type)
         self.updateSessionId(id: id)
         self.sessionType == .automatic ? self.attachObservers() : self.detachObservers()
     }
@@ -60,7 +58,7 @@ final class SessionManager {
     
     func refreshSession() {
         guard self.sessionId != SessionConstants.defaultSessionId else { return }
-        self.startSession(id: SessionManager.generatedSessionId, shouldUpdateType: false)
+        self.startSession(id: SessionManager.generatedSessionId, type: self.sessionType)
     }
     
     func ensureAutomaticSession() {

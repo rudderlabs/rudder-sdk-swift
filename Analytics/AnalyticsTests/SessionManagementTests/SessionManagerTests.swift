@@ -22,7 +22,7 @@ final class SessionManagerTests: XCTestCase {
         storage = nil
     }
     
-    func test_startSession_shouldUpdateType_true() {
+    func test_startSession() {
         given("A sample session information") {
             guard let storage else { XCTFail("Storage not initialized"); return }
             let sessionId: UInt64 = 123454321
@@ -43,27 +43,6 @@ final class SessionManagerTests: XCTestCase {
         }
     }
     
-    func test_startSession_shouldUpdateType_false() {
-        given("An initial session state values") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
-            let sessionId: UInt64 = 123454321
-            let sessionType: SessionType = .manual
-            
-            let configuration = SessionConfiguration(automaticSessionTracking: true)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
-            
-            when("Starting a session without updating the session type") {
-                manager.startSession(id: sessionId, type: sessionType)
-                
-                then("The session should start, but the session type should remain unchanged") {
-                    XCTAssertTrue(manager.sessionId == sessionId, "Session ID should be updated correctly")
-                    XCTAssertTrue(manager.isSessionStart == true, "Session should be marked as started")
-                    XCTAssertTrue(manager.sessionType == .automatic, "Session type should remain automatic, not manual")
-                }
-            }
-        }
-    }
-    
     func testEndSession_ResetsSession() {
         given("A session manager with an active session") {
             guard let storage else { XCTFail("Storage not initialized"); return }
@@ -72,7 +51,7 @@ final class SessionManagerTests: XCTestCase {
             let configuration = SessionConfiguration(automaticSessionTracking: true)
             let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
             
-            manager.startSession(id: sessionId)
+            manager.startSession(id: sessionId, type: .manual)
             
             when("Ending the active session") {
                 manager.endSession()
@@ -92,7 +71,7 @@ final class SessionManagerTests: XCTestCase {
             let configuration = SessionConfiguration(automaticSessionTracking: true)
             let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
             
-            manager.startSession(id: sessionId)
+            manager.startSession(id: sessionId, type: .manual)
             
             when("Refreshing the active session") {
                 manager.refreshSession()
@@ -131,7 +110,7 @@ final class SessionManagerTests: XCTestCase {
             let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 2000)
             let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
             
-            manager.startSession(id: 12345)
+            manager.startSession(id: 12345, type: .automatic)
             let initialSessionId = manager.sessionId
             
 #if os(macOS)
