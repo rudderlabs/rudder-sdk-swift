@@ -124,15 +124,15 @@ extension SessionManager {
     }
     
     var sessionId: UInt64? {
-        return self.sessionInstance.sessionId == SessionConstants.defaultSessionId ? nil : self.sessionInstance.sessionId
+        return self.sessionInstance.id == SessionConstants.defaultSessionId ? nil : self.sessionInstance.id
     }
     
     var isSessionStart: Bool {
-        return self.sessionInstance.isSessionStart
+        return self.sessionInstance.isStart
     }
     
     var sessionType: SessionType {
-        return self.sessionInstance.sessionType
+        return self.sessionInstance.type
     }
     
     var lastActivityTime: UInt64 {
@@ -159,14 +159,14 @@ extension SessionManager {
     }
     
     func updateSessionStart(isSessionStrat: Bool) {
-        guard self.sessionInstance.isSessionStart != isSessionStrat else { return }
+        guard self.sessionInstance.isStart != isSessionStrat else { return }
         
         self.sessionState.dispatch(action: UpdateIsSessionStartAction(isSessionStart: isSessionStrat))
         self.sessionInstance.storeIsSessionStart(isSessionStart: isSessionStrat, storage: self.storage)
     }
     
     private func updateSessionType(type: SessionType) {
-        guard self.sessionInstance.sessionType != type else { return }
+        guard self.sessionInstance.type != type else { return }
         
         self.sessionState.dispatch(action: UpdateSessionTypeAction(sessionType: type))
         self.sessionInstance.storeSessionType(type: type, storage: self.storage)

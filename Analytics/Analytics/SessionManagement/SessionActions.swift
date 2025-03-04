@@ -20,7 +20,7 @@ struct UpdateSessionIdAction: StateAction {
     
     func reduce(currentState: SessionInfo) -> SessionInfo {
         var updatedState = currentState
-        updatedState.sessionId = sessionId
+        updatedState.id = sessionId
         return updatedState
     }
 }
@@ -38,7 +38,7 @@ struct UpdateIsSessionStartAction: StateAction {
     
     func reduce(currentState: SessionInfo) -> SessionInfo {
         var updatedState = currentState
-        updatedState.isSessionStart = isSessionStart
+        updatedState.isStart = isSessionStart
         return updatedState
     }
 }
@@ -56,7 +56,7 @@ struct UpdateSessionTypeAction: StateAction {
     
     func reduce(currentState: SessionInfo) -> SessionInfo {
         var updatedState = currentState
-        updatedState.sessionType = sessionType
+        updatedState.type = sessionType
         return updatedState
     }
 }
@@ -67,9 +67,9 @@ struct EndSessionAction: StateAction {
     typealias T = SessionInfo
     
     func reduce(currentState: SessionInfo) -> SessionInfo {
-        return SessionInfo(sessionId: SessionConstants.defaultSessionId,
-                           sessionType: SessionConstants.defaultSessionType,
-                           isSessionStart: SessionConstants.defaultIsSessionStart,
+        return SessionInfo(id: SessionConstants.defaultSessionId,
+                           type: SessionConstants.defaultSessionType,
+                           isStart: SessionConstants.defaultIsSessionStart,
                            lastActivityTime: SessionConstants.defaultSessionLastActivityTime)
     }
 }

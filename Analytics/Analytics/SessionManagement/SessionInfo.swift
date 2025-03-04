@@ -12,24 +12,24 @@ import Foundation
  A struct encapsulates session-related information.
  */
 struct SessionInfo {
-    var sessionId: UInt64 = SessionConstants.defaultSessionId
-    var sessionType: SessionType = SessionConstants.defaultSessionType
-    var isSessionStart: Bool = SessionConstants.defaultIsSessionStart
+    var id: UInt64 = SessionConstants.defaultSessionId
+    var type: SessionType = SessionConstants.defaultSessionType
+    var isStart: Bool = SessionConstants.defaultIsSessionStart
     var lastActivityTime: UInt64 = SessionConstants.defaultSessionLastActivityTime
     
     static func initializeState(_ storage: KeyValueStorage) -> SessionInfo {
         var state = SessionInfo()
         
         if let sessionIdValue: String = storage.read(key: Constants.StorageKeys.sessionId), let sessionId = UInt64(sessionIdValue) {
-            state.sessionId = sessionId
+            state.id = sessionId
         }
         
         if let isManualSession: Bool = storage.read(key: Constants.StorageKeys.isManualSession) {
-            state.sessionType = isManualSession ? .manual : .automatic
+            state.type = isManualSession ? .manual : .automatic
         }
         
         if let isSessionStart: Bool = storage.read(key: Constants.StorageKeys.isSessionStart) {
-            state.isSessionStart = isSessionStart
+            state.isStart = isSessionStart
         }
         
         if let lastActivityTimeValue: String = storage.read(key: Constants.StorageKeys.lastActivityTime), let lastActivityTime = UInt64(lastActivityTimeValue) {
