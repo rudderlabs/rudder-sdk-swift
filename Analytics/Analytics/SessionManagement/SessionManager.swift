@@ -57,7 +57,7 @@ final class SessionManager {
     }
     
     func refreshSession() {
-        guard self.sessionId != SessionConstants.defaultSessionId else { return }
+        guard let currentSessionId = self.sessionId, currentSessionId != SessionConstants.defaultSessionId else { return }
         self.startSession(id: SessionManager.generatedSessionId, type: self.sessionType)
     }
     
