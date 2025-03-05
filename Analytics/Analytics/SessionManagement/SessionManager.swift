@@ -62,9 +62,12 @@ final class SessionManager {
     }
     
     func ensureAutomaticSession() {
-        guard self.sessionCofiguration.automaticSessionTracking else { return }
-        if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
-            self.startSession(id: Self.generatedSessionId, type: .automatic)
+        if self.sessionCofiguration.automaticSessionTracking {
+            if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
+                self.startSession(id: Self.generatedSessionId, type: .automatic)
+            }
+        } else if self.sessionId != nil, self.sessionType == .automatic {
+            self.endSession()
         }
     }
     
