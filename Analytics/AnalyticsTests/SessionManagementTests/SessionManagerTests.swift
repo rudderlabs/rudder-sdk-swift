@@ -103,6 +103,25 @@ final class SessionManagerTests: XCTestCase {
         }
     }
     
+    func test_ensureAutomaticSession_EndsSessionWhenTrackingDisabled() {
+        given("A session manager with an active automatic session but tracking disabled") {
+            guard let storage else { XCTFail("Storage not initialized"); return }
+            
+            let configuration = SessionConfiguration(automaticSessionTracking: false)
+            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
+        
+            manager.startSession(id: 12345, type: .automatic)            
+            
+            when("Ensuring automatic session") {
+                manager.ensureAutomaticSession()
+                
+                then("The session should be ended") {
+                    XCTAssertNil(manager.sessionId, "Session should be ended when automatic tracking is disabled")
+                }
+            }
+        }
+    }
+    
     func test_appBackgroundAndForeground_SessionTimeoutBehavior() {
         given("A session manager with automatic tracking enabled") {
             guard let storage else { XCTFail("Storage not initialized"); return }
@@ -132,7 +151,9 @@ final class SessionManagerTests: XCTestCase {
             }
             
             when("The app comes back to the foreground before timeout") {
-                sleep(1) // Simulating time passing (depends on session timeout duration)
+                let timeInterval = manager.monotonicCurrentTime - 1000
+                manager.updateSessionLastActivityTime(timeInterval)
+                
                 NotificationCenter.default.post(name: foregroundNotification, object: nil)
                 
                 then("A new session should not be started") {
@@ -143,7 +164,10 @@ final class SessionManagerTests: XCTestCase {
             
             when("The app comes back to the foreground after timeout") {
                 NotificationCenter.default.post(name: backgroundNotification, object: nil)
-                sleep(2) // Simulating time passing (depends on session timeout duration)
+                
+                let timeInterval = manager.monotonicCurrentTime - 3000
+                manager.updateSessionLastActivityTime(timeInterval)
+                
                 NotificationCenter.default.post(name: foregroundNotification, object: nil)
                 
                 then("A new session should be started if timed out") {
@@ -154,6 +178,7 @@ final class SessionManagerTests: XCTestCase {
         }
     }
     
+    // TODO: This test case will be moved to observer pattern in future..
     func testAttachObservers_RegistersNotifications() {
         given("A session manager instance") {
             guard let storage else { XCTFail("Storage not initialized"); return }
@@ -173,6 +198,7 @@ final class SessionManagerTests: XCTestCase {
         }
     }
     
+    // TODO: This section will be moved to observer pattern in future..
     func testDetachObservers_RemovesNotifications() {
         given("A session manager with active observers") {
             guard let storage else { XCTFail("Storage not initialized"); return }

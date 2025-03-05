@@ -77,7 +77,7 @@ final class SessionManager {
 }
 
 // MARK: - Observers
-
+// TODO: This section will be moved to observer pattern in future..
 extension SessionManager {
     
     func attachObservers() {
@@ -175,8 +175,8 @@ extension SessionManager {
         self.sessionInstance.storeSessionType(type: type, storage: self.storage)
     }
     
-    func updateSessionLastActivityTime() {
-        let lastActivityTime = self.monotonicCurrentTime
+    func updateSessionLastActivityTime(_ time: UInt64? = nil) {
+        let lastActivityTime = time ?? self.monotonicCurrentTime
         self.sessionState.dispatch(action: UpdateSessionLastActivityAction(lastActivityTime: lastActivityTime))
         self.sessionInstance.storeSessionActivity(time: lastActivityTime, storage: self.storage)
     }
