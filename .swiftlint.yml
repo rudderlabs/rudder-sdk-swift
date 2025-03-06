@@ -3,6 +3,7 @@ disabled_rules:
     - redundant_string_enum_value  # Disables the rule that flags redundant string enum values
     - file_length  # Disables the rule that flags files that are too large
     - trailing_whitespace  # Disables the rule that flags trailing whitespace
+    - void_function_in_ternary # Disables the rule that prohibits using void-returning functions within a ternary operator
 
 # Enable additional rules
 opt_in_rules:

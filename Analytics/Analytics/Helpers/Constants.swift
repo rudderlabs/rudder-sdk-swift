@@ -58,6 +58,9 @@ extension Constants {
         /// Key for storing session state.
         static let isSessionStart = "is_session_start"
         
+        /// Key for storing session last activity time.
+        static let lastActivityTime = "last_activity_time"
+        
         /// Private initializer to prevent instantiation.
         private init() {
             /* Prevent instantiation (no-op) */
@@ -144,6 +147,12 @@ extension Constants {
         
         /// Default setting for collecting device identifiers.
         public static let willCollectDeviceId: Bool = true
+        
+        /// Default setting for indicating whether session tracking should be automatic.
+        public static let automaticSessionTrackingStatus: Bool = true
+        
+        /// Default setting for session timeout duration in milliseconds(5 minutes).
+        public static let sessionTimeoutInMillis: UInt64 = 300_000
         
         /// Default query parameters added to requests.
         static let queryParams = ["p": "ios", "v": "\(RSVersion)"]

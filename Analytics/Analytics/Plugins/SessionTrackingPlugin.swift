@@ -25,13 +25,16 @@ final class SessionTrackingPlugin: Plugin {
     var prepareSessionInfo: [String: Any] {
         var info: [String: Any] = [:]
         guard let sessionManager = self.analytics?.sessionManager, let sessionId = sessionManager.sessionId else { return info }
-        info["sessionId"] = String(sessionId)
+        info["sessionId"] = sessionId
         
         if sessionManager.isSessionStart {
             info["sessionStart"] = true
             sessionManager.updateSessionStart(isSessionStrat: false)
         }
         
+        if sessionManager.sessionType == .automatic {
+            sessionManager.updateSessionLastActivityTime()
+        }
         return info
     }
 }
