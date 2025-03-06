@@ -84,15 +84,15 @@ final class SessionManagerTests: XCTestCase {
         }
     }
     
-    func test_ensureAutomaticSession_StartsNewSessionWhenNeeded() {
+    func test_automaticSession_StartsNewSessionWhenNeeded() {
         given("A session manager with automatic session tracking enabled") {
             guard let storage else { XCTFail("Storage not initialized"); return }
             
             let configuration = SessionConfiguration(automaticSessionTracking: true)
             let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
             
-            when("Ensuring automatic session while there is no active session") {
-                manager.ensureAutomaticSession()
+            when("Start automatic session while there is no active session") {
+                manager.startAutomaticSessionIfNeeded()
                 
                 then("A new session should be started") {
                     XCTAssertNotNil(manager.sessionId, "A session should be started")
@@ -103,7 +103,7 @@ final class SessionManagerTests: XCTestCase {
         }
     }
     
-    func test_ensureAutomaticSession_EndsSessionWhenTrackingDisabled() {
+    func test_automaticSession_EndsSessionWhenTrackingDisabled() {
         given("A session manager with an active automatic session but tracking disabled") {
             guard let storage else { XCTFail("Storage not initialized"); return }
             
@@ -112,8 +112,8 @@ final class SessionManagerTests: XCTestCase {
         
             manager.startSession(id: 12345, type: .automatic)            
             
-            when("Ensuring automatic session") {
-                manager.ensureAutomaticSession()
+            when("Validate the automatic session") {
+                manager.startAutomaticSessionIfNeeded()
                 
                 then("The session should be ended") {
                     XCTAssertNil(manager.sessionId, "Session should be ended when automatic tracking is disabled")

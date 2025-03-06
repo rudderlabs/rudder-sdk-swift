@@ -40,7 +40,7 @@ final class SessionManager {
         self.sessionCofiguration = sessionConfiguration
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
         
-        self.ensureAutomaticSession()
+        self.startAutomaticSessionIfNeeded()
     }
     
     func startSession(id: UInt64, type: SessionType) {
@@ -61,7 +61,7 @@ final class SessionManager {
         self.startSession(id: SessionManager.generatedSessionId, type: self.sessionType)
     }
     
-    func ensureAutomaticSession() {
+    func startAutomaticSessionIfNeeded() {
         if self.sessionCofiguration.automaticSessionTracking {
             if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
                 self.startSession(id: Self.generatedSessionId, type: .automatic)
