@@ -40,7 +40,7 @@ final class SessionManager {
         self.sessionCofiguration = sessionConfiguration
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
         
-        self.ensureAutomaticSession()
+        self.startAutomaticSessionIfNeeded()
     }
     
     func startSession(id: UInt64, type: SessionType) {
@@ -57,14 +57,17 @@ final class SessionManager {
     }
     
     func refreshSession() {
-        guard self.sessionId != SessionConstants.defaultSessionId else { return }
+        guard let currentSessionId = self.sessionId, currentSessionId != SessionConstants.defaultSessionId else { return }
         self.startSession(id: SessionManager.generatedSessionId, type: self.sessionType)
     }
     
-    func ensureAutomaticSession() {
-        guard self.sessionCofiguration.automaticSessionTracking else { return }
-        if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
-            self.startSession(id: Self.generatedSessionId, type: .automatic)
+    func startAutomaticSessionIfNeeded() {
+        if self.sessionCofiguration.automaticSessionTracking {
+            if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
+                self.startSession(id: Self.generatedSessionId, type: .automatic)
+            }
+        } else if self.sessionId != nil, self.sessionType == .automatic {
+            self.endSession()
         }
     }
     
@@ -74,7 +77,7 @@ final class SessionManager {
 }
 
 // MARK: - Observers
-
+// TODO: This section will be moved to observer pattern in future..
 extension SessionManager {
     
     func attachObservers() {
@@ -172,8 +175,8 @@ extension SessionManager {
         self.sessionInstance.storeSessionType(type: type, storage: self.storage)
     }
     
-    func updateSessionLastActivityTime() {
-        let lastActivityTime = self.monotonicCurrentTime
+    func updateSessionLastActivityTime(_ time: UInt64? = nil) {
+        let lastActivityTime = time ?? self.monotonicCurrentTime
         self.sessionState.dispatch(action: UpdateSessionLastActivityAction(lastActivityTime: lastActivityTime))
         self.sessionInstance.storeSessionActivity(time: lastActivityTime, storage: self.storage)
     }
