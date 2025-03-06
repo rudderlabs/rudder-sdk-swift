@@ -31,9 +31,9 @@ final class SessionInfoTests: XCTestCase {
                 let sessionInfo = SessionInfo.initializeState(storage)
                 
                 then("SessionInfo initialized with default values") {
-                    XCTAssertTrue(sessionInfo.sessionId == SessionConstants.defaultSessionId)
-                    XCTAssertTrue(sessionInfo.isSessionStart == SessionConstants.defaultIsSessionStart)
-                    XCTAssertTrue(sessionInfo.sessionType == SessionConstants.defaultSessionType)
+                    XCTAssertTrue(sessionInfo.id == SessionConstants.defaultSessionId)
+                    XCTAssertTrue(sessionInfo.isStart == SessionConstants.defaultIsSessionStart)
+                    XCTAssertTrue(sessionInfo.type == SessionConstants.defaultSessionType)
                 }
             }
         }
@@ -55,9 +55,9 @@ final class SessionInfoTests: XCTestCase {
                 let sessionInfo = SessionInfo.initializeState(storage)
                 
                 then("UserIdentity initialized with storage values") {
-                    XCTAssertTrue(String(sessionInfo.sessionId) == expectedSessionId)
-                    XCTAssertTrue(sessionInfo.isSessionStart == expectedIsSessionStart)
-                    XCTAssertTrue(sessionInfo.sessionType == expectedSessionType)
+                    XCTAssertTrue(String(sessionInfo.id) == expectedSessionId)
+                    XCTAssertTrue(sessionInfo.isStart == expectedIsSessionStart)
+                    XCTAssertTrue(sessionInfo.type == expectedSessionType)
                 }
             }
         }

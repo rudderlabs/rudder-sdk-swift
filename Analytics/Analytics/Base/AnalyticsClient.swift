@@ -60,7 +60,7 @@ public class AnalyticsClient {
 extension AnalyticsClient {
     
     /**
-     Starts a session with a given `sessionId`, or generates one if not provided.
+     Starts a session with a given `id`, or generates one if not provided.
      
      - Parameter sessionId: An optional `UInt64` session ID. If `nil`, a new session ID is generated.
      */
