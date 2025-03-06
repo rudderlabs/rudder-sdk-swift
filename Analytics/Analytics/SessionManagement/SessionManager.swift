@@ -150,6 +150,19 @@ extension SessionManager {
     var isSessionTimedOut: Bool {
         return (self.monotonicCurrentTime - self.lastActivityTime) > self.automaticSessionTimeout
     }
+    
+    var lastActivityTime: UInt64 {
+        return self.sessionInstance.lastActivityTime
+    }
+    
+    var monotonicCurrentTime: UInt64 {
+        let millisecondsInSecond: TimeInterval = 1000.0
+        return UInt64(ProcessInfo.processInfo.systemUptime * millisecondsInSecond)
+    }
+    
+    var isSessionTimedOut: Bool {
+        return (self.monotonicCurrentTime - self.lastActivityTime) > self.automaticSessionTimeout
+    }
 }
 
 // MARK: - Session Action Handlers
