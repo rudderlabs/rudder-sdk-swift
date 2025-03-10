@@ -11,6 +11,7 @@ import UIKit
 import AppKit
 #endif
 
+// MARK: - AppLifecycleEvent
 enum AppLifecycleEvent: CaseIterable {
     case background
     case terminate
@@ -33,10 +34,25 @@ enum AppLifecycleEvent: CaseIterable {
     }
 }
 
+// MARK: - LifecycleEventObserver
 protocol LifecycleEventObserver: AnyObject {
     func onBackground()
     func onForeground()
     func onTerminate()
+}
+
+extension LifecycleEventObserver {
+    func onBackground() {
+        /* Default implementation (no-op) */
+    }
+    
+    func onForeground() {
+        /* Default implementation (no-op) */
+    }
+    
+    func onTerminate() {
+        /* Default implementation (no-op) */
+    }
 }
 
 // Wrapper to hold weak references to observers

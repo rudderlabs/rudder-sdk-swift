@@ -6,7 +6,10 @@
 //
 
 import Foundation
-
+// MARK: - LifecycleManagementPlugin
+/**
+ A plugin created to manage app lifecycle events.
+ */
 final class LifecycleManagementPlugin: Plugin {
     var pluginType: PluginType = .manual
     var analytics: AnalyticsClient?
@@ -24,6 +27,7 @@ final class LifecycleManagementPlugin: Plugin {
     }
 }
 
+// MARK: - Event Management
 extension LifecycleManagementPlugin {
     func registerNotifications() {
         AppLifecycleEvent.allCases.forEach { event in
