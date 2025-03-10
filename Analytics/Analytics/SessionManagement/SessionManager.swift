@@ -30,11 +30,7 @@ final class SessionManager {
     
     private var sessionInstance: SessionInfo { self.sessionState.state.value }
     private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
-    
-    var backgroundObserver: NSObjectProtocol?
-    var foregroundObserver: NSObjectProtocol?
-    var terminateObserver: NSObjectProtocol?
-    
+        
     var analytics: AnalyticsClient
     
     init(analytics: AnalyticsClient) {
@@ -134,7 +130,8 @@ extension SessionManager {
     }
     
     var isSessionTimedOut: Bool {
-        return (self.monotonicCurrentTime - self.lastActivityTime) > self.automaticSessionTimeout
+        let timeDifference = self.monotonicCurrentTime &- self.lastActivityTime // Safe subtraction
+        return timeDifference > self.automaticSessionTimeout
     }
 }
 
