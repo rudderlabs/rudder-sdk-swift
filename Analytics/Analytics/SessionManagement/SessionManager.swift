@@ -35,9 +35,12 @@ final class SessionManager {
     var foregroundObserver: NSObjectProtocol?
     var terminateObserver: NSObjectProtocol?
     
-    init(storage: KeyValueStorage, sessionConfiguration: SessionConfiguration) {
-        self.storage = storage
-        self.sessionCofiguration = sessionConfiguration
+    var analytics: AnalyticsClient
+    
+    init(analytics: AnalyticsClient) {
+        self.analytics = analytics
+        self.storage = analytics.configuration.storage
+        self.sessionCofiguration = analytics.configuration.sessionConfiguration
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
         
         self.startAutomaticSessionIfNeeded()
@@ -77,44 +80,27 @@ final class SessionManager {
 }
 
 // MARK: - Observers
-// TODO: This section will be moved to observer pattern in future..
-extension SessionManager {
+extension SessionManager: LifecycleEventObserver {
     
     func attachObservers() {
-        self.detachObservers()  // Prevent duplicate observers
-        
-#if os(macOS)
-        // macOS (AppKit)
-        let backgroundNotification = NSApplication.didResignActiveNotification
-        let terminateNotification = NSApplication.willTerminateNotification
-        let foregroundNotification = NSApplication.didBecomeActiveNotification
-#else
-        // iOS, tvOS, watchOS, and Mac Catalyst (UIKit)
-        let backgroundNotification = UIApplication.didEnterBackgroundNotification
-        let terminateNotification = UIApplication.willTerminateNotification
-        let foregroundNotification = UIApplication.willEnterForegroundNotification
-#endif
-        
-        let handleBackground: (Notification) -> Void = { [weak self] _ in
-            self?.updateSessionLastActivityTime()
-        }
-        
-        let handleForeground: (Notification) -> Void = { [weak self] _ in
-            guard let self = self, self.sessionId != nil, self.sessionType == .automatic, self.isSessionTimedOut else { return }
-            self.startSession(id: Self.generatedSessionId, type: .automatic)
-        }
-        
-        let notificationCenter = NotificationCenter.default
-        self.backgroundObserver = notificationCenter.addObserver(forName: backgroundNotification, object: nil, queue: .main, using: handleBackground)
-        self.foregroundObserver = notificationCenter.addObserver(forName: foregroundNotification, object: nil, queue: .main, using: handleForeground)
-        self.terminateObserver = notificationCenter.addObserver(forName: terminateNotification, object: nil, queue: .main, using: handleBackground)
+        self.analytics.lifecycleManagementPlugin?.addObserver(self)
     }
     
     func detachObservers() {
-        [backgroundObserver, foregroundObserver, terminateObserver].compactMap { $0 }.forEach { NotificationCenter.default.removeObserver($0) }
-        backgroundObserver = nil
-        foregroundObserver = nil
-        terminateObserver = nil
+        self.analytics.lifecycleManagementPlugin?.removeObserver(self)
+    }
+    
+    func onBackground() {
+        self.updateSessionLastActivityTime()
+    }
+    
+    func onForeground() {
+        guard self.sessionId != nil, self.sessionType == .automatic, self.isSessionTimedOut else { return }
+        self.startSession(id: Self.generatedSessionId, type: .automatic)
+    }
+    
+    func onTerminate() {
+        self.updateSessionLastActivityTime()
     }
 }
 
