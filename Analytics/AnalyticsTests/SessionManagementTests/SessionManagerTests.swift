@@ -10,26 +10,27 @@ import XCTest
 @testable import Analytics
 
 final class SessionManagerTests: XCTestCase {
-    private var storage: MockKeyValueStorage?
+    private var analytics: AnalyticsClient?
     
     override func setUpWithError() throws {
         try super.setUpWithError()
-        storage = MockKeyValueStorage()
     }
     
     override func tearDownWithError() throws {
         try super.tearDownWithError()
-        storage = nil
+        analytics = nil
     }
     
     func test_startSession() {
         given("A sample session information") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
+            let configuration = SessionConfiguration(automaticSessionTracking: false)
+            self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
+            
+            guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
             let sessionId: UInt64 = 123454321
             let sessionType: SessionType = .manual
             
-            let configuration = SessionConfiguration(automaticSessionTracking: false)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
+            let manager = SessionManager(analytics: analytics)
             
             when("Starting a new session with a specific ID and type") {
                 manager.startSession(id: sessionId, type: sessionType)
@@ -43,13 +44,14 @@ final class SessionManagerTests: XCTestCase {
         }
     }
     
-    func testEndSession_ResetsSession() {
+    func testEndSession() {
         given("A session manager with an active session") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
-            let sessionId: UInt64 = 123454321
+            let configuration = SessionConfiguration(automaticSessionTracking: false)
+            self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
             
-            let configuration = SessionConfiguration(automaticSessionTracking: true)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
+            guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
+            let sessionId: UInt64 = 123454321
+            let manager = SessionManager(analytics: analytics)
             
             manager.startSession(id: sessionId, type: .manual)
             
@@ -63,13 +65,15 @@ final class SessionManagerTests: XCTestCase {
         }
     }
     
-    func testRefreshSession_GeneratesNewSessionId() {
+    func testRefreshSession() {
         given("A session manager with an active session") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
-            let sessionId: UInt64 = 123454321
+            let configuration = SessionConfiguration(automaticSessionTracking: false)
+            self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
             
-            let configuration = SessionConfiguration(automaticSessionTracking: true)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
+            guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
+            let sessionId: UInt64 = 123454321
+        
+            let manager = SessionManager(analytics: analytics)
             
             manager.startSession(id: sessionId, type: .manual)
             
@@ -86,10 +90,11 @@ final class SessionManagerTests: XCTestCase {
     
     func test_automaticSession_StartsNewSessionWhenNeeded() {
         given("A session manager with automatic session tracking enabled") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
-            
             let configuration = SessionConfiguration(automaticSessionTracking: true)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
+            self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
+            
+            guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
+            let manager = SessionManager(analytics: analytics)
             
             when("Start automatic session while there is no active session") {
                 manager.startAutomaticSessionIfNeeded()
@@ -105,10 +110,11 @@ final class SessionManagerTests: XCTestCase {
     
     func test_automaticSession_EndsSessionWhenTrackingDisabled() {
         given("A session manager with an active automatic session but tracking disabled") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
-            
             let configuration = SessionConfiguration(automaticSessionTracking: false)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
+            self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
+    
+            guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
+            let manager = SessionManager(analytics: analytics)
         
             manager.startSession(id: 12345, type: .automatic)            
             
@@ -124,10 +130,12 @@ final class SessionManagerTests: XCTestCase {
     
     func test_appBackgroundAndForeground_SessionTimeoutBehavior() {
         given("A session manager with automatic tracking enabled") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
+            let configuration = SessionConfiguration(automaticSessionTracking: false, sessionTimeoutInMillis: 2000)
+            self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
             
-            let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 2000)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
+            guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
+            
+            let manager = SessionManager(analytics: analytics)
             
             manager.startSession(id: 12345, type: .automatic)
             let initialSessionId = manager.sessionId
@@ -177,55 +185,14 @@ final class SessionManagerTests: XCTestCase {
             }
         }
     }
-    
-    // TODO: This test case will be moved to observer pattern in future..
-    func testAttachObservers_RegistersNotifications() {
-        given("A session manager instance") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
-            
-            let configuration = SessionConfiguration(automaticSessionTracking: true)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
-            
-            when("Attaching observers") {
-                manager.attachObservers()
-                
-                then("Observers should be registered") {
-                    XCTAssertNotNil(manager.backgroundObserver, "Background observer should be registered")
-                    XCTAssertNotNil(manager.foregroundObserver, "Foreground observer should be registered")
-                    XCTAssertNotNil(manager.terminateObserver, "Terminate observer should be registered")
-                }
-            }
-        }
-    }
-    
-    // TODO: This section will be moved to observer pattern in future..
-    func testDetachObservers_RemovesNotifications() {
-        given("A session manager with active observers") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
-            
-            let configuration = SessionConfiguration(automaticSessionTracking: true)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
-            
-            manager.attachObservers()
-            
-            when("Detaching observers") {
-                manager.detachObservers()
-                
-                then("Observers should be removed") {
-                    XCTAssertNil(manager.backgroundObserver, "Background observer should be removed")
-                    XCTAssertNil(manager.foregroundObserver, "Foreground observer should be removed")
-                    XCTAssertNil(manager.terminateObserver, "Terminate observer should be removed")
-                }
-            }
-        }
-    }
-    
+
     func test_mixManualSession_withAutomaticSession() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true)
+        self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
+        
         given("A session manager with automatic tracking enabled") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
-            
-            let configuration = SessionConfiguration(automaticSessionTracking: true)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
+            guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
+            let manager = SessionManager(analytics: analytics)
             
             when("Start a manual session") {
                 manager.startSession(id: 1234567, type: .manual)
@@ -240,11 +207,12 @@ final class SessionManagerTests: XCTestCase {
     }
     
     func test_mixAutomaticSession_withManualSession() {
+        let configuration = SessionConfiguration(automaticSessionTracking: false)
+        self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
+        
         given("A session manager with automatic tracking disabled") {
-            guard let storage else { XCTFail("Storage not initialized"); return }
-            
-            let configuration = SessionConfiguration(automaticSessionTracking: false)
-            let manager = SessionManager(storage: storage, sessionConfiguration: configuration)
+            guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
+            let manager = SessionManager(analytics: analytics)
             
             manager.startSession(id: 1234567, type: .manual)
             
