@@ -91,6 +91,7 @@
 		53C7A76E2D2EF2A200F1325E /* UserIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A76D2D2EF2A200F1325E /* UserIdentityTests.swift */; };
 		53CC470B2D7F034100025427 /* LifecycleManagementUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC470A2D7F034100025427 /* LifecycleManagementUtils.swift */; };
 		53CC470E2D7F03CD00025427 /* LifecycleManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC470D2D7F03CD00025427 /* LifecycleManagementPlugin.swift */; };
+		53CC47122D7F6CB000025427 /* LifecycleManagementPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC47112D7F6CB000025427 /* LifecycleManagementPluginTests.swift */; };
 		53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */; };
 		53CF353D2D1050CA0062096B /* NetworkInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */; };
 		53E9C2F02D5C8000009A3A53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E9C2EF2D5C8000009A3A53 /* Constants.swift */; };
@@ -209,6 +210,7 @@
 		53C7A76D2D2EF2A200F1325E /* UserIdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdentityTests.swift; sourceTree = "<group>"; };
 		53CC470A2D7F034100025427 /* LifecycleManagementUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleManagementUtils.swift; sourceTree = "<group>"; };
 		53CC470D2D7F03CD00025427 /* LifecycleManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleManagementPlugin.swift; sourceTree = "<group>"; };
+		53CC47112D7F6CB000025427 /* LifecycleManagementPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleManagementPluginTests.swift; sourceTree = "<group>"; };
 		53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPlugin.swift; sourceTree = "<group>"; };
 		53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPluginTests.swift; sourceTree = "<group>"; };
 		53E9C2EF2D5C8000009A3A53 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 				5388D5B82D0C4EA6000966AB /* LibraryInfoPluginTests.swift */,
 				53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */,
 				53EF70B82D7077B700C2A829 /* SessionTrackingPluginTests.swift */,
+				53CC47112D7F6CB000025427 /* LifecycleManagementPluginTests.swift */,
 			);
 			path = PluginTests;
 			sourceTree = "<group>";
@@ -819,6 +822,7 @@
 				5388D5A22D0A10AE000966AB /* LocaleInfoPluginTests.swift in Sources */,
 				53CF353D2D1050CA0062096B /* NetworkInfoPluginTests.swift in Sources */,
 				533485912C9AB3170029F88E /* MockProvider.swift in Sources */,
+				53CC47122D7F6CB000025427 /* LifecycleManagementPluginTests.swift in Sources */,
 				5388D5B72D0C4DF5000966AB /* AppInfoPluginTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
