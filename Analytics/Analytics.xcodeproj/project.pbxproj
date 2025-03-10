@@ -89,6 +89,8 @@
 		53C7A7682D2DA2C400F1325E /* StateManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */; };
 		53C7A76C2D2EEE3200F1325E /* UserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A76B2D2EEE3200F1325E /* UserIdentity.swift */; };
 		53C7A76E2D2EF2A200F1325E /* UserIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C7A76D2D2EF2A200F1325E /* UserIdentityTests.swift */; };
+		53CC470B2D7F034100025427 /* LifecycleManagementUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC470A2D7F034100025427 /* LifecycleManagementUtils.swift */; };
+		53CC470E2D7F03CD00025427 /* LifecycleManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC470D2D7F03CD00025427 /* LifecycleManagementPlugin.swift */; };
 		53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */; };
 		53CF353D2D1050CA0062096B /* NetworkInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */; };
 		53E9C2F02D5C8000009A3A53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E9C2EF2D5C8000009A3A53 /* Constants.swift */; };
@@ -205,6 +207,8 @@
 		53C7A7672D2DA2C400F1325E /* StateManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagementTests.swift; sourceTree = "<group>"; };
 		53C7A76B2D2EEE3200F1325E /* UserIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdentity.swift; sourceTree = "<group>"; };
 		53C7A76D2D2EF2A200F1325E /* UserIdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdentityTests.swift; sourceTree = "<group>"; };
+		53CC470A2D7F034100025427 /* LifecycleManagementUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleManagementUtils.swift; sourceTree = "<group>"; };
+		53CC470D2D7F03CD00025427 /* LifecycleManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleManagementPlugin.swift; sourceTree = "<group>"; };
 		53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPlugin.swift; sourceTree = "<group>"; };
 		53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPluginTests.swift; sourceTree = "<group>"; };
 		53E9C2EF2D5C8000009A3A53 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -289,6 +293,7 @@
 				5387E8952CA322EC00DB1C49 /* Network */,
 				53C7A7662D2D9CE400F1325E /* StateManagement */,
 				536C99132D6CE4300005F8AD /* SessionManagement */,
+				53CC470C2D7F034C00025427 /* LifecycleManagement */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -478,6 +483,7 @@
 				5388D5B22D0C2081000966AB /* LibraryInfoPlugin.swift */,
 				53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */,
 				53BAEF722D6DCEE60068EF5D /* SessionTrackingPlugin.swift */,
+				53CC470D2D7F03CD00025427 /* LifecycleManagementPlugin.swift */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -541,6 +547,14 @@
 				531744732D528F7500E98C03 /* ResetUserIdentityActionTests.swift */,
 			);
 			path = StateManagementTests;
+			sourceTree = "<group>";
+		};
+		53CC470C2D7F034C00025427 /* LifecycleManagement */ = {
+			isa = PBXGroup;
+			children = (
+				53CC470A2D7F034100025427 /* LifecycleManagementUtils.swift */,
+			);
+			path = LifecycleManagement;
 			sourceTree = "<group>";
 		};
 		53EF70B32D6F343800C2A829 /* SessionManagementTests */ = {
@@ -742,6 +756,7 @@
 				53F864BA2D23EC430078D68E /* GroupEvent.swift in Sources */,
 				5383D2F02D4141AD00291B00 /* SetUserIdAndTraitsAction.swift in Sources */,
 				5388D5A52D0A12AD000966AB /* OSInfoPlugin.swift in Sources */,
+				53CC470B2D7F034100025427 /* LifecycleManagementUtils.swift in Sources */,
 				537E10B92D456385002074AE /* AliasEvent.swift in Sources */,
 				539E54042C98B05300982E95 /* StorageModels.swift in Sources */,
 				5388D5A92D0A1364000966AB /* TimeZoneInfoPlugin.swift in Sources */,
@@ -759,6 +774,7 @@
 				53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */,
 				53A22A3D2C7472850059D6FE /* Event.swift in Sources */,
 				5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */,
+				53CC470E2D7F03CD00025427 /* LifecycleManagementPlugin.swift in Sources */,
 				53BE94E92C921B9E0004E75A /* KeyValueStore.swift in Sources */,
 				5369DD9C2D1B2B6B00DEC550 /* NetworkInfoPluginUtils.swift in Sources */,
 				5383D2E82D40133700291B00 /* IdentifyEvent.swift in Sources */,
