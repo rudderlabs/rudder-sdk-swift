@@ -25,19 +25,21 @@ enum SessionType {
 final class SessionManager {
     
     private var storage: KeyValueStorage
-    private var sessionCofiguration: SessionConfiguration
     private var sessionState: StateImpl<SessionInfo>
     
     private var sessionInstance: SessionInfo { self.sessionState.state.value }
+    private var sessionCofiguration: SessionConfiguration { analytics.configuration.sessionConfiguration }
     private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
     
     var backgroundObserver: NSObjectProtocol?
     var foregroundObserver: NSObjectProtocol?
     var terminateObserver: NSObjectProtocol?
     
-    init(storage: KeyValueStorage, sessionConfiguration: SessionConfiguration) {
-        self.storage = storage
-        self.sessionCofiguration = sessionConfiguration
+    var analytics: AnalyticsClient
+    
+    init(analytics: AnalyticsClient) {
+        self.analytics = analytics
+        self.storage = analytics.configuration.storage
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
         
         self.startAutomaticSessionIfNeeded()
