@@ -22,9 +22,9 @@ final class SessionTrackingPluginTests: XCTestCase {
     
     func test_intercept_trackEvent() {
         given("Manual session is started..") {
-            self.analytics.sessionManager.startSession(id: 1231231234, type: .manual)
             let plugin = SessionTrackingPlugin()
             plugin.setup(analytics: self.analytics)
+            plugin.sessionManager?.startSession(id: 1231231234, type: .manual)
             let track = TrackEvent(event: "Track")
             
             when("A simple track event is sent to the session tracking plugin..") {
@@ -41,9 +41,9 @@ final class SessionTrackingPluginTests: XCTestCase {
     
     func test_intercept_mulitple_groupEvent() {
         given("Start the session and trigger the first group event to the session tracking plugin..") {
-            self.analytics.sessionManager.startSession(id: 1231231234, type: .manual)
             let plugin = SessionTrackingPlugin()
             plugin.setup(analytics: self.analytics)
+            plugin.sessionManager?.startSession(id: 1231231234, type: .manual)
             
             let group = GroupEvent(groupId: "Group_id")
             var interceptedEvent = plugin.intercept(event: group)
