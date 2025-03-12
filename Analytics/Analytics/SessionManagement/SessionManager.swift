@@ -40,7 +40,6 @@ final class SessionManager {
     init(analytics: AnalyticsClient) {
         self.analytics = analytics
         self.storage = analytics.configuration.storage
-        self.sessionCofiguration = analytics.configuration.sessionConfiguration
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
         
         self.startAutomaticSessionIfNeeded()
@@ -83,11 +82,11 @@ final class SessionManager {
 extension SessionManager: LifecycleEventObserver {
     
     func attachObservers() {
-        self.analytics.lifecycleManagementPlugin?.addObserver(self)
+//        self.analytics.lifecycleManagementPlugin?.addObserver(self)
     }
     
     func detachObservers() {
-        self.analytics.lifecycleManagementPlugin?.removeObserver(self)
+//        self.analytics.lifecycleManagementPlugin?.removeObserver(self)
     }
     
     func onBackground() {

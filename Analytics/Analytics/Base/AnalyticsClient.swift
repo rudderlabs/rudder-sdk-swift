@@ -49,7 +49,6 @@ public class AnalyticsClient {
         self.configuration = configuration
         self.processEventChannel = AsyncChannel(capacity: Int.max)
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
-        self.lifecycleManagementPlugin = LifecycleManagementPlugin()
         self.setup()
     }
 }
@@ -219,7 +218,6 @@ extension AnalyticsClient {
         self.collectConfiguration()
         self.startProcessingEvents()
         
-        self.sessionManager = SessionManager(analytics: self)
         self.pluginChain = PluginChain(analytics: self)
         
         // Add default plugins
