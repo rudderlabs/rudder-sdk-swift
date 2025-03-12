@@ -1,23 +1,23 @@
 //
-//  LifecycleManagementPlugin.swift
+//  LifeCycleObserver.swift
 //  Analytics
 //
-//  Created by Satheesh Kannan on 10/03/25.
+//  Created by Satheesh Kannan on 12/03/25.
 //
 
 import Foundation
-// MARK: - LifecycleManagementPlugin
+
+// MARK: - LifecycleObserver
 /**
  A plugin created to manage app lifecycle events.
  */
-final class LifecycleManagementPlugin: Plugin {
-    var pluginType: PluginType = .manual
+final class LifecycleObserver {
     var analytics: AnalyticsClient?
     
     private var observers: [WeakObserver] = []
     private var notificationObservers: [NSObjectProtocol] = []
     
-    func setup(analytics: AnalyticsClient) {
+    init(analytics: AnalyticsClient) {
         self.analytics = analytics
         self.registerNotifications()
     }
@@ -28,7 +28,7 @@ final class LifecycleManagementPlugin: Plugin {
 }
 
 // MARK: - Event Management
-extension LifecycleManagementPlugin {
+extension LifecycleObserver {
     func registerNotifications() {
         AppLifecycleEvent.allCases.forEach { event in
             let observer = NotificationCenter.default.addObserver(forName: event.notificationName, object: nil, queue: .main) { _ in
@@ -46,7 +46,7 @@ extension LifecycleManagementPlugin {
         }
     }
     
-    private func notifyObservers(_ action: (LifecycleEventObserver) -> Void) {
+    private func notifyObservers(_ action: (LifecycleEventListener) -> Void) {
         observers.removeAll { $0.observer == nil } // Clean up nil references
         
         for wrapper in observers {
@@ -58,12 +58,12 @@ extension LifecycleManagementPlugin {
 }
 
 // MARK: - Observer Management
-extension LifecycleManagementPlugin {
-    func addObserver(_ observer: LifecycleEventObserver) {
+extension LifecycleObserver {
+    func addObserver(_ observer: LifecycleEventListener) {
         observers.append(WeakObserver(observer))
     }
     
-    func removeObserver(_ observer: LifecycleEventObserver) {
+    func removeObserver(_ observer: LifecycleEventListener) {
         observers.removeAll { $0.observer === observer }
     }
 }
