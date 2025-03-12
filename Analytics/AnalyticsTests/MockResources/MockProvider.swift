@@ -29,6 +29,12 @@ final class MockProvider {
         let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storage: storage, flushPolicies: [])
         return AnalyticsClient(configuration: configuration)
     }
+    
+    static func clientWithSessionConfig(config: SessionConfiguration) -> AnalyticsClient{
+        let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .memory)
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storage: storage, flushPolicies: [], sessionConfiguration: config)
+        return AnalyticsClient(configuration: configuration)
+    }
 }
 
 // MARK: - MockProvider(Extension)

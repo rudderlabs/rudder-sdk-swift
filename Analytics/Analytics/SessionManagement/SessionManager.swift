@@ -25,19 +25,21 @@ enum SessionType {
 final class SessionManager {
     
     private var storage: KeyValueStorage
-    private var sessionCofiguration: SessionConfiguration
     private var sessionState: StateImpl<SessionInfo>
     
     private var sessionInstance: SessionInfo { self.sessionState.state.value }
+    private var sessionCofiguration: SessionConfiguration { analytics.configuration.sessionConfiguration }
     private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
     
     var backgroundObserver: NSObjectProtocol?
     var foregroundObserver: NSObjectProtocol?
     var terminateObserver: NSObjectProtocol?
     
-    init(storage: KeyValueStorage, sessionConfiguration: SessionConfiguration) {
-        self.storage = storage
-        self.sessionCofiguration = sessionConfiguration
+    var analytics: AnalyticsClient
+    
+    init(analytics: AnalyticsClient) {
+        self.analytics = analytics
+        self.storage = analytics.configuration.storage
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
         
         self.startAutomaticSessionIfNeeded()
@@ -136,19 +138,6 @@ extension SessionManager {
     
     var sessionType: SessionType {
         return self.sessionInstance.type
-    }
-    
-    var lastActivityTime: UInt64 {
-        return self.sessionInstance.lastActivityTime
-    }
-    
-    var monotonicCurrentTime: UInt64 {
-        let millisecondsInSecond: TimeInterval = 1000.0
-        return UInt64(ProcessInfo.processInfo.systemUptime * millisecondsInSecond)
-    }
-    
-    var isSessionTimedOut: Bool {
-        return (self.monotonicCurrentTime - self.lastActivityTime) > self.automaticSessionTimeout
     }
     
     var lastActivityTime: UInt64 {

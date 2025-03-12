@@ -23,7 +23,7 @@ public class AnalyticsClient {
     /**
      The chain of plugins used for processing events and managing additional analytics functionality.
      */
-    private var pluginChain: PluginChain!
+    private var pluginChain: PluginChain?
     
     /**
      The property used to manage and observe changes to the user's identity state within the application.
@@ -36,9 +36,9 @@ public class AnalyticsClient {
     private var processEventChannel: AsyncChannel<Event>
 
     /**
-     The session manager responsible for handling session operations.
+     The plugin responsible for handling session related operations.
      */
-    internal var sessionManager: SessionManager
+    internal var sessionTrackingPlugin: SessionTrackingPlugin = SessionTrackingPlugin()
     
     /**
      Initializes the `AnalyticsClient` with the given configuration.
@@ -47,7 +47,6 @@ public class AnalyticsClient {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
-        self.sessionManager = SessionManager(storage: configuration.storage, sessionConfiguration: configuration.sessionConfiguration)
         self.processEventChannel = AsyncChannel(capacity: Int.max)
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         
@@ -71,14 +70,14 @@ extension AnalyticsClient {
         }
         
         let newSessionId = sessionId ?? SessionManager.generatedSessionId
-        self.sessionManager.startSession(id: newSessionId, type: .manual)
+        self.sessionTrackingPlugin.sessionManager?.startSession(id: newSessionId, type: .manual)
     }
     
     /**
      Ends the current session.
      */
     public func endSession() {
-        self.sessionManager.endSession()
+        self.sessionTrackingPlugin.sessionManager?.endSession()
     }
     
     /**
@@ -86,7 +85,7 @@ extension AnalyticsClient {
      
      - Returns: The `UInt64` value if active session exists else `nil`.
      */
-    public var sessionId: UInt64? { self.sessionManager.sessionId }
+    public var sessionId: UInt64? { self.sessionTrackingPlugin.sessionManager?.sessionId }
 }
 
 // MARK: - Events
@@ -174,7 +173,7 @@ extension AnalyticsClient {
      Flushes all pending events by triggering the flush method on all plugins in the plugin chain.
      */
     public func flush() {
-        self.pluginChain.apply { plugin in
+        self.pluginChain?.apply { plugin in
             if let plugin = plugin as? RudderStackDataPlanePlugin {
                 plugin.flush()
             }
@@ -190,7 +189,7 @@ extension AnalyticsClient {
         self.userIdentityState.dispatch(action: ResetUserIdentityAction(clearAnonymousId: clearAnonymousId))
         self.userIdentityState.state.value.resetUserIdentity(clearAnonymousId: clearAnonymousId, storage: self.storage)
         
-        self.sessionManager.refreshSession()
+        self.sessionTrackingPlugin.sessionManager?.refreshSession()
     }
 }
 
@@ -204,7 +203,7 @@ extension AnalyticsClient {
      - Parameter plugin: The plugin to be added.
      */
     public func addPlugin(_ plugin: Plugin) {
-        self.pluginChain.add(plugin: plugin)
+        self.pluginChain?.add(plugin: plugin)
     }
 }
 
@@ -223,16 +222,16 @@ extension AnalyticsClient {
         self.pluginChain = PluginChain(analytics: self)
         
         // Add default plugins
-        self.pluginChain.add(plugin: RudderStackDataPlanePlugin())
-        self.pluginChain.add(plugin: DeviceInfoPlugin())
-        self.pluginChain.add(plugin: LocaleInfoPlugin())
-        self.pluginChain.add(plugin: OSInfoPlugin())
-        self.pluginChain.add(plugin: ScreenInfoPlugin())
-        self.pluginChain.add(plugin: TimeZoneInfoPlugin())
-        self.pluginChain.add(plugin: AppInfoPlugin())
-        self.pluginChain.add(plugin: LibraryInfoPlugin())
-        self.pluginChain.add(plugin: NetworkInfoPlugin())
-        self.pluginChain.add(plugin: SessionTrackingPlugin())
+        self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())
+        self.pluginChain?.add(plugin: DeviceInfoPlugin())
+        self.pluginChain?.add(plugin: LocaleInfoPlugin())
+        self.pluginChain?.add(plugin: OSInfoPlugin())
+        self.pluginChain?.add(plugin: ScreenInfoPlugin())
+        self.pluginChain?.add(plugin: TimeZoneInfoPlugin())
+        self.pluginChain?.add(plugin: AppInfoPlugin())
+        self.pluginChain?.add(plugin: LibraryInfoPlugin())
+        self.pluginChain?.add(plugin: NetworkInfoPlugin())
+        self.pluginChain?.add(plugin: self.sessionTrackingPlugin)
     }
     
     /**
@@ -242,7 +241,7 @@ extension AnalyticsClient {
         Task {
             for await event in self.processEventChannel.stream {
                 let updatedEvent = event.updateEventData()
-                self.pluginChain.process(event: updatedEvent)
+                self.pluginChain?.process(event: updatedEvent)
             }
         }
     }
