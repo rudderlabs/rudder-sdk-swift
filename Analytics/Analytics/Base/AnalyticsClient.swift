@@ -36,14 +36,9 @@ public class AnalyticsClient {
     private var processEventChannel: AsyncChannel<Event>
 
     /**
-     The session manager responsible for handling session operations.
+     The plugin responsible for handling session related operations.
      */
-    internal var sessionManager: SessionManager?
-    
-    /**
-     The plugin is responsible for handling lifecycle management operations.
-     */
-    internal var lifecycleManagementPlugin: LifecycleManagementPlugin?
+    internal var sessionTrackingPlugin: SessionTrackingPlugin = SessionTrackingPlugin()
     
     /**
      Initializes the `AnalyticsClient` with the given configuration.
@@ -75,14 +70,14 @@ extension AnalyticsClient {
         }
         
         let newSessionId = sessionId ?? SessionManager.generatedSessionId
-        self.sessionManager?.startSession(id: newSessionId, type: .manual)
+        self.sessionTrackingPlugin.sessionManager?.startSession(id: newSessionId, type: .manual)
     }
     
     /**
      Ends the current session.
      */
     public func endSession() {
-        self.sessionManager?.endSession()
+        self.sessionTrackingPlugin.sessionManager?.endSession()
     }
     
     /**
@@ -90,7 +85,7 @@ extension AnalyticsClient {
      
      - Returns: The `UInt64` value if active session exists else `nil`.
      */
-    public var sessionId: UInt64? { self.sessionManager?.sessionId }
+    public var sessionId: UInt64? { self.sessionTrackingPlugin.sessionManager?.sessionId }
 }
 
 // MARK: - Events
@@ -194,7 +189,7 @@ extension AnalyticsClient {
         self.userIdentityState.dispatch(action: ResetUserIdentityAction(clearAnonymousId: clearAnonymousId))
         self.userIdentityState.state.value.resetUserIdentity(clearAnonymousId: clearAnonymousId, storage: self.storage)
         
-        self.sessionManager?.refreshSession()
+        self.sessionTrackingPlugin.sessionManager?.refreshSession()
     }
 }
 
@@ -237,12 +232,7 @@ extension AnalyticsClient {
         self.pluginChain?.add(plugin: AppInfoPlugin())
         self.pluginChain?.add(plugin: LibraryInfoPlugin())
         self.pluginChain?.add(plugin: NetworkInfoPlugin())
-        self.pluginChain?.add(plugin: SessionTrackingPlugin())
-        
-        // Lifecycle Management Plugin
-        if let lifecyclePlugin = self.lifecycleManagementPlugin {
-            self.pluginChain?.add(plugin: lifecyclePlugin)
-        }
+        self.pluginChain?.add(plugin: self.sessionTrackingPlugin)
     }
     
     /**

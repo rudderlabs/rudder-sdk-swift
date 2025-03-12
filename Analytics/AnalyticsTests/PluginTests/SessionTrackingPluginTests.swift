@@ -25,6 +25,7 @@ final class SessionTrackingPluginTests: XCTestCase {
             self.analytics.sessionManager?.startSession(id: 1231231234, type: .manual)
             let plugin = SessionTrackingPlugin()
             plugin.setup(analytics: self.analytics)
+            plugin.sessionManager?.startSession(id: 1231231234, type: .manual)
             let track = TrackEvent(event: "Track")
             
             when("A simple track event is sent to the session tracking plugin..") {
@@ -44,6 +45,7 @@ final class SessionTrackingPluginTests: XCTestCase {
             self.analytics.sessionManager?.startSession(id: 1231231234, type: .manual)
             let plugin = SessionTrackingPlugin()
             plugin.setup(analytics: self.analytics)
+            plugin.sessionManager?.startSession(id: 1231231234, type: .manual)
             
             let group = GroupEvent(groupId: "Group_id")
             var interceptedEvent = plugin.intercept(event: group)
