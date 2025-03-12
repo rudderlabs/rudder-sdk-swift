@@ -10,13 +10,13 @@ import XCTest
 @testable import Analytics
 
 final class LifecycleManagementPluginTests: XCTestCase {
-    private var plugin: LifecycleManagementPlugin!
+    private var plugin: LifecycleTrackingPlugin!
     private var mockAnalyticsClient: AnalyticsClient!
     private var mockObserver: LifecycleEventObserverMock!
 
     override func setUp() {
         super.setUp()
-        plugin = LifecycleManagementPlugin()
+        plugin = LifecycleTrackingPlugin()
         mockAnalyticsClient = MockProvider.clientWithMemoryStorage
         mockObserver = LifecycleEventObserverMock()
     }
@@ -29,7 +29,7 @@ final class LifecycleManagementPluginTests: XCTestCase {
     }
 
     func test_setup_registersNotifications() {
-            given("A LifecycleManagementPlugin instance is set up") {
+            given("A LifecycleTrackingPlugin instance is set up") {
                 let notificationCenter = NotificationCenter.default
 
                 when("setup is called") {
@@ -94,7 +94,7 @@ final class LifecycleManagementPluginTests: XCTestCase {
 
 // MARK: - Mocks
 
-final class LifecycleEventObserverMock: LifecycleEventObserver {
+final class LifecycleEventObserverMock: LifecycleEventListener {
     var onBackgroundCalled = false
     var onTerminateCalled = false
     var onForegroundCalled = false

@@ -34,14 +34,14 @@ enum AppLifecycleEvent: CaseIterable {
     }
 }
 
-// MARK: - LifecycleEventObserver
-protocol LifecycleEventObserver: AnyObject {
+// MARK: - LifecycleEventListener
+protocol LifecycleEventListener: AnyObject {
     func onBackground()
     func onForeground()
     func onTerminate()
 }
 
-extension LifecycleEventObserver {
+extension LifecycleEventListener {
     func onBackground() {
         /* Default implementation (no-op) */
     }
@@ -57,9 +57,9 @@ extension LifecycleEventObserver {
 
 // Wrapper to hold weak references to observers
 class WeakObserver {
-    weak var observer: LifecycleEventObserver?
+    weak var observer: LifecycleEventListener?
     
-    init(_ observer: LifecycleEventObserver) {
+    init(_ observer: LifecycleEventListener) {
         self.observer = observer
     }
 }

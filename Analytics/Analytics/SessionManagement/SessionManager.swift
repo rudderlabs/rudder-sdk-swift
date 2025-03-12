@@ -31,10 +31,6 @@ final class SessionManager {
     private var sessionCofiguration: SessionConfiguration { analytics.configuration.sessionConfiguration }
     private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
     
-    var backgroundObserver: NSObjectProtocol?
-    var foregroundObserver: NSObjectProtocol?
-    var terminateObserver: NSObjectProtocol?
-    
     var analytics: AnalyticsClient
     
     init(analytics: AnalyticsClient) {
@@ -79,7 +75,7 @@ final class SessionManager {
 }
 
 // MARK: - Observers
-extension SessionManager: LifecycleEventObserver {
+extension SessionManager: LifecycleEventListener {
     
     func attachObservers() {
 //        self.analytics.lifecycleManagementPlugin?.addObserver(self)
