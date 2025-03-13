@@ -43,6 +43,7 @@ extension LifecycleObserver {
         case .background: notifyObservers { $0.onBackground() }
         case .terminate: notifyObservers { $0.onTerminate() }
         case .foreground: notifyObservers { $0.onForeground() }
+        case .becomeActive: notifyObservers { $0.onBecomeActive() }
         }
     }
     
