@@ -148,6 +148,9 @@ extension Constants {
         /// Default setting for collecting device identifiers.
         public static let willCollectDeviceId: Bool = true
         
+        /// Default setting for tracking application lifecycle events.
+        public static let willTrackLifecycleEvents: Bool = true
+        
         /// Default setting for indicating whether session tracking should be automatic.
         public static let automaticSessionTrackingStatus: Bool = true
         

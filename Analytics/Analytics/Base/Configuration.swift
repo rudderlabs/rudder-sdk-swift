@@ -60,6 +60,11 @@ public class Configuration {
     var collectDeviceId: Bool
     
     /**
+     A boolean flag indicating whether the SDK should track application lifecycle events. Defaults to `true`.
+     */
+    var trackApplicationLifecycleEvents: Bool
+    
+    /**
      A configuration instance for managing session settings.
      */
     var sessionConfiguration: SessionConfiguration
@@ -79,8 +84,9 @@ public class Configuration {
        - storage: The storage mechanism for persisting data.
        - flushPolicies: The flush policies for event flushing.
        - collectDeviceId: A flag to enable automatic collection of the device ID. Defaults to `true`.
+       - trackApplicationLifecycleEvents: A flag to enable automatic tracking of the application lifecycle events. Defaults to `true`.
        - sessionConfiguration: A configuration instance for managing session settings.
-     
+ 
      - Returns: An instance of `Configuration` with the specified settings.
      */
     public init(
@@ -93,6 +99,7 @@ public class Configuration {
         storage: Storage? = nil,
         flushPolicies: [FlushPolicy] = Constants.DefaultConfig.flushPolicies,
         collectDeviceId: Bool = Constants.DefaultConfig.willCollectDeviceId,
+        trackApplicationLifecycleEvents: Bool = Constants.DefaultConfig.willTrackLifecycleEvents,
         sessionConfiguration: SessionConfiguration = SessionConfiguration()
     ) {
         self.writeKey = writeKey
@@ -104,6 +111,7 @@ public class Configuration {
         self.storage = storage ?? BasicStorage(writeKey: writeKey)
         self.flushPolicies = flushPolicies
         self.collectDeviceId = collectDeviceId
+        self.trackApplicationLifecycleEvents = trackApplicationLifecycleEvents
         self.sessionConfiguration = sessionConfiguration
     }
 }
