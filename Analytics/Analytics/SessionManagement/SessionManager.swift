@@ -78,11 +78,11 @@ final class SessionManager {
 extension SessionManager: LifecycleEventListener {
     
     func attachObservers() {
-//        self.analytics.lifecycleManagementPlugin?.addObserver(self)
+        self.analytics.lifecycleObserver?.addObserver(self)
     }
     
     func detachObservers() {
-//        self.analytics.lifecycleManagementPlugin?.removeObserver(self)
+        self.analytics.lifecycleObserver?.removeObserver(self)
     }
     
     func onBackground() {
