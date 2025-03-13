@@ -16,6 +16,7 @@ enum AppLifecycleEvent: CaseIterable {
     case background
     case terminate
     case foreground
+    case becomeActive
     
     var notificationName: Notification.Name {
 #if os(macOS)
@@ -23,12 +24,14 @@ enum AppLifecycleEvent: CaseIterable {
         case .background: return NSApplication.didResignActiveNotification
         case .terminate: return NSApplication.willTerminateNotification
         case .foreground: return NSApplication.didBecomeActiveNotification
+        case .becomeActive: return NSApplication.didBecomeActiveNotification
         }
 #else
         switch self {
         case .background: return UIApplication.didEnterBackgroundNotification
         case .terminate: return UIApplication.willTerminateNotification
         case .foreground: return UIApplication.willEnterForegroundNotification
+        case .becomeActive: return UIApplication.didBecomeActiveNotification
         }
 #endif
     }
@@ -39,6 +42,7 @@ protocol LifecycleEventListener: AnyObject {
     func onBackground()
     func onForeground()
     func onTerminate()
+    func onBecomeActive()
 }
 
 extension LifecycleEventListener {
@@ -51,6 +55,10 @@ extension LifecycleEventListener {
     }
     
     func onTerminate() {
+        /* Default implementation (no-op) */
+    }
+    
+    func onBecomeActive() {
         /* Default implementation (no-op) */
     }
 }
