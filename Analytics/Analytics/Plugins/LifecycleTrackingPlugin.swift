@@ -13,11 +13,90 @@ import Foundation
  */
 final class LifecycleTrackingPlugin: Plugin {
     var pluginType: PluginType = .manual
+    
     var analytics: AnalyticsClient?
+    private var appVersion: AppVersion?
+    
+    @Synchronized private var isFirstLaunch = true
     
     func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
+        
+        self.appVersion = self.getAppVersion()
+        self.updateAppVersion()
+        
+        if analytics.configuration.trackApplicationLifecycleEvents {
+            self.trackAppInstallationEvents()
+            analytics.lifecycleObserver?.addObserver(self)
+        }
     }
     
-    deinit {}
+    deinit {
+        analytics?.lifecycleObserver?.removeObserver(self)
+    }
+}
+
+extension LifecycleTrackingPlugin: LifecycleEventListener {
+    func onBecomeActive() {
+        var properties: [String: Any] = [:]
+        if isFirstLaunch {
+            properties["version"] = appVersion?.currentVersionName
+        }
+        properties["from_background"] = !isFirstLaunch
+        isFirstLaunch = false
+        self.analytics?.track(name: "Application Opened", properties: properties)
+    }
+    
+    func onBackground() {
+        self.analytics?.track(name: "Application Backgrounded")
+    }
+}
+
+extension LifecycleTrackingPlugin {
+    func trackAppInstallationEvents() {
+        guard let appVersion else { return }
+        if appVersion.previousBuild == -1 {
+            self.analytics?.track(name: "Application Installed", properties: [
+                "version": appVersion.currentVersionName ?? "",
+                "build": appVersion.currentBuild
+            ])
+        } else {
+            guard appVersion.currentBuild != appVersion.previousBuild else { return }
+            self.analytics?.track(name: "Application Updated", properties: [
+                "version": appVersion.currentVersionName ?? "",
+                "build": appVersion.currentBuild,
+                "previous_version": appVersion.previousVersionName ?? "",
+                "previous_build": appVersion.previousBuild
+            ])
+        }
+    }
+}
+
+extension LifecycleTrackingPlugin {
+    private func getAppVersion() -> AppVersion {
+        let bundle = Bundle.main
+        let currentVersionName = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        let currentBuild = Int(bundle.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "0") ?? 0
+        
+        return AppVersion(
+            currentVersionName: currentVersionName,
+            currentBuild: currentBuild,
+            previousVersionName: self.analytics?.storage.read(key: Constants.StorageKeys.appVersion),
+            previousBuild: self.analytics?.storage.read(key: Constants.StorageKeys.appBuild) ?? -1
+        )
+    }
+    
+    private func updateAppVersion() {
+        if let versionName = self.appVersion?.currentVersionName {
+            self.analytics?.storage.write(value: versionName, key: Constants.StorageKeys.appVersion)
+        }
+        self.analytics?.storage.write(value: self.appVersion?.currentBuild, key: Constants.StorageKeys.appBuild)
+    }
+}
+
+struct AppVersion {
+    var currentVersionName: String?
+    var currentBuild: Int
+    var previousVersionName: String?
+    var previousBuild: Int
 }
