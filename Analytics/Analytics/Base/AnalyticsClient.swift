@@ -73,7 +73,7 @@ extension AnalyticsClient {
             return
         }
         
-        let newSessionId = sessionId ?? SessionManager.generatedSessionId
+        let newSessionId = sessionId ?? SessionHandler.generatedSessionId
         self.sessionTrackingPlugin.sessionManager?.startSession(id: newSessionId, type: .manual)
     }
     
