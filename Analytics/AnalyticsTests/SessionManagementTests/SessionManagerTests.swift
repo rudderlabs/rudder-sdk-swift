@@ -51,7 +51,6 @@ final class SessionManagerTests: XCTestCase {
 
             guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
             let sessionId: UInt64 = 123454321
-            let manager = SessionManager(analytics: analytics)
             
             let manager = SessionManager(analytics: analytics)
             manager.startSession(id: sessionId, type: .manual)
@@ -73,9 +72,7 @@ final class SessionManagerTests: XCTestCase {
             
             guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
             let sessionId: UInt64 = 123454321
-        
-            let manager = SessionManager(analytics: analytics)
-            
+                    
             let manager = SessionManager(analytics: analytics)
             manager.startSession(id: sessionId, type: .manual)
             
@@ -96,7 +93,6 @@ final class SessionManagerTests: XCTestCase {
             self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
             
             guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
-            let manager = SessionManager(analytics: analytics)
             
             when("Start automatic session while there is no active session") {
                 let manager = SessionManager(analytics: analytics)
@@ -188,49 +184,6 @@ final class SessionManagerTests: XCTestCase {
         }
     }
     
-    // TODO: This test case will be moved to observer pattern in future..
-    func testAttachObservers_RegistersNotifications() {
-        given("A session manager instance") {
-            let configuration = SessionConfiguration(automaticSessionTracking: true)
-            self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
-            
-            guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
-            let manager = SessionManager(analytics: analytics)
-            
-            when("Attaching observers") {
-                manager.attachObservers()
-                
-                then("Observers should be registered") {
-                    XCTAssertNotNil(manager.backgroundObserver, "Background observer should be registered")
-                    XCTAssertNotNil(manager.foregroundObserver, "Foreground observer should be registered")
-                    XCTAssertNotNil(manager.terminateObserver, "Terminate observer should be registered")
-                }
-            }
-        }
-    }
-    
-    // TODO: This section will be moved to observer pattern in future..
-    func testDetachObservers_RemovesNotifications() {
-        given("A session manager with active observers") {
-            let configuration = SessionConfiguration(automaticSessionTracking: true)
-            self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
-            
-            guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
-            
-            let manager = SessionManager(analytics: analytics)
-            manager.attachObservers()
-            
-            when("Detaching observers") {
-                manager.detachObservers()
-                
-                then("Observers should be removed") {
-                    XCTAssertNil(manager.backgroundObserver, "Background observer should be removed")
-                    XCTAssertNil(manager.foregroundObserver, "Foreground observer should be removed")
-                    XCTAssertNil(manager.terminateObserver, "Terminate observer should be removed")
-                }
-            }
-        }
-    }
 
     func test_mixManualSession_withAutomaticSession() {
         let configuration = SessionConfiguration(automaticSessionTracking: true)
