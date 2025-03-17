@@ -267,6 +267,14 @@
 			path = Policies;
 			sourceTree = "<group>";
 		};
+		533E48C52D8806A5001A1F37 /* LifecycleManagementTests */ = {
+			isa = PBXGroup;
+			children = (
+				533E48C32D880410001A1F37 /* LifecycleObserverTests.swift */,
+			);
+			path = LifecycleManagementTests;
+			sourceTree = "<group>";
+		};
 		5351AA5C2C6BE95D003C3C47 = {
 			isa = PBXGroup;
 			children = (
@@ -440,7 +448,7 @@
 				53C7A7692D2DA2CB00F1325E /* StateManagementTests */,
 				538E2B202CECFFF700B550BC /* MockResources */,
 				53EF70B32D6F343800C2A829 /* SessionManagementTests */,
-				533E48C32D880410001A1F37 /* LifecycleObserverTests.swift */,
+				533E48C52D8806A5001A1F37 /* LifecycleManagementTests */,
 			);
 			path = AnalyticsTests;
 			sourceTree = "<group>";
