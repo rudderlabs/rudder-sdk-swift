@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - LifecycleObserver
 /**
- A plugin created to manage app lifecycle events.
+ A class created to observe app lifecycle events.
  */
 final class LifecycleObserver {
     var analytics: AnalyticsClient?

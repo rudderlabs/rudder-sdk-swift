@@ -63,7 +63,10 @@ extension LifecycleEventListener {
     }
 }
 
-// Wrapper to hold weak references to observers
+// MARK: - WeakObserver
+/**
+ Wrapper to hold weak references to observers
+ */
 class WeakObserver {
     weak var observer: LifecycleEventListener?
     
