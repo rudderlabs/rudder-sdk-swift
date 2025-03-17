@@ -37,8 +37,10 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         XCTAssertNotNil(plugin.appVersion)
         
         print("Then the plugin should track installation event")
-        guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
-        XCTAssert(eventName == LifecycleEvent.applicationInstalled.rawValue)
+        let eventNames = await fetchTrackedEventNames()
+        guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
+        
+        XCTAssert(eventNames.first == LifecycleEvent.applicationInstalled.rawValue && eventNames.last == LifecycleEvent.applicationOpened.rawValue)
     }
     
     func test_application_opened_event() async {
@@ -51,8 +53,10 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         plugin.onBecomeActive()
         
         print("Then the plugin should track application opened event")
-        guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
-        XCTAssert(eventName == LifecycleEvent.applicationOpened.rawValue)
+        let eventNames = await fetchTrackedEventNames()
+        guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
+        
+        XCTAssert(eventNames.last == LifecycleEvent.applicationOpened.rawValue)
     }
     
     func test_application_backgrounded_event() async {
@@ -65,8 +69,9 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         plugin.onBackground()
         
         print("Then the plugin should track application backgrounded event")
-        guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
-        XCTAssert(eventName == LifecycleEvent.applicationBackgrounded.rawValue)
+        let eventNames = await fetchTrackedEventNames()
+        guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
+        XCTAssert(eventNames.last == LifecycleEvent.applicationBackgrounded.rawValue)
     }
     
     func test_application_updated_event() async {
@@ -85,23 +90,25 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         plugin.trackAppInstallationEvents()
         
         print("Then the plugin should track application updated event")
-        guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
-        XCTAssert(eventName == LifecycleEvent.applicationUpdated.rawValue)
+        let eventNames = await fetchTrackedEventNames()
+        guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
+        XCTAssert(eventNames.last == LifecycleEvent.applicationUpdated.rawValue)
     }
     
-    private func readCurrentEventName() async -> String? {
+    private func fetchTrackedEventNames() async -> [String] {
         try? await Task.sleep(nanoseconds: 300_000_000)
-        guard let analyticsMock else { return nil }
+        guard let analyticsMock else { return [] }
+
         await analyticsMock.configuration.storage.rollover()
+        
         let dataItems = await analyticsMock.configuration.storage.read().dataItems
-        let batch = dataItems.first?.batch ?? ""
-        guard let batchDict = batch.toDictionary?["batch"] as? [[String: Any]],
-                let eventDict = batchDict.last,
-                let eventName = eventDict["event"] as? String else { return nil }
+        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        let eventNames = batchData.compactMap { $0["event"] as? String }
         
         for item in dataItems {
             await analyticsMock.configuration.storage.remove(eventReference: item.reference)
         }
-        return eventName
+
+        return eventNames
     }
 }
