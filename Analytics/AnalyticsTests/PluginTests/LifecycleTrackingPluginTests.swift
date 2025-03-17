@@ -1,5 +1,5 @@
 //
-//  LifecycleManagementPluginTests.swift
+//  LifecycleTrackingPluginTests.swift
 //  AnalyticsTests
 //
 //  Created by Satheesh Kannan on 11/03/25.
@@ -9,7 +9,7 @@ import UIKit
 import XCTest
 @testable import Analytics
 
-final class LifecycleManagementPluginTests: XCTestCase {
+final class LifecycleTrackingPluginTests: XCTestCase {
     private var plugin: LifecycleTrackingPlugin!
     private var mockAnalyticsClient: AnalyticsClient!
     private var mockObserver: LifecycleEventObserverMock!
