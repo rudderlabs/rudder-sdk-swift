@@ -13,11 +13,9 @@ import Foundation
 final class SessionTrackingPlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: AnalyticsClient?
-    var sessionManager: SessionHandler?
     
     func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
-        self.sessionManager = SessionHandler(analytics: analytics)
     }
     
     func intercept(event: any Event) -> (any Event)? {
@@ -26,16 +24,16 @@ final class SessionTrackingPlugin: Plugin {
     
     var prepareSessionInfo: [String: Any] {
         var info: [String: Any] = [:]
-        guard let sessionManager = self.sessionManager, let sessionId = sessionManager.sessionId else { return info }
+        guard let sessionHandler = self.analytics?.sessionHandler, let sessionId = sessionHandler.sessionId else { return info }
         info["sessionId"] = sessionId
         
-        if sessionManager.isSessionStart {
+        if sessionHandler.isSessionStart {
             info["sessionStart"] = true
-            sessionManager.updateSessionStart(isSessionStrat: false)
+            sessionHandler.updateSessionStart(isSessionStrat: false)
         }
         
-        if sessionManager.sessionType == .automatic {
-            sessionManager.updateSessionLastActivityTime()
+        if sessionHandler.sessionType == .automatic {
+            sessionHandler.updateSessionLastActivityTime()
         }
         return info
     }
