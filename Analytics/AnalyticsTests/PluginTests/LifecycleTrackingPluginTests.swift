@@ -10,96 +10,98 @@ import XCTest
 @testable import Analytics
 
 final class LifecycleTrackingPluginTests: XCTestCase {
-    private var plugin: LifecycleTrackingPlugin!
-    private var mockAnalyticsClient: AnalyticsClient!
-    private var mockObserver: LifecycleEventObserverMock!
-
+    var analyticsMock: AnalyticsClient?
+    var plugin: LifecycleTrackingPlugin!
+    
     override func setUp() {
         super.setUp()
+        analyticsMock = MockProvider.clientWithMemoryStorage
         plugin = LifecycleTrackingPlugin()
-        mockAnalyticsClient = MockProvider.clientWithMemoryStorage
-        mockObserver = LifecycleEventObserverMock()
     }
-
+    
     override func tearDown() {
+        analyticsMock = nil
         plugin = nil
-        mockAnalyticsClient = nil
-        mockObserver = nil
         super.tearDown()
     }
-
-    func test_setup_registersNotifications() {
-            given("A LifecycleTrackingPlugin instance is set up") {
-                let notificationCenter = NotificationCenter.default
-
-                when("setup is called") {
-                    plugin.setup(analytics: mockAnalyticsClient)
-                    plugin.addObserver(mockObserver)
-                    
-                    then("Observers should be notified after setup") {
-                        AppLifecycleEvent.allCases.forEach { event in
-                            notificationCenter.post(name: event.notificationName, object: nil)
-                        }
-                        XCTAssertTrue(mockObserver.onBackgroundCalled || mockObserver.onTerminateCalled || mockObserver.onForegroundCalled)
-                    }
-                }
-            }
+    
+    func test_application_installed_event() async {
+        print("Given an analytics configuration allows lifecycle tracking")
+        analyticsMock?.configuration.trackApplicationLifecycleEvents = true
+        
+        print("When the plugin setup with the given analytics configuration")
+        guard let analyticsMock else { XCTFail("No disk client"); return }
+        plugin.setup(analytics: analyticsMock)
+        
+        print("Then the app version should be initialized")
+        XCTAssertNotNil(plugin.appVersion)
+        
+        print("Then the plugin should track installation event")
+        guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
+        XCTAssert(eventName == LifecycleEvent.applicationInstalled.rawValue)
+    }
+    
+    func test_application_opened_event() async {
+        print("Given an analytics configuration allows lifecycle tracking")
+        analyticsMock?.configuration.trackApplicationLifecycleEvents = true
+        guard let analyticsMock else { XCTFail("No disk client"); return }
+        plugin.setup(analytics: analyticsMock)
+        
+        print("When the app become active")
+        plugin.onBecomeActive()
+        
+        print("Then the plugin should track application opened event")
+        guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
+        XCTAssert(eventName == LifecycleEvent.applicationOpened.rawValue)
+    }
+    
+    func test_application_backgrounded_event() async {
+        print("Given an analytics configuration allows lifecycle tracking")
+        analyticsMock?.configuration.trackApplicationLifecycleEvents = true
+        guard let analyticsMock else { XCTFail("No disk client"); return }
+        plugin.setup(analytics: analyticsMock)
+        
+        print("When the app become active")
+        plugin.onBackground()
+        
+        print("Then the plugin should track application backgrounded event")
+        guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
+        XCTAssert(eventName == LifecycleEvent.applicationBackgrounded.rawValue)
+    }
+    
+    func test_application_updated_event() async {
+        print("Given an analytics configuration allows lifecycle tracking")
+        analyticsMock?.configuration.trackApplicationLifecycleEvents = true
+        guard let analyticsMock else { XCTFail("No disk client"); return }
+        plugin.setup(analytics: analyticsMock)
+        
+        print("When the app got update")
+        plugin.appVersion = AppVersion(
+            currentVersionName: "2.0",
+            currentBuild: 20,
+            previousVersionName: "1.0",
+            previousBuild: 10
+        )
+        plugin.trackAppInstallationEvents()
+        
+        print("Then the plugin should track application updated event")
+        guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
+        XCTAssert(eventName == LifecycleEvent.applicationUpdated.rawValue)
+    }
+    
+    private func readCurrentEventName() async -> String? {
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        guard let analyticsMock else { return nil }
+        await analyticsMock.configuration.storage.rollover()
+        let dataItems = await analyticsMock.configuration.storage.read().dataItems
+        let batch = dataItems.first?.batch ?? ""
+        guard let batchDict = batch.toDictionary?["batch"] as? [[String: Any]],
+                let eventDict = batchDict.last,
+                let eventName = eventDict["event"] as? String else { return nil }
+        
+        for item in dataItems {
+            await analyticsMock.configuration.storage.remove(eventReference: item.reference)
         }
-
-        func test_addObserver_observerIsNotifiedOnEvents() {
-            given("An observer is added to the plugin") {
-                plugin.addObserver(mockObserver)
-
-                when("registerNotifications is called and a background event occurs") {
-                    plugin.registerNotifications()
-                    NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
-
-                    then("Observer should have received background event notification") {
-                        XCTAssertTrue(mockObserver.onBackgroundCalled)
-                    }
-                }
-            }
-        }
-
-        func test_removeObserver_observerIsNotNotified() {
-            given("An observer is added and then removed from the plugin") {
-                plugin.addObserver(mockObserver)
-                plugin.removeObserver(mockObserver)
-
-                when("A background event occurs") {
-                    NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
-
-                    then("Observer should not be notified after removal") {
-                        XCTAssertFalse(mockObserver.onBackgroundCalled)
-                    }
-                }
-            }
-        }
-
-        func test_pluginDeinit_removesNotificationObservers() {
-            given("A plugin instance with registered notifications") {
-                plugin.registerNotifications()
-
-                when("The plugin instance is deinitialized") {
-                    plugin = nil
-
-                    then("No crashes should occur when posting notifications") {
-                        NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
-                        NotificationCenter.default.post(name: AppLifecycleEvent.terminate.notificationName, object: nil)
-                    }
-                }
-            }
-        }
-}
-
-// MARK: - Mocks
-
-final class LifecycleEventObserverMock: LifecycleEventListener {
-    var onBackgroundCalled = false
-    var onTerminateCalled = false
-    var onForegroundCalled = false
-
-    func onBackground() { onBackgroundCalled = true }
-    func onTerminate() { onTerminateCalled = true }
-    func onForeground() { onForegroundCalled = true }
+        return eventName
+    }
 }
