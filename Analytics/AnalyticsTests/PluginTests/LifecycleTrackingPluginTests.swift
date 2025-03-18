@@ -62,7 +62,7 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         guard let analyticsMock else { XCTFail("No disk client"); return }
         plugin.setup(analytics: analyticsMock)
         
-        print("When the app become active")
+        print("When the app moves to background")
         plugin.onBackground()
         
         print("Then the plugin should track application backgrounded event")
