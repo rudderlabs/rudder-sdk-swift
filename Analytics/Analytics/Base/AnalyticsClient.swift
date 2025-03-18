@@ -38,7 +38,7 @@ public class AnalyticsClient {
     /**
      The handler instance responsible for lifecycle and session related operations.
      */
-    internal var lifecycleSessionHandler: LifecycleSessionWrapper?
+    internal var lifecycleSessionWrapper: LifecycleSessionWrapper?
     
     /**
      Initializes the `AnalyticsClient` with the given configuration.
@@ -219,7 +219,7 @@ extension AnalyticsClient {
         self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
-        self.lifecycleSessionHandler = LifecycleSessionWrapper(analytics: self)
+        self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
         
         // Add default plugins
         self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())

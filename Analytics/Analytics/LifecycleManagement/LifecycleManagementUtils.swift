@@ -95,10 +95,10 @@ class LifecycleSessionWrapper {
  */
 extension AnalyticsClient {
     var sessionHandler: SessionHandler? {
-        return self.lifecycleSessionHandler?.sessionHandler
+        return self.lifecycleSessionWrapper?.sessionHandler
     }
     
     var lifecycleObserver: LifecycleObserver? {
-        return self.lifecycleSessionHandler?.lifecycleObserver
+        return self.lifecycleSessionWrapper?.lifecycleObserver
     }
 }
