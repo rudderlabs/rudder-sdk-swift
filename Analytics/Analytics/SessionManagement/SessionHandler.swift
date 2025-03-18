@@ -37,8 +37,6 @@ final class SessionHandler {
         self.analytics = analytics
         self.storage = analytics.configuration.storage
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
-        
-        self.startAutomaticSessionIfNeeded()
     }
     
     func startSession(id: UInt64, type: SessionType) {
