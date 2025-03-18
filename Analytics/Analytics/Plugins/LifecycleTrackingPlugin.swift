@@ -26,7 +26,7 @@ final class LifecycleTrackingPlugin: Plugin {
         self.updateAppVersion()
         
         if analytics.configuration.trackApplicationLifecycleEvents {
-            self.trackAppInstallationEvents()
+            self.trackAppInstallAndUpdateEvents()
             analytics.lifecycleObserver?.addObserver(self)
         }
     }
@@ -57,15 +57,15 @@ extension LifecycleTrackingPlugin: LifecycleEventListener {
 // MARK: - Installation Events
 
 extension LifecycleTrackingPlugin {
-    func trackAppInstallationEvents() {
+    func trackAppInstallAndUpdateEvents() {
         guard let appVersion else { return }
-        if appVersion.previousBuild == -1 {
+        if appVersion.previousVersionName == nil {
             self.analytics?.track(name: LifecycleEvent.applicationInstalled.rawValue, properties: [
                 "version": appVersion.currentVersionName ?? "",
                 "build": appVersion.currentBuild
             ])
         } else {
-            guard appVersion.currentBuild != appVersion.previousBuild || appVersion.currentVersionName != appVersion.previousVersionName else { self.onBecomeActive(); return }
+            guard appVersion.currentVersionName != appVersion.previousVersionName else { self.onBecomeActive(); return }
             self.analytics?.track(name: LifecycleEvent.applicationUpdated.rawValue, properties: [
                 "version": appVersion.currentVersionName ?? "",
                 "build": appVersion.currentBuild,
