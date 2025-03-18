@@ -76,6 +76,7 @@ final class SessionHandler {
 extension SessionHandler: LifecycleEventListener {
     
     func attachObservers() {
+        self.detachObservers()
         self.analytics.lifecycleObserver?.addObserver(self)
     }
     
