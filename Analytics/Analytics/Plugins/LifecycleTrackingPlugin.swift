@@ -64,9 +64,8 @@ extension LifecycleTrackingPlugin {
                 "version": appVersion.currentVersionName ?? "",
                 "build": appVersion.currentBuild
             ])
-            self.onBecomeActive()
         } else {
-            guard appVersion.currentBuild != appVersion.previousBuild || appVersion.currentVersionName != appVersion.previousVersionName else { return }
+            guard appVersion.currentBuild != appVersion.previousBuild || appVersion.currentVersionName != appVersion.previousVersionName else { self.onBecomeActive(); return }
             self.analytics?.track(name: LifecycleEvent.applicationUpdated.rawValue, properties: [
                 "version": appVersion.currentVersionName ?? "",
                 "build": appVersion.currentBuild,
@@ -74,6 +73,7 @@ extension LifecycleTrackingPlugin {
                 "previous_build": appVersion.previousBuild
             ])
         }
+        self.onBecomeActive()
     }
 }
 
