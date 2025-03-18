@@ -83,7 +83,7 @@ final class LifecycleTrackingPluginTests: XCTestCase {
             previousVersionName: "1.0",
             previousBuild: 10
         )
-        plugin.trackAppInstallationEvents()
+        plugin.trackAppInstallAndUpdateEvents()
         
         print("Then the plugin should track application updated event")
         guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
