@@ -59,7 +59,7 @@ extension LifecycleTrackingPlugin: LifecycleEventListener {
 extension LifecycleTrackingPlugin {
     func trackAppInstallationEvents() {
         guard let appVersion else { return }
-        if appVersion.previousBuild == -1 {
+        if appVersion.previousVersionName == nil {
             self.analytics?.track(name: LifecycleEvent.applicationInstalled.rawValue, properties: [
                 "version": appVersion.currentVersionName ?? "",
                 "build": appVersion.currentBuild
