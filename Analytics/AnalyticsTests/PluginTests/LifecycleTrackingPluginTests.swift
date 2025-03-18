@@ -38,6 +38,7 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         
         print("Then the plugin should track installation event")
         guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
+        // TODO: Will be fixed in next PR...
         XCTAssert(eventName == LifecycleEvent.applicationInstalled.rawValue)
     }
     
@@ -86,6 +87,7 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         
         print("Then the plugin should track application updated event")
         guard let eventName = await readCurrentEventName() else { XCTFail("No event recorded"); return }
+        // TODO: Will be fixed in next PR...
         XCTAssert(eventName == LifecycleEvent.applicationUpdated.rawValue)
     }
     
