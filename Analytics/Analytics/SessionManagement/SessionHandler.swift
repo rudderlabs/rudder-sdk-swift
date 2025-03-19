@@ -37,8 +37,6 @@ final class SessionHandler {
         self.analytics = analytics
         self.storage = analytics.configuration.storage
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
-        
-        self.startAutomaticSessionIfNeeded()
     }
     
     func startSession(id: UInt64, type: SessionType) {
@@ -78,6 +76,7 @@ final class SessionHandler {
 extension SessionHandler: LifecycleEventListener {
     
     func attachObservers() {
+        self.detachObservers()
         self.analytics.lifecycleObserver?.addObserver(self)
     }
     

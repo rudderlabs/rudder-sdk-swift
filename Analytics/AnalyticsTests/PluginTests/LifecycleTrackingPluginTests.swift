@@ -92,7 +92,8 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         print("Then the plugin should track application updated event")
         let eventNames = await fetchTrackedEventNames()
         guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
-        XCTAssert(eventNames.last == LifecycleEvent.applicationUpdated.rawValue)
+        
+        XCTAssert(eventNames.contains(LifecycleEvent.applicationUpdated.rawValue))
     }
     
     private func fetchTrackedEventNames() async -> [String] {

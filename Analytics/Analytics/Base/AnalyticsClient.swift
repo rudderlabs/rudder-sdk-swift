@@ -36,9 +36,15 @@ public class AnalyticsClient {
     private var processEventChannel: AsyncChannel<Event>
 
     /**
-     The handler instance responsible for lifecycle and session related operations.
+         The handler instance responsible for managing lifecycle events and session-related operations.
+
+         - Note: When this property is set, `startAutomaticSessionIfNeeded()` is automatically triggered to ensure the automatic session begins as required.
      */
-    internal var lifecycleSessionWrapper: LifecycleSessionWrapper?
+    internal var lifecycleSessionWrapper: LifecycleSessionWrapper? {
+        didSet {
+            self.sessionHandler?.startAutomaticSessionIfNeeded()
+        }
+    }
     
     /**
      Initializes the `AnalyticsClient` with the given configuration.
