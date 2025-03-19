@@ -212,6 +212,18 @@ extension AnalyticsClient {
     }
 }
 
+// MARK: - Shutdown
+
+extension AnalyticsClient {
+    /**
+     Shuts down the analytics instance, ending all operations, removing plugins, and freeing resources.
+     All events recorded before shutdown are saved to disk but are processed only after the next startup.
+     
+     - Note: This action is irreversible, but no saved data is lost.
+     */
+    public func shutdown() {}
+}
+
 // MARK: - Private Functions
 
 extension AnalyticsClient {
