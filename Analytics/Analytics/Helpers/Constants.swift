@@ -36,18 +36,18 @@ extension Constants {
 // MARK: - Storage
 extension Constants {
     /// Constants related to storage keys used within the SDK.
-    public struct StorageKeys {
+    struct StorageKeys {
         /// Key for storing the anonymous user identifier.
-        public static let anonymousId = "anonymous_id"
+        static let anonymousId = "anonymous_id"
         
         /// Key for storing the user identifier.
-        public static let userId = "user_id"
+        static let userId = "user_id"
         
         /// Key for storing user traits.
-        public static let traits = "traits"
+        static let traits = "traits"
         
         /// Key for storing source configuration data.
-        public static let sourceConfig = "source_config"
+        static let sourceConfig = "source_config"
         
         /// Key for storing session id.
         static let sessionId = "session_id"
@@ -60,6 +60,12 @@ extension Constants {
         
         /// Key for storing session last activity time.
         static let lastActivityTime = "last_activity_time"
+        
+        /// Key for storing app version.
+        static let appVersion = "rudder.app_version"
+        
+        /// Key for storing app build.
+        static let appBuild = "rudder.app_build"
         
         /// Private initializer to prevent instantiation.
         private init() {
@@ -147,6 +153,9 @@ extension Constants {
         
         /// Default setting for collecting device identifiers.
         public static let willCollectDeviceId: Bool = true
+        
+        /// Default setting for tracking application lifecycle events.
+        public static let willTrackLifecycleEvents: Bool = true
         
         /// Default setting for indicating whether session tracking should be automatic.
         public static let automaticSessionTrackingStatus: Bool = true

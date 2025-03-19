@@ -41,6 +41,11 @@ public class AnalyticsClient {
     internal var sessionTrackingPlugin: SessionTrackingPlugin = SessionTrackingPlugin()
     
     /**
+     An Observer of app lifecycle events.
+     */
+    internal var lifecycleObserver: LifecycleObserver?
+    
+    /**
      Initializes the `AnalyticsClient` with the given configuration.
      
      - Parameter configuration: The configuration object containing settings and storage details.
@@ -49,7 +54,6 @@ public class AnalyticsClient {
         self.configuration = configuration
         self.processEventChannel = AsyncChannel(capacity: Int.max)
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
-        
         self.setup()
     }
 }
@@ -220,6 +224,7 @@ extension AnalyticsClient {
         self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
+        self.lifecycleObserver = LifecycleObserver(analytics: self)
         
         // Add default plugins
         self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())
@@ -232,6 +237,7 @@ extension AnalyticsClient {
         self.pluginChain?.add(plugin: LibraryInfoPlugin())
         self.pluginChain?.add(plugin: NetworkInfoPlugin())
         self.pluginChain?.add(plugin: self.sessionTrackingPlugin)
+        self.pluginChain?.add(plugin: LifecycleTrackingPlugin())
     }
     
     /**

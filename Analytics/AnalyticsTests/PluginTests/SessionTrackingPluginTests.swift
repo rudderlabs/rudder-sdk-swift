@@ -61,5 +61,3 @@ final class SessionTrackingPluginTests: XCTestCase {
         }
     }
 }
-
-
