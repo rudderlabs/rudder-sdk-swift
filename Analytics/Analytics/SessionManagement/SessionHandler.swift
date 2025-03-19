@@ -1,5 +1,5 @@
 //
-//  SessionManager.swift
+//  SessionHandler.swift
 //  Analytics
 //
 //  Created by Satheesh Kannan on 25/02/25.
@@ -18,11 +18,11 @@ enum SessionType {
     case automatic
 }
 
-// MARK: - SessionManager
+// MARK: - SessionHandler
 /**
  This class handles session management for both manual and automatic types.
  */
-final class SessionManager {
+final class SessionHandler {
     
     private var storage: KeyValueStorage
     private var sessionState: StateImpl<SessionInfo>
@@ -56,7 +56,7 @@ final class SessionManager {
     
     func refreshSession() {
         guard let currentSessionId = self.sessionId, currentSessionId != SessionConstants.defaultSessionId else { return }
-        self.startSession(id: SessionManager.generatedSessionId, type: self.sessionType)
+        self.startSession(id: SessionHandler.generatedSessionId, type: self.sessionType)
     }
     
     func startAutomaticSessionIfNeeded() {
@@ -75,7 +75,7 @@ final class SessionManager {
 }
 
 // MARK: - Observers
-extension SessionManager: LifecycleEventListener {
+extension SessionHandler: LifecycleEventListener {
     
     func attachObservers() {
         self.analytics.lifecycleObserver?.addObserver(self)
@@ -101,7 +101,7 @@ extension SessionManager: LifecycleEventListener {
 
 // MARK: - Helpers
 
-extension SessionManager {
+extension SessionHandler {
     
     static var generatedSessionId: UInt64 {
         return UInt64(Date().timeIntervalSince1970)
@@ -136,7 +136,7 @@ extension SessionManager {
 
 // MARK: - Session Action Handlers
 
-extension SessionManager {
+extension SessionHandler {
     
     private func updateSessionId(id: UInt64) {
         self.sessionState.dispatch(action: UpdateSessionIdAction(sessionId: id))

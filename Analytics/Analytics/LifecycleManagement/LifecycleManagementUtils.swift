@@ -74,3 +74,31 @@ class WeakObserver {
         self.observer = observer
     }
 }
+
+// MARK: - LifecycleSessionWrapper
+/**
+ A wrapper that integrates lifecycle observation and session handling for analytics tracking.
+ */
+class LifecycleSessionWrapper {
+    var lifecycleObserver: LifecycleObserver
+    var sessionHandler: SessionHandler
+    
+    init(analytics: AnalyticsClient) {
+        self.lifecycleObserver = LifecycleObserver(analytics: analytics)
+        self.sessionHandler = SessionHandler(analytics: analytics)
+    }
+}
+
+// MARK: - AnalyticsClient
+/**
+ Provides convenient access to the session handler and lifecycle observer from the lifecycle session handler.
+ */
+extension AnalyticsClient {
+    var sessionHandler: SessionHandler? {
+        return self.lifecycleSessionWrapper?.sessionHandler
+    }
+    
+    var lifecycleObserver: LifecycleObserver? {
+        return self.lifecycleSessionWrapper?.lifecycleObserver
+    }
+}

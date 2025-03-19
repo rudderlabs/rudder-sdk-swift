@@ -36,14 +36,9 @@ public class AnalyticsClient {
     private var processEventChannel: AsyncChannel<Event>
 
     /**
-     The plugin responsible for handling session related operations.
+     The handler instance responsible for lifecycle and session related operations.
      */
-    internal var sessionTrackingPlugin: SessionTrackingPlugin = SessionTrackingPlugin()
-    
-    /**
-     An Observer of app lifecycle events.
-     */
-    internal var lifecycleObserver: LifecycleObserver?
+    internal var lifecycleSessionWrapper: LifecycleSessionWrapper?
     
     /**
      Initializes the `AnalyticsClient` with the given configuration.
@@ -73,15 +68,15 @@ extension AnalyticsClient {
             return
         }
         
-        let newSessionId = sessionId ?? SessionManager.generatedSessionId
-        self.sessionTrackingPlugin.sessionManager?.startSession(id: newSessionId, type: .manual)
+        let newSessionId = sessionId ?? SessionHandler.generatedSessionId
+        self.sessionHandler?.startSession(id: newSessionId, type: .manual)
     }
     
     /**
      Ends the current session.
      */
     public func endSession() {
-        self.sessionTrackingPlugin.sessionManager?.endSession()
+        self.sessionHandler?.endSession()
     }
     
     /**
@@ -89,7 +84,7 @@ extension AnalyticsClient {
      
      - Returns: The `UInt64` value if active session exists else `nil`.
      */
-    public var sessionId: UInt64? { self.sessionTrackingPlugin.sessionManager?.sessionId }
+    public var sessionId: UInt64? { self.sessionHandler?.sessionId }
 }
 
 // MARK: - Events
@@ -193,7 +188,7 @@ extension AnalyticsClient {
         self.userIdentityState.dispatch(action: ResetUserIdentityAction(clearAnonymousId: clearAnonymousId))
         self.userIdentityState.state.value.resetUserIdentity(clearAnonymousId: clearAnonymousId, storage: self.storage)
         
-        self.sessionTrackingPlugin.sessionManager?.refreshSession()
+        self.sessionHandler?.refreshSession()
     }
 }
 
@@ -224,7 +219,7 @@ extension AnalyticsClient {
         self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
-        self.lifecycleObserver = LifecycleObserver(analytics: self)
+        self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
         
         // Add default plugins
         self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())
@@ -236,7 +231,7 @@ extension AnalyticsClient {
         self.pluginChain?.add(plugin: AppInfoPlugin())
         self.pluginChain?.add(plugin: LibraryInfoPlugin())
         self.pluginChain?.add(plugin: NetworkInfoPlugin())
-        self.pluginChain?.add(plugin: self.sessionTrackingPlugin)
+        self.pluginChain?.add(plugin: SessionTrackingPlugin())
         self.pluginChain?.add(plugin: LifecycleTrackingPlugin())
     }
     

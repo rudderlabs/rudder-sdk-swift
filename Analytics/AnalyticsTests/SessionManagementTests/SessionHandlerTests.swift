@@ -1,5 +1,5 @@
 //
-//  SessionManagerTests.swift
+//  SessionHandlerTests.swift
 //  AnalyticsTests
 //
 //  Created by Satheesh Kannan on 27/02/25.
@@ -9,7 +9,7 @@ import Foundation
 import XCTest
 @testable import Analytics
 
-final class SessionManagerTests: XCTestCase {
+final class SessionHandlerTests: XCTestCase {
     private var analytics: AnalyticsClient?
     
     override func setUpWithError() throws {
@@ -30,7 +30,7 @@ final class SessionManagerTests: XCTestCase {
             let sessionId: UInt64 = 123454321
             let sessionType: SessionType = .manual
             
-            let manager = SessionManager(analytics: analytics)
+            let manager = SessionHandler(analytics: analytics)
             
             when("Starting a new session with a specific ID and type") {
                 manager.startSession(id: sessionId, type: sessionType)
@@ -52,7 +52,7 @@ final class SessionManagerTests: XCTestCase {
             guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
             let sessionId: UInt64 = 123454321
             
-            let manager = SessionManager(analytics: analytics)
+            let manager = SessionHandler(analytics: analytics)
             manager.startSession(id: sessionId, type: .manual)
             
             when("Ending the active session") {
@@ -73,7 +73,7 @@ final class SessionManagerTests: XCTestCase {
             guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
             let sessionId: UInt64 = 123454321
                     
-            let manager = SessionManager(analytics: analytics)
+            let manager = SessionHandler(analytics: analytics)
             manager.startSession(id: sessionId, type: .manual)
             
             when("Refreshing the active session") {
@@ -95,7 +95,7 @@ final class SessionManagerTests: XCTestCase {
             guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
             
             when("Start automatic session while there is no active session") {
-                let manager = SessionManager(analytics: analytics)
+                let manager = SessionHandler(analytics: analytics)
                 
                 then("A new session should be started") {
                     XCTAssertNotNil(manager.sessionId, "A session should be started")
@@ -113,7 +113,7 @@ final class SessionManagerTests: XCTestCase {
             
             guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
             
-            let manager = SessionManager(analytics: analytics)
+            let manager = SessionHandler(analytics: analytics)
             manager.startSession(id: 12345, type: .automatic)
             
             when("Validate the automatic session") {
@@ -133,7 +133,7 @@ final class SessionManagerTests: XCTestCase {
             
             guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
             
-            let manager = SessionManager(analytics: analytics)
+            let manager = SessionHandler(analytics: analytics)
             
             manager.startSession(id: 12345, type: .automatic)
             let initialSessionId = manager.sessionId
@@ -194,7 +194,7 @@ final class SessionManagerTests: XCTestCase {
             self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
             
             guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
-            let manager = SessionManager(analytics: analytics)
+            let manager = SessionHandler(analytics: analytics)
             
             when("Start a manual session") {
                 manager.startSession(id: 1234567, type: .manual)
@@ -214,7 +214,7 @@ final class SessionManagerTests: XCTestCase {
             self.analytics = MockProvider.clientWithSessionConfig(config: configuration)
             
             guard let analytics = self.analytics else { XCTFail("Analytics not initialized"); return }
-            let manager = SessionManager(analytics: analytics)
+            let manager = SessionHandler(analytics: analytics)
             manager.startSession(id: 1234567, type: .manual)
             
             when("Start an automatic session") {
