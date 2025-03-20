@@ -140,7 +140,24 @@ extension AnalyticsTests {
         client.track(name: "Track Event", properties: ["prop": "value"])
         try? await Task.sleep(nanoseconds: 300_000_000)
         
+        client.screen(name: "Screen Event")
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        client.group(id: "Group_id")
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        client.identify(userId: "User_id")
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        client.alias(newId: "Alias_user_id", previousId: nil)
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
         let dataItems = await client.configuration.storage.read().dataItems
         XCTAssert(dataItems.isEmpty)
+        
+        XCTAssertNil(client.sessionId)
+        XCTAssertNil(client.anonymousId)
+        XCTAssertNil(client.userId)
+        XCTAssertNil(client.traits)
     }
 }

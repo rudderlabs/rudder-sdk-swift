@@ -375,6 +375,20 @@ extension AnalyticsClient {
     }
     
     /**
+     A computed property for accessing the `userId` in the current user identity state.
+     */
+    public var userId: String? {
+        return self.isAnalyticsActive ? self.userIdentityState.state.value.userId : nil
+    }
+    
+    /**
+     A computed property for accessing the `traits` in the current user identity state.
+     */
+    public var traits: RudderTraits? {
+        return self.isAnalyticsActive ? self.userIdentityState.state.value.traits : nil
+    }
+    
+    /**
      A computed property that provides access to the storage instance from the configuration.
      
      This property retrieves the `Storage` instance associated with the current configuration.
