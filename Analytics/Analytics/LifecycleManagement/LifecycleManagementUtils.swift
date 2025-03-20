@@ -80,12 +80,17 @@ class WeakObserver {
  A wrapper that integrates lifecycle observation and session handling for analytics tracking.
  */
 class LifecycleSessionWrapper {
-    var lifecycleObserver: LifecycleObserver
-    var sessionHandler: SessionHandler
+    var lifecycleObserver: LifecycleObserver?
+    var sessionHandler: SessionHandler?
     
     init(analytics: AnalyticsClient) {
         self.lifecycleObserver = LifecycleObserver(analytics: analytics)
         self.sessionHandler = SessionHandler(analytics: analytics)
+    }
+    
+    func tearDown() {
+        self.sessionHandler = nil
+        self.lifecycleObserver = nil
     }
 }
 

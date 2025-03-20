@@ -23,6 +23,7 @@ final class LifecycleObserver {
     }
     
     deinit {
+        self.observers.removeAll()
         self.notificationObservers.forEach { NotificationCenter.default.removeObserver($0) }
     }
 }
