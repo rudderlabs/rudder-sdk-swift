@@ -43,13 +43,13 @@ final class SessionHandler {
         self.updateSessionStart(isSessionStrat: true)
         self.updateSessionType(type: type)
         self.updateSessionId(id: id)
-        self.sessionType == .automatic ? self.attachObservers() : self.detachObservers()
+        self.sessionType == .automatic ? self.registerObserver() : self.deregisterObserver()
     }
     
     func endSession() {
         self.sessionState.dispatch(action: EndSessionAction())
         self.sessionInstance.resetSessionState(storage: self.storage)
-        self.detachObservers()
+        self.deregisterObserver()
     }
     
     func refreshSession() {
@@ -68,19 +68,19 @@ final class SessionHandler {
     }
     
     deinit {
-        self.detachObservers()
+        self.deregisterObserver()
     }
 }
 
 // MARK: - Observers
 extension SessionHandler: LifecycleEventListener {
     
-    func attachObservers() {
-        self.detachObservers()
+    func registerObserver() {
+        self.deregisterObserver()
         self.analytics.lifecycleObserver?.addObserver(self)
     }
     
-    func detachObservers() {
+    func deregisterObserver() {
         self.analytics.lifecycleObserver?.removeObserver(self)
     }
     
