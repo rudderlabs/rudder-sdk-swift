@@ -64,6 +64,10 @@ extension AnalyticsManager {
         self.analytics?.endSession()
     }
     
+    func shutdown() {
+        self.analytics?.shutdown()
+    }
+    
     var anonymousId: String? {
         get { self.analytics?.anonymousId }
         set { if let newId = newValue { self.analytics?.anonymousId = newId } }

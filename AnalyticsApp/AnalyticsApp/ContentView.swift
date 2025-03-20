@@ -98,6 +98,12 @@ struct ContentView: View {
                     AnalyticsManager.shared.endSession()
                 }
             }
+            
+            HStack {
+                CustomButton(title: "Shutdown") {
+                    AnalyticsManager.shared.shutdown()
+                }
+            }
         }
     }
 }
