@@ -256,7 +256,7 @@ extension AnalyticsClient {
     var isAnalyticsActive: Bool {
         get {
             if isAnalyticsShutdown {
-                print("Analytics instance has been shutdown. No further operations are allowed.")
+                print(Constants.Log.shutdownMessage)
             }
             return !isAnalyticsShutdown
         }
