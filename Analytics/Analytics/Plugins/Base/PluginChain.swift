@@ -47,6 +47,13 @@ class PluginChain {
             $0.apply(closure: closure)
         }
     }
+    
+    func removeAll() {
+        apply { $0.teardown() }
+        pluginList.forEach { _, mediator in
+            mediator.removeAll()
+        }
+    }
 }
 
 // MARK: - Private functions

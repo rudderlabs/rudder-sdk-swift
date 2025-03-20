@@ -20,6 +20,10 @@ class PluginInteractor {
         self.pluginList.removeAll { $0 === plugin }
     }
     
+    func removeAll() {
+        pluginList.removeAll()
+    }
+    
     func execute(_ event: Event) -> Event? {
         var result = event
         self.pluginList.forEach {
