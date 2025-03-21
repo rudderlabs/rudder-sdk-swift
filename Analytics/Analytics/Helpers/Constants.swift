@@ -101,10 +101,10 @@ extension Constants {
         /// Constants for time interval-based flush triggers.
         public struct Interval {
             /// Default time interval for triggering a flush (in milliseconds).
-            public static let `default`: Double = 10_000 // 10 seconds
+            public static let `default`: UInt64 = 10_000 // 10 seconds
             
             /// Minimum time interval for triggering a flush (in milliseconds).
-            public static let min: Double = 1
+            public static let min: UInt64 = 1
         }
         
         /// Private initializer to prevent instantiation.
