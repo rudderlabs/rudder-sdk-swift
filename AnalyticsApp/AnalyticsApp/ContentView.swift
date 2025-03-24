@@ -103,6 +103,10 @@ struct ContentView: View {
                 CustomButton(title: "Shutdown") {
                     AnalyticsManager.shared.shutdown()
                 }
+                
+                CustomButton(title: "Initialize SDK") {
+                    AnalyticsManager.shared.initializeAnalyticsSDK()
+                }
             }
         }
     }
