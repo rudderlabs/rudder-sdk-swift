@@ -32,9 +32,7 @@ import Foundation
 
  */
 public final class FrequencyFlushPolicy: FlushPolicy {
-    /// The `AnalyticsClient` instance to trigger flush operations.
-    private var analytics: AnalyticsClient?
-
+    
     /// The timer responsible for periodic flush operations.
     private var flushTimer: Timer?
 
@@ -57,7 +55,6 @@ public final class FrequencyFlushPolicy: FlushPolicy {
      - Parameter analytics: The `AnalyticsClient` instance to invoke flush operations on.
      */
     func scheduleFlush(analytics: AnalyticsClient) {
-        self.analytics = analytics
         let millisecondsInSecond: TimeInterval = 1000.0
         
         self.flushTimer = Timer.scheduledTimer(

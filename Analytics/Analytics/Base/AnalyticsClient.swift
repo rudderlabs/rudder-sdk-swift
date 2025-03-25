@@ -247,7 +247,10 @@ extension AnalyticsClient {
         self.processEventChannel.close()
         
         self.pluginChain?.removeAll()
+        self.pluginChain = nil
+        
         self.lifecycleSessionWrapper?.tearDown()
+        self.lifecycleSessionWrapper = nil
     }
     
     /**

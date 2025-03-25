@@ -89,6 +89,7 @@ class LifecycleSessionWrapper {
     }
     
     func tearDown() {
+        // Don't change the order..
         self.sessionHandler = nil
         self.lifecycleObserver = nil
     }
