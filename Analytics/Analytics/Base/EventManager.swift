@@ -63,8 +63,9 @@ extension EventManager {
     
     func stop() {
         self.flushPolicyFacade.cancelSchedule()
+        
         self.writeChannel.close()
-        self.uploadChannel.close()
+        self.uploadChannel.cancel()
     }
 }
 

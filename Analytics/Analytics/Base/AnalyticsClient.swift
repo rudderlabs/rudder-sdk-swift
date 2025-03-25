@@ -34,11 +34,11 @@ public class AnalyticsClient {
      A private asynchronous channel for queuing and processing events.
      */
     private var processEventChannel: AsyncChannel<Event>
-
+    
     /**
-         The handler instance responsible for managing lifecycle events and session-related operations.
-
-         - Note: When this property is set, `startAutomaticSessionIfNeeded()` is automatically triggered to ensure the automatic session begins as required.
+     The handler instance responsible for managing lifecycle events and session-related operations.
+     
+     - Note: When this property is set, `startAutomaticSessionIfNeeded()` is automatically triggered to ensure the automatic session begins as required.
      */
     internal var lifecycleSessionWrapper: LifecycleSessionWrapper? {
         didSet {
@@ -46,6 +46,11 @@ public class AnalyticsClient {
         }
     }
     
+    /**
+     Tracks the shutdown state of the analytics instance.
+     */
+    private(set) var isAnalyticsShutdown: Bool = false
+        
     /**
      Initializes the `AnalyticsClient` with the given configuration.
      
@@ -69,6 +74,8 @@ extension AnalyticsClient {
      - Parameter sessionId: An optional `UInt64` session ID. If `nil`, a new session ID is generated.
      */
     public func startSession(sessionId: UInt64? = nil) {
+        guard self.isAnalyticsActive else { return }
+        
         if let sessionId, String(sessionId).count < SessionConstants.minSessionIdLength {
             print("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
             return
@@ -82,6 +89,7 @@ extension AnalyticsClient {
      Ends the current session.
      */
     public func endSession() {
+        guard self.isAnalyticsActive else { return }
         self.sessionHandler?.endSession()
     }
     
@@ -90,7 +98,7 @@ extension AnalyticsClient {
      
      - Returns: The `UInt64` value if active session exists else `nil`.
      */
-    public var sessionId: UInt64? { self.sessionHandler?.sessionId }
+    public var sessionId: UInt64? { self.isAnalyticsActive ? self.sessionHandler?.sessionId : nil }
 }
 
 // MARK: - Events
@@ -106,6 +114,8 @@ extension AnalyticsClient {
         - options: An optional object for providing additional options. Defaults to empty instance of `RudderOption`.
      */
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOption? = RudderOption()) {
+        guard self.isAnalyticsActive else { return }
+        
         let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -120,6 +130,8 @@ extension AnalyticsClient {
         - options: An Optional options for additional customization. Defaults to empty instance of `RudderOption`.
      */
     public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = RudderOption()) {
+        guard self.isAnalyticsActive else { return }
+        
         let event = ScreenEvent(screenName: name, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -133,6 +145,8 @@ extension AnalyticsClient {
         - options: An Optional options for additional customization. Defaults to empty instance of `RudderOption`.
      */
     public func group(id: String, traits: RudderTraits? = nil, options: RudderOption? = RudderOption()) {
+        guard self.isAnalyticsActive else { return }
+        
         let event = GroupEvent(groupId: id, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -146,9 +160,9 @@ extension AnalyticsClient {
         - options: Custom options for the event, including integrations and context. Defaults to empty instance of `RudderOption`.
      */
     public func identify(userId: String, traits: RudderTraits? = nil, options: RudderOption? = RudderOption()) {
+        guard self.isAnalyticsActive else { return }
         
         self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId, traits: traits ?? RudderTraits(), storage: self.storage))
-        
         self.userIdentityState.state.value.storeUserIdAndTraits(self.storage)
         
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
@@ -164,10 +178,10 @@ extension AnalyticsClient {
         - options: Additional options for customization, such as integrations and context. Defaults to empty instance of `RudderOption`.
      */
     public func alias(newId: String, previousId: String?, options: RudderOption? = RudderOption()) {
+        guard self.isAnalyticsActive else { return }
+        
         let preferedPreviousId = self.userIdentityState.state.value.resolvePreferredPreviousId(previousId ?? String.empty)
-        
         self.userIdentityState.dispatch(action: SetUserIdAction(userId: newId))
-        
         self.userIdentityState.state.value.storeUserId(self.storage)
         
         let event = AliasEvent(previousId: preferedPreviousId, options: options, userIdentity: self.userIdentityState.state.value)
@@ -178,6 +192,8 @@ extension AnalyticsClient {
      Flushes all pending events by triggering the flush method on all plugins in the plugin chain.
      */
     public func flush() {
+        guard self.isAnalyticsActive else { return }
+        
         self.pluginChain?.apply { plugin in
             if let plugin = plugin as? RudderStackDataPlanePlugin {
                 plugin.flush()
@@ -191,6 +207,8 @@ extension AnalyticsClient {
      - Parameter clearAnonymousId: A boolean flag indicating whether the anonymous ID should be stored before resetting. Defaults to `false`.
      */
     public func reset(clearAnonymousId: Bool = false) {
+        guard self.isAnalyticsActive else { return }
+        
         self.userIdentityState.dispatch(action: ResetUserIdentityAction(clearAnonymousId: clearAnonymousId))
         self.userIdentityState.state.value.resetUserIdentity(clearAnonymousId: clearAnonymousId, storage: self.storage)
         
@@ -208,7 +226,46 @@ extension AnalyticsClient {
      - Parameter plugin: The plugin to be added.
      */
     public func addPlugin(_ plugin: Plugin) {
+        guard self.isAnalyticsActive else { return }
         self.pluginChain?.add(plugin: plugin)
+    }
+}
+
+// MARK: - Shutdown
+
+extension AnalyticsClient {
+    /**
+     Shuts down the analytics instance, ending all operations, removing plugins, and freeing resources.
+     All events recorded before shutdown are saved to disk but are processed only after the next startup.
+     
+     - Note: This action is irreversible, but no saved data is lost.
+     */
+    public func shutdown() {
+        guard self.isAnalyticsActive else { return }
+        
+        self.isAnalyticsShutdown = true
+        self.processEventChannel.close()
+        
+        self.pluginChain?.removeAll()
+        self.pluginChain = nil
+        
+        self.lifecycleSessionWrapper?.tearDown()
+        self.lifecycleSessionWrapper = nil
+    }
+    
+    /**
+     Indicates whether the analytics instance is active.
+     */
+    var isAnalyticsActive: Bool {
+        get {
+            if isAnalyticsShutdown {
+                print(Constants.Log.shutdownMessage)
+            }
+            return !isAnalyticsShutdown
+        }
+        set {
+            isAnalyticsShutdown = !newValue
+        }
     }
 }
 
@@ -309,14 +366,29 @@ extension AnalyticsClient {
      Updates the `anonymousId` in the `userIdentityState` by dispatching a `SetAnonymousIdAction`.
      Additionally, persists the updated value by calling `storeAnonymousId`.
      */
-    public var anonymousId: String {
+    public var anonymousId: String? {
         get {
-            return self.userIdentityState.state.value.anonymousId
+            return self.isAnalyticsActive ? self.userIdentityState.state.value.anonymousId : nil
         }
         set {
+            guard let newValue, self.isAnalyticsActive else { return }
             self.userIdentityState.dispatch(action: SetAnonymousIdAction(anonymousId: newValue))
             self.storeAnonymousId()
         }
+    }
+    
+    /**
+     A computed property for accessing the `userId` in the current user identity state.
+     */
+    public var userId: String? {
+        return self.isAnalyticsActive ? self.userIdentityState.state.value.userId : nil
+    }
+    
+    /**
+     A computed property for accessing the `traits` in the current user identity state.
+     */
+    public var traits: RudderTraits? {
+        return self.isAnalyticsActive ? self.userIdentityState.state.value.traits : nil
     }
     
     /**

@@ -43,7 +43,7 @@ extension AnalyticsTests {
     
     func test_anonymousId() {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
-        XCTAssertFalse(client.anonymousId.isEmpty)
+        XCTAssert(client.anonymousId?.isEmpty == false)
         
         let testId = "testId"
         client.anonymousId = testId
@@ -127,5 +127,37 @@ extension AnalyticsTests {
         try? await Task.sleep(nanoseconds: 300_000_000)
         let dataItems = await client.configuration.storage.read().dataItems
         XCTAssertFalse(dataItems.isEmpty) //Should be false.. Since no proper dataplane configured...
+    }
+    
+    func test_shutdown() async {
+        guard let client = analytics_disk else { XCTFail("No disk client"); return }
+        client.shutdown()
+
+        XCTAssertFalse(client.isAnalyticsActive)
+        XCTAssertNil(client.lifecycleObserver)
+        XCTAssertNil(client.sessionHandler)
+
+        client.track(name: "Track Event", properties: ["prop": "value"])
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        client.screen(name: "Screen Event")
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        client.group(id: "Group_id")
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        client.identify(userId: "User_id")
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        client.alias(newId: "Alias_user_id", previousId: nil)
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        let dataItems = await client.configuration.storage.read().dataItems
+        XCTAssert(dataItems.isEmpty)
+        
+        XCTAssertNil(client.sessionId)
+        XCTAssertNil(client.anonymousId)
+        XCTAssertNil(client.userId)
+        XCTAssertNil(client.traits)
     }
 }

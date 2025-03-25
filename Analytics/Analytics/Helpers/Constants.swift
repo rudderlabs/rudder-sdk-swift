@@ -26,6 +26,9 @@ extension Constants {
         /// The default log level for the SDK.
         public static let defaultLevel: LogLevel = .none
         
+        /// Message printed after the analytics instance shuts down, indicating no further operations are allowed.
+        static let shutdownMessage = "Analytics instance has been shut down. No further operations are allowed."
+        
         /// Private initializer to prevent instantiation.
         private init() {
             /* Prevent instantiation (no-op) */

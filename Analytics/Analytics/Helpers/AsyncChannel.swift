@@ -61,10 +61,21 @@ final class AsyncChannel<T> {
     func close() {
         lock.lock()
         defer { lock.unlock() }
+        
         isClosed = true
         continuation.finish()
     }
 
+    /// Cancels the channel immediately, discarding pending data.
+    func cancel() {
+        lock.lock()
+        defer { lock.unlock() }
+        
+        buffer.removeAll()   // Clear pending data
+        isClosed = true
+        continuation.finish() // Stops the stream immediately
+    }
+    
     /// A helper to wait for space in the buffer.
     private func waitUntilSpaceAvailable() async {
         await withCheckedContinuation { cont in
