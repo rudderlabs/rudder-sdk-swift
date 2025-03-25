@@ -134,7 +134,7 @@ final class FrequencyFlushPolicyTests: XCTestCase {
     func test_validFlushFrequency() {
         given("FrequentlyFlushPolicy with 0.5sec flush interval... ") {
             let mills = MockHelper.milliseconds(from: 0.5)
-            let policy = FrequencyFlushPolicy(flushIntervalInMillis: mills)
+            let policy = FrequencyFlushPolicy(flushIntervalInMillis: UInt64(mills))
             
             when("initiate the shedule...") {
                 let client = MockAnalyticsClient()
@@ -154,7 +154,7 @@ final class FrequencyFlushPolicyTests: XCTestCase {
             let mills = MockHelper.milliseconds(from: -1.5)
             
             when("preare the policy...") {
-                let policy = FrequencyFlushPolicy(flushIntervalInMillis: mills)
+                let policy = FrequencyFlushPolicy(flushIntervalInMillis: UInt64(max(0, mills)))
                 let minimum = Constants.Flush.Interval.min
                 
                 then("sets the flush interval to minimum..") {

@@ -37,7 +37,7 @@ public final class FrequencyFlushPolicy: FlushPolicy {
     private var flushTimer: Timer?
 
     /// The interval, in milliseconds, at which flush operations occur.
-    private(set) var flushIntervalInMillis: Double
+    private(set) var flushIntervalInMillis: UInt64
 
     /**
      Initializes a new `FrequencyFlushPolicy`.
@@ -45,7 +45,7 @@ public final class FrequencyFlushPolicy: FlushPolicy {
      - Parameter flushIntervalInMillis: The time interval in milliseconds for triggering flushes. Defaults to `Constants.Flush.Interval.default`.
      - Note: The interval is clamped to `Constants.Flush.Interval.min` to prevent excessively short durations.
      */
-    public init(flushIntervalInMillis: Double = Constants.Flush.Interval.default) {
+    public init(flushIntervalInMillis: UInt64 = Constants.Flush.Interval.default) {
         self.flushIntervalInMillis = max(flushIntervalInMillis, Constants.Flush.Interval.min)
     }
 
