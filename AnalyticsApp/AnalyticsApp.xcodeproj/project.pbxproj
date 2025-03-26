@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		533624BB2D93E31F00F602CD /* OptionPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533624BA2D93E31F00F602CD /* OptionPlugin.swift */; };
 		53472F7A2D622B2900EF8042 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53472F792D622B2900EF8042 /* PermissionManager.swift */; };
 		5351AA7D2C6BE9DE003C3C47 /* AnalyticsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */; };
 		5351AA7F2C6BE9DE003C3C47 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		533624BA2D93E31F00F602CD /* OptionPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPlugin.swift; sourceTree = "<group>"; };
 		53472F792D622B2900EF8042 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		5351AA792C6BE9DE003C3C47 /* AnalyticsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsApp.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			children = (
 				5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */,
 				53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */,
+				533624BA2D93E31F00F602CD /* OptionPlugin.swift */,
 			);
 			path = ExternalPlugins;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 				53472F7A2D622B2900EF8042 /* PermissionManager.swift in Sources */,
 				5383D2C72D3E95FC00291B00 /* AnalyticsManager.swift in Sources */,
 				5351AA7F2C6BE9DE003C3C47 /* ContentView.swift in Sources */,
+				533624BB2D93E31F00F602CD /* OptionPlugin.swift in Sources */,
 				5351AA7D2C6BE9DE003C3C47 /* AnalyticsApp.swift in Sources */,
 				53D7FDF72D63A42C00598443 /* BluetoothInfoPlugin.swift in Sources */,
 			);
