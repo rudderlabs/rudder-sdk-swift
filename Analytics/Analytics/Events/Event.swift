@@ -114,8 +114,10 @@ extension Event {
             mutableSelf = mutableSelf.addToContext(info: ["traits": traits])
         }
         
-        mutableSelf.integrations = options?.integrations?.compactMapValues { AnyCodable($0) }
-        
+        if let integrations = self.options?.integrations, !integrations.isEmpty {
+            mutableSelf = mutableSelf.addToIntegrations(info: integrations)
+        }
+                
         if let customContext = self.options?.customContext, !customContext.isEmpty {
             mutableSelf = mutableSelf.addToContext(info: customContext)
         }
@@ -140,6 +142,21 @@ extension Event {
     public func addToContext(info: [String: Any]) -> Event {
         var mutableSelf = self
         mutableSelf.context = (mutableSelf.context ?? [:]) + info.mapValues { AnyCodable($0) }
+        return mutableSelf
+    }
+    
+    /**
+     Appends integration information to the `Event` payload.
+
+     This method takes a dictionary of key-value pairs and merges it with the existing `integrations` property. The values are wrapped in `AnyCodable` to ensure type compatibility.
+
+     - Parameter info: A dictionary containing integration information to append.
+     - Returns: A new `Event` instance with the updated context.
+     
+     */
+    public func addToIntegrations(info: [String: Any]) -> Event {
+        var mutableSelf = self
+        mutableSelf.integrations = (mutableSelf.integrations ?? [:]) + info.mapValues { AnyCodable($0) }
         return mutableSelf
     }
 }
