@@ -10,8 +10,12 @@ import Analytics
 
 final class OptionPlugin: Plugin {
     var pluginType: PluginType = .onProcess
-    var option: RudderOption?
     var analytics: AnalyticsClient?
+    var option: RudderOption?
+    
+    init(option: RudderOption) {
+        self.option = option
+    }
     
     func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
