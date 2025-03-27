@@ -8,6 +8,11 @@
 import Foundation
 import Analytics
 
+// MARK: - BluetoothInfoPlugin
+/**
+ This class is a processing plugin that overrides the custom context and integration values of any event.
+ */
+
 final class OptionPlugin: Plugin {
     var pluginType: PluginType = .onProcess
     var analytics: AnalyticsClient?
