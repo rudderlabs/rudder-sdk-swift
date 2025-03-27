@@ -16,7 +16,9 @@ struct OptionPluginTests {
         given("An OptionPlugin initialized with a custom option") {
             let customContext = ["key1": "value1"]
             let integrations = ["integration1": true]
-            let option = RudderOption(integrations: integrations, customContext: customContext)
+            let extenalId = ExternalId(type: "external_Id_Type", id: "external_Id")
+            
+            let option = RudderOption(integrations: integrations, customContext: customContext, externalIds: [extenalId])
             let plugin = OptionPlugin(option: option)
             
             when("Intercepting a mock event") {
@@ -31,6 +33,10 @@ struct OptionPluginTests {
                     
                     guard let integrations = result?.integrations as? [String: Any] else { #expect(1 == 0, "Integrations not added"); return }
                     #expect(integrations["integration1"] != nil)
+                    
+                    guard let externalIds = context["externalId"] as? [String: Any] else { #expect(1 == 0, "External IDs not added"); return }
+                    #expect(externalIds["id"] as? String == "external_Id")
+                    #expect(externalIds["type"] as? String == "external_id_type")
                 }
             }
         }
