@@ -10,7 +10,7 @@ import Analytics
 
 // MARK: - OptionPlugin
 /**
- This class is a processing plugin that overrides the custom context and integration values of any event.
+ This class is a processing plugin that updates option values of any event.
  */
 
 final class OptionPlugin: Plugin {
