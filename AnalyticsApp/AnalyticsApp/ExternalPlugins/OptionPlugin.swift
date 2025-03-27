@@ -31,6 +31,7 @@ final class OptionPlugin: Plugin {
         
         var updatedEvent = event.addToContext(info: option.customContext ?? [:])
         updatedEvent = updatedEvent.addToIntegrations(info: option.integrations ?? [:])
+        updatedEvent = updatedEvent.addExternalIds(info: option.externalIds ?? [])
         
         return updatedEvent
     }
