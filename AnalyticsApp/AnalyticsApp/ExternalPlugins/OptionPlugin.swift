@@ -8,7 +8,7 @@
 import Foundation
 import Analytics
 
-// MARK: - BluetoothInfoPlugin
+// MARK: - OptionPlugin
 /**
  This class is a processing plugin that overrides the custom context and integration values of any event.
  */
