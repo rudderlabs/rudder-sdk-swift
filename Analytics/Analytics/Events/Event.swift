@@ -114,14 +114,16 @@ extension Event {
             mutableSelf = mutableSelf.addToContext(info: ["traits": traits])
         }
         
-        mutableSelf.integrations = options?.integrations?.compactMapValues { AnyCodable($0) }
-        
+        if let integrations = self.options?.integrations, !integrations.isEmpty {
+            mutableSelf = mutableSelf.addToIntegrations(info: integrations)
+        }
+                
         if let customContext = self.options?.customContext, !customContext.isEmpty {
             mutableSelf = mutableSelf.addToContext(info: customContext)
         }
         
         if let externalIds = self.options?.externalIds, !externalIds.isEmpty {
-            mutableSelf = mutableSelf.addToContext(info: ["externalId": externalIds.compactMap { $0.dictionary }])
+            mutableSelf = mutableSelf.addExternalIds(info: externalIds)
         }
         
         return mutableSelf
@@ -141,6 +143,34 @@ extension Event {
         var mutableSelf = self
         mutableSelf.context = (mutableSelf.context ?? [:]) + info.mapValues { AnyCodable($0) }
         return mutableSelf
+    }
+    
+    /**
+     Appends integration information to the `Event` payload.
+
+     This method takes a dictionary of key-value pairs and merges it with the existing `integrations` property. The values are wrapped in `AnyCodable` to ensure type compatibility.
+
+     - Parameter info: A dictionary containing integration information to append.
+     - Returns: A new `Event` instance with the updated context.
+     
+     */
+    public func addToIntegrations(info: [String: Any]) -> Event {
+        var mutableSelf = self
+        mutableSelf.integrations = (mutableSelf.integrations ?? [:]) + info.mapValues { AnyCodable($0) }
+        return mutableSelf
+    }
+    
+    /**
+     Appends external id information to the `Event` payload.
+
+     This method takes a array of `ExternalId`s and merges it with the existing `context` property. The values are wrapped in `AnyCodable` to ensure type compatibility.
+
+     - Parameter info: A array containing `ExternalId` information to append.
+     - Returns: A new `Event` instance with the updated context.
+     
+     */
+    public func addExternalIds(info: [ExternalId]) -> Event {
+        return info.isEmpty ? self : self.addToContext(info: ["externalId": info.compactMap { $0.dictionary }])
     }
 }
 
