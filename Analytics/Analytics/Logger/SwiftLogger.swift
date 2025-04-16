@@ -7,6 +7,95 @@
 
 import Foundation
 
+// MARK: - Logger
+
+/**
+ A protocol that defines logging capabilities with support for multiple log levels.
+ 
+ Implementers of this protocol can provide customized logging behavior based on the current log level.
+ */
+public protocol Logger {
+    
+    /**
+     Logs detailed informational message.
+     
+     - Parameters:
+       - log: The message to log.
+     */
+    func verbose(log: String)
+    
+    /**
+     Logs useful debugging message.
+     
+     - Parameters:
+       - log: The message to log.
+     */
+    func debug(log: String)
+    
+    /**
+     Logs an informational message.
+     
+     - Parameters:
+       - log: The message to log.
+     */
+    func info(log: String)
+    
+    /**
+     Logs a warning message.
+     
+     - Parameters:
+       - log: The message to log.
+     */
+    func warn(log: String)
+    
+    /**
+     Logs an error message.
+     
+     - Parameters:
+       - log: The message to log.
+       - error: An optional error associated with the message being logged.
+     */
+    func error(log: String, error: Error?)
+}
+
+public extension Logger {
+    
+    /**
+     Logs detailed informational message.
+     */
+    func verbose(log: String) {
+        /* Default implementation (no-op) */
+    }
+    
+    /**
+     Logs a debug message.
+     */
+    func debug(log: String) {
+        /* Default implementation (no-op) */
+    }
+    
+    /**
+     Logs an informational message.
+     */
+    func info(log: String) {
+        /* Default implementation (no-op) */
+    }
+
+    /**
+     Logs a warning message.
+     */
+    func warn(log: String) {
+        /* Default implementation (no-op) */
+    }
+
+    /**
+     Logs an error message.
+     */
+    func error(log: String, error: Error?) {
+        /* Default implementation (no-op) */
+    }
+}
+
 // MARK: - LogLevel
 
 /**
@@ -23,107 +112,6 @@ import Foundation
 @objc
 public enum LogLevel: Int {
     case none, error, warn, info, debug, verbose
-}
-
-// MARK: - Logger
-
-/**
- A protocol that defines logging capabilities with support for multiple log levels.
- 
- Implementers of this protocol can provide customized logging behavior based on the current log level.
- */
-public protocol Logger {
-    /**
-     The current log level that determines which messages are logged.
-     */
-    var currentLogLevel: LogLevel { get }
-    
-    /**
-     Activates the specified log level, which determines the severity of messages to log.
-     
-     - Parameter level: The desired log level.
-     */
-    func activate(level: LogLevel)
-    
-    /**
-     Logs an informational message.
-     
-     - Parameters:
-       - tag: A tag to categorize or identify the source of the log.
-       - log: The message to log.
-     */
-    func info(tag: String, log: String)
-    
-    /**
-     Logs a debugging message.
-     
-     - Parameters:
-       - tag: A tag to categorize or identify the source of the log.
-       - log: The message to log.
-     */
-    func debug(tag: String, log: String)
-    
-    /**
-     Logs a warning message.
-     
-     - Parameters:
-       - tag: A tag to categorize or identify the source of the log.
-       - log: The message to log.
-     */
-    func warn(tag: String, log: String)
-    
-    /**
-     Logs an error message.
-     
-     - Parameters:
-       - tag: A tag to categorize or identify the source of the log.
-       - log: The message to log.
-     */
-    func error(tag: String, log: String)
-}
-
-public extension Logger {
-    /**
-     The current log level of the logger.
-     */
-    var currentLogLevel: LogLevel {
-        return .none
-    }
-
-    /**
-     Activates the logger with the specified log level.
-     */
-    func activate(level: LogLevel) {
-        /* Default implementation (no-op) */
-    }
-
-    /**
-     Logs an informational message.
-     */
-    func info(tag: String, log: String) {
-        /* Default implementation (no-op) */
-    }
-
-    /**
-     Logs a debug message.
-     */
-    func debug(tag: String, log: String) {
-        /* Default implementation (no-op) */
-    }
-
-    /**
-     Logs a warning message.
-     */
-    func warn(tag: String, log: String) {
-        /* Default implementation (no-op) */
-    }
-
-    /**
-     Logs an error message.
-     */
-    func error(tag: String, log: String) {
-        /* Default implementation (no-op) */
-    }
 }
 
 // MARK: - SwiftLogger
