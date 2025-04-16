@@ -13,15 +13,16 @@ import Foundation
  An enumeration that defines the levels of logging. Each level corresponds to an increasing severity of log messages.
 
  - Cases:
-   - `none`: No logging.
-   - `debug`: Detailed debugging information.
-   - `info`: General informational messages.
-   - `warn`: Warnings about potential issues.
-   - `error`: Errors that occurred during execution.
+    - `none`: No logging.
+    - `error`: Errors that may still allow the app to run.
+    - `warn`: Warnings about potential issues.
+    - `info`: General informational messages.
+    - `debug`: Useful debugging information.
+    - `verbose`: Detailed messages for deep troubleshooting.
  */
 @objc
 public enum LogLevel: Int {
-    case none, debug, info, warn, error
+    case none, error, warn, info, debug, verbose
 }
 
 // MARK: - Logger
