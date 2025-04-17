@@ -231,6 +231,21 @@ extension AnalyticsClient {
     }
 }
 
+// MARK: - Logger  Management
+
+extension AnalyticsClient {
+    
+    /**
+     Sets a custom logger for analytics logging.
+
+     - Parameter logger: The logger instance to be used for logging analytics events and messages.
+     */
+    public func setLogger(logger: Logger) {
+        guard self.isAnalyticsActive else { return }
+        LoggerAnalytics.setup(logger: logger, logLevel: self.configuration.logLevel)
+    }
+}
+
 // MARK: - Shutdown
 
 extension AnalyticsClient {
