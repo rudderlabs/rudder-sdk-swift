@@ -30,9 +30,9 @@ public class Configuration {
     var controlPlaneUrl: String
 
     /**
-     The logger instance used for logging messages.
+     The current log level that controls which messages are shown.
      */
-    var logger: Logger
+    var logLevel: LogLevel
 
     /**
      A boolean flag to disable event tracking when set to `true`. Defaults to `false`.
@@ -78,7 +78,7 @@ public class Configuration {
        - writeKey: The write key for authentication with the analytics service.
        - dataPlaneUrl: The URL for the data plane.
        - controlPlaneUrl: The URL for the control plane.
-       - logger: The logger instance for logging messages.
+       - logLevel: The logLevel value for logging messages. Defaults to `none`.
        - optOut: A flag to disable event tracking when `true`. Defaults to `false`.
        - gzipEnaabled: A flag to enable GZip compression.
        - storage: The storage mechanism for persisting data.
@@ -93,7 +93,7 @@ public class Configuration {
         writeKey: String,
         dataPlaneUrl: String,
         controlPlaneUrl: String = Constants.DefaultConfig.controlPlaneUrl,
-        logger: Logger = SwiftLogger(logLevel: Constants.Log.defaultLevel),
+        logLevel: LogLevel = Constants.Log.defaultLevel,
         optOut: Bool = false,
         gzipEnaabled: Bool = Constants.DefaultConfig.gzipEnabled,
         storage: Storage? = nil,
@@ -105,7 +105,7 @@ public class Configuration {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
-        self.logger = logger
+        self.logLevel = logLevel
         self.optOut = optOut
         self.gzipEnabled = gzipEnaabled
         self.storage = storage ?? BasicStorage(writeKey: writeKey)
