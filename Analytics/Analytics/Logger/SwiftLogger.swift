@@ -109,6 +109,7 @@ public extension Logger {
     - `debug`: Useful debugging information.
     - `verbose`: Detailed messages for deep troubleshooting.
  */
+
 @objc
 public enum LogLevel: Int {
     case none, error, warn, info, debug, verbose
@@ -118,97 +119,66 @@ public enum LogLevel: Int {
 
 /**
  A concrete implementation of the `Logger` protocol that logs messages to the console.
- 
- The `SwiftLogger` class supports configurable log levels, ensuring that only messages with a severity equal to or higher
- than the current log level are logged.
 
  - Note: Logs are prefixed with a constant tag defined in `Rudder-Analytics`.
  */
-@objcMembers
-public final class SwiftLogger: Logger {
-    
-    // MARK: - Properties
 
-    /**
-     The currently active log level for this logger instance.
-     */
-    private var logLevel: LogLevel
+final class SwiftLogger: Logger {
     
-    public var currentLogLevel: LogLevel {
-        return self.logLevel
-    }
-    
-    // MARK: - Initialization
-
-    /**
-     Initializes a `SwiftLogger` with the specified log level.
-     
-     - Parameter logLevel: The initial log level for this logger.
-     */
-    public init(logLevel: LogLevel) {
-        self.logLevel = logLevel
-    }
-    
-    // MARK: - Methods
-
-    /**
-     Activates the specified log level for this logger.
-     
-     - Parameter level: The desired log level.
-     */
-    public func activate(level: LogLevel) {
-        self.logLevel = level
-    }
+    private var tag = Constants.Log.tag
     
     /**
-     Logs an informational message if the current log level is `info` or higher.
+     Logs an informational message if the current log level is `verbose`.
      
      - Parameters:
-       - tag: A tag to categorize or identify the source of the log.
        - log: The message to log.
      */
-    public func info(tag: String, log: String) {
-        if self.logLevel.rawValue >= LogLevel.info.rawValue {
-            print(Constants.Log.tag + "-info : \(log)")
-        }
+    public func verbose(log: String) {
+        print("[\(tag)] VERBOSE: \(log)")
     }
     
     /**
      Logs a debugging message if the current log level is `debug` or higher.
      
      - Parameters:
-       - tag: A tag to categorize or identify the source of the log.
        - log: The message to log.
      */
-    public func debug(tag: String, log: String) {
-        if self.logLevel.rawValue >= LogLevel.debug.rawValue {
-            print(Constants.Log.tag + "-debug : \(log)")
-        }
+    public func debug(log: String) {
+        print("[\(tag)] DEBUG: \(log)")
+    }
+    
+    /**
+     Logs an informational message if the current log level is `info` or higher.
+     
+     - Parameters:
+       - log: The message to log.
+     */
+    public func info(log: String) {
+        print("[\(tag)] INFO: \(log)")
     }
     
     /**
      Logs a warning message if the current log level is `warn` or higher.
      
      - Parameters:
-       - tag: A tag to categorize or identify the source of the log.
        - log: The message to log.
      */
-    public func warn(tag: String, log: String) {
-        if self.logLevel.rawValue >= LogLevel.warn.rawValue {
-            print(Constants.Log.tag + "-warn : \(log)")
-        }
+    public func warn(log: String) {
+        print("[\(tag)] WARN: \(log)")
     }
     
     /**
      Logs an error message if the current log level is `error` or higher.
      
      - Parameters:
-       - tag: A tag to categorize or identify the source of the log.
        - log: The message to log.
+       - error: Optional error to include in the message.
      */
-    public func error(tag: String, log: String) {
-        if self.logLevel.rawValue >= LogLevel.error.rawValue {
-            print(Constants.Log.tag + "-error : \(log)")
+    public func error(log: String, error: (any Error)?) {
+        if let error {
+            print("[\(tag)] ERROR: \(log) - \(error.localizedDescription)")
+        } else {
+            print("[\(tag)] ERROR: \(log)")
         }
     }
 }
