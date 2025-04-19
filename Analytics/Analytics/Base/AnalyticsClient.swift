@@ -292,6 +292,7 @@ extension AnalyticsClient {
      Sets up the analytics client by collecting configuration data and initializing the plugin chain.
      */
     private func setup() {
+        self.setLogger(logger: SwiftLogger())
         self.storeAnonymousId()
         self.collectConfiguration()
         self.startProcessingEvents()

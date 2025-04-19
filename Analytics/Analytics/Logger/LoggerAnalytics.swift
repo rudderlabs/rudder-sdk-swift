@@ -23,7 +23,7 @@ final class LoggerAnalytics {
 
     private static let shared = LoggerAnalytics()
 
-    private var logger: Logger = SwiftLogger()
+    private var logger: Logger?
     private var logLevel: LogLevel = Constants.Log.defaultLevel
 
     /**
@@ -43,26 +43,26 @@ final class LoggerAnalytics {
 
     static func verbose(log: String) {
         guard shared.logLevel.rawValue >= LogLevel.verbose.rawValue else { return }
-        shared.logger.verbose(log: log)
+        shared.logger?.verbose(log: log)
     }
 
     static func debug(log: String) {
         guard shared.logLevel.rawValue >= LogLevel.debug.rawValue else { return }
-        shared.logger.debug(log: log)
+        shared.logger?.debug(log: log)
     }
 
     static func info(log: String) {
         guard shared.logLevel.rawValue >= LogLevel.info.rawValue else { return }
-        shared.logger.info(log: log)
+        shared.logger?.info(log: log)
     }
 
     static func warn(log: String) {
         guard shared.logLevel.rawValue >= LogLevel.warn.rawValue else { return }
-        shared.logger.warn(log: log)
+        shared.logger?.warn(log: log)
     }
 
-    static func error(log: String, error: Error?) {
+    static func error(log: String, error: Error? = nil) {
         guard shared.logLevel.rawValue >= LogLevel.error.rawValue else { return }
-        shared.logger.error(log: log, error: error)
+        shared.logger?.error(log: log, error: error)
     }
 }

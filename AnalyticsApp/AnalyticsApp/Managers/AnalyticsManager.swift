@@ -17,8 +17,9 @@ class AnalyticsManager {
     private var analytics: AnalyticsClient?
     
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logger: self)
+        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logLevel: .verbose)
         self.analytics = AnalyticsClient(configuration: config)
+        self.analytics?.setLogger(logger: self)
         
         //Add external plugin to analytics..
         self.analytics?.addPlugin(AdvertisingIdPlugin())
@@ -84,11 +85,27 @@ extension AnalyticsManager {
 
 // MARK: - Logger
 extension AnalyticsManager: Logger {
+    func verbose(log: String) {
+        print("[Analytics-Swift] :: Verbose :: \(log)")
+    }
     
-    var currentLogLevel: LogLevel { .debug }
+    func debug(log: String) {
+        print("[Analytics-Swift] :: Debug :: \(log)")
+    }
     
-    func debug(tag: String, log: String) {
-        print("\(tag) : \(log)")
+    func info(log: String) {
+        print("[Analytics-Swift] :: Info :: \(log)")
+    }
+    
+    func warn(log: String) {
+        print("[Analytics-Swift] :: Warn :: \(log)")
+    }
+    
+    func error(log: String, error: (any Error)?) {
+        print("[Analytics-Swift] :: Error :: \(log)")
+        if let error {
+            print("[Analytics-Swift] :: Error Details :: \(error)")
+        }
     }
 }
 
