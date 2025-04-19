@@ -32,13 +32,18 @@ final class HttpNetwork {
     }()
     
     static func perform(request: URLRequest) async throws -> Data {
+        LoggerAnalytics.debug(log: "Request URL: \(request.url?.absoluteString ?? "No URL")")
+        
         let (data, response) = try await session.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else { throw HttpNetworkError.invalidResponse }
         
         let statusCode = httpResponse.statusCode
+        
+        LoggerAnalytics.debug(log: "Response Status Code: \(statusCode)")
+        LoggerAnalytics.debug(log: "Response Data: \(data.jsonString ?? "No Data")")
+        
         guard statusCode == HttpStateCode.success else {
-            print(data.jsonString ?? "No Data..")
             throw HttpNetworkError.requestFailed(statusCode)
         }
         

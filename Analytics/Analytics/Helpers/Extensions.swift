@@ -113,7 +113,7 @@ extension FileManager {
         let fileUrl = URL(fileURLWithPath: filePath)
         do {
             try FileManager.default.removeItem(at: fileUrl)
-            print("File deleted: \(filePath)")
+            LoggerAnalytics.debug(log: "File deleted: \(filePath)")
             return true
         } catch {
             return false
@@ -146,7 +146,7 @@ extension Encodable {
             let jsonData = try encoder.encode(self)
             return jsonData.jsonString
         } catch {
-            print("Error encoding JSON: \(error)")
+            LoggerAnalytics.error(log: "Encoding JSON Error", error: error)
             return nil
         }
     }

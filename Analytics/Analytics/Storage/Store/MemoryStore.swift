@@ -28,7 +28,7 @@ final actor MemoryStore {
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > DataStoreConstants.maxBatchSize {
             self.finish()
-            print("Batch size exceeded. Closing the current batch.")
+            LoggerAnalytics.info(log: "Batch size exceeded. Closing the current batch..")
             self.store(event: event)
             return
         }
@@ -72,7 +72,7 @@ final actor MemoryStore {
     private func removeItem(using id: String) -> Bool {
         guard let firstIndex = self.dataItems.firstIndex(where: { $0.reference == id }) else { return false }
         self.dataItems.remove(at: firstIndex)
-        print("Item removed: \(id)")
+        LoggerAnalytics.debug(log: "Item removed: \(id)")
         return true
     }
 }

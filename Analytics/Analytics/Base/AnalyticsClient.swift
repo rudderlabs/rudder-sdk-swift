@@ -77,7 +77,7 @@ extension AnalyticsClient {
         guard self.isAnalyticsActive else { return }
         
         if let sessionId, String(sessionId).count < SessionConstants.minSessionIdLength {
-            print("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
+            LoggerAnalytics.error(log: "Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
             return
         }
         
@@ -274,7 +274,7 @@ extension AnalyticsClient {
     var isAnalyticsActive: Bool {
         get {
             if isAnalyticsShutdown {
-                print(Constants.Log.shutdownMessage)
+                LoggerAnalytics.error(log: Constants.Log.shutdownMessage)
             }
             return !isAnalyticsShutdown
         }
@@ -360,9 +360,9 @@ extension AnalyticsClient {
             do {
                 let data = try await client.getConfiguarationData()
                 self.storage.write(value: data.jsonString, key: Constants.StorageKeys.sourceConfig)
-                print(data.prettyPrintedString ?? "Bad response")
+                LoggerAnalytics.info(log: data.prettyPrintedString ?? "Bad response")
             } catch {
-                print(error.localizedDescription)
+                LoggerAnalytics.error(log: "Failed to get sourceConfig", error: error)
             }
         }
     }
