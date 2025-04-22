@@ -17,6 +17,7 @@
 		5351AA8D2C6BEA02003C3C47 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA8B2C6BEA02003C3C47 /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5383D2C72D3E95FC00291B00 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2C62D3E95FC00291B00 /* AnalyticsManager.swift */; };
 		5383D2C92D3E97C700291B00 /* AdvertisingIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */; };
+		53CC353C2DB7A95900A2EF2F /* CustomLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */; };
 		53D7FDF72D63A42C00598443 /* BluetoothInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		5383D2C62D3E95FC00291B00 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 		5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPlugin.swift; sourceTree = "<group>"; };
 		5383D2CE2D3EAC0C00291B00 /* AnalyticsAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnalyticsAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLogger.swift; sourceTree = "<group>"; };
 		53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -106,6 +108,7 @@
 			children = (
 				5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */,
 				5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */,
+				53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */,
 				53D7FE0D2D63C58C00598443 /* Managers */,
 				53D7FE0C2D63C57900598443 /* ExternalPlugins */,
 				5351AA802C6BE9E0003C3C47 /* Assets.xcassets */,
@@ -255,6 +258,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53CC353C2DB7A95900A2EF2F /* CustomLogger.swift in Sources */,
 				5383D2C92D3E97C700291B00 /* AdvertisingIdPlugin.swift in Sources */,
 				53472F7A2D622B2900EF8042 /* PermissionManager.swift in Sources */,
 				5383D2C72D3E95FC00291B00 /* AnalyticsManager.swift in Sources */,
