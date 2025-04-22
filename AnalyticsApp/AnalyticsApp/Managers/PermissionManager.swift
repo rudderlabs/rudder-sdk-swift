@@ -9,6 +9,7 @@ import Foundation
 import CoreBluetooth
 import AppTrackingTransparency
 import AdSupport
+import Analytics
 
 enum PermissionType {
     case idfa
@@ -50,10 +51,10 @@ extension PermissionManager {
     private func requestIDFAPermission(completion: @escaping () -> Void) {
         DispatchQueue.main.async {
             ATTrackingManager.requestTrackingAuthorization { status in
-                print("IDFA Status: \(status.rawValue)")
+                LoggerAnalytics.debug(log: "IDFA Status: \(status.rawValue)")
                 if status == .authorized {
                     let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
-                    print("IDFA: \(idfa)")
+                    LoggerAnalytics.debug(log: "IDFA: \(idfa)")
                 }
                 completion()
             }
@@ -72,11 +73,11 @@ extension PermissionManager: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
-            print("Bluetooth is On")
+            LoggerAnalytics.info(log: "Bluetooth is On")
         case .poweredOff:
-            print("Bluetooth is Off")
+            LoggerAnalytics.info(log: "Bluetooth is Off")
         default:
-            print("Bluetooth state: \(central.state.rawValue)")
+            LoggerAnalytics.debug(log: "Bluetooth state: \(central.state.rawValue)")
         }
         // Trigger completion only after user interaction with Bluetooth alert
         bluetoothCompletion?()
