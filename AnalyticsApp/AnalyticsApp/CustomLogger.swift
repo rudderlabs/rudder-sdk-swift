@@ -8,6 +8,19 @@
 import Foundation
 import Analytics
 
+/**
+ A basic implementation of the `Logger` protocol that prints analytics logs to the console.
+ 
+ ## Usage:
+
+ ```swift
+ // 1. Set an instance of this class as the logger for Analytics
+ analytics.setLogger(logger: CustomLogger())
+
+ // 2. Use `LoggerAnalytics` to log messages
+ LoggerAnalytics.info(log: "Custom logger initialized.")
+ */
+
 class CustomLogger: Logger {
     func verbose(log: String) {
         print("[Analytics-Swift] :: Verbose :: \(log)")
