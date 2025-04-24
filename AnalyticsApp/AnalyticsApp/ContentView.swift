@@ -62,7 +62,11 @@ struct ContentView: View {
             }
             
             CustomButton(title: "Read AnonymousId") {
-                print("Current Anonymous Id: \(String(describing: AnalyticsManager.shared.anonymousId))")
+                if let anonymousId = AnalyticsManager.shared.anonymousId {
+                    LoggerAnalytics.debug(log: "Current Anonymous Id: \(anonymousId)")
+                } else {
+                    LoggerAnalytics.debug(log: "Current Anonymous Id: nil")
+                }
             }
             
             HStack {
@@ -88,9 +92,9 @@ struct ContentView: View {
             HStack {
                 CustomButton(title: "Read SessionId") {
                     if let sessionId = AnalyticsManager.shared.sessionId {
-                        print("Current Session Id: \(String(sessionId))")
+                        LoggerAnalytics.debug(log: "Current Session Id: \(String(sessionId))")
                     } else {
-                        print("No active session found.")
+                        LoggerAnalytics.debug(log: "No active session found.")
                     }
                 }
                 

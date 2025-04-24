@@ -77,7 +77,7 @@ extension AnalyticsClient {
         guard self.isAnalyticsActive else { return }
         
         if let sessionId, String(sessionId).count < SessionConstants.minSessionIdLength {
-            print("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
+            LoggerAnalytics.error(log: "Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
             return
         }
         
@@ -231,6 +231,21 @@ extension AnalyticsClient {
     }
 }
 
+// MARK: - Logger  Management
+
+extension AnalyticsClient {
+    
+    /**
+     Sets a custom logger for analytics logging.
+
+     - Parameter logger: The logger instance to be used for logging analytics events and messages.
+     */
+    public func setLogger(logger: Logger) {
+        guard self.isAnalyticsActive else { return }
+        LoggerAnalytics.setup(logger: logger, logLevel: self.configuration.logLevel)
+    }
+}
+
 // MARK: - Shutdown
 
 extension AnalyticsClient {
@@ -259,7 +274,7 @@ extension AnalyticsClient {
     var isAnalyticsActive: Bool {
         get {
             if isAnalyticsShutdown {
-                print(Constants.Log.shutdownMessage)
+                LoggerAnalytics.error(log: Constants.Log.shutdownMessage)
             }
             return !isAnalyticsShutdown
         }
@@ -277,6 +292,7 @@ extension AnalyticsClient {
      Sets up the analytics client by collecting configuration data and initializing the plugin chain.
      */
     private func setup() {
+        self.setLogger(logger: SwiftLogger())
         self.storeAnonymousId()
         self.collectConfiguration()
         self.startProcessingEvents()
@@ -344,9 +360,9 @@ extension AnalyticsClient {
             do {
                 let data = try await client.getConfiguarationData()
                 self.storage.write(value: data.jsonString, key: Constants.StorageKeys.sourceConfig)
-                print(data.prettyPrintedString ?? "Bad response")
+                LoggerAnalytics.info(log: data.prettyPrintedString ?? "Bad response")
             } catch {
-                print(error.localizedDescription)
+                LoggerAnalytics.error(log: "Failed to get sourceConfig", error: error)
             }
         }
     }
