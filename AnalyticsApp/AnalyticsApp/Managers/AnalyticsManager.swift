@@ -17,7 +17,7 @@ class AnalyticsManager {
     private var analytics: AnalyticsClient?
     
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logger: self)
+        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logLevel: .verbose)
         self.analytics = AnalyticsClient(configuration: config)
         
         //Add external plugin to analytics..
@@ -79,16 +79,6 @@ extension AnalyticsManager {
     
     var sessionId: UInt64? {
         return self.analytics?.sessionId
-    }
-}
-
-// MARK: - Logger
-extension AnalyticsManager: Logger {
-    
-    var currentLogLevel: LogLevel { .debug }
-    
-    func debug(tag: String, log: String) {
-        print("\(tag) : \(log)")
     }
 }
 

@@ -55,7 +55,7 @@ extension EventManager {
     }
     
     func flush() {
-        print("Flush triggered...")
+        LoggerAnalytics.info(log: "Flush triggered...")
         Task {
             try await self.writeChannel.send(self.flushEvent)
         }
@@ -78,6 +78,7 @@ extension EventManager {
 
                 if !isFlushSignal {
                     if let json = event.event?.jsonString {
+                        LoggerAnalytics.debug(log: "Processing event: \(json)")
                         await self.storage.write(event: json)
                         self.flushPolicyFacade.updateCount()
                     }
@@ -89,7 +90,7 @@ extension EventManager {
                         await self.storage.rollover()
                         try await self.uploadChannel.send(Constants.DefaultConfig.uploadSignal)
                     } catch {
-                        print("Error on upload signal: \(error)")
+                        LoggerAnalytics.error(log: "Error on upload signal", error: error)
                     }
                 }
             }
@@ -101,17 +102,19 @@ extension EventManager {
             for await _ in self.uploadChannel.stream {
                 let dataItems = await self.storage.read().dataItems
                 for item in dataItems {
-                    print("Upload started: \(item.reference)")
+                    LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
+                    
                     do {
                         let processed = item.batch.replacingOccurrences(of: Constants.Payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
-                        print("Uploading: \(processed)")
+                        LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
                         
-                        _ = try await self.httpClient.postBatchEvents(processed)
+                        let responseData = try await self.httpClient.postBatchEvents(processed)
+                        LoggerAnalytics.debug(log: "Upload response: \(responseData.jsonString ?? "No response")")
                         
                         await self.storage.remove(eventReference: item.reference)
-                        print("Upload completed: \(item.reference)")
+                        LoggerAnalytics.debug(log: "Upload completed: \(item.reference)")
                     } catch {
-                        print("Upload failed: \(item.reference)")
+                        LoggerAnalytics.error(log: "Upload failed: \(item.reference)", error: error)
                     }
                 }
             }
