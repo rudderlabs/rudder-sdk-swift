@@ -6,14 +6,18 @@
 //
 
 import UIKit
+import Analytics
+
+// MARK: - AppDelegate
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
+    private var analytics: AnalyticsClient?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        self.initializeAnalyticsSDK()
         return true
     }
 
@@ -34,3 +38,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+// MARK: - Analytics Helper
+
+extension AppDelegate {
+    
+    static var `default`: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
+    
+    func initializeAnalyticsSDK() {
+        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logLevel: .verbose)
+        self.analytics = AnalyticsClient(configuration: config)
+    }
+    
+    func track(name: String, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+        self.analytics?.track(name: name, properties: properties, options: options)
+    }
+}
+
+// MARK: - UIStoryboard
+
+extension UIStoryboard {
+    static var main: UIStoryboard {
+        return UIStoryboard(name: "Main", bundle: nil)
+    }
+}
