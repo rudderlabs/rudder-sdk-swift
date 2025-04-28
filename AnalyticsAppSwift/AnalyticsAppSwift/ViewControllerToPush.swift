@@ -8,7 +8,9 @@
 import UIKit
 
 // MARK: - ViewControllerToPush
-
+/**
+ View controller which will be pushed using `UINavigationController`.
+ */
 class ViewControllerToPush: UIViewController {
 
     override func viewDidLoad() {

@@ -8,7 +8,9 @@
 import UIKit
 
 // MARK: - ViewControllerToPresent
-
+/**
+ View controller which will be presented.
+ */
 class ViewControllerToPresent: UIViewController {
 
     override func viewDidLoad() {
