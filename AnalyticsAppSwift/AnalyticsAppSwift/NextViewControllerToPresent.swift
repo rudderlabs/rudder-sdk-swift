@@ -1,5 +1,5 @@
 //
-//  ViewControllerToPresent.swift
+//  NextViewControllerToPresent.swift
 //  AnalyticsAppSwift
 //
 //  Created by Satheesh Kannan on 28/04/25.
@@ -7,11 +7,11 @@
 
 import UIKit
 
-// MARK: - ViewControllerToPresent
+// MARK: - NextViewControllerToPresent
 /**
  View controller which will be presented.
  */
-class ViewControllerToPresent: UIViewController {
+class NextViewControllerToPresent: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  BaseViewController.swift
 //  AnalyticsAppSwift
 //
 //  Created by Satheesh Kannan on 19/04/25.
@@ -7,9 +7,9 @@
 
 import UIKit
 
-// MARK: - ViewController
+// MARK: - BaseViewController
 
-class ViewController: UIViewController {
+class BaseViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +20,7 @@ class ViewController: UIViewController {
 
 // MARK: - Button Actions
 
-extension ViewController {
+extension BaseViewController {
 
     @IBAction func trackEvent(_ sender: Any) {
         AppDelegate.default.track(name: "Button Clicked")
