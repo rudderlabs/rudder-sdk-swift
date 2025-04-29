@@ -8,6 +8,7 @@
 import UIKit
 import Analytics
 
+// MARK: - UIKitAutomaticScreenTrackingPlugin
 /**
  Automatically tracks UIKit screen appearances by swizzling `viewDidAppear` and posting analytics events.
  */
@@ -90,7 +91,7 @@ extension UIViewController {
         NotificationCenter.default.post(name: .UIKitScreenTrackingNotification, object: self)
     }
 
-    var topViewController: UIViewController? {
+    fileprivate var topViewController: UIViewController? {
         let root = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .flatMap { $0.windows }
@@ -114,7 +115,7 @@ extension UIViewController {
     }
 }
 
-// MARK: - Notification Extension
+// MARK: - Notification Name Extension
 
 extension Notification.Name {
     fileprivate static let UIKitScreenTrackingNotification = Notification.Name("TrackUIKitScreenNotification")
