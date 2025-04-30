@@ -52,6 +52,10 @@ extension AppDelegate {
     func track(name: String, properties: RudderProperties? = nil, options: RudderOption? = nil) {
         self.analytics?.track(name: name, properties: properties, options: options)
     }
+    
+    func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+        self.analytics?.screen(name: name, category: category, properties: properties, options: options)
+    }
 }
 
 // MARK: - UIStoryboard
