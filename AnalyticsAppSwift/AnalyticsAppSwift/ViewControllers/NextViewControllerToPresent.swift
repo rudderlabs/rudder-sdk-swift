@@ -21,3 +21,9 @@ class NextViewControllerToPresent: UIViewController {
         self.dismiss(animated: true)
     }
 }
+
+extension NextViewControllerToPresent: UIKitScreenTrackable {
+    func trackUIKitScreen(name: String) {
+        AppDelegate.default.screen(name: name, category: "Presented Screen", properties: ["fullName": "NextViewControllerToPresent"])
+    }
+}

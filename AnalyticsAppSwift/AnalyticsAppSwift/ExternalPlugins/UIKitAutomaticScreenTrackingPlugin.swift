@@ -45,7 +45,11 @@ final class UIKitAutomaticScreenTrackingPlugin: Plugin {
         let name = NSStringFromClass(type(of: viewController)).replacingOccurrences(of: "ViewController", with: "")
         let className = name.components(separatedBy: ".").last ?? viewController.title ?? "Unknown"
         
-        self.analytics?.screen(name: className)
+        if let trackableViewController = viewController as? UIKitScreenTrackable {
+            trackableViewController.trackUIKitScreen(name: className)
+        } else {
+            self.analytics?.screen(name: className)
+        }
     }
 
     func swizzleViewDidAppear() {
@@ -119,4 +123,10 @@ extension UIViewController {
 
 extension Notification.Name {
     fileprivate static let UIKitScreenTrackingNotification = Notification.Name("TrackUIKitScreenNotification")
+}
+
+// MARK: - UIKitScreenTrackable
+
+protocol UIKitScreenTrackable {
+    func trackUIKitScreen(name: String)
 }
