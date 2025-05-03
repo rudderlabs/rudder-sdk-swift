@@ -10,7 +10,6 @@
 		5303DB332DBFF42F008C0784 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5303DB322DBFF42F008C0784 /* Analytics.framework */; };
 		5303DB342DBFF42F008C0784 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5303DB322DBFF42F008C0784 /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53CBA9602DC29AD200961D6A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53CBA95A2DC29AD200961D6A /* Main.storyboard */; };
-		53CBA9612DC29AD200961D6A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 53CBA9562DC29AD200961D6A /* Info.plist */; };
 		53CBA9622DC29AD200961D6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53CBA9542DC29AD200961D6A /* Assets.xcassets */; };
 		53CBA9632DC29AD200961D6A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53CBA9582DC29AD200961D6A /* LaunchScreen.storyboard */; };
 		53CBA9642DC29AD200961D6A /* NextViewControllerToPresent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CBA95B2DC29AD200961D6A /* NextViewControllerToPresent.swift */; };
@@ -262,7 +261,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				53CBA9602DC29AD200961D6A /* Main.storyboard in Resources */,
-				53CBA9612DC29AD200961D6A /* Info.plist in Resources */,
 				53CBA9622DC29AD200961D6A /* Assets.xcassets in Resources */,
 				53CBA9632DC29AD200961D6A /* LaunchScreen.storyboard in Resources */,
 			);
