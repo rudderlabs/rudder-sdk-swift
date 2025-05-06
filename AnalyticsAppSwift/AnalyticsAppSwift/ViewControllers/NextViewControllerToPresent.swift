@@ -24,6 +24,6 @@ class NextViewControllerToPresent: UIViewController {
 
 extension NextViewControllerToPresent: UIKitScreenTrackable {
     func trackUIKitScreen(name: String) {
-        AppDelegate.default.screen(name: name, category: "Presented Screen", properties: ["fullName": "NextViewControllerToPresent"])
+        AppDelegate.default.screen(name: name, category: "Presented Screen", properties: ["fullName": "NextViewControllerToPresent", "automatic": true])
     }
 }
