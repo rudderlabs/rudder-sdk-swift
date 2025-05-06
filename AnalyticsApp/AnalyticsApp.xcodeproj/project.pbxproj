@@ -110,7 +110,7 @@
 				5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */,
 				53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */,
 				53D7FE0D2D63C58C00598443 /* Managers */,
-				53D7FE0C2D63C57900598443 /* ExternalPlugins */,
+				53D7FE0C2D63C57900598443 /* CustomPlugins */,
 				5351AA802C6BE9E0003C3C47 /* Assets.xcassets */,
 				5351AA822C6BE9E0003C3C47 /* Preview Content */,
 			);
@@ -133,14 +133,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		53D7FE0C2D63C57900598443 /* ExternalPlugins */ = {
+		53D7FE0C2D63C57900598443 /* CustomPlugins */ = {
 			isa = PBXGroup;
 			children = (
 				5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */,
 				53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */,
 				533624BA2D93E31F00F602CD /* OptionPlugin.swift */,
 			);
-			path = ExternalPlugins;
+			path = CustomPlugins;
 			sourceTree = "<group>";
 		};
 		53D7FE0D2D63C58C00598443 /* Managers */ = {

@@ -30,7 +30,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-
 /* Begin PBXCopyFilesBuildPhase section */
 		5303DB352DBFF42F008C0784 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -102,7 +101,7 @@
 				53CBA96A2DC29AE000961D6A /* AppDelegate */,
 				53CBA96C2DC29AFB00961D6A /* ViewControllers */,
 				53CBA96B2DC29AEF00961D6A /* Storyboards */,
-				53CBA96D2DC29B1600961D6A /* ExternalPlugins */,
+				53CBA96D2DC29B1600961D6A /* CustomPlugins */,
 				53CBA9542DC29AD200961D6A /* Assets.xcassets */,
 				53CBA9562DC29AD200961D6A /* Info.plist */,
 			);
@@ -137,12 +136,12 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
-		53CBA96D2DC29B1600961D6A /* ExternalPlugins */ = {
+		53CBA96D2DC29B1600961D6A /* CustomPlugins */ = {
 			isa = PBXGroup;
 			children = (
 				53CBA95E2DC29AD200961D6A /* UIKitAutomaticScreenTrackingPlugin.swift */,
 			);
-			path = ExternalPlugins;
+			path = CustomPlugins;
 			sourceTree = "<group>";
 		};
 		53CC34B12DB41F4000A2EF2F = {
@@ -291,6 +290,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
 /* Begin PBXTargetDependency section */
 		53CBA9772DC29B8000961D6A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
