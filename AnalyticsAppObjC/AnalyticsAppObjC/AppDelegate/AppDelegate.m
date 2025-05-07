@@ -6,6 +6,7 @@
 //
 
 #import "AppDelegate.h"
+#import "Analytics/Analytics-Swift.h"
 
 @interface AppDelegate ()
 

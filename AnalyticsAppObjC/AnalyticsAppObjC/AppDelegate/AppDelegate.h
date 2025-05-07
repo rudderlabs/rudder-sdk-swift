@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Analytics/Analytics.h>
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 
