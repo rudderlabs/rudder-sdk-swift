@@ -11,7 +11,6 @@
 		5352C7AF2DCBCBA10022B105 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5352C7AA2DCBCBA10022B105 /* SceneDelegate.m */; };
 		5352C7B02DCBCBA10022B105 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5352C7AC2DCBCBA10022B105 /* ViewController.m */; };
 		5352C7B12DCBCBA10022B105 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5352C7A12DCBCBA10022B105 /* AppDelegate.m */; };
-		5352C7B22DCBCBA10022B105 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5352C7A32DCBCBA10022B105 /* Info.plist */; };
 		5352C7B32DCBCBA10022B105 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5352C7A22DCBCBA10022B105 /* Assets.xcassets */; };
 		5352C7B42DCBCBA10022B105 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5352C7A82DCBCBA10022B105 /* Main.storyboard */; };
 		5352C7B52DCBCBA10022B105 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5352C7A52DCBCBA10022B105 /* LaunchScreen.storyboard */; };
@@ -189,7 +188,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5352C7B22DCBCBA10022B105 /* Info.plist in Resources */,
 				5352C7B32DCBCBA10022B105 /* Assets.xcassets in Resources */,
 				5352C7B42DCBCBA10022B105 /* Main.storyboard in Resources */,
 				5352C7B52DCBCBA10022B105 /* LaunchScreen.storyboard in Resources */,
