@@ -64,7 +64,7 @@ public class RudderOption: RudderOptionType {
     /**
      Initializes a new instance of `RudderOption`.
 
-     The initial integrations are set to the default integrations defined in `Constants.Payload.integration`.
+     The initial integrations are set to the default integrations defined in `Constants.payload.integration`.
      */
     
     public init(integrations: [String: Any]? = nil, customContext: [String: Any]? = nil, externalIds: [ExternalId]? = nil) {
