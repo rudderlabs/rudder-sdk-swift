@@ -125,7 +125,7 @@ public enum LogLevel: Int {
 
 final class SwiftLogger: Logger {
     
-    private var tag = Constants.Log.tag
+    private var tag = Constants.log.tag
     
     /**
      Logs an informational message if the current log level is `verbose`.

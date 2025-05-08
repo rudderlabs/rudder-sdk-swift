@@ -274,7 +274,7 @@ extension AnalyticsClient {
     var isAnalyticsActive: Bool {
         get {
             if isAnalyticsShutdown {
-                LoggerAnalytics.error(log: Constants.Log.shutdownMessage)
+                LoggerAnalytics.error(log: Constants.log.shutdownMessage)
             }
             return !isAnalyticsShutdown
         }
@@ -359,7 +359,7 @@ extension AnalyticsClient {
             let client = HttpClient(analytics: self)
             do {
                 let data = try await client.getConfiguarationData()
-                self.storage.write(value: data.jsonString, key: Constants.StorageKeys.sourceConfig)
+                self.storage.write(value: data.jsonString, key: Constants.storageKeys.sourceConfig)
                 LoggerAnalytics.info(log: data.prettyPrintedString ?? "Bad response")
             } catch {
                 LoggerAnalytics.error(log: "Failed to get sourceConfig", error: error)

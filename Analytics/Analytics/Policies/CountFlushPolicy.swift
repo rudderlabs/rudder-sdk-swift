@@ -43,8 +43,8 @@ public final class CountFlushPolicy: FlushPolicy {
      - Parameter flushCount: The number of events required to trigger a flush. Defaults to `Constants.Flush.EventCount.default`.
      - Note: The flush count is clamped between `Constants.Flush.EventCount.min` and `Constants.Flush.EventCount.max`.
      */
-    public init(flushCount: Int = Constants.Flush.EventCount.default) {
-        self.flushCount = min(Constants.Flush.EventCount.max, max(flushCount, Constants.Flush.EventCount.min))
+    public init(flushCount: Int = Constants.flushEventCount.default) {
+        self.flushCount = min(Constants.flushEventCount.max, max(flushCount, Constants.flushEventCount.min))
     }
 
     /**

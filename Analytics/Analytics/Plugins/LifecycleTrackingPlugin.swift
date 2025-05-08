@@ -88,16 +88,16 @@ extension LifecycleTrackingPlugin {
         return AppVersion(
             currentVersionName: currentVersionName,
             currentBuild: currentBuild,
-            previousVersionName: self.analytics?.storage.read(key: Constants.StorageKeys.appVersion),
-            previousBuild: self.analytics?.storage.read(key: Constants.StorageKeys.appBuild) ?? -1
+            previousVersionName: self.analytics?.storage.read(key: Constants.storageKeys.appVersion),
+            previousBuild: self.analytics?.storage.read(key: Constants.storageKeys.appBuild) ?? -1
         )
     }
     
     private func updateAppVersion() {
         if let versionName = self.appVersion?.currentVersionName {
-            self.analytics?.storage.write(value: versionName, key: Constants.StorageKeys.appVersion)
+            self.analytics?.storage.write(value: versionName, key: Constants.storageKeys.appVersion)
         }
-        self.analytics?.storage.write(value: self.appVersion?.currentBuild, key: Constants.StorageKeys.appBuild)
+        self.analytics?.storage.write(value: self.appVersion?.currentBuild, key: Constants.storageKeys.appBuild)
     }
 }
 
