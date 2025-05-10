@@ -12,64 +12,64 @@ import Foundation
  The `Configuration` class represents the settings used to initialize and configure the Analytics SDK. It provides customization for key parameters like URLs, logging behavior, and data collection preferences.
  */
 @objcMembers
-public class Configuration {
+public class Configuration: NSObject {
 
     /**
      The write key used to authenticate with the analytics service.
      */
-    var writeKey: String
+    public var writeKey: String
 
     /**
      The URL for the data plane where analytics events are sent.
      */
-    var dataPlaneUrl: String
+    public var dataPlaneUrl: String
 
     /**
      The URL for the control plane to fetch configuration data.
      */
-    var controlPlaneUrl: String
+    public var controlPlaneUrl: String
 
     /**
      The current log level that controls which messages are shown.
      */
-    var logLevel: LogLevel
+    public var logLevel: LogLevel
 
     /**
      A boolean flag to disable event tracking when set to `true`. Defaults to `false`.
      */
-    var optOut: Bool
+    public var optOut: Bool
 
     /**
      A boolean flag to enable GZip compression for network requests. Defaults to `true`.
      */
-    var gzipEnabled: Bool
+    public var gzipEnabled: Bool
 
     /**
      The storage mechanism used to persist data. Defaults to in-built storage system, if no custom storage is provided.
      */
-    var storage: Storage
+    public var storage: Storage
 
     /**
      An array of flush policies defining how and when events are flushed to the data plane.
      */
-    var flushPolicies: [FlushPolicy]
+    public var flushPolicies: [FlushPolicy]
 
     /**
      A boolean flag indicating whether the SDK should automatically collect the device ID. Defaults to `true`.
      */
-    var collectDeviceId: Bool
+    public var collectDeviceId: Bool
     
     /**
      A boolean flag indicating whether the SDK should track application lifecycle events. Defaults to `true`.
      */
-    var trackApplicationLifecycleEvents: Bool
+    public var trackApplicationLifecycleEvents: Bool
     
     /**
      A configuration instance for managing session settings.
      */
-    var sessionConfiguration: SessionConfiguration
+    public var sessionConfiguration: SessionConfiguration
 
-    // MARK: - Initialization
+    // MARK: - Initialization (Swift)
 
     /**
      Initializes a `Configuration` object with the specified parameters.
@@ -95,7 +95,7 @@ public class Configuration {
         controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl,
         logLevel: LogLevel = Constants.log.defaultLevel,
         optOut: Bool = false,
-        gzipEnaabled: Bool = Constants.defaultConfig.gzipEnabled,
+        gzipEnabled: Bool = Constants.defaultConfig.gzipEnabled,
         storage: Storage? = nil,
         flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
         collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId,
@@ -107,13 +107,43 @@ public class Configuration {
         self.controlPlaneUrl = controlPlaneUrl
         self.logLevel = logLevel
         self.optOut = optOut
-        self.gzipEnabled = gzipEnaabled
+        self.gzipEnabled = gzipEnabled
         self.storage = storage ?? BasicStorage(writeKey: writeKey)
         self.flushPolicies = flushPolicies
         self.collectDeviceId = collectDeviceId
         self.trackApplicationLifecycleEvents = trackApplicationLifecycleEvents
         self.sessionConfiguration = sessionConfiguration
+        
+        super.init()
     }
+    
+    // MARK: - Initialization (Objective C)
+    
+    /**
+     Initializes a `Configuration` object with the required `writeKey` and `dataPlaneUrl`.
+     All other properties will use default values.
+     
+     - Parameters:
+        - writeKey: The write key used to authenticate with the analytics service.
+        - dataPlaneUrl: The URL of the data plane where analytics events are sent.
+     */
+    @objc
+    public convenience init(writeKey: String, dataPlaneUrl: String) {
+        self.init(
+            writeKey: writeKey,
+            dataPlaneUrl: dataPlaneUrl,
+            controlPlaneUrl: Constants.defaultConfig.controlPlaneUrl,
+            logLevel: Constants.log.defaultLevel,
+            optOut: false,
+            gzipEnabled: Constants.defaultConfig.gzipEnabled,
+            storage: nil,
+            flushPolicies: Constants.defaultConfig.flushPolicies,
+            collectDeviceId: Constants.defaultConfig.willCollectDeviceId,
+            trackApplicationLifecycleEvents: Constants.defaultConfig.willTrackLifecycleEvents,
+            sessionConfiguration: SessionConfiguration()
+        )
+    }
+
 }
 
 // MARK: - SessionConfiguration
@@ -121,7 +151,7 @@ public class Configuration {
  A configuration class for managing session settings.
  */
 @objcMembers
-public class SessionConfiguration {
+public class SessionConfiguration: NSObject {
     /**
      A flag indicating whether automatic session tracking is enabled.
      */
@@ -142,5 +172,7 @@ public class SessionConfiguration {
     public init(automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.defaultConfig.sessionTimeoutInMillis) {
         self.automaticSessionTracking = automaticSessionTracking
         self.sessionTimeoutInMillis = sessionTimeoutInMillis
+        
+        super.init()
     }
 }
