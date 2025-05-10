@@ -88,7 +88,7 @@ extension EventManager {
                     do {
                         self.flushPolicyFacade.resetCount()
                         await self.storage.rollover()
-                        try await self.uploadChannel.send(Constants.DefaultConfig.uploadSignal)
+                        try await self.uploadChannel.send(Constants.defaultConfig.uploadSignal)
                     } catch {
                         LoggerAnalytics.error(log: "Error on upload signal", error: error)
                     }
@@ -105,7 +105,7 @@ extension EventManager {
                     LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
                     
                     do {
-                        let processed = item.batch.replacingOccurrences(of: Constants.Payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
+                        let processed = item.batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
                         LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
                         
                         let responseData = try await self.httpClient.postBatchEvents(processed)

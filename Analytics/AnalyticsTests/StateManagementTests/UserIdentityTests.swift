@@ -47,9 +47,9 @@ final class UserIdentityTests: XCTestCase {
             let expectedUserId = "test-user-id"
             let expectedTraits = ["traits_key": "traits_value", "traits_key2": "sk@example.com"]
             
-            storage.write(value: expectedAnonymousId, key: Constants.StorageKeys.anonymousId)
-            storage.write(value: expectedUserId, key: Constants.StorageKeys.userId)
-            storage.write(value: expectedTraits.jsonString, key: Constants.StorageKeys.traits)
+            storage.write(value: expectedAnonymousId, key: Constants.storageKeys.anonymousId)
+            storage.write(value: expectedUserId, key: Constants.storageKeys.userId)
+            storage.write(value: expectedTraits.jsonString, key: Constants.storageKeys.traits)
             
             when("UserIdentity initialized.") {
                 let userIdentity = UserIdentity.initializeState(storage)

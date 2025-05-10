@@ -42,11 +42,11 @@ public final class FrequencyFlushPolicy: FlushPolicy {
     /**
      Initializes a new `FrequencyFlushPolicy`.
 
-     - Parameter flushIntervalInMillis: The time interval in milliseconds for triggering flushes. Defaults to `Constants.Flush.Interval.default`.
-     - Note: The interval is clamped to `Constants.Flush.Interval.min` to prevent excessively short durations.
+     - Parameter flushIntervalInMillis: The time interval in milliseconds for triggering flushes. Defaults to `Constants.flushInterval.default`.
+     - Note: The interval is clamped to `Constants.flushInterval.min` to prevent excessively short durations.
      */
-    public init(flushIntervalInMillis: UInt64 = Constants.Flush.Interval.default) {
-        self.flushIntervalInMillis = max(flushIntervalInMillis, Constants.Flush.Interval.min)
+    public init(flushIntervalInMillis: UInt64 = Constants.flushInterval.default) {
+        self.flushIntervalInMillis = max(flushIntervalInMillis, Constants.flushInterval.min)
     }
 
     /**

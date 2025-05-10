@@ -47,9 +47,9 @@ final class SessionInfoTests: XCTestCase {
             let expectedIsSessionStart = true
             let expectedSessionType = SessionType.manual
             
-            storage.write(value: expectedSessionId, key: Constants.StorageKeys.sessionId)
-            storage.write(value: expectedIsSessionStart, key: Constants.StorageKeys.isSessionStart)
-            storage.write(value: expectedSessionType == .manual, key: Constants.StorageKeys.isManualSession)
+            storage.write(value: expectedSessionId, key: Constants.storageKeys.sessionId)
+            storage.write(value: expectedIsSessionStart, key: Constants.storageKeys.isSessionStart)
+            storage.write(value: expectedSessionType == .manual, key: Constants.storageKeys.isManualSession)
             
             when("SessionInfo initialized.") {
                 let sessionInfo = SessionInfo.initializeState(storage)

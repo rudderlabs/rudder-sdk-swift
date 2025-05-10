@@ -46,10 +46,10 @@ public struct UserIdentity {
     static func initializeState(_ storage: KeyValueStorage) -> UserIdentity {
         var identity = UserIdentity()
         
-        identity.anonymousId = storage.read(key: Constants.StorageKeys.anonymousId) ?? .randomUUIDString
-        identity.userId = storage.read(key: Constants.StorageKeys.userId) ?? String.empty
+        identity.anonymousId = storage.read(key: Constants.storageKeys.anonymousId) ?? .randomUUIDString
+        identity.userId = storage.read(key: Constants.storageKeys.userId) ?? String.empty
         
-        if let traitsString: String = storage.read(key: Constants.StorageKeys.traits), let traits = traitsString.toDictionary {
+        if let traitsString: String = storage.read(key: Constants.storageKeys.traits), let traits = traitsString.toDictionary {
             identity.traits = traits
         }
         
@@ -64,23 +64,23 @@ extension UserIdentity {
     /**
      Stores the current `anonymousId` in the specified storage.
      
-     This method writes the value of `anonymousId` to the provided `KeyValueStorage` instance under the key defined in `Constants.StorageKeys.anonymousId`.
+     This method writes the value of `anonymousId` to the provided `KeyValueStorage` instance under the key defined in `Constants.storageKeys.anonymousId`.
      
      - Parameter storage: The storage instance where the `anonymousId` will be saved.
      */
     func storeAnonymousId(_ storage: KeyValueStorage) {
-        storage.write(value: anonymousId, key: Constants.StorageKeys.anonymousId)
+        storage.write(value: anonymousId, key: Constants.storageKeys.anonymousId)
     }
     
     /**
      Stores the current `userId` in the specified storage.
      
-     This method writes the value of `userId` to the provided `KeyValueStorage` instance under the key defined in `Constants.StorageKeys.userId`.
+     This method writes the value of `userId` to the provided `KeyValueStorage` instance under the key defined in `Constants.storageKeys.userId`.
      
      - Parameter storage: The storage instance where the `userId` will be saved.
      */
     func storeUserId(_ storage: KeyValueStorage) {
-        storage.write(value: userId, key: Constants.StorageKeys.userId)
+        storage.write(value: userId, key: Constants.storageKeys.userId)
     }
     
     /**
@@ -90,12 +90,12 @@ extension UserIdentity {
         - storage: An instance of `KeyValueStorage` where the values will be stored.
      
      The method performs the following:
-     1. Writes the `userId` to the storage using the `Constants.StorageKeys.userId` key.
-     2. Serializes the `traits` into a JSON string and writes it to the storage using the `Constants.StorageKeys.traits` key.
+     1. Writes the `userId` to the storage using the `Constants.storageKeys.userId` key.
+     2. Serializes the `traits` into a JSON string and writes it to the storage using the `Constants.storageKeys.traits` key.
      */
     func storeUserIdAndTraits(_ storage: KeyValueStorage) {
         self.storeUserId(storage)
-        storage.write(value: traits.jsonString, key: Constants.StorageKeys.traits)
+        storage.write(value: traits.jsonString, key: Constants.storageKeys.traits)
     }
     
     /**
@@ -105,12 +105,12 @@ extension UserIdentity {
         - storage: An instance of `KeyValueStorage` where the values will be removed.
      
      The method performs the following:
-     1. Removes the `userId` from the storage using the `Constants.StorageKeys.userId` key.
-     2. Removes the `traits` from the storage using the `Constants.StorageKeys.traits` key.
+     1. Removes the `userId` from the storage using the `Constants.storageKeys.userId` key.
+     2. Removes the `traits` from the storage using the `Constants.storageKeys.traits` key.
      */
     func resetUserIdAndTraits(_ storage: KeyValueStorage) {
-        storage.remove(key: Constants.StorageKeys.userId)
-        storage.remove(key: Constants.StorageKeys.traits)
+        storage.remove(key: Constants.storageKeys.userId)
+        storage.remove(key: Constants.storageKeys.traits)
     }
     
     /**
