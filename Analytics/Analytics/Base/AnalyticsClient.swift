@@ -12,7 +12,7 @@ import Foundation
  The `AnalyticsClient` class provides functionality for tracking events, managing user information, and processing data through a chain of plugins. It allows developers to track user actions, screen views, and group-specific data while enabling modular and extensible processing using plugins.
  */
 @objcMembers
-public class AnalyticsClient {
+public class AnalyticsClient: NSObject {
     
     /**
      The configuration object for the analytics client. It contains settings and storage mechanisms
@@ -60,6 +60,8 @@ public class AnalyticsClient {
         self.configuration = configuration
         self.processEventChannel = AsyncChannel(capacity: Int.max)
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
+        super.init()
+        
         self.setup()
     }
 }
