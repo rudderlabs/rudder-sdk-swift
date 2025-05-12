@@ -73,7 +73,7 @@ extension DiskStore {
     }
     
     private var currentFileIndex: Int {
-        guard let index: Int = self.keyValueStore.read(reference: self.fileIndexKey) else { return 0 }
+        guard let index = self.keyValueStore.read(reference: self.fileIndexKey) as? Int else { return 0 }
         return index
     }
     
