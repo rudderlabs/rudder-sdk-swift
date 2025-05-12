@@ -12,11 +12,10 @@ import Foundation
  A protocol that defines a simple key-value storage mechanism.
 
  This protocol provides methods for storing, retrieving, and removing data in a storage system using string-based keys.
- It supports encoding and decoding of data types that conform to the `Codable` protocol.
 
  - Methods:
-   - `write<T: Codable>(value: T, key: String)`: Stores a value in the storage for a given key.
-   - `read<T: Codable>(key: String) -> T?`: Retrieves a value associated with the given key.
+   - `write(value: Any?, key: String)`: Stores a value in the storage for a given key.
+   - `read(key: String) -> Any?`: Retrieves a value associated with the given key.
    - `remove(key: String)`: Removes a value associated with the given key.
  */
 public protocol KeyValueStorage {
@@ -24,18 +23,19 @@ public protocol KeyValueStorage {
      Stores a value for a given key.
      
      - Parameters:
-        - value: The value to store. Must conform to the `Codable` protocol.
+        - value: The value to store.
         - key: The key associated with the value.
      */
-    func write<T: Codable>(value: T, key: String)
+    func write(value: Any?, key: String)
     
     /**
      Retrieves a value associated with the given key.
 
-     - Parameter key: The key for which to retrieve the value.
-     - Returns: The decoded value, or `nil` if no value exists for the key or if decoding fails.
+     - Parameters:
+        - key: The key for which to retrieve the value.
+        - Returns: The stored value, or `nil` if no value exists for the key.
      */
-    func read<T: Codable>(key: String) -> T?
+    func read(key: String) -> Any?
     
     /**
      Removes a value associated with the given key.
