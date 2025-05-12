@@ -46,10 +46,10 @@ public struct UserIdentity {
     static func initializeState(_ storage: KeyValueStorage) -> UserIdentity {
         var identity = UserIdentity()
         
-        identity.anonymousId = storage.read(key: Constants.storageKeys.anonymousId) ?? .randomUUIDString
-        identity.userId = storage.read(key: Constants.storageKeys.userId) ?? String.empty
+        identity.anonymousId = (storage.read(key: Constants.storageKeys.anonymousId) as? String) ?? .randomUUIDString
+        identity.userId = (storage.read(key: Constants.storageKeys.userId) as? String) ?? String.empty
         
-        if let traitsString: String = storage.read(key: Constants.storageKeys.traits), let traits = traitsString.toDictionary {
+        if let traitsString = storage.read(key: Constants.storageKeys.traits) as? String, let traits = traitsString.toDictionary {
             identity.traits = traits
         }
         

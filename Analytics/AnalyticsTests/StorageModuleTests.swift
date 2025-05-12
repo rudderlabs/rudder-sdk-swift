@@ -40,31 +40,32 @@ extension StorageModuleTests {
         
         let value1 = 1
         storage.write(value: value1, key: "IntValue")
-        let stored1: Int? = storage.read(key: "IntValue")
+        let stored1 = storage.read(key: "IntValue") as? Int
         XCTAssertNotNil(stored1)
         
         let value2 = 2.0
         storage.write(value: value2, key: "DoubleValue")
-        let stored2: Double? = storage.read(key: "DoubleValue")
+        let stored2 = storage.read(key: "DoubleValue") as? Double
         XCTAssertNotNil(stored2)
         
         let value3 = "3"
         storage.write(value: value3, key: "StringValue")
-        let stored3: String? = storage.read(key: "StringValue")
+        let stored3 = storage.read(key: "StringValue") as? String
         XCTAssertNotNil(stored3)
         
         let value4 = true
         storage.write(value: value4, key: "BoolValue")
-        let stored4: Bool? = storage.read(key: "BoolValue")
+        let stored4 = storage.read(key: "BoolValue") as? Bool
         XCTAssertNotNil(stored4)
-    }
-    
-    func test_write_nonPrimitive() {
-        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail("Storage not initialized"); return }
-    
-        storage.write(value: MockProvider.simpleTrackEvent, key: "DataModel")
-        let model: TrackEvent? = storage.read(key: "DataModel")
-        XCTAssertNotNil(model)
+        
+        let array: [Any] = [value1, value2, value3, value4]
+        storage.write(value: array, key: "arrayValue")
+        guard let stored5 = storage.read(key: "arrayValue") as? [Any] else { XCTFail("Array value not found"); return }
+        XCTAssertEqual(stored5.count, 4)
+        XCTAssertEqual(stored5[0] as? Int, value1)
+        XCTAssertEqual(stored5[1] as? Double, value2)
+        XCTAssertEqual(stored5[2] as? String, value3)
+        XCTAssertEqual(stored5[3] as? Bool, value4)
     }
     
     func test_read_primitive() {
@@ -72,31 +73,32 @@ extension StorageModuleTests {
         
         let value1 = 1
         storage.write(value: value1, key: "IntValue")
-        let stored1: Int? = storage.read(key: "IntValue")
+        let stored1 = storage.read(key: "IntValue") as? Int
         XCTAssertTrue(value1 == stored1)
         
         let value2 = 2.0
         storage.write(value: value2, key: "DoubleValue")
-        let stored2: Double? = storage.read(key: "DoubleValue")
+        let stored2 = storage.read(key: "DoubleValue") as? Double
         XCTAssertTrue(value2 == stored2)
         
         let value3 = "3"
         storage.write(value: value3, key: "StringValue")
-        let stored3: String? = storage.read(key: "StringValue")
+        let stored3 = storage.read(key: "StringValue") as? String
         XCTAssertTrue(value3 == stored3)
         
         let value4 = true
         storage.write(value: value4, key: "BoolValue")
-        let stored4: Bool? = storage.read(key: "BoolValue")
+        let stored4 = storage.read(key: "BoolValue") as? Bool
         XCTAssertTrue(value4 == stored4)
-    }
-    
-    func test_read_nonPrimitive() {
-        guard let storage = self.analytics_memory?.configuration.storage else { XCTFail("Storage not initialized"); return }
-    
-        storage.write(value: MockProvider.simpleTrackEvent, key: "DataModel")
-        guard let model: TrackEvent = storage.read(key: "DataModel") else { XCTFail("Data model not found"); return }
-        XCTAssertTrue(MockProvider.simpleTrackEvent.messageId == model.messageId)
+        
+        let dict: [String: Any] = ["value1": value1, "value2": value2, "value3": value3, "value4": value4]
+        storage.write(value: dict, key: "dictValue")
+        guard let stored5 = storage.read(key: "dictValue") as? [String: Any] else { XCTFail("Dictionary value not found"); return }
+        XCTAssertEqual(stored5.count, 4)
+        XCTAssertEqual(stored5["value1"] as? Int, value1)
+        XCTAssertEqual(stored5["value2"] as? Double, value2)
+        XCTAssertEqual(stored5["value3"] as? String, value3)
+        XCTAssertEqual(stored5["value4"] as? Bool, value4)
     }
     
     func test_delete_values() {
@@ -105,31 +107,26 @@ extension StorageModuleTests {
         let value1 = 1
         storage.write(value: value1, key: "IntValue")
         storage.remove(key: "IntValue")
-        let stored1: Int? = storage.read(key: "IntValue")
+        let stored1 = storage.read(key: "IntValue") as? Int
         XCTAssertNil(stored1)
         
         let value2 = 2.0
         storage.write(value: value2, key: "DoubleValue")
         storage.remove(key: "DoubleValue")
-        let stored2: Double? = storage.read(key: "DoubleValue")
+        let stored2 = storage.read(key: "DoubleValue") as? Double
         XCTAssertNil(stored2)
         
         let value3 = "3"
         storage.write(value: value3, key: "StringValue")
         storage.remove(key: "StringValue")
-        let stored3: String? = storage.read(key: "StringValue")
+        let stored3 = storage.read(key: "StringValue") as? String
         XCTAssertNil(stored3)
         
         let value4 = true
         storage.write(value: value4, key: "BoolValue")
         storage.remove(key: "BoolValue")
-        let stored4: Bool? = storage.read(key: "BoolValue")
+        let stored4 = storage.read(key: "BoolValue") as? Bool
         XCTAssertNil(stored4)
-        
-        storage.write(value: MockProvider.simpleTrackEvent, key: "DataModel")
-        storage.remove(key: "DataModel")
-        let model: TrackEvent? = storage.read(key: "DataModel")
-        XCTAssertNil(model)
     }
 }
 

@@ -88,8 +88,8 @@ extension LifecycleTrackingPlugin {
         return AppVersion(
             currentVersionName: currentVersionName,
             currentBuild: currentBuild,
-            previousVersionName: self.analytics?.storage.read(key: Constants.storageKeys.appVersion),
-            previousBuild: self.analytics?.storage.read(key: Constants.storageKeys.appBuild) ?? -1
+            previousVersionName: self.analytics?.storage.read(key: Constants.storageKeys.appVersion) as? String,
+            previousBuild: (self.analytics?.storage.read(key: Constants.storageKeys.appBuild) as? Int) ?? -1
         )
     }
     
