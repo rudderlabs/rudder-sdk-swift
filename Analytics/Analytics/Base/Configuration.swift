@@ -92,14 +92,14 @@ public class Configuration {
     public init(
         writeKey: String,
         dataPlaneUrl: String,
-        controlPlaneUrl: String = Constants.DefaultConfig.controlPlaneUrl,
-        logLevel: LogLevel = Constants.Log.defaultLevel,
+        controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl,
+        logLevel: LogLevel = Constants.log.defaultLevel,
         optOut: Bool = false,
-        gzipEnaabled: Bool = Constants.DefaultConfig.gzipEnabled,
+        gzipEnaabled: Bool = Constants.defaultConfig.gzipEnabled,
         storage: Storage? = nil,
-        flushPolicies: [FlushPolicy] = Constants.DefaultConfig.flushPolicies,
-        collectDeviceId: Bool = Constants.DefaultConfig.willCollectDeviceId,
-        trackApplicationLifecycleEvents: Bool = Constants.DefaultConfig.willTrackLifecycleEvents,
+        flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
+        collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId,
+        trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents,
         sessionConfiguration: SessionConfiguration = SessionConfiguration()
     ) {
         self.writeKey = writeKey
@@ -139,7 +139,7 @@ public class SessionConfiguration {
         - automaticSessionTracking: A boolean indicating whether session tracking should be automatic. Default is `true`.
         - sessionTimeoutInMillis: The session timeout duration in milliseconds. Default is `300_000` (5 minutes).
      */
-    public init(automaticSessionTracking: Bool = Constants.DefaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.DefaultConfig.sessionTimeoutInMillis) {
+    public init(automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.defaultConfig.sessionTimeoutInMillis) {
         self.automaticSessionTracking = automaticSessionTracking
         self.sessionTimeoutInMillis = sessionTimeoutInMillis
     }

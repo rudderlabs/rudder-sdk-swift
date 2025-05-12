@@ -24,7 +24,7 @@ public final class LoggerAnalytics {
     private static let shared = LoggerAnalytics()
     
     private var logger: Logger?
-    private var logLevel: LogLevel = Constants.Log.defaultLevel
+    private var logLevel: LogLevel = Constants.log.defaultLevel
     
     /**
      Sets up the logger and log level for analytics.
