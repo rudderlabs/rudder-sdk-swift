@@ -48,6 +48,13 @@ public final class CountFlushPolicy: NSObject, FlushPolicy {
         self.flushCount = min(Constants.flushEventCount.max, max(flushCount, Constants.flushEventCount.min))
         super.init()
     }
+    
+    /**
+     Initializes a new `CountFlushPolicy` by applying default value. Defaults to `Constants.flushEventCount.default`.
+     */
+    public convenience override init() {
+        self.init(flushCount: Constants.flushEventCount.default)
+    }
 
     /**
      Increments the internal event count in a thread-safe manner.

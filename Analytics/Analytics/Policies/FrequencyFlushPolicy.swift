@@ -50,6 +50,13 @@ public final class FrequencyFlushPolicy: NSObject, FlushPolicy {
         self.flushIntervalInMillis = max(flushIntervalInMillis, Constants.flushInterval.min)
         super.init()
     }
+    
+    /**
+     Initializes a new `FrequencyFlushPolicy` by applying default value. Defaults to `Constants.flushInterval.default`.
+     */
+    public convenience override init() {
+        self.init(flushIntervalInMillis: Constants.flushInterval.default)
+    }
 
     /**
      Schedules periodic flush operations using the provided `AnalyticsClient`.
