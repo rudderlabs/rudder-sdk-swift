@@ -89,6 +89,13 @@ extension AnalyticsClient {
     }
     
     /**
+     A computed property which returns the current active session id.
+     
+     - Returns: The `UInt64` value if active session exists else `nil`.
+     */
+    @nonobjc public var sessionId: UInt64? { self.isAnalyticsActive ? self.sessionHandler?.sessionId : nil }
+    
+    /**
      Ends the current session.
      */
     public func endSession() {
@@ -96,15 +103,7 @@ extension AnalyticsClient {
         self.sessionHandler?.endSession()
     }
     
-    /**
-     A computed property which returns the current active session id.
-     
-     - Returns: The `UInt64` value if active session exists else `nil`.
-     */
-    @nonobjc public var sessionId: UInt64? { self.isAnalyticsActive ? self.sessionHandler?.sessionId : nil }
-    
     // swiftlint:disable identifier_name
-    
     /**
      Starts a session with a given `id`, or generates one if not provided.
      
@@ -129,7 +128,6 @@ extension AnalyticsClient {
         guard self.isAnalyticsActive, let sessionId = self.sessionHandler?.sessionId else { return nil }
         return NSNumber(value: sessionId)
     }
-    
     // swiftlint:enable identifier_name
 }
 
