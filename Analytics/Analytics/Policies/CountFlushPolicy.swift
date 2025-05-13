@@ -30,7 +30,8 @@ import Foundation
    - Use `shouldFlush()` to check if the flush condition is met.
    - Reset the count with `reset()` after a flush operation.
  */
-public final class CountFlushPolicy: FlushPolicy {
+@objcMembers
+public final class CountFlushPolicy: NSObject, FlushPolicy {
     /// The maximum number of events before a flush is triggered.
     private(set) var flushCount: Int
 
@@ -45,6 +46,7 @@ public final class CountFlushPolicy: FlushPolicy {
      */
     public init(flushCount: Int = Constants.flushEventCount.default) {
         self.flushCount = min(Constants.flushEventCount.max, max(flushCount, Constants.flushEventCount.min))
+        super.init()
     }
 
     /**

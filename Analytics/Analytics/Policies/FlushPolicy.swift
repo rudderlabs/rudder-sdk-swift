@@ -23,24 +23,15 @@ import Foundation
  - Default Behavior:
    The default implementation of `shouldFlush()` in the protocol extension returns `false`, indicating that no flush should occur unless explicitly overridden.
  */
+@objc
 public protocol FlushPolicy {
     /**
-     Determines whether a flush operation should be triggered.
+     Determines whether a flush operation should be triggered on user's call.
 
      - Returns: A `Bool` indicating if the flush condition is met (`true`) or not (`false`).
      */
+    @objc
     func shouldFlush() -> Bool
-}
-
-public extension FlushPolicy {
-    /**
-     Determines whether a flush operation should be triggered1.
-
-     - Returns: A `Bool` indicating if the flush condition is met (`true`) or not (`false`).
-     */
-    func shouldFlush() -> Bool {
-        return false
-    }
 }
 
 // MARK: - FlushPolicyFacade

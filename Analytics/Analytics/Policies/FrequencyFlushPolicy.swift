@@ -31,7 +31,8 @@ import Foundation
    - The timer operations are safely managed to avoid memory leaks and redundant scheduling.
 
  */
-public final class FrequencyFlushPolicy: FlushPolicy {
+@objcMembers
+public final class FrequencyFlushPolicy: NSObject, FlushPolicy {
     
     /// The timer responsible for periodic flush operations.
     private var flushTimer: Timer?
@@ -47,6 +48,7 @@ public final class FrequencyFlushPolicy: FlushPolicy {
      */
     public init(flushIntervalInMillis: UInt64 = Constants.flushInterval.default) {
         self.flushIntervalInMillis = max(flushIntervalInMillis, Constants.flushInterval.min)
+        super.init()
     }
 
     /**
@@ -74,6 +76,13 @@ public final class FrequencyFlushPolicy: FlushPolicy {
         flushTimer = nil
     }
 
+    /**
+     Determines whether a flush operation should be triggered on user's call.
+     */
+    public func shouldFlush() -> Bool {
+        return false
+    }
+    
     /**
      Deinitializes the `FrequencyFlushPolicy` and ensures the timer is invalidated.
      */

@@ -25,13 +25,14 @@ import Foundation
    - This implementation is intended for single-threaded use cases, as no synchronization is applied.
 
  */
-public final class StartupFlushPolicy: FlushPolicy {
+@objcMembers
+public final class StartupFlushPolicy: NSObject, FlushPolicy {
     /// Tracks whether the flush has already been triggered.
     private var flushedAtStartup: Bool = false
 
     /// Initializes a new `StartupFlushPolicy`.
-    public init() {
-        /* Default implementation (no-op) */
+    public override init() {
+        super.init()
     }
 
     /**
