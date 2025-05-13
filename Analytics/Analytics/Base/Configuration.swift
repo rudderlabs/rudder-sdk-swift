@@ -89,6 +89,7 @@ public class Configuration: NSObject {
  
      - Returns: An instance of `Configuration` with the specified settings.
      */
+    @nonobjc
     public init(
         writeKey: String,
         dataPlaneUrl: String,
@@ -155,12 +156,12 @@ public class SessionConfiguration: NSObject {
     /**
      A flag indicating whether automatic session tracking is enabled.
      */
-    var automaticSessionTracking: Bool
+    public var automaticSessionTracking: Bool
     
     /**
      The timeout duration for a session, in milliseconds.
      */
-    var sessionTimeoutInMillis: UInt64
+    public var sessionTimeoutInMillis: UInt64
     
     /**
      Initializes a new session configuration instance.
@@ -169,10 +170,19 @@ public class SessionConfiguration: NSObject {
         - automaticSessionTracking: A boolean indicating whether session tracking should be automatic. Default is `true`.
         - sessionTimeoutInMillis: The session timeout duration in milliseconds. Default is `300_000` (5 minutes).
      */
+    @nonobjc
     public init(automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.defaultConfig.sessionTimeoutInMillis) {
         self.automaticSessionTracking = automaticSessionTracking
         self.sessionTimeoutInMillis = sessionTimeoutInMillis
         
         super.init()
+    }
+    
+    /**
+     Objective-C accessible initializer that applies default values manually.
+     */
+    @objc
+    public convenience override init() {
+        self.init(automaticSessionTracking: Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: Constants.defaultConfig.sessionTimeoutInMillis)
     }
 }
