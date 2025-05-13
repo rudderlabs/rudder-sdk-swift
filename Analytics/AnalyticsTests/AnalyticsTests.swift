@@ -34,7 +34,7 @@ final class AnalyticsTests: XCTestCase {
         let client = AnalyticsClient(configuration: configuration)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
         
-        let config: String? = client.configuration.storage.read(key: Constants.storageKeys.sourceConfig)
+        let config = client.configuration.storage.read(key: Constants.storageKeys.sourceConfig) as? String
         XCTAssertFalse(((config?.isEmpty) != nil))
     }
 }
@@ -110,9 +110,9 @@ extension AnalyticsTests {
         client.reset()
         
         let anonymousId = client.anonymousId
-        let userId: String? = client.storage.read(key: Constants.storageKeys.userId)
+        let userId = client.storage.read(key: Constants.storageKeys.userId) as? String
         XCTAssertTrue(userId == nil)
-        let trits: String? = client.storage.read(key: Constants.storageKeys.traits)
+        let trits = client.storage.read(key: Constants.storageKeys.traits) as? String
         XCTAssertTrue(trits == nil)
         
         client.reset(clearAnonymousId: true)

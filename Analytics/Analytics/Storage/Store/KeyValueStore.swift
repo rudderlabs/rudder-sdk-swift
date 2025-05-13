@@ -24,28 +24,46 @@ final class KeyValueStore {
  Basic operations for storing, retrieving, and deleting values.
  */
 extension KeyValueStore {
-    func save<T: Codable>(value: T?, reference key: String) {
-        if self.isPrimitiveType(value) {
-            self.userDefaults?.set(value, forKey: key)
+    /**
+     Saves a value to `UserDefaults` if it's supported.
+     */
+    func save(value: Any?, reference key: String) {
+        guard let value = value else {
+            self.delete(reference: key)
+            return
+        }
+        
+        guard isSupportedType(value) else { return }
+        
+        if JSONSerialization.isValidJSONObject(value), let data = try? JSONSerialization.data(withJSONObject: value, options: []) {
+            self.userDefaults?.set(data, forKey: key)
         } else {
-            guard let encodedData = try? JSONEncoder().encode(value) else { return }
-            self.userDefaults?.set(encodedData, forKey: key)
+            self.userDefaults?.set(value, forKey: key)
         }
         self.userDefaults?.synchronize()
     }
     
-    func read<T: Codable>(reference key: String) -> T? {
-        var result: T?
-        let rawValue = self.userDefaults?.object(forKey: key)
-        if let rawData = rawValue as? Data {
-            guard let decodedValue = try? JSONDecoder().decode(T.self, from: rawData) else { return nil }
-            result = decodedValue
-        } else {
-            result = rawValue as? T 
+    /**
+     Reads and returns a value from `UserDefaults`.
+     */
+    func read(reference key: String) -> Any? {
+        guard let rawValue = self.userDefaults?.object(forKey: key) else { return nil }
+        
+        if let data = rawValue as? Data {
+            do {
+                let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+                return jsonObject
+            } catch {
+                // If decoding fails, return the raw data
+                return data
+            }
         }
-        return result
+        return rawValue
     }
     
+    /**
+     Deletes a stored value for the given key.
+     */
     func delete(reference key: String) {
         self.userDefaults?.removeObject(forKey: key)
         self.userDefaults?.synchronize()
@@ -53,18 +71,19 @@ extension KeyValueStore {
 }
 
 /**
- Function to determine whether the received value is a primitive data type.
+ Function to determine whether the received value is is supported for storage.
  */
 extension KeyValueStore {
-    private func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
-        guard let value = value else { return true } // Since nil is also a primitive, & can be set to UserDefaults..
-        
-        return switch value {
-        case is Int, is Double, is Float, is NSNumber, is Bool, is String, is Character,
-            is [Int], is [Double], is [Float], is [NSNumber], is [Bool], is [String], is [Character]:
-            true
+    private func isSupportedType(_ value: Any) -> Bool {
+        switch value {
+        case is Int, is Double, is Float, is Bool, is String, is Character, is Date, is Data, is URL, is NSNumber:
+            return true
+        case let array as [Any]:
+            return array.allSatisfy { isSupportedType($0) }
+        case let dict as [String: Any]:
+            return dict.values.allSatisfy { isSupportedType($0) }
         default:
-            false
+            return false
         }
     }
 }

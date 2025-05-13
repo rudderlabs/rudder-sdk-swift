@@ -87,7 +87,7 @@ extension MemoryStore {
     }
     
     private var currentDataItemId: String? {
-        guard let currentItemId: String = self.keyValueStore.read(reference: self.currentDataItemKey) else { return nil }
+        guard let currentItemId = self.keyValueStore.read(reference: self.currentDataItemKey) as? String else { return nil }
         return currentItemId
     }
     
