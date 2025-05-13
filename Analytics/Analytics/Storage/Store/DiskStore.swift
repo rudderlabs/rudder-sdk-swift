@@ -124,7 +124,7 @@ extension DiskStore: DataStore {
             for file in self.collectFiles() {
                 guard let batch = FileManager.contentsOf(file: file) else { continue }
                 
-                var item = EventDataItem(batch: batch)
+                let item = EventDataItem(batch: batch)
                 item.reference = file
                 item.isClosed = true
                 

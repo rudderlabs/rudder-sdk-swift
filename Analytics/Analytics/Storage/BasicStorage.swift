@@ -26,10 +26,6 @@ final class BasicStorage: Storage {
         self.dataStore = StoreProvider.prepareProvider(for: storageMode, writeKey: writeKey)
         self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
-    
-    var eventStorageMode: StorageMode {
-        return self.storageMode
-    }
 }
 
 // MARK: - EventStorage

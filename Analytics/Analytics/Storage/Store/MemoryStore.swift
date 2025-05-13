@@ -23,7 +23,7 @@ final actor MemoryStore {
     }
     
     private func store(event: String) {
-        var dataItem = self.currentDataItem ?? EventDataItem(batch: DataStoreConstants.fileBatchPrefix)
+        let dataItem = self.currentDataItem ?? EventDataItem(batch: DataStoreConstants.fileBatchPrefix)
         let newEntry = dataItem.batch == DataStoreConstants.fileBatchPrefix
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > DataStoreConstants.maxBatchSize {
@@ -40,7 +40,7 @@ final actor MemoryStore {
     }
     
     private func finish() {
-        guard var currentDataItem = self.currentDataItem else { return }
+        guard let currentDataItem = self.currentDataItem else { return }
         currentDataItem.batch += DataStoreConstants.fileBatchSentAtSuffix + String.currentTimeStamp + DataStoreConstants.fileBatchSuffix
         currentDataItem.isClosed = true
         self.appendDataItem(currentDataItem)

@@ -18,6 +18,7 @@ import Foundation
    - `read(key: String) -> Any?`: Retrieves a value associated with the given key.
    - `remove(key: String)`: Removes a value associated with the given key.
  */
+@objc
 public protocol KeyValueStorage {
     /**
      Stores a value for a given key.
@@ -26,6 +27,7 @@ public protocol KeyValueStorage {
         - value: The value to store.
         - key: The key associated with the value.
      */
+    @objc(writeValue: forkey:)
     func write(value: Any?, key: String)
     
     /**
@@ -35,6 +37,7 @@ public protocol KeyValueStorage {
         - key: The key for which to retrieve the value.
         - Returns: The stored value, or `nil` if no value exists for the key.
      */
+    @objc(readValueForKey:)
     func read(key: String) -> Any?
     
     /**
@@ -42,6 +45,7 @@ public protocol KeyValueStorage {
 
      - Parameter key: The key for which to remove the value.
      */
+    @objc(removeValueForKey:)
     func remove(key: String)
 }
 
@@ -58,6 +62,7 @@ public protocol KeyValueStorage {
    - `rollover()`: Handles event rollover, typically used to finalize or batch events for processing.
 
  */
+@objc
 public protocol EventStorage {
     /**
      Stores a event in the storage.
@@ -103,14 +108,8 @@ public protocol EventStorage {
  - Properties:
    - `eventStorageMode`: Defines the mode of storage used for events.
  */
-public protocol Storage: KeyValueStorage, EventStorage {
-    /**
-     The mode of storage used for storing events.
-
-     This property indicates the current `StorageMode` being used, which determines how events are managed within the storage system.
-     */
-    var eventStorageMode: StorageMode { get }
-}
+@objc
+public protocol Storage: KeyValueStorage, EventStorage {}
 
 // MARK: - StorageMode
 /**
