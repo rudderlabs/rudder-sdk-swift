@@ -179,7 +179,7 @@ public class SessionConfiguration: NSObject {
     }
     
     /**
-     Objective-C accessible initializer that applies default values manually.
+     Initializer that applies default values manually.
      */
     @objc
     public convenience override init() {
