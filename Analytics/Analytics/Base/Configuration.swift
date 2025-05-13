@@ -47,7 +47,19 @@ public class Configuration: NSObject {
     /**
      The storage mechanism used to persist data. Defaults to in-built storage system, if no custom storage is provided.
      */
-    public var storage: Storage
+    @nonobjc public var storage: Storage
+    
+    /**
+     The storage mechanism used to persist data. Defaults to in-built storage system, if no custom storage is provided.
+     */
+    public var persistentStorage: Storage? {
+        get {
+            return storage
+        }
+        set {
+            storage = newValue ?? BasicStorage(writeKey: writeKey)
+        }
+    }
 
     /**
      An array of flush policies defining how and when events are flushed to the data plane.
@@ -89,7 +101,6 @@ public class Configuration: NSObject {
  
      - Returns: An instance of `Configuration` with the specified settings.
      */
-    @nonobjc
     public init(
         writeKey: String,
         dataPlaneUrl: String,
@@ -128,7 +139,6 @@ public class Configuration: NSObject {
         - writeKey: The write key used to authenticate with the analytics service.
         - dataPlaneUrl: The URL of the data plane where analytics events are sent.
      */
-    @objc
     public convenience init(writeKey: String, dataPlaneUrl: String) {
         self.init(
             writeKey: writeKey,
@@ -144,7 +154,6 @@ public class Configuration: NSObject {
             sessionConfiguration: SessionConfiguration()
         )
     }
-
 }
 
 // MARK: - SessionConfiguration
@@ -170,7 +179,6 @@ public class SessionConfiguration: NSObject {
         - automaticSessionTracking: A boolean indicating whether session tracking should be automatic. Default is `true`.
         - sessionTimeoutInMillis: The session timeout duration in milliseconds. Default is `300_000` (5 minutes).
      */
-    @nonobjc
     public init(automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.defaultConfig.sessionTimeoutInMillis) {
         self.automaticSessionTracking = automaticSessionTracking
         self.sessionTimeoutInMillis = sessionTimeoutInMillis
@@ -179,9 +187,8 @@ public class SessionConfiguration: NSObject {
     }
     
     /**
-     Initializer that applies default values manually.
+     Initializer that applies default values.
      */
-    @objc
     public convenience override init() {
         self.init(automaticSessionTracking: Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: Constants.defaultConfig.sessionTimeoutInMillis)
     }
