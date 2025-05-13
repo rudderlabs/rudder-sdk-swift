@@ -75,6 +75,7 @@ extension AnalyticsClient {
      
      - Parameter sessionId: An optional `UInt64` session ID. If `nil`, a new session ID is generated.
      */
+    @nonobjc
     public func startSession(sessionId: UInt64? = nil) {
         guard self.isAnalyticsActive else { return }
         
@@ -100,7 +101,36 @@ extension AnalyticsClient {
      
      - Returns: The `UInt64` value if active session exists else `nil`.
      */
-    public var sessionId: UInt64? { self.isAnalyticsActive ? self.sessionHandler?.sessionId : nil }
+    @nonobjc public var sessionId: UInt64? { self.isAnalyticsActive ? self.sessionHandler?.sessionId : nil }
+    
+    // swiftlint:disable identifier_name
+    
+    /**
+     Starts a session with a given `id`, or generates one if not provided.
+     
+     - Parameter sessionId: An optional `uint64_t` session ID value of `NSNumber`. If `nil`, a new session ID is generated.
+     */
+    @objc(startSessionWithSessionId:)
+    public func __objc__startSession(sessionId: NSNumber?) {
+        if let sessionId, sessionId.int64Value < 0 {
+            LoggerAnalytics.error(log: "Negative session IDs are invalid.")
+            return
+        }
+        self.startSession(sessionId: sessionId?.uint64Value)
+    }
+    
+    /**
+     A computed property which returns the current active session id.
+     
+     - Returns: The `uint64_t` value of `NSNumber`, if active session exists else `nil`.
+     */
+    @objc(sessionId)
+    public var __objc__sessionId: NSNumber? {
+        guard self.isAnalyticsActive, let sessionId = self.sessionHandler?.sessionId else { return nil }
+        return NSNumber(value: sessionId)
+    }
+    
+    // swiftlint:enable identifier_name
 }
 
 // MARK: - Events
