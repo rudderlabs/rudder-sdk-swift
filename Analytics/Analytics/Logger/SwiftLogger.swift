@@ -14,6 +14,7 @@ import Foundation
  
  Implementers of this protocol can provide customized logging behavior based on the current log level.
  */
+@objc
 public protocol Logger {
     
     /**
@@ -22,6 +23,7 @@ public protocol Logger {
      - Parameters:
        - log: The message to log.
      */
+    @objc(verbose:)
     func verbose(log: String)
     
     /**
@@ -30,6 +32,7 @@ public protocol Logger {
      - Parameters:
        - log: The message to log.
      */
+    @objc(debug:)
     func debug(log: String)
     
     /**
@@ -38,6 +41,7 @@ public protocol Logger {
      - Parameters:
        - log: The message to log.
      */
+    @objc(info:)
     func info(log: String)
     
     /**
@@ -46,6 +50,7 @@ public protocol Logger {
      - Parameters:
        - log: The message to log.
      */
+    @objc(warn:)
     func warn(log: String)
     
     /**
@@ -55,6 +60,7 @@ public protocol Logger {
        - log: The message to log.
        - error: An optional error associated with the message being logged.
      */
+    @objc(errorLog: error:)
     func error(log: String, error: Error?)
 }
 
