@@ -143,6 +143,7 @@ extension AnalyticsClient {
         - properties: An optional object containing event-specific properties. Defaults to `nil`.
         - options: An optional object for providing additional options. Defaults to empty instance of `RudderOption`.
      */
+    @objc(track:properties:options:)
     public func track(name: String, properties: RudderProperties? = nil, options: RudderOption? = RudderOption()) {
         guard self.isAnalyticsActive else { return }
         
@@ -159,6 +160,7 @@ extension AnalyticsClient {
         - properties: An Optional properties associated with the screen view. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to empty instance of `RudderOption`.
      */
+    @objc(screen:category:properties:options:)
     public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = RudderOption()) {
         guard self.isAnalyticsActive else { return }
         
@@ -174,6 +176,7 @@ extension AnalyticsClient {
         - traits: An Optional traits associated with the group. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to empty instance of `RudderOption`.
      */
+    @objc(group:traits:options:)
     public func group(id: String, traits: RudderTraits? = nil, options: RudderOption? = RudderOption()) {
         guard self.isAnalyticsActive else { return }
         
@@ -189,6 +192,7 @@ extension AnalyticsClient {
         - traits: Custom traits or attributes associated with the user. Defaults to `nil`.
         - options: Custom options for the event, including integrations and context. Defaults to empty instance of `RudderOption`.
      */
+    @objc(identify:traits:options:)
     public func identify(userId: String, traits: RudderTraits? = nil, options: RudderOption? = RudderOption()) {
         guard self.isAnalyticsActive else { return }
         
@@ -207,6 +211,7 @@ extension AnalyticsClient {
         - previousId: The existing or previous user ID. If `nil`, the method resolves a preferred previous ID.
         - options: Additional options for customization, such as integrations and context. Defaults to empty instance of `RudderOption`.
      */
+    @objc(alias:previousId:options:)
     public func alias(newId: String, previousId: String?, options: RudderOption? = RudderOption()) {
         guard self.isAnalyticsActive else { return }
         
@@ -236,6 +241,7 @@ extension AnalyticsClient {
      
      - Parameter clearAnonymousId: A boolean flag indicating whether the anonymous ID should be stored before resetting. Defaults to `false`.
      */
+    @objc(reset:)
     public func reset(clearAnonymousId: Bool = false) {
         guard self.isAnalyticsActive else { return }
         

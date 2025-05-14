@@ -35,7 +35,8 @@ public protocol KeyValueStorage {
 
      - Parameters:
         - key: The key for which to retrieve the value.
-        - Returns: The stored value, or `nil` if no value exists for the key.
+     
+     - Returns: The stored value, or `nil` if no value exists for the key.
      */
     @objc(readValueForKey:)
     func read(key: String) -> Any?
