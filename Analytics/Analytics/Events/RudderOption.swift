@@ -19,7 +19,8 @@ import Foundation
     - `customContext`: A dictionary of custom context values associated with the event.
     - `externalIds`: An array of external IDs to be included with the event payload.
  */
-protocol RudderOptionType {
+@objc
+public protocol RudderOptionType {
     
     /**
      This property manages the integrations to be included with the event payload.
@@ -50,7 +51,8 @@ protocol RudderOptionType {
     - `customContext`: A dictionary of custom context values associated with the event.
     - `externalIds`: An array of external IDs associated with the event.
  */
-public class RudderOption: RudderOptionType {
+@objcMembers
+public class RudderOption: NSObject, RudderOptionType {
     
     /// A dictionary of integration names as keys and their state values.
     private(set) public var integrations: [String: Any]?
@@ -63,14 +65,22 @@ public class RudderOption: RudderOptionType {
     
     /**
      Initializes a new instance of `RudderOption`.
-
+     
      The initial integrations are set to the default integrations defined in `Constants.payload.integration`.
      */
-    
     public init(integrations: [String: Any]? = nil, customContext: [String: Any]? = nil, externalIds: [ExternalId]? = nil) {
         self.integrations = (integrations ?? [:]) + Constants.payload.integration
         self.customContext = customContext
         self.externalIds = externalIds
+        
+        super.init()
+    }
+    
+    /**
+     Initializes a new instance of `RudderOption`.
+     */
+    public convenience override init() {
+        self.init(integrations: nil, customContext: nil, externalIds: nil)
     }
 }
 
@@ -85,12 +95,13 @@ public class RudderOption: RudderOptionType {
  - Conformance:
  - `Codable`: Allows the `ExternalId` to be encoded and decoded using `JSONEncoder` and `JSONDecoder`.
  */
-public struct ExternalId: Codable, Equatable {
+@objcMembers
+public class ExternalId: NSObject, Codable {
     /// The type of the external identifier.
-    var type: String
+    private(set) public var type: String
     
     /// The value of the external identifier.
-    var id: String
+    private(set) public var id: String
     
     /**
      Initializes a new instance of `ExternalId` with the given `type` and `id`.
