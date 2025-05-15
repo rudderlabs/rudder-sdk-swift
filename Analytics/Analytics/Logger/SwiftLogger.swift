@@ -139,7 +139,7 @@ final class SwiftLogger: Logger {
      - Parameters:
        - log: The message to log.
      */
-    public func verbose(log: String) {
+    func verbose(log: String) {
         print("[\(tag)] VERBOSE: \(log)")
     }
     
@@ -149,7 +149,7 @@ final class SwiftLogger: Logger {
      - Parameters:
        - log: The message to log.
      */
-    public func debug(log: String) {
+    func debug(log: String) {
         print("[\(tag)] DEBUG: \(log)")
     }
     
@@ -159,7 +159,7 @@ final class SwiftLogger: Logger {
      - Parameters:
        - log: The message to log.
      */
-    public func info(log: String) {
+    func info(log: String) {
         print("[\(tag)] INFO: \(log)")
     }
     
@@ -169,7 +169,7 @@ final class SwiftLogger: Logger {
      - Parameters:
        - log: The message to log.
      */
-    public func warn(log: String) {
+    func warn(log: String) {
         print("[\(tag)] WARN: \(log)")
     }
     
@@ -180,7 +180,7 @@ final class SwiftLogger: Logger {
        - log: The message to log.
        - error: Optional error to include in the message.
      */
-    public func error(log: String, error: (any Error)?) {
+    func error(log: String, error: (any Error)?) {
         if let error {
             print("[\(tag)] ERROR: \(log) - \(error.localizedDescription)")
         } else {

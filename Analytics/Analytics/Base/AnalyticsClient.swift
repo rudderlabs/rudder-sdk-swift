@@ -276,6 +276,7 @@ extension AnalyticsClient {
 
      - Parameter logger: The logger instance to be used for logging analytics events and messages.
      */
+    @objc(setLogger:)
     public func setLogger(logger: Logger) {
         guard self.isAnalyticsActive else { return }
         LoggerAnalytics.setup(logger: logger, logLevel: self.configuration.logLevel)
