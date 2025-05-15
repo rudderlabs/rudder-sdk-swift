@@ -45,6 +45,9 @@ public class _Log: NSObject {
 
     /// Message printed after the analytics instance shuts down.
     public let shutdownMessage: String = "Analytics instance has been shut down. No further operations are allowed."
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate override init() { super.init() }
 }
 
 /// Constants related to keys used for persistent storage within the SDK.
@@ -78,6 +81,9 @@ class _StorageKeys: NSObject {
 
     /// Key for storing the app build number.
     let appBuild = "rudder.app_build"
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate override init() { super.init() }
 }
 
 /// Constants for event count-based flush triggers.
@@ -91,6 +97,9 @@ public class _FlushEventCount: NSObject {
 
     /// Maximum number of events allowed before triggering a flush.
     public let max: Int = 100
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate override init() { super.init() }
 }
 
 /// Constants for time interval-based flush triggers.
@@ -101,6 +110,9 @@ public class _FlushInterval: NSObject {
 
     /// Minimum time interval allowed for triggering a flush, in milliseconds.
     public let min: UInt64 = 1
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate override init() { super.init() }
 }
 
 /// Constants used when creating payloads for network requests.
@@ -113,6 +125,9 @@ class _Payload: NSObject {
 
     /// Default integration settings applied to events.
     let integration = ["All": true]
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate override init() { super.init() }
 }
 
 /// Default configuration values used throughout the SDK.
@@ -151,6 +166,9 @@ public class _DefaultConfig: NSObject {
 
     /// Special signal string used to trigger uploads.
     let uploadSignal = "#!upload!#"
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate override init() { super.init() }
 }
 // swiftlint:enable type_name
 
