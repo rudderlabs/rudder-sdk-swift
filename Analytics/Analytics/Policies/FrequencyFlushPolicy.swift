@@ -38,7 +38,7 @@ public final class FrequencyFlushPolicy: NSObject, FlushPolicy {
     private var flushTimer: Timer?
 
     /// The interval, in milliseconds, at which flush operations occur.
-    private(set) var flushIntervalInMillis: UInt64
+    private(set) public var flushIntervalInMillis: UInt64
 
     /**
      Initializes a new `FrequencyFlushPolicy`.

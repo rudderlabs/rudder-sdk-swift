@@ -33,7 +33,7 @@ import Foundation
 @objcMembers
 public final class CountFlushPolicy: NSObject, FlushPolicy {
     /// The maximum number of events before a flush is triggered.
-    private(set) var flushCount: Int
+    private(set) public var flushCount: Int
 
     /// The current count of events, updated in a thread-safe manner.
     @Synchronized private var eventCount: Int = 0
