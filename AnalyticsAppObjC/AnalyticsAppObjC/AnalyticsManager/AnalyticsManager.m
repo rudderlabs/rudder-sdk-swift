@@ -28,7 +28,7 @@
 }
 
 - (void)initializeAnalyticsSDK {
-    
+#warning Remove keys...
     NSString *writeKey = @"2vPgTJJHX8Z1fpU8DWjDGlmyJpF";
     NSString *dataPlaneUrl = @"https://rudderstacfbtt.dataplane.rudderstack.com";
     
@@ -38,7 +38,7 @@
     config.logLevel = LogLevelVerbose;
     config.optOut = NO;
     config.gzipEnabled = Constants.defaultConfig.gzipEnabled;
-    config.flushPolicies = @[[StartupFlushPolicy new], [FrequencyFlushPolicy new], [[CountFlushPolicy alloc] initWithFlushCount:1]];
+    config.flushPolicies = @[[StartupFlushPolicy new], [FrequencyFlushPolicy new], [[CountFlushPolicy alloc] initWithFlushCount:5]];
     config.collectDeviceId = Constants.defaultConfig.willCollectDeviceId;
     config.trackApplicationLifecycleEvents = Constants.defaultConfig.willTrackLifecycleEvents;
     config.sessionConfiguration = [[SessionConfiguration alloc] init];
@@ -108,7 +108,8 @@
     self.client.anonymousId = anonymousId;
 }
 
-- (NSNumber *)sessionId {
+- (NSNumber * _Nullable)sessionId {
     return self.client.sessionId;
 }
+
 @end

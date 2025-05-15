@@ -29,8 +29,30 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)shutdown;
 - (NSString * _Nullable)anonymousId;
 - (void)setAnonymousId:(NSString *)anonymousId;
-- (NSNumber *)sessionId;
+- (NSNumber * _Nullable)sessionId;
 
 @end
 
 NS_ASSUME_NONNULL_END
+
+#pragma mark - Analytics ActionType
+
+typedef NS_ENUM(NSInteger, ActionType) {
+    ActionTypeIdentify,
+    ActionTypeAlias,
+    ActionTypeTrack,
+    ActionTypeMultipleTrack,
+    ActionTypeScreen,
+    ActionTypeGroup,
+    ActionTypeFlush,
+    ActionTypeUpdateAnonymousId,
+    ActionTypeReadAnonymousId,
+    ActionTypeReset,
+    ActionTypeResetWithAnonymousId,
+    ActionTypeStartSession,
+    ActionTypeStartSessionWithSessionId,
+    ActionTypeReadSessionId,
+    ActionTypeEndSession,
+    ActionTypeShutdown,
+    ActionTypeReInitializeSDK
+};
