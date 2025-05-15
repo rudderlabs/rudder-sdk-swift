@@ -8,6 +8,7 @@
 #import "AnalyticsManager.h"
 #import "CustomStorage.h"
 #import "CustomOptionPlugin.h"
+#import "CustomLogger.h"
 
 @interface AnalyticsManager()
 
@@ -45,9 +46,14 @@
     
     self.client = [[AnalyticsClient alloc] initWithConfiguration:config];
     
+    // Adding custom plugin..
     RudderOption *option = [[RudderOption alloc] initWithIntegrations:@{@"CleverTap": @YES} customContext:@{@"plugin_key": @"plugin_value"} externalIds:@[[[ExternalId alloc] initWithType:@"external_id_type" id:@"external_id"]]];
     CustomOptionPlugin *optionPlugin = [[CustomOptionPlugin alloc] initWithOption:option];
     [self.client addPlugin:optionPlugin];
+    
+    // Adding custom Logger..
+    CustomLogger *logger = [CustomLogger new];
+    [self.client setLogger:logger];
 }
 
 - (void)identify:(NSString * _Nonnull)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RudderOption* _Nullable)option {

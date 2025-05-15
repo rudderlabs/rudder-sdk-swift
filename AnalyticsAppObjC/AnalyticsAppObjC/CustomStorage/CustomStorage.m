@@ -50,7 +50,7 @@
     
     if (dataItem.batch.length > _maxBatchSize) {
         [self finish];
-        NSLog(@"Batch size exceeded. Closing the current batch...");
+        [LoggerAnalytics debug:@"Batch size exceeded. Closing the current batch..."];
         [self storeEvent:event];
         return;
     }
@@ -95,7 +95,8 @@
     
     if (index != NSNotFound) {
         [self.dataItems removeObjectAtIndex:index];
-        NSLog(@"Item removed: %@", itemId);
+        [LoggerAnalytics info:[NSString stringWithFormat: @"Item removed: %@", itemId]];
+    
         success = YES;
     }
     return success;

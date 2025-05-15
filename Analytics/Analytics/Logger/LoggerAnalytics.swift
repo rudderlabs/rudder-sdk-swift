@@ -12,13 +12,13 @@ import Foundation
 /**
  A centralized logger used for logging analytics-related events based on a set log level.
  */
-
-public final class LoggerAnalytics {
+@objcMembers
+public final class LoggerAnalytics: NSObject {
     
     // MARK: - Private Properties
     
-    private init() {
-        // Default implementation is a no-op singleton
+    private override init() {
+        super.init()
     }
     
     private static let shared = LoggerAnalytics()
@@ -46,6 +46,7 @@ public final class LoggerAnalytics {
      
      - Parameter log: The verbose message to be logged.
      */
+    @objc(verbose:)
     public static func verbose(log: String) {
         guard shared.logLevel.rawValue >= LogLevel.verbose.rawValue else { return }
         shared.logger?.verbose(log: log)
@@ -56,6 +57,7 @@ public final class LoggerAnalytics {
      
      - Parameter log: The debug message to be logged.
      */
+    @objc(debug:)
     public static func debug(log: String) {
         guard shared.logLevel.rawValue >= LogLevel.debug.rawValue else { return }
         shared.logger?.debug(log: log)
@@ -66,6 +68,7 @@ public final class LoggerAnalytics {
      
      - Parameter log: The info message to be logged.
      */
+    @objc(info:)
     public static func info(log: String) {
         guard shared.logLevel.rawValue >= LogLevel.info.rawValue else { return }
         shared.logger?.info(log: log)
@@ -76,6 +79,7 @@ public final class LoggerAnalytics {
      
      - Parameter log: The warning message to be logged.
      */
+    @objc(warn:)
     public static func warn(log: String) {
         guard shared.logLevel.rawValue >= LogLevel.warn.rawValue else { return }
         shared.logger?.warn(log: log)
@@ -88,6 +92,7 @@ public final class LoggerAnalytics {
      - log: The error message to be logged.
      - error: An optional `Error` instance to be included with the log.
      */
+    @objc(errorLog: error:)
     public static func error(log: String, error: Error? = nil) {
         guard shared.logLevel.rawValue >= LogLevel.error.rawValue else { return }
         shared.logger?.error(log: log, error: error)
