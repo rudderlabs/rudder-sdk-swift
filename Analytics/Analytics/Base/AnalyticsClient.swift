@@ -261,9 +261,20 @@ extension AnalyticsClient {
      
      - Parameter plugin: The plugin to be added.
      */
+    @nonobjc
     public func addPlugin(_ plugin: Plugin) {
         guard self.isAnalyticsActive else { return }
         self.pluginChain?.add(plugin: plugin)
+    }
+    
+    /**
+     Adds a custom Objective-C plugin to the plugin chain for processing events and extending functionality.
+     
+     - Parameter plugin: The Objective-C plugin to be added.
+     */
+    public func addPlugin(_ plugin: ObjCPlugin) {
+        let swiftPlugin = ObjCPluginAdapter(objcPlugin: plugin)
+        self.addPlugin(swiftPlugin)
     }
 }
 
