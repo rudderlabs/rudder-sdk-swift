@@ -11,6 +11,7 @@
 		530CD0342DB180D4003B62DF /* LoggerAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530CD0332DB180D4003B62DF /* LoggerAnalytics.swift */; };
 		531744742D528F7500E98C03 /* ResetUserIdentityActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531744732D528F7500E98C03 /* ResetUserIdentityActionTests.swift */; };
 		532CD1ED2DD5C94700FA9802 /* ObjCEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532CD1EC2DD5C94700FA9802 /* ObjCEvent.swift */; };
+		532CD1EF2DD5D7D800FA9802 /* ObjCPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532CD1EE2DD5D7D800FA9802 /* ObjCPlugin.swift */; };
 		5334858F2C9AB24E0029F88E /* StorageModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5334858E2C9AB24E0029F88E /* StorageModuleTests.swift */; };
 		533485912C9AB3170029F88E /* MockProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485902C9AB3170029F88E /* MockProvider.swift */; };
 		533485952C9AC7C70029F88E /* CodableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533485942C9AC7C70029F88E /* CodableTypes.swift */; };
@@ -134,6 +135,7 @@
 		530CD0332DB180D4003B62DF /* LoggerAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerAnalytics.swift; sourceTree = "<group>"; };
 		531744732D528F7500E98C03 /* ResetUserIdentityActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetUserIdentityActionTests.swift; sourceTree = "<group>"; };
 		532CD1EC2DD5C94700FA9802 /* ObjCEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCEvent.swift; sourceTree = "<group>"; };
+		532CD1EE2DD5D7D800FA9802 /* ObjCPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCPlugin.swift; sourceTree = "<group>"; };
 		5334858E2C9AB24E0029F88E /* StorageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModuleTests.swift; sourceTree = "<group>"; };
 		533485902C9AB3170029F88E /* MockProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProvider.swift; sourceTree = "<group>"; };
 		533485942C9AC7C70029F88E /* CodableTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTypes.swift; sourceTree = "<group>"; };
@@ -597,6 +599,7 @@
 			isa = PBXGroup;
 			children = (
 				53FD37732CB1B0C700DBA06B /* Plugin.swift */,
+				532CD1EE2DD5D7D800FA9802 /* ObjCPlugin.swift */,
 				53FD37742CB1B0C700DBA06B /* PluginChain.swift */,
 				53FD37752CB1B0C700DBA06B /* PluginInteractor.swift */,
 			);
@@ -802,6 +805,7 @@
 				536DEF552D36B371000BB30B /* SetAnonymousIdAction.swift in Sources */,
 				53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */,
 				53A22A3D2C7472850059D6FE /* Event.swift in Sources */,
+				532CD1EF2DD5D7D800FA9802 /* ObjCPlugin.swift in Sources */,
 				5392AB972C6FC84800369791 /* SwiftLogger.swift in Sources */,
 				53CC470E2D7F03CD00025427 /* LifecycleTrackingPlugin.swift in Sources */,
 				53BE94E92C921B9E0004E75A /* KeyValueStore.swift in Sources */,
