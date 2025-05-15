@@ -63,6 +63,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		532CD1F32DD5E06A00FA9802 /* CustomStorage */ = {
+			isa = PBXGroup;
+			children = (
+				532CD1F02DD5DE3E00FA9802 /* CustomStorage.h */,
+				532CD1F12DD5DE3E00FA9802 /* CustomStorage.m */,
+			);
+			path = CustomStorage;
+			sourceTree = "<group>";
+		};
 		5352C7642DCBCB390022B105 = {
 			isa = PBXGroup;
 			children = (
@@ -86,11 +95,10 @@
 				5352C7BB2DCBCC0A0022B105 /* AppDelegate */,
 				5352C7BD2DCBCC490022B105 /* ViewControllers */,
 				5352C7BC2DCBCC2D0022B105 /* Storyboards */,
+				532CD1F32DD5E06A00FA9802 /* CustomStorage */,
 				5352C7A22DCBCBA10022B105 /* Assets.xcassets */,
 				5352C7A32DCBCBA10022B105 /* Info.plist */,
 				5352C7A62DCBCBA10022B105 /* main.m */,
-				532CD1F02DD5DE3E00FA9802 /* CustomStorage.h */,
-				532CD1F12DD5DE3E00FA9802 /* CustomStorage.m */,
 			);
 			path = AnalyticsAppObjC;
 			sourceTree = "<group>";
