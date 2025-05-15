@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		532CD1F22DD5DE3E00FA9802 /* CustomStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 532CD1F12DD5DE3E00FA9802 /* CustomStorage.m */; };
 		532CD1F62DD5E0C200FA9802 /* CustomOptionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 532CD1F52DD5E0C200FA9802 /* CustomOptionPlugin.m */; };
+		532CD1FA2DD5E4CA00FA9802 /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 532CD1F92DD5E4CA00FA9802 /* AnalyticsManager.m */; };
 		5352C7AE2DCBCBA10022B105 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5352C7A62DCBCBA10022B105 /* main.m */; };
 		5352C7AF2DCBCBA10022B105 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5352C7AA2DCBCBA10022B105 /* SceneDelegate.m */; };
 		5352C7B02DCBCBA10022B105 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5352C7AC2DCBCBA10022B105 /* ViewController.m */; };
@@ -39,6 +40,8 @@
 		532CD1F12DD5DE3E00FA9802 /* CustomStorage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomStorage.m; sourceTree = "<group>"; };
 		532CD1F42DD5E0C200FA9802 /* CustomOptionPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomOptionPlugin.h; sourceTree = "<group>"; };
 		532CD1F52DD5E0C200FA9802 /* CustomOptionPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomOptionPlugin.m; sourceTree = "<group>"; };
+		532CD1F82DD5E4CA00FA9802 /* AnalyticsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalyticsManager.h; sourceTree = "<group>"; };
+		532CD1F92DD5E4CA00FA9802 /* AnalyticsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalyticsManager.m; sourceTree = "<group>"; };
 		5352C76D2DCBCB390022B105 /* AnalyticsAppObjC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppObjC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5352C7A02DCBCBA10022B105 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5352C7A12DCBCBA10022B105 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -84,6 +87,15 @@
 			path = CustomOptionPlugin;
 			sourceTree = "<group>";
 		};
+		532CD1FB2DD5E4D200FA9802 /* AnalyticsManager */ = {
+			isa = PBXGroup;
+			children = (
+				532CD1F82DD5E4CA00FA9802 /* AnalyticsManager.h */,
+				532CD1F92DD5E4CA00FA9802 /* AnalyticsManager.m */,
+			);
+			path = AnalyticsManager;
+			sourceTree = "<group>";
+		};
 		5352C7642DCBCB390022B105 = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +119,7 @@
 				5352C7BB2DCBCC0A0022B105 /* AppDelegate */,
 				5352C7BD2DCBCC490022B105 /* ViewControllers */,
 				5352C7BC2DCBCC2D0022B105 /* Storyboards */,
+				532CD1FB2DD5E4D200FA9802 /* AnalyticsManager */,
 				532CD1F32DD5E06A00FA9802 /* CustomStorage */,
 				532CD1F72DD5E0CD00FA9802 /* CustomOptionPlugin */,
 				5352C7A22DCBCBA10022B105 /* Assets.xcassets */,
@@ -228,6 +241,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5352C7AE2DCBCBA10022B105 /* main.m in Sources */,
+				532CD1FA2DD5E4CA00FA9802 /* AnalyticsManager.m in Sources */,
 				5352C7AF2DCBCBA10022B105 /* SceneDelegate.m in Sources */,
 				532CD1F62DD5E0C200FA9802 /* CustomOptionPlugin.m in Sources */,
 				5352C7B02DCBCBA10022B105 /* ViewController.m in Sources */,
