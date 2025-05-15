@@ -6,7 +6,6 @@
 //
 
 #import "CustomStorage.h"
-#import <Analytics/Analytics-Swift.h>
 
 #pragma mark - CustomStorage
 @interface CustomStorage () {
