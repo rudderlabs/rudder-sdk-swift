@@ -70,6 +70,7 @@ public protocol EventStorage {
 
      - Parameter event: The event payload to store as a `String`.
      */
+    @objc(write: completionHandler:)
     func write(event: String) async
 
     /**
@@ -77,6 +78,7 @@ public protocol EventStorage {
 
      - Returns: A `EventDataResult` containing the retrieved events.
      */
+    @objc(read:)
     func read() async -> EventDataResult
 
     /**
@@ -85,6 +87,7 @@ public protocol EventStorage {
      - Parameter eventReference: The reference of the event to be removed.
      - Returns: A `Bool` indicating whether the event was successfully removed.
      */
+    @objc(remove: completionHandler:)
     @discardableResult
     func remove(eventReference: String) async -> Bool
 
@@ -93,6 +96,7 @@ public protocol EventStorage {
 
      This is typically used to finalize or batch stored events for processing or uploading.
      */
+    @objc(rollover:)
     func rollover() async
 }
 
