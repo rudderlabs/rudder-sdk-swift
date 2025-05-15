@@ -49,10 +49,12 @@ public class Configuration: NSObject {
      */
     @nonobjc public var storage: Storage
     
+    // swiftlint:disable identifier_name
     /**
      The storage mechanism used to persist data. Defaults to in-built storage system, if no custom storage is provided.
      */
-    public var persistentStorage: Storage? {
+    @objc(storage)
+    public var __objc__Storage: Storage? {
         get {
             return storage
         }
@@ -60,7 +62,8 @@ public class Configuration: NSObject {
             storage = newValue ?? BasicStorage(writeKey: writeKey)
         }
     }
-
+    // swiftlint:enable identifier_name
+    
     /**
      An array of flush policies defining how and when events are flushed to the data plane.
      */
