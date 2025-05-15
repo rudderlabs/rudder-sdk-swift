@@ -28,9 +28,9 @@
 }
 
 - (void)initializeAnalyticsSDK {
-#warning Remove keys...
-    NSString *writeKey = @"2vPgTJJHX8Z1fpU8DWjDGlmyJpF";
-    NSString *dataPlaneUrl = @"https://rudderstacfbtt.dataplane.rudderstack.com";
+
+    NSString *writeKey = @"sample-write-key";
+    NSString *dataPlaneUrl = @"https://data-plane.analytics.com";
     
     Configuration *config = [[Configuration alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
     
