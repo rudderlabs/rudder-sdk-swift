@@ -10,6 +10,7 @@
 		532CD1F22DD5DE3E00FA9802 /* CustomStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 532CD1F12DD5DE3E00FA9802 /* CustomStorage.m */; };
 		532CD1F62DD5E0C200FA9802 /* CustomOptionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 532CD1F52DD5E0C200FA9802 /* CustomOptionPlugin.m */; };
 		532CD1FA2DD5E4CA00FA9802 /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 532CD1F92DD5E4CA00FA9802 /* AnalyticsManager.m */; };
+		532CD1FE2DD5FDD500FA9802 /* CustomLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 532CD1FD2DD5FDD500FA9802 /* CustomLogger.m */; };
 		5352C7AE2DCBCBA10022B105 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5352C7A62DCBCBA10022B105 /* main.m */; };
 		5352C7AF2DCBCBA10022B105 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5352C7AA2DCBCBA10022B105 /* SceneDelegate.m */; };
 		5352C7B02DCBCBA10022B105 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5352C7AC2DCBCBA10022B105 /* ViewController.m */; };
@@ -42,6 +43,8 @@
 		532CD1F52DD5E0C200FA9802 /* CustomOptionPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomOptionPlugin.m; sourceTree = "<group>"; };
 		532CD1F82DD5E4CA00FA9802 /* AnalyticsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalyticsManager.h; sourceTree = "<group>"; };
 		532CD1F92DD5E4CA00FA9802 /* AnalyticsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalyticsManager.m; sourceTree = "<group>"; };
+		532CD1FC2DD5FDD500FA9802 /* CustomLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomLogger.h; sourceTree = "<group>"; };
+		532CD1FD2DD5FDD500FA9802 /* CustomLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomLogger.m; sourceTree = "<group>"; };
 		5352C76D2DCBCB390022B105 /* AnalyticsAppObjC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppObjC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5352C7A02DCBCBA10022B105 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5352C7A12DCBCBA10022B105 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -96,6 +99,15 @@
 			path = AnalyticsManager;
 			sourceTree = "<group>";
 		};
+		532CD1FF2DD5FDE700FA9802 /* CustomLogger */ = {
+			isa = PBXGroup;
+			children = (
+				532CD1FC2DD5FDD500FA9802 /* CustomLogger.h */,
+				532CD1FD2DD5FDD500FA9802 /* CustomLogger.m */,
+			);
+			path = CustomLogger;
+			sourceTree = "<group>";
+		};
 		5352C7642DCBCB390022B105 = {
 			isa = PBXGroup;
 			children = (
@@ -122,6 +134,7 @@
 				532CD1FB2DD5E4D200FA9802 /* AnalyticsManager */,
 				532CD1F32DD5E06A00FA9802 /* CustomStorage */,
 				532CD1F72DD5E0CD00FA9802 /* CustomOptionPlugin */,
+				532CD1FF2DD5FDE700FA9802 /* CustomLogger */,
 				5352C7A22DCBCBA10022B105 /* Assets.xcassets */,
 				5352C7A32DCBCBA10022B105 /* Info.plist */,
 				5352C7A62DCBCBA10022B105 /* main.m */,
@@ -244,6 +257,7 @@
 				532CD1FA2DD5E4CA00FA9802 /* AnalyticsManager.m in Sources */,
 				5352C7AF2DCBCBA10022B105 /* SceneDelegate.m in Sources */,
 				532CD1F62DD5E0C200FA9802 /* CustomOptionPlugin.m in Sources */,
+				532CD1FE2DD5FDD500FA9802 /* CustomLogger.m in Sources */,
 				5352C7B02DCBCBA10022B105 /* ViewController.m in Sources */,
 				532CD1F22DD5DE3E00FA9802 /* CustomStorage.m in Sources */,
 				5352C7B12DCBCBA10022B105 /* AppDelegate.m in Sources */,
