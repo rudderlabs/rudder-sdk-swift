@@ -267,15 +267,18 @@ extension AnalyticsClient {
         self.pluginChain?.add(plugin: plugin)
     }
     
+    // swiftlint:disable identifier_name
     /**
      Adds a custom Objective-C plugin to the plugin chain for processing events and extending functionality.
      
      - Parameter plugin: The Objective-C plugin to be added.
      */
-    public func addPlugin(_ plugin: ObjCPlugin) {
+    @objc(addPlugin:)
+    public func __objc__addPlugin(_ plugin: ObjCPlugin) {
         let swiftPlugin = ObjCPluginAdapter(objcPlugin: plugin)
         self.addPlugin(swiftPlugin)
     }
+    // swiftlint:enable identifier_name
 }
 
 // MARK: - Logger  Management
