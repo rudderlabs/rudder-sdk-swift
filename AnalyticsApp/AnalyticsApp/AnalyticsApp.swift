@@ -15,6 +15,9 @@ struct AnalyticsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onOpenURL { url in
+                    AnalyticsManager.shared.openURL(url)
+                }
         }
     }
 }

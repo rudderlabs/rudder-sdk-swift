@@ -59,6 +59,7 @@
 		5383D2CE2D3EAC0C00291B00 /* AnalyticsAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnalyticsAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLogger.swift; sourceTree = "<group>"; };
 		53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPlugin.swift; sourceTree = "<group>"; };
+		53E01B0C2DDBA40200602AFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -106,6 +107,7 @@
 		5351AA7B2C6BE9DE003C3C47 /* AnalyticsApp */ = {
 			isa = PBXGroup;
 			children = (
+				53E01B0C2DDBA40200602AFD /* Info.plist */,
 				5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */,
 				5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */,
 				53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */,
@@ -417,6 +419,7 @@
 				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AnalyticsApp/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app needs Bluetooth access to enhance your experience.";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This app needs Tracking access to improve your experience.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -448,6 +451,7 @@
 				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AnalyticsApp/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app needs Bluetooth access to enhance your experience.";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This app needs Tracking access to improve your experience.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

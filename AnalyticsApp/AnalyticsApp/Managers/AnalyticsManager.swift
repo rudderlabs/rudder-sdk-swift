@@ -80,5 +80,9 @@ extension AnalyticsManager {
     var sessionId: UInt64? {
         return self.analytics?.sessionId
     }
+    
+    func openURL(_ url: URL, options: [String: Any]? = nil) {
+        self.analytics?.openURL(url, options: options)
+    }
 }
 
