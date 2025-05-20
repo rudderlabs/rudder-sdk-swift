@@ -160,4 +160,34 @@ extension AnalyticsTests {
         XCTAssertNil(client.userId)
         XCTAssertNil(client.traits)
     }
+    
+    func testDeepLinkTracking() async{
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        let testURL = URL(string: "analyticsapp://testing?id=127&ref=deeplink")!
+        let testOptions = ["source": "unitTest"]
+        
+        client.openURL(testURL, options: testOptions)
+        
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        await client.configuration.storage.rollover()
+        let dataItems = await client.configuration.storage.read().dataItems
+        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        guard let lastEvent = batchData.last else { XCTFail("No event found"); return }
+        
+        XCTAssertEqual(lastEvent["event"] as? String, "Deep Link Opened")
+
+        if let properties = lastEvent["properties"] as? [String: Any] {
+            XCTAssertEqual(properties["url"] as? String, testURL.absoluteString)
+            XCTAssertEqual(properties["id"] as? String, "127")
+            XCTAssertEqual(properties["ref"] as? String, "deeplink")
+            XCTAssertEqual(properties["source"] as? String, "unitTest")
+        } else {
+            XCTFail("Event properties not found")
+        }
+        
+        for item in dataItems {
+            await client.configuration.storage.remove(eventReference: item.reference)
+        }
+    }
 }
