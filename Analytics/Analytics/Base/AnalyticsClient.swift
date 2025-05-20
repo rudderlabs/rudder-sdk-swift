@@ -417,6 +417,40 @@ extension AnalyticsClient {
     var storage: Storage { self.configuration.storage }
 }
 
+// MARK: - DeepLink Tracking
+
+extension AnalyticsClient {
+    
+    /**
+     Handles a deep link URL by extracting its query parameters and tracking the event.
+
+     This method checks if analytics tracking is active. If it is, it extracts query parameters
+     from the provided URL, merges them with any additional options, and sends a tracking event.
+
+     - Parameters:
+        - url: The deep link `URL` to process and track.
+        - options: An optional dictionary of additional metadata to include in the tracking event.
+     */
+    public func openURL(_ url: URL, options: [String: Any]? = nil) {
+        guard self.isAnalyticsActive else { return }
+
+        var properties: [String: Any] = url.queryParameters
+        properties["url"] = url.absoluteString
+
+        // Add additional options
+        if let options = options {
+            for (key, value) in options {
+                properties[key] = value
+            }
+        }
+        
+        LoggerAnalytics.debug(log: "Deep Link Opened: \(url.absoluteString)")
+        
+        // Track the event
+        self.track(name: "Deep Link Opened", properties: properties)
+    }
+}
+
 // MARK: - Typealiases (Public)
 /**
  A dictionary representing event properties with string keys and any values

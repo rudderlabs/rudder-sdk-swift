@@ -164,6 +164,24 @@ extension URL {
         urlComponents.queryItems = parameters.map { URLQueryItem(name: $0, value: $1) }
         return urlComponents.url ?? self
     }
+    
+    var queryItems: [URLQueryItem] {
+        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false),
+              let items = components.queryItems else {
+            return []
+        }
+        return items
+    }
+    
+    var queryParameters: [String: String] {
+        var params: [String: String] = [:]
+        for item in queryItems {
+            if let value = item.value {
+                params[item.name] = value
+            }
+        }
+        return params
+    }
 }
 
 // MARK: - Dictionary
