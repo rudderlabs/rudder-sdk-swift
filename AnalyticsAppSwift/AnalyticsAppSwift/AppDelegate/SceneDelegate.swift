@@ -47,6 +47,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let client = appDelegate.analytics, let url = URLContexts.first?.url else { return }
+        client.openURL(url, options: ["fromFunction": #function])
+    }
 }
 
