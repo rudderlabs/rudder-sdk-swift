@@ -19,20 +19,17 @@ final class MockProvider {
     static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
     
     static var clientWithDiskStorage: AnalyticsClient {
-        let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .disk)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storage: storage, flushPolicies: [])
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storageMode: .disk, flushPolicies: [])
         return AnalyticsClient(configuration: configuration)
     }
     
     static var clientWithMemoryStorage: AnalyticsClient {
-        let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .memory)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storage: storage, flushPolicies: [])
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storageMode: .memory, flushPolicies: [])
         return AnalyticsClient(configuration: configuration)
     }
     
     static func clientWithSessionConfig(config: SessionConfiguration) -> AnalyticsClient{
-        let storage = BasicStorage(writeKey: _mockWriteKey, storageMode: .memory)
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storage: storage, flushPolicies: [], sessionConfiguration: config)
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storageMode: .disk, flushPolicies: [], sessionConfiguration: config)
         return AnalyticsClient(configuration: configuration)
     }
 }
@@ -192,34 +189,26 @@ class MockKeyValueStorage: KeyValueStorage {
         self.userDefaults = nil
     }
     
-    func write(value: Any?, key: String) {
-        guard let value = value else {
-            self.remove(key: key)
-            return
-        }
-        
-        guard isSupportedType(value) else { return }
-        
-        if JSONSerialization.isValidJSONObject(value),
-           let data = try? JSONSerialization.data(withJSONObject: value, options: []) {
-            self.userDefaults?.set(data, forKey: key)
-        } else {
+    func write<T: Codable>(value: T, key: String) {
+        if self.isPrimitiveType(value) {
             self.userDefaults?.set(value, forKey: key)
+        } else {
+            guard let encodedData = try? JSONEncoder().encode(value) else { return }
+            self.userDefaults?.set(encodedData, forKey: key)
         }
         self.userDefaults?.synchronize()
     }
     
-    func read(key: String) -> Any? {
-        guard let rawValue = self.userDefaults?.object(forKey: key) else { return nil }
-        
-        if let data = rawValue as? Data {
-            if let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []) {
-                return jsonObject
-            }
-            return data
+    func read<T: Codable>(key: String) -> T? {
+        var result: T?
+        let rawValue = self.userDefaults?.object(forKey: key)
+        if let rawData = rawValue as? Data {
+            guard let decodedValue = try? JSONDecoder().decode(T.self, from: rawData) else { return nil }
+            result = decodedValue
+        } else {
+            result = rawValue as? T
         }
-        
-        return rawValue
+        return result
     }
     
     func remove(key: String) {
@@ -227,16 +216,15 @@ class MockKeyValueStorage: KeyValueStorage {
         self.userDefaults?.synchronize()
     }
     
-    private func isSupportedType(_ value: Any) -> Bool {
-        switch value {
-        case is Int, is Double, is Float, is Bool, is String, is Character, is Date, is Data, is URL, is NSNumber:
-            return true
-        case let array as [Any]:
-            return array.allSatisfy { isSupportedType($0) }
-        case let dict as [String: Any]:
-            return dict.values.allSatisfy { isSupportedType($0) }
+    private func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
+        guard let value = value else { return true } // Since nil is also a primitive, & can be set to UserDefaults..
+        
+        return switch value {
+        case is Int, is Double, is Float, is NSNumber, is Bool, is String, is Character,
+            is [Int], is [Double], is [Float], is [NSNumber], is [Bool], is [String], is [Character]:
+            true
         default:
-            return false
+            false
         }
     }
 }
