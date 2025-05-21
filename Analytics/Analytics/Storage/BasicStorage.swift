@@ -60,11 +60,11 @@ extension BasicStorage {
  Implementation of the `KeyValueStorage` protocol.
  */
 extension BasicStorage {
-    func write(value: Any?, key: String) {
+    func write<T: Codable>(value: T, key: String) {
         self.keyValueStore.save(value: value, reference: key)
     }
     
-    func read(key: String) -> Any? {
+    func read<T: Codable>(key: String) -> T? {
         return self.keyValueStore.read(reference: key)
     }
     
