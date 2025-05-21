@@ -19,7 +19,7 @@ import Foundation
    - `read<T: Codable>(key: String) -> T?`: Retrieves a value associated with the given key.
    - `remove(key: String)`: Removes a value associated with the given key.
  */
-public protocol KeyValueStorage {
+protocol KeyValueStorage {
     /**
      Stores a value for a given key.
      
@@ -56,9 +56,8 @@ public protocol KeyValueStorage {
    - `read()`: Retrieves stored event asynchronously.
    - `remove(eventReference:)`: Removes a specific event using its reference and returns whether the removal was successful.
    - `rollover()`: Handles event rollover, typically used to finalize or batch events for processing.
-
  */
-public protocol EventStorage {
+protocol EventStorage {
     /**
      Stores a event in the storage.
 
@@ -103,7 +102,7 @@ public protocol EventStorage {
  - Properties:
    - `eventStorageMode`: Defines the mode of storage used for events.
  */
-public protocol Storage: KeyValueStorage, EventStorage {
+protocol Storage: KeyValueStorage, EventStorage {
     /**
      The mode of storage used for storing events.
 
