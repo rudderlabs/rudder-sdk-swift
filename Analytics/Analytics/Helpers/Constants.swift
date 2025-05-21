@@ -191,7 +191,7 @@ public struct _DefaultConfig {
     public let sessionTimeoutInMillis: UInt64 = 300_000
 
     /// Default storage mode used for persisting data.
-    let storageMode: StorageMode = .disk
+    public let storageMode: StorageMode = .disk
     
     /// Default query parameters added to outgoing requests.
     let queryParams = ["p": "ios", "v": "\(RSVersion)"]
