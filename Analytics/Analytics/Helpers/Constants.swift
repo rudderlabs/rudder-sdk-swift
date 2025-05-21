@@ -8,11 +8,14 @@
 import Foundation
 
 // MARK: - Constants
-/// A container for all constants used throughout the SDK.
-@objcMembers
-public class Constants: NSObject {
+/**
+ A container for all constants used throughout the SDK.
+ */
+public struct Constants {
     /// Private initializer to prevent instantiation.
-    private override init() { super.init() }
+    private init() {
+        /* Default implementation (no-op) */
+    }
 
     /// Logging-related constants.
     public static let log = _Log()
@@ -34,21 +37,36 @@ public class Constants: NSObject {
 }
 
 // swiftlint:disable type_name
-/// Constants related to logging configurations.
-@objcMembers
-public class _Log: NSObject {
-    /// The default log tag used for identifying SDK logs.
-    public let tag: String = "Rudder-Analytics"
-
+/**
+ Constants related to logging configurations.
+ */
+public struct _Log {
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate init () {
+        /* Default implementation (no-op) */
+    }
+    
     /// The default log level for the SDK.
     public let defaultLevel: LogLevel = .none
+    
+    /// The default log tag used for identifying SDK logs.
+    let tag: String = "Rudder-Analytics"
 
     /// Message printed after the analytics instance shuts down.
-    public let shutdownMessage: String = "Analytics instance has been shut down. No further operations are allowed."
+    let shutdownMessage: String = "Analytics instance has been shut down. No further operations are allowed."
 }
 
-/// Constants related to keys used for persistent storage within the SDK.
-class _StorageKeys: NSObject {
+/**
+ Constants related to keys used for persistent storage within the SDK.
+ */
+struct _StorageKeys {
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate init () {
+        /* Default implementation (no-op) */
+    }
+    
     /// Key for storing the anonymous user identifier.
     let anonymousId = "anonymous_id"
 
@@ -80,31 +98,53 @@ class _StorageKeys: NSObject {
     let appBuild = "rudder.app_build"
 }
 
-/// Constants for event count-based flush triggers.
-@objcMembers
-public class _FlushEventCount: NSObject {
+/**
+ Constants for event count-based flush triggers.
+ */
+public struct _FlushEventCount {
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate init () {
+        /* Default implementation (no-op) */
+    }
+    
     /// Default number of events before triggering a flush.
     public let `default` = 30
 
     /// Minimum number of events allowed before triggering a flush.
-    public let min: Int = 1
+    let min: Int = 1
 
     /// Maximum number of events allowed before triggering a flush.
-    public let max: Int = 100
+    let max: Int = 100
 }
 
-/// Constants for time interval-based flush triggers.
-@objcMembers
-public class _FlushInterval: NSObject {
+/**
+ Constants for time interval-based flush triggers.
+ */
+public struct _FlushInterval {
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate init () {
+        /* Default implementation (no-op) */
+    }
+    
     /// Default time interval for triggering a flush, in milliseconds (10 seconds).
     public let `default`: UInt64 = 10_000
 
     /// Minimum time interval allowed for triggering a flush, in milliseconds.
-    public let min: UInt64 = 1
+    let min: UInt64 = 1
 }
 
-/// Constants used when creating payloads for network requests.
-class _Payload: NSObject {
+/**
+ Constants used when creating payloads for network requests.
+ */
+struct _Payload {
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate init () {
+        /* Default implementation (no-op) */
+    }
+    
     /// Placeholder used for adding sent-at timestamps in event payloads.
     let sentAtPlaceholder = "{{_RSA_DEF_SENT_AT_TS_}}"
 
@@ -115,11 +155,15 @@ class _Payload: NSObject {
     let integration = ["All": true]
 }
 
-/// Default configuration values used throughout the SDK.
-@objcMembers
-public class _DefaultConfig: NSObject {
-    /// Default storage mode used for persisting data.
-    public let storageMode: StorageMode = .disk
+/**
+ Default configuration values used throughout the SDK.
+ */
+public struct _DefaultConfig {
+    
+    /// Private initializer to prevent instantiation.
+    fileprivate init() {
+        /* Default implementation (no-op) */
+    }
 
     /// Default control plane URL for the SDK.
     public let controlPlaneUrl: String = "https://api.rudderlabs.com"
@@ -146,6 +190,9 @@ public class _DefaultConfig: NSObject {
     /// Default session timeout duration in milliseconds (5 minutes).
     public let sessionTimeoutInMillis: UInt64 = 300_000
 
+    /// Default storage mode used for persisting data.
+    let storageMode: StorageMode = .disk
+    
     /// Default query parameters added to outgoing requests.
     let queryParams = ["p": "ios", "v": "\(RSVersion)"]
 
