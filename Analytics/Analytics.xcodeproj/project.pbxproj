@@ -100,6 +100,7 @@
 		53CF353D2D1050CA0062096B /* NetworkInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */; };
 		53E01B322DDF1D8300602AFD /* ObjCAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B312DDF1D8300602AFD /* ObjCAnalytics.swift */; };
 		53E01B342DDF233100602AFD /* ObjCConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B332DDF233100602AFD /* ObjCConfiguration.swift */; };
+		53E01B372DDF9A7A00602AFD /* ObjCFlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B362DDF9A7A00602AFD /* ObjCFlushPolicy.swift */; };
 		53E9C2F02D5C8000009A3A53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E9C2EF2D5C8000009A3A53 /* Constants.swift */; };
 		53EF70B22D6F343200C2A829 /* SessionInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EF70B12D6F343200C2A829 /* SessionInfoTests.swift */; };
 		53EF70B52D704AA700C2A829 /* SessionActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EF70B42D704AA700C2A829 /* SessionActionTests.swift */; };
@@ -225,6 +226,7 @@
 		53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPluginTests.swift; sourceTree = "<group>"; };
 		53E01B312DDF1D8300602AFD /* ObjCAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCAnalytics.swift; sourceTree = "<group>"; };
 		53E01B332DDF233100602AFD /* ObjCConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCConfiguration.swift; sourceTree = "<group>"; };
+		53E01B362DDF9A7A00602AFD /* ObjCFlushPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCFlushPolicy.swift; sourceTree = "<group>"; };
 		53E9C2EF2D5C8000009A3A53 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		53EF70B12D6F343200C2A829 /* SessionInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInfoTests.swift; sourceTree = "<group>"; };
 		53EF70B42D704AA700C2A829 /* SessionActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionActionTests.swift; sourceTree = "<group>"; };
@@ -316,8 +318,7 @@
 				53C7A7662D2D9CE400F1325E /* StateManagement */,
 				536C99132D6CE4300005F8AD /* SessionManagement */,
 				53CC470C2D7F034C00025427 /* LifecycleManagement */,
-				53E01B312DDF1D8300602AFD /* ObjCAnalytics.swift */,
-				53E01B332DDF233100602AFD /* ObjCConfiguration.swift */,
+				53E01B352DDF93B500602AFD /* ObjC */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -586,6 +587,16 @@
 			path = LifecycleManagement;
 			sourceTree = "<group>";
 		};
+		53E01B352DDF93B500602AFD /* ObjC */ = {
+			isa = PBXGroup;
+			children = (
+				53E01B312DDF1D8300602AFD /* ObjCAnalytics.swift */,
+				53E01B332DDF233100602AFD /* ObjCConfiguration.swift */,
+				53E01B362DDF9A7A00602AFD /* ObjCFlushPolicy.swift */,
+			);
+			path = ObjC;
+			sourceTree = "<group>";
+		};
 		53EF70B32D6F343800C2A829 /* SessionManagementTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -793,6 +804,7 @@
 				5388D5A92D0A1364000966AB /* TimeZoneInfoPlugin.swift in Sources */,
 				53F864C02D26EB330078D68E /* FrequencyFlushPolicy.swift in Sources */,
 				533485972C9B6FFB0029F88E /* PropertyWrappers.swift in Sources */,
+				53E01B372DDF9A7A00602AFD /* ObjCFlushPolicy.swift in Sources */,
 				530CD0342DB180D4003B62DF /* LoggerAnalytics.swift in Sources */,
 				533E48BA2D81A58F001A1F37 /* LifecycleObserver.swift in Sources */,
 				5387E8972CA3233000DB1C49 /* HttpClient.swift in Sources */,

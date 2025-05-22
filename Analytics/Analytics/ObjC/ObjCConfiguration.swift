@@ -123,3 +123,6 @@ public class ObjCConfigurationBuilder: NSObject {
         return self
     }
 }
+
+@objc(RSFlushPolicy)
+public protocol ObjCFlushPolicy {}
