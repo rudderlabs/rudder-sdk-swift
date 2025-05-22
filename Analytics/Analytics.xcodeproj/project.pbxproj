@@ -98,6 +98,8 @@
 		53CC47122D7F6CB000025427 /* LifecycleTrackingPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC47112D7F6CB000025427 /* LifecycleTrackingPluginTests.swift */; };
 		53CF353B2D0F5BCF0062096B /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */; };
 		53CF353D2D1050CA0062096B /* NetworkInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */; };
+		53E01B322DDF1D8300602AFD /* ObjCAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B312DDF1D8300602AFD /* ObjCAnalytics.swift */; };
+		53E01B342DDF233100602AFD /* ObjCConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B332DDF233100602AFD /* ObjCConfiguration.swift */; };
 		53E9C2F02D5C8000009A3A53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E9C2EF2D5C8000009A3A53 /* Constants.swift */; };
 		53EF70B22D6F343200C2A829 /* SessionInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EF70B12D6F343200C2A829 /* SessionInfoTests.swift */; };
 		53EF70B52D704AA700C2A829 /* SessionActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EF70B42D704AA700C2A829 /* SessionActionTests.swift */; };
@@ -221,6 +223,8 @@
 		53CC47112D7F6CB000025427 /* LifecycleTrackingPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleTrackingPluginTests.swift; sourceTree = "<group>"; };
 		53CF353A2D0F5BCF0062096B /* NetworkInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPlugin.swift; sourceTree = "<group>"; };
 		53CF353C2D1050CA0062096B /* NetworkInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoPluginTests.swift; sourceTree = "<group>"; };
+		53E01B312DDF1D8300602AFD /* ObjCAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCAnalytics.swift; sourceTree = "<group>"; };
+		53E01B332DDF233100602AFD /* ObjCConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCConfiguration.swift; sourceTree = "<group>"; };
 		53E9C2EF2D5C8000009A3A53 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		53EF70B12D6F343200C2A829 /* SessionInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInfoTests.swift; sourceTree = "<group>"; };
 		53EF70B42D704AA700C2A829 /* SessionActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionActionTests.swift; sourceTree = "<group>"; };
@@ -312,6 +316,8 @@
 				53C7A7662D2D9CE400F1325E /* StateManagement */,
 				536C99132D6CE4300005F8AD /* SessionManagement */,
 				53CC470C2D7F034C00025427 /* LifecycleManagement */,
+				53E01B312DDF1D8300602AFD /* ObjCAnalytics.swift */,
+				53E01B332DDF233100602AFD /* ObjCConfiguration.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -759,6 +765,7 @@
 				5388D5A72D0A12F5000966AB /* ScreenInfoPlugin.swift in Sources */,
 				53BAEF712D6DA3410068EF5D /* SessionActions.swift in Sources */,
 				53F864B82D23EB960078D68E /* ScreenEvent.swift in Sources */,
+				53E01B322DDF1D8300602AFD /* ObjCAnalytics.swift in Sources */,
 				53BE94ED2C941B4B0004E75A /* DataStore.swift in Sources */,
 				537E10BB2D4D3D04002074AE /* SetUserIdAction.swift in Sources */,
 				5392AB952C6FC78F00369791 /* Configuration.swift in Sources */,
@@ -770,6 +777,7 @@
 				53FD377D2CB1C2BE00DBA06B /* RudderStackDataPlanePlugin.swift in Sources */,
 				53F864C22D26EBE70078D68E /* StartupFlushPolicy.swift in Sources */,
 				53C7A76C2D2EEE3200F1325E /* UserIdentity.swift in Sources */,
+				53E01B342DDF233100602AFD /* ObjCConfiguration.swift in Sources */,
 				53F864BE2D26EAE00078D68E /* CountFlushPolicy.swift in Sources */,
 				536C99122D6CE4290005F8AD /* SessionInfo.swift in Sources */,
 				5388D5B12D0C203C000966AB /* AppInfoPlugin.swift in Sources */,
@@ -1020,7 +1028,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1065,7 +1073,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
