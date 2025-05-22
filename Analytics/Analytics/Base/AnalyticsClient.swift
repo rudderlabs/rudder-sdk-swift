@@ -17,7 +17,7 @@ public class AnalyticsClient {
      The configuration object for the analytics client. It contains settings and storage mechanisms
      required for the analytics system.
      */
-    public var configuration: Configuration
+    private(set) public var configuration: Configuration
     
     /**
      The chain of plugins used for processing events and managing additional analytics functionality.
@@ -190,6 +190,7 @@ extension AnalyticsClient {
     /**
      Flushes all pending events by triggering the flush method on all plugins in the plugin chain.
      */
+    @objc
     public func flush() {
         guard self.isAnalyticsActive else { return }
         
