@@ -121,6 +121,7 @@ protocol Storage: KeyValueStorage, EventStorage {
    - `disk`: Stores events on the disk, ensuring persistence across app sessions.
    - `memory`: Stores events in memory, providing faster access but no persistence.
  */
+@objc(RSStorageMode)
 public enum StorageMode: Int {
     /// Stores events on the disk, ensuring persistence across app sessions.
     case disk
