@@ -119,7 +119,6 @@ public class Configuration {
 /**
  A configuration class for managing session settings.
  */
-@objcMembers
 public class SessionConfiguration {
     /**
      A flag indicating whether automatic session tracking is enabled.

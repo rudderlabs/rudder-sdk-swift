@@ -110,7 +110,6 @@ public extension Logger {
     - `verbose`: Detailed messages for deep troubleshooting.
  */
 
-@objc
 public enum LogLevel: Int {
     case none, error, warn, info, debug, verbose
 }
