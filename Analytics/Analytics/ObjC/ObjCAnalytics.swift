@@ -8,7 +8,7 @@
 import Foundation
 
 @objc(RSAnalytics)
-public class ObjCAnalytics: NSObject {
+public final class ObjCAnalytics: NSObject {
     
     let analytics: AnalyticsClient
     

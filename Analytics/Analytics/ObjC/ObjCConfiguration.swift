@@ -8,7 +8,7 @@
 import Foundation
 
 @objc(RSConfiguration)
-public class ObjCConfiguration: NSObject {
+public final class ObjCConfiguration: NSObject {
     
     let configuration: Configuration
     
@@ -42,6 +42,42 @@ public class ObjCConfiguration: NSObject {
         set { configuration.gzipEnabled = newValue }
     }
     
+    @objc internal(set) public var storageMode: StorageMode {
+        get { return configuration.storageMode }
+        set { configuration.storageMode = newValue }
+    }
+    
+    @objc internal(set) public var flushPolicies: [ObjCFlushPolicy] {
+        get {
+            return configuration.flushPolicies.compactMap {
+                return switch $0 {
+                case let policy as StartupFlushPolicy:
+                    ObjcStartupFlushPolicy(policy: policy)
+                case let policy as CountFlushPolicy:
+                    ObjcCountFlushPolicy(policy: policy)
+                case let policy as FrequencyFlushPolicy:
+                    ObjcFrequencyFlushPolicy(policy: policy)
+                default:
+                    nil
+                }
+            }
+        }
+        set {
+            configuration.flushPolicies = newValue.compactMap { objcPolicy in
+                switch objcPolicy {
+                case let policy as ObjcStartupFlushPolicy:
+                    return policy.flushPolicy
+                case let policy as ObjcCountFlushPolicy:
+                    return policy.flushPolicy
+                case let policy as ObjcFrequencyFlushPolicy:
+                    return policy.flushPolicy
+                default:
+                    return nil
+                }
+            }
+        }
+    }
+    
     @objc internal(set) public var collectDeviceId: Bool {
         get { configuration.collectDeviceId }
         set { configuration.collectDeviceId = newValue }
@@ -52,12 +88,9 @@ public class ObjCConfiguration: NSObject {
         set { configuration.trackApplicationLifecycleEvents = newValue }
     }
     
-    var flushPolicies: [FlushPolicy] {
-        return configuration.flushPolicies
-    }
-    
-    var sessionConfiguration: SessionConfiguration {
-        return configuration.sessionConfiguration
+    @objc internal(set) public var sessionConfiguration: ObjCSessionConfiguration {
+        get { ObjCSessionConfiguration(configuration: configuration.sessionConfiguration) }
+        set { configuration.sessionConfiguration = newValue.configuration }
     }
     
     init(writeKey: String, dataPlaneUrl: String) {
@@ -66,7 +99,7 @@ public class ObjCConfiguration: NSObject {
 }
 
 @objc(RSConfigurationBuilder)
-public class ObjCConfigurationBuilder: NSObject {
+public final class ObjCConfigurationBuilder: NSObject {
     
     let configuration: ObjCConfiguration
     
@@ -111,6 +144,20 @@ public class ObjCConfigurationBuilder: NSObject {
     
     @objc
     @discardableResult
+    public func setStorageMode(_ storageMode: StorageMode) -> Self {
+        self.configuration.storageMode = storageMode
+        return self
+    }
+    
+    @objc
+    @discardableResult
+    public func setFlushPolicies(_ policies: [ObjCFlushPolicy]) -> Self {
+        self.configuration.flushPolicies = policies
+        return self
+    }
+    
+    @objc
+    @discardableResult
     public func setCollectDeviceId(_ collectDeviceId: Bool) -> Self {
         self.configuration.collectDeviceId = collectDeviceId
         return self
@@ -122,7 +169,33 @@ public class ObjCConfigurationBuilder: NSObject {
         self.configuration.trackApplicationLifecycleEvents = track
         return self
     }
+    
+    @objc
+    @discardableResult
+    public func setSessionConfiguration(_ configuration: ObjCSessionConfiguration) -> Self {
+        self.configuration.sessionConfiguration = configuration
+        return self
+    }
 }
 
-@objc(RSFlushPolicy)
-public protocol ObjCFlushPolicy {}
+@objc(RSSessionConfiguration)
+public final class ObjCSessionConfiguration: NSObject {
+    
+    let configuration: SessionConfiguration
+    
+    @objc
+    public init(automaticSessionTracking: Bool, sessionTimeoutInMillis: UInt64) {
+        self.configuration = SessionConfiguration(automaticSessionTracking: automaticSessionTracking, sessionTimeoutInMillis: sessionTimeoutInMillis)
+        super.init()
+    }
+    
+    @objc
+    public convenience override init() {
+        self.init(automaticSessionTracking: Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: Constants.defaultConfig.sessionTimeoutInMillis)
+    }
+    
+    public init(configuration: SessionConfiguration) {
+        self.configuration = configuration
+        super.init()
+    }
+}
