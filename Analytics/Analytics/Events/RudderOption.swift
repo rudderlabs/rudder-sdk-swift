@@ -7,42 +7,11 @@
 
 import Foundation
 
-// MARK: - RudderOptionType
-
-/**
- A base protocol for managing Rudder options.
-
- The `RudderOptionType` protocol defines methods and properties for managing options like integrations, custom context and externalIds that can be added to event payload. Conforming types are expected to implement the logic for adding these options.
-
- - Properties:
-    - `integrations`: A dictionary of integrations and their enabled/disabled state details.
-    - `customContext`: A dictionary of custom context values associated with the event.
-    - `externalIds`: An array of external IDs to be included with the event payload.
- */
-protocol RudderOptionType {
-    
-    /**
-     This property manages the integrations to be included with the event payload.
-     */
-    var integrations: [String: Any]? { get }
-
-    /**
-     This context can include additional metadata, such as user information or device details.
-     */
-    var customContext: [String: Any]? { get }
-    
-    /**
-     This property holds the external IDs to be included with the event payload.
-     */
-    var externalIds: [ExternalId]? { get }
-}
-
 // MARK: - RudderOption
 
 /**
- A class that implements the `RudderOptionType` protocol for managing Rudder options.
+ A class that allows adding and updating integration settings and custom context data for event payload.
 
- The `RudderOption` class allows adding and updating integration settings and custom context data for event payload.
  This class is useful for customizing the event payload with additional metadata or toggling integrations on or off.
 
  - Properties:
@@ -50,7 +19,7 @@ protocol RudderOptionType {
     - `customContext`: A dictionary of custom context values associated with the event.
     - `externalIds`: An array of external IDs associated with the event.
  */
-public class RudderOption: RudderOptionType {
+public struct RudderOption {
     
     /// A dictionary of integration names as keys and their state values.
     private(set) public var integrations: [String: Any]?
