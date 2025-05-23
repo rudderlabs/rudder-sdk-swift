@@ -95,6 +95,7 @@ public final class ObjCConfiguration: NSObject {
     
     init(writeKey: String, dataPlaneUrl: String) {
         self.configuration = Configuration(writeKey: writeKey, dataPlaneUrl: dataPlaneUrl)
+        super.init()
     }
 }
 
@@ -175,27 +176,5 @@ public final class ObjCConfigurationBuilder: NSObject {
     public func setSessionConfiguration(_ configuration: ObjCSessionConfiguration) -> Self {
         self.configuration.sessionConfiguration = configuration
         return self
-    }
-}
-
-@objc(RSSessionConfiguration)
-public final class ObjCSessionConfiguration: NSObject {
-    
-    let configuration: SessionConfiguration
-    
-    @objc
-    public init(automaticSessionTracking: Bool, sessionTimeoutInMillis: UInt64) {
-        self.configuration = SessionConfiguration(automaticSessionTracking: automaticSessionTracking, sessionTimeoutInMillis: sessionTimeoutInMillis)
-        super.init()
-    }
-    
-    @objc
-    public convenience override init() {
-        self.init(automaticSessionTracking: Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: Constants.defaultConfig.sessionTimeoutInMillis)
-    }
-    
-    public init(configuration: SessionConfiguration) {
-        self.configuration = configuration
-        super.init()
     }
 }
