@@ -225,6 +225,12 @@ extension ObjCAnalytics {
         self.analytics.flush()
     }
     
+    // MARK: - Shutdown
+    @objc
+    public func shutdown() {
+        self.analytics.shutdown()
+    }
+    
     // MARK: - Reset
     @objc
     public func reset(_ clearAnonymousId: Bool) {
