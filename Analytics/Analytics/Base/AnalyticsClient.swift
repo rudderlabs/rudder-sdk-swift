@@ -158,10 +158,10 @@ extension AnalyticsClient {
         - traits: Custom traits or attributes associated with the user. Defaults to `nil`.
         - options: Custom options for the event, including integrations and context. Defaults to empty instance of `RudderOption`.
      */
-    public func identify(userId: String, traits: RudderTraits? = nil, options: RudderOption? = RudderOption()) {
+    public func identify(userId: String? = nil, traits: RudderTraits? = nil, options: RudderOption? = RudderOption()) {
         guard self.isAnalyticsActive else { return }
         
-        self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId, traits: traits ?? RudderTraits(), storage: self.storage))
+        self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId ?? "", traits: traits ?? RudderTraits(), storage: self.storage))
         self.userIdentityState.state.value.storeUserIdAndTraits(self.storage)
         
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
