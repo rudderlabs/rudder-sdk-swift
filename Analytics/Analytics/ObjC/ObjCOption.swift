@@ -11,47 +11,63 @@ import Foundation
 public final class ObjCOption: NSObject {
     let option: RudderOption
     
+    @objc internal(set) public var integrations: [String: Any]? {
+        get { option.integrations }
+        set { option.integrations = (newValue ?? [:]) + Constants.payload.integration }
+    }
+    
+    @objc internal(set) public var customContext: [String: Any]? {
+        get { option.customContext }
+        set { option.customContext = newValue }
+    }
+    
+    @objc internal(set) public var externalIds: [ObjCExternalId]? {
+        get { option.externalIds?.compactMap { ObjCExternalId(externalId: $0) } }
+        set { option.externalIds = newValue?.map { $0.externalId } }
+    }
+    
+    override init() {
+        self.option = RudderOption()
+        super.init()
+    }
+}
+
+@objc(RSOptionBuilder)
+public final class ObjCOptionBuilder: NSObject {
+    let option: ObjCOption
+    
     @objc
-    public init(integrations: [String: Any]?, customContext: [String: Any]?, externalIds: [ObjCExternalId]?) {
-        let externalIdValues = externalIds?.map { $0.externalId }
-        self.option = RudderOption(integrations: integrations, customContext: customContext, externalIds: externalIdValues)
+    public override init() {
+        self.option = ObjCOption()
         super.init()
     }
     
     @objc
-    public convenience override init() {
-        self.init(integrations: nil, customContext: nil, externalIds: nil)
+    public func build() -> ObjCOption {
+        return option
     }
     
     @objc
-    public convenience init(integrations: [String: Any]?) {
-        self.init(integrations: integrations, customContext: nil, externalIds: nil)
+    @discardableResult
+    public func setIntegrations(_ integrations: [String: Any]?) -> Self {
+        self.option.integrations = integrations
+        return self
     }
     
     @objc
-    public convenience init(customContext: [String: Any]?) {
-        self.init(integrations: nil, customContext: customContext, externalIds: nil)
+    @discardableResult
+    public func setCustomContext(_ customContext: [String: Any]?) -> Self {
+        self.option.customContext = customContext
+        return self
     }
     
     @objc
-    public convenience init(externalIds: [ObjCExternalId]?) {
-        self.init(integrations: nil, customContext: nil, externalIds: externalIds)
+    @discardableResult
+    public func setExternalIds(_ externalIds: [ObjCExternalId]?) -> Self {
+        self.option.externalIds = externalIds
+        return self
     }
     
-    @objc
-    public convenience init(integrations: [String: Any]?, customContext: [String: Any]?) {
-        self.init(integrations: integrations, customContext: customContext, externalIds: nil)
-    }
-    
-    @objc
-    public convenience init(customContext: [String: Any]?, externalIds: [ObjCExternalId]?) {
-        self.init(integrations: nil, customContext: customContext, externalIds: externalIds)
-    }
-    
-    @objc
-    public convenience init(integrations: [String: Any]?, externalIds: [ObjCExternalId]?) {
-        self.init(integrations: integrations, customContext: nil, externalIds: externalIds)
-    }
 }
 
 @objc(RSExternalId)
@@ -61,6 +77,11 @@ public final class ObjCExternalId: NSObject {
     @objc
     public init(type: String, id: String) {
         self.externalId = ExternalId(type: type, id: id)
+        super.init()
+    }
+    
+    public init(externalId: ExternalId) {
+        self.externalId = externalId
         super.init()
     }
 }

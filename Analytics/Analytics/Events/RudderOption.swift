@@ -19,16 +19,16 @@ import Foundation
     - `customContext`: A dictionary of custom context values associated with the event.
     - `externalIds`: An array of external IDs associated with the event.
  */
-public struct RudderOption {
+public class RudderOption {
     
     /// A dictionary of integration names as keys and their state values.
-    private(set) public var integrations: [String: Any]?
+    internal(set) public var integrations: [String: Any]?
     
     /// A dictionary of custom context values associated with the event payload.
-    private(set) public var customContext: [String: Any]?
+    internal(set) public var customContext: [String: Any]?
     
     /// An array of external IDs associated with the event payload.
-    private(set) public var externalIds: [ExternalId]?
+    internal(set) public var externalIds: [ExternalId]?
     
     /**
      Initializes a new instance of `RudderOption`.
