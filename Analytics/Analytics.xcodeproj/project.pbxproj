@@ -103,6 +103,7 @@
 		53E01B372DDF9A7A00602AFD /* ObjCFlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B362DDF9A7A00602AFD /* ObjCFlushPolicy.swift */; };
 		53E01B492DE07D6E00602AFD /* ObjCOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B482DE07D6E00602AFD /* ObjCOption.swift */; };
 		53E01B4B2DE08DA400602AFD /* ObjCSessionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B4A2DE08DA400602AFD /* ObjCSessionConfiguration.swift */; };
+		53E01B772DE4EDBB00602AFD /* ObjCLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B762DE4EDBB00602AFD /* ObjCLogger.swift */; };
 		53E9C2F02D5C8000009A3A53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E9C2EF2D5C8000009A3A53 /* Constants.swift */; };
 		53EF70B22D6F343200C2A829 /* SessionInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EF70B12D6F343200C2A829 /* SessionInfoTests.swift */; };
 		53EF70B52D704AA700C2A829 /* SessionActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EF70B42D704AA700C2A829 /* SessionActionTests.swift */; };
@@ -231,6 +232,7 @@
 		53E01B362DDF9A7A00602AFD /* ObjCFlushPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCFlushPolicy.swift; sourceTree = "<group>"; };
 		53E01B482DE07D6E00602AFD /* ObjCOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCOption.swift; sourceTree = "<group>"; };
 		53E01B4A2DE08DA400602AFD /* ObjCSessionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCSessionConfiguration.swift; sourceTree = "<group>"; };
+		53E01B762DE4EDBB00602AFD /* ObjCLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCLogger.swift; sourceTree = "<group>"; };
 		53E9C2EF2D5C8000009A3A53 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		53EF70B12D6F343200C2A829 /* SessionInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInfoTests.swift; sourceTree = "<group>"; };
 		53EF70B42D704AA700C2A829 /* SessionActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionActionTests.swift; sourceTree = "<group>"; };
@@ -599,6 +601,7 @@
 				53E01B4A2DE08DA400602AFD /* ObjCSessionConfiguration.swift */,
 				53E01B482DE07D6E00602AFD /* ObjCOption.swift */,
 				53E01B362DDF9A7A00602AFD /* ObjCFlushPolicy.swift */,
+				53E01B762DE4EDBB00602AFD /* ObjCLogger.swift */,
 			);
 			path = ObjC;
 			sourceTree = "<group>";
@@ -823,6 +826,7 @@
 				53E9C2F02D5C8000009A3A53 /* Constants.swift in Sources */,
 				53C7A7652D2D9CDE00F1325E /* StateManagement.swift in Sources */,
 				53FD37782CB1B0C700DBA06B /* PluginChain.swift in Sources */,
+				53E01B772DE4EDBB00602AFD /* ObjCLogger.swift in Sources */,
 				536DEF552D36B371000BB30B /* SetAnonymousIdAction.swift in Sources */,
 				53FD37792CB1B0C700DBA06B /* PluginInteractor.swift in Sources */,
 				53A22A3D2C7472850059D6FE /* Event.swift in Sources */,
