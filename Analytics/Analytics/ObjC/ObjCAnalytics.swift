@@ -215,7 +215,7 @@ extension ObjCAnalytics {
     
 }
 
-// MARK: - Flush & Reset
+// MARK: - Others
 
 extension ObjCAnalytics {
     
@@ -235,5 +235,12 @@ extension ObjCAnalytics {
     @objc
     public func reset(_ clearAnonymousId: Bool) {
         clearAnonymousId ? self.analytics.reset(clearAnonymousId: true) : self.analytics.reset()
+    }
+    
+    // MARK: - Logger
+    @objc
+    public func setLogger(_ logger: ObjCLogger) {
+        let adaptedLogger = ObjCLoggerAdapter(logger: logger)
+        self.analytics.setLogger(logger: adaptedLogger)
     }
 }
