@@ -65,17 +65,17 @@ extension ObjCAnalytics {
     }
     
     @objc
-    public func track(_ name: String, properties: [String: Any]?) {
+    public func track(_ name: String, properties: [String: Any]) {
         self.internalTrack(name, properties: properties, options: nil)
     }
     
     @objc
-    public func track(_ name: String, options: ObjCOption?) {
+    public func track(_ name: String, options: ObjCOption) {
         self.internalTrack(name, properties: nil, options: options)
     }
     
     @objc
-    public func track(_ name: String, properties: [String: Any]?, options: ObjCOption?) {
+    public func track(_ name: String, properties: [String: Any], options: ObjCOption) {
         self.internalTrack(name, properties: properties, options: options)
     }
     
@@ -91,37 +91,37 @@ extension ObjCAnalytics {
     }
     
     @objc
-    public func screen(_ name: String, category: String?) {
+    public func screen(_ name: String, category: String) {
         self.internalScreen(name, category: category, properties: nil, options: nil)
     }
     
     @objc
-    public func screen(_ name: String, properties: [String: Any]?) {
+    public func screen(_ name: String, properties: [String: Any]) {
         self.internalScreen(name, category: nil, properties: properties, options: nil)
     }
     
     @objc
-    public func screen(_ name: String, options: ObjCOption?) {
+    public func screen(_ name: String, options: ObjCOption) {
         self.internalScreen(name, category: nil, properties: nil, options: options)
     }
     
     @objc
-    public func screen(_ name: String, category: String?, properties: [String: Any]?) {
+    public func screen(_ name: String, category: String, properties: [String: Any]) {
         self.internalScreen(name, category: category, properties: properties, options: nil)
     }
     
     @objc
-    public func screen(_ name: String, category: String?, options: ObjCOption?) {
+    public func screen(_ name: String, category: String, options: ObjCOption) {
         self.internalScreen(name, category: category, properties: nil, options: options)
     }
     
     @objc
-    public func screen(_ name: String, properties: [String: Any]?, options: ObjCOption?) {
+    public func screen(_ name: String, properties: [String: Any], options: ObjCOption) {
         self.internalScreen(name, category: nil, properties: properties, options: options)
     }
     
     @objc
-    public func screen(_ name: String, category: String?, properties: [String: Any]?, options: ObjCOption?) {
+    public func screen(_ name: String, category: String, properties: [String: Any], options: ObjCOption) {
         self.internalScreen(name, category: category, properties: properties, options: options)
     }
     
@@ -137,17 +137,17 @@ extension ObjCAnalytics {
     }
     
     @objc
-    public func group(_ id: String, traits: [String: Any]?) {
+    public func group(_ id: String, traits: [String: Any]) {
         self.internalGroup(id, traits: traits, options: nil)
     }
     
     @objc
-    public func group(_ id: String, options: ObjCOption?) {
+    public func group(_ id: String, options: ObjCOption) {
         self.internalGroup(id, traits: nil, options: options)
     }
     
     @objc
-    public func group(_ id: String, traits: [String: Any]?, options: ObjCOption?) {
+    public func group(_ id: String, traits: [String: Any], options: ObjCOption) {
         self.internalGroup(id, traits: traits, options: options)
     }
     
@@ -163,27 +163,27 @@ extension ObjCAnalytics {
     }
     
     @objc
-    public func identify(traits: [String: Any]?) {
+    public func identify(traits: [String: Any]) {
         self.internalIdentify(nil, traits: traits, options: nil)
     }
     
     @objc
-    public func identify(_ userId: String, traits: [String: Any]?) {
+    public func identify(_ userId: String, traits: [String: Any]) {
         self.internalIdentify(userId, traits: traits, options: nil)
     }
     
     @objc
-    public func identify(_ userId: String, options: ObjCOption?) {
+    public func identify(_ userId: String, options: ObjCOption) {
         self.internalIdentify(userId, traits: nil, options: options)
     }
     
     @objc
-    public func identify(traits: [String: Any]?, options: ObjCOption?) {
+    public func identify(traits: [String: Any], options: ObjCOption) {
         self.internalIdentify(nil, traits: traits, options: options)
     }
     
     @objc
-    public func identify(_ userId: String, traits: [String: Any]?, options: ObjCOption?) {
+    public func identify(_ userId: String, traits: [String: Any], options: ObjCOption) {
         self.internalIdentify(userId, traits: traits, options: options)
     }
     
@@ -199,17 +199,17 @@ extension ObjCAnalytics {
     }
     
     @objc
-    public func alias(_ userId: String, previousId: String?) {
+    public func alias(_ userId: String, previousId: String) {
         self.internalAlias(userId, previousId: previousId, options: nil)
     }
     
     @objc
-    public func alias(_ newId: String, options: ObjCOption?) {
+    public func alias(_ newId: String, options: ObjCOption) {
         self.internalAlias(newId, previousId: nil, options: options)
     }
     
     @objc
-    public func alias(_ newId: String, previousId: String?, options: ObjCOption?) {
+    public func alias(_ newId: String, previousId: String, options: ObjCOption) {
         self.internalAlias(newId, previousId: previousId, options: options)
     }
     
