@@ -48,3 +48,23 @@ extension ObjCAnalytics {
         return NSNumber(value: sessionId)
     }
 }
+
+// MARK: - Events
+
+extension ObjCAnalytics {
+    
+    @objc
+    public func track(_ name: String) {
+        self.track(name, properties: nil, options: nil)
+    }
+    
+    @objc
+    public func track(_ name: String, properties: [String: Any]?) {
+        self.track(name, properties: properties, options: nil)
+    }
+    
+    @objc
+    public func track(_ name: String, properties: [String: Any]?, options: ObjCOption?) {
+        self.analytics.track(name: name, properties: properties, options: options?.option)
+    }
+}
