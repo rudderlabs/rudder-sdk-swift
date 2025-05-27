@@ -105,6 +105,7 @@
 		53E01B4B2DE08DA400602AFD /* ObjCSessionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B4A2DE08DA400602AFD /* ObjCSessionConfiguration.swift */; };
 		53E01B772DE4EDBB00602AFD /* ObjCLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B762DE4EDBB00602AFD /* ObjCLogger.swift */; };
 		53E01B792DE5F6E800602AFD /* ObjCEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B782DE5F6E800602AFD /* ObjCEvent.swift */; };
+		53E01B7B2DE5F8A200602AFD /* ObjCPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B7A2DE5F8A200602AFD /* ObjCPlugin.swift */; };
 		53E9C2F02D5C8000009A3A53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E9C2EF2D5C8000009A3A53 /* Constants.swift */; };
 		53EF70B22D6F343200C2A829 /* SessionInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EF70B12D6F343200C2A829 /* SessionInfoTests.swift */; };
 		53EF70B52D704AA700C2A829 /* SessionActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EF70B42D704AA700C2A829 /* SessionActionTests.swift */; };
@@ -235,6 +236,7 @@
 		53E01B4A2DE08DA400602AFD /* ObjCSessionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCSessionConfiguration.swift; sourceTree = "<group>"; };
 		53E01B762DE4EDBB00602AFD /* ObjCLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCLogger.swift; sourceTree = "<group>"; };
 		53E01B782DE5F6E800602AFD /* ObjCEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCEvent.swift; sourceTree = "<group>"; };
+		53E01B7A2DE5F8A200602AFD /* ObjCPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCPlugin.swift; sourceTree = "<group>"; };
 		53E9C2EF2D5C8000009A3A53 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		53EF70B12D6F343200C2A829 /* SessionInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInfoTests.swift; sourceTree = "<group>"; };
 		53EF70B42D704AA700C2A829 /* SessionActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionActionTests.swift; sourceTree = "<group>"; };
@@ -605,6 +607,7 @@
 				53E01B362DDF9A7A00602AFD /* ObjCFlushPolicy.swift */,
 				53E01B762DE4EDBB00602AFD /* ObjCLogger.swift */,
 				53E01B782DE5F6E800602AFD /* ObjCEvent.swift */,
+				53E01B7A2DE5F8A200602AFD /* ObjCPlugin.swift */,
 			);
 			path = ObjC;
 			sourceTree = "<group>";
@@ -838,6 +841,7 @@
 				53CC470E2D7F03CD00025427 /* LifecycleTrackingPlugin.swift in Sources */,
 				53BE94E92C921B9E0004E75A /* KeyValueStore.swift in Sources */,
 				5369DD9C2D1B2B6B00DEC550 /* NetworkInfoPluginUtils.swift in Sources */,
+				53E01B7B2DE5F8A200602AFD /* ObjCPlugin.swift in Sources */,
 				5383D2E82D40133700291B00 /* IdentifyEvent.swift in Sources */,
 				533485952C9AC7C70029F88E /* CodableTypes.swift in Sources */,
 				5388D5A02D0A09A5000966AB /* LocaleInfoPlugin.swift in Sources */,

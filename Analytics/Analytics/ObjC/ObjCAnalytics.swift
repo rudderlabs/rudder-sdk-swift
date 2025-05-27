@@ -18,6 +18,10 @@ public final class ObjCAnalytics: NSObject {
     public init(configuration: ObjCConfiguration) {
         self.analytics = AnalyticsClient(configuration: configuration.configuration)
     }
+    
+    public init(analytics: AnalyticsClient) {
+        self.analytics = analytics
+    }
 }
 
 // MARK: - Session
@@ -258,5 +262,13 @@ extension ObjCAnalytics {
     @objc
     public func getTraits() -> [String: Any]? {
         return self.analytics.traits
+    }
+}
+
+extension ObjCAnalytics {
+    @objc
+    public func addPlugin(_ plugin: ObjCPlugin) {
+        let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
+        analytics.addPlugin(adaptedPlugin)
     }
 }
