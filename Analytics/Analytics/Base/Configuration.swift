@@ -11,7 +11,6 @@ import Foundation
 /**
  The `Configuration` class represents the settings used to initialize and configure the Analytics SDK. It provides customization for key parameters like URLs, logging behavior, and data collection preferences.
  */
-@objcMembers
 public class Configuration {
 
     /**
@@ -96,7 +95,7 @@ public class Configuration {
         logLevel: LogLevel = Constants.log.defaultLevel,
         optOut: Bool = false,
         gzipEnaabled: Bool = Constants.defaultConfig.gzipEnabled,
-        storage: Storage? = nil,
+        storageMode: StorageMode = Constants.defaultConfig.storageMode,
         flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
         collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId,
         trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents,
@@ -108,7 +107,7 @@ public class Configuration {
         self.logLevel = logLevel
         self.optOut = optOut
         self.gzipEnabled = gzipEnaabled
-        self.storage = storage ?? BasicStorage(writeKey: writeKey)
+        self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode)
         self.flushPolicies = flushPolicies
         self.collectDeviceId = collectDeviceId
         self.trackApplicationLifecycleEvents = trackApplicationLifecycleEvents

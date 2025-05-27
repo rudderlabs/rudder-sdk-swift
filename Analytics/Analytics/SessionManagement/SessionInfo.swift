@@ -20,19 +20,19 @@ struct SessionInfo {
     static func initializeState(_ storage: KeyValueStorage) -> SessionInfo {
         var state = SessionInfo()
         
-        if let sessionIdValue = storage.read(key: Constants.storageKeys.sessionId) as? String, let sessionId = UInt64(sessionIdValue) {
+        if let sessionIdValue: String = storage.read(key: Constants.storageKeys.sessionId), let sessionId = UInt64(sessionIdValue) {
             state.id = sessionId
         }
         
-        if let isManualSession = storage.read(key: Constants.storageKeys.isManualSession) as? Bool {
+        if let isManualSession: Bool = storage.read(key: Constants.storageKeys.isManualSession) {
             state.type = isManualSession ? .manual : .automatic
         }
         
-        if let isSessionStart: Bool = storage.read(key: Constants.storageKeys.isSessionStart) as? Bool {
+        if let isSessionStart: Bool = storage.read(key: Constants.storageKeys.isSessionStart) {
             state.isStart = isSessionStart
         }
         
-        if let lastActivityTimeValue: String = storage.read(key: Constants.storageKeys.lastActivityTime) as? String, let lastActivityTime = UInt64(lastActivityTimeValue) {
+        if let lastActivityTimeValue: String = storage.read(key: Constants.storageKeys.lastActivityTime), let lastActivityTime = UInt64(lastActivityTimeValue) {
             state.lastActivityTime = lastActivityTime
         }
       

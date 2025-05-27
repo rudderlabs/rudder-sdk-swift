@@ -12,30 +12,30 @@ import Foundation
  A protocol that defines a simple key-value storage mechanism.
 
  This protocol provides methods for storing, retrieving, and removing data in a storage system using string-based keys.
+ It supports encoding and decoding of data types that conform to the `Codable` protocol.
 
  - Methods:
-   - `write(value: Any?, key: String)`: Stores a value in the storage for a given key.
-   - `read(key: String) -> Any?`: Retrieves a value associated with the given key.
+   - `write<T: Codable>(value: T, key: String)`: Stores a value in the storage for a given key.
+   - `read<T: Codable>(key: String) -> T?`: Retrieves a value associated with the given key.
    - `remove(key: String)`: Removes a value associated with the given key.
  */
-public protocol KeyValueStorage {
+protocol KeyValueStorage {
     /**
      Stores a value for a given key.
      
      - Parameters:
-        - value: The value to store.
+        - value: The value to store. Must conform to the `Codable` protocol.
         - key: The key associated with the value.
      */
-    func write(value: Any?, key: String)
+    func write<T: Codable>(value: T, key: String)
     
     /**
      Retrieves a value associated with the given key.
-
-     - Parameters:
-        - key: The key for which to retrieve the value.
-        - Returns: The stored value, or `nil` if no value exists for the key.
+     
+     - Parameter key: The key for which to retrieve the value.
+     - Returns: The decoded value, or `nil` if no value exists for the key or if decoding fails.
      */
-    func read(key: String) -> Any?
+    func read<T: Codable>(key: String) -> T?
     
     /**
      Removes a value associated with the given key.
@@ -56,9 +56,8 @@ public protocol KeyValueStorage {
    - `read()`: Retrieves stored event asynchronously.
    - `remove(eventReference:)`: Removes a specific event using its reference and returns whether the removal was successful.
    - `rollover()`: Handles event rollover, typically used to finalize or batch events for processing.
-
  */
-public protocol EventStorage {
+protocol EventStorage {
     /**
      Stores a event in the storage.
 
@@ -103,7 +102,7 @@ public protocol EventStorage {
  - Properties:
    - `eventStorageMode`: Defines the mode of storage used for events.
  */
-public protocol Storage: KeyValueStorage, EventStorage {
+protocol Storage: KeyValueStorage, EventStorage {
     /**
      The mode of storage used for storing events.
 

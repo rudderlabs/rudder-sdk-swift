@@ -16,9 +16,9 @@ import Foundation
  - Properties:
    - `dataItems`: An array of `EventDataItem` objects representing individual event batches.
  */
-public struct EventDataResult {
+struct EventDataResult {
     /// An array of EventDataItem objects representing individual event batches.
-    public let dataItems: [EventDataItem]
+    let dataItems: [EventDataItem]
 }
 
 // MARK: - EventDataItem
@@ -32,15 +32,15 @@ public struct EventDataResult {
    - `batch`: The batch of events as a `String` that needs to be processed or uploaded.
    - `isClosed`: A flag indicating whether the batch is closed for further modifications.
 */
-public struct EventDataItem {
+struct EventDataItem {
     /// A unique identifier for the event batch.
-    public var reference: String
+    var reference: String
     
     /// The batch of events as a `String`.
-    public var batch: String
+    var batch: String
     
     /// The status of the events batch as a `String`.
-    public var isClosed: Bool
+    var isClosed: Bool
     
     /**
      Initializes a new instance of `EventDataItem` with the provided batch content.

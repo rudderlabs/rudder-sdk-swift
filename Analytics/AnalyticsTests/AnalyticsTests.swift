@@ -28,13 +28,12 @@ final class AnalyticsTests: XCTestCase {
     }
     
     func test_sourceConfiguration() {
-        let storage = BasicStorage(writeKey: MockProvider._mockWriteKey, storageMode: .disk)
-        let configuration = Configuration(writeKey: MockProvider._mockWriteKey, dataPlaneUrl: "https://www.mock-url.com/", storage: storage)
+        let configuration = Configuration(writeKey: MockProvider._mockWriteKey, dataPlaneUrl: "https://www.mock-url.com/", storageMode: .disk)
         
         let client = AnalyticsClient(configuration: configuration)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
         
-        let config = client.configuration.storage.read(key: Constants.storageKeys.sourceConfig) as? String
+        let config: String? = client.configuration.storage.read(key: Constants.storageKeys.sourceConfig)
         XCTAssertFalse(((config?.isEmpty) != nil))
     }
 }
@@ -110,9 +109,9 @@ extension AnalyticsTests {
         client.reset()
         
         let anonymousId = client.anonymousId
-        let userId = client.storage.read(key: Constants.storageKeys.userId) as? String
+        let userId: String? = client.storage.read(key: Constants.storageKeys.userId)
         XCTAssertTrue(userId == nil)
-        let trits = client.storage.read(key: Constants.storageKeys.traits) as? String
+        let trits: String? = client.storage.read(key: Constants.storageKeys.traits)
         XCTAssertTrue(trits == nil)
         
         client.reset(clearAnonymousId: true)
