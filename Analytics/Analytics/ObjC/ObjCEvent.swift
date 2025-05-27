@@ -209,7 +209,7 @@ public class ObjCEvent: NSObject {
 
  Each case corresponds to a type of event that can be tracked.
  */
-@objc
+@objc(RSEventType)
 public enum ObjCEventType: Int {
     /** Represents an `identify` event. */
     case identify = 1
