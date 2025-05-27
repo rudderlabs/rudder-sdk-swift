@@ -250,17 +250,18 @@ extension ObjCAnalytics {
 
 extension ObjCAnalytics {
     @objc
-    public func getAnonymousId() -> String? {
-        return self.analytics.anonymousId
+    public var anonymousId: String? {
+        get { self.analytics.anonymousId }
+        set { self.analytics.anonymousId = newValue }
     }
     
     @objc
-    public func getuserId() -> String? {
+    public var userId: String? {
         return self.analytics.userId
     }
     
     @objc
-    public func getTraits() -> [String: Any]? {
+    public var traits: [String: Any]? {
         return self.analytics.traits
     }
 }
