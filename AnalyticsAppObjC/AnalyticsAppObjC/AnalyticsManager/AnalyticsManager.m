@@ -6,6 +6,8 @@
 //
 
 #import "AnalyticsManager.h"
+#import "CustomLogger.h"
+#import "CustomOptionPlugin.h"
 
 @interface AnalyticsManager()
 
@@ -44,18 +46,19 @@
     [builder setStorageMode: RSStorageModeMemory];
     
     self.client = [[RSAnalytics alloc] initWithConfiguration:[builder build]];
-/*
-    config.storage = [[CustomStorage alloc] initWithWriteKey:writeKey];
-        
-    // Adding custom plugin..
-    RudderOption *option = [[RudderOption alloc] initWithIntegrations:@{@"CleverTap": @YES} customContext:@{@"plugin_key": @"plugin_value"} externalIds:@[[[ExternalId alloc] initWithType:@"external_id_type" id:@"external_id"]]];
-    CustomOptionPlugin *optionPlugin = [[CustomOptionPlugin alloc] initWithOption:option];
-    [self.client addPlugin:optionPlugin];
-    
+   
     // Adding custom Logger..
     CustomLogger *logger = [CustomLogger new];
-    [self.client setLogger:logger];
- */
+    [self.client setCustomLogger:logger];
+    
+    RSOptionBuilder *optionBuilder = [RSOptionBuilder new];
+    [optionBuilder setIntegrations:@{@"CleverTap": @YES}];
+    [optionBuilder setCustomContext:@{@"plugin_key": @"plugin_value"}];
+    [optionBuilder setExternalIds:@[[[RSExternalId alloc] initWithType:@"external_id_type" id:@"external_id"]]];
+    
+    // Adding custom plugin..
+    CustomOptionPlugin *plugin = [[CustomOptionPlugin alloc] initWithOption:[optionBuilder build]];
+    [self.client addPlugin:plugin];
 }
 
 - (void)identify:(NSString * _Nonnull)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSOption* _Nullable)option {

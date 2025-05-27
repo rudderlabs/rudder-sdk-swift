@@ -17,29 +17,29 @@ public protocol ObjCLogger {
 }
 
 final class ObjCLoggerAdapter: Logger {
-    private weak var objcLogger: ObjCLogger?
+    private var objcLogger: ObjCLogger
 
-    public init(logger: ObjCLogger?) {
+    public init(logger: ObjCLogger) {
         self.objcLogger = logger
     }
 
     public func verbose(log: String) {
-        objcLogger?.verbose?(log)
+        objcLogger.verbose?(log)
     }
 
     public func debug(log: String) {
-        objcLogger?.debug?(log)
+        objcLogger.debug?(log)
     }
 
     public func info(log: String) {
-        objcLogger?.info?(log)
+        objcLogger.info?(log)
     }
 
     public func warn(log: String) {
-        objcLogger?.warn?(log)
+        objcLogger.warn?(log)
     }
 
     public func error(log: String, error: Error?) {
-        objcLogger?.errorLog?(log, error: error)
+        objcLogger.errorLog?(log, error: error)
     }
 }

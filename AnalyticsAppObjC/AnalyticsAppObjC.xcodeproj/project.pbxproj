@@ -17,6 +17,8 @@
 		5352C7B82DCBCBD10022B105 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5352C7B72DCBCBD10022B105 /* Analytics.framework */; };
 		5352C7B92DCBCBD10022B105 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5352C7B72DCBCBD10022B105 /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53E01B7E2DE61B3200602AFD /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B7D2DE61B3200602AFD /* AnalyticsManager.m */; };
+		53E01B812DE62BE300602AFD /* CustomLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B802DE62BE300602AFD /* CustomLogger.m */; };
+		53E01B842DE62CD300602AFD /* CustomOptionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B832DE62CD300602AFD /* CustomOptionPlugin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +51,10 @@
 		5352C7B72DCBCBD10022B105 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E01B7C2DE61B3200602AFD /* AnalyticsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalyticsManager.h; sourceTree = "<group>"; };
 		53E01B7D2DE61B3200602AFD /* AnalyticsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalyticsManager.m; sourceTree = "<group>"; };
+		53E01B7F2DE62BE300602AFD /* CustomLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomLogger.h; sourceTree = "<group>"; };
+		53E01B802DE62BE300602AFD /* CustomLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomLogger.m; sourceTree = "<group>"; };
+		53E01B822DE62CD300602AFD /* CustomOptionPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomOptionPlugin.h; sourceTree = "<group>"; };
+		53E01B832DE62CD300602AFD /* CustomOptionPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomOptionPlugin.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,11 +92,12 @@
 				5352C7BB2DCBCC0A0022B105 /* AppDelegate */,
 				5352C7BD2DCBCC490022B105 /* ViewControllers */,
 				5352C7BC2DCBCC2D0022B105 /* Storyboards */,
+				53E01B852DE62E7500602AFD /* AnalyticsManager */,
+				53E01B862DE62E8000602AFD /* CustomLogger */,
+				53E01B872DE62E8E00602AFD /* CustomOptionPlugin */,
 				5352C7A22DCBCBA10022B105 /* Assets.xcassets */,
 				5352C7A32DCBCBA10022B105 /* Info.plist */,
 				5352C7A62DCBCBA10022B105 /* main.m */,
-				53E01B7C2DE61B3200602AFD /* AnalyticsManager.h */,
-				53E01B7D2DE61B3200602AFD /* AnalyticsManager.m */,
 			);
 			path = AnalyticsAppObjC;
 			sourceTree = "<group>";
@@ -130,6 +137,33 @@
 				5352C7AC2DCBCBA10022B105 /* ViewController.m */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		53E01B852DE62E7500602AFD /* AnalyticsManager */ = {
+			isa = PBXGroup;
+			children = (
+				53E01B7C2DE61B3200602AFD /* AnalyticsManager.h */,
+				53E01B7D2DE61B3200602AFD /* AnalyticsManager.m */,
+			);
+			path = AnalyticsManager;
+			sourceTree = "<group>";
+		};
+		53E01B862DE62E8000602AFD /* CustomLogger */ = {
+			isa = PBXGroup;
+			children = (
+				53E01B7F2DE62BE300602AFD /* CustomLogger.h */,
+				53E01B802DE62BE300602AFD /* CustomLogger.m */,
+			);
+			path = CustomLogger;
+			sourceTree = "<group>";
+		};
+		53E01B872DE62E8E00602AFD /* CustomOptionPlugin */ = {
+			isa = PBXGroup;
+			children = (
+				53E01B822DE62CD300602AFD /* CustomOptionPlugin.h */,
+				53E01B832DE62CD300602AFD /* CustomOptionPlugin.m */,
+			);
+			path = CustomOptionPlugin;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -206,9 +240,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53E01B812DE62BE300602AFD /* CustomLogger.m in Sources */,
 				5352C7AE2DCBCBA10022B105 /* main.m in Sources */,
 				5352C7AF2DCBCBA10022B105 /* SceneDelegate.m in Sources */,
 				53E01B7E2DE61B3200602AFD /* AnalyticsManager.m in Sources */,
+				53E01B842DE62CD300602AFD /* CustomOptionPlugin.m in Sources */,
 				5352C7B02DCBCBA10022B105 /* ViewController.m in Sources */,
 				5352C7B12DCBCBA10022B105 /* AppDelegate.m in Sources */,
 			);
