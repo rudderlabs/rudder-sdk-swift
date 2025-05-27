@@ -7,17 +7,24 @@
 
 import Foundation
 
+// MARK: - ObjCLoggerAnalytics
+/**
+ A static utility class to enable logging from Objective-C using the native Swift `LoggerAnalytics` system.
+
+ This class provides Objective-C accessible static methods for logging at various levels.
+ */
 @objc(RSLoggerAnalytics)
 public final class ObjCLoggerAnalytics: NSObject {
     
-    // Private init to prevent instantiation
+    /** Private initializer to prevent instantiation. */
     private override init() {
         /* Default implementation (no-op) */
     }
 
     /**
-     Logs a verbose message.
-     - Parameter log: The message to log.
+     Logs a verbose-level message using the underlying Swift logger.
+
+     - Parameter log: The verbose message to log.
      */
     @objc
     public static func verbose(_ log: String) {
@@ -25,8 +32,9 @@ public final class ObjCLoggerAnalytics: NSObject {
     }
     
     /**
-     Logs a debug message.
-     - Parameter log: The message to log.
+     Logs a debug-level message using the underlying Swift logger.
+
+     - Parameter log: The debug message to log.
      */
     @objc
     public static func debug(_ log: String) {
@@ -34,8 +42,9 @@ public final class ObjCLoggerAnalytics: NSObject {
     }
     
     /**
-     Logs an info message.
-     - Parameter log: The message to log.
+     Logs an informational message using the underlying Swift logger.
+
+     - Parameter log: The info message to log.
      */
     @objc
     public static func info(_ log: String) {
@@ -43,8 +52,9 @@ public final class ObjCLoggerAnalytics: NSObject {
     }
     
     /**
-     Logs a warning message.
-     - Parameter log: The message to log.
+     Logs a warning-level message using the underlying Swift logger.
+
+     - Parameter log: The warning message to log.
      */
     @objc
     public static func warn(_ log: String) {
@@ -52,10 +62,11 @@ public final class ObjCLoggerAnalytics: NSObject {
     }
     
     /**
-     Logs an error message.
+     Logs an error message using the underlying Swift logger.
+
      - Parameters:
-        - log: The error message.
-        - error: An optional `NSError` object.
+       - log: The error message to log.
+       - error: An optional `NSError` providing error details.
      */
     @objc
     public static func error(_ log: String, error: NSError?) {
