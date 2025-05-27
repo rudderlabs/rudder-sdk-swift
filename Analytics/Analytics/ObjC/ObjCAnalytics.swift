@@ -218,7 +218,6 @@ extension ObjCAnalytics {
 // MARK: - Others
 
 extension ObjCAnalytics {
-    
     // MARK: - Flush
     @objc
     public func flush() {
@@ -238,9 +237,26 @@ extension ObjCAnalytics {
     }
     
     // MARK: - Logger
-    @objc
+    @objc(setCustomLogger:)
     public func setLogger(_ logger: ObjCLogger) {
         let adaptedLogger = ObjCLoggerAdapter(logger: logger)
         self.analytics.setLogger(logger: adaptedLogger)
+    }
+}
+
+extension ObjCAnalytics {
+    @objc
+    public func getAnonymousId() -> String? {
+        return self.analytics.anonymousId
+    }
+    
+    @objc
+    public func getuserId() -> String? {
+        return self.analytics.userId
+    }
+    
+    @objc
+    public func getTraits() -> [String: Any]? {
+        return self.analytics.traits
     }
 }
