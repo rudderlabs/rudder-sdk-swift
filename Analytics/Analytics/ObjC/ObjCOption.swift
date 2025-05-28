@@ -78,7 +78,7 @@ public final class ObjCOptionBuilder: NSObject {
     @objc
     @discardableResult
     public func setIntegrations(_ integrations: [String: Any]?) -> Self {
-        self.option.integrations = integrations
+        self.option.integrations = integrations?.objCSanitized
         return self
     }
 
@@ -91,7 +91,7 @@ public final class ObjCOptionBuilder: NSObject {
     @objc
     @discardableResult
     public func setCustomContext(_ customContext: [String: Any]?) -> Self {
-        self.option.customContext = customContext
+        self.option.customContext = customContext?.objCSanitized
         return self
     }
 

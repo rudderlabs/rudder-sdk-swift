@@ -149,8 +149,7 @@ public class ObjCEvent: NSObject {
      */
     @objc(addToContext:)
     public func addToContext(info: [String: Any]) -> ObjCEvent {
-        let normalized = info.mapValues { normalize(value: $0) }
-        self.event = event.addToContext(info: normalized)
+        self.event = event.addToContext(info: info.objCSanitized)
         return self
     }
 
@@ -162,8 +161,7 @@ public class ObjCEvent: NSObject {
      */
     @objc(addToIntegrations:)
     public func addToIntegrations(info: [String: Any]) -> ObjCEvent {
-        let normalized = info.mapValues { normalize(value: $0) }
-        self.event = event.addToIntegrations(info: normalized)
+        self.event = event.addToIntegrations(info: info.objCSanitized)
         return self
     }
 
@@ -178,28 +176,6 @@ public class ObjCEvent: NSObject {
         let externalIds: [ExternalId] = info.map { $0.externalId }
         self.event = event.addExternalIds(info: externalIds)
         return self
-    }
-
-    // MARK: - Helpers
-
-    /**
-     Normalizes the boolean values in Objective-C compatible structures.
-     */
-    func normalize(value: Any) -> Any {
-        if let number = value as? NSNumber {
-            let objCType = String(cString: number.objCType)
-            if objCType == "c" {
-                return number.boolValue
-            } else {
-                return number
-            }
-        } else if let array = value as? [Any] {
-            return array.map { normalize(value: $0) }
-        } else if let dictionary = value as? [String: Any] {
-            return dictionary.mapValues { normalize(value: $0) }
-        }
-
-        return value
     }
 }
 

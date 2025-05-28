@@ -21,28 +21,32 @@ public protocol ObjCLogger {
 
      - Parameter log: The verbose log message.
      */
-    @objc optional func verbose(_ log: String)
+    @objc
+    optional func verbose(_ log: String)
 
     /**
      Called when a debug log is emitted.
 
      - Parameter log: The debug log message.
      */
-    @objc optional func debug(_ log: String)
+    @objc
+    optional func debug(_ log: String)
 
     /**
      Called when an informational log is emitted.
 
      - Parameter log: The info log message.
      */
-    @objc optional func info(_ log: String)
+    @objc
+    optional func info(_ log: String)
 
     /**
      Called when a warning log is emitted.
 
      - Parameter log: The warning log message.
      */
-    @objc optional func warn(_ log: String)
+    @objc
+    optional func warn(_ log: String)
 
     /**
      Called when an error log is emitted.
@@ -51,7 +55,8 @@ public protocol ObjCLogger {
        - log: The error log message.
        - error: An optional `Error` providing additional details.
      */
-    @objc optional func errorLog(_ log: String, error: Error?)
+    @objc
+    optional func errorLog(_ log: String, error: Error?)
 }
 
 // MARK: - ObjCLoggerAdapter

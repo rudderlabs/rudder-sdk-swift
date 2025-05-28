@@ -84,25 +84,25 @@ extension ObjCAnalytics {
     // MARK: - Track
     
     private func internalTrack(_ name: String, properties: [String: Any]?, options: ObjCOption?) {
-        self.analytics.track(name: name, properties: properties, options: options?.option)
+        self.analytics.track(name: name, properties: properties?.objCSanitized, options: options?.option)
     }
     
     // MARK: - Screen
     
     private func internalScreen(_ name: String, category: String?, properties: [String: Any]?, options: ObjCOption?) {
-        self.analytics.screen(name: name, category: category, properties: properties, options: options?.option)
+        self.analytics.screen(name: name, category: category, properties: properties?.objCSanitized, options: options?.option)
     }
     
     // MARK: - Group
     
     private func internalGroup(_ id: String, traits: [String: Any]?, options: ObjCOption?) {
-        self.analytics.group(id: id, traits: traits, options: options?.option)
+        self.analytics.group(id: id, traits: traits?.objCSanitized, options: options?.option)
     }
     
     // MARK: - Identify
     
     private func internalIdentify(_ userId: String?, traits: [String: Any]?, options: ObjCOption?) {
-        self.analytics.identify(userId: userId, traits: traits, options: options?.option)
+        self.analytics.identify(userId: userId, traits: traits?.objCSanitized, options: options?.option)
     }
     
     // MARK: - Alias
@@ -481,8 +481,7 @@ extension ObjCAnalytics {
     /**
      The anonymous ID used for tracking unidentified users.
      */
-    @objc
-    public var anonymousId: String? {
+    @objc public var anonymousId: String? {
         get { self.analytics.anonymousId }
         set { self.analytics.anonymousId = newValue }
     }
@@ -490,16 +489,14 @@ extension ObjCAnalytics {
     /**
      The currently identified user's ID, if available.
      */
-    @objc
-    public var userId: String? {
+    @objc public var userId: String? {
         return self.analytics.userId
     }
 
     /**
      Traits associated with the currently identified user.
      */
-    @objc
-    public var traits: [String: Any]? {
+    @objc public var traits: [String: Any]? {
         return self.analytics.traits
     }
 }
