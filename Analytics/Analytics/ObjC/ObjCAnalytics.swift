@@ -8,7 +8,9 @@
 import Foundation
 
 // MARK: - ObjCAnalytics
-
+/**
+ A wrapper class that exposes the Swift `AnalyticsClient` to Objective-C.
+ */
 @objc(RSAnalytics)
 public final class ObjCAnalytics: NSObject {
     
