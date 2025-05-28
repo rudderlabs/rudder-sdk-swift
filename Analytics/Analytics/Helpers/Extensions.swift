@@ -192,9 +192,42 @@ extension Dictionary where Key == String {
 }
 
 // MARK: - [String: Any]
-extension [String: Any] {
+extension Dictionary where Key == String, Value == Any {
     var jsonString: String? {
         return try? JSONSerialization.data(withJSONObject: self, options: []).jsonString
+    }
+    
+    var objCSanitized: [String: Any] {
+        self.mapValues { value in
+            if let number = value as? NSNumber {
+                let objCType = String(cString: number.objCType)
+                return objCType == "c" ? number.boolValue : number
+            } else if let array = value as? [Any] {
+                return array.objCSanitized
+            } else if let dict = value as? [String: Any] {
+                return dict.objCSanitized
+            } else {
+                return value
+            }
+        }
+    }
+}
+
+// MARK: - [Any]
+extension Array where Element == Any {
+    var objCSanitized: [Any] {
+        self.map { element in
+            if let number = element as? NSNumber {
+                let objCType = String(cString: number.objCType)
+                return objCType == "c" ? number.boolValue : number
+            } else if let array = element as? [Any] {
+                return array.objCSanitized
+            } else if let dict = element as? [String: Any] {
+                return dict.objCSanitized
+            } else {
+                return element
+            }
+        }
     }
 }
 
