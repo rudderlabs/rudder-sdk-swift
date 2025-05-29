@@ -16,11 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)initializeAnalyticsSDK;
 
-- (void)identify:(NSString * _Nonnull)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSOption* _Nullable)option;
-- (void)track:(NSString * _Nonnull)name properties:(NSDictionary<NSString *,id> * _Nullable)properties options:(RSOption* _Nullable)option;
-- (void)screen:(NSString * _Nonnull)name category:(NSString * _Nullable)category properties:(NSDictionary<NSString *,id> * _Nullable)properties options:(RSOption* _Nullable)option;
-- (void)group:(NSString * _Nonnull)groupId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSOption* _Nullable)option;
-- (void)alias:(NSString * _Nonnull)newId previousId:(NSString* _Nullable)previousId options:(RSOption* _Nullable)option;
+- (void)identify:(NSString * _Nonnull)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSAOption* _Nullable)option;
+- (void)track:(NSString * _Nonnull)name properties:(NSDictionary<NSString *,id> * _Nullable)properties options:(RSAOption* _Nullable)option;
+- (void)screen:(NSString * _Nonnull)name category:(NSString * _Nullable)category properties:(NSDictionary<NSString *,id> * _Nullable)properties options:(RSAOption* _Nullable)option;
+- (void)group:(NSString * _Nonnull)groupId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSAOption* _Nullable)option;
+- (void)alias:(NSString * _Nonnull)newId previousId:(NSString* _Nullable)previousId options:(RSAOption* _Nullable)option;
 - (void)flush;
 - (void)reset:(BOOL)clearAnonymousId;
 - (void)startSession;

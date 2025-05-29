@@ -13,7 +13,7 @@ import Foundation
 
  Flush policies define conditions under which queued events should be flushed (sent).
  */
-@objc(RSFlushPolicy)
+@objc(RSAFlushPolicy)
 public protocol ObjCFlushPolicy {
     /* Default implementation (no-op) */
 }
@@ -24,7 +24,7 @@ public protocol ObjCFlushPolicy {
 
  This is a wrapper around the `StartupFlushPolicy` for use in Objective-C.
  */
-@objc(RSStartupFlushPolicy)
+@objc(RSAStartupFlushPolicy)
 public final class ObjcStartupFlushPolicy: NSObject, ObjCFlushPolicy {
 
     /** The wrapped `StartupFlushPolicy` instance. */
@@ -56,7 +56,7 @@ public final class ObjcStartupFlushPolicy: NSObject, ObjCFlushPolicy {
 
  This is a wrapper around the `CountFlushPolicy` for use in Objective-C.
  */
-@objc(RSCountFlushPolicy)
+@objc(RSACountFlushPolicy)
 public final class ObjcCountFlushPolicy: NSObject, ObjCFlushPolicy {
 
     /** The wrapped `CountFlushPolicy` instance. */
@@ -98,7 +98,7 @@ public final class ObjcCountFlushPolicy: NSObject, ObjCFlushPolicy {
 
  This is a wrapper around the `FrequencyFlushPolicy` for use in Objective-C.
  */
-@objc(RSFrequencyFlushPolicy)
+@objc(RSAFrequencyFlushPolicy)
 public final class ObjcFrequencyFlushPolicy: NSObject, ObjCFlushPolicy {
 
     /** The wrapped `FrequencyFlushPolicy` instance. */

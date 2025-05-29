@@ -10,9 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CustomOptionPlugin : NSObject<RSPlugin>
+@interface CustomOptionPlugin : NSObject<RSAPlugin>
 
-- (instancetype)initWithOption:(RSOption *)option NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithOption:(RSAOption *)option NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
 @end

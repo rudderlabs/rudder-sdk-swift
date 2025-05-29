@@ -11,7 +11,7 @@
 
 @interface AnalyticsManager()
 
-@property(nonatomic, retain) RSAnalytics *client;
+@property(nonatomic, retain) RSAAnalytics *client;
 
 @end
 
@@ -31,53 +31,53 @@
     NSString *writeKey = @"sample-write-key";
     NSString *dataPlaneUrl = @"https://data-plane.analytics.com";
     
-    RSConfigurationBuilder *builder = [[RSConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
-    [builder setLogLevel: RSLogLevelVerbose];
+    RSAConfigurationBuilder *builder = [[RSAConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
+    [builder setLogLevel: RSALogLevelVerbose];
     [builder setOptOut: NO];
     [builder setGzipEnabled: YES];
     
-    NSArray *flushPolicies = @[[RSStartupFlushPolicy new], [RSFrequencyFlushPolicy new], [RSCountFlushPolicy new]];
+    NSArray *flushPolicies = @[[RSAStartupFlushPolicy new], [RSAFrequencyFlushPolicy new], [RSACountFlushPolicy new]];
     [builder setFlushPolicies: flushPolicies];
     [builder setCollectDeviceId: YES];
     [builder setTrackApplicationLifecycleEvents: YES];
 
-    RSSessionConfigurationBuilder *sessionBuilder = [RSSessionConfigurationBuilder new];
+    RSASessionConfigurationBuilder *sessionBuilder = [RSASessionConfigurationBuilder new];
     [builder setSessionConfiguration: [sessionBuilder build]];
-    [builder setStorageMode: RSStorageModeMemory];
+    [builder setStorageMode: RSAStorageModeMemory];
     
-    self.client = [[RSAnalytics alloc] initWithConfiguration:[builder build]];
+    self.client = [[RSAAnalytics alloc] initWithConfiguration:[builder build]];
    
     // Adding custom Logger..
     CustomLogger *logger = [CustomLogger new];
     [self.client setCustomLogger:logger];
     
-    RSOptionBuilder *optionBuilder = [RSOptionBuilder new];
+    RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
     [optionBuilder setIntegrations:@{@"CleverTap": @YES}];
     [optionBuilder setCustomContext:@{@"plugin_key": @"plugin_value"}];
-    [optionBuilder setExternalIds:@[[[RSExternalId alloc] initWithType:@"external_id_type" id:@"external_id"]]];
+    [optionBuilder setExternalIds:@[[[RSAExternalId alloc] initWithType:@"external_id_type" id:@"external_id"]]];
     
     // Adding custom plugin..
     CustomOptionPlugin *plugin = [[CustomOptionPlugin alloc] initWithOption:[optionBuilder build]];
     [self.client addPlugin:plugin];
 }
 
-- (void)identify:(NSString * _Nonnull)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSOption* _Nullable)option {
+- (void)identify:(NSString * _Nonnull)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSAOption* _Nullable)option {
     [self.client identify:userId traits:traits options:option];
 }
 
-- (void)track:(NSString * _Nonnull)name properties:(NSDictionary<NSString *,id> * _Nullable)properties options:(RSOption* _Nullable)option {
+- (void)track:(NSString * _Nonnull)name properties:(NSDictionary<NSString *,id> * _Nullable)properties options:(RSAOption* _Nullable)option {
     [self.client track:name properties:properties options:option];
 }
 
-- (void)screen:(NSString * _Nonnull)name category:(NSString * _Nullable)category properties:(NSDictionary<NSString *,id> * _Nullable)properties options:(RSOption* _Nullable)option {
+- (void)screen:(NSString * _Nonnull)name category:(NSString * _Nullable)category properties:(NSDictionary<NSString *,id> * _Nullable)properties options:(RSAOption* _Nullable)option {
     [self.client screen:name category:category properties:properties options:option];
 }
 
-- (void)group:(NSString * _Nonnull)groupId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSOption* _Nullable)option {
+- (void)group:(NSString * _Nonnull)groupId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSAOption* _Nullable)option {
     [self.client group:groupId traits:traits options:option];
 }
 
-- (void)alias:(NSString * _Nonnull)newId previousId:(NSString* _Nullable)previousId options:(RSOption* _Nullable)option {
+- (void)alias:(NSString * _Nonnull)newId previousId:(NSString* _Nullable)previousId options:(RSAOption* _Nullable)option {
     [self.client alias:newId previousId:previousId options:option];
 }
 
