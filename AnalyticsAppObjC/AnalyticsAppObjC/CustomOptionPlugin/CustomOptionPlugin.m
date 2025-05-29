@@ -32,9 +32,9 @@
     return RSPluginTypeOnProcess;
 }
 
-- (ObjCEvent * _Nullable)intercept:(ObjCEvent * _Nonnull)event {
+- (RSEvent * _Nullable)intercept:(RSEvent * _Nonnull)event {
     
-    ObjCEvent *updatedEvent = [event addToContext: self.option.customContext];
+    RSEvent *updatedEvent = [event addToContext: self.option.customContext];
     updatedEvent = [event addToIntegrations: self.option.integrations];
     updatedEvent = [event addExternalIds: self.option.externalIds];
     

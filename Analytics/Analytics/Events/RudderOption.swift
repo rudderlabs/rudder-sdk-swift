@@ -19,23 +19,25 @@ import Foundation
     - `customContext`: A dictionary of custom context values associated with the event.
     - `externalIds`: An array of external IDs associated with the event.
  */
-public class RudderOption {
+
+@objc(RSOption)
+public class RudderOption: NSObject {
     
     /// A dictionary of integration names as keys and their state values.
-    internal(set) public var integrations: [String: Any]?
+    @objc internal(set) public var integrations: [String: Any]?
     
     /// A dictionary of custom context values associated with the event payload.
-    internal(set) public var customContext: [String: Any]?
+    @objc internal(set) public var customContext: [String: Any]?
     
     /// An array of external IDs associated with the event payload.
-    internal(set) public var externalIds: [ExternalId]?
+    @objc internal(set) public var externalIds: [ExternalId]?
     
     /**
      Initializes a new instance of `RudderOption`.
 
      The initial integrations are set to the default integrations defined in `Constants.payload.integration`.
      */
-    
+    @objc
     public init(integrations: [String: Any]? = nil, customContext: [String: Any]? = nil, externalIds: [ExternalId]? = nil) {
         self.integrations = (integrations ?? [:]) + Constants.payload.integration
         self.customContext = customContext
@@ -54,12 +56,13 @@ public class RudderOption {
  - Conformance:
  - `Codable`: Allows the `ExternalId` to be encoded and decoded using `JSONEncoder` and `JSONDecoder`.
  */
-public struct ExternalId: Codable, Equatable {
+@objc(RSExternalId)
+public class ExternalId: NSObject, Codable {
     /// The type of the external identifier.
-    var type: String
+    private(set) public var type: String
     
     /// The value of the external identifier.
-    var id: String
+    private(set) public var id: String
     
     /**
      Initializes a new instance of `ExternalId` with the given `type` and `id`.
@@ -70,6 +73,7 @@ public struct ExternalId: Codable, Equatable {
      
      - Returns: A new `ExternalId` instance.
      */
+    @objc
     public init(type: String, id: String) {
         self.type = type
         self.id = id

@@ -19,11 +19,11 @@ public final class ObjCAnalytics: NSObject {
     /**
      Initializes the analytics client using the provided Objective-C configuration.
      
-     - Parameter configuration: The Objective-C wrapper for the configuration.
+     - Parameter configuration: The configuration object containing settings and storage details.
      */
     @objc
-    public init(configuration: ObjCConfiguration) {
-        self.analytics = AnalyticsClient(configuration: configuration.configuration)
+    public init(configuration: Configuration) {
+        self.analytics = AnalyticsClient(configuration: configuration)
     }
     
     /**
@@ -83,32 +83,32 @@ extension ObjCAnalytics {
     
     // MARK: - Track
     
-    private func internalTrack(_ name: String, properties: [String: Any]?, options: ObjCOption?) {
-        self.analytics.track(name: name, properties: properties?.objCSanitized, options: options?.option)
+    private func internalTrack(_ name: String, properties: [String: Any]?, options: RudderOption?) {
+        self.analytics.track(name: name, properties: properties?.objCSanitized, options: options)
     }
     
     // MARK: - Screen
     
-    private func internalScreen(_ name: String, category: String?, properties: [String: Any]?, options: ObjCOption?) {
-        self.analytics.screen(name: name, category: category, properties: properties?.objCSanitized, options: options?.option)
+    private func internalScreen(_ name: String, category: String?, properties: [String: Any]?, options: RudderOption?) {
+        self.analytics.screen(name: name, category: category, properties: properties?.objCSanitized, options: options)
     }
     
     // MARK: - Group
     
-    private func internalGroup(_ id: String, traits: [String: Any]?, options: ObjCOption?) {
-        self.analytics.group(id: id, traits: traits?.objCSanitized, options: options?.option)
+    private func internalGroup(_ id: String, traits: [String: Any]?, options: RudderOption?) {
+        self.analytics.group(id: id, traits: traits?.objCSanitized, options: options)
     }
     
     // MARK: - Identify
     
-    private func internalIdentify(_ userId: String?, traits: [String: Any]?, options: ObjCOption?) {
-        self.analytics.identify(userId: userId, traits: traits?.objCSanitized, options: options?.option)
+    private func internalIdentify(_ userId: String?, traits: [String: Any]?, options: RudderOption?) {
+        self.analytics.identify(userId: userId, traits: traits?.objCSanitized, options: options)
     }
     
     // MARK: - Alias
     
-    private func internalAlias(_ userId: String, previousId: String?, options: ObjCOption?) {
-        self.analytics.alias(newId: userId, previousId: previousId, options: options?.option)
+    private func internalAlias(_ userId: String, previousId: String?, options: RudderOption?) {
+        self.analytics.alias(newId: userId, previousId: previousId, options: options)
     }
     
 }
@@ -149,7 +149,7 @@ extension ObjCAnalytics {
        - options: Additional tracking options.
      */
     @objc
-    public func track(_ name: String, options: ObjCOption) {
+    public func track(_ name: String, options: RudderOption) {
         self.internalTrack(name, properties: nil, options: options)
     }
 
@@ -162,7 +162,7 @@ extension ObjCAnalytics {
        - options: Additional tracking options.
      */
     @objc
-    public func track(_ name: String, properties: [String: Any], options: ObjCOption) {
+    public func track(_ name: String, properties: [String: Any], options: RudderOption) {
         self.internalTrack(name, properties: properties, options: options)
     }
 
@@ -210,7 +210,7 @@ extension ObjCAnalytics {
        - options: Additional options for screen tracking.
      */
     @objc
-    public func screen(_ name: String, options: ObjCOption) {
+    public func screen(_ name: String, options: RudderOption) {
         self.internalScreen(name, category: nil, properties: nil, options: options)
     }
 
@@ -236,7 +236,7 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func screen(_ name: String, category: String, options: ObjCOption) {
+    public func screen(_ name: String, category: String, options: RudderOption) {
         self.internalScreen(name, category: category, properties: nil, options: options)
     }
 
@@ -249,7 +249,7 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func screen(_ name: String, properties: [String: Any], options: ObjCOption) {
+    public func screen(_ name: String, properties: [String: Any], options: RudderOption) {
         self.internalScreen(name, category: nil, properties: properties, options: options)
     }
 
@@ -263,7 +263,7 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func screen(_ name: String, category: String, properties: [String: Any], options: ObjCOption) {
+    public func screen(_ name: String, category: String, properties: [String: Any], options: RudderOption) {
         self.internalScreen(name, category: category, properties: properties, options: options)
     }
 
@@ -299,7 +299,7 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func group(_ id: String, options: ObjCOption) {
+    public func group(_ id: String, options: RudderOption) {
         self.internalGroup(id, traits: nil, options: options)
     }
 
@@ -312,7 +312,7 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func group(_ id: String, traits: [String: Any], options: ObjCOption) {
+    public func group(_ id: String, traits: [String: Any], options: RudderOption) {
         self.internalGroup(id, traits: traits, options: options)
     }
 
@@ -358,7 +358,7 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func identify(_ userId: String, options: ObjCOption) {
+    public func identify(_ userId: String, options: RudderOption) {
         self.internalIdentify(userId, traits: nil, options: options)
     }
 
@@ -370,7 +370,7 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func identify(traits: [String: Any], options: ObjCOption) {
+    public func identify(traits: [String: Any], options: RudderOption) {
         self.internalIdentify(nil, traits: traits, options: options)
     }
 
@@ -383,7 +383,7 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func identify(_ userId: String, traits: [String: Any], options: ObjCOption) {
+    public func identify(_ userId: String, traits: [String: Any], options: RudderOption) {
         self.internalIdentify(userId, traits: traits, options: options)
     }
 
@@ -419,7 +419,7 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func alias(_ newId: String, options: ObjCOption) {
+    public func alias(_ newId: String, options: RudderOption) {
         self.internalAlias(newId, previousId: nil, options: options)
     }
 
@@ -432,7 +432,7 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func alias(_ newId: String, previousId: String, options: ObjCOption) {
+    public func alias(_ newId: String, previousId: String, options: RudderOption) {
         self.internalAlias(newId, previousId: previousId, options: options)
     }
 }

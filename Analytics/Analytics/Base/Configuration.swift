@@ -11,7 +11,8 @@ import Foundation
 /**
  The `Configuration` class represents the settings used to initialize and configure the Analytics SDK. It provides customization for key parameters like URLs, logging behavior, and data collection preferences.
  */
-public class Configuration {
+@objc(RSConfiguration)
+public class Configuration: NSObject {
 
     /**
      The write key used to authenticate with the analytics service.
@@ -125,7 +126,8 @@ public class Configuration {
 /**
  A configuration class for managing session settings.
  */
-public class SessionConfiguration {
+@objc(RSSessionConfiguration)
+public class SessionConfiguration: NSObject {
     /**
      A flag indicating whether automatic session tracking is enabled.
      */

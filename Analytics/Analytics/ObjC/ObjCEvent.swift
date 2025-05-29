@@ -14,7 +14,7 @@ import Foundation
  Useful for exposing analytics event data to Objective-C codebases, allowing manipulation
  of event metadata, integrations, context, traits, and other properties.
  */
-@objcMembers
+@objc(RSEvent)
 public class ObjCEvent: NSObject {
     /**
      The underlying Swift `Event` instance.
@@ -172,9 +172,8 @@ public class ObjCEvent: NSObject {
      - Returns: The updated `ObjCEvent` instance.
      */
     @objc(addExternalIds:)
-    public func addExternalIds(info: [ObjCExternalId]) -> ObjCEvent {
-        let externalIds: [ExternalId] = info.map { $0.externalId }
-        self.event = event.addExternalIds(info: externalIds)
+    public func addExternalIds(info: [ExternalId]) -> ObjCEvent {
+        self.event = event.addExternalIds(info: info)
         return self
     }
 }
