@@ -18,7 +18,6 @@ public final class ObjCConfigurationBuilder: NSObject {
     private var dataPlaneUrl: String
     private var controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl
     private var logLevel: LogLevel = Constants.log.defaultLevel
-    private var optOut: Bool = false
     private var gzipEnabled: Bool = Constants.defaultConfig.gzipEnabled
     private var storageMode: StorageMode = StorageMode.disk
     private var flushPolicies: [ObjCFlushPolicy] = [ObjcStartupFlushPolicy(), ObjcCountFlushPolicy(), ObjcFrequencyFlushPolicy()]
@@ -63,7 +62,6 @@ public final class ObjCConfigurationBuilder: NSObject {
             dataPlaneUrl: dataPlaneUrl,
             controlPlaneUrl: controlPlaneUrl,
             logLevel: logLevel,
-            optOut: optOut,
             gzipEnaabled: gzipEnabled,
             storageMode: storageMode,
             flushPolicies: swiftFlushPolicies,
@@ -86,14 +84,6 @@ public final class ObjCConfigurationBuilder: NSObject {
     @discardableResult
     public func setLogLevel(_ logLevel: LogLevel) -> Self {
         self.logLevel = logLevel
-        return self
-    }
-    
-    /** Sets the opt-out flag for the configuration. */
-    @objc
-    @discardableResult
-    public func setOptOut(_ optOut: Bool) -> Self {
-        self.optOut = optOut
         return self
     }
     

@@ -33,7 +33,6 @@
     
     RSAConfigurationBuilder *builder = [[RSAConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
     [builder setLogLevel: RSALogLevelVerbose];
-    [builder setOptOut: NO];
     [builder setGzipEnabled: YES];
     
     NSArray *flushPolicies = @[[RSAStartupFlushPolicy new], [RSAFrequencyFlushPolicy new], [RSACountFlushPolicy new]];

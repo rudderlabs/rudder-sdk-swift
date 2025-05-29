@@ -21,9 +21,7 @@ class PluginChain {
         PluginType.allCases.forEach { self.pluginList[$0] = PluginInteractor() }
     }
     
-    func process(event: Event) {
-        guard !self.analytics.configuration.optOut else { return }
-        
+    func process(event: Event) {        
         let preProcessedResult = self.applyPlugins(pluginType: .preProcess, event: event)
         let onProcessedResult = self.applyPlugins(pluginType: .onProcess, event: preProcessedResult)
         
