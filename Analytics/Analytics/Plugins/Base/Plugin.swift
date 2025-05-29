@@ -16,7 +16,7 @@ import Foundation
 
  - Conforms to: `CaseIterable`
  */
-@objc
+@objc(RSPluginType)
 public enum PluginType: Int, CaseIterable {
     /// Plugins that are executed before the main event processing begins.
     case preProcess

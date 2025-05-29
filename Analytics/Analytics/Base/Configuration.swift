@@ -11,7 +11,8 @@ import Foundation
 /**
  The `Configuration` class represents the settings used to initialize and configure the Analytics SDK. It provides customization for key parameters like URLs, logging behavior, and data collection preferences.
  */
-public class Configuration {
+@objc(RSConfiguration)
+public class Configuration: NSObject {
 
     /**
      The write key used to authenticate with the analytics service.
@@ -44,9 +45,14 @@ public class Configuration {
     var gzipEnabled: Bool
 
     /**
-     The storage mechanism used to persist data. Defaults to in-built storage system, if no custom storage is provided.
+     The storage mechanism used to persist data. Defaults to in-built storage system.
      */
     var storage: Storage
+    
+    /**
+     The storage mode used to store events data. Defaults to `disk` storage system.
+     */
+    var storageMode: StorageMode
 
     /**
      An array of flush policies defining how and when events are flushed to the data plane.
@@ -80,7 +86,7 @@ public class Configuration {
        - logLevel: The logLevel value for logging messages. Defaults to `none`.
        - optOut: A flag to disable event tracking when `true`. Defaults to `false`.
        - gzipEnaabled: A flag to enable GZip compression.
-       - storage: The storage mechanism for persisting data.
+       - storageMode: The storage mode for storing events. Defaults to `disk`.
        - flushPolicies: The flush policies for event flushing.
        - collectDeviceId: A flag to enable automatic collection of the device ID. Defaults to `true`.
        - trackApplicationLifecycleEvents: A flag to enable automatic tracking of the application lifecycle events. Defaults to `true`.
@@ -107,6 +113,7 @@ public class Configuration {
         self.logLevel = logLevel
         self.optOut = optOut
         self.gzipEnabled = gzipEnaabled
+        self.storageMode = storageMode
         self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode)
         self.flushPolicies = flushPolicies
         self.collectDeviceId = collectDeviceId
@@ -119,8 +126,8 @@ public class Configuration {
 /**
  A configuration class for managing session settings.
  */
-@objcMembers
-public class SessionConfiguration {
+@objc(RSSessionConfiguration)
+public class SessionConfiguration: NSObject {
     /**
      A flag indicating whether automatic session tracking is enabled.
      */

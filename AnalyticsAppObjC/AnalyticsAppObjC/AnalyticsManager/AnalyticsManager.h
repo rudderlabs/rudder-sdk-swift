@@ -1,0 +1,59 @@
+//
+//  AnalyticsManager.h
+//  AnalyticsAppObjC
+//
+//  Created by Satheesh Kannan on 27/05/25.
+//
+
+#import <Foundation/Foundation.h>
+#import <Analytics/Analytics-Swift.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface AnalyticsManager : NSObject
+
++ (instancetype)sharedManager;
+
+- (void)initializeAnalyticsSDK;
+
+- (void)identify:(NSString * _Nonnull)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSOption* _Nullable)option;
+- (void)track:(NSString * _Nonnull)name properties:(NSDictionary<NSString *,id> * _Nullable)properties options:(RSOption* _Nullable)option;
+- (void)screen:(NSString * _Nonnull)name category:(NSString * _Nullable)category properties:(NSDictionary<NSString *,id> * _Nullable)properties options:(RSOption* _Nullable)option;
+- (void)group:(NSString * _Nonnull)groupId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSOption* _Nullable)option;
+- (void)alias:(NSString * _Nonnull)newId previousId:(NSString* _Nullable)previousId options:(RSOption* _Nullable)option;
+- (void)flush;
+- (void)reset:(BOOL)clearAnonymousId;
+- (void)startSession;
+- (void)startSession:(NSNumber *)sessionId;
+- (void)endSession;
+- (void)shutdown;
+- (NSString * _Nullable)anonymousId;
+- (void)setAnonymousId:(NSString *)anonymousId;
+- (NSNumber * _Nullable)sessionId;
+
+@end
+
+NS_ASSUME_NONNULL_END
+
+
+#pragma mark - Analytics ActionType
+
+typedef NS_ENUM(NSInteger, ActionType) {
+    ActionTypeIdentify,
+    ActionTypeAlias,
+    ActionTypeTrack,
+    ActionTypeMultipleTrack,
+    ActionTypeScreen,
+    ActionTypeGroup,
+    ActionTypeFlush,
+    ActionTypeUpdateAnonymousId,
+    ActionTypeReadAnonymousId,
+    ActionTypeReset,
+    ActionTypeResetWithAnonymousId,
+    ActionTypeStartSession,
+    ActionTypeStartSessionWithSessionId,
+    ActionTypeReadSessionId,
+    ActionTypeEndSession,
+    ActionTypeShutdown,
+    ActionTypeReInitializeSDK
+};
