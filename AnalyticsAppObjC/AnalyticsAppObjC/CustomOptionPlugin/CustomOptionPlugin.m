@@ -11,15 +11,15 @@
 
 @interface CustomOptionPlugin()
 
-@property(nonatomic, retain) RSAnalytics *client;
-@property(nonatomic, retain) RSOption *option;
+@property(nonatomic, retain) RSAAnalytics *client;
+@property(nonatomic, retain) RSAOption *option;
 
 @end
 
 @implementation CustomOptionPlugin
 @synthesize pluginType;
 
-- (instancetype)initWithOption:(RSOption *)option
+- (instancetype)initWithOption:(RSAOption *)option
 {
     self = [super init];
     if (self) {
@@ -28,20 +28,20 @@
     return self;
 }
 
-- (RSPluginType)pluginType {
-    return RSPluginTypeOnProcess;
+- (RSAPluginType)pluginType {
+    return RSAPluginTypeOnProcess;
 }
 
-- (RSEvent * _Nullable)intercept:(RSEvent * _Nonnull)event {
+- (RSAEvent * _Nullable)intercept:(RSAEvent * _Nonnull)event {
     
-    RSEvent *updatedEvent = [event addToContext: self.option.customContext];
+    RSAEvent *updatedEvent = [event addToContext: self.option.customContext];
     updatedEvent = [event addToIntegrations: self.option.integrations];
     updatedEvent = [event addExternalIds: self.option.externalIds];
     
     return updatedEvent;
 }
 
-- (void)setup:(RSAnalytics * _Nonnull)analytics {
+- (void)setup:(RSAAnalytics * _Nonnull)analytics {
     self.client = analytics;
 }
 

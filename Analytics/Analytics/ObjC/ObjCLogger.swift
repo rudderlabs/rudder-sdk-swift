@@ -13,7 +13,7 @@ import Foundation
  
  Implement any of the optional methods to receive SDK log messages.
  */
-@objc(RSLogger)
+@objc(RSALogger)
 public protocol ObjCLogger {
 
     /**

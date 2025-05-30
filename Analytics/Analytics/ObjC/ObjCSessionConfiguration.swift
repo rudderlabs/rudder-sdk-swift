@@ -11,7 +11,7 @@ import Foundation
 /**
  A builder class for constructing `SessionConfiguration` instances for Objective-C usage.
  */
-@objc(RSSessionConfigurationBuilder)
+@objc(RSASessionConfigurationBuilder)
 public final class ObjCSessionConfigurationBuilder: NSObject {
 
     private var automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus

@@ -11,7 +11,7 @@ import Foundation
 /**
  The `Configuration` class represents the settings used to initialize and configure the Analytics SDK. It provides customization for key parameters like URLs, logging behavior, and data collection preferences.
  */
-@objc(RSConfiguration)
+@objc(RSAConfiguration)
 public class Configuration: NSObject {
 
     /**
@@ -33,11 +33,6 @@ public class Configuration: NSObject {
      The current log level that controls which messages are shown.
      */
     var logLevel: LogLevel
-
-    /**
-     A boolean flag to disable event tracking when set to `true`. Defaults to `false`.
-     */
-    var optOut: Bool
 
     /**
      A boolean flag to enable GZip compression for network requests. Defaults to `true`.
@@ -84,7 +79,6 @@ public class Configuration: NSObject {
        - dataPlaneUrl: The URL for the data plane.
        - controlPlaneUrl: The URL for the control plane.
        - logLevel: The logLevel value for logging messages. Defaults to `none`.
-       - optOut: A flag to disable event tracking when `true`. Defaults to `false`.
        - gzipEnaabled: A flag to enable GZip compression.
        - storageMode: The storage mode for storing events. Defaults to `disk`.
        - flushPolicies: The flush policies for event flushing.
@@ -99,7 +93,6 @@ public class Configuration: NSObject {
         dataPlaneUrl: String,
         controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl,
         logLevel: LogLevel = Constants.log.defaultLevel,
-        optOut: Bool = false,
         gzipEnaabled: Bool = Constants.defaultConfig.gzipEnabled,
         storageMode: StorageMode = Constants.defaultConfig.storageMode,
         flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
@@ -111,7 +104,6 @@ public class Configuration: NSObject {
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
         self.logLevel = logLevel
-        self.optOut = optOut
         self.gzipEnabled = gzipEnaabled
         self.storageMode = storageMode
         self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode)
@@ -126,7 +118,7 @@ public class Configuration: NSObject {
 /**
  A configuration class for managing session settings.
  */
-@objc(RSSessionConfiguration)
+@objc(RSASessionConfiguration)
 public class SessionConfiguration: NSObject {
     /**
      A flag indicating whether automatic session tracking is enabled.

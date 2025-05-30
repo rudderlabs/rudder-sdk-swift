@@ -13,7 +13,7 @@ import Foundation
 
  This class provides Objective-C accessible static methods for logging at various levels.
  */
-@objc(RSLoggerAnalytics)
+@objc(RSALoggerAnalytics)
 public final class ObjCLoggerAnalytics: NSObject {
     
     /** Private initializer to prevent instantiation. */

@@ -19,6 +19,7 @@
 		53E01B7E2DE61B3200602AFD /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B7D2DE61B3200602AFD /* AnalyticsManager.m */; };
 		53E01B812DE62BE300602AFD /* CustomLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B802DE62BE300602AFD /* CustomLogger.m */; };
 		53E01B842DE62CD300602AFD /* CustomOptionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B832DE62CD300602AFD /* CustomOptionPlugin.m */; };
+		53E01BE02DE8C89200602AFD /* ObjCCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01BDF2DE8C89200602AFD /* ObjCCompat.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,6 +56,8 @@
 		53E01B802DE62BE300602AFD /* CustomLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomLogger.m; sourceTree = "<group>"; };
 		53E01B822DE62CD300602AFD /* CustomOptionPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomOptionPlugin.h; sourceTree = "<group>"; };
 		53E01B832DE62CD300602AFD /* CustomOptionPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomOptionPlugin.m; sourceTree = "<group>"; };
+		53E01BDE2DE8C89200602AFD /* ObjCCompat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCCompat.h; sourceTree = "<group>"; };
+		53E01BDF2DE8C89200602AFD /* ObjCCompat.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjCCompat.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +98,7 @@
 				53E01B852DE62E7500602AFD /* AnalyticsManager */,
 				53E01B862DE62E8000602AFD /* CustomLogger */,
 				53E01B872DE62E8E00602AFD /* CustomOptionPlugin */,
+				53E01BE12DE8C89A00602AFD /* ObjCCompat */,
 				5352C7A22DCBCBA10022B105 /* Assets.xcassets */,
 				5352C7A32DCBCBA10022B105 /* Info.plist */,
 				5352C7A62DCBCBA10022B105 /* main.m */,
@@ -164,6 +168,15 @@
 				53E01B832DE62CD300602AFD /* CustomOptionPlugin.m */,
 			);
 			path = CustomOptionPlugin;
+			sourceTree = "<group>";
+		};
+		53E01BE12DE8C89A00602AFD /* ObjCCompat */ = {
+			isa = PBXGroup;
+			children = (
+				53E01BDE2DE8C89200602AFD /* ObjCCompat.h */,
+				53E01BDF2DE8C89200602AFD /* ObjCCompat.m */,
+			);
+			path = ObjCCompat;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -241,6 +254,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				53E01B812DE62BE300602AFD /* CustomLogger.m in Sources */,
+				53E01BE02DE8C89200602AFD /* ObjCCompat.m in Sources */,
 				5352C7AE2DCBCBA10022B105 /* main.m in Sources */,
 				5352C7AF2DCBCBA10022B105 /* SceneDelegate.m in Sources */,
 				53E01B7E2DE61B3200602AFD /* AnalyticsManager.m in Sources */,

@@ -13,7 +13,7 @@ import Foundation
 
  Conformers can intercept events, perform setup and teardown, and define their plugin type.
  */
-@objc(RSPlugin)
+@objc(RSAPlugin)
 public protocol ObjCPlugin: AnyObject {
 
     /// The type of plugin (e.g., `preProcess`, `onProcess`, `destination`, etc.).

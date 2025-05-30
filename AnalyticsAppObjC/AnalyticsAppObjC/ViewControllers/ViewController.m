@@ -65,12 +65,12 @@
     
     switch (actionType) {
         case ActionTypeIdentify: {
-            RSExternalId *externalId = [[RSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
 
             NSDictionary *integrations = @{@"Amplitude": @NO};
             NSDictionary *customContext = @{@"identify_key1": @"identify_value1"};
 
-            RSOptionBuilder *optionBuilder = [RSOptionBuilder new];
+            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId]];
@@ -80,12 +80,12 @@
         }
             
         case ActionTypeAlias: {
-            RSExternalId *externalId = [[RSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
 
             NSDictionary *integrations = @{@"Amplitude": @NO};
             NSDictionary *customContext = @{@"identify_key1": @"identify_value1"};
 
-            RSOptionBuilder *optionBuilder = [RSOptionBuilder new];
+            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId]];
@@ -95,7 +95,7 @@
         }
     
         case ActionTypeTrack: {
-            RSExternalId *externalId = [[RSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
             
             NSDictionary *integrations = @{@"Amplitude": @YES, @"CleverTap": @NO};
             NSDictionary *customContext = @{
@@ -107,7 +107,7 @@
                 @"SK6": @YES
             };
             
-            RSOptionBuilder *optionBuilder = [RSOptionBuilder new];
+            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId]];
@@ -117,12 +117,12 @@
         }
             
         case ActionTypeMultipleTrack: {
-            RSExternalId *externalId = [[RSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
 
             NSDictionary *integrations = @{@"Amplitude": @YES, @"CleverTap": @NO};
             NSDictionary *customContext = @{ @"SK123": @{@"Key123": @"Value123"}};
 
-            RSOptionBuilder *optionBuilder = [RSOptionBuilder new];
+            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId]];
@@ -134,12 +134,12 @@
         }
             
         case ActionTypeScreen: {
-            RSExternalId *externalId = [[RSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
 
             NSDictionary *integrations = @{@"Facebook": @NO};
             NSDictionary *customContext = @{@"SK": @{@"Key1": @"Value1"}};
 
-            RSOptionBuilder *optionBuilder = [RSOptionBuilder new];
+            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId]];
@@ -149,14 +149,14 @@
         }
             
         case ActionTypeGroup: {
-            RSExternalId *externalId1 = [[RSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
-            RSExternalId *externalId2 = [[RSExternalId alloc] initWithType:@"official_idCardNumber" id:@"AB123CD"];
+            RSAExternalId *externalId1 = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSAExternalId *externalId2 = [[RSAExternalId alloc] initWithType:@"official_idCardNumber" id:@"AB123CD"];
 
             NSDictionary *twitterConfig = @{@"isEnabled": @YES, @"consumerKey": @"consumerSecret"};
             NSDictionary *integrations = @{@"Firebase": @NO, @"Twitter": twitterConfig};
             NSDictionary *customContext = @{@"SK": @{@"Key1": @"Value1"}};
 
-            RSOptionBuilder *optionBuilder = [RSOptionBuilder new];
+            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId1, externalId2]];
@@ -177,7 +177,7 @@
             
         case ActionTypeReadAnonymousId: {
             NSString *anonymousId = [[AnalyticsManager sharedManager] anonymousId];
-            [RSLoggerAnalytics debug:[NSString stringWithFormat:@"Current Anonymous Id: %@", (anonymousId == Nil) ? @"Nil" : anonymousId]];
+            [RSALoggerAnalytics debug:[NSString stringWithFormat:@"Current Anonymous Id: %@", (anonymousId == Nil) ? @"Nil" : anonymousId]];
             break;
         }
             
@@ -204,9 +204,9 @@
         case ActionTypeReadSessionId: {
             NSNumber *sessionId = [[AnalyticsManager sharedManager] sessionId];
             if (sessionId) {
-                [RSLoggerAnalytics debug:[NSString stringWithFormat:@"Current Session Id: %llu", sessionId.unsignedLongLongValue]];
+                [RSALoggerAnalytics debug:[NSString stringWithFormat:@"Current Session Id: %llu", sessionId.unsignedLongLongValue]];
             } else {
-                [RSLoggerAnalytics debug:@"No active session found."];
+                [RSALoggerAnalytics debug:@"No active session found."];
             }
             break;
         }
