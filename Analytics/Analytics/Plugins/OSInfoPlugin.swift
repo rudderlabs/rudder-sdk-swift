@@ -5,7 +5,11 @@
 //  Created by Satheesh Kannan on 04/12/24.
 //
 
+#if os(iOS)
 import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 // MARK: - OSInfoPlugin
 /**
@@ -24,6 +28,14 @@ final class OSInfoPlugin: Plugin {
     }
     
     private var preparedOSInfo: [String: Any] = {
-        return ["name": UIDevice.current.systemName, "version": UIDevice.current.systemVersion]
+#if os(iOS)
+        let name = UIDevice.current.systemName
+        let versionString = UIDevice.current.systemVersion
+#elseif os(macOS)
+        let name = "macOS"
+        let version = ProcessInfo.processInfo.operatingSystemVersion
+        let versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
+#endif
+        return ["name": name, "version": versionString]
     }()
 }

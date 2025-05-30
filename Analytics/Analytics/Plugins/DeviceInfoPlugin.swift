@@ -5,8 +5,13 @@
 //  Created by Satheesh Kannan on 27/11/24.
 //
 
-import Foundation
+
+#if os(iOS)
 import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
+
 
 // MARK: - DeviceInfoPlugin
 /**
@@ -35,11 +40,19 @@ extension DeviceInfoPlugin {
     var preparedDeviceInfo: [String: Any] {
         var deviceInfo = [String: Any]()
         
-        deviceInfo["id"] = self.collectDeviceId ? UIDevice.current.identifierForVendor?.uuidString : nil
+#if os(iOS)
+        let device = UIDevice.current
+        deviceInfo["id"] = self.collectDeviceId ? device.identifierForVendor?.uuidString : nil
+        deviceInfo["name"] = device.name
+        deviceInfo["type"] = device.systemName
+#elseif os(macOS)
+        let device = Host.current()
+        deviceInfo["id"] = self.collectDeviceId ? ProcessInfo.processInfo.hostName : nil
+        deviceInfo["name"] = device.localizedName ?? "Mac"
+        deviceInfo["type"] = "macOS"
+#endif
         deviceInfo["manufacturer"] = "Apple"
         deviceInfo["model"] = self.deviceModelIdentifier
-        deviceInfo["name"] = UIDevice.current.name
-        deviceInfo["type"] = UIDevice.current.systemName
         
         return deviceInfo
     }

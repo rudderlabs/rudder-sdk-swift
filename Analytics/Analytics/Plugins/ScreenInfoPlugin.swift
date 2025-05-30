@@ -5,7 +5,11 @@
 //  Created by Satheesh Kannan on 04/12/24.
 //
 
+#if os(iOS)
 import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 // MARK: - ScreenInfoPlugin
 /**
@@ -24,6 +28,14 @@ final class ScreenInfoPlugin: Plugin {
     }
     
     private var preparedScreenInfo: [String: Any] = {
-        return ["density": UIScreen.main.scale, "width": UIScreen.main.bounds.size.width, "height": UIScreen.main.bounds.size.height]
+#if os(iOS)
+        let scale = UIScreen.main.scale
+        let size = UIScreen.main.bounds.size
+#elseif os(macOS)
+        guard let screen = NSScreen.main else { return [:] }
+        let scale = screen.backingScaleFactor
+        let size = screen.frame.size
+#endif
+        return ["density": scale, "width": size.width, "height": size.height]
     }()
 }
