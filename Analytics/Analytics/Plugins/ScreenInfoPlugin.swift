@@ -9,6 +9,8 @@
 import UIKit
 #elseif os(macOS)
 import AppKit
+#elseif os(watchOS)
+import WatchKit
 #endif
 
 // MARK: - ScreenInfoPlugin
@@ -31,10 +33,15 @@ final class ScreenInfoPlugin: Plugin {
 #if os(iOS)
         let scale = UIScreen.main.scale
         let size = UIScreen.main.bounds.size
+        
 #elseif os(macOS)
         guard let screen = NSScreen.main else { return [:] }
         let scale = screen.backingScaleFactor
         let size = screen.frame.size
+        
+#elseif os(watchOS)
+        let scale = WKInterfaceDevice.current().screenScale
+        let size = WKInterfaceDevice.current().screenBounds.size
 #endif
         return ["density": scale, "width": size.width, "height": size.height]
     }()

@@ -5,10 +5,12 @@
 //  Created by Satheesh Kannan on 10/03/25.
 //
 
-#if canImport(UIKit)
+#if os(iOS)
 import UIKit
-#elseif canImport(AppKit)
+#elseif os(macOS)
 import AppKit
+#elseif os(watchOS)
+import WatchKit
 #endif
 
 // MARK: - AppLifecycleEvent
@@ -19,19 +21,28 @@ enum AppLifecycleEvent: CaseIterable {
     case becomeActive
     
     var notificationName: Notification.Name {
-#if os(macOS)
+#if os(iOS)
+        switch self {
+        case .background: return UIApplication.didEnterBackgroundNotification
+        case .terminate: return UIApplication.willTerminateNotification
+        case .foreground: return UIApplication.willEnterForegroundNotification
+        case .becomeActive: return UIApplication.didBecomeActiveNotification
+        }
+        
+#elseif os(macOS)
         switch self {
         case .background: return NSApplication.didResignActiveNotification
         case .terminate: return NSApplication.willTerminateNotification
         case .foreground: return NSApplication.didBecomeActiveNotification
         case .becomeActive: return NSApplication.didBecomeActiveNotification
         }
-#else
+        
+#elseif os(watchOS)
         switch self {
-        case .background: return UIApplication.didEnterBackgroundNotification
-        case .terminate: return UIApplication.willTerminateNotification
-        case .foreground: return UIApplication.willEnterForegroundNotification
-        case .becomeActive: return UIApplication.didBecomeActiveNotification
+        case .background: return WKExtension.applicationWillResignActiveNotification
+        case .terminate: return Notification.Name("")
+        case .foreground: return WKExtension.applicationWillEnterForegroundNotification
+        case .becomeActive: return WKExtension.applicationDidBecomeActiveNotification
         }
 #endif
     }

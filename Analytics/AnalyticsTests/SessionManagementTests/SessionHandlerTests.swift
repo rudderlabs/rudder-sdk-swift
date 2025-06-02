@@ -5,7 +5,14 @@
 //  Created by Satheesh Kannan on 27/02/25.
 //
 
-import Foundation
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#elseif os(watchOS)
+import WatchKit
+#endif
+
 import XCTest
 @testable import Analytics
 
@@ -142,10 +149,14 @@ final class SessionHandlerTests: XCTestCase {
             // macOS (AppKit)
             let backgroundNotification = NSApplication.didResignActiveNotification
             let foregroundNotification = NSApplication.didBecomeActiveNotification
-#else
-            // iOS, tvOS, watchOS, and Mac Catalyst (UIKit)
+#elseif os(iOS)
+            // iOS, Mac Catalyst (UIKit)
             let backgroundNotification = UIApplication.didEnterBackgroundNotification
             let foregroundNotification = UIApplication.willEnterForegroundNotification
+#elseif os(watchOS)
+            // watchOS
+            let backgroundNotification = WKExtension.applicationWillResignActiveNotification
+            let foregroundNotification = WKExtension.applicationWillEnterForegroundNotification
 #endif
             
             when("The app moves to the background") {
