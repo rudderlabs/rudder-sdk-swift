@@ -5,13 +5,11 @@
 //  Created by Satheesh Kannan on 27/11/24.
 //
 
-
 #if os(iOS)
 import UIKit
 #elseif os(macOS)
 import AppKit
 #endif
-
 
 // MARK: - DeviceInfoPlugin
 /**

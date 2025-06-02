@@ -5,7 +5,7 @@
 //  Created by Satheesh Kannan on 11/03/25.
 //
 
-import UIKit
+import Foundation
 import XCTest
 @testable import Analytics
 
