@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		53DF2B862DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 53DF2B852DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		53DF2BCE2DEE114600FE2659 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DF2BCD2DEE114600FE2659 /* Analytics.framework */; };
+		53DF2BCF2DEE114600FE2659 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DF2BCD2DEE114600FE2659 /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,11 +34,23 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		53DF2BD02DEE114600FE2659 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				53DF2BCF2DEE114600FE2659 /* Analytics.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		53DF2B782DEE0F7600FE2659 /* AnalyticsAppWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DF2B852DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppWatchKitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53DF2BCD2DEE114600FE2659 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -64,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53DF2BCE2DEE114600FE2659 /* Analytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +90,7 @@
 			children = (
 				53DF2B7A2DEE0F7600FE2659 /* AnalyticsAppWatch */,
 				53DF2B892DEE0F7700FE2659 /* AnalyticsAppWatchKitApp */,
+				53DF2BCC2DEE114600FE2659 /* Frameworks */,
 				53DF2B792DEE0F7600FE2659 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,6 +102,14 @@
 				53DF2B852DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		53DF2BCC2DEE114600FE2659 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				53DF2BCD2DEE114600FE2659 /* Analytics.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -122,6 +146,7 @@
 				53DF2B812DEE0F7700FE2659 /* Sources */,
 				53DF2B822DEE0F7700FE2659 /* Frameworks */,
 				53DF2B832DEE0F7700FE2659 /* Resources */,
+				53DF2BD02DEE114600FE2659 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
