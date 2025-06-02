@@ -5,7 +5,11 @@
 //  Created by Satheesh Kannan on 04/12/24.
 //
 
-import Foundation
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 // MARK: - LocaleInfoPlugin
 /**
@@ -29,7 +33,7 @@ final class LocaleInfoPlugin: Plugin {
         let languageCode: String?
         let regionCode: String?
         
-        if #available(iOS 16.0, *) {
+        if #available(iOS 16.0, macOS 13.0, *) {
             languageCode = locale.language.languageCode?.identifier
             regionCode = locale.region?.identifier
         } else {

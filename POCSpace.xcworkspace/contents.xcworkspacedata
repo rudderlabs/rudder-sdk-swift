@@ -13,4 +13,7 @@
    <FileRef
       location = "group:AnalyticsAppObjC/AnalyticsAppObjC.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:AnalyticsAppMac/AnalyticsAppMac.xcodeproj">
+   </FileRef>
 </Workspace>
