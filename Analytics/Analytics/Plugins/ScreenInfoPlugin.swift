@@ -33,7 +33,7 @@ final class ScreenInfoPlugin: Plugin {
 #if os(iOS)
         let scale = UIScreen.main.scale
         let size = UIScreen.main.bounds.size
-        
+
 #elseif os(macOS)
         guard let screen = NSScreen.main else { return [:] }
         let scale = screen.backingScaleFactor

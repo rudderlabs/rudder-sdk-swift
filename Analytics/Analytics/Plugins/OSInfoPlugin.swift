@@ -33,7 +33,7 @@ final class OSInfoPlugin: Plugin {
 #if os(iOS)
         let name = UIDevice.current.systemName
         let versionString = UIDevice.current.systemVersion
-        
+
 #elseif os(macOS)
         let name = "macOS"
         let version = ProcessInfo.processInfo.operatingSystemVersion
@@ -43,7 +43,6 @@ final class OSInfoPlugin: Plugin {
         let name = WKInterfaceDevice.current().systemName
         let versionString = WKInterfaceDevice.current().systemVersion
 #endif
-
         return ["name": name, "version": versionString]
     }()
 }

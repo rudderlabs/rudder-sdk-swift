@@ -45,7 +45,7 @@ extension DeviceInfoPlugin {
         deviceInfo["id"] = self.collectDeviceId ? device.identifierForVendor?.uuidString : nil
         deviceInfo["name"] = device.name
         deviceInfo["type"] = device.systemName
-        
+
 #elseif os(macOS)
         let device = Host.current()
         deviceInfo["id"] = self.collectDeviceId ? self.macAddress("en0") : nil
