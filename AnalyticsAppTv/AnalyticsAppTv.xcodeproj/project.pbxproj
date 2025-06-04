@@ -6,8 +6,28 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		53DF2C272DF03F0700FE2659 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DF2C262DF03F0700FE2659 /* Analytics.framework */; };
+		53DF2C282DF03F0700FE2659 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DF2C262DF03F0700FE2659 /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		53DF2C292DF03F0700FE2659 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				53DF2C282DF03F0700FE2659 /* Analytics.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		53DF2C0F2DF03E0400FE2659 /* AnalyticsAppTv.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppTv.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53DF2C262DF03F0700FE2659 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53DF2C272DF03F0700FE2659 /* Analytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +54,7 @@
 			isa = PBXGroup;
 			children = (
 				53DF2C112DF03E0400FE2659 /* AnalyticsAppTv */,
+				53DF2C252DF03F0700FE2659 /* Frameworks */,
 				53DF2C102DF03E0400FE2659 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -45,6 +67,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		53DF2C252DF03F0700FE2659 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				53DF2C262DF03F0700FE2659 /* Analytics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -55,6 +85,7 @@
 				53DF2C0B2DF03E0400FE2659 /* Sources */,
 				53DF2C0C2DF03E0400FE2659 /* Frameworks */,
 				53DF2C0D2DF03E0400FE2659 /* Resources */,
+				53DF2C292DF03F0700FE2659 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
