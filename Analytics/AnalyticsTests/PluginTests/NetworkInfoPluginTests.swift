@@ -61,7 +61,11 @@ final class NetworkInfoPluginTests: XCTestCase {
                     guard let codableInfo = context["network"], let networkInfo = codableInfo.value as? [String: Any] else { XCTFail("No network info found"); return }
                     
                     XCTAssertEqual(networkInfo["wifi"] as? Bool, true)
+#if os(tvOS)
+                    XCTAssertEqual(networkInfo["cellular"] as? Bool, false)
+#else
                     XCTAssertEqual(networkInfo["cellular"] as? Bool, true)
+#endif
                 }
             }
         }
@@ -84,7 +88,7 @@ final class NetworkInfoPluginTests: XCTestCase {
                     XCTAssertNotNil(context["network"])
                     
                     guard let codableInfo = context["network"], let networkInfo = codableInfo.value as? [String: Any] else { XCTFail("No network info found"); return }
-                                        
+                    
                     XCTAssertEqual(networkInfo["wifi"] as? Bool, true)
                     XCTAssertEqual(networkInfo["cellular"] as? Bool, false)
                 }
@@ -109,9 +113,14 @@ final class NetworkInfoPluginTests: XCTestCase {
                     XCTAssertNotNil(context["network"])
                     
                     guard let codableInfo = context["network"], let networkInfo = codableInfo.value as? [String: Any] else { XCTFail("No network info found"); return }
-                                        
+                    
                     XCTAssertEqual(networkInfo["wifi"] as? Bool, false)
+                    
+#if os(tvOS)
+                    XCTAssertEqual(networkInfo["cellular"] as? Bool, false)
+#else
                     XCTAssertEqual(networkInfo["cellular"] as? Bool, true)
+#endif
                 }
             }
         }
