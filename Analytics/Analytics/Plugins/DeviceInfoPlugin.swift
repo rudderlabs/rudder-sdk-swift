@@ -9,6 +9,8 @@
 import UIKit
 #elseif os(macOS)
 import AppKit
+#elseif os(watchOS)
+import WatchKit
 #endif
 
 // MARK: - DeviceInfoPlugin
@@ -43,11 +45,18 @@ extension DeviceInfoPlugin {
         deviceInfo["id"] = self.collectDeviceId ? device.identifierForVendor?.uuidString : nil
         deviceInfo["name"] = device.name
         deviceInfo["type"] = device.systemName
+
 #elseif os(macOS)
         let device = Host.current()
         deviceInfo["id"] = self.collectDeviceId ? self.macAddress("en0") : nil
         deviceInfo["name"] = device.localizedName ?? "Mac"
         deviceInfo["type"] = "macOS"
+        
+#elseif os(watchOS)
+        let device = WKInterfaceDevice.current()
+        deviceInfo["id"] = self.collectDeviceId ? device.identifierForVendor?.uuidString : nil
+        deviceInfo["name"] = device.name
+        deviceInfo["type"] = "watchOS"
 #endif
         deviceInfo["manufacturer"] = "Apple"
         deviceInfo["model"] = self.deviceModelIdentifier

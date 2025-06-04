@@ -9,6 +9,8 @@
 import UIKit
 #elseif os(macOS)
 import AppKit
+#elseif os(watchOS)
+import WatchKit
 #endif
 
 // MARK: - LocaleInfoPlugin
@@ -33,7 +35,7 @@ final class LocaleInfoPlugin: Plugin {
         let languageCode: String?
         let regionCode: String?
         
-        if #available(iOS 16.0, macOS 13.0, *) {
+        if #available(iOS 16.0, macOS 13.0, watchOS 9.0, *) {
             languageCode = locale.language.languageCode?.identifier
             regionCode = locale.region?.identifier
         } else {

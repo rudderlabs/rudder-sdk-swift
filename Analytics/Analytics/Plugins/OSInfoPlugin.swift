@@ -9,6 +9,8 @@
 import UIKit
 #elseif os(macOS)
 import AppKit
+#elseif os(watchOS)
+import WatchKit
 #endif
 
 // MARK: - OSInfoPlugin
@@ -31,10 +33,15 @@ final class OSInfoPlugin: Plugin {
 #if os(iOS)
         let name = UIDevice.current.systemName
         let versionString = UIDevice.current.systemVersion
+
 #elseif os(macOS)
         let name = "macOS"
         let version = ProcessInfo.processInfo.operatingSystemVersion
         let versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
+        
+#elseif os(watchOS)
+        let name = WKInterfaceDevice.current().systemName
+        let versionString = WKInterfaceDevice.current().systemVersion
 #endif
         return ["name": name, "version": versionString]
     }()
