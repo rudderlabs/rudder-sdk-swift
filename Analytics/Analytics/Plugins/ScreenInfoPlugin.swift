@@ -5,7 +5,7 @@
 //  Created by Satheesh Kannan on 04/12/24.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 #elseif os(macOS)
 import AppKit
@@ -30,7 +30,7 @@ final class ScreenInfoPlugin: Plugin {
     }
     
     private var preparedScreenInfo: [String: Any] = {
-#if os(iOS)
+#if os(iOS) || os(tvOS)
         let scale = UIScreen.main.scale
         let size = UIScreen.main.bounds.size
 
