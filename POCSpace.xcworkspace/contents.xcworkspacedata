@@ -19,4 +19,7 @@
    <FileRef
       location = "group:AnalyticsAppWatch/AnalyticsAppWatch.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:AnalyticsAppTv/AnalyticsAppTv.xcodeproj">
+   </FileRef>
 </Workspace>
