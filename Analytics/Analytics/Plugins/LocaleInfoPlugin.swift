@@ -5,7 +5,7 @@
 //  Created by Satheesh Kannan on 04/12/24.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 #elseif os(macOS)
 import AppKit
@@ -35,7 +35,7 @@ final class LocaleInfoPlugin: Plugin {
         let languageCode: String?
         let regionCode: String?
         
-        if #available(iOS 16.0, macOS 13.0, watchOS 9.0, *) {
+        if #available(iOS 16.0, tvOS 16.0, macOS 13.0, watchOS 9.0, *) {
             languageCode = locale.language.languageCode?.identifier
             regionCode = locale.region?.identifier
         } else {

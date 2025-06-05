@@ -144,15 +144,15 @@ final class SessionHandlerTests: XCTestCase {
             
             manager.startSession(id: 12345, type: .automatic)
             let initialSessionId = manager.sessionId
-            
-#if os(macOS)
-            // macOS (AppKit)
-            let backgroundNotification = NSApplication.didResignActiveNotification
-            let foregroundNotification = NSApplication.didBecomeActiveNotification
-#elseif os(iOS)
+
+#if os(iOS) || os(tvOS)
             // iOS, Mac Catalyst (UIKit)
             let backgroundNotification = UIApplication.didEnterBackgroundNotification
             let foregroundNotification = UIApplication.willEnterForegroundNotification
+#elseif os(macOS)
+            // macOS (AppKit)
+            let backgroundNotification = NSApplication.didResignActiveNotification
+            let foregroundNotification = NSApplication.didBecomeActiveNotification
 #elseif os(watchOS)
             // watchOS
             let backgroundNotification = WKExtension.applicationWillResignActiveNotification

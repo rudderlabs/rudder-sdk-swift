@@ -5,7 +5,7 @@
 //  Created by Satheesh Kannan on 27/11/24.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 #elseif os(macOS)
 import AppKit
@@ -40,7 +40,7 @@ extension DeviceInfoPlugin {
     var preparedDeviceInfo: [String: Any] {
         var deviceInfo = [String: Any]()
         
-#if os(iOS)
+#if os(iOS) || os(tvOS)
         let device = UIDevice.current
         deviceInfo["id"] = self.collectDeviceId ? device.identifierForVendor?.uuidString : nil
         deviceInfo["name"] = device.name
