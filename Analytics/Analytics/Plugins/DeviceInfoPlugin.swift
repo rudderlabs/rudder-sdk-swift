@@ -42,7 +42,7 @@ extension DeviceInfoPlugin {
         
 #if os(iOS) || os(tvOS)
         let device = UIDevice.current
-        deviceInfo["id"] = self.collectDeviceId ? device.identifierForVendor?.uuidString : nil
+        deviceInfo["id"] = self.collectDeviceId ? device.identifierForVendor?.uuidString.lowercased() : nil
         deviceInfo["name"] = device.name
         deviceInfo["type"] = device.systemName
 
@@ -54,7 +54,7 @@ extension DeviceInfoPlugin {
         
 #elseif os(watchOS)
         let device = WKInterfaceDevice.current()
-        deviceInfo["id"] = self.collectDeviceId ? device.identifierForVendor?.uuidString : nil
+        deviceInfo["id"] = self.collectDeviceId ? device.identifierForVendor?.uuidString.lowercased() : nil
         deviceInfo["name"] = device.name
         deviceInfo["type"] = "watchOS"
 #endif

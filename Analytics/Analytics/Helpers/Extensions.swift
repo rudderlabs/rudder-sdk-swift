@@ -13,7 +13,7 @@ extension String {
     static let empty: String = ""
     
     static var randomUUIDString: String {
-        return UUID().uuidString
+        return UUID().uuidString.lowercased()
     }
     
     static var currentTimeStamp: String {
