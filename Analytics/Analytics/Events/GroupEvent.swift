@@ -25,7 +25,7 @@ struct GroupEvent: Event {
     var messageId: String = .randomUUIDString
     
     /// The timestamp of when the event occurred, defaulting to the current time.
-    var originalTimeStamp: String = .currentTimeStamp
+    var originalTimestamp: String = .currentTimeStamp
     
     /// The anonymous identifier for the user associated with the event.
     var anonymousId: String?
@@ -80,7 +80,7 @@ struct GroupEvent: Event {
     enum CodingKeys: CodingKey {
         case type
         case messageId
-        case originalTimeStamp
+        case originalTimestamp
         case anonymousId
         case channel
         case integrations

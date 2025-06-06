@@ -23,7 +23,7 @@ struct AliasEvent: Event {
     var messageId: String = .randomUUIDString
 
     /// The timestamp of when the event occurred, defaulting to the current time.
-    var originalTimeStamp: String = .currentTimeStamp
+    var originalTimestamp: String = .currentTimeStamp
 
     /// An optional anonymous identifier for the user associated with the event.
     var anonymousId: String?
@@ -83,7 +83,7 @@ struct AliasEvent: Event {
         case traits
         case type
         case messageId
-        case originalTimeStamp
+        case originalTimestamp
         case previousId
     }
 }

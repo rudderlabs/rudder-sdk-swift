@@ -97,7 +97,7 @@ struct MockHelper {
     static func resetDynamicValues(_ event: inout Event) {
         event.messageId = "<message-id>"
         event.anonymousId = "<anonymous-id>"
-        event.originalTimeStamp = "<original-timestamp>"
+        event.originalTimestamp = "<original-timestamp>"
     }
 }
 
