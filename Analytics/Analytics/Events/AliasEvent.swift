@@ -60,15 +60,15 @@ struct AliasEvent: Event {
 
      - Parameters:
         - previousId: The existing identifier for the user that is being linked to a new identifier.
-        - options: Custom options for the event, including integrations and context. Defaults to an empty instance of `RudderOption`.
-        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to an empty instance of `UserIdentity`.
+        - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to `nil`.
 
      This initializer also applies default values for integrations and context if they are not explicitly provided.
      */
-    init(previousId: String, options: RudderOption? = RudderOption(), userIdentity: UserIdentity = UserIdentity()) {
+    init(previousId: String, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
         self.previousId = previousId
-        self.userIdentity = userIdentity
-        self.options = options
+        self.userIdentity = userIdentity ?? UserIdentity()
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }

@@ -66,16 +66,16 @@ struct TrackEvent: Event {
      - Parameters:
         - event: The name of the event being tracked.
         - properties: Additional properties or metadata associated with the event. Defaults to `nil`.
-        - options: Custom options for the event, including integrations and context. Defaults to an empty instance of `RudderOption`.
-        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to a empty instance of `UserIdentity`.
+        - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to `nil`.
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(event: String, properties: RudderProperties? = nil, options: RudderOption? = RudderOption(), userIdentity: UserIdentity = UserIdentity()) {
+    init(event: String, properties: RudderProperties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
         self.event = event
         self.properties = CodableCollection(dictionary: properties)
-        self.userIdentity = userIdentity
-        self.options = options
+        self.userIdentity = userIdentity ?? UserIdentity()
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }
