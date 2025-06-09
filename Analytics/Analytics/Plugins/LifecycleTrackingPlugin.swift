@@ -73,8 +73,8 @@ extension LifecycleTrackingPlugin {
             ])
         }
 
-        // Ignore the first foreground event on watchOS and macOS to prevent duplicate tracking
 #if !os(watchOS) && !os(macOS)
+        // Ignore the first foreground event on watchOS and macOS to prevent duplicate tracking
         self.onBecomeActive()
 #endif
     }
