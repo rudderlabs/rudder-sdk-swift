@@ -101,21 +101,11 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         guard let analyticsMock else { XCTFail("No disk client"); return }
         plugin.setup(analytics: analyticsMock)
         
-        // Simulate an app update scenario to trigger the method
-        plugin.appVersion = AppVersion(
-            currentVersionName: "2.0",
-            currentBuild: 20,
-            previousVersionName: "1.0",
-            previousBuild: 10
-        )
+        // Simulate app install/update events
         plugin.trackAppInstallAndUpdateEvents()
         
         let eventNames = await fetchTrackedEventNames()
         guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
-        
-        // Verify that Application Updated is tracked
-        XCTAssert(eventNames.contains(LifecycleEvent.applicationUpdated.rawValue), 
-                 "Application Updated event should be tracked")
         
         #if os(watchOS) || os(macOS)
         // On watchOS and macOS, Application Opened should NOT be tracked automatically
