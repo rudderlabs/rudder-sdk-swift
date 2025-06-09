@@ -211,6 +211,39 @@ extension Dictionary where Key == String, Value == Any {
             }
         }
     }
+    
+}
+
+// MARK: - [String: Any]
+public extension Dictionary where Key == String, Value == Any {
+    /** A computed property that converts `[String: Any]` to `[String: AnyCodable]` */
+    var codableWrapped: [String: AnyCodable] {
+        return self.mapValues { AnyCodable($0) }
+    }
+}
+
+// MARK: - [String: AnyCodable]
+public extension Dictionary where Key == String, Value == AnyCodable {
+    /** A computed property that converts `[String: AnyCodable]` to `[String: Any]` */
+    var rawDictionary: [String: Any] {
+        self.mapValues { $0.value }
+    }
+}
+
+// MARK: - [AnyCodable]
+public extension Array where Element == AnyCodable {
+    /** A computed property that converts `[AnyCodable]` to `[Any]` */
+    var rawArray: [Any] {
+        self.map { $0.value }
+    }
+}
+
+// MARK: - [Any]
+public extension Array where Element == Any {
+    /** A computed property that converts `[Any]` to `[AnyCodable]` */
+    var codableWrapped: [AnyCodable] {
+        self.map { AnyCodable($0) }
+    }
 }
 
 // MARK: - [Any]
