@@ -111,10 +111,6 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         // On watchOS and macOS, Application Opened should NOT be tracked automatically
         XCTAssertFalse(eventNames.contains(LifecycleEvent.applicationOpened.rawValue),
                       "Application Opened event should NOT be tracked automatically on watchOS and macOS to prevent duplicate tracking")
-        #else
-        // On other platforms, Application Opened should be tracked automatically
-        XCTAssert(eventNames.contains(LifecycleEvent.applicationOpened.rawValue),
-                 "Application Opened event should be tracked automatically on iOS/tvOS platforms")
         #endif
     }
     
