@@ -18,6 +18,7 @@ final class LifecycleTrackingPlugin: Plugin {
     var appVersion: AppVersion?
     
     @Synchronized private var isFirstLaunch = true
+    @Synchronized private var firstForeGround = true
     
     func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
@@ -40,6 +41,14 @@ final class LifecycleTrackingPlugin: Plugin {
 
 extension LifecycleTrackingPlugin: LifecycleEventListener {
     func onBecomeActive() {
+        // Ignore the first foreground event on watchOS and macOS to prevent duplicate tracking
+#if os(watchOS) || os(macOS)
+        if firstForeGround {
+            firstForeGround = false
+            return
+        }
+#endif
+        
         var properties: [String: Any] = [:]
         if isFirstLaunch {
             properties["version"] = appVersion?.currentVersionName
@@ -64,8 +73,7 @@ extension LifecycleTrackingPlugin {
                 "version": appVersion.currentVersionName ?? "",
                 "build": appVersion.currentBuild
             ])
-        } else {
-            guard appVersion.currentVersionName != appVersion.previousVersionName else { self.onBecomeActive(); return }
+        } else if appVersion.previousBuild != appVersion.currentBuild {
             self.analytics?.track(name: LifecycleEvent.applicationUpdated.rawValue, properties: [
                 "version": appVersion.currentVersionName ?? "",
                 "build": appVersion.currentBuild,
