@@ -96,6 +96,38 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         XCTAssert(eventNames.contains(LifecycleEvent.applicationUpdated.rawValue))
     }
     
+    func test_trackAppInstallAndUpdateEvents_does_not_fire_opened_event_on_watchOS_macOS() async {
+        analyticsMock?.configuration.trackApplicationLifecycleEvents = true
+        guard let analyticsMock else { XCTFail("No disk client"); return }
+        plugin.setup(analytics: analyticsMock)
+        
+        // Simulate an app update scenario to trigger the method
+        plugin.appVersion = AppVersion(
+            currentVersionName: "2.0",
+            currentBuild: 20,
+            previousVersionName: "1.0",
+            previousBuild: 10
+        )
+        plugin.trackAppInstallAndUpdateEvents()
+        
+        let eventNames = await fetchTrackedEventNames()
+        guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
+        
+        // Verify that Application Updated is tracked
+        XCTAssert(eventNames.contains(LifecycleEvent.applicationUpdated.rawValue), 
+                 "Application Updated event should be tracked")
+        
+        #if os(watchOS) || os(macOS)
+        // On watchOS and macOS, Application Opened should NOT be tracked automatically
+        XCTAssertFalse(eventNames.contains(LifecycleEvent.applicationOpened.rawValue),
+                      "Application Opened event should NOT be tracked automatically on watchOS and macOS to prevent duplicate tracking")
+        #else
+        // On other platforms, Application Opened should be tracked automatically
+        XCTAssert(eventNames.contains(LifecycleEvent.applicationOpened.rawValue),
+                 "Application Opened event should be tracked automatically on iOS/tvOS platforms")
+        #endif
+    }
+    
     private func fetchTrackedEventNames() async -> [String] {
         try? await Task.sleep(nanoseconds: 300_000_000)
         guard let analyticsMock else { return [] }
