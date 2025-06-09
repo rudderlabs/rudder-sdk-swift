@@ -29,9 +29,24 @@ final class OptionPlugin: Plugin {
     func intercept(event: any Event) -> (any Event)? {
         guard let option else { return event }
         
-        var updatedEvent = event.addToContext(info: option.customContext ?? [:])
-        updatedEvent = updatedEvent.addToIntegrations(info: option.integrations ?? [:])
-        updatedEvent = updatedEvent.addExternalIds(info: option.externalIds ?? [])
+        var updatedEvent = event
+        
+        if var contextDict = updatedEvent.context?.rawDictionary {
+            option.customContext?.forEach { contextDict[$0.key] = $0.value }
+            
+            if let ids = option.externalIds?.compactMap({ ["id": $0.id, "type": $0.type] }),
+                var externalIdsArray = contextDict["externalId"] as? [[String: Any]] {
+                externalIdsArray.append(contentsOf: ids)
+                contextDict["externalId"] = externalIdsArray
+            }
+            
+            updatedEvent.context = contextDict.codableWrapped
+        }
+        
+        if var integrationsDict = updatedEvent.integrations?.rawDictionary {
+            option.integrations?.forEach { integrationsDict[$0.key] = $0.value }
+            updatedEvent.integrations = integrationsDict.codableWrapped
+        }
         
         return updatedEvent
     }
