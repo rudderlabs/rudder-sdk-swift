@@ -73,9 +73,8 @@ extension LifecycleTrackingPlugin {
             ])
         }
 
-#if !os(watchOS) && !os(macOS)
-        // Ignore the first foreground event on watchOS and macOS to prevent duplicate tracking
-        self.onBecomeActive()
+#if os(iOS)
+        if ProcessInfo.isSwiftUIiOSApp { self.onBecomeActive() }
 #endif
     }
 }
