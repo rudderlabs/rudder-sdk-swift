@@ -182,12 +182,7 @@
         }
             
         case ActionTypeReset: {
-            [[AnalyticsManager sharedManager] reset:NO];
-            break;
-        }
-            
-        case ActionTypeResetWithAnonymousId: {
-            [[AnalyticsManager sharedManager] reset:YES];
+            [[AnalyticsManager sharedManager] reset];
             break;
         }
             

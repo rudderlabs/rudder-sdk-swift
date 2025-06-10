@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)group:(NSString * _Nonnull)groupId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSAOption* _Nullable)option;
 - (void)alias:(NSString * _Nonnull)newId previousId:(NSString* _Nullable)previousId options:(RSAOption* _Nullable)option;
 - (void)flush;
-- (void)reset:(BOOL)clearAnonymousId;
+- (void)reset;
 - (void)startSession;
 - (void)startSession:(NSNumber *)sessionId;
 - (void)endSession;
