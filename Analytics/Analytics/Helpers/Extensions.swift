@@ -8,6 +8,10 @@
 import Foundation
 import zlib
 
+#if os(iOS)
+import UIKit
+#endif
+
 // MARK: - String
 extension String {
     static let empty: String = ""
@@ -365,3 +369,19 @@ extension Data {
     // swiftlint:enable force_unwrapping
     // swiftlint:enable no_magic_numbers
 }
+
+#if os(iOS)
+extension ProcessInfo {
+    static var isSwiftUIiOSApp: Bool {
+        for case let windowScene as UIWindowScene in UIApplication.shared.connectedScenes {
+            for window in windowScene.windows where window.isKeyWindow {
+                if let rootVC = window.rootViewController,
+                   String(describing: type(of: rootVC)).contains("UIHostingController") {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+#endif
