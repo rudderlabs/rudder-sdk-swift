@@ -13,27 +13,30 @@ struct BluetoothInfoPluginTests {
     
     @Test
     func test_bluetoothAvailability_whenAuthorized() {
-        given("Prepare the environment when authorization is authorized...") {
+        given("a BluetoothInfoPlugin with authorized Bluetooth status") {
             let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
             let analytics = AnalyticsClient(configuration: config)
             
             let bluetoothInfoPlugin = BluetoothInfoPlugin()
             analytics.addPlugin(bluetoothInfoPlugin)
             
+            bluetoothInfoPlugin.bluetoothAuthorizationStatus = { .allowedAlways }
             let event = MockEvent()
             
-            bluetoothInfoPlugin.bluetoothAuthorizationStatus = { .allowedAlways }
-            
-            when("intercept the plugin using mock event..") {
+            when("the plugin intercepts the mock event") {
                 let result = bluetoothInfoPlugin.intercept(event: event)
                 
-                then("check the result if bluetooth status added or not..") {
-                    #expect(result != nil)
+                then("it should inject bluetooth: true into the network context") {
+                    #expect(result != nil, "Expected the intercepted event to be non-nil")
                     
-                    guard let networkContext = result?.context?["network"]?.value as? [String: Any], let isBluetoothAvailable = networkContext["bluetooth"] as? Bool else {
-                        #expect(1 == 0, "bluetooth status not found.."); return
+                    guard let contextDict = result?.context?.rawDictionary,
+                          let networkContext = contextDict["network"] as? [String: Any],
+                          let isBluetoothAvailable = networkContext["bluetooth"] as? Bool else {
+                        #expect(Bool(false), "Expected bluetooth status in network context")
+                        return
                     }
-                    #expect(isBluetoothAvailable)
+
+                    #expect(isBluetoothAvailable == true, "Expected bluetooth to be true")
                 }
             }
         }
@@ -41,23 +44,24 @@ struct BluetoothInfoPluginTests {
     
     @Test
     func test_bluetoothAvailability_whenDenied() {
-        given("Prepare the environment when authorization is denied..") {
+        given("a BluetoothInfoPlugin with denied Bluetooth authorization") {
             let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
             let analytics = AnalyticsClient(configuration: config)
             
             let bluetoothInfoPlugin = BluetoothInfoPlugin()
             analytics.addPlugin(bluetoothInfoPlugin)
             
+            bluetoothInfoPlugin.bluetoothAuthorizationStatus = { .denied }
             let event = MockEvent()
             
-            bluetoothInfoPlugin.bluetoothAuthorizationStatus = { .denied }
-            
-            when("intercept the plugin using mock event..") {
+            when("the plugin intercepts the mock event") {
                 let result = bluetoothInfoPlugin.intercept(event: event)
                 
-                then("check the result if bluetooth status added or not..") {
-                    #expect(result != nil)
-                    #expect(result?.context?["network"] == nil, "bluetooth status not found..")
+                then("it should NOT inject bluetooth status into the network context") {
+                    #expect(result != nil, "Expected intercepted event to be non-nil")
+                    
+                    let networkContext = result?.context?.rawDictionary["network"]
+                    #expect(networkContext == nil, "Expected no network context when Bluetooth is denied")
                 }
             }
         }
