@@ -34,11 +34,21 @@
 
 - (RSAEvent * _Nullable)intercept:(RSAEvent * _Nonnull)event {
     
-    RSAEvent *updatedEvent = [event addToContext: self.option.customContext];
-    updatedEvent = [event addToIntegrations: self.option.integrations];
-    updatedEvent = [event addExternalIds: self.option.externalIds];
+    NSMutableDictionary *contextDict = [NSMutableDictionary dictionaryWithDictionary: event.context];
+    [contextDict addEntriesFromDictionary: self.option.customContext];
     
-    return updatedEvent;
+    NSMutableArray *externalIdArray = [NSMutableArray arrayWithArray: contextDict[@"externalId"]];
+    [self.option.externalIds enumerateObjectsUsingBlock:^(RSAExternalId * _Nonnull eId, NSUInteger idx, BOOL * _Nonnull stop) {
+        [externalIdArray addObject:@{@"id": eId.id, @"type": eId.type}];
+    }];
+    contextDict[@"externalId"] = externalIdArray;
+    event.context = contextDict;
+    
+    NSMutableDictionary *integrationsDict = [NSMutableDictionary dictionaryWithDictionary: event.integrations];
+    [integrationsDict addEntriesFromDictionary: self.option.integrations];
+    event.integrations = integrationsDict;
+    
+    return event;
 }
 
 - (void)setup:(RSAAnalytics * _Nonnull)analytics {
