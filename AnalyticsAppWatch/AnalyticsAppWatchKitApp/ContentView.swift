@@ -99,7 +99,7 @@ struct ContentView: View {
                     // Additional APIs Section
                 Section("Additional APIs") {
                     WatchButton(title: "Reset User") {
-                        AnalyticsManager.shared.reset(clearAnonymousId: false)
+                        AnalyticsManager.shared.reset()
                         updateUserInfo()
                     }
                     

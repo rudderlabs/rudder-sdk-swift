@@ -118,7 +118,7 @@ struct ContentView: View {
                     .font(.headline)
                 
                 CustomButton(title: "Reset User") {
-                    AnalyticsManager.shared.reset(clearAnonymousId: false)
+                    AnalyticsManager.shared.reset()
                     updateUserInfo()
                 }
                 

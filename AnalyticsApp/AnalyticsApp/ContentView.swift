@@ -71,11 +71,7 @@ struct ContentView: View {
             
             HStack {
                 CustomButton(title: "Reset") {
-                    AnalyticsManager.shared.reset(false)
-                }
-                
-                CustomButton(title: "Reset (AnonymousId)") {
-                    AnalyticsManager.shared.reset(true)
+                    AnalyticsManager.shared.reset()
                 }
             }
             

@@ -118,7 +118,7 @@ struct ContentView: View {
                         
                         section("Additional APIs:")
                         CustomButton(title: "Reset User") {
-                            AnalyticsManager.shared.reset(clearAnonymousId: false)
+                            AnalyticsManager.shared.reset()
                             updateUserInfo()
                         }
                         .focused($focusedButton, equals: .reset)
