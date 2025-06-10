@@ -60,8 +60,8 @@
     [self.client endSession];
 }
 
-- (void)reset:(BOOL)clearAnonymousId {
-    [self.client reset:clearAnonymousId];
+- (void)reset {
+    [self.client reset];
 }
 
 - (void)flush {

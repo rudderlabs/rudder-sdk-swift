@@ -456,13 +456,11 @@ extension ObjCAnalytics {
     }
 
     /**
-     Resets analytics state. Optionally clears the anonymous ID.
-     
-     - Parameter clearAnonymousId: If `true`, clears the anonymous ID.
+     Resets analytics state.
      */
     @objc
-    public func reset(_ clearAnonymousId: Bool) {
-        clearAnonymousId ? self.analytics.reset(clearAnonymousId: true) : self.analytics.reset()
+    public func reset() {
+        self.analytics.reset()
     }
 
     /**

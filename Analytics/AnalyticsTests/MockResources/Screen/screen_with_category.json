@@ -6,7 +6,7 @@
     "All" : true
   },
   "messageId" : "<message-id>",
-  "originalTimeStamp" : "<original-timestamp>",
+  "originalTimestamp" : "<original-timestamp>",
   "properties" : {
     "category" : "Main",
     "name" : "Sample_Screen_Event"

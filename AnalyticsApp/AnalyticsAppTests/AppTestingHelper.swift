@@ -18,7 +18,7 @@ class MockEvent: Event {
     var traits: Analytics.CodableCollection?
     var type: Analytics.EventType = .track
     var messageId: String = UUID().uuidString
-    var originalTimeStamp: String = Date().description
+    var originalTimestamp: String = Date().description
     var userId: String?
     var userIdentity: Analytics.UserIdentity?
     var options: Analytics.RudderOption?
@@ -32,7 +32,7 @@ class MockEvent: Event {
         case traits
         case type
         case messageId
-        case originalTimeStamp
+        case originalTimestamp
         case userId
     }
 }

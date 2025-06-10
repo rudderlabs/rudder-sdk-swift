@@ -6,7 +6,7 @@
     "All" : true
   },
   "messageId" : "<message-id>",
-  "originalTimeStamp" : "<original-timestamp>",
+  "originalTimestamp" : "<original-timestamp>",
   "sentAt" : "{{_RSA_DEF_SENT_AT_TS_}}",
   "type" : "group"
 }
