@@ -22,7 +22,7 @@ final class ResetUserIdentityActionTests: XCTestCase {
                 state.dispatch(action: action)
                 
                 then("UserIdentity values are reset except anonymousId..") {
-                    XCTAssertNotEqual(state.state.value.anonymousId, anonymousId, "Anonymous ID should be preserved")
+                    XCTAssertNotEqual(state.state.value.anonymousId, anonymousId, "Anonymous ID should be regenerated")
                     XCTAssertTrue(state.state.value.userId.isEmpty)
                     XCTAssertTrue(state.state.value.traits.isEmpty)
                 }
