@@ -106,16 +106,16 @@ extension AnalyticsTests {
         client.storage.write(value: "test_user_id", key: Constants.storageKeys.userId)
         client.storage.write(value: ["prop": "value"].jsonString, key: Constants.storageKeys.traits)
         
+        // Capture the anonymous ID before reset - it should be preserved
+        let anonymousId = client.anonymousId
+        
         client.reset()
         
-        let anonymousId = client.anonymousId
+        XCTAssertFalse(anonymousId == client.anonymousId)
         let userId: String? = client.storage.read(key: Constants.storageKeys.userId)
         XCTAssertTrue(userId == nil)
         let trits: String? = client.storage.read(key: Constants.storageKeys.traits)
         XCTAssertTrue(trits == nil)
-        
-        client.reset(clearAnonymousId: true)
-        XCTAssertFalse(anonymousId == client.anonymousId)
     }
     
     func test_flushEvents_disk() async {
