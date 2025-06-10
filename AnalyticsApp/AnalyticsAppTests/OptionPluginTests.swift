@@ -16,27 +16,39 @@ struct OptionPluginTests {
         given("An OptionPlugin initialized with a custom option") {
             let customContext = ["key1": "value1"]
             let integrations = ["integration1": true]
-            let extenalId = ExternalId(type: "external_Id_Type", id: "external_Id")
-            
-            let option = RudderOption(integrations: integrations, customContext: customContext, externalIds: [extenalId])
+            let externalId = ExternalId(type: "external_id_type", id: "external_id")
+
+            let option = RudderOption(integrations: integrations, customContext: customContext, externalIds: [externalId])
             let plugin = OptionPlugin(option: option)
-            
+
             when("Intercepting a mock event") {
                 let mockEvent = MockEvent()
                 let result = plugin.intercept(event: mockEvent)
-                
-                then("The event should be updated with the provided context and integrations") {
+
+                then("The event should be updated with the provided context, integrations, and externalIds") {
                     #expect(result != nil)
-                    
-                    guard let context = result?.context as? [String: Any] else { #expect(1 == 0, "Custom context not added"); return }
-                    #expect(context["key1"] != nil)
-                    
-                    guard let integrations = result?.integrations as? [String: Any] else { #expect(1 == 0, "Integrations not added"); return }
-                    #expect(integrations["integration1"] != nil)
-                    
-                    guard let externalIds = context["externalId"] as? [String: Any] else { #expect(1 == 0, "External IDs not added"); return }
-                    #expect(externalIds["id"] as? String == "external_Id")
-                    #expect(externalIds["type"] as? String == "external_id_type")
+
+                    guard let context = result?.context?.rawDictionary else {
+                        #expect(Bool(false), "Context not available or not of expected type")
+                        return
+                    }
+                    #expect(context["key1"] as? String == "value1")
+
+                    guard let integrations = result?.integrations?.rawDictionary else {
+                        #expect(Bool(false), "Integrations not available or not of expected type")
+                        return
+                    }
+                    #expect(integrations["integration1"] as? Bool == true)
+
+                    guard let externalIds = context["externalId"] as? [[String: Any]] else {
+                        #expect(Bool(false), "externalId not available or not of expected type [[String: Any]]")
+                        return
+                    }
+
+                    let match = externalIds.contains { dict in
+                        dict["id"] as? String == "external_id" && dict["type"] as? String == "external_id_type"
+                    }
+                    #expect(match, "Expected externalId entry not found")
                 }
             }
         }
