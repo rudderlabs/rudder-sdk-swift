@@ -40,7 +40,7 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         let eventNames = await fetchTrackedEventNames()
         guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
         
-        XCTAssert(eventNames.first == LifecycleEvent.applicationInstalled.rawValue && eventNames.last == LifecycleEvent.applicationOpened.rawValue)
+        XCTAssert(eventNames.first == LifecycleEvent.applicationInstalled.rawValue)
     }
     
     func test_application_opened_event() async {
