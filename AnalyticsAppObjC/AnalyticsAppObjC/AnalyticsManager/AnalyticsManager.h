@@ -49,7 +49,6 @@ typedef NS_ENUM(NSInteger, ActionType) {
     ActionTypeUpdateAnonymousId,
     ActionTypeReadAnonymousId,
     ActionTypeReset,
-    ActionTypeResetWithAnonymousId,
     ActionTypeStartSession,
     ActionTypeStartSessionWithSessionId,
     ActionTypeReadSessionId,
