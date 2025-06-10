@@ -33,16 +33,16 @@ enum AppLifecycleEvent: CaseIterable {
         switch self {
         case .background: return NSApplication.didResignActiveNotification
         case .terminate: return NSApplication.willTerminateNotification
-        case .foreground: return NSApplication.didBecomeActiveNotification
+        case .foreground: return NSApplication.willBecomeActiveNotification
         case .becomeActive: return NSApplication.didBecomeActiveNotification
         }
         
 #elseif os(watchOS)
         switch self {
-        case .background: return WKExtension.applicationWillResignActiveNotification
+        case .background: return WKApplication.didEnterBackgroundNotification
         case .terminate: return Notification.Name("WillTerminate")
-        case .foreground: return WKExtension.applicationWillEnterForegroundNotification
-        case .becomeActive: return WKExtension.applicationDidBecomeActiveNotification
+        case .foreground: return WKApplication.willEnterForegroundNotification
+        case .becomeActive: return WKApplication.didBecomeActiveNotification
         }
 #endif
     }

@@ -38,7 +38,7 @@
     "Firebase" : true
   },
   "messageId" : "<message-id>",
-  "originalTimeStamp" : "<original-timestamp>",
+  "originalTimestamp" : "<original-timestamp>",
   "properties" : {
     "category" : "Main",
     "key-1" : "String value",

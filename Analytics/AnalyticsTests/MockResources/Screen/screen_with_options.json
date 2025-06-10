@@ -32,7 +32,7 @@
     "Firebase" : true
   },
   "messageId" : "<message-id>",
-  "originalTimeStamp" : "<original-timestamp>",
+  "originalTimestamp" : "<original-timestamp>",
   "properties" : {
     "name" : "Sample_Screen_Event"
   },

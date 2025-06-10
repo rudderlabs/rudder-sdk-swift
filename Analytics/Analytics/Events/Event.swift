@@ -74,7 +74,7 @@ public protocol Event: Codable {
     /**
      The original timestamp when the event occurred, in ISO 8601 format.
      */
-    var originalTimeStamp: String { get set }
+    var originalTimestamp: String { get set }
     
     /**
      Holds the associated values for an event.

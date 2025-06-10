@@ -117,16 +117,12 @@ extension UserIdentity {
      Resets the user identity by clearing stored identifiers and traits.
 
      - Parameters:
-       - clearAnonymousId: A boolean flag indicating whether the anonymous ID should be stored before resetting.
        - storage: The storage instance used to remove user-related data.
 
-     If `clearAnonymousId` is `true`, the function stores the current anonymous ID before resetting other user identity-related data, such as user ID and traits.
+     This function stores the current anonymous ID and reset other user identity-related data, such as user ID and traits.
     */
-    func resetUserIdentity(clearAnonymousId: Bool, storage: Storage) {
-        if clearAnonymousId {
-            self.storeAnonymousId(storage)
-        }
-        
+    func resetUserIdentity(storage: Storage) {
+        self.storeAnonymousId(storage)
         self.resetUserIdAndTraits(storage)
     }
     

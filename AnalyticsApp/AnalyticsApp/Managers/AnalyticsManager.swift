@@ -56,8 +56,8 @@ extension AnalyticsManager {
         self.analytics?.flush()
     }
     
-    func reset(_ clearAnonymousId: Bool) {
-        self.analytics?.reset(clearAnonymousId: clearAnonymousId)
+    func reset() {
+        self.analytics?.reset()
     }
     
     func startSession(sessionId: UInt64? = nil) {

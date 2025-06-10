@@ -64,8 +64,7 @@ extension LifecycleTrackingPlugin {
                 "version": appVersion.currentVersionName ?? "",
                 "build": appVersion.currentBuild
             ])
-        } else {
-            guard appVersion.currentVersionName != appVersion.previousVersionName else { self.onBecomeActive(); return }
+        } else if appVersion.currentVersionName != appVersion.previousVersionName {
             self.analytics?.track(name: LifecycleEvent.applicationUpdated.rawValue, properties: [
                 "version": appVersion.currentVersionName ?? "",
                 "build": appVersion.currentBuild,
@@ -73,7 +72,10 @@ extension LifecycleTrackingPlugin {
                 "previous_build": appVersion.previousBuild
             ])
         }
-        self.onBecomeActive()
+
+#if os(iOS)
+        if ProcessInfo.isSwiftUIiOSApp { self.onBecomeActive() }
+#endif
     }
 }
 

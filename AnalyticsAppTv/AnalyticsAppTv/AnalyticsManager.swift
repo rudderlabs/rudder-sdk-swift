@@ -53,8 +53,8 @@ extension AnalyticsManager {
     
     // MARK: - User Management
     
-    func reset(clearAnonymousId: Bool = false) {
-        self.analytics?.reset(clearAnonymousId: clearAnonymousId)
+    func reset() {
+        self.analytics?.reset()
     }
     
     var anonymousId: String? {

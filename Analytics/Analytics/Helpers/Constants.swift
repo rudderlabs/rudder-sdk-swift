@@ -208,4 +208,4 @@ public struct _DefaultConfig {
  **Important:**
  Do not edit this value unless performing a manual release.
  */
-let RSVersion: String = "1.31.0"
+let RSVersion: String = "1.0.0-alpha.1"

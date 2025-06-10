@@ -29,9 +29,9 @@
 - (void)setupTableView {
     _cellIdentifier = @"Cell";
     
-    self.tableRowTitles = @{@(ActionTypeIdentify): @"Identify", @(ActionTypeAlias): @"Alias", @(ActionTypeTrack): @"Track", @(ActionTypeMultipleTrack): @"Multipletrack", @(ActionTypeScreen): @"Screen", @(ActionTypeGroup): @"Group", @(ActionTypeFlush): @"Flush", @(ActionTypeUpdateAnonymousId): @"Update AnonymousId", @(ActionTypeReadAnonymousId): @"Read AnonymousId", @(ActionTypeReset): @"Reset", @(ActionTypeResetWithAnonymousId): @"Reset with AnonymousId", @(ActionTypeStartSession): @"Start Session", @(ActionTypeStartSessionWithSessionId): @"Start Session with SessionId", @(ActionTypeReadSessionId): @"Read SessionId", @(ActionTypeEndSession): @"End Session", @(ActionTypeShutdown): @"Shutdown", @(ActionTypeReInitializeSDK): @"Re-Initialize SDK"};
+    self.tableRowTitles = @{@(ActionTypeIdentify): @"Identify", @(ActionTypeAlias): @"Alias", @(ActionTypeTrack): @"Track", @(ActionTypeMultipleTrack): @"Multipletrack", @(ActionTypeScreen): @"Screen", @(ActionTypeGroup): @"Group", @(ActionTypeFlush): @"Flush", @(ActionTypeUpdateAnonymousId): @"Update AnonymousId", @(ActionTypeReadAnonymousId): @"Read AnonymousId", @(ActionTypeReset): @"Reset", @(ActionTypeStartSession): @"Start Session", @(ActionTypeStartSessionWithSessionId): @"Start Session with SessionId", @(ActionTypeReadSessionId): @"Read SessionId", @(ActionTypeEndSession): @"End Session", @(ActionTypeShutdown): @"Shutdown", @(ActionTypeReInitializeSDK): @"Re-Initialize SDK"};
     
-    self.tableRows = @[@(ActionTypeIdentify), @(ActionTypeAlias), @(ActionTypeTrack), @(ActionTypeMultipleTrack), @(ActionTypeScreen), @(ActionTypeGroup), @(ActionTypeFlush), @(ActionTypeUpdateAnonymousId), @(ActionTypeReadAnonymousId), @(ActionTypeReset), @(ActionTypeResetWithAnonymousId), @(ActionTypeStartSession), @(ActionTypeStartSessionWithSessionId), @(ActionTypeReadSessionId), @(ActionTypeEndSession), @(ActionTypeShutdown), @(ActionTypeReInitializeSDK)];
+    self.tableRows = @[@(ActionTypeIdentify), @(ActionTypeAlias), @(ActionTypeTrack), @(ActionTypeMultipleTrack), @(ActionTypeScreen), @(ActionTypeGroup), @(ActionTypeFlush), @(ActionTypeUpdateAnonymousId), @(ActionTypeReadAnonymousId), @(ActionTypeReset), @(ActionTypeStartSession), @(ActionTypeStartSessionWithSessionId), @(ActionTypeReadSessionId), @(ActionTypeEndSession), @(ActionTypeShutdown), @(ActionTypeReInitializeSDK)];
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -182,12 +182,7 @@
         }
             
         case ActionTypeReset: {
-            [[AnalyticsManager sharedManager] reset:NO];
-            break;
-        }
-            
-        case ActionTypeResetWithAnonymousId: {
-            [[AnalyticsManager sharedManager] reset:YES];
+            [[AnalyticsManager sharedManager] reset];
             break;
         }
             

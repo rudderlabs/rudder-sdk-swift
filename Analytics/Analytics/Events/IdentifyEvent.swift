@@ -23,7 +23,7 @@ struct IdentifyEvent: Event {
     var messageId: String = .randomUUIDString
 
     /// The timestamp of when the event occurred, defaulting to the current time.
-    var originalTimeStamp: String = .currentTimeStamp
+    var originalTimestamp: String = .currentTimeStamp
 
     /// The anonymous identifier for the user associated with the event.
     var anonymousId: String?
@@ -60,15 +60,15 @@ struct IdentifyEvent: Event {
 
      - Parameters:
         - traits: Custom traits or attributes for the user. Defaults to `nil`.
-        - options: Custom options for the event, including integrations and context. Defaults to an empty instance of `RudderOption`.
-        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to an empty instance of `UserIdentity`.
+        - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to `nil`.
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(options: RudderOption? = RudderOption(), userIdentity: UserIdentity = UserIdentity()) {
-        self.userIdentity = userIdentity
+    init(options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
+        self.userIdentity = userIdentity ?? UserIdentity()
         self.event = self.type.rawValue
-        self.options = options
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }
@@ -76,7 +76,7 @@ struct IdentifyEvent: Event {
     enum CodingKeys: CodingKey {
         case type
         case messageId
-        case originalTimeStamp
+        case originalTimestamp
         case anonymousId
         case channel
         case integrations

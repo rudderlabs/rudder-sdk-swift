@@ -152,11 +152,11 @@ final class SessionHandlerTests: XCTestCase {
 #elseif os(macOS)
             // macOS (AppKit)
             let backgroundNotification = NSApplication.didResignActiveNotification
-            let foregroundNotification = NSApplication.didBecomeActiveNotification
+            let foregroundNotification = NSApplication.willBecomeActiveNotification
 #elseif os(watchOS)
             // watchOS
-            let backgroundNotification = WKExtension.applicationWillResignActiveNotification
-            let foregroundNotification = WKExtension.applicationWillEnterForegroundNotification
+            let backgroundNotification = WKApplication.didEnterBackgroundNotification
+            let foregroundNotification = WKApplication.willEnterForegroundNotification
 #endif
             
             when("The app moves to the background") {
