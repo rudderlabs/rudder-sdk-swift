@@ -128,9 +128,9 @@ public class ObjCEvent: NSObject {
     /**
      The original timestamp of when the event occurred.
      */
-    public var originalTimeStamp: String {
-        get { event.originalTimeStamp }
-        set { event.originalTimeStamp = newValue }
+    public var originalTimestamp: String {
+        get { event.originalTimestamp }
+        set { event.originalTimestamp = newValue }
     }
 
     /**
