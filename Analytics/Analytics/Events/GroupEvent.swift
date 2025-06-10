@@ -25,7 +25,7 @@ struct GroupEvent: Event {
     var messageId: String = .randomUUIDString
     
     /// The timestamp of when the event occurred, defaulting to the current time.
-    var originalTimeStamp: String = .currentTimeStamp
+    var originalTimestamp: String = .currentTimeStamp
     
     /// The anonymous identifier for the user associated with the event.
     var anonymousId: String?
@@ -63,16 +63,16 @@ struct GroupEvent: Event {
      - Parameters:
         - groupId: The unique identifier of the group being associated with the user.
         - traits: Custom traits or attributes associated with the group. Defaults to `nil`.
-        - options: Custom options for the event, including integrations and context. Defaults to an empty instance of `RudderOption`.
-        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to a empty instance of `UserIdentity`.
+        - options: Custom options for the event, including integrations and context. Defaults to `nil`.
+        - userIdentity: The user's identity information, represented as `UserIdentity`. Defaults to `nil`.
 
      This initializer also processes and includes default values, such as default integrations and context if they are not provided.
      */
-    init(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = RudderOption(), userIdentity: UserIdentity = UserIdentity()) {
+    init(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
         self.groupId = groupId
         self.traits = CodableCollection(dictionary: traits)
-        self.userIdentity = userIdentity
-        self.options = options
+        self.userIdentity = userIdentity ?? UserIdentity()
+        self.options = options ?? RudderOption()
         
         self.addDefaultValues()
     }
@@ -80,7 +80,7 @@ struct GroupEvent: Event {
     enum CodingKeys: CodingKey {
         case type
         case messageId
-        case originalTimeStamp
+        case originalTimestamp
         case anonymousId
         case channel
         case integrations
