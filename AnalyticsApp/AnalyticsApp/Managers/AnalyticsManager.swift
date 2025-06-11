@@ -73,8 +73,7 @@ extension AnalyticsManager {
     }
     
     var anonymousId: String? {
-        get { self.analytics?.anonymousId }
-        set { if let newId = newValue { self.analytics?.anonymousId = newId } }
+        return self.analytics?.anonymousId
     }
     
     var sessionId: UInt64? {

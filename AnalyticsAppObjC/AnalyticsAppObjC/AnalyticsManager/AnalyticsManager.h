@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)endSession;
 - (void)shutdown;
 - (NSString * _Nullable)anonymousId;
-- (void)setAnonymousId:(NSString *)anonymousId;
 - (NSNumber * _Nullable)sessionId;
 
 @end

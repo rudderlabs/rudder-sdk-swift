@@ -120,6 +120,7 @@ struct ContentView: View {
                         CustomButton(title: "Reset User") {
                             AnalyticsManager.shared.reset()
                             updateUserInfo()
+                            updateSessionInfo()
                         }
                         .focused($focusedButton, equals: .reset)
                         

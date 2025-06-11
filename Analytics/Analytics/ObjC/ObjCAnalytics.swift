@@ -480,8 +480,7 @@ extension ObjCAnalytics {
      The anonymous ID used for tracking unidentified users.
      */
     @objc public var anonymousId: String? {
-        get { self.analytics.anonymousId }
-        set { self.analytics.anonymousId = newValue }
+        return self.analytics.anonymousId
     }
 
     /**

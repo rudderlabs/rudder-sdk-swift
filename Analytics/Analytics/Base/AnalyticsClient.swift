@@ -371,24 +371,13 @@ extension AnalyticsClient {
 extension AnalyticsClient {
     
     /**
-     A computed property for accessing and updating the `anonymousId` in the user identity state.
+     A computed property for accessing the `anonymousId` in the user identity state.
      
      - **Getter:**
      Retrieves the current `anonymousId` value from the `userIdentityState`.
-     
-     - **Setter:**
-     Updates the `anonymousId` in the `userIdentityState` by dispatching a `SetAnonymousIdAction`.
-     Additionally, persists the updated value by calling `storeAnonymousId`.
      */
     public var anonymousId: String? {
-        get {
-            return self.isAnalyticsActive ? self.userIdentityState.state.value.anonymousId : nil
-        }
-        set {
-            guard let newValue, self.isAnalyticsActive else { return }
-            self.userIdentityState.dispatch(action: SetAnonymousIdAction(anonymousId: newValue))
-            self.storeAnonymousId()
-        }
+        return self.isAnalyticsActive ? self.userIdentityState.state.value.anonymousId : nil
     }
     
     /**

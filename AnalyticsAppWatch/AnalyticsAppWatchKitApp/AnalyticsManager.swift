@@ -58,8 +58,7 @@ extension AnalyticsManager {
     }
     
     var anonymousId: String? {
-        get { self.analytics?.anonymousId }
-        set { self.analytics?.anonymousId = newValue }
+        return self.analytics?.anonymousId
     }
     
     var userId: String? {
