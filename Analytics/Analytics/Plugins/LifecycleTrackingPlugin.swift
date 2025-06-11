@@ -74,7 +74,7 @@ extension LifecycleTrackingPlugin {
         }
 
 #if os(iOS)
-        if ProcessInfo.isSwiftUIiOSApp { self.onBecomeActive() }
+        ProcessInfo.isSwiftUIiOSApp { if $0 { self.onBecomeActive() } }
 #endif
     }
 }
