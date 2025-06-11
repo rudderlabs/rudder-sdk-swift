@@ -45,7 +45,7 @@ final class UserIdentityTests: XCTestCase {
             
             let expectedAnonymousId = "test-anonymous-id"
             let expectedUserId = "test-user-id"
-            let expectedTraits = ["traits_key": "traits_value", "traits_key2": "sk@example.com"]
+            let expectedTraits = ["traits_key": "traits_value", "traits_key2": "test@example.com"]
             
             storage.write(value: expectedAnonymousId, key: Constants.storageKeys.anonymousId)
             storage.write(value: expectedUserId, key: Constants.storageKeys.userId)

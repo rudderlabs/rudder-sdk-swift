@@ -124,7 +124,7 @@ final class MessageModuleTests: XCTestCase {
     func test_track_event_custom_context() {
         given("Fully loaded custom context option") {
             let event = "Sample Event"
-            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
+            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
             
             when("Create a track event") {
                 var track = TrackEvent(event: event, options: option)
@@ -261,7 +261,7 @@ final class MessageModuleTests: XCTestCase {
     func test_screen_event_custom_context() {
         given("Fully loaded custom context option") {
             let name = "Sample Screen Event"
-            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
+            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
             
             when("Create a screen event") {
                 var screen = ScreenEvent(screenName: name, options: option)
@@ -400,7 +400,7 @@ final class MessageModuleTests: XCTestCase {
     func test_group_event_custom_context() {
         given("Fully loaded custom context option") {
             let groupId = "Sample_Group_Id"
-            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true])
+            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
             
             when("Create a group event") {
                 var group = GroupEvent(groupId: groupId, options: option)

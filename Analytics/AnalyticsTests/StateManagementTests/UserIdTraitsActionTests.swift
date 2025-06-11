@@ -30,7 +30,7 @@ final class UserIdTraitsActionTests: XCTestCase {
             let initialTraits = ["initial_traits_key": "initial_traits_value"]
             
             let expectedUserId = "test-user-id"
-            let expectedTraits = ["traits_key": "traits_value", "traits_key2": "sk@example.com"]
+            let expectedTraits = ["traits_key": "traits_value", "traits_key2": "test@example.com"]
             
             let processingState = createState(initialState: UserIdentity(userId: initialUserId, traits: initialTraits))
             let action = SetUserIdAndTraitsAction(userId: expectedUserId, traits: expectedTraits, storage: storage)
@@ -53,7 +53,7 @@ final class UserIdTraitsActionTests: XCTestCase {
             let firstUserId = "first_test_user_id"
             let firstTraits = ["first_traits_key": "first_traits_value"]
             
-            let secondTraits = ["traits_key": "traits_value", "traits_key2": "sk@example.com"]
+            let secondTraits = ["traits_key": "traits_value", "traits_key2": "test@example.com"]
             
             let processingState = createState(initialState: UserIdentity(userId: firstUserId, traits: firstTraits))
             
