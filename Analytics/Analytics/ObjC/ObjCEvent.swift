@@ -61,11 +61,11 @@ public class ObjCEvent: NSObject {
      */
     @objc public var integrations: [String: Any]? {
         get {
-            event.integrations?.mapValues { $0.value as Any } as? [String: Any]
+            event.integrations?.rawDictionary
         }
         set {
             guard let dict = newValue?.objCSanitized else { return }
-            event.integrations = dict.mapValues { AnyCodable($0) }
+            event.integrations = dict.codableWrapped
         }
     }
     
@@ -74,11 +74,11 @@ public class ObjCEvent: NSObject {
      */
     @objc public var context: [String: Any]? {
         get {
-            event.context?.mapValues { $0.value as Any } as? [String: Any]
+            event.context?.rawDictionary
         }
         set {
             guard let dict = newValue?.objCSanitized else { return }
-            event.context = dict.mapValues { AnyCodable($0) }
+            event.context = dict.codableWrapped
         }
     }
     
@@ -88,9 +88,9 @@ public class ObjCEvent: NSObject {
     @objc public var traits: Any? {
         get {
             if let array = event.traits?.array {
-                return array.map { $0.value } as [Any]
+                return array.rawArray
             } else if let dict = event.traits?.dictionary {
-                return dict.mapValues { $0.value } as [String: Any]
+                return dict.rawDictionary
             }
             return nil
         }
