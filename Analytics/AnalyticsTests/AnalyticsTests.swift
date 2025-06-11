@@ -43,10 +43,6 @@ extension AnalyticsTests {
     func test_anonymousId() {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         XCTAssert(client.anonymousId?.isEmpty == false)
-        
-        let testId = "testId"
-        client.anonymousId = testId
-        XCTAssertEqual(client.anonymousId, testId)
     }
     
     func test_identify_disk() async {

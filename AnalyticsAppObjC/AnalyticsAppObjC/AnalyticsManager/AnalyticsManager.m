@@ -108,10 +108,6 @@
     return self.client.anonymousId;
 }
 
-- (void)setAnonymousId:(NSString *)anonymousId {
-    self.client.anonymousId = anonymousId;
-}
-
 - (NSNumber * _Nullable)sessionId {
     return self.client.sessionId;
 }
