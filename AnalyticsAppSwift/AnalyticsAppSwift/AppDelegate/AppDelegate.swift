@@ -46,7 +46,7 @@ extension AppDelegate {
         let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logLevel: .verbose)
         self.analytics = AnalyticsClient(configuration: config)
         
-        self.analytics?.addPlugin(UIKitAutomaticScreenTrackingPlugin())
+        self.analytics?.add(UIKitAutomaticScreenTrackingPlugin())
     }
     
     func track(name: String, properties: RudderProperties? = nil, options: RudderOption? = nil) {

@@ -508,6 +508,6 @@ extension ObjCAnalytics {
     @objc
     public func addPlugin(_ plugin: ObjCPlugin) {
         let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
-        analytics.addPlugin(adaptedPlugin)
+        analytics.add(adaptedPlugin)
     }
 }
