@@ -35,22 +35,23 @@ public class ObjCEvent: NSObject {
     /**
      A unique identifier for anonymous users.
      */
-    public var anonymousId: String? {
+
+    @objc public var anonymousId: String? {
         return event.anonymousId
     }
 
     /**
      The user identifier, if known.
      */
-    public var userId: String? {
+    @objc public var userId: String? {
         get { event.userId }
         set { event.userId = newValue }
     }
 
     /**
-     The originating channel of the event (e.g., "mobile", "web").
+     The originating channel of the event.
      */
-    public var channel: String? {
+    @objc public var channel: String? {
         get { event.channel }
         set { event.channel = newValue }
     }
@@ -58,46 +59,46 @@ public class ObjCEvent: NSObject {
     /**
      A dictionary of integration-specific configuration for this event.
      */
-    public var integrations: [String: Any]? {
+    @objc public var integrations: [String: Any]? {
         get {
-            event.integrations?.mapValues { $0.value as Any } as? [String: Any]
+            event.integrations?.rawDictionary
         }
         set {
-            guard let dict = newValue else { return }
-            event.integrations = dict.mapValues { AnyCodable($0) }
+            guard let dict = newValue?.objCSanitized else { return }
+            event.integrations = dict.codableWrapped
         }
     }
     
     /**
      A dictionary of context information providing environmental details for the event.
      */
-    public var context: [String: Any]? {
+    @objc public var context: [String: Any]? {
         get {
-            event.context?.mapValues { $0.value as Any } as? [String: Any]
+            event.context?.rawDictionary
         }
         set {
-            guard let dict = newValue else { return }
-            event.context = dict.mapValues { AnyCodable($0) }
+            guard let dict = newValue?.objCSanitized else { return }
+            event.context = dict.codableWrapped
         }
     }
     
     /**
      Arbitrary user traits, either as an array or dictionary.
      */
-    public var traits: Any? {
+    @objc public var traits: Any? {
         get {
             if let array = event.traits?.array {
-                return array.map { $0.value } as [Any]
+                return array.rawArray
             } else if let dict = event.traits?.dictionary {
-                return dict.mapValues { $0.value } as [String: Any]
+                return dict.rawDictionary
             }
             return nil
         }
         set {
             if let array = newValue as? [Any] {
-                event.traits = CodableCollection(array: array)
+                event.traits = CodableCollection(array: array.objCSanitized)
             } else if let dict = newValue as? [String: Any] {
-                event.traits = CodableCollection(dictionary: dict)
+                event.traits = CodableCollection(dictionary: dict.objCSanitized)
             } else {
                 return
             }
@@ -107,7 +108,7 @@ public class ObjCEvent: NSObject {
     /**
      The type of event (e.g., track, identify, screen).
      */
-    public var type: ObjCEventType {
+    @objc public var type: ObjCEventType {
         get { event.type.objcValue }
         set {
             if let eventType = EventType(objcType: newValue) {
@@ -119,7 +120,7 @@ public class ObjCEvent: NSObject {
     /**
      A unique identifier for this message.
      */
-    public var messageId: String {
+    @objc public var messageId: String {
         get { event.messageId }
         set { event.messageId = newValue }
     }
@@ -135,45 +136,9 @@ public class ObjCEvent: NSObject {
     /**
      The timestamp for when the event was sent.
      */
-    public var sentAt: String? {
+    @objc public var sentAt: String? {
         get { event.sentAt }
         set { event.sentAt = newValue }
-    }
-
-    /**
-     Adds the given context dictionary to the event’s context.
-     
-     - Parameter info: A dictionary of context information to merge.
-     - Returns: The updated `ObjCEvent` instance.
-     */
-    @objc(addToContext:)
-    public func addToContext(info: [String: Any]) -> ObjCEvent {
-        self.event = event.addToContext(info: info.objCSanitized)
-        return self
-    }
-
-    /**
-     Adds the given integration dictionary to the event’s integrations.
-     
-     - Parameter info: A dictionary of integration-specific configuration to merge.
-     - Returns: The updated `ObjCEvent` instance.
-     */
-    @objc(addToIntegrations:)
-    public func addToIntegrations(info: [String: Any]) -> ObjCEvent {
-        self.event = event.addToIntegrations(info: info.objCSanitized)
-        return self
-    }
-
-    /**
-     Adds external identifiers to the event.
-     
-     - Parameter info: An array of `ExternalId` to associate with the event.
-     - Returns: The updated `ObjCEvent` instance.
-     */
-    @objc(addExternalIds:)
-    public func addExternalIds(info: [ExternalId]) -> ObjCEvent {
-        self.event = event.addExternalIds(info: info)
-        return self
     }
 }
 

@@ -12,8 +12,8 @@ import Analytics
 struct AdvertisingIdPluginTests {
     
     @Test
-    func test_checkAdvertisingId_whenAuthorized() {
-        given("Prepare the environment when authorized..") {
+    func test_advertisingId_isInjected_whenTrackingIsAuthorized() {
+        given("an analytics client and AdvertisingIdPlugin with authorized tracking") {
             let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
             let analytics = AnalyticsClient(configuration: config)
             
@@ -21,49 +21,65 @@ struct AdvertisingIdPluginTests {
             analytics.addPlugin(advertisingIdPlugin)
             
             let mockIdfa = "mock_idfa_1234"
-            let event = MockEvent()
-            
             advertisingIdPlugin.trackingAuthorizationStatus = { .authorized }
             advertisingIdPlugin.getAdvertisingId = { mockIdfa }
             
-            when("intercept the plugin using mock event..") {
+            let event = MockEvent()
+            
+            when("the plugin intercepts the event") {
                 let result = advertisingIdPlugin.intercept(event: event)
                 
-                then("check the result if advertisingId is added or not..") {
-                    #expect(result != nil)
-                    guard let deviceContent = result?.context?["device"]?.value as? [String: Any],
-                          let idfa = deviceContent["advertisingId"] as? String else { #expect(1 == 0, "advertisingId not found.."); return}
-                    #expect(idfa == mockIdfa)
+                then("it should inject the advertisingId into the device context") {
+                    #expect(result != nil, "Expected the intercepted event to be non-nil")
+                    
+                    guard let contextDict = result?.context?.rawDictionary,
+                          let deviceContext = contextDict["device"] as? [String: Any] else {
+                        #expect(1 == 0, "Expected device context to exist")
+                        return
+                    }
+                    
+                    #expect(deviceContext["advertisingId"] as? String == mockIdfa, "Expected advertisingId to match mock value")
+                    #expect(deviceContext["adTrackingEnabled"] as? Bool == true, "Expected adTrackingEnabled to be true")
                 }
             }
         }
     }
     
     @Test
-    func test_checkAdvertisingId_whenDenied() {
-        given("Prepare the environment when denied..") {
+    func test_advertisingId_isNotInjected_whenTrackingIsDenied() {
+        given("an AdvertisingIdPlugin with denied tracking and an event with existing device context") {
             let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
             let analytics = AnalyticsClient(configuration: config)
-            
+
             let advertisingIdPlugin = AdvertisingIdPlugin()
             analytics.addPlugin(advertisingIdPlugin)
-            
+
             let mockIdfa = "mock_idfa_1234"
-            var event = MockEvent()
-            if let modified = event.addToContext(info: ["device": ["sample_key": "sample_value"]]) as? MockEvent {
-                event = modified
-            }
-            
             advertisingIdPlugin.trackingAuthorizationStatus = { .denied }
             advertisingIdPlugin.getAdvertisingId = { mockIdfa }
-            
-            when("intercept the plugin using mock event..") {
+
+            // Create an event with existing device context
+            let event = MockEvent()
+            event.context = [
+                "device": [
+                    "sample_key": "sample_value"
+                ]
+            ].codableWrapped
+
+            when("the plugin intercepts the event") {
                 let result = advertisingIdPlugin.intercept(event: event)
-                
-                then("check the result if advertisingId is added or not..") {
-                    #expect(result != nil)
-                    guard let deviceContent = result?.context?["device"]?.value as? [String: Any] else { #expect(1 == 0, "deviceContent not found.."); return}
-                    #expect(deviceContent["advertisingId"] == nil)
+
+                then("it should not add the advertisingId but should preserve existing device context") {
+                    #expect(result != nil, "Expected the intercepted event to be non-nil")
+
+                    guard let contextDict = result?.context?.rawDictionary,
+                          let deviceContext = contextDict["device"] as? [String: Any] else {
+                        #expect(Bool(false), "Expected device context to exist")
+                        return
+                    }
+
+                    #expect(deviceContext["advertisingId"] == nil, "Expected advertisingId to be absent when tracking is denied")
+                    #expect(deviceContext["sample_key"] as? String == "sample_value", "Expected original device context to be preserved")
                 }
             }
         }

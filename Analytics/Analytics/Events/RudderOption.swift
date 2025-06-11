@@ -59,10 +59,10 @@ public class RudderOption: NSObject {
 @objc(RSAExternalId)
 public class ExternalId: NSObject, Codable {
     /// The type of the external identifier.
-    private(set) public var type: String
+    @objc private(set) public var type: String
     
     /// The value of the external identifier.
-    private(set) public var id: String
+    @objc private(set) public var id: String
     
     /**
      Initializes a new instance of `ExternalId` with the given `type` and `id`.

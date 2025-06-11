@@ -139,7 +139,7 @@ extension Event {
 
      - Note: If the `context` property is `nil`, it is initialized with the provided context.
      */
-    public func addToContext(info: [String: Any]) -> Event {
+    func addToContext(info: [String: Any]) -> Event {
         var mutableSelf = self
         mutableSelf.context = (mutableSelf.context ?? [:]) + info.mapValues { AnyCodable($0) }
         return mutableSelf
@@ -154,7 +154,7 @@ extension Event {
      - Returns: A new `Event` instance with the updated context.
      
      */
-    public func addToIntegrations(info: [String: Any]) -> Event {
+    func addToIntegrations(info: [String: Any]) -> Event {
         var mutableSelf = self
         mutableSelf.integrations = (mutableSelf.integrations ?? [:]) + info.mapValues { AnyCodable($0) }
         return mutableSelf
@@ -169,7 +169,7 @@ extension Event {
      - Returns: A new `Event` instance with the updated context.
      
      */
-    public func addExternalIds(info: [ExternalId]) -> Event {
+    func addExternalIds(info: [ExternalId]) -> Event {
         return info.isEmpty ? self : self.addToContext(info: ["externalId": info.compactMap { $0.dictionary }])
     }
 }

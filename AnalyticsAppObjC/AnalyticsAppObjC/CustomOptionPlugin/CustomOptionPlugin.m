@@ -34,11 +34,36 @@
 
 - (RSAEvent * _Nullable)intercept:(RSAEvent * _Nonnull)event {
     
-    RSAEvent *updatedEvent = [event addToContext: self.option.customContext];
-    updatedEvent = [event addToIntegrations: self.option.integrations];
-    updatedEvent = [event addExternalIds: self.option.externalIds];
+    [self addCustomContext:event];
+    [self addExternalIds:event];
+    [self addIntegrations:event];
     
-    return updatedEvent;
+    return event;
+}
+
+- (void)addCustomContext:(RSAEvent *)event {
+    NSMutableDictionary *contextDict = [NSMutableDictionary dictionaryWithDictionary: (event.context ?: @{})];
+    [contextDict addEntriesFromDictionary: (self.option.customContext ?: @{})];
+    event.context = contextDict;
+}
+
+- (void)addExternalIds:(RSAEvent *)event {
+    NSMutableDictionary *contextDict = [NSMutableDictionary dictionaryWithDictionary: (event.context ?: @{})];
+    NSMutableArray *externalIdArray = [NSMutableArray arrayWithArray: (contextDict[@"externalId"] ?: @[])];
+    
+    // Merge option's externalIds into existing externalIds
+    [self.option.externalIds enumerateObjectsUsingBlock:^(RSAExternalId * _Nonnull externalId, NSUInteger idx, BOOL * _Nonnull stop) {
+        [externalIdArray addObject:@{@"id": externalId.id, @"type": externalId.type}];
+    }];
+    
+    contextDict[@"externalId"] = externalIdArray;
+    event.context = contextDict;
+}
+
+- (void)addIntegrations:(RSAEvent *)event {
+    NSMutableDictionary *integrationsDict = [NSMutableDictionary dictionaryWithDictionary: (event.integrations ?: @{})];
+    [integrationsDict addEntriesFromDictionary: (self.option.integrations ?: @{})];
+    event.integrations = integrationsDict;
 }
 
 - (void)setup:(RSAAnalytics * _Nonnull)analytics {

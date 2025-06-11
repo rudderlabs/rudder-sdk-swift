@@ -29,19 +29,18 @@ class AdvertisingIdPlugin: Plugin {
     }
     
     func intercept(event: any Event) -> (any Event)? {
-        guard trackingAuthorizationStatus() == .authorized, let advertisingId = getAdvertisingId() else {
-            return event
-        }
+        guard trackingAuthorizationStatus() == .authorized, let advertisingId = getAdvertisingId() else { return event }
         
-        var deviceContent = [String: Any]()
-        if let deviceInfo = event.context?["device"]?.value as? [String: Any] {
-            deviceInfo.forEach { deviceContent[$0.key] = $0.value }
-        }
+        var updatedEvent = event
+        var contextDict = updatedEvent.context?.rawDictionary ?? [:]
         
-        // Add the IDFA to the device context
-        deviceContent["advertisingId"] = advertisingId
-        deviceContent["adTrackingEnabled"] = true
+        var deviceInfoDict = contextDict["device"] as? [String: Any] ?? [:]
+        deviceInfoDict["advertisingId"] = advertisingId
+        deviceInfoDict["adTrackingEnabled"] = true
         
-        return event.addToContext(info: ["device": deviceContent])
+        contextDict["device"] = deviceInfoDict
+        
+        updatedEvent.context = contextDict.codableWrapped
+        return updatedEvent
     }
 }

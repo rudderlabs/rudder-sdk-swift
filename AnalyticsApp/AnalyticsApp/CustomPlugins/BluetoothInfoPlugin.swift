@@ -29,15 +29,15 @@ class BluetoothInfoPlugin: Plugin {
         let isBluetoothAvailable = self.bluetoothAuthorizationStatus() == .allowedAlways
         guard isBluetoothAvailable else { return event }
         
-        var networkContent = [String: Any]()
-        if let networkInfo = event.context?["network"]?.value as? [String: Any] {
-            networkInfo.forEach { networkContent[$0.key] = $0.value }
-        }
+        var updatedEvent = event
+        var contextDict = updatedEvent.context?.rawDictionary ?? [:]
         
-        // Add the bluetooth value to the network context
-        networkContent["bluetooth"] = isBluetoothAvailable
+        var networkInfoDict = contextDict["network"] as? [String: Any] ?? [:]
+        networkInfoDict["bluetooth"] = isBluetoothAvailable
+        contextDict["network"] = networkInfoDict
         
-        return event.addToContext(info: ["network": networkContent])
+        updatedEvent.context = contextDict.codableWrapped
+        return updatedEvent
     }
 }
 
