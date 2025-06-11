@@ -56,6 +56,7 @@ extension AppDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         self.pushToken = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
         print("Device Token: \(pushToken)")
+        self.permissionManager.didRegisterForRemoteNotifications()
     }
     
     func application(_ application: UIApplication,

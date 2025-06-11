@@ -23,7 +23,7 @@ final class PermissionManager: NSObject {
     private var completion: (() -> Void)?
     private var centralManager: CBCentralManager?
     private var bluetoothCompletion: (() -> Void)?
-    private(set) var pushDeviceToken: String?
+    private var pushNotificationCompletion: (() -> Void)?
 
     func requestPermissions(_ permissions: [PermissionType], completion: @escaping () -> Void) {
         permissionQueue = permissions
@@ -53,18 +53,25 @@ final class PermissionManager: NSObject {
 // MARK: - APNS
 extension PermissionManager {
     private func requestPushNotificationPermission(completion: @escaping () -> Void) {
+        pushNotificationCompletion = completion
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             DispatchQueue.main.async {
                 if granted {
                     UIApplication.shared.registerForRemoteNotifications()
-                }
-                // Wait for device token callback, but call completion after a short delay regardless
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    completion()
+                } else {
+                    // If not granted, finish immediately
+                    self.pushNotificationCompletion?()
+                    self.pushNotificationCompletion = nil
                 }
             }
         }
+    }
+
+    // Call this from AppDelegate when device token is received
+    func didRegisterForRemoteNotifications() {
+        pushNotificationCompletion?()
+        pushNotificationCompletion = nil
     }
 }
 
