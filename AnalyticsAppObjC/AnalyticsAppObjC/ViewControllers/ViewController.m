@@ -99,12 +99,12 @@
             
             NSDictionary *integrations = @{@"Amplitude": @YES, @"CleverTap": @NO};
             NSDictionary *customContext = @{
-                @"SK1": @{@"Key1": @"Value1"},
-                @"SK2": @[@"value1", @"value2"],
-                @"SK3": @"Value3",
-                @"SK4": @1234,
-                @"SK5": @5678.9,
-                @"SK6": @YES
+                @"Key_1": @{@"Key1": @"Value1"},
+                @"Key_2": @[@"value1", @"value2"],
+                @"Key_3": @"Value3",
+                @"Key_4": @1234,
+                @"Key_5": @5678.9,
+                @"Key_6": @YES
             };
             
             RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
@@ -120,7 +120,7 @@
             RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
 
             NSDictionary *integrations = @{@"Amplitude": @YES, @"CleverTap": @NO};
-            NSDictionary *customContext = @{ @"SK123": @{@"Key123": @"Value123"}};
+            NSDictionary *customContext = @{ @"Key_1": @{@"Key123": @"Value123"}};
 
             RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
@@ -137,7 +137,7 @@
             RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
 
             NSDictionary *integrations = @{@"Facebook": @NO};
-            NSDictionary *customContext = @{@"SK": @{@"Key1": @"Value1"}};
+            NSDictionary *customContext = @{@"Key_1": @{@"Key1": @"Value1"}};
 
             RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
@@ -154,7 +154,7 @@
 
             NSDictionary *twitterConfig = @{@"isEnabled": @YES, @"consumerKey": @"consumerSecret"};
             NSDictionary *integrations = @{@"Firebase": @NO, @"Twitter": twitterConfig};
-            NSDictionary *customContext = @{@"SK": @{@"Key1": @"Value1"}};
+            NSDictionary *customContext = @{@"Key_1": @{@"Key1": @"Value1"}};
 
             RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
             [optionBuilder setIntegrations:integrations];

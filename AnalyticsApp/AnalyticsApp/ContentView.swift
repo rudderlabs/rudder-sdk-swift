@@ -28,13 +28,13 @@ struct ContentView: View {
             
             HStack {
                 CustomButton(title: "Track") {
-                    let option = RudderOption(integrations: ["Amplitude": true, "CleverTap": false], customContext: ["SK1": ["Key1": "Value1"], "SK2": ["value1", "value2"], "SK3": "Value3", "SK4": 1234, "SK5": 5678.9, "SK6": true], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
+                    let option = RudderOption(integrations: ["Amplitude": true, "CleverTap": false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
                     
                     AnalyticsManager.shared.track(name: "Track at \(Date())", properties: ["key": "value"], options: option)
                 }
                 
                 CustomButton(title: "Multiple Track") {
-                    let option = RudderOption(integrations: ["Amplitude": true, "CleverTap": false], customContext: ["SK123": ["Key123": "Value123"]], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
+                    let option = RudderOption(integrations: ["Amplitude": true, "CleverTap": false], customContext: ["Key_1": ["Key123": "Value123"]], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
                     for i in 1...50 {
                         AnalyticsManager.shared.track(name: "Track: \(i)", options: option)
                     }
@@ -43,12 +43,12 @@ struct ContentView: View {
             
             HStack {
                 CustomButton(title: "Screen") {
-                    let option = RudderOption(integrations: ["Facebook": false], customContext: ["SK": ["Key1": "Value1"]], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
+                    let option = RudderOption(integrations: ["Facebook": false], customContext: ["Key_1": ["Key1": "Value1"]], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
                     AnalyticsManager.shared.screen(name: "Analytics Screen", properties: ["key": "value"], options: option)
                 }
                 
                 CustomButton(title: "Group") {
-                    let option = RudderOption(integrations: ["Firebase": false, "Twitter": ["isEnabled": true, "consumerKey": "consumerSecret"]], customContext: ["SK": ["Key1": "Value1"]], externalIds: [ExternalId(type: "idCardNumber", id: "12791"), ExternalId(type: "official_idCardNumber", id: "AB123CD")])
+                    let option = RudderOption(integrations: ["Firebase": false, "Twitter": ["isEnabled": true, "consumerKey": "consumerSecret"]], customContext: ["Key_1": ["Key1": "Value1"]], externalIds: [ExternalId(type: "idCardNumber", id: "12791"), ExternalId(type: "official_idCardNumber", id: "AB123CD")])
                     AnalyticsManager.shared.group(id: "group_id", traits: ["key": "value"], options: option)
                 }
                 
