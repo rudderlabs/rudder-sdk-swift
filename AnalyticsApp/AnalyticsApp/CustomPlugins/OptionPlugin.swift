@@ -27,7 +27,7 @@ final class OptionPlugin: Plugin {
     }
     
     func intercept(event: any Event) -> (any Event)? {
-        guard let option else { return event }
+        guard self.option != nil else { return event }
         var updatedEvent = event
         
         self.addCustomContext(&updatedEvent)
