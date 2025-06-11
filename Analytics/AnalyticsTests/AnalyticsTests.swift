@@ -251,30 +251,20 @@ extension AnalyticsTests {
         }
     }
     
-    func test_identify_noResetWhenUserIdIsEmpty() async {
+    func test_identify_noResetWhenUserIdIsEmptyOrNotPassed() async {
         given("Analytics client with an identified user") {
             guard let client = analytics_disk else { return XCTFail("No disk client") }
             
             client.identify(userId: "initial_user", traits: ["name": "Initial User"])
+            let initialAnonymousId = client.anonymousId
             
             when("identifying with empty userId") {
-                let initialAnonymousId = client.anonymousId
                 client.identify(userId: "", traits: ["name": "Empty User"])
                 
                 then("should not reset (anonymousId remains the same)") {
                     XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should not change when identifying with empty userId")
                 }
             }
-        }
-    }
-    
-    func test_identify_resetWhenOnlyTraitsIsPassed() async {
-        given("Analytics client with an existing identified user") {
-            guard let client = analytics_disk else { return XCTFail("No disk client") }
-            
-            client.identify(userId: "existing_user", traits: ["name": "Existing User"])
-            
-            let initialAnonymousId = client.anonymousId
             
             when("identifying with only traits") {
                 client.identify(traits: ["name": "Anonymous User"])
