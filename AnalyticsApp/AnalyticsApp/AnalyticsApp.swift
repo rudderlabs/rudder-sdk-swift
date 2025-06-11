@@ -27,12 +27,20 @@ struct AnalyticsApp: App {
 class AppDelegate: NSObject, UIApplicationDelegate {
     
     private let permissionManager = PermissionManager()
-    private var pushToken: String = ""
+    private var permissionsRequested = false
+    private var pushToken: String = "" {
+        didSet {
+            if permissionsRequested, !pushToken.isEmpty {
+                AnalyticsManager.shared.addPlugin(SetPushTokenPlugin(pushToken: pushToken))
+            }
+        }
+    }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
         self.permissionManager.requestPermissions([.idfa, .pushNotification, .bluetooth]) {
             print("All required permissions requested..")
+            self.permissionsRequested = true
             AnalyticsManager.shared.initializeAnalyticsSDK()
             
             if !self.pushToken.isEmpty {
