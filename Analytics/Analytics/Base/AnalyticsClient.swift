@@ -161,6 +161,12 @@ extension AnalyticsClient {
     public func identify(userId: String? = nil, traits: RudderTraits? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
+        if let currentUserId = self.userId, !currentUserId.isEmpty,
+           let newUserId = userId, !newUserId.isEmpty,
+           currentUserId != newUserId {
+            reset()
+        }
+        
         self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId ?? "", traits: traits ?? RudderTraits(), storage: self.storage))
         self.userIdentityState.state.value.storeUserIdAndTraits(self.storage)
         

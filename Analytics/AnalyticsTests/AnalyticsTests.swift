@@ -186,3 +186,103 @@ extension AnalyticsTests {
         }
     }
 }
+
+// MARK: - Identify Reset Behavior Tests
+    
+extension AnalyticsTests {
+    
+    func test_identify_noResetWhenCurrentUserIdIsEmpty() async {
+        given("Analytics client with no previous user identification") {
+            guard let client = analytics_disk else { return XCTFail("No disk client") }
+            
+            let anonymousId = client.anonymousId
+            let userId = "first_user"
+            
+            when("identifying with a user for the first time") {
+                client.identify(userId: userId)
+                
+                then("should not reset (no previous user to reset from)") {
+                    XCTAssertEqual(anonymousId, client.anonymousId, "Anonymous ID should not change on first identification")
+                    XCTAssertEqual(userId, client.userId, "User ID should be set to first user")
+                }
+            }
+        }
+    }
+    
+    func test_identify_noResetWhenUserIdIsSame() async {
+        given("Analytics client with an identified user") {
+            guard let client = analytics_disk else { return XCTFail("No disk client") }
+            
+            let testUserId = "same_user_id"
+            client.identify(userId: testUserId)
+            
+            when("identifying with the same userId") {
+                let initialAnonymousId = client.anonymousId
+                
+                client.identify(userId: testUserId)
+                
+                then("should not reset") {
+                    XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should not change when identifying with same userId")
+                    XCTAssertEqual(testUserId, client.userId, "User ID should not change when identifying with same userId")
+                }
+            }
+        }
+    }
+    
+    func test_identify_resetWhenUserIdChanges() async {
+        given("Analytics client with an identified user") {
+            guard let client = analytics_disk else { return XCTFail("No disk client") }
+            
+            let initialUserId = "initial_user_id"
+            client.identify(userId: initialUserId)
+            
+            let initialAnonymousId = client.anonymousId
+            
+            when("identifying with a different userId") {
+                let newUserId = "new_user_id"
+                client.identify(userId: newUserId)
+                
+                then("should trigger reset") {
+                    XCTAssertNotEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should change when identifying with different userId (reset should occur)")
+                    XCTAssertNotNil(client.anonymousId, "New anonymous ID should be generated")
+                    XCTAssertEqual(newUserId, client.userId, "User ID should be updated to new user ID")
+                }
+            }
+        }
+    }
+    
+    func test_identify_noResetWhenUserIdIsEmpty() async {
+        given("Analytics client with an identified user") {
+            guard let client = analytics_disk else { return XCTFail("No disk client") }
+            
+            client.identify(userId: "initial_user", traits: ["name": "Initial User"])
+            
+            when("identifying with empty userId") {
+                let initialAnonymousId = client.anonymousId
+                client.identify(userId: "", traits: ["name": "Empty User"])
+                
+                then("should not reset (anonymousId remains the same)") {
+                    XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should not change when identifying with empty userId")
+                }
+            }
+        }
+    }
+    
+    func test_identify_resetWhenOnlyTraitsIsPassed() async {
+        given("Analytics client with an existing identified user") {
+            guard let client = analytics_disk else { return XCTFail("No disk client") }
+            
+            client.identify(userId: "existing_user", traits: ["name": "Existing User"])
+            
+            let initialAnonymousId = client.anonymousId
+            
+            when("identifying with only traits") {
+                client.identify(traits: ["name": "Anonymous User"])
+                
+                then("should not reset (anonymousId remains the same)") {
+                    XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should not change when identifying with only traits")
+                }
+            }
+        }
+    }
+}
