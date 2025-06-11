@@ -29,9 +29,9 @@
 - (void)setupTableView {
     _cellIdentifier = @"Cell";
     
-    self.tableRowTitles = @{@(ActionTypeIdentify): @"Identify", @(ActionTypeAlias): @"Alias", @(ActionTypeTrack): @"Track", @(ActionTypeMultipleTrack): @"Multipletrack", @(ActionTypeScreen): @"Screen", @(ActionTypeGroup): @"Group", @(ActionTypeFlush): @"Flush", @(ActionTypeUpdateAnonymousId): @"Update AnonymousId", @(ActionTypeReadAnonymousId): @"Read AnonymousId", @(ActionTypeReset): @"Reset", @(ActionTypeStartSession): @"Start Session", @(ActionTypeStartSessionWithSessionId): @"Start Session with SessionId", @(ActionTypeReadSessionId): @"Read SessionId", @(ActionTypeEndSession): @"End Session", @(ActionTypeShutdown): @"Shutdown", @(ActionTypeReInitializeSDK): @"Re-Initialize SDK"};
+    self.tableRowTitles = @{@(ActionTypeIdentify): @"Identify", @(ActionTypeAlias): @"Alias", @(ActionTypeTrack): @"Track", @(ActionTypeMultipleTrack): @"Multipletrack", @(ActionTypeScreen): @"Screen", @(ActionTypeGroup): @"Group", @(ActionTypeFlush): @"Flush", @(ActionTypeReadAnonymousId): @"Read AnonymousId", @(ActionTypeReset): @"Reset", @(ActionTypeStartSession): @"Start Session", @(ActionTypeStartSessionWithSessionId): @"Start Session with SessionId", @(ActionTypeReadSessionId): @"Read SessionId", @(ActionTypeEndSession): @"End Session", @(ActionTypeShutdown): @"Shutdown", @(ActionTypeReInitializeSDK): @"Re-Initialize SDK"};
     
-    self.tableRows = @[@(ActionTypeIdentify), @(ActionTypeAlias), @(ActionTypeTrack), @(ActionTypeMultipleTrack), @(ActionTypeScreen), @(ActionTypeGroup), @(ActionTypeFlush), @(ActionTypeUpdateAnonymousId), @(ActionTypeReadAnonymousId), @(ActionTypeReset), @(ActionTypeStartSession), @(ActionTypeStartSessionWithSessionId), @(ActionTypeReadSessionId), @(ActionTypeEndSession), @(ActionTypeShutdown), @(ActionTypeReInitializeSDK)];
+    self.tableRows = @[@(ActionTypeIdentify), @(ActionTypeAlias), @(ActionTypeTrack), @(ActionTypeMultipleTrack), @(ActionTypeScreen), @(ActionTypeGroup), @(ActionTypeFlush), @(ActionTypeReadAnonymousId), @(ActionTypeReset), @(ActionTypeStartSession), @(ActionTypeStartSessionWithSessionId), @(ActionTypeReadSessionId), @(ActionTypeEndSession), @(ActionTypeShutdown), @(ActionTypeReInitializeSDK)];
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -167,11 +167,6 @@
             
         case ActionTypeFlush: {
             [[AnalyticsManager sharedManager] flush];
-            break;
-        }
-            
-        case ActionTypeUpdateAnonymousId: {
-            [[AnalyticsManager sharedManager] setAnonymousId:@"new_anonymous_id"];
             break;
         }
             

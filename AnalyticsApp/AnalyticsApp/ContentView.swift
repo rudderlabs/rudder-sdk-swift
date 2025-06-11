@@ -57,10 +57,6 @@ struct ContentView: View {
                 }
             }
             
-            CustomButton(title: "Update AnonymousId") {
-                AnalyticsManager.shared.anonymousId = "new_anonymous_id"
-            }
-            
             CustomButton(title: "Read AnonymousId") {
                 if let anonymousId = AnalyticsManager.shared.anonymousId {
                     LoggerAnalytics.debug(log: "Current Anonymous Id: \(anonymousId)")
