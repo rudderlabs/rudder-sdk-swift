@@ -52,6 +52,10 @@ extension AnalyticsManager {
         self.analytics?.alias(newId: newId, previousId: previousId, options: options)
     }
     
+    func addPlugin(_ plugin: Plugin) {
+        self.analytics?.addPlugin(plugin)
+    }
+    
     func flush() {
         self.analytics?.flush()
     }
