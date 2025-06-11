@@ -27,13 +27,13 @@ public struct CodableCollection: Codable {
     // Initializers for convenience
     public init?(array: [Any]?) {
         guard let array else { return nil }
-        self.array = array.map { AnyCodable($0) }
+        self.array = array.codableWrapped
         self.dictionary = nil
     }
 
     public init?(dictionary: [String: Any]?) {
         guard let dictionary else { return nil }
-        self.dictionary = dictionary.mapValues { AnyCodable($0) }
+        self.dictionary = dictionary.codableWrapped
         self.array = nil
     }
 
