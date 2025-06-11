@@ -101,6 +101,7 @@ struct ContentView: View {
                     WatchButton(title: "Reset User") {
                         AnalyticsManager.shared.reset()
                         updateUserInfo()
+                        updateSessionInfo()
                     }
                     
                     WatchButton(title: "Flush Events") {
