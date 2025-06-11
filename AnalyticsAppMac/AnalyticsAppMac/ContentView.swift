@@ -120,6 +120,7 @@ struct ContentView: View {
                 CustomButton(title: "Reset User") {
                     AnalyticsManager.shared.reset()
                     updateUserInfo()
+                    updateSessionInfo()
                 }
                 
                 CustomButton(title: "Flush Events") {
