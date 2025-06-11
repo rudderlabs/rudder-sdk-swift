@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 // MARK: - AnalyticsAppApp
 @main
@@ -26,14 +27,31 @@ struct AnalyticsApp: App {
 class AppDelegate: NSObject, UIApplicationDelegate {
     
     private let permissionManager = PermissionManager()
+    private var pushToken: String = ""
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
-        // Note: Since bluetooth doesn't have a completion block for user response, ask `Bluetooth` permission always at last.
-        self.permissionManager.requestPermissions([.idfa, .bluetooth]) {
+        self.permissionManager.requestPermissions([.idfa, .pushNotification, .bluetooth]) {
             print("All required permissions requested..")
             AnalyticsManager.shared.initializeAnalyticsSDK()
+            
+            if !self.pushToken.isEmpty {
+                AnalyticsManager.shared.addPlugin(SetPushTokenPlugin(pushToken: self.pushToken))
+            }
         }
         return true
+    }
+}
+
+// MARK: - APNS
+extension AppDelegate {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        self.pushToken = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+        print("Device Token: \(pushToken)")
+    }
+    
+    func application(_ application: UIApplication,
+                     didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to register: \(error.localizedDescription)")
     }
 }
