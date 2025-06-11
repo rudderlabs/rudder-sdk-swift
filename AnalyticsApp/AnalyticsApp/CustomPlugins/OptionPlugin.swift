@@ -28,23 +28,41 @@ final class OptionPlugin: Plugin {
     
     func intercept(event: any Event) -> (any Event)? {
         guard let option else { return event }
-        
         var updatedEvent = event
         
-        var contextDict = updatedEvent.context?.rawDictionary ?? [:]
-        option.customContext?.forEach { contextDict[$0.key] = $0.value }
+        self.addCustomContext(&updatedEvent)
+        self.addExternalIds(&updatedEvent)
+        self.addIntegrations(&updatedEvent)
         
-        if let ids = option.externalIds?.compactMap({ ["id": $0.id, "type": $0.type] }) {
+        return updatedEvent
+    }
+}
+
+// MARK: - Helpers
+
+extension OptionPlugin {
+    
+    func addCustomContext(_ event: inout any Event) {
+        var contextDict = event.context?.rawDictionary ?? [:]
+        self.option?.customContext?.forEach { contextDict[$0.key] = $0.value }
+        event.context = contextDict.codableWrapped
+    }
+    
+    func addExternalIds( _ event: inout any Event) {
+        var contextDict = event.context?.rawDictionary ?? [:]
+        if let ids = self.option?.externalIds?.map({ ["id": $0.id, "type": $0.type] }) {
             var externalIdsArray = contextDict["externalId"] as? [[String: Any]] ?? []
+            
+            // Merge option's externalIds into existing externalIds
             externalIdsArray.append(contentsOf: ids)
             contextDict["externalId"] = externalIdsArray
         }
-        updatedEvent.context = contextDict.codableWrapped
-        
-        var integrationsDict = updatedEvent.integrations?.rawDictionary ?? [:]
-        option.integrations?.forEach { integrationsDict[$0.key] = $0.value }
-        updatedEvent.integrations = integrationsDict.codableWrapped
-        
-        return updatedEvent
+        event.context = contextDict.codableWrapped
+    }
+    
+    func addIntegrations(_ event: inout any Event) {
+        var integrationsDict = event.integrations?.rawDictionary ?? [:]
+        self.option?.integrations?.forEach { integrationsDict[$0.key] = $0.value }
+        event.integrations = integrationsDict.codableWrapped
     }
 }
