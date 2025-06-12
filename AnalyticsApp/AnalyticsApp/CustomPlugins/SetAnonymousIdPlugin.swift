@@ -9,7 +9,7 @@ import Analytics
  
  Set this plugin just after the SDK initialization to set the custom `anonymousId` in the event payload for every event:
  ```swift
- analytics.addPlugin(SetAnonymousIdPlugin(anonymousId: "someAnonymousId"))
+ analytics.add(SetAnonymousIdPlugin(anonymousId: "someAnonymousId"))
  ```
  
  - Parameter anonymousId: The anonymousId to be set in the event payload. Ensure to preserve this value across app launches.
