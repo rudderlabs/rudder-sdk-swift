@@ -28,13 +28,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     private let permissionManager = PermissionManager()
     private var permissionsRequested = false
-    private var pushToken: String = "" {
-        didSet {
-            if permissionsRequested, !pushToken.isEmpty {
-                AnalyticsManager.shared.addPlugin(SetPushTokenPlugin(pushToken: pushToken))
-            }
-        }
-    }
+    private var pushToken: String = ""
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
@@ -62,5 +56,6 @@ extension AppDelegate {
     func application(_ application: UIApplication,
                      didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register: \(error.localizedDescription)")
+        self.permissionManager.didRegisterForRemoteNotifications()
     }
 }
