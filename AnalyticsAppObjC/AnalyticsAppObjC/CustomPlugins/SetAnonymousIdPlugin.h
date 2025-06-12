@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
  **Note**: The `anonymousId` fetched using `RSAAnalytics.anonymousId` would be different from the `anonymousId` set here.
  
  Set this plugin just after the SDK initialization to set the custom `anonymousId` in the event payload for every event:
- ```objc
+ ```objective-c
  [analytics add:[[SetAnonymousIdPlugin alloc] initWithAnonymousId:@"someAnonymousId"]];
  ```
  
