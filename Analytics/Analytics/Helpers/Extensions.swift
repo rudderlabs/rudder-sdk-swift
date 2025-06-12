@@ -417,7 +417,7 @@ extension ProcessInfo {
         return false
     }
 
-    static func isSwiftUIiOSApp(completion: @escaping (Bool) -> Void) {
+    static func checkSwiftUIiOSApp(completion: @escaping (Bool) -> Void) {
         if Thread.isMainThread {
             completion(isSwiftUIiOSApp)
         } else {
