@@ -36,7 +36,8 @@ public class ObjCEvent: NSObject {
      A unique identifier for anonymous users.
      */
     @objc public var anonymousId: String? {
-        return event.anonymousId
+        get { event.anonymousId }
+        set { event.anonymousId = newValue }
     }
 
     /**

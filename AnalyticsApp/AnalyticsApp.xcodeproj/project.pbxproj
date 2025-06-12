@@ -19,6 +19,7 @@
 		5383D2C92D3E97C700291B00 /* AdvertisingIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */; };
 		53CC353C2DB7A95900A2EF2F /* CustomLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */; };
 		53D7FDF72D63A42C00598443 /* BluetoothInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */; };
+		8CBEA31C2DF9ABD50034B8E8 /* SetAnonymousIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBEA31B2DF9ABD40034B8E8 /* SetAnonymousIdPlugin.swift */; };
 		53DF2DCF2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DF2DCE2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +64,7 @@
 		53DF2DC72DF994D500FE2659 /* AnalyticsApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AnalyticsApp.entitlements; sourceTree = "<group>"; };
 		53DF2DCE2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPlugin.swift; sourceTree = "<group>"; };
 		53E01B0C2DDBA40200602AFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8CBEA31B2DF9ABD40034B8E8 /* SetAnonymousIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -142,6 +144,7 @@
 		53D7FE0C2D63C57900598443 /* CustomPlugins */ = {
 			isa = PBXGroup;
 			children = (
+				8CBEA31B2DF9ABD40034B8E8 /* SetAnonymousIdPlugin.swift */,
 				5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */,
 				53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */,
 				533624BA2D93E31F00F602CD /* OptionPlugin.swift */,
@@ -267,6 +270,7 @@
 			files = (
 				53DF2DCF2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift in Sources */,
 				53CC353C2DB7A95900A2EF2F /* CustomLogger.swift in Sources */,
+				8CBEA31C2DF9ABD50034B8E8 /* SetAnonymousIdPlugin.swift in Sources */,
 				5383D2C92D3E97C700291B00 /* AdvertisingIdPlugin.swift in Sources */,
 				53472F7A2D622B2900EF8042 /* PermissionManager.swift in Sources */,
 				5383D2C72D3E95FC00291B00 /* AnalyticsManager.swift in Sources */,

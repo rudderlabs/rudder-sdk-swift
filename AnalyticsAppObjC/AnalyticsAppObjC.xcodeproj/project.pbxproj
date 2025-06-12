@@ -21,6 +21,7 @@
 		53E01B812DE62BE300602AFD /* CustomLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B802DE62BE300602AFD /* CustomLogger.m */; };
 		53E01B842DE62CD300602AFD /* CustomOptionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B832DE62CD300602AFD /* CustomOptionPlugin.m */; };
 		53E01BE02DE8C89200602AFD /* ObjCCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01BDF2DE8C89200602AFD /* ObjCCompat.m */; };
+		8CBEA3402DF9B3580034B8E8 /* SetAnonymousIdPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBEA33F2DF9B3580034B8E8 /* SetAnonymousIdPlugin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +62,8 @@
 		53E01B832DE62CD300602AFD /* CustomOptionPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomOptionPlugin.m; sourceTree = "<group>"; };
 		53E01BDE2DE8C89200602AFD /* ObjCCompat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCCompat.h; sourceTree = "<group>"; };
 		53E01BDF2DE8C89200602AFD /* ObjCCompat.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjCCompat.m; sourceTree = "<group>"; };
+		8CBEA33F2DF9B3580034B8E8 /* SetAnonymousIdPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SetAnonymousIdPlugin.m; sourceTree = "<group>"; };
+		8CBEA3412DF9B36A0034B8E8 /* SetAnonymousIdPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SetAnonymousIdPlugin.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +104,7 @@
 				53E01B852DE62E7500602AFD /* AnalyticsManager */,
 				53E01B862DE62E8000602AFD /* CustomLogger */,
 				53E01B872DE62E8E00602AFD /* CustomOptionPlugin */,
+				8CBEA33C2DF9B30B0034B8E8 /* CustomPlugins */,
 				535C9FDC2DFABF7000F6618A /* SetPushTokenPlugin */,
 				53E01BE12DE8C89A00602AFD /* ObjCCompat */,
 				5352C7A22DCBCBA10022B105 /* Assets.xcassets */,
@@ -192,6 +196,15 @@
 			path = ObjCCompat;
 			sourceTree = "<group>";
 		};
+		8CBEA33C2DF9B30B0034B8E8 /* CustomPlugins */ = {
+			isa = PBXGroup;
+			children = (
+				8CBEA3412DF9B36A0034B8E8 /* SetAnonymousIdPlugin.h */,
+				8CBEA33F2DF9B3580034B8E8 /* SetAnonymousIdPlugin.m */,
+			);
+			path = CustomPlugins;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -226,6 +239,7 @@
 				TargetAttributes = {
 					5352C76C2DCBCB390022B105 = {
 						CreatedOnToolsVersion = 16.3;
+						LastSwiftMigration = 1640;
 					};
 				};
 			};
@@ -268,6 +282,7 @@
 			files = (
 				53E01B812DE62BE300602AFD /* CustomLogger.m in Sources */,
 				53E01BE02DE8C89200602AFD /* ObjCCompat.m in Sources */,
+				8CBEA3402DF9B3580034B8E8 /* SetAnonymousIdPlugin.m in Sources */,
 				535C9FDB2DFABF6700F6618A /* SetPushTokenPlugin.m in Sources */,
 				5352C7AE2DCBCBA10022B105 /* main.m in Sources */,
 				5352C7AF2DCBCBA10022B105 /* SceneDelegate.m in Sources */,
@@ -305,6 +320,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UCL2K3J73M;
@@ -324,6 +340,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppObjC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -333,6 +351,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UCL2K3J73M;
@@ -352,6 +371,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppObjC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
