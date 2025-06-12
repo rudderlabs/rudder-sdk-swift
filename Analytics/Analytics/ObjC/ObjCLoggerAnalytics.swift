@@ -34,7 +34,7 @@ public final class ObjCLoggerAnalytics: NSObject {
     /**
      Sets the log level that determines which logs will be processed.
      
-     - Parameter level: The log level to set (ObjCLogLevel).
+     - Parameter level: The log level to set `RSALogLevel`.
      */
     @objc
     public static func setLogLevel(_ level: LogLevel) {
@@ -44,7 +44,7 @@ public final class ObjCLoggerAnalytics: NSObject {
     /**
      Gets the current log level.
      
-     - Returns: The current log level as an ObjCLogLevel.
+     - Returns: The current log level as an `RSALogLevel`.
      */
     @objc
     public static func getLogLevel() -> LogLevel {
