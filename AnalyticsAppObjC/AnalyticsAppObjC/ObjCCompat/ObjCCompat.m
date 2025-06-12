@@ -30,8 +30,9 @@
     NSString *writeKey = @"sample-write-key";
     NSString *dataPlaneUrl = @"https://data-plane.analytics.com";
     
+    [RSALoggerAnalytics setLogLevel: RSALogLevelVerbose];
+    
     RSAConfigurationBuilder *builder = [[RSAConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
-    [builder setLogLevel: RSALogLevelVerbose];
     [builder setGzipEnabled: YES];
     
     NSArray *flushPolicies = @[[RSAStartupFlushPolicy new], [RSAFrequencyFlushPolicy new], [RSACountFlushPolicy new]];
@@ -163,7 +164,7 @@
 
 - (void)addCustomLogger {
     CustomLogger *logger = [CustomLogger new];
-    [self.client setCustomLogger:logger];
+    [RSALoggerAnalytics setLogger: logger];
 }
 
 #pragma mark - Helpers

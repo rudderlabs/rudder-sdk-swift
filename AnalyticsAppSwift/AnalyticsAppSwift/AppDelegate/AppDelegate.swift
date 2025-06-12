@@ -43,7 +43,8 @@ extension AppDelegate {
     static var `default`: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
     
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logLevel: .verbose)
+        LoggerAnalytics.logLevel = .verbose // Set the log level for analytics
+        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
         self.analytics = AnalyticsClient(configuration: config)
         
         self.analytics?.addPlugin(UIKitAutomaticScreenTrackingPlugin())
