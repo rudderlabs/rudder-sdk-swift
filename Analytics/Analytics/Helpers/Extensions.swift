@@ -404,7 +404,8 @@ extension Data {
 
 #if os(iOS)
 extension ProcessInfo {
-    static var isSwiftUIiOSApp: Bool {
+    private static var isSwiftUIiOSApp: Bool {
+        precondition(Thread.isMainThread, "isSwiftUIiOSApp must be called on the main thread")
         for case let windowScene as UIWindowScene in UIApplication.shared.connectedScenes {
             for window in windowScene.windows where window.isKeyWindow {
                 if let rootVC = window.rootViewController,
@@ -414,6 +415,16 @@ extension ProcessInfo {
             }
         }
         return false
+    }
+
+    static func checkSwiftUIiOSApp(completion: @escaping (Bool) -> Void) {
+        if Thread.isMainThread {
+            completion(isSwiftUIiOSApp)
+        } else {
+            DispatchQueue.main.async {
+                completion(isSwiftUIiOSApp)
+            }
+        }
     }
 }
 #endif
