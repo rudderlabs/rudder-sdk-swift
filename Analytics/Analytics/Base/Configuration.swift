@@ -103,8 +103,6 @@ public class Configuration: NSObject {
         self.collectDeviceId = collectDeviceId
         self.trackApplicationLifecycleEvents = trackApplicationLifecycleEvents
         self.sessionConfiguration = sessionConfiguration
-        
-        LoggerAnalytics.setLogger(SwiftLogger())
     }
 }
 

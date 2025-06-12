@@ -46,7 +46,7 @@ public final class LoggerAnalytics {
     /**
      The current logger implementation.
      */
-    private var logger: Logger?
+    private var logger: Logger = SwiftLogger()
     
     /**
      The current log level determining which log messages will be processed.
@@ -83,7 +83,7 @@ public final class LoggerAnalytics {
      */
     public static func verbose(log: String) {
         guard shared.currentLogLevel.rawValue >= LogLevel.verbose.rawValue else { return }
-        shared.logger?.verbose(log: log)
+        shared.logger.verbose(log: log)
     }
     
     /**
@@ -93,7 +93,7 @@ public final class LoggerAnalytics {
      */
     public static func debug(log: String) {
         guard shared.currentLogLevel.rawValue >= LogLevel.debug.rawValue else { return }
-        shared.logger?.debug(log: log)
+        shared.logger.debug(log: log)
     }
     
     /**
@@ -103,7 +103,7 @@ public final class LoggerAnalytics {
      */
     public static func info(log: String) {
         guard shared.currentLogLevel.rawValue >= LogLevel.info.rawValue else { return }
-        shared.logger?.info(log: log)
+        shared.logger.info(log: log)
     }
     
     /**
@@ -113,7 +113,7 @@ public final class LoggerAnalytics {
      */
     public static func warn(log: String) {
         guard shared.currentLogLevel.rawValue >= LogLevel.warn.rawValue else { return }
-        shared.logger?.warn(log: log)
+        shared.logger.warn(log: log)
     }
     
     /**
@@ -125,6 +125,6 @@ public final class LoggerAnalytics {
      */
     public static func error(log: String, error: Error? = nil) {
         guard shared.currentLogLevel.rawValue >= LogLevel.error.rawValue else { return }
-        shared.logger?.error(log: log, error: error)
+        shared.logger.error(log: log, error: error)
     }
 }
