@@ -205,15 +205,20 @@ extension Dictionary where Key == String, Value == Any {
         self.mapValues { value in
             if let number = value as? NSNumber {
                 let objCType = String(cString: number.objCType)
-                if objCType == "c" {
+
+                switch objCType {
+                case "c", "C": // Bool
                     return number.boolValue
-                } else if objCType == "f" {
+                case "s", "S", "i", "I", "l", "L", "q", "Q": // All integer types
+                    return number.intValue
+                case "f": // Float
                     let stringValue = String(describing: number.floatValue)
                     return Double(stringValue) ?? Double(number.floatValue)
-                } else if objCType == "d" {
+                case "d": // Double
                     return number.doubleValue
+                default:
+                    return number
                 }
-                return number
             } else if let array = value as? [Any] {
                 return array.objCSanitized
             } else if let dict = value as? [String: Any] {
@@ -263,15 +268,20 @@ extension Array where Element == Any {
         self.map { value in
             if let number = value as? NSNumber {
                 let objCType = String(cString: number.objCType)
-                if objCType == "c" {
+
+                switch objCType {
+                case "c", "C": // Bool
                     return number.boolValue
-                } else if objCType == "f" {
+                case "s", "S", "i", "I", "l", "L", "q", "Q": // All integer types
+                    return number.intValue
+                case "f": // Float
                     let stringValue = String(describing: number.floatValue)
                     return Double(stringValue) ?? Double(number.floatValue)
-                } else if objCType == "d" {
+                case "d": // Double
                     return number.doubleValue
+                default:
+                    return number
                 }
-                return number
             } else if let array = value as? [Any] {
                 return array.objCSanitized
             } else if let dict = value as? [String: Any] {
