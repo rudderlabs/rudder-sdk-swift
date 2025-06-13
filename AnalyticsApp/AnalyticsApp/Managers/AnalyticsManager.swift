@@ -32,7 +32,7 @@ class AnalyticsManager {
 
 // MARK: - Rudder methods
 extension AnalyticsManager {
-    func identify(userId: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    func identify(userId: String? = nil, traits: RudderTraits? = nil, options: RudderOption? = nil) {
         self.analytics?.identify(userId: userId, traits: traits, options: options)
     }
     
@@ -82,6 +82,10 @@ extension AnalyticsManager {
     
     var sessionId: UInt64? {
         return self.analytics?.sessionId
+    }
+    
+    var userId: String? {
+        return self.analytics?.userId
     }
     
     func openURL(_ url: URL, options: [String: Any]? = nil) {
