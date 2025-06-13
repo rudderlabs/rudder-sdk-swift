@@ -104,7 +104,13 @@ public struct AnyCodable: Codable {
         } else if let boolValue = try? container.decode(Bool.self) {
             value = boolValue
         } else if let stringValue = try? container.decode(String.self) {
-            value = Date.date(from: stringValue) ?? stringValue
+            if let url = URL(string: stringValue), (stringValue.contains("://") || stringValue.contains("www.")) {
+                value = url
+            } else if let date = Date.date(from: stringValue) {
+                value = date
+            } else {
+                value = stringValue
+            }
         } else if let arrayValue = try? container.decode([AnyCodable].self) {
             value = arrayValue.map { $0.value }
         } else if let dictionaryValue = try? container.decode([String: AnyCodable].self) {
@@ -129,6 +135,8 @@ public struct AnyCodable: Codable {
             try container.encode(boolValue)
         } else if let dateValue = value as? Date {
             try container.encode(dateValue.iso8601TimeStamp)
+        } else if let urlValue = value as? URL {
+            try container.encode(urlValue.absoluteString)
         } else if let stringValue = value as? String {
             try container.encode(stringValue)
         } else if let arrayValue = value as? [Any] {
