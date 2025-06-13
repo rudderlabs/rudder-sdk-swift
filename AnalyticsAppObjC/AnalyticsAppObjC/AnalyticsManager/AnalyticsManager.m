@@ -57,7 +57,7 @@
     
     // Adding custom plugin..
     CustomOptionPlugin *plugin = [[CustomOptionPlugin alloc] initWithOption:[optionBuilder build]];
-    [self.client addPlugin:plugin];
+    [self.client add:plugin];
 }
 
 - (void)identify:(NSString * _Nonnull)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSAOption* _Nullable)option {
