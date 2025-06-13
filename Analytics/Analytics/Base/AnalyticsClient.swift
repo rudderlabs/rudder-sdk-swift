@@ -233,7 +233,7 @@ extension AnalyticsClient {
      
      - Parameter plugin: The plugin to be removed.
      */
-    public func remove(_ plugin: Plugin) {
+    public func remove(plugin: Plugin) {
         guard self.isAnalyticsActive else { return }
         self.pluginChain?.remove(plugin: plugin)
     }
