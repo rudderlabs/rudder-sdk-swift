@@ -223,7 +223,7 @@ extension AnalyticsClient {
      
      - Parameter plugin: The plugin to be added.
      */
-    public func add(_ plugin: Plugin) {
+    public func add(plugin: Plugin) {
         guard self.isAnalyticsActive else { return }
         self.pluginChain?.add(plugin: plugin)
     }
