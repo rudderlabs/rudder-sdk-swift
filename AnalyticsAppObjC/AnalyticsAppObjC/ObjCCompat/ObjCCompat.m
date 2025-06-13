@@ -80,7 +80,7 @@
     
     // Adding custom plugin..
     CustomOptionPlugin *plugin = [[CustomOptionPlugin alloc] initWithOption:[optionBuilder build]];
-    [self.client add:plugin];
+    [self.client addPlugin:plugin];
 }
 
 - (NSNumber * _Nullable)sessionId {
