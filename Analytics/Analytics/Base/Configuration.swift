@@ -94,7 +94,6 @@ public class Configuration: NSObject {
         controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl,
         logLevel: LogLevel = Constants.log.defaultLevel,
         gzipEnaabled: Bool = Constants.defaultConfig.gzipEnabled,
-        storageMode: StorageMode = Constants.defaultConfig.storageMode,
         flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
         collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId,
         trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents,
@@ -105,7 +104,7 @@ public class Configuration: NSObject {
         self.controlPlaneUrl = controlPlaneUrl
         self.logLevel = logLevel
         self.gzipEnabled = gzipEnaabled
-        self.storageMode = storageMode
+        self.storageMode = Constants.defaultConfig.storageMode
         self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode)
         self.flushPolicies = flushPolicies
         self.collectDeviceId = collectDeviceId
