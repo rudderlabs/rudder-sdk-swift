@@ -37,6 +37,7 @@ final class AnalyticsTests: XCTestCase {
         XCTAssertFalse(((config?.isEmpty) != nil))
     }
 }
+
 // MARK: - Disk Store
 extension AnalyticsTests {
     
@@ -188,5 +189,44 @@ extension AnalyticsTests {
         for item in dataItems {
             await client.configuration.storage.remove(eventReference: item.reference)
         }
+    }
+    
+    func test_addPlugin_disk() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        let customPlugin = MockPlugin()
+        client.add(plugin: customPlugin)
+        
+        client.track(name: "Original Event")
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        await client.configuration.storage.rollover()
+        
+        let dataItems = await client.configuration.storage.read().dataItems
+        XCTAssertFalse(dataItems.isEmpty, "Data items should not be empty")
+        
+        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        guard let lastEvent = batchData.last else { XCTFail("No event found"); return }
+        
+        XCTAssertTrue(lastEvent["event"] as? String == "New Event Name", "Event name should be modified by the plugin")
+    }
+
+    func test_removePlugin_disk() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        let customPlugin = MockPlugin()
+        client.add(plugin: customPlugin)
+        client.remove(plugin: customPlugin)
+        
+        client.track(name: "Original Event")
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        await client.configuration.storage.rollover()
+        
+        let dataItems = await client.configuration.storage.read().dataItems
+        XCTAssertFalse(dataItems.isEmpty, "Data items should not be empty")
+        
+        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        guard let lastEvent = batchData.last else { XCTFail("No event found"); return }
+        
+        XCTAssertTrue(lastEvent["event"] as? String == "Original Event", "Event name should remain unchanged after plugin removal")
     }
 }
