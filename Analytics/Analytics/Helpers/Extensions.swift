@@ -8,8 +8,10 @@
 import Foundation
 import zlib
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
+#elseif os(macOS)
+import AppKit
 #endif
 
 // MARK: - String
@@ -402,10 +404,11 @@ extension Data {
     // swiftlint:enable no_magic_numbers
 }
 
-#if os(iOS)
+// MARK: - ProcessInfo
 extension ProcessInfo {
-    private static var isSwiftUIiOSApp: Bool {
-        precondition(Thread.isMainThread, "isSwiftUIiOSApp must be called on the main thread")
+    #if os(iOS) || os(tvOS)
+    private static var isSwiftUIApp: Bool {
+        precondition(Thread.isMainThread, "isSwiftUIApp must be called on the main thread")
         for case let windowScene as UIWindowScene in UIApplication.shared.connectedScenes {
             for window in windowScene.windows where window.isKeyWindow {
                 if let rootVC = window.rootViewController,
@@ -416,15 +419,44 @@ extension ProcessInfo {
         }
         return false
     }
-
-    static func checkSwiftUIiOSApp(completion: @escaping (Bool) -> Void) {
+    #elseif os(macOS)
+    private static var isSwiftUIApp: Bool {
+        precondition(Thread.isMainThread, "isSwiftUIApp must be called on the main thread")
+        // On macOS, checking if the app is SwiftUI-based
+        if let mainMenu = NSApp.mainMenu {
+            if String(describing: type(of: mainMenu)).contains("SwiftUI"),
+               let delegate = NSApp.delegate,
+               !String(describing: type(of: delegate)).contains("AppDelegate") {
+                return true
+            }
+        }
+        // Check the first window's content view controller
+        if let window = NSApp.windows.first,
+           let contentVC = window.contentViewController,
+           String(describing: type(of: contentVC)).contains("HostingController") {
+            return true
+        }
+        return false
+    }
+    #elseif os(watchOS)
+    // On watchOS, we assume it's a SwiftUI app since watchOS is primarily SwiftUI-based now
+    private static var isSwiftUIApp: Bool {
+        return true
+    }
+    #else
+    // Default implementation for other platforms
+    private static var isSwiftUIApp: Bool {
+        return false
+    }
+    #endif
+    
+    static func checkIsSwiftUIApp(completion: @escaping (Bool) -> Void) {
         if Thread.isMainThread {
-            completion(isSwiftUIiOSApp)
+            completion(isSwiftUIApp)
         } else {
             DispatchQueue.main.async {
-                completion(isSwiftUIiOSApp)
+                completion(isSwiftUIApp)
             }
         }
     }
 }
-#endif
