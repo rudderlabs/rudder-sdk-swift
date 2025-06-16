@@ -83,6 +83,41 @@ extension LifecycleEventListener {
     }
 }
 
+// MARK: - LifecycleManagementUtils
+
+class LifecycleManagementUtils {
+    private init() {
+        /* Default implementation (no-op) */
+    }
+    
+    /// Processes application launch options and extracts relevant properties for analytics
+    /// - Parameter options: The launch options dictionary from application launch
+    /// - Returns: Dictionary of properties extracted from launch options
+    static func processLaunchOptions(_ options: [AnyHashable: Any]?) -> [String: Any] {
+        var properties: [String: Any] = [:]
+        guard let options = options else { return properties }
+        
+        #if os(iOS) || os(tvOS)
+        // iOS and tvOS specific launch options
+        let url = options[UIApplication.LaunchOptionsKey.url] as? URL
+        properties["url"] = url?.absoluteString ?? ""
+        
+        let sourceApplication = options[UIApplication.LaunchOptionsKey.sourceApplication] as? String
+        properties["referring_application"] = sourceApplication ?? ""
+        
+        #elseif os(macOS)
+        // macOS specific launch options
+        let urls = options["NSApplicationLaunchUserNotificationKey"] as? [URL] ?? []
+        properties["url"] = urls.first?.absoluteString ?? ""
+        
+        let sourceApplication = options["NSApplicationLaunchUserNotificationKey"] as? String ?? ""
+        properties["referring_application"] = sourceApplication
+        #endif
+        
+        return properties
+    }
+}
+
 // MARK: - WeakObserver
 /**
  Wrapper to hold weak references to observers

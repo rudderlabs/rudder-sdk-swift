@@ -96,6 +96,9 @@ struct _StorageKeys {
 
     /// Key for storing the app build number.
     let appBuild = "rudder.app_build"
+    
+    /// Key for storing wether the app is installed event is tracked.
+    let didTrackAppInstalledEvent = "is_app_install_event_tracked"
 }
 
 /**
