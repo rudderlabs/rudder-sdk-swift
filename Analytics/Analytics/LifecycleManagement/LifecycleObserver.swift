@@ -32,16 +32,17 @@ final class LifecycleObserver {
 extension LifecycleObserver {
     func registerNotifications() {
         AppLifecycleEvent.allCases.forEach { event in
-            let observer = NotificationCenter.default.addObserver(forName: event.notificationName, object: nil, queue: .main) { [weak self] _ in
+            let observer = NotificationCenter.default.addObserver(forName: event.notificationName, object: nil, queue: .main) { [weak self] notification in
                 guard let self else { return }
-                self.handleEvent(event)
+                self.handleEvent(event, notification: notification)
             }
             notificationObservers.append(observer)
         }
     }
     
-    private func handleEvent(_ event: AppLifecycleEvent) {
+    private func handleEvent(_ event: AppLifecycleEvent, notification: Notification? = nil) {
         switch event {
+        case .didFinishLaunching: notifyObservers { $0.onDidFinishLaunching(options: notification?.userInfo) }
         case .background: notifyObservers { $0.onBackground() }
         case .terminate: notifyObservers { $0.onTerminate() }
         case .foreground: notifyObservers { $0.onForeground() }
