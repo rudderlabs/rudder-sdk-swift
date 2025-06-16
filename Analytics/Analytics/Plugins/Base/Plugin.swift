@@ -28,7 +28,7 @@ public enum PluginType: Int, CaseIterable {
     case terminal
     
     /// Plugins of this type are executed only when called manually. For example, session-based plugins that trigger on specific user actions.
-    case manual
+    case utility
 }
 
 // MARK: - Plugin

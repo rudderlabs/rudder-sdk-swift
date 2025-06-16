@@ -13,7 +13,7 @@ import Analytics
  Automatically tracks UIKit screen appearances by swizzling `viewDidAppear` and posting analytics events.
  */
 final class UIKitAutomaticScreenTrackingPlugin: Plugin {
-    var pluginType: PluginType = .manual
+    var pluginType: PluginType = .utility
     var analytics: AnalyticsClient?
     
     private var isSwizzled = false
