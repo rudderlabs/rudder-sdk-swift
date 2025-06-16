@@ -122,7 +122,7 @@ protocol Storage: KeyValueStorage, EventStorage {
    - `memory`: Stores events in memory, providing faster access but no persistence.
  */
 @objc(RSAStorageMode)
-public enum StorageMode: Int {
+enum StorageMode: Int {
     /// Stores events on the disk, ensuring persistence across app sessions.
     case disk
 
