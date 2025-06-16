@@ -18,16 +18,16 @@ import Foundation
  */
 @objc(RSAPluginType)
 public enum PluginType: Int, CaseIterable {
-    /// Plugins that are executed before the main event processing begins.
+    /// Plugins of this type are executed before any event processing begins. Useful for pre-processing events or adding context data.
     case preProcess
     
-    /// Plugins that are executed during the main event processing.
+    /// Plugins of this type are executed as the first level of event processing. Useful for applying transformations or validations early in the pipeline.
     case onProcess
     
-    /// Plugins that send processed events to a destination.
+    /// Plugins of this type are executed at the end when events are about to be passed off to their destinations. Typically used for modifying events specifically for certain destinations.
     case terminal
     
-    /// Plugins that are triggered manually by the user or system.
+    /// Plugins of this type are executed only when called manually. For example, session-based plugins that trigger on specific user actions.
     case manual
 }
 
