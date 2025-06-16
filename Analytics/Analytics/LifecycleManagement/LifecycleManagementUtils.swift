@@ -15,6 +15,7 @@ import WatchKit
 
 // MARK: - AppLifecycleEvent
 enum AppLifecycleEvent: CaseIterable {
+    case didFinishLaunching
     case background
     case terminate
     case foreground
@@ -23,6 +24,7 @@ enum AppLifecycleEvent: CaseIterable {
     var notificationName: Notification.Name {
 #if os(iOS) || os(tvOS)
         switch self {
+        case .didFinishLaunching: return UIApplication.didFinishLaunchingNotification
         case .background: return UIApplication.didEnterBackgroundNotification
         case .terminate: return UIApplication.willTerminateNotification
         case .foreground: return UIApplication.willEnterForegroundNotification
@@ -31,6 +33,7 @@ enum AppLifecycleEvent: CaseIterable {
         
 #elseif os(macOS)
         switch self {
+        case .didFinishLaunching: return NSApplication.didFinishLaunchingNotification
         case .background: return NSApplication.didResignActiveNotification
         case .terminate: return NSApplication.willTerminateNotification
         case .foreground: return NSApplication.willBecomeActiveNotification
@@ -39,6 +42,7 @@ enum AppLifecycleEvent: CaseIterable {
         
 #elseif os(watchOS)
         switch self {
+        case .didFinishLaunching: return WKApplication.didFinishLaunchingNotification
         case .background: return WKApplication.didEnterBackgroundNotification
         case .terminate: return Notification.Name("WillTerminate")
         case .foreground: return WKApplication.willEnterForegroundNotification
@@ -50,6 +54,7 @@ enum AppLifecycleEvent: CaseIterable {
 
 // MARK: - LifecycleEventListener
 protocol LifecycleEventListener: AnyObject {
+    func onDidFinishLaunching(options: [AnyHashable: Any]?)
     func onBackground()
     func onForeground()
     func onTerminate()
@@ -57,6 +62,10 @@ protocol LifecycleEventListener: AnyObject {
 }
 
 extension LifecycleEventListener {
+    func onDidFinishLaunching(options: [AnyHashable: Any]?) {
+        /* Default implementation (no-op) */
+    }
+    
     func onBackground() {
         /* Default implementation (no-op) */
     }
