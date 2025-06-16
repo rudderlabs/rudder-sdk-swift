@@ -42,7 +42,6 @@
 
     RSASessionConfigurationBuilder *sessionBuilder = [RSASessionConfigurationBuilder new];
     [builder setSessionConfiguration: [sessionBuilder build]];
-    [builder setStorageMode: RSAStorageModeMemory];
     
     self.client = [[RSAAnalytics alloc] initWithConfiguration:[builder build]];
    
