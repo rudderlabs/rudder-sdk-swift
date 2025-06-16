@@ -19,7 +19,7 @@ public final class ObjCAnalytics: NSObject {
     /**
      Initializes the analytics client using the provided Objective-C configuration.
      
-     - Parameter configuration: The configuration object containing settings and storage details.
+     - Parameter configuration: The configuration object containing settings.
      */
     @objc
     public init(configuration: Configuration) {
