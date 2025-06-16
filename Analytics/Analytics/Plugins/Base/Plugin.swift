@@ -25,10 +25,7 @@ public enum PluginType: Int, CaseIterable {
     case onProcess
     
     /// Plugins that send processed events to a destination.
-    case destination
-    
-    /// Plugins that are executed after the main event processing has completed.
-    case after
+    case terminal
     
     /// Plugins that are triggered manually by the user or system.
     case manual

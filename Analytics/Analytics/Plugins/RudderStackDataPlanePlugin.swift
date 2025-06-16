@@ -12,7 +12,7 @@ import Foundation
  */
 final class RudderStackDataPlanePlugin: EventPlugin {
     
-    var pluginType: PluginType = .destination
+    var pluginType: PluginType = .terminal
     var analytics: AnalyticsClient?
     
     private var eventManager: EventManager?
