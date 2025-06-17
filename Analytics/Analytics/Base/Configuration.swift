@@ -93,7 +93,7 @@ public class Configuration: NSObject {
         dataPlaneUrl: String,
         controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl,
         logLevel: LogLevel = Constants.log.defaultLevel,
-        gzipEnaabled: Bool = Constants.defaultConfig.gzipEnabled,
+        gzipEnabled: Bool = Constants.defaultConfig.gzipEnabled,
         storageMode: StorageMode = Constants.defaultConfig.storageMode,
         flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
         collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId,
@@ -104,7 +104,7 @@ public class Configuration: NSObject {
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
         self.logLevel = logLevel
-        self.gzipEnabled = gzipEnaabled
+        self.gzipEnabled = gzipEnabled
         self.storageMode = storageMode
         self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode)
         self.flushPolicies = flushPolicies

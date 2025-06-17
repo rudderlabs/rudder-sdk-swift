@@ -62,7 +62,7 @@ public final class ObjCConfigurationBuilder: NSObject {
             dataPlaneUrl: dataPlaneUrl,
             controlPlaneUrl: controlPlaneUrl,
             logLevel: logLevel,
-            gzipEnaabled: gzipEnabled,
+            gzipEnabled: gzipEnabled,
             storageMode: storageMode,
             flushPolicies: swiftFlushPolicies,
             collectDeviceId: collectDeviceId,
