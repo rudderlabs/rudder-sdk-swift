@@ -12,7 +12,7 @@ import Foundation
  This protocol is designed to execute predefined network requests.
  */
 protocol HttpClientRequests {
-    func getConfiguarationData() async throws -> Data
+    func getConfigurationData() async throws -> Data
     func postBatchEvents(_ batch: String) async throws -> Data
 }
 
@@ -52,7 +52,7 @@ final class HttpClient {
 
 // MARK: - HttpClientRequests
 extension HttpClient: HttpClientRequests {
-    func getConfiguarationData() async throws -> Data {
+    func getConfigurationData() async throws -> Data {
         guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { throw HttpClientError.invalidRequest }
         return try await HttpNetwork.perform(request: urlRequest)
     }

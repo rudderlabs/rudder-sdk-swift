@@ -362,7 +362,7 @@ extension AnalyticsClient {
         Task {
             let client = HttpClient(analytics: self)
             do {
-                let data = try await client.getConfiguarationData()
+                let data = try await client.getConfigurationData()
                 self.storage.write(value: data.jsonString, key: Constants.storageKeys.sourceConfig)
                 LoggerAnalytics.info(log: data.prettyPrintedString ?? "Bad response")
             } catch {
