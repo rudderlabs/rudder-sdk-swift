@@ -174,8 +174,8 @@ extension ObjCAnalytics {
      - Parameter name: The name of the screen.
      */
     @objc
-    public func screen(_ name: String) {
-        self.internalScreen(name, category: nil, properties: nil, options: nil)
+    public func screen(_ screenName: String) {
+        self.internalScreen(screenName, category: nil, properties: nil, options: nil)
     }
 
     /**
@@ -186,8 +186,8 @@ extension ObjCAnalytics {
        - category: The category of the screen.
      */
     @objc
-    public func screen(_ name: String, category: String) {
-        self.internalScreen(name, category: category, properties: nil, options: nil)
+    public func screen(_ screenName: String, category: String) {
+        self.internalScreen(screenName, category: category, properties: nil, options: nil)
     }
 
     /**
@@ -198,8 +198,8 @@ extension ObjCAnalytics {
        - properties: Screen properties.
      */
     @objc
-    public func screen(_ name: String, properties: [String: Any]) {
-        self.internalScreen(name, category: nil, properties: properties, options: nil)
+    public func screen(_ screenName: String, properties: [String: Any]) {
+        self.internalScreen(screenName, category: nil, properties: properties, options: nil)
     }
 
     /**
@@ -210,8 +210,8 @@ extension ObjCAnalytics {
        - options: Additional options for screen tracking.
      */
     @objc
-    public func screen(_ name: String, options: RudderOption) {
-        self.internalScreen(name, category: nil, properties: nil, options: options)
+    public func screen(_ screenName: String, options: RudderOption) {
+        self.internalScreen(screenName, category: nil, properties: nil, options: options)
     }
 
     /**
@@ -223,8 +223,8 @@ extension ObjCAnalytics {
        - properties: Additional screen properties.
      */
     @objc
-    public func screen(_ name: String, category: String, properties: [String: Any]) {
-        self.internalScreen(name, category: category, properties: properties, options: nil)
+    public func screen(_ screenName: String, category: String, properties: [String: Any]) {
+        self.internalScreen(screenName, category: category, properties: properties, options: nil)
     }
 
     /**
@@ -236,8 +236,8 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func screen(_ name: String, category: String, options: RudderOption) {
-        self.internalScreen(name, category: category, properties: nil, options: options)
+    public func screen(_ screenName: String, category: String, options: RudderOption) {
+        self.internalScreen(screenName, category: category, properties: nil, options: options)
     }
 
     /**
@@ -249,8 +249,8 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func screen(_ name: String, properties: [String: Any], options: RudderOption) {
-        self.internalScreen(name, category: nil, properties: properties, options: options)
+    public func screen(_ screenName: String, properties: [String: Any], options: RudderOption) {
+        self.internalScreen(screenName, category: nil, properties: properties, options: options)
     }
 
     /**
@@ -263,8 +263,8 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func screen(_ name: String, category: String, properties: [String: Any], options: RudderOption) {
-        self.internalScreen(name, category: category, properties: properties, options: options)
+    public func screen(_ screenName: String, category: String, properties: [String: Any], options: RudderOption) {
+        self.internalScreen(screenName, category: category, properties: properties, options: options)
     }
 
     // MARK: - Group
