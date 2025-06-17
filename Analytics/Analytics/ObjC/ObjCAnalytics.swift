@@ -275,8 +275,8 @@ extension ObjCAnalytics {
      - Parameter id: The group identifier.
      */
     @objc
-    public func group(_ id: String) {
-        self.internalGroup(id, traits: nil, options: nil)
+    public func group(_ groupId: String) {
+        self.internalGroup(groupId, traits: nil, options: nil)
     }
 
     /**
@@ -287,8 +287,8 @@ extension ObjCAnalytics {
        - traits: Traits to associate with the group.
      */
     @objc
-    public func group(_ id: String, traits: [String: Any]) {
-        self.internalGroup(id, traits: traits, options: nil)
+    public func group(_ groupId: String, traits: [String: Any]) {
+        self.internalGroup(groupId, traits: traits, options: nil)
     }
 
     /**
@@ -299,8 +299,8 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func group(_ id: String, options: RudderOption) {
-        self.internalGroup(id, traits: nil, options: options)
+    public func group(_ groupId: String, options: RudderOption) {
+        self.internalGroup(groupId, traits: nil, options: options)
     }
 
     /**
@@ -312,8 +312,8 @@ extension ObjCAnalytics {
        - options: Additional options.
      */
     @objc
-    public func group(_ id: String, traits: [String: Any], options: RudderOption) {
-        self.internalGroup(id, traits: traits, options: options)
+    public func group(_ groupId: String, traits: [String: Any], options: RudderOption) {
+        self.internalGroup(groupId, traits: traits, options: options)
     }
 
     // MARK: - Identify
