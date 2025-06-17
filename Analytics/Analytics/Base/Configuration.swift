@@ -74,7 +74,6 @@ public class Configuration: NSObject {
        - dataPlaneUrl: The URL for the data plane.
        - controlPlaneUrl: The URL for the control plane.
        - gzipEnaabled: A flag to enable GZip compression.
-       - storageMode: The storage mode for storing events. Defaults to `disk`.
        - flushPolicies: The flush policies for event flushing.
        - collectDeviceId: A flag to enable automatic collection of the device ID. Defaults to `true`.
        - trackApplicationLifecycleEvents: A flag to enable automatic tracking of the application lifecycle events. Defaults to `true`.
@@ -87,7 +86,6 @@ public class Configuration: NSObject {
         dataPlaneUrl: String,
         controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl,
         gzipEnaabled: Bool = Constants.defaultConfig.gzipEnabled,
-        storageMode: StorageMode = Constants.defaultConfig.storageMode,
         flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
         collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId,
         trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents,
@@ -97,7 +95,7 @@ public class Configuration: NSObject {
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
         self.gzipEnabled = gzipEnaabled
-        self.storageMode = storageMode
+        self.storageMode = Constants.defaultConfig.storageMode
         self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode)
         self.flushPolicies = flushPolicies
         self.collectDeviceId = collectDeviceId

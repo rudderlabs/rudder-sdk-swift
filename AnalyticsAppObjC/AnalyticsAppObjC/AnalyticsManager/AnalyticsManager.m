@@ -41,7 +41,6 @@
 
     RSASessionConfigurationBuilder *sessionBuilder = [RSASessionConfigurationBuilder new];
     [builder setSessionConfiguration: [sessionBuilder build]];
-    [builder setStorageMode: RSAStorageModeMemory];
     
     // Adding custom Logger..
     [RSALoggerAnalytics setLogLevel: RSALogLevelVerbose];

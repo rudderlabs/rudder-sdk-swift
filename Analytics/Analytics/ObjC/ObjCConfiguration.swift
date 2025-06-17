@@ -18,7 +18,6 @@ public final class ObjCConfigurationBuilder: NSObject {
     private var dataPlaneUrl: String
     private var controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl
     private var gzipEnabled: Bool = Constants.defaultConfig.gzipEnabled
-    private var storageMode: StorageMode = StorageMode.disk
     private var flushPolicies: [ObjCFlushPolicy] = [ObjcStartupFlushPolicy(), ObjcCountFlushPolicy(), ObjcFrequencyFlushPolicy()]
     private var collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId
     private var trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents
@@ -61,7 +60,6 @@ public final class ObjCConfigurationBuilder: NSObject {
             dataPlaneUrl: dataPlaneUrl,
             controlPlaneUrl: controlPlaneUrl,
             gzipEnaabled: gzipEnabled,
-            storageMode: storageMode,
             flushPolicies: swiftFlushPolicies,
             collectDeviceId: collectDeviceId,
             trackApplicationLifecycleEvents: trackApplicationLifecycleEvents,
@@ -82,14 +80,6 @@ public final class ObjCConfigurationBuilder: NSObject {
     @discardableResult
     public func setGzipEnabled(_ gzipEnabled: Bool) -> Self {
         self.gzipEnabled = gzipEnabled
-        return self
-    }
-    
-    /** Sets the storage mode for the configuration. */
-    @objc
-    @discardableResult
-    public func setStorageMode(_ storageMode: StorageMode) -> Self {
-        self.storageMode = storageMode
         return self
     }
     
