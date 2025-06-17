@@ -27,8 +27,9 @@ struct ContentView: View {
             }
             
             HStack {
+                let sampleURL = "https://www.rsa-test.com/"
                 CustomButton(title: "Track") {
-                    let option = RudderOption(integrations: ["Amplitude": true, "CleverTap": false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
+                    let option = RudderOption(integrations: ["Amplitude": true, "CleverTap": false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true, "Key_7": URL(string: sampleURL) ?? sampleURL], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
                     
                     AnalyticsManager.shared.track(name: "Track at \(Date())", properties: ["key": "value"], options: option)
                 }
