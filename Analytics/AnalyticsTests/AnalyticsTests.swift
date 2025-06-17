@@ -86,7 +86,7 @@ extension AnalyticsTests {
     
     func test_groupEvent_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
-        client.group(id: "group_id", traits: ["prop": "value"])
+        client.group(groupId: "group_id", traits: ["prop": "value"])
         try? await Task.sleep(nanoseconds: 300_000_000)
         await client.configuration.storage.rollover()
         let dataItems = await client.configuration.storage.read().dataItems
@@ -138,7 +138,7 @@ extension AnalyticsTests {
         client.screen(name: "Screen Event")
         try? await Task.sleep(nanoseconds: 300_000_000)
         
-        client.group(id: "Group_id")
+        client.group(groupId: "Group_id")
         try? await Task.sleep(nanoseconds: 300_000_000)
         
         client.identify(userId: "User_id")

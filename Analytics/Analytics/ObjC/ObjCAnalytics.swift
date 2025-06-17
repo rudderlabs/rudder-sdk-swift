@@ -96,7 +96,7 @@ extension ObjCAnalytics {
     // MARK: - Group
     
     private func internalGroup(_ id: String, traits: [String: Any]?, options: RudderOption?) {
-        self.analytics.group(id: id, traits: traits?.objCSanitized, options: options)
+        self.analytics.group(groupId: id, traits: traits?.objCSanitized, options: options)
     }
     
     // MARK: - Identify

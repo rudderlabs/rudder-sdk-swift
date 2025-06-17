@@ -36,7 +36,7 @@ extension AnalyticsManager {
     }
     
     func group(id: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
-        self.analytics?.group(id: id, traits: traits, options: options)
+        self.analytics?.group(groupId: id, traits: traits, options: options)
     }
     
     func identify(userId: String? = nil, traits: RudderTraits? = nil, options: RudderOption? = nil) {

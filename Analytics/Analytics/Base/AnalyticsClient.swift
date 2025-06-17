@@ -143,10 +143,10 @@ extension AnalyticsClient {
         - traits: An Optional traits associated with the group. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
-    public func group(id: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    public func group(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
-        let event = GroupEvent(groupId: id, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
+        let event = GroupEvent(groupId: groupId, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
     
