@@ -17,7 +17,9 @@ class AnalyticsManager {
     private var analytics: AnalyticsClient?
     
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logLevel: .verbose)
+        LoggerAnalytics.logLevel = .verbose // Set the log level for analytics
+        
+        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
         self.analytics = AnalyticsClient(configuration: config)
         
         //Add external plugin to analytics..

@@ -17,7 +17,8 @@ class AnalyticsManager {
     private var analytics: AnalyticsClient?
     
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logLevel: .verbose)
+        LoggerAnalytics.logLevel = .verbose // Set the log level for analytics
+        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
         self.analytics = AnalyticsClient(configuration: config)
     }
 }
@@ -87,12 +88,6 @@ extension AnalyticsManager {
     
     func addPlugin(_ plugin: Plugin) {
         self.analytics?.addPlugin(plugin)
-    }
-    
-    // MARK: - Logger Management
-    
-    func setLogger(logger: Logger) {
-        self.analytics?.setLogger(logger: logger)
     }
     
     // MARK: - System Management

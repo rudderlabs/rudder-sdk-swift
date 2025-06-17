@@ -30,11 +30,6 @@ public class Configuration: NSObject {
     var controlPlaneUrl: String
 
     /**
-     The current log level that controls which messages are shown.
-     */
-    var logLevel: LogLevel
-
-    /**
      A boolean flag to enable GZip compression for network requests. Defaults to `true`.
      */
     var gzipEnabled: Bool
@@ -78,7 +73,6 @@ public class Configuration: NSObject {
        - writeKey: The write key for authentication with the analytics service.
        - dataPlaneUrl: The URL for the data plane.
        - controlPlaneUrl: The URL for the control plane.
-       - logLevel: The logLevel value for logging messages. Defaults to `none`.
        - gzipEnaabled: A flag to enable GZip compression.
        - storageMode: The storage mode for storing events. Defaults to `disk`.
        - flushPolicies: The flush policies for event flushing.
@@ -92,7 +86,6 @@ public class Configuration: NSObject {
         writeKey: String,
         dataPlaneUrl: String,
         controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl,
-        logLevel: LogLevel = Constants.log.defaultLevel,
         gzipEnaabled: Bool = Constants.defaultConfig.gzipEnabled,
         storageMode: StorageMode = Constants.defaultConfig.storageMode,
         flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
@@ -103,7 +96,6 @@ public class Configuration: NSObject {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
-        self.logLevel = logLevel
         self.gzipEnabled = gzipEnaabled
         self.storageMode = storageMode
         self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode)

@@ -17,7 +17,6 @@ public final class ObjCConfigurationBuilder: NSObject {
     private var writeKey: String
     private var dataPlaneUrl: String
     private var controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl
-    private var logLevel: LogLevel = Constants.log.defaultLevel
     private var gzipEnabled: Bool = Constants.defaultConfig.gzipEnabled
     private var storageMode: StorageMode = StorageMode.disk
     private var flushPolicies: [ObjCFlushPolicy] = [ObjcStartupFlushPolicy(), ObjcCountFlushPolicy(), ObjcFrequencyFlushPolicy()]
@@ -61,7 +60,6 @@ public final class ObjCConfigurationBuilder: NSObject {
             writeKey: writeKey,
             dataPlaneUrl: dataPlaneUrl,
             controlPlaneUrl: controlPlaneUrl,
-            logLevel: logLevel,
             gzipEnaabled: gzipEnabled,
             storageMode: storageMode,
             flushPolicies: swiftFlushPolicies,
@@ -76,14 +74,6 @@ public final class ObjCConfigurationBuilder: NSObject {
     @discardableResult
     public func setControlPlaneUrl(_ controlPlaneUrl: String) -> Self {
         self.controlPlaneUrl = controlPlaneUrl
-        return self
-    }
-    
-    /** Sets the log level for the configuration. */
-    @objc
-    @discardableResult
-    public func setLogLevel(_ logLevel: LogLevel) -> Self {
-        self.logLevel = logLevel
         return self
     }
     

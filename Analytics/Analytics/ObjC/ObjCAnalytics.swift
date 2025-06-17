@@ -462,17 +462,6 @@ extension ObjCAnalytics {
     public func reset() {
         self.analytics.reset()
     }
-
-    /**
-     Sets a custom logger for analytics logging.
-     
-     - Parameter logger: An Objective-C compatible logger.
-     */
-    @objc(setCustomLogger:)
-    public func setLogger(_ logger: ObjCLogger) {
-        let adaptedLogger = ObjCLoggerAdapter(logger: logger)
-        self.analytics.setLogger(logger: adaptedLogger)
-    }
 }
 
 extension ObjCAnalytics {
