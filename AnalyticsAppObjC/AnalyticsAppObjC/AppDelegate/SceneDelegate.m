@@ -59,10 +59,7 @@
 - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
     for (UIOpenURLContext *context in URLContexts) {
         NSURL *url = context.URL;
-        NSDictionary *options = @{@"sourceApplication": context.options.sourceApplication ?: @"unknown"};
-    
-        NSLog(@"Deep link opened: %@", url.absoluteString);
-        [[AnalyticsManager sharedManager] openURL:url options:options];
+        [[AnalyticsManager sharedManager] openURL:url options: nil];
     }
 }
 
