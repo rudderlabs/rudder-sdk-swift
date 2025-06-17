@@ -395,8 +395,8 @@ extension ObjCAnalytics {
      - Parameter userId: The new user ID.
      */
     @objc
-    public func alias(_ userId: String) {
-        self.internalAlias(userId, previousId: nil, options: nil)
+    public func alias(_ newId: String) {
+        self.internalAlias(newId, previousId: nil, options: nil)
     }
 
     /**
@@ -407,8 +407,8 @@ extension ObjCAnalytics {
        - previousId: The previous user ID.
      */
     @objc
-    public func alias(_ userId: String, previousId: String) {
-        self.internalAlias(userId, previousId: previousId, options: nil)
+    public func alias(_ newId: String, previousId: String) {
+        self.internalAlias(newId, previousId: previousId, options: nil)
     }
 
     /**
