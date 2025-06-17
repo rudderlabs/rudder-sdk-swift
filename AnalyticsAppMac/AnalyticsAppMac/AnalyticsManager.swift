@@ -32,7 +32,7 @@ extension AnalyticsManager {
     }
     
     func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
-        self.analytics?.screen(name: name, category: category, properties: properties, options: options)
+        self.analytics?.screen(screenName: name, category: category, properties: properties, options: options)
     }
     
     func group(id: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {

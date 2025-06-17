@@ -90,7 +90,7 @@ extension ObjCAnalytics {
     // MARK: - Screen
     
     private func internalScreen(_ name: String, category: String?, properties: [String: Any]?, options: RudderOption?) {
-        self.analytics.screen(name: name, category: category, properties: properties?.objCSanitized, options: options)
+        self.analytics.screen(screenName: name, category: category, properties: properties?.objCSanitized, options: options)
     }
     
     // MARK: - Group

@@ -128,10 +128,10 @@ extension AnalyticsClient {
         - properties: An Optional properties associated with the screen view. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
-    public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    public func screen(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
-        let event = ScreenEvent(screenName: name, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
+        let event = ScreenEvent(screenName: screenName, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
     
