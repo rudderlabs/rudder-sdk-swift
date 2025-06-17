@@ -182,7 +182,7 @@ extension AnalyticsClient {
         - previousId: The existing or previous user ID. If `nil`, the method resolves a preferred previous ID.
         - options: Additional options for customization, such as integrations and context. Defaults to `nil`.
      */
-    public func alias(newId: String, previousId: String?, options: RudderOption? = nil) {
+    public func alias(newId: String, previousId: String? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
         let preferedPreviousId = self.userIdentityState.state.value.resolvePreferredPreviousId(previousId ?? String.empty)
