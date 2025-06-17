@@ -112,4 +112,8 @@
     return self.client.sessionId;
 }
 
+- (void)openURL:(NSURL * _Nonnull)url options:(NSDictionary<NSString *, id> * _Nullable)options {
+    [self.client openURL:url options:options];
+}
+
 @end
