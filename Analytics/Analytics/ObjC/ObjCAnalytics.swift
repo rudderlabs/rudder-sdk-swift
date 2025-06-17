@@ -493,9 +493,20 @@ extension ObjCAnalytics {
      
      - Parameter plugin: An Objective-C compatible plugin.
      */
-    @objc
-    public func addPlugin(_ plugin: ObjCPlugin) {
+    @objc(addPlugin:)
+    public func add(plugin: ObjCPlugin) {
         let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
-        analytics.addPlugin(adaptedPlugin)
+        analytics.add(plugin: adaptedPlugin)
+    }
+    
+    /**
+     Removes a plugin from analytics client.
+     
+     - Parameter plugin: An Objective-C compatible plugin.
+     */
+    @objc(removePlugin:)
+    public func remove(plugin: ObjCPlugin) {
+        let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
+        analytics.remove(plugin: adaptedPlugin)
     }
 }

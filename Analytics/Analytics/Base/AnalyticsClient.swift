@@ -229,9 +229,19 @@ extension AnalyticsClient {
      
      - Parameter plugin: The plugin to be added.
      */
-    public func addPlugin(_ plugin: Plugin) {
+    public func add(plugin: Plugin) {
         guard self.isAnalyticsActive else { return }
         self.pluginChain?.add(plugin: plugin)
+    }
+    
+    /**
+     Removes an already added plugin from the plugin chain of processing events.
+     
+     - Parameter plugin: The plugin to be removed.
+     */
+    public func remove(plugin: Plugin) {
+        guard self.isAnalyticsActive else { return }
+        self.pluginChain?.remove(plugin: plugin)
     }
 }
 

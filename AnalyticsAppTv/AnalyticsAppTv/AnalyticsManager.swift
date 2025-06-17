@@ -87,7 +87,7 @@ extension AnalyticsManager {
     // MARK: - Plugin Management
     
     func addPlugin(_ plugin: Plugin) {
-        self.analytics?.addPlugin(plugin)
+        self.analytics?.add(plugin: plugin)
     }
     
     // MARK: - System Management
