@@ -171,7 +171,7 @@ extension ObjCAnalytics {
     /**
      Tracks a screen view by name.
      
-     - Parameter name: The name of the screen.
+     - Parameter screenName: The name of the screen.
      */
     @objc
     public func screen(_ screenName: String) {
@@ -182,7 +182,7 @@ extension ObjCAnalytics {
      Tracks a screen view by name and category.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - category: The category of the screen.
      */
     @objc
@@ -194,7 +194,7 @@ extension ObjCAnalytics {
      Tracks a screen view with properties.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - properties: Screen properties.
      */
     @objc
@@ -206,7 +206,7 @@ extension ObjCAnalytics {
      Tracks a screen view with options.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - options: Additional options for screen tracking.
      */
     @objc
@@ -218,7 +218,7 @@ extension ObjCAnalytics {
      Tracks a screen view with category and properties.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - category: The screen category.
        - properties: Additional screen properties.
      */
@@ -231,7 +231,7 @@ extension ObjCAnalytics {
      Tracks a screen view with category and options.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - category: The screen category.
        - options: Additional options.
      */
@@ -244,7 +244,7 @@ extension ObjCAnalytics {
      Tracks a screen view with properties and options.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - properties: Additional screen properties.
        - options: Additional options.
      */
@@ -257,7 +257,7 @@ extension ObjCAnalytics {
      Tracks a screen view with category, properties, and options.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - category: The screen category.
        - properties: Additional screen properties.
        - options: Additional options.
@@ -272,7 +272,7 @@ extension ObjCAnalytics {
     /**
      Associates the user with a group.
      
-     - Parameter id: The group identifier.
+     - Parameter groupId: The group identifier.
      */
     @objc
     public func group(_ groupId: String) {
@@ -283,7 +283,7 @@ extension ObjCAnalytics {
      Associates the user with a group and traits.
      
      - Parameters:
-       - id: The group identifier.
+       - groupId: The group identifier.
        - traits: Traits to associate with the group.
      */
     @objc
@@ -295,7 +295,7 @@ extension ObjCAnalytics {
      Associates the user with a group and options.
      
      - Parameters:
-       - id: The group identifier.
+       - groupId: The group identifier.
        - options: Additional options.
      */
     @objc
@@ -307,7 +307,7 @@ extension ObjCAnalytics {
      Associates the user with a group, traits, and options.
      
      - Parameters:
-       - id: The group identifier.
+       - groupId: The group identifier.
        - traits: Traits to associate.
        - options: Additional options.
      */
@@ -392,7 +392,7 @@ extension ObjCAnalytics {
     /**
      Aliases a user ID with a new ID.
      
-     - Parameter userId: The new user ID.
+     - Parameter newId: The new user ID.
      */
     @objc
     public func alias(_ newId: String) {
@@ -403,7 +403,7 @@ extension ObjCAnalytics {
      Aliases a user ID with a previous ID.
      
      - Parameters:
-       - userId: The new user ID.
+       - newId: The new user ID.
        - previousId: The previous user ID.
      */
     @objc

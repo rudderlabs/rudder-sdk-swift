@@ -123,7 +123,7 @@ extension AnalyticsClient {
      Tracks a screen view event with the specified name, category, and optional properties and options.
      
      - Parameters:
-        - name: The name of the screen.
+        - screenName: The name of the screen.
         - category: An optional category associated with the screen. Defaults to `nil`.
         - properties: An Optional properties associated with the screen view. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to `nil`.
@@ -139,7 +139,7 @@ extension AnalyticsClient {
      Tracks a group event with the specified group ID, traits, and options.
      
      - Parameters:
-        - id: The unique identifier of the group.
+        - groupId: The unique identifier of the group.
         - traits: An Optional traits associated with the group. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
@@ -179,7 +179,7 @@ extension AnalyticsClient {
      
      - Parameters:
         - newId: The new user ID that should be associated with the previous ID.
-        - previousId: The existing or previous user ID. If `nil`, the method resolves a preferred previous ID.
+        - previousId: The existing or previous user ID. If `nil`, the method resolves a preferred previous ID. Defaults to `nil`.
         - options: Additional options for customization, such as integrations and context. Defaults to `nil`.
      */
     public func alias(newId: String, previousId: String? = nil, options: RudderOption? = nil) {
