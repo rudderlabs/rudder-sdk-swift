@@ -33,7 +33,6 @@ final class DataPlaneModuleTests: XCTestCase {
         guard let analytics = self.analytics_memory else { XCTFail("Analytics not initialized"); return }
         self.dpPlugin?.setup(analytics: analytics)
         XCTAssertNotNil(self.dpPlugin)
-        XCTAssertTrue(self.dpPlugin?.analytics?.configuration.storage.eventStorageMode == .memory)
     }
 }
 

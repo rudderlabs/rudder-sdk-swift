@@ -18,7 +18,7 @@ struct BluetoothInfoPluginTests {
             let analytics = AnalyticsClient(configuration: config)
             
             let bluetoothInfoPlugin = BluetoothInfoPlugin()
-            analytics.addPlugin(bluetoothInfoPlugin)
+            analytics.add(plugin: bluetoothInfoPlugin)
             
             bluetoothInfoPlugin.bluetoothAuthorizationStatus = { .allowedAlways }
             let event = MockEvent()
@@ -49,7 +49,7 @@ struct BluetoothInfoPluginTests {
             let analytics = AnalyticsClient(configuration: config)
             
             let bluetoothInfoPlugin = BluetoothInfoPlugin()
-            analytics.addPlugin(bluetoothInfoPlugin)
+            analytics.add(plugin: bluetoothInfoPlugin)
             
             bluetoothInfoPlugin.bluetoothAuthorizationStatus = { .denied }
             let event = MockEvent()

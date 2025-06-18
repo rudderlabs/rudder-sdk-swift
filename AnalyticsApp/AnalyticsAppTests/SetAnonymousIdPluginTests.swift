@@ -11,7 +11,7 @@ struct SetAnonymousIdPluginTests {
             
             let customAnonymousId = "custom-test-anonymous-id-12345"
             let setAnonymousIdPlugin = SetAnonymousIdPlugin(anonymousId: customAnonymousId)
-            analytics.addPlugin(setAnonymousIdPlugin)
+            analytics.add(plugin: setAnonymousIdPlugin)
             
             let event = MockEvent()
             event.anonymousId = "original-anonymous-id"
@@ -34,7 +34,7 @@ struct SetAnonymousIdPluginTests {
             
             let emptyAnonymousId = ""
             let setAnonymousIdPlugin = SetAnonymousIdPlugin(anonymousId: emptyAnonymousId)
-            analytics.addPlugin(setAnonymousIdPlugin)
+            analytics.add(plugin: setAnonymousIdPlugin)
             
             let event = MockEvent()
             event.anonymousId = "original-id"
@@ -57,7 +57,7 @@ struct SetAnonymousIdPluginTests {
             
             let longAnonymousId = String(repeating: "a", count: 1000)
             let setAnonymousIdPlugin = SetAnonymousIdPlugin(anonymousId: longAnonymousId)
-            analytics.addPlugin(setAnonymousIdPlugin)
+            analytics.add(plugin: setAnonymousIdPlugin)
             
             let event = MockEvent()
             event.anonymousId = "short-id"
