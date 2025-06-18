@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)shutdown;
 - (NSString * _Nullable)anonymousId;
 - (NSNumber * _Nullable)sessionId;
+- (void)openURL:(NSURL * _Nonnull)url options:(NSDictionary<NSString *, id> * _Nullable)options;
 
 @end
 

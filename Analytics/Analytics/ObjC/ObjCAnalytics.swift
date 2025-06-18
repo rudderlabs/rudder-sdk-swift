@@ -510,3 +510,28 @@ extension ObjCAnalytics {
         analytics.remove(plugin: adaptedPlugin)
     }
 }
+
+// MARK: - Deep Link Tracking
+extension ObjCAnalytics {
+    /**
+     Handles a deep link URL by extracting its query parameters and tracking the event.
+     
+     - Parameters:
+        - url: The deep link URL to process and track.
+        - options: An optional dictionary of additional metadata to include in the tracking event.
+     */
+    @objc
+    public func openURL(_ url: URL, options: [String: Any]?) {
+        self.analytics.openURL(url, options: options)
+    }
+    
+    /**
+     Handles a deep link URL without additional options.
+     
+     - Parameter url: The deep link URL to process and track.
+     */
+    @objc
+    public func openURL(_ url: URL) {
+        self.analytics.openURL(url, options: nil)
+    }
+}

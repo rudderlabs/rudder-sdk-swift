@@ -6,6 +6,7 @@
 //
 
 #import "SceneDelegate.h"
+#import "AnalyticsManager.h"
 
 @interface SceneDelegate ()
 
@@ -53,5 +54,13 @@
     // to restore the scene back to its current state.
 }
 
+#pragma mark - Deep Link Handling
+
+- (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
+    for (UIOpenURLContext *context in URLContexts) {
+        NSURL *url = context.URL;
+        [[AnalyticsManager sharedManager] openURL:url options: nil];
+    }
+}
 
 @end
