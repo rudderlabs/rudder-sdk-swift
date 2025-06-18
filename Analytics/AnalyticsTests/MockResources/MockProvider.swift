@@ -19,17 +19,17 @@ final class MockProvider {
     static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
     
     static var clientWithDiskStorage: AnalyticsClient {
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storageMode: .disk, flushPolicies: [])
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", flushPolicies: [])
         return AnalyticsClient(configuration: configuration)
     }
     
     static var clientWithMemoryStorage: AnalyticsClient {
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storageMode: .memory, flushPolicies: [])
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", flushPolicies: [])
         return AnalyticsClient(configuration: configuration)
     }
     
     static func clientWithSessionConfig(config: SessionConfiguration) -> AnalyticsClient{
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", storageMode: .disk, flushPolicies: [], sessionConfiguration: config)
+        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", flushPolicies: [], sessionConfiguration: config)
         return AnalyticsClient(configuration: configuration)
     }
 }

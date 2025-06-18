@@ -28,7 +28,7 @@ final class AnalyticsTests: XCTestCase {
     }
     
     func test_sourceConfiguration() {
-        let configuration = Configuration(writeKey: MockProvider._mockWriteKey, dataPlaneUrl: "https://www.mock-url.com/", storageMode: .disk)
+        let configuration = Configuration(writeKey: MockProvider._mockWriteKey, dataPlaneUrl: "https://www.mock-url.com/")
         
         let client = AnalyticsClient(configuration: configuration)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
