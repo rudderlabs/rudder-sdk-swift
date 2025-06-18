@@ -132,7 +132,7 @@ public struct _FlushInterval {
     public let `default`: UInt64 = 10_000
 
     /// Minimum time interval allowed for triggering a flush, in milliseconds.
-    let min: UInt64 = 1
+    let min: UInt64 = 1_000
 }
 
 /**
@@ -191,7 +191,7 @@ public struct _DefaultConfig {
     public let sessionTimeoutInMillis: UInt64 = 300_000
 
     /// Default storage mode used for persisting data.
-    public let storageMode: StorageMode = .disk
+    let storageMode: StorageMode = .disk
     
     /// Default query parameters added to outgoing requests.
     let queryParams = ["p": "ios", "v": "\(RSVersion)"]

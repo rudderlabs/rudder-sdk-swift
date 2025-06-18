@@ -32,7 +32,6 @@
     NSString *dataPlaneUrl = @"https://data-plane.analytics.com";
     
     RSAConfigurationBuilder *builder = [[RSAConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
-    [builder setLogLevel: RSALogLevelVerbose];
     [builder setGzipEnabled: YES];
     
     NSArray *flushPolicies = @[[RSAStartupFlushPolicy new], [RSAFrequencyFlushPolicy new], [RSACountFlushPolicy new]];
@@ -42,13 +41,13 @@
 
     RSASessionConfigurationBuilder *sessionBuilder = [RSASessionConfigurationBuilder new];
     [builder setSessionConfiguration: [sessionBuilder build]];
-    [builder setStorageMode: RSAStorageModeMemory];
+    
+    // Adding custom Logger..
+    [RSALoggerAnalytics setLogLevel: RSALogLevelVerbose];
+    CustomLogger *logger = [CustomLogger new];
+    [RSALoggerAnalytics setLogger:logger];
     
     self.client = [[RSAAnalytics alloc] initWithConfiguration:[builder build]];
-   
-    // Adding custom Logger..
-    CustomLogger *logger = [CustomLogger new];
-    [self.client setCustomLogger:logger];
     
     RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
     [optionBuilder setIntegrations:@{@"CleverTap": @YES}];

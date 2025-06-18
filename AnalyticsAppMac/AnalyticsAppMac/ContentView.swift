@@ -53,7 +53,7 @@ struct ContentView: View {
                 CustomButton(title: "Track Event") {
                     AnalyticsManager.shared.track(
                         name: "Track at \(Date())",
-                        properties: ["key": "value"],
+                        properties: ["key": "value"]
                     )
                 }
                 

@@ -19,7 +19,7 @@ public final class ObjCAnalytics: NSObject {
     /**
      Initializes the analytics client using the provided Objective-C configuration.
      
-     - Parameter configuration: The configuration object containing settings and storage details.
+     - Parameter configuration: The configuration object containing settings.
      */
     @objc
     public init(configuration: Configuration) {
@@ -462,17 +462,6 @@ extension ObjCAnalytics {
     public func reset() {
         self.analytics.reset()
     }
-
-    /**
-     Sets a custom logger for analytics logging.
-     
-     - Parameter logger: An Objective-C compatible logger.
-     */
-    @objc(setCustomLogger:)
-    public func setLogger(_ logger: ObjCLogger) {
-        let adaptedLogger = ObjCLoggerAdapter(logger: logger)
-        self.analytics.setLogger(logger: adaptedLogger)
-    }
 }
 
 extension ObjCAnalytics {
@@ -504,9 +493,20 @@ extension ObjCAnalytics {
      
      - Parameter plugin: An Objective-C compatible plugin.
      */
-    @objc
-    public func addPlugin(_ plugin: ObjCPlugin) {
+    @objc(addPlugin:)
+    public func add(plugin: ObjCPlugin) {
         let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
-        analytics.addPlugin(adaptedPlugin)
+        analytics.add(plugin: adaptedPlugin)
+    }
+    
+    /**
+     Removes a plugin from analytics client.
+     
+     - Parameter plugin: An Objective-C compatible plugin.
+     */
+    @objc(removePlugin:)
+    public func remove(plugin: ObjCPlugin) {
+        let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
+        analytics.remove(plugin: adaptedPlugin)
     }
 }

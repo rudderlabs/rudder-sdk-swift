@@ -25,7 +25,8 @@ final class LoggerAnalyticsTests: XCTestCase {
     func testLoggerLogsAtCorrectLevels() {
         given("a mock logger and log level set to .info") {
             guard let mockLogger else { XCTFail("Mock logger not set up correctly"); return }
-            LoggerAnalytics.setup(logger: mockLogger, logLevel: .info)
+            LoggerAnalytics.setLogger(mockLogger)
+            LoggerAnalytics.logLevel = .info
             
             when("calling each log method") {
                 LoggerAnalytics.verbose(log: "This is verbose")
@@ -49,7 +50,8 @@ final class LoggerAnalyticsTests: XCTestCase {
     func testErrorLoggingWithAndWithoutErrorObject() {
         given("a mock logger and log level set to .error") {
             guard let mockLogger else { XCTFail("Mock logger not set up correctly"); return }
-            LoggerAnalytics.setup(logger: mockLogger, logLevel: .error)
+            LoggerAnalytics.setLogger(mockLogger)
+            LoggerAnalytics.logLevel = .error
             
             when("calling error with and without an error object") {
                 LoggerAnalytics.error(log: "Only log")
@@ -67,7 +69,8 @@ final class LoggerAnalyticsTests: XCTestCase {
     func testNoLoggingWhenLevelIsNone() {
         given("a mock logger and log level set to .none") {
             guard let mockLogger else { XCTFail("Mock logger not set up correctly"); return }
-            LoggerAnalytics.setup(logger: mockLogger, logLevel: .none)
+            LoggerAnalytics.setLogger(mockLogger)
+            LoggerAnalytics.logLevel = .none
             
             when("all log methods are called") {
                 LoggerAnalytics.verbose(log: "V")

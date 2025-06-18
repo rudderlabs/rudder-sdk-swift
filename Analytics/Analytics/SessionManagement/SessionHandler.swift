@@ -5,11 +5,7 @@
 //  Created by Satheesh Kannan on 25/02/25.
 //
 
-#if canImport(UIKit)
-import UIKit
-#elseif canImport(AppKit)
-import AppKit
-#endif
+import Foundation
 
 // MARK: - SessionType
 

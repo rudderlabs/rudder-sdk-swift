@@ -20,7 +20,37 @@ public final class ObjCLoggerAnalytics: NSObject {
     private override init() {
         /* Default implementation (no-op) */
     }
-
+    
+    /**
+     Sets the logger implementation to be used for all logging operations.
+     
+     - Parameter logger: The `RSALogger` implementation to be used.
+     */
+    @objc
+    public static func setLogger(_ logger: ObjCLogger) {
+        LoggerAnalytics.setLogger(ObjCLoggerAdapter(logger: logger))
+    }
+    
+    /**
+     Sets the log level that determines which logs will be processed.
+     
+     - Parameter level: The log level to set `RSALogLevel`.
+     */
+    @objc
+    public static func setLogLevel(_ level: LogLevel) {
+        LoggerAnalytics.logLevel = level
+    }
+    
+    /**
+     Gets the current log level.
+     
+     - Returns: The current log level as an `RSALogLevel`.
+     */
+    @objc
+    public static func getLogLevel() -> LogLevel {
+        return LoggerAnalytics.logLevel
+    }
+    
     /**
      Logs a verbose-level message using the underlying Swift logger.
 

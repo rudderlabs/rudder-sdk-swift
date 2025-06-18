@@ -16,7 +16,7 @@ import Foundation
 @objc(RSAPlugin)
 public protocol ObjCPlugin: AnyObject {
 
-    /// The type of plugin (e.g., `preProcess`, `onProcess`, `destination`, etc.).
+    /// The type of plugin (e.g., `preProcess`, `onProcess`, `terminal`, etc.).
     @objc var pluginType: PluginType { get set }
 
     /**

@@ -104,7 +104,8 @@
                 @"Key_3": @"Value3",
                 @"Key_4": @1234,
                 @"Key_5": @5678.9,
-                @"Key_6": @YES
+                @"Key_6": @YES,
+                @"Key_7": [NSURL URLWithString:@"https://www.rsa-test.com/"]
             };
             
             RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];

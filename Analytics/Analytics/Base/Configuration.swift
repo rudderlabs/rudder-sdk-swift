@@ -30,11 +30,6 @@ public class Configuration: NSObject {
     var controlPlaneUrl: String
 
     /**
-     The current log level that controls which messages are shown.
-     */
-    var logLevel: LogLevel
-
-    /**
      A boolean flag to enable GZip compression for network requests. Defaults to `true`.
      */
     var gzipEnabled: Bool
@@ -78,9 +73,7 @@ public class Configuration: NSObject {
        - writeKey: The write key for authentication with the analytics service.
        - dataPlaneUrl: The URL for the data plane.
        - controlPlaneUrl: The URL for the control plane.
-       - logLevel: The logLevel value for logging messages. Defaults to `none`.
        - gzipEnabled: A flag to enable GZip compression.
-       - storageMode: The storage mode for storing events. Defaults to `disk`.
        - flushPolicies: The flush policies for event flushing.
        - collectDeviceId: A flag to enable automatic collection of the device ID. Defaults to `true`.
        - trackApplicationLifecycleEvents: A flag to enable automatic tracking of the application lifecycle events. Defaults to `true`.
@@ -92,9 +85,7 @@ public class Configuration: NSObject {
         writeKey: String,
         dataPlaneUrl: String,
         controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl,
-        logLevel: LogLevel = Constants.log.defaultLevel,
         gzipEnabled: Bool = Constants.defaultConfig.gzipEnabled,
-        storageMode: StorageMode = Constants.defaultConfig.storageMode,
         flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
         collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId,
         trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents,
@@ -103,9 +94,8 @@ public class Configuration: NSObject {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
-        self.logLevel = logLevel
-        self.gzipEnabled = gzipEnabled
-        self.storageMode = storageMode
+        self.gzipEnabled = gzipEnaabled
+        self.storageMode = Constants.defaultConfig.storageMode
         self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode)
         self.flushPolicies = flushPolicies
         self.collectDeviceId = collectDeviceId
