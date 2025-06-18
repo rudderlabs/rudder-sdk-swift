@@ -104,7 +104,7 @@ public struct AnyCodable: Codable {
         } else if let boolValue = try? container.decode(Bool.self) {
             value = boolValue
         } else if let stringValue = try? container.decode(String.self) {
-            if let url = URL(string: stringValue), (stringValue.contains("://") || stringValue.contains("www.")) {
+            if let url = URL(string: stringValue), stringValue.contains("://") || stringValue.contains("www.") {
                 value = url
             } else if let date = Date.date(from: stringValue) {
                 value = date
