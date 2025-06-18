@@ -79,7 +79,7 @@ public class Configuration: NSObject {
        - dataPlaneUrl: The URL for the data plane.
        - controlPlaneUrl: The URL for the control plane.
        - logLevel: The logLevel value for logging messages. Defaults to `none`.
-       - gzipEnaabled: A flag to enable GZip compression.
+       - gzipEnabled: A flag to enable GZip compression.
        - storageMode: The storage mode for storing events. Defaults to `disk`.
        - flushPolicies: The flush policies for event flushing.
        - collectDeviceId: A flag to enable automatic collection of the device ID. Defaults to `true`.
