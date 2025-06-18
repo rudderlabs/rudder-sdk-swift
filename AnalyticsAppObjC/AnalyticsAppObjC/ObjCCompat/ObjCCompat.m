@@ -13,15 +13,14 @@
 @interface ObjCCompat()
 
 @property RSAAnalytics *client;
+@property CustomOptionPlugin *customPlugin;
 
 @end
 
 @implementation ObjCCompat
 
 - (instancetype)init {
-    if (self) {
-        
-    }
+    if (self) {}
     return self;
 }
 
@@ -44,7 +43,6 @@
     [sessionBuilder setSessionTimeoutInMillis: @1000];
     
     [builder setSessionConfiguration: [sessionBuilder build]];
-    [builder setStorageMode: RSAStorageModeMemory];
     
     self.client = [[RSAAnalytics alloc] initWithConfiguration:[builder build]];
 }
@@ -80,8 +78,15 @@
     [optionBuilder setExternalIds:@[[[RSAExternalId alloc] initWithType:@"external_id_type" id:@"external_id"]]];
     
     // Adding custom plugin..
-    CustomOptionPlugin *plugin = [[CustomOptionPlugin alloc] initWithOption:[optionBuilder build]];
-    [self.client addPlugin:plugin];
+    self.customPlugin = [[CustomOptionPlugin alloc] initWithOption:[optionBuilder build]];
+    [self.client addPlugin: self.customPlugin];
+}
+
+- (void)removeCustomPlugin {
+    if (self.customPlugin != nil) {
+        [self.client removePlugin: self.customPlugin];
+        self.customPlugin = nil;
+    }
 }
 
 - (NSNumber * _Nullable)sessionId {
