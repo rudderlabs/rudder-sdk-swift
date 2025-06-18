@@ -202,18 +202,7 @@ extension Dictionary where Key == String, Value == Any {
     }
     
     var objCSanitized: [String: Any] {
-        self.mapValues { value in
-            if let number = value as? NSNumber {
-                let objCType = String(cString: number.objCType)
-                return objCType == "c" ? number.boolValue : number
-            } else if let array = value as? [Any] {
-                return array.objCSanitized
-            } else if let dict = value as? [String: Any] {
-                return dict.objCSanitized
-            } else {
-                return value
-            }
-        }
+        self.mapValues { objCSanitizeValue($0) }
     }
 }
 
@@ -252,18 +241,53 @@ public extension Array where Element == Any {
 // MARK: - [Any]
 extension Array where Element == Any {
     var objCSanitized: [Any] {
-        self.map { element in
-            if let number = element as? NSNumber {
-                let objCType = String(cString: number.objCType)
-                return objCType == "c" ? number.boolValue : number
-            } else if let array = element as? [Any] {
-                return array.objCSanitized
-            } else if let dict = element as? [String: Any] {
-                return dict.objCSanitized
-            } else {
-                return element
-            }
-        }
+        self.map { objCSanitizeValue($0) }
+    }
+}
+
+// MARK: - ObjC Sanitization Helper
+/**
+ Recursively sanitizes values to ensure compatibility with Objective-C.
+ 
+ This function handles NSNumber type disambiguation (which is crucial for Objective-C interop),
+ and recursively processes nested arrays and dictionaries.
+ */
+private func objCSanitizeValue(_ value: Any) -> Any {
+    switch value {
+    case let number as NSNumber:
+        return sanitizeNSNumber(number)
+    case let array as [Any]:
+        return array.objCSanitized
+    case let dict as [String: Any]:
+        return dict.objCSanitized
+    default:
+        return value
+    }
+}
+
+/**
+ Sanitizes NSNumber objects by examining their underlying Objective-C type encoding.
+ 
+ This is necessary because NSNumber can represent different primitive types (Bool, Int, Float, Double)
+ but Objective-C needs explicit type information.
+ */
+private func sanitizeNSNumber(_ number: NSNumber) -> Any {
+    let objCType = String(cString: number.objCType)
+    
+    switch objCType {
+    case "c", "C": // Bool (char/unsigned char when used for BOOL)
+        return number.boolValue
+    case "s", "S", "i", "I", "l", "L", "q", "Q": // All integer types
+        return number.intValue
+    case "f": // Float (32-bit)
+        // Convert through string to maintain precision consistency
+        let stringValue = String(describing: number.floatValue)
+        return Double(stringValue) ?? Double(number.floatValue)
+    case "d": // Double (64-bit)
+        return number.doubleValue
+    default:
+        // For unknown types, return the original NSNumber
+        return number
     }
 }
 
