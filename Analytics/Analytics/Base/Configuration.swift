@@ -73,7 +73,7 @@ public class Configuration: NSObject {
        - writeKey: The write key for authentication with the analytics service.
        - dataPlaneUrl: The URL for the data plane.
        - controlPlaneUrl: The URL for the control plane.
-       - gzipEnaabled: A flag to enable GZip compression.
+       - gzipEnabled: A flag to enable GZip compression.
        - flushPolicies: The flush policies for event flushing.
        - collectDeviceId: A flag to enable automatic collection of the device ID. Defaults to `true`.
        - trackApplicationLifecycleEvents: A flag to enable automatic tracking of the application lifecycle events. Defaults to `true`.
@@ -85,7 +85,7 @@ public class Configuration: NSObject {
         writeKey: String,
         dataPlaneUrl: String,
         controlPlaneUrl: String = Constants.defaultConfig.controlPlaneUrl,
-        gzipEnaabled: Bool = Constants.defaultConfig.gzipEnabled,
+        gzipEnabled: Bool = Constants.defaultConfig.gzipEnabled,
         flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
         collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId,
         trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents,
@@ -94,7 +94,7 @@ public class Configuration: NSObject {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
-        self.gzipEnabled = gzipEnaabled
+        self.gzipEnabled = gzipEnabled
         self.storageMode = Constants.defaultConfig.storageMode
         self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode)
         self.flushPolicies = flushPolicies

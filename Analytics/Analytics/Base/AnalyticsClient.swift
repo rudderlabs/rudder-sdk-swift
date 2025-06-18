@@ -123,15 +123,15 @@ extension AnalyticsClient {
      Tracks a screen view event with the specified name, category, and optional properties and options.
      
      - Parameters:
-        - name: The name of the screen.
+        - screenName: The name of the screen.
         - category: An optional category associated with the screen. Defaults to `nil`.
         - properties: An Optional properties associated with the screen view. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
-    public func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    public func screen(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
-        let event = ScreenEvent(screenName: name, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
+        let event = ScreenEvent(screenName: screenName, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
     
@@ -139,14 +139,14 @@ extension AnalyticsClient {
      Tracks a group event with the specified group ID, traits, and options.
      
      - Parameters:
-        - id: The unique identifier of the group.
+        - groupId: The unique identifier of the group.
         - traits: An Optional traits associated with the group. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
-    public func group(id: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    public func group(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
-        let event = GroupEvent(groupId: id, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
+        let event = GroupEvent(groupId: groupId, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
     
@@ -179,10 +179,10 @@ extension AnalyticsClient {
      
      - Parameters:
         - newId: The new user ID that should be associated with the previous ID.
-        - previousId: The existing or previous user ID. If `nil`, the method resolves a preferred previous ID.
+        - previousId: The existing or previous user ID. If `nil`, the method resolves a preferred previous ID. Defaults to `nil`.
         - options: Additional options for customization, such as integrations and context. Defaults to `nil`.
      */
-    public func alias(newId: String, previousId: String?, options: RudderOption? = nil) {
+    public func alias(newId: String, previousId: String? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
         let preferedPreviousId = self.userIdentityState.state.value.resolvePreferredPreviousId(previousId ?? String.empty)
@@ -356,7 +356,7 @@ extension AnalyticsClient {
         Task {
             let client = HttpClient(analytics: self)
             do {
-                let data = try await client.getConfiguarationData()
+                let data = try await client.getConfigurationData()
                 self.storage.write(value: data.jsonString, key: Constants.storageKeys.sourceConfig)
                 LoggerAnalytics.info(log: data.prettyPrintedString ?? "Bad response")
             } catch {

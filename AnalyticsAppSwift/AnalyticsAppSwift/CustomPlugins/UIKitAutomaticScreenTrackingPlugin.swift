@@ -50,7 +50,7 @@ final class UIKitAutomaticScreenTrackingPlugin: Plugin {
         if let trackableViewController = viewController as? UIKitScreenTrackable {
             trackableViewController.trackUIKitScreen(name: className)
         } else {
-            self.analytics?.screen(name: className)
+            self.analytics?.screen(screenName: className)
         }
     }
     

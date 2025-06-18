@@ -90,13 +90,13 @@ extension ObjCAnalytics {
     // MARK: - Screen
     
     private func internalScreen(_ name: String, category: String?, properties: [String: Any]?, options: RudderOption?) {
-        self.analytics.screen(name: name, category: category, properties: properties?.objCSanitized, options: options)
+        self.analytics.screen(screenName: name, category: category, properties: properties?.objCSanitized, options: options)
     }
     
     // MARK: - Group
     
     private func internalGroup(_ id: String, traits: [String: Any]?, options: RudderOption?) {
-        self.analytics.group(id: id, traits: traits?.objCSanitized, options: options)
+        self.analytics.group(groupId: id, traits: traits?.objCSanitized, options: options)
     }
     
     // MARK: - Identify
@@ -171,100 +171,100 @@ extension ObjCAnalytics {
     /**
      Tracks a screen view by name.
      
-     - Parameter name: The name of the screen.
+     - Parameter screenName: The name of the screen.
      */
     @objc
-    public func screen(_ name: String) {
-        self.internalScreen(name, category: nil, properties: nil, options: nil)
+    public func screen(_ screenName: String) {
+        self.internalScreen(screenName, category: nil, properties: nil, options: nil)
     }
 
     /**
      Tracks a screen view by name and category.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - category: The category of the screen.
      */
     @objc
-    public func screen(_ name: String, category: String) {
-        self.internalScreen(name, category: category, properties: nil, options: nil)
+    public func screen(_ screenName: String, category: String) {
+        self.internalScreen(screenName, category: category, properties: nil, options: nil)
     }
 
     /**
      Tracks a screen view with properties.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - properties: Screen properties.
      */
     @objc
-    public func screen(_ name: String, properties: [String: Any]) {
-        self.internalScreen(name, category: nil, properties: properties, options: nil)
+    public func screen(_ screenName: String, properties: [String: Any]) {
+        self.internalScreen(screenName, category: nil, properties: properties, options: nil)
     }
 
     /**
      Tracks a screen view with options.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - options: Additional options for screen tracking.
      */
     @objc
-    public func screen(_ name: String, options: RudderOption) {
-        self.internalScreen(name, category: nil, properties: nil, options: options)
+    public func screen(_ screenName: String, options: RudderOption) {
+        self.internalScreen(screenName, category: nil, properties: nil, options: options)
     }
 
     /**
      Tracks a screen view with category and properties.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - category: The screen category.
        - properties: Additional screen properties.
      */
     @objc
-    public func screen(_ name: String, category: String, properties: [String: Any]) {
-        self.internalScreen(name, category: category, properties: properties, options: nil)
+    public func screen(_ screenName: String, category: String, properties: [String: Any]) {
+        self.internalScreen(screenName, category: category, properties: properties, options: nil)
     }
 
     /**
      Tracks a screen view with category and options.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - category: The screen category.
        - options: Additional options.
      */
     @objc
-    public func screen(_ name: String, category: String, options: RudderOption) {
-        self.internalScreen(name, category: category, properties: nil, options: options)
+    public func screen(_ screenName: String, category: String, options: RudderOption) {
+        self.internalScreen(screenName, category: category, properties: nil, options: options)
     }
 
     /**
      Tracks a screen view with properties and options.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - properties: Additional screen properties.
        - options: Additional options.
      */
     @objc
-    public func screen(_ name: String, properties: [String: Any], options: RudderOption) {
-        self.internalScreen(name, category: nil, properties: properties, options: options)
+    public func screen(_ screenName: String, properties: [String: Any], options: RudderOption) {
+        self.internalScreen(screenName, category: nil, properties: properties, options: options)
     }
 
     /**
      Tracks a screen view with category, properties, and options.
      
      - Parameters:
-       - name: The screen name.
+       - screenName: The screen name.
        - category: The screen category.
        - properties: Additional screen properties.
        - options: Additional options.
      */
     @objc
-    public func screen(_ name: String, category: String, properties: [String: Any], options: RudderOption) {
-        self.internalScreen(name, category: category, properties: properties, options: options)
+    public func screen(_ screenName: String, category: String, properties: [String: Any], options: RudderOption) {
+        self.internalScreen(screenName, category: category, properties: properties, options: options)
     }
 
     // MARK: - Group
@@ -272,48 +272,48 @@ extension ObjCAnalytics {
     /**
      Associates the user with a group.
      
-     - Parameter id: The group identifier.
+     - Parameter groupId: The group identifier.
      */
     @objc
-    public func group(_ id: String) {
-        self.internalGroup(id, traits: nil, options: nil)
+    public func group(_ groupId: String) {
+        self.internalGroup(groupId, traits: nil, options: nil)
     }
 
     /**
      Associates the user with a group and traits.
      
      - Parameters:
-       - id: The group identifier.
+       - groupId: The group identifier.
        - traits: Traits to associate with the group.
      */
     @objc
-    public func group(_ id: String, traits: [String: Any]) {
-        self.internalGroup(id, traits: traits, options: nil)
+    public func group(_ groupId: String, traits: [String: Any]) {
+        self.internalGroup(groupId, traits: traits, options: nil)
     }
 
     /**
      Associates the user with a group and options.
      
      - Parameters:
-       - id: The group identifier.
+       - groupId: The group identifier.
        - options: Additional options.
      */
     @objc
-    public func group(_ id: String, options: RudderOption) {
-        self.internalGroup(id, traits: nil, options: options)
+    public func group(_ groupId: String, options: RudderOption) {
+        self.internalGroup(groupId, traits: nil, options: options)
     }
 
     /**
      Associates the user with a group, traits, and options.
      
      - Parameters:
-       - id: The group identifier.
+       - groupId: The group identifier.
        - traits: Traits to associate.
        - options: Additional options.
      */
     @objc
-    public func group(_ id: String, traits: [String: Any], options: RudderOption) {
-        self.internalGroup(id, traits: traits, options: options)
+    public func group(_ groupId: String, traits: [String: Any], options: RudderOption) {
+        self.internalGroup(groupId, traits: traits, options: options)
     }
 
     // MARK: - Identify
@@ -392,23 +392,23 @@ extension ObjCAnalytics {
     /**
      Aliases a user ID with a new ID.
      
-     - Parameter userId: The new user ID.
+     - Parameter newId: The new user ID.
      */
     @objc
-    public func alias(_ userId: String) {
-        self.internalAlias(userId, previousId: nil, options: nil)
+    public func alias(_ newId: String) {
+        self.internalAlias(newId, previousId: nil, options: nil)
     }
 
     /**
      Aliases a user ID with a previous ID.
      
      - Parameters:
-       - userId: The new user ID.
+       - newId: The new user ID.
        - previousId: The previous user ID.
      */
     @objc
-    public func alias(_ userId: String, previousId: String) {
-        self.internalAlias(userId, previousId: previousId, options: nil)
+    public func alias(_ newId: String, previousId: String) {
+        self.internalAlias(newId, previousId: previousId, options: nil)
     }
 
     /**

@@ -74,7 +74,7 @@ extension AnalyticsTests {
     
     func test_screenEvent_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
-        client.screen(name: "Screen Event", category: "Main", properties: ["prop": "value"])
+        client.screen(screenName: "Screen Event", category: "Main", properties: ["prop": "value"])
         try? await Task.sleep(nanoseconds: 300_000_000)
         await client.configuration.storage.rollover ()
         let dataItems = await client.configuration.storage.read().dataItems
@@ -87,7 +87,7 @@ extension AnalyticsTests {
     
     func test_groupEvent_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
-        client.group(id: "group_id", traits: ["prop": "value"])
+        client.group(groupId: "group_id", traits: ["prop": "value"])
         try? await Task.sleep(nanoseconds: 300_000_000)
         await client.configuration.storage.rollover()
         let dataItems = await client.configuration.storage.read().dataItems
@@ -136,10 +136,10 @@ extension AnalyticsTests {
         client.track(name: "Track Event", properties: ["prop": "value"])
         try? await Task.sleep(nanoseconds: 300_000_000)
         
-        client.screen(name: "Screen Event")
+        client.screen(screenName: "Screen Event")
         try? await Task.sleep(nanoseconds: 300_000_000)
         
-        client.group(id: "Group_id")
+        client.group(groupId: "Group_id")
         try? await Task.sleep(nanoseconds: 300_000_000)
         
         client.identify(userId: "User_id")
