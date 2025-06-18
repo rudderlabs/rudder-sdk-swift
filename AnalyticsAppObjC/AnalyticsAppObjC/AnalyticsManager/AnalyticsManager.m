@@ -60,7 +60,7 @@
     [self.client addPlugin:plugin];
 }
 
-- (void)identify:(NSString * _Nonnull)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSAOption* _Nullable)option {
+- (void)identify:(NSString * _Nullable)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSAOption* _Nullable)option {
     [self.client identify:userId traits:traits options:option];
 }
 
