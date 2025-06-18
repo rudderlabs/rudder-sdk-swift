@@ -18,6 +18,7 @@ final class LifecycleTrackingPlugin: Plugin {
     var appVersion: AppVersion?
     
     @Synchronized private var isFirstLaunch = true
+    @Synchronized private var didAppEnterBackground = false
     
     func setup(analytics: AnalyticsClient) {
         self.analytics = analytics
@@ -26,7 +27,8 @@ final class LifecycleTrackingPlugin: Plugin {
         self.updateAppVersion()
         
         if analytics.configuration.trackApplicationLifecycleEvents {
-            self.trackAppInstallAndUpdateEvents()
+            self.trackAppInstallOrUpdateEvents()
+            self.trackAppOpenedEvent()
             analytics.lifecycleObserver?.addObserver(self)
         }
     }
@@ -39,17 +41,16 @@ final class LifecycleTrackingPlugin: Plugin {
 // MARK: - LifecycleEventListener
 
 extension LifecycleTrackingPlugin: LifecycleEventListener {
+    
     func onBecomeActive() {
-        var properties: [String: Any] = [:]
-        if isFirstLaunch {
-            properties["version"] = appVersion?.currentVersionName
+        if didAppEnterBackground {
+            didAppEnterBackground = false
+            self.trackAppOpenedEvent()
         }
-        properties["from_background"] = !isFirstLaunch
-        isFirstLaunch = false
-        self.analytics?.track(name: LifecycleEvent.applicationOpened.rawValue, properties: properties)
     }
     
     func onBackground() {
+        didAppEnterBackground = true
         self.analytics?.track(name: LifecycleEvent.applicationBackgrounded.rawValue)
     }
 }
@@ -57,8 +58,10 @@ extension LifecycleTrackingPlugin: LifecycleEventListener {
 // MARK: - Installation Events
 
 extension LifecycleTrackingPlugin {
-    func trackAppInstallAndUpdateEvents() {
-        guard let appVersion else { return }
+    func trackAppInstallOrUpdateEvents() {
+        print("SK_Test :: \(#function)")
+        guard let appVersion, isFirstLaunch else { return }
+        
         if appVersion.previousVersionName == nil {
             self.analytics?.track(name: LifecycleEvent.applicationInstalled.rawValue, properties: [
                 "version": appVersion.currentVersionName ?? "",
@@ -72,10 +75,16 @@ extension LifecycleTrackingPlugin {
                 "previous_build": appVersion.previousBuild
             ])
         }
-
-#if os(iOS)
-        ProcessInfo.checkSwiftUIiOSApp { if $0 { self.onBecomeActive() } }
-#endif
+    }
+    
+    func trackAppOpenedEvent() {
+        var properties: [String: Any] = [:]
+        if isFirstLaunch {
+            properties["version"] = appVersion?.currentVersionName
+        }
+        properties["from_background"] = !isFirstLaunch
+        isFirstLaunch = false
+        self.analytics?.track(name: LifecycleEvent.applicationOpened.rawValue, properties: properties)
     }
 }
 
