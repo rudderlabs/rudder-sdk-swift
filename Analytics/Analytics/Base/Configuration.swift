@@ -94,7 +94,7 @@ public class Configuration: NSObject {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
         self.controlPlaneUrl = controlPlaneUrl
-        self.gzipEnabled = gzipEnaabled
+        self.gzipEnabled = gzipEnabled
         self.storageMode = Constants.defaultConfig.storageMode
         self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode)
         self.flushPolicies = flushPolicies
