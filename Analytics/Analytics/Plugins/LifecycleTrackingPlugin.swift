@@ -59,7 +59,6 @@ extension LifecycleTrackingPlugin: LifecycleEventListener {
 
 extension LifecycleTrackingPlugin {
     func trackAppInstallOrUpdateEvents() {
-        print("SK_Test :: \(#function)")
         guard let appVersion, isFirstLaunch else { return }
         
         if appVersion.previousVersionName == nil {
