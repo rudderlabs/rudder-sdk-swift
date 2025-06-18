@@ -12,7 +12,7 @@ import Foundation
  A plugin created to track app lifecycle events.
  */
 final class LifecycleTrackingPlugin: Plugin {
-    var pluginType: PluginType = .manual
+    var pluginType: PluginType = .utility
     
     var analytics: AnalyticsClient?
     var appVersion: AppVersion?
