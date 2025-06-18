@@ -18,7 +18,7 @@ struct AdvertisingIdPluginTests {
             let analytics = AnalyticsClient(configuration: config)
             
             let advertisingIdPlugin = AdvertisingIdPlugin()
-            analytics.addPlugin(advertisingIdPlugin)
+            analytics.add(plugin: advertisingIdPlugin)
             
             let mockIdfa = "mock_idfa_1234"
             advertisingIdPlugin.trackingAuthorizationStatus = { .authorized }
@@ -52,7 +52,7 @@ struct AdvertisingIdPluginTests {
             let analytics = AnalyticsClient(configuration: config)
 
             let advertisingIdPlugin = AdvertisingIdPlugin()
-            analytics.addPlugin(advertisingIdPlugin)
+            analytics.add(plugin: advertisingIdPlugin)
 
             let mockIdfa = "mock_idfa_1234"
             advertisingIdPlugin.trackingAuthorizationStatus = { .denied }

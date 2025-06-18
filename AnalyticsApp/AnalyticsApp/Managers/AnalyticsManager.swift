@@ -55,7 +55,7 @@ extension AnalyticsManager {
     }
     
     func addPlugin(_ plugin: Plugin) {
-        self.analytics?.addPlugin(plugin)
+        self.analytics?.add(plugin: plugin)
     }
     
     func flush() {
