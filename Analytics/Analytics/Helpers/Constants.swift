@@ -132,7 +132,7 @@ public struct _FlushInterval {
     public let `default`: UInt64 = 10_000
 
     /// Minimum time interval allowed for triggering a flush, in milliseconds.
-    let min: UInt64 = 1
+    let min: UInt64 = 1_000
 }
 
 /**
