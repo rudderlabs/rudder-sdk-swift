@@ -172,6 +172,11 @@
     [RSALoggerAnalytics setLogger: logger];
 }
 
+- (void)trackDeepLinking {
+    [self.client openURL: [NSURL URLWithString:@"https://www.example-test.com"]];
+    [self.client openURL: [NSURL URLWithString:@"https://www.example-test.com"] options: @{@"another_property": @"another_value"}];
+}
+
 #pragma mark - Helpers
 
 - (NSDictionary *)preparedProperty {
