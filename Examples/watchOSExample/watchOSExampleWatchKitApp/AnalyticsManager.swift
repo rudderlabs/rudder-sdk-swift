@@ -1,12 +1,12 @@
 //
 //  AnalyticsManager.swift
-//  AnalyticsAppWatchKitApp
+//  watchOSExampleWatchKitApp
 //
 //  Created by Satheesh Kannan on 02/06/25.
 //
 
 import Foundation
-import Analytics
+import RudderStackAnalytics
 
 // MARK: - AnalyticsManager
 class AnalyticsManager {

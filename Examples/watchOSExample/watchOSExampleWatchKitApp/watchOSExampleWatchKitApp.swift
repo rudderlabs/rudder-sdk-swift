@@ -1,6 +1,6 @@
 //
-//  AnalyticsAppWatchApp.swift
-//  AnalyticsAppWatchKitApp
+//  watchOSExampleApp.swift
+//  watchOSExampleWatchKitApp
 //
 //  Created by Satheesh Kannan on 02/06/25.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - WatchKit App
 @main
-struct AnalyticsAppWatchKitApp: App {
+struct watchOSExampleWatchKitApp: App {
     
     @WKApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     

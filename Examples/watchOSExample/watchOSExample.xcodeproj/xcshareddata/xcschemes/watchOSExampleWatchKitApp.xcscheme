@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1630"
+   LastUpgradeVersion = "1640"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "53DF2B842DEE0F7700FE2659"
-               BuildableName = "AnalyticsAppWatchKitApp.app"
-               BlueprintName = "AnalyticsAppWatchKitApp"
-               ReferencedContainer = "container:AnalyticsAppWatch.xcodeproj">
+               BuildableName = "watchOSExampleWatchKitApp.app"
+               BlueprintName = "watchOSExampleWatchKitApp"
+               ReferencedContainer = "container:watchOSExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -30,9 +30,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "53DF2B772DEE0F7600FE2659"
-               BuildableName = "AnalyticsAppWatch.app"
-               BlueprintName = "AnalyticsAppWatch"
-               ReferencedContainer = "container:AnalyticsAppWatch.xcodeproj">
+               BuildableName = "watchOSExampleApp.app"
+               BlueprintName = "watchOSExampleApp"
+               ReferencedContainer = "container:watchOSExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -59,9 +59,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "53DF2B842DEE0F7700FE2659"
-            BuildableName = "AnalyticsAppWatchKitApp.app"
-            BlueprintName = "AnalyticsAppWatchKitApp"
-            ReferencedContainer = "container:AnalyticsAppWatch.xcodeproj">
+            BuildableName = "watchOSExampleWatchKitApp.app"
+            BlueprintName = "watchOSExampleWatchKitApp"
+            ReferencedContainer = "container:watchOSExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -76,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "53DF2B842DEE0F7700FE2659"
-            BuildableName = "AnalyticsAppWatchKitApp.app"
-            BlueprintName = "AnalyticsAppWatchKitApp"
-            ReferencedContainer = "container:AnalyticsAppWatch.xcodeproj">
+            BuildableName = "watchOSExampleWatchKitApp.app"
+            BlueprintName = "watchOSExampleWatchKitApp"
+            ReferencedContainer = "container:watchOSExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -7,9 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		535BB51A2E04955400E1DAB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB5172E04955400E1DAB0 /* Assets.xcassets */; };
+		535BB51B2E04955400E1DAB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB5182E04955400E1DAB0 /* ContentView.swift */; };
+		535BB51C2E04955400E1DAB0 /* watchOSExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB5162E04955400E1DAB0 /* watchOSExampleApp.swift */; };
+		535BB5222E04956600E1DAB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB51F2E04956600E1DAB0 /* Assets.xcassets */; };
+		535BB5232E04956600E1DAB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB5202E04956600E1DAB0 /* ContentView.swift */; };
+		535BB5242E04956600E1DAB0 /* watchOSExampleWatchKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB51D2E04956600E1DAB0 /* watchOSExampleWatchKitApp.swift */; };
+		535BB5252E04956600E1DAB0 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB51E2E04956600E1DAB0 /* AnalyticsManager.swift */; };
 		53DEA73D2E03EBF300D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA73E2E03EBF300D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		53DF2B862DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 53DF2B852DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		53DF2B862DEE0F7700FE2659 /* watchOSExampleWatchKitApp.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 53DF2B852DEE0F7700FE2659 /* watchOSExampleWatchKitApp.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +47,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				53DF2B862DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app in Embed Watch Content */,
+				53DF2B862DEE0F7700FE2659 /* watchOSExampleWatchKitApp.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -48,23 +55,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		535BB5162E04955400E1DAB0 /* watchOSExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = watchOSExampleApp.swift; sourceTree = "<group>"; };
+		535BB5172E04955400E1DAB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		535BB5182E04955400E1DAB0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		535BB51D2E04956600E1DAB0 /* watchOSExampleWatchKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = watchOSExampleWatchKitApp.swift; sourceTree = "<group>"; };
+		535BB51E2E04956600E1DAB0 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
+		535BB51F2E04956600E1DAB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		535BB5202E04956600E1DAB0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		53DF2B782DEE0F7600FE2659 /* AnalyticsAppWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		53DF2B852DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppWatchKitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53DF2B782DEE0F7600FE2659 /* watchOSExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = watchOSExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53DF2B852DEE0F7700FE2659 /* watchOSExampleWatchKitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = watchOSExampleWatchKitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		53DF2B7A2DEE0F7600FE2659 /* AnalyticsAppWatch */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AnalyticsAppWatch;
-			sourceTree = "<group>";
-		};
-		53DF2B892DEE0F7700FE2659 /* AnalyticsAppWatchKitApp */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AnalyticsAppWatchKitApp;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		53DF2B752DEE0F7600FE2659 /* Frameworks */ = {
@@ -85,11 +86,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		535BB5192E04955400E1DAB0 /* watchOSExample */ = {
+			isa = PBXGroup;
+			children = (
+				535BB5162E04955400E1DAB0 /* watchOSExampleApp.swift */,
+				535BB5172E04955400E1DAB0 /* Assets.xcassets */,
+				535BB5182E04955400E1DAB0 /* ContentView.swift */,
+			);
+			path = watchOSExample;
+			sourceTree = "<group>";
+		};
+		535BB5212E04956600E1DAB0 /* watchOSExampleWatchKitApp */ = {
+			isa = PBXGroup;
+			children = (
+				535BB51D2E04956600E1DAB0 /* watchOSExampleWatchKitApp.swift */,
+				535BB51E2E04956600E1DAB0 /* AnalyticsManager.swift */,
+				535BB51F2E04956600E1DAB0 /* Assets.xcassets */,
+				535BB5202E04956600E1DAB0 /* ContentView.swift */,
+			);
+			path = watchOSExampleWatchKitApp;
+			sourceTree = "<group>";
+		};
 		53DF2B6F2DEE0F7600FE2659 = {
 			isa = PBXGroup;
 			children = (
-				53DF2B7A2DEE0F7600FE2659 /* AnalyticsAppWatch */,
-				53DF2B892DEE0F7700FE2659 /* AnalyticsAppWatchKitApp */,
+				535BB5192E04955400E1DAB0 /* watchOSExample */,
+				535BB5212E04956600E1DAB0 /* watchOSExampleWatchKitApp */,
 				53DF2BCC2DEE114600FE2659 /* Frameworks */,
 				53DF2B792DEE0F7600FE2659 /* Products */,
 			);
@@ -98,8 +120,8 @@
 		53DF2B792DEE0F7600FE2659 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				53DF2B782DEE0F7600FE2659 /* AnalyticsAppWatch.app */,
-				53DF2B852DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app */,
+				53DF2B782DEE0F7600FE2659 /* watchOSExampleApp.app */,
+				53DF2B852DEE0F7700FE2659 /* watchOSExampleWatchKitApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -115,9 +137,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		53DF2B772DEE0F7600FE2659 /* AnalyticsAppWatch */ = {
+		53DF2B772DEE0F7600FE2659 /* watchOSExampleApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 53DF2B962DEE0F7800FE2659 /* Build configuration list for PBXNativeTarget "AnalyticsAppWatch" */;
+			buildConfigurationList = 53DF2B962DEE0F7800FE2659 /* Build configuration list for PBXNativeTarget "watchOSExampleApp" */;
 			buildPhases = (
 				53DF2B742DEE0F7600FE2659 /* Sources */,
 				53DF2B752DEE0F7600FE2659 /* Frameworks */,
@@ -129,19 +151,16 @@
 			dependencies = (
 				53DF2B882DEE0F7700FE2659 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				53DF2B7A2DEE0F7600FE2659 /* AnalyticsAppWatch */,
-			);
-			name = AnalyticsAppWatch;
+			name = watchOSExampleApp;
 			packageProductDependencies = (
 			);
 			productName = AnalyticsAppWatch;
-			productReference = 53DF2B782DEE0F7600FE2659 /* AnalyticsAppWatch.app */;
+			productReference = 53DF2B782DEE0F7600FE2659 /* watchOSExampleApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		53DF2B842DEE0F7700FE2659 /* AnalyticsAppWatchKitApp */ = {
+		53DF2B842DEE0F7700FE2659 /* watchOSExampleWatchKitApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 53DF2B922DEE0F7800FE2659 /* Build configuration list for PBXNativeTarget "AnalyticsAppWatchKitApp" */;
+			buildConfigurationList = 53DF2B922DEE0F7800FE2659 /* Build configuration list for PBXNativeTarget "watchOSExampleWatchKitApp" */;
 			buildPhases = (
 				53DF2B812DEE0F7700FE2659 /* Sources */,
 				53DF2B822DEE0F7700FE2659 /* Frameworks */,
@@ -152,14 +171,11 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				53DF2B892DEE0F7700FE2659 /* AnalyticsAppWatchKitApp */,
-			);
-			name = AnalyticsAppWatchKitApp;
+			name = watchOSExampleWatchKitApp;
 			packageProductDependencies = (
 			);
 			productName = "AnalyticsAppWatch Watch App";
-			productReference = 53DF2B852DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app */;
+			productReference = 53DF2B852DEE0F7700FE2659 /* watchOSExampleWatchKitApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -180,7 +196,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 53DF2B732DEE0F7600FE2659 /* Build configuration list for PBXProject "AnalyticsAppWatch" */;
+			buildConfigurationList = 53DF2B732DEE0F7600FE2659 /* Build configuration list for PBXProject "watchOSExample" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -194,8 +210,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				53DF2B772DEE0F7600FE2659 /* AnalyticsAppWatch */,
-				53DF2B842DEE0F7700FE2659 /* AnalyticsAppWatchKitApp */,
+				53DF2B772DEE0F7600FE2659 /* watchOSExampleApp */,
+				53DF2B842DEE0F7700FE2659 /* watchOSExampleWatchKitApp */,
 			);
 		};
 /* End PBXProject section */
@@ -205,6 +221,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535BB51A2E04955400E1DAB0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,6 +229,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535BB5222E04956600E1DAB0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,6 +240,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535BB51B2E04955400E1DAB0 /* ContentView.swift in Sources */,
+				535BB51C2E04955400E1DAB0 /* watchOSExampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,6 +249,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535BB5232E04956600E1DAB0 /* ContentView.swift in Sources */,
+				535BB5242E04956600E1DAB0 /* watchOSExampleWatchKitApp.swift in Sources */,
+				535BB5252E04956600E1DAB0 /* AnalyticsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,7 +260,7 @@
 /* Begin PBXTargetDependency section */
 		53DF2B882DEE0F7700FE2659 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 53DF2B842DEE0F7700FE2659 /* AnalyticsAppWatchKitApp */;
+			target = 53DF2B842DEE0F7700FE2659 /* watchOSExampleWatchKitApp */;
 			targetProxy = 53DF2B872DEE0F7700FE2659 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -367,7 +390,7 @@
 				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = AnalyticsAppWatchKitApp;
+				INFOPLIST_KEY_CFBundleDisplayName = watchOSExampleWatchKitApp;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.sk.AnalyticsAppWatch;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -375,7 +398,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppWatch.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.watchosexample.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -396,7 +419,7 @@
 				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = AnalyticsAppWatchKitApp;
+				INFOPLIST_KEY_CFBundleDisplayName = watchOSExampleWatchKitApp;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.sk.AnalyticsAppWatch;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -404,7 +427,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppWatch.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudderstack.watchosexample.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -426,7 +449,7 @@
 				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = AnalyticsAppWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = watchOSExampleApp;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -438,7 +461,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppWatch;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.watchosexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -457,7 +480,7 @@
 				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = AnalyticsAppWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = watchOSExampleApp;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -469,7 +492,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppWatch;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.watchosexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -482,7 +505,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		53DF2B732DEE0F7600FE2659 /* Build configuration list for PBXProject "AnalyticsAppWatch" */ = {
+		53DF2B732DEE0F7600FE2659 /* Build configuration list for PBXProject "watchOSExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				53DF2B902DEE0F7800FE2659 /* Debug */,
@@ -491,7 +514,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		53DF2B922DEE0F7800FE2659 /* Build configuration list for PBXNativeTarget "AnalyticsAppWatchKitApp" */ = {
+		53DF2B922DEE0F7800FE2659 /* Build configuration list for PBXNativeTarget "watchOSExampleWatchKitApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				53DF2B932DEE0F7800FE2659 /* Debug */,
@@ -500,7 +523,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		53DF2B962DEE0F7800FE2659 /* Build configuration list for PBXNativeTarget "AnalyticsAppWatch" */ = {
+		53DF2B962DEE0F7800FE2659 /* Build configuration list for PBXNativeTarget "watchOSExampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				53DF2B972DEE0F7800FE2659 /* Debug */,

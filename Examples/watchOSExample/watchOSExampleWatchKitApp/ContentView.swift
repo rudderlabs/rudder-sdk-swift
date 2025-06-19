@@ -1,12 +1,12 @@
 //
 //  ContentView.swift
-//  AnalyticsAppWatchKitApp
+//  watchOSExampleWatchKitApp
 //
 //  Created by Satheesh Kannan on 02/06/25.
 //
 
 import SwiftUI
-import Analytics
+import RudderStackAnalytics
 
 // MARK: - ContentView
 struct ContentView: View {

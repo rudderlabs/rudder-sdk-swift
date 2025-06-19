@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  AnalyticsAppWatch
+//  watchOSExample
 //
 //  Created by Satheesh Kannan on 02/06/25.
 //
