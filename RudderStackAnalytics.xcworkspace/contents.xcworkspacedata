@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace version = "1.0">
+    <FileRef location = "group:Analytics.xcodeproj"/>
+    <FileRef location = "group:Examples/AnalyticsApp.xcodeproj"/>
+    <FileRef location = "group:Examples/AnalyticsAppMac.xcodeproj"/>
+    <FileRef location = "group:Examples/AnalyticsAppObjC.xcodeproj"/>
+    <FileRef location = "group:Examples/AnalyticsAppSwift.xcodeproj"/>
+    <FileRef location = "group:Examples/AnalyticsAppTv.xcodeproj"/>
+    <FileRef location = "group:Examples/AnalyticsAppWatch.xcodeproj"/>
+</Workspace>
