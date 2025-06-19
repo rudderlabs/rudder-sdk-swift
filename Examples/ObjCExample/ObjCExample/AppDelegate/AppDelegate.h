@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <RudderStackAnalytics/RudderStackAnalytics-Swift.h>
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 

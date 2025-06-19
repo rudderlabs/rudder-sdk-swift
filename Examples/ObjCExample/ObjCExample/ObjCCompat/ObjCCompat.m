@@ -6,7 +6,7 @@
 //
 
 #import "ObjCCompat.h"
-#import <RudderStackAnalytics/RudderStackAnalytics-Swift.h>
+#import <RudderStackAnalytics/RudderStackAnalytics.h>
 #import "CustomOptionPlugin.h"
 #import "CustomLogger.h"
 

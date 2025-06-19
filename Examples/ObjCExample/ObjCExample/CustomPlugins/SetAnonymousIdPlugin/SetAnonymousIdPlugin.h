@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <RudderStackAnalytics/RudderStackAnalytics-Swift.h>
+#import <RudderStackAnalytics/RudderStackAnalytics.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
