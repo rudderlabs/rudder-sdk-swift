@@ -4,4 +4,22 @@
    <FileRef
       location = "group:Analytics.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Examples/AnalyticsApp/AnalyticsApp.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Examples/AnalyticsAppSwift/AnalyticsAppSwift.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Examples/AnalyticsAppObjC/AnalyticsAppObjC.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Examples/AnalyticsAppMac/AnalyticsAppMac.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Examples/AnalyticsAppWatch/AnalyticsAppWatch.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Examples/AnalyticsAppTv/AnalyticsAppTv.xcodeproj">
+   </FileRef>
 </Workspace>
