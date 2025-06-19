@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		53E01C0C2DE9A13800602AFD /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53E01C0B2DE9A13800602AFD /* Analytics.framework */; };
-		53E01C0D2DE9A13800602AFD /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53E01C0B2DE9A13800602AFD /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		53DEA7392E03EBE100D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */; };
+		53DEA73A2E03EBE100D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		53E01C0E2DE9A13800602AFD /* Embed Frameworks */ = {
+		53DEA73B2E03EBE100D6C371 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				53E01C0D2DE9A13800602AFD /* Analytics.framework in Embed Frameworks */,
+				53DEA73A2E03EBE100D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -26,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E01BEB2DE999FA00602AFD /* AnalyticsAppMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E01C0B2DE9A13800602AFD /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -43,7 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53E01C0C2DE9A13800602AFD /* Analytics.framework in Frameworks */,
+				53DEA7392E03EBE100D6C371 /* RudderStackAnalytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +71,7 @@
 		53E01C0A2DE9A13800602AFD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */,
 				53E01C0B2DE9A13800602AFD /* Analytics.framework */,
 			);
 			name = Frameworks;
@@ -85,7 +87,7 @@
 				53E01BE72DE999FA00602AFD /* Sources */,
 				53E01BE82DE999FA00602AFD /* Frameworks */,
 				53E01BE92DE999FA00602AFD /* Resources */,
-				53E01C0E2DE9A13800602AFD /* Embed Frameworks */,
+				53DEA73B2E03EBE100D6C371 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

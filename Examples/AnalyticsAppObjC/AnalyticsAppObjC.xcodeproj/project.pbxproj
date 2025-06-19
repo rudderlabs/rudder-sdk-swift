@@ -14,9 +14,9 @@
 		5352C7B32DCBCBA10022B105 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5352C7A22DCBCBA10022B105 /* Assets.xcassets */; };
 		5352C7B42DCBCBA10022B105 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5352C7A82DCBCBA10022B105 /* Main.storyboard */; };
 		5352C7B52DCBCBA10022B105 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5352C7A52DCBCBA10022B105 /* LaunchScreen.storyboard */; };
-		5352C7B82DCBCBD10022B105 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5352C7B72DCBCBD10022B105 /* Analytics.framework */; };
-		5352C7B92DCBCBD10022B105 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5352C7B72DCBCBD10022B105 /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		535C9FDB2DFABF6700F6618A /* SetPushTokenPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 535C9FDA2DFABF6700F6618A /* SetPushTokenPlugin.m */; };
+		53DEA7352E03EBD600D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7342E03EBD600D6C371 /* RudderStackAnalytics.framework */; };
+		53DEA7362E03EBD600D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7342E03EBD600D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53E01B7E2DE61B3200602AFD /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B7D2DE61B3200602AFD /* AnalyticsManager.m */; };
 		53E01B812DE62BE300602AFD /* CustomLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B802DE62BE300602AFD /* CustomLogger.m */; };
 		53E01B842DE62CD300602AFD /* CustomOptionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 53E01B832DE62CD300602AFD /* CustomOptionPlugin.m */; };
@@ -25,13 +25,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		5352C7BA2DCBCBD10022B105 /* Embed Frameworks */ = {
+		53DEA7372E03EBD600D6C371 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5352C7B92DCBCBD10022B105 /* Analytics.framework in Embed Frameworks */,
+				53DEA7362E03EBD600D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,6 +54,7 @@
 		5352C7B72DCBCBD10022B105 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		535C9FD92DFABF6700F6618A /* SetPushTokenPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SetPushTokenPlugin.h; sourceTree = "<group>"; };
 		535C9FDA2DFABF6700F6618A /* SetPushTokenPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SetPushTokenPlugin.m; sourceTree = "<group>"; };
+		53DEA7342E03EBD600D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E01B7C2DE61B3200602AFD /* AnalyticsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalyticsManager.h; sourceTree = "<group>"; };
 		53E01B7D2DE61B3200602AFD /* AnalyticsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalyticsManager.m; sourceTree = "<group>"; };
 		53E01B7F2DE62BE300602AFD /* CustomLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomLogger.h; sourceTree = "<group>"; };
@@ -71,7 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5352C7B82DCBCBD10022B105 /* Analytics.framework in Frameworks */,
+				53DEA7352E03EBD600D6C371 /* RudderStackAnalytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +118,7 @@
 		5352C7B62DCBCBD10022B105 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				53DEA7342E03EBD600D6C371 /* RudderStackAnalytics.framework */,
 				5352C7B72DCBCBD10022B105 /* Analytics.framework */,
 			);
 			name = Frameworks;
@@ -215,7 +217,7 @@
 				5352C7692DCBCB390022B105 /* Sources */,
 				5352C76A2DCBCB390022B105 /* Frameworks */,
 				5352C76B2DCBCB390022B105 /* Resources */,
-				5352C7BA2DCBCBD10022B105 /* Embed Frameworks */,
+				53DEA7372E03EBD600D6C371 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

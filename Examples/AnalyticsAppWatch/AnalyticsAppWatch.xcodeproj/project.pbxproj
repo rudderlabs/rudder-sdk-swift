@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		53DEA73D2E03EBF300D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */; };
+		53DEA73E2E03EBF300D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53DF2B862DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 53DF2B852DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		53DF2BCE2DEE114600FE2659 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DF2BCD2DEE114600FE2659 /* Analytics.framework */; };
-		53DF2BCF2DEE114600FE2659 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DF2BCD2DEE114600FE2659 /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,6 +23,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		53DEA73F2E03EBF400D6C371 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				53DEA73E2E03EBF300D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		53DF2B952DEE0F7800FE2659 /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -34,20 +45,10 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		53DF2BD02DEE114600FE2659 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				53DF2BCF2DEE114600FE2659 /* Analytics.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DF2B782DEE0F7600FE2659 /* AnalyticsAppWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DF2B852DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppWatchKitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DF2BCD2DEE114600FE2659 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,7 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53DF2BCE2DEE114600FE2659 /* Analytics.framework in Frameworks */,
+				53DEA73D2E03EBF300D6C371 /* RudderStackAnalytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +108,7 @@
 		53DF2BCC2DEE114600FE2659 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */,
 				53DF2BCD2DEE114600FE2659 /* Analytics.framework */,
 			);
 			name = Frameworks;
@@ -146,7 +148,7 @@
 				53DF2B812DEE0F7700FE2659 /* Sources */,
 				53DF2B822DEE0F7700FE2659 /* Frameworks */,
 				53DF2B832DEE0F7700FE2659 /* Resources */,
-				53DF2BD02DEE114600FE2659 /* Embed Frameworks */,
+				53DEA73F2E03EBF400D6C371 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

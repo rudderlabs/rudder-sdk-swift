@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5303DB332DBFF42F008C0784 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5303DB322DBFF42F008C0784 /* Analytics.framework */; };
-		5303DB342DBFF42F008C0784 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5303DB322DBFF42F008C0784 /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53CBA9602DC29AD200961D6A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53CBA95A2DC29AD200961D6A /* Main.storyboard */; };
 		53CBA9622DC29AD200961D6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53CBA9542DC29AD200961D6A /* Assets.xcassets */; };
 		53CBA9632DC29AD200961D6A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53CBA9582DC29AD200961D6A /* LaunchScreen.storyboard */; };
@@ -18,6 +16,8 @@
 		53CBA9672DC29AD200961D6A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CBA95D2DC29AD200961D6A /* SceneDelegate.swift */; };
 		53CBA9682DC29AD200961D6A /* NextViewControllerToPush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CBA95C2DC29AD200961D6A /* NextViewControllerToPush.swift */; };
 		53CBA9692DC29AD200961D6A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CBA9532DC29AD200961D6A /* AppDelegate.swift */; };
+		53DEA7312E03EBC800D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7302E03EBC800D6C371 /* RudderStackAnalytics.framework */; };
+		53DEA7322E03EBC800D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7302E03EBC800D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,13 +31,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		5303DB352DBFF42F008C0784 /* Embed Frameworks */ = {
+		53DEA7332E03EBC900D6C371 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5303DB342DBFF42F008C0784 /* Analytics.framework in Embed Frameworks */,
+				53DEA7322E03EBC800D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -58,6 +58,7 @@
 		53CBA95E2DC29AD200961D6A /* UIKitAutomaticScreenTrackingPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitAutomaticScreenTrackingPlugin.swift; sourceTree = "<group>"; };
 		53CBA9722DC29B8000961D6A /* AnalyticsAppSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnalyticsAppSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53CC34BA2DB41F4000A2EF2F /* AnalyticsAppSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53DEA7302E03EBC800D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -80,7 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5303DB332DBFF42F008C0784 /* Analytics.framework in Frameworks */,
+				53DEA7312E03EBC800D6C371 /* RudderStackAnalytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +91,7 @@
 		5303DB312DBFF42F008C0784 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				53DEA7302E03EBC800D6C371 /* RudderStackAnalytics.framework */,
 				5303DB322DBFF42F008C0784 /* Analytics.framework */,
 			);
 			name = Frameworks;
@@ -196,7 +198,7 @@
 				53CC34B62DB41F4000A2EF2F /* Sources */,
 				53CC34B72DB41F4000A2EF2F /* Frameworks */,
 				53CC34B82DB41F4000A2EF2F /* Resources */,
-				5303DB352DBFF42F008C0784 /* Embed Frameworks */,
+				53DEA7332E03EBC900D6C371 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
