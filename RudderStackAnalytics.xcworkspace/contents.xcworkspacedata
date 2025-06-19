@@ -20,6 +20,6 @@
       location = "group:Examples/AnalyticsAppTv/AnalyticsAppTv.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Examples/SwiftUIApp/SwiftUIApp.xcodeproj">
+      location = "group:Examples/SwiftUIExample/SwiftUIExample.xcodeproj">
    </FileRef>
 </Workspace>

@@ -1,6 +1,6 @@
 //
 //  PermissionManager.swift
-//  SwiftUIApp
+//  SwiftUIExample
 //
 //  Created by Satheesh Kannan on 16/02/25.
 //

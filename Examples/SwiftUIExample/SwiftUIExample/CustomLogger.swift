@@ -1,6 +1,6 @@
 //
 //  CustomLogger.swift
-//  SwiftUIApp
+//  SwiftUIExample
 //
 //  Created by Satheesh Kannan on 22/04/25.
 //

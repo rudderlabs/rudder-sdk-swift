@@ -1,6 +1,6 @@
 //
 //  OptionPlugin.swift
-//  SwiftUIApp
+//  SwiftUIExample
 //
 //  Created by Satheesh Kannan on 26/03/25.
 //

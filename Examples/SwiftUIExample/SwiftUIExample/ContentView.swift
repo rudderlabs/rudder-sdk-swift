@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  SwiftUIApp
+//  SwiftUIExample
 //
 //  Created by Satheesh Kannan on 14/08/24.
 //

@@ -1,6 +1,6 @@
 //
 //  AppTestingHelper.swift
-//  SwiftUIAppTests
+//  SwiftUIExampleTests
 //
 //  Created by Satheesh Kannan on 20/01/25.
 //

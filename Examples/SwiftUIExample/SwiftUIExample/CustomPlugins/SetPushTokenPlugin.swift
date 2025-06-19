@@ -1,6 +1,6 @@
 //
 //  SetPushTokenPlugin.swift
-//  SwiftUIApp
+//  SwiftUIExample
 //
 //  Created by Satheesh Kannan on 11/06/25.
 //

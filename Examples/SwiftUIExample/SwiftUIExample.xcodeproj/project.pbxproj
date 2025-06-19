@@ -7,25 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		531E18952E041A740039885D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 531E188F2E041A740039885D /* Assets.xcassets */; };
-		531E18962E041A740039885D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 531E188B2E041A740039885D /* Preview Assets.xcassets */; };
-		531E18972E041A740039885D /* SwiftUIAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E188E2E041A740039885D /* SwiftUIAppApp.swift */; };
-		531E18982E041A740039885D /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18882E041A740039885D /* AnalyticsManager.swift */; };
-		531E18992E041A740039885D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18902E041A740039885D /* ContentView.swift */; };
-		531E189A2E041A740039885D /* SetPushTokenPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18862E041A740039885D /* SetPushTokenPlugin.swift */; };
-		531E189B2E041A740039885D /* CustomLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18912E041A740039885D /* CustomLogger.swift */; };
-		531E189C2E041A740039885D /* SetAnonymousIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18852E041A740039885D /* SetAnonymousIdPlugin.swift */; };
-		531E189D2E041A740039885D /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18892E041A740039885D /* PermissionManager.swift */; };
-		531E189E2E041A740039885D /* BluetoothInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18832E041A740039885D /* BluetoothInfoPlugin.swift */; };
-		531E189F2E041A740039885D /* OptionPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18842E041A740039885D /* OptionPlugin.swift */; };
-		531E18A02E041A740039885D /* AdvertisingIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18822E041A740039885D /* AdvertisingIdPlugin.swift */; };
-		531E18A92E041A820039885D /* BluetoothInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A42E041A820039885D /* BluetoothInfoPluginTests.swift */; };
-		531E18AA2E041A820039885D /* SwiftUIAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A22E041A820039885D /* SwiftUIAppTests.swift */; };
-		531E18AB2E041A820039885D /* SetPushTokenPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A72E041A820039885D /* SetPushTokenPluginTests.swift */; };
-		531E18AC2E041A820039885D /* OptionPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A52E041A820039885D /* OptionPluginTests.swift */; };
-		531E18AD2E041A820039885D /* AppTestingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A32E041A820039885D /* AppTestingHelper.swift */; };
-		531E18AE2E041A820039885D /* SetAnonymousIdPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A62E041A820039885D /* SetAnonymousIdPluginTests.swift */; };
-		531E18AF2E041A820039885D /* AdvertisingIdPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A12E041A820039885D /* AdvertisingIdPluginTests.swift */; };
+		535BB3E22E04642400E1DAB0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB3D92E04642400E1DAB0 /* Preview Assets.xcassets */; };
+		535BB3E42E04642400E1DAB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB3DB2E04642400E1DAB0 /* Assets.xcassets */; };
+		535BB3E52E04642400E1DAB0 /* SwiftUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3E02E04642400E1DAB0 /* SwiftUIExampleApp.swift */; };
+		535BB3E62E04642400E1DAB0 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3D62E04642400E1DAB0 /* AnalyticsManager.swift */; };
+		535BB3E72E04642400E1DAB0 /* SetPushTokenPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3D42E04642400E1DAB0 /* SetPushTokenPlugin.swift */; };
+		535BB3E82E04642400E1DAB0 /* CustomLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3DD2E04642400E1DAB0 /* CustomLogger.swift */; };
+		535BB3E92E04642400E1DAB0 /* SetAnonymousIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3D32E04642400E1DAB0 /* SetAnonymousIdPlugin.swift */; };
+		535BB3EA2E04642400E1DAB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3DC2E04642400E1DAB0 /* ContentView.swift */; };
+		535BB3EB2E04642400E1DAB0 /* BluetoothInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3D12E04642400E1DAB0 /* BluetoothInfoPlugin.swift */; };
+		535BB3EC2E04642400E1DAB0 /* OptionPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3D22E04642400E1DAB0 /* OptionPlugin.swift */; };
+		535BB3ED2E04642400E1DAB0 /* AdvertisingIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3D02E04642400E1DAB0 /* AdvertisingIdPlugin.swift */; };
+		535BB3EE2E04642400E1DAB0 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3D72E04642400E1DAB0 /* PermissionManager.swift */; };
+		535BB3F72E04643900E1DAB0 /* SetPushTokenPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F42E04643900E1DAB0 /* SetPushTokenPluginTests.swift */; };
+		535BB3F82E04643900E1DAB0 /* AdvertisingIdPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3EF2E04643900E1DAB0 /* AdvertisingIdPluginTests.swift */; };
+		535BB3F92E04643900E1DAB0 /* SetAnonymousIdPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F32E04643900E1DAB0 /* SetAnonymousIdPluginTests.swift */; };
+		535BB3FA2E04643900E1DAB0 /* OptionPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F22E04643900E1DAB0 /* OptionPluginTests.swift */; };
+		535BB3FB2E04643900E1DAB0 /* BluetoothInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F12E04643900E1DAB0 /* BluetoothInfoPluginTests.swift */; };
+		535BB3FC2E04643900E1DAB0 /* SwiftUIAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */; };
+		535BB3FD2E04643900E1DAB0 /* AppTestingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F02E04643900E1DAB0 /* AppTestingHelper.swift */; };
 		53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -55,29 +55,29 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		531E18822E041A740039885D /* AdvertisingIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPlugin.swift; sourceTree = "<group>"; };
-		531E18832E041A740039885D /* BluetoothInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPlugin.swift; sourceTree = "<group>"; };
-		531E18842E041A740039885D /* OptionPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPlugin.swift; sourceTree = "<group>"; };
-		531E18852E041A740039885D /* SetAnonymousIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPlugin.swift; sourceTree = "<group>"; };
-		531E18862E041A740039885D /* SetPushTokenPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPlugin.swift; sourceTree = "<group>"; };
-		531E18882E041A740039885D /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
-		531E18892E041A740039885D /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
-		531E188B2E041A740039885D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		531E188E2E041A740039885D /* SwiftUIAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAppApp.swift; sourceTree = "<group>"; };
-		531E188F2E041A740039885D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		531E18902E041A740039885D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		531E18912E041A740039885D /* CustomLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLogger.swift; sourceTree = "<group>"; };
-		531E18922E041A740039885D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		531E18A12E041A820039885D /* AdvertisingIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPluginTests.swift; sourceTree = "<group>"; };
-		531E18A22E041A820039885D /* SwiftUIAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAppTests.swift; sourceTree = "<group>"; };
-		531E18A32E041A820039885D /* AppTestingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTestingHelper.swift; sourceTree = "<group>"; };
-		531E18A42E041A820039885D /* BluetoothInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPluginTests.swift; sourceTree = "<group>"; };
-		531E18A52E041A820039885D /* OptionPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPluginTests.swift; sourceTree = "<group>"; };
-		531E18A62E041A820039885D /* SetAnonymousIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPluginTests.swift; sourceTree = "<group>"; };
-		531E18A72E041A820039885D /* SetPushTokenPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPluginTests.swift; sourceTree = "<group>"; };
-		531E18D62E042E7A0039885D /* SwiftUIApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftUIApp.entitlements; sourceTree = "<group>"; };
-		5351AA792C6BE9DE003C3C47 /* SwiftUIApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5383D2CE2D3EAC0C00291B00 /* SwiftUIAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5351AA792C6BE9DE003C3C47 /* SwiftUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		535BB3D02E04642400E1DAB0 /* AdvertisingIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPlugin.swift; sourceTree = "<group>"; };
+		535BB3D12E04642400E1DAB0 /* BluetoothInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPlugin.swift; sourceTree = "<group>"; };
+		535BB3D22E04642400E1DAB0 /* OptionPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPlugin.swift; sourceTree = "<group>"; };
+		535BB3D32E04642400E1DAB0 /* SetAnonymousIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPlugin.swift; sourceTree = "<group>"; };
+		535BB3D42E04642400E1DAB0 /* SetPushTokenPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPlugin.swift; sourceTree = "<group>"; };
+		535BB3D62E04642400E1DAB0 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
+		535BB3D72E04642400E1DAB0 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
+		535BB3D92E04642400E1DAB0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		535BB3DB2E04642400E1DAB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		535BB3DC2E04642400E1DAB0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		535BB3DD2E04642400E1DAB0 /* CustomLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLogger.swift; sourceTree = "<group>"; };
+		535BB3DE2E04642400E1DAB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		535BB3DF2E04642400E1DAB0 /* SwiftUIExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftUIExample.entitlements; sourceTree = "<group>"; };
+		535BB3E02E04642400E1DAB0 /* SwiftUIExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIExampleApp.swift; sourceTree = "<group>"; };
+		535BB3EF2E04643900E1DAB0 /* AdvertisingIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPluginTests.swift; sourceTree = "<group>"; };
+		535BB3F02E04643900E1DAB0 /* AppTestingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTestingHelper.swift; sourceTree = "<group>"; };
+		535BB3F12E04643900E1DAB0 /* BluetoothInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPluginTests.swift; sourceTree = "<group>"; };
+		535BB3F22E04643900E1DAB0 /* OptionPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPluginTests.swift; sourceTree = "<group>"; };
+		535BB3F32E04643900E1DAB0 /* SetAnonymousIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPluginTests.swift; sourceTree = "<group>"; };
+		535BB3F42E04643900E1DAB0 /* SetPushTokenPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPluginTests.swift; sourceTree = "<group>"; };
+		535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAppTests.swift; sourceTree = "<group>"; };
+		5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -100,70 +100,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		531E18872E041A740039885D /* CustomPlugins */ = {
-			isa = PBXGroup;
-			children = (
-				531E18822E041A740039885D /* AdvertisingIdPlugin.swift */,
-				531E18832E041A740039885D /* BluetoothInfoPlugin.swift */,
-				531E18842E041A740039885D /* OptionPlugin.swift */,
-				531E18852E041A740039885D /* SetAnonymousIdPlugin.swift */,
-				531E18862E041A740039885D /* SetPushTokenPlugin.swift */,
-			);
-			path = CustomPlugins;
-			sourceTree = "<group>";
-		};
-		531E188A2E041A740039885D /* Managers */ = {
-			isa = PBXGroup;
-			children = (
-				531E18882E041A740039885D /* AnalyticsManager.swift */,
-				531E18892E041A740039885D /* PermissionManager.swift */,
-			);
-			path = Managers;
-			sourceTree = "<group>";
-		};
-		531E188C2E041A740039885D /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				531E188B2E041A740039885D /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		531E18932E041A740039885D /* SwiftUIApp */ = {
-			isa = PBXGroup;
-			children = (
-				531E188E2E041A740039885D /* SwiftUIAppApp.swift */,
-				531E18902E041A740039885D /* ContentView.swift */,
-				531E18912E041A740039885D /* CustomLogger.swift */,
-				531E18872E041A740039885D /* CustomPlugins */,
-				531E188A2E041A740039885D /* Managers */,
-				531E188C2E041A740039885D /* Preview Content */,
-				531E18D62E042E7A0039885D /* SwiftUIApp.entitlements */,
-				531E188F2E041A740039885D /* Assets.xcassets */,
-				531E18922E041A740039885D /* Info.plist */,
-			);
-			path = SwiftUIApp;
-			sourceTree = "<group>";
-		};
-		531E18A82E041A820039885D /* SwiftUIAppTests */ = {
-			isa = PBXGroup;
-			children = (
-				531E18A12E041A820039885D /* AdvertisingIdPluginTests.swift */,
-				531E18A22E041A820039885D /* SwiftUIAppTests.swift */,
-				531E18A32E041A820039885D /* AppTestingHelper.swift */,
-				531E18A42E041A820039885D /* BluetoothInfoPluginTests.swift */,
-				531E18A52E041A820039885D /* OptionPluginTests.swift */,
-				531E18A62E041A820039885D /* SetAnonymousIdPluginTests.swift */,
-				531E18A72E041A820039885D /* SetPushTokenPluginTests.swift */,
-			);
-			path = SwiftUIAppTests;
-			sourceTree = "<group>";
-		};
 		5351AA702C6BE9DE003C3C47 = {
 			isa = PBXGroup;
 			children = (
-				531E18932E041A740039885D /* SwiftUIApp */,
-				531E18A82E041A820039885D /* SwiftUIAppTests */,
+				535BB3E12E04642400E1DAB0 /* SwiftUIExample */,
+				535BB3F62E04643900E1DAB0 /* SwiftUIExampleTests */,
 				5351AA7A2C6BE9DE003C3C47 /* Products */,
 				5351AA8A2C6BEA02003C3C47 /* Frameworks */,
 			);
@@ -172,8 +113,8 @@
 		5351AA7A2C6BE9DE003C3C47 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5351AA792C6BE9DE003C3C47 /* SwiftUIApp.app */,
-				5383D2CE2D3EAC0C00291B00 /* SwiftUIAppTests.xctest */,
+				5351AA792C6BE9DE003C3C47 /* SwiftUIExample.app */,
+				5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -186,12 +127,71 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		535BB3D52E04642400E1DAB0 /* CustomPlugins */ = {
+			isa = PBXGroup;
+			children = (
+				535BB3D02E04642400E1DAB0 /* AdvertisingIdPlugin.swift */,
+				535BB3D12E04642400E1DAB0 /* BluetoothInfoPlugin.swift */,
+				535BB3D22E04642400E1DAB0 /* OptionPlugin.swift */,
+				535BB3D32E04642400E1DAB0 /* SetAnonymousIdPlugin.swift */,
+				535BB3D42E04642400E1DAB0 /* SetPushTokenPlugin.swift */,
+			);
+			path = CustomPlugins;
+			sourceTree = "<group>";
+		};
+		535BB3D82E04642400E1DAB0 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				535BB3D62E04642400E1DAB0 /* AnalyticsManager.swift */,
+				535BB3D72E04642400E1DAB0 /* PermissionManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		535BB3DA2E04642400E1DAB0 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				535BB3D92E04642400E1DAB0 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		535BB3E12E04642400E1DAB0 /* SwiftUIExample */ = {
+			isa = PBXGroup;
+			children = (
+				535BB3E02E04642400E1DAB0 /* SwiftUIExampleApp.swift */,
+				535BB3DC2E04642400E1DAB0 /* ContentView.swift */,
+				535BB3DD2E04642400E1DAB0 /* CustomLogger.swift */,
+				535BB3D52E04642400E1DAB0 /* CustomPlugins */,
+				535BB3D82E04642400E1DAB0 /* Managers */,
+				535BB3DA2E04642400E1DAB0 /* Preview Content */,
+				535BB3DB2E04642400E1DAB0 /* Assets.xcassets */,
+				535BB3DE2E04642400E1DAB0 /* Info.plist */,
+				535BB3DF2E04642400E1DAB0 /* SwiftUIExample.entitlements */,
+			);
+			path = SwiftUIExample;
+			sourceTree = "<group>";
+		};
+		535BB3F62E04643900E1DAB0 /* SwiftUIExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				535BB3EF2E04643900E1DAB0 /* AdvertisingIdPluginTests.swift */,
+				535BB3F02E04643900E1DAB0 /* AppTestingHelper.swift */,
+				535BB3F12E04643900E1DAB0 /* BluetoothInfoPluginTests.swift */,
+				535BB3F22E04643900E1DAB0 /* OptionPluginTests.swift */,
+				535BB3F32E04643900E1DAB0 /* SetAnonymousIdPluginTests.swift */,
+				535BB3F42E04643900E1DAB0 /* SetPushTokenPluginTests.swift */,
+				535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */,
+			);
+			path = SwiftUIExampleTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5351AA782C6BE9DE003C3C47 /* SwiftUIApp */ = {
+		5351AA782C6BE9DE003C3C47 /* SwiftUIExample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "SwiftUIApp" */;
+			buildConfigurationList = 5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "SwiftUIExample" */;
 			buildPhases = (
 				5351AA752C6BE9DE003C3C47 /* Sources */,
 				5351AA762C6BE9DE003C3C47 /* Frameworks */,
@@ -202,14 +202,14 @@
 			);
 			dependencies = (
 			);
-			name = SwiftUIApp;
+			name = SwiftUIExample;
 			productName = AnalyticsApp;
-			productReference = 5351AA792C6BE9DE003C3C47 /* SwiftUIApp.app */;
+			productReference = 5351AA792C6BE9DE003C3C47 /* SwiftUIExample.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5383D2CD2D3EAC0C00291B00 /* SwiftUIAppTests */ = {
+		5383D2CD2D3EAC0C00291B00 /* SwiftUIExampleTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "SwiftUIAppTests" */;
+			buildConfigurationList = 5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "SwiftUIExampleTests" */;
 			buildPhases = (
 				5383D2CA2D3EAC0C00291B00 /* Sources */,
 				5383D2CB2D3EAC0C00291B00 /* Frameworks */,
@@ -220,11 +220,11 @@
 			dependencies = (
 				5383D2D32D3EAC0C00291B00 /* PBXTargetDependency */,
 			);
-			name = SwiftUIAppTests;
+			name = SwiftUIExampleTests;
 			packageProductDependencies = (
 			);
 			productName = AnalyticsAppTests;
-			productReference = 5383D2CE2D3EAC0C00291B00 /* SwiftUIAppTests.xctest */;
+			productReference = 5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -246,7 +246,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5351AA742C6BE9DE003C3C47 /* Build configuration list for PBXProject "SwiftUIApp" */;
+			buildConfigurationList = 5351AA742C6BE9DE003C3C47 /* Build configuration list for PBXProject "SwiftUIExample" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -259,8 +259,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5351AA782C6BE9DE003C3C47 /* SwiftUIApp */,
-				5383D2CD2D3EAC0C00291B00 /* SwiftUIAppTests */,
+				5351AA782C6BE9DE003C3C47 /* SwiftUIExample */,
+				5383D2CD2D3EAC0C00291B00 /* SwiftUIExampleTests */,
 			);
 		};
 /* End PBXProject section */
@@ -270,8 +270,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				531E18952E041A740039885D /* Assets.xcassets in Resources */,
-				531E18962E041A740039885D /* Preview Assets.xcassets in Resources */,
+				535BB3E22E04642400E1DAB0 /* Preview Assets.xcassets in Resources */,
+				535BB3E42E04642400E1DAB0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,16 +289,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				531E18972E041A740039885D /* SwiftUIAppApp.swift in Sources */,
-				531E18982E041A740039885D /* AnalyticsManager.swift in Sources */,
-				531E18992E041A740039885D /* ContentView.swift in Sources */,
-				531E189A2E041A740039885D /* SetPushTokenPlugin.swift in Sources */,
-				531E189B2E041A740039885D /* CustomLogger.swift in Sources */,
-				531E189C2E041A740039885D /* SetAnonymousIdPlugin.swift in Sources */,
-				531E189D2E041A740039885D /* PermissionManager.swift in Sources */,
-				531E189E2E041A740039885D /* BluetoothInfoPlugin.swift in Sources */,
-				531E189F2E041A740039885D /* OptionPlugin.swift in Sources */,
-				531E18A02E041A740039885D /* AdvertisingIdPlugin.swift in Sources */,
+				535BB3E52E04642400E1DAB0 /* SwiftUIExampleApp.swift in Sources */,
+				535BB3E62E04642400E1DAB0 /* AnalyticsManager.swift in Sources */,
+				535BB3E72E04642400E1DAB0 /* SetPushTokenPlugin.swift in Sources */,
+				535BB3E82E04642400E1DAB0 /* CustomLogger.swift in Sources */,
+				535BB3E92E04642400E1DAB0 /* SetAnonymousIdPlugin.swift in Sources */,
+				535BB3EA2E04642400E1DAB0 /* ContentView.swift in Sources */,
+				535BB3EB2E04642400E1DAB0 /* BluetoothInfoPlugin.swift in Sources */,
+				535BB3EC2E04642400E1DAB0 /* OptionPlugin.swift in Sources */,
+				535BB3ED2E04642400E1DAB0 /* AdvertisingIdPlugin.swift in Sources */,
+				535BB3EE2E04642400E1DAB0 /* PermissionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,13 +306,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				531E18A92E041A820039885D /* BluetoothInfoPluginTests.swift in Sources */,
-				531E18AA2E041A820039885D /* SwiftUIAppTests.swift in Sources */,
-				531E18AB2E041A820039885D /* SetPushTokenPluginTests.swift in Sources */,
-				531E18AC2E041A820039885D /* OptionPluginTests.swift in Sources */,
-				531E18AD2E041A820039885D /* AppTestingHelper.swift in Sources */,
-				531E18AE2E041A820039885D /* SetAnonymousIdPluginTests.swift in Sources */,
-				531E18AF2E041A820039885D /* AdvertisingIdPluginTests.swift in Sources */,
+				535BB3F72E04643900E1DAB0 /* SetPushTokenPluginTests.swift in Sources */,
+				535BB3F82E04643900E1DAB0 /* AdvertisingIdPluginTests.swift in Sources */,
+				535BB3F92E04643900E1DAB0 /* SetAnonymousIdPluginTests.swift in Sources */,
+				535BB3FA2E04643900E1DAB0 /* OptionPluginTests.swift in Sources */,
+				535BB3FB2E04643900E1DAB0 /* BluetoothInfoPluginTests.swift in Sources */,
+				535BB3FC2E04643900E1DAB0 /* SwiftUIAppTests.swift in Sources */,
+				535BB3FD2E04643900E1DAB0 /* AppTestingHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,7 +321,7 @@
 /* Begin PBXTargetDependency section */
 		5383D2D32D3EAC0C00291B00 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5351AA782C6BE9DE003C3C47 /* SwiftUIApp */;
+			target = 5351AA782C6BE9DE003C3C47 /* SwiftUIExample */;
 			targetProxy = 5383D2D22D3EAC0C00291B00 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -451,14 +451,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SwiftUIApp/SwiftUIApp.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SwiftUIExample/SwiftUIExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SwiftUIApp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SwiftUIExample/Preview Content\"";
 				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SwiftUIApp/Info.plist;
+				INFOPLIST_FILE = SwiftUIExample/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app needs Bluetooth access to enhance your experience.";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This app needs Tracking access to improve your experience.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -472,7 +472,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -488,14 +488,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SwiftUIApp/SwiftUIApp.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SwiftUIExample/SwiftUIExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SwiftUIApp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SwiftUIExample/Preview Content\"";
 				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SwiftUIApp/Info.plist;
+				INFOPLIST_FILE = SwiftUIExample/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app needs Bluetooth access to enhance your experience.";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This app needs Tracking access to improve your experience.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -509,7 +509,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -530,7 +530,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiapptests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiexampletests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -538,7 +538,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUIApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUIApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUIExample.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUIExample";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
@@ -553,7 +553,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiapptests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiexampletests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -561,7 +561,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUIApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUIApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUIExample.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUIExample";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
@@ -569,7 +569,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5351AA742C6BE9DE003C3C47 /* Build configuration list for PBXProject "SwiftUIApp" */ = {
+		5351AA742C6BE9DE003C3C47 /* Build configuration list for PBXProject "SwiftUIExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5351AA852C6BE9E0003C3C47 /* Debug */,
@@ -578,7 +578,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "SwiftUIApp" */ = {
+		5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "SwiftUIExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5351AA882C6BE9E0003C3C47 /* Debug */,
@@ -587,7 +587,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "SwiftUIAppTests" */ = {
+		5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "SwiftUIExampleTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5383D2D52D3EAC0C00291B00 /* Debug */,

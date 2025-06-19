@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5351AA782C6BE9DE003C3C47"
-               BuildableName = "SwiftUIApp.app"
-               BlueprintName = "SwiftUIApp"
-               ReferencedContainer = "container:SwiftUIApp.xcodeproj">
+               BuildableName = "SwiftUIExample.app"
+               BlueprintName = "SwiftUIExample"
+               ReferencedContainer = "container:SwiftUIExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../../TestPlans/SwiftUIApp.xctestplan"
+            reference = "container:../../TestPlans/SwiftUIExample.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -50,9 +50,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5351AA782C6BE9DE003C3C47"
-            BuildableName = "SwiftUIApp.app"
-            BlueprintName = "SwiftUIApp"
-            ReferencedContainer = "container:SwiftUIApp.xcodeproj">
+            BuildableName = "SwiftUIExample.app"
+            BlueprintName = "SwiftUIExample"
+            ReferencedContainer = "container:SwiftUIExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -67,9 +67,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5351AA782C6BE9DE003C3C47"
-            BuildableName = "SwiftUIApp.app"
-            BlueprintName = "SwiftUIApp"
-            ReferencedContainer = "container:SwiftUIApp.xcodeproj">
+            BuildableName = "SwiftUIExample.app"
+            BlueprintName = "SwiftUIExample"
+            ReferencedContainer = "container:SwiftUIExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -1,6 +1,6 @@
 //
-//  SwiftUIAppApp.swift
-//  SwiftUIApp
+//  SwiftUIExampleApp.swift
+//  SwiftUIExample
 //
 //  Created by Satheesh Kannan on 14/08/24.
 //
@@ -8,9 +8,9 @@
 import SwiftUI
 import UserNotifications
 
-// MARK: - SwiftUIAppApp
+// MARK: - SwiftUIExampleApp
 @main
-struct SwiftUIAppApp: App {
+struct SwiftUIExampleApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
