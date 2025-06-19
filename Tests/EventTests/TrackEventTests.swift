@@ -1,6 +1,6 @@
 //
 //  TrackEventTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 18/11/24.
 //

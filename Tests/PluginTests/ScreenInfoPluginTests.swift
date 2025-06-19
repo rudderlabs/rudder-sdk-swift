@@ -1,6 +1,6 @@
 //
 //  ScreenInfoPluginTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 11/12/24.
 //

@@ -1,6 +1,6 @@
 //
 //  UserIdentityTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 08/01/25.
 //

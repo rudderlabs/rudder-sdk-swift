@@ -1,6 +1,6 @@
 //
 //  LoggerAnalyticsTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 19/04/25.
 //

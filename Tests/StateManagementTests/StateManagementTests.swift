@@ -1,6 +1,6 @@
 //
 //  StateManagementTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 07/01/25.
 //

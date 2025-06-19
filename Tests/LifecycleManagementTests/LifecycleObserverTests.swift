@@ -1,6 +1,6 @@
 //
 //  LifecycleObserverTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 17/03/25.
 //

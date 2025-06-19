@@ -1,6 +1,6 @@
 //
 //  StorageModuleTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 18/09/24.
 //

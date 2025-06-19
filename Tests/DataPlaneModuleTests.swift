@@ -1,6 +1,6 @@
 //
 //  DataPlaneModuleTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 09/10/24.
 //

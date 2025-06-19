@@ -1,6 +1,6 @@
 //
 //  FlushPolicyModuleTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 05/11/24.
 //

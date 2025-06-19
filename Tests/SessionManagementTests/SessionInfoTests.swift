@@ -1,6 +1,6 @@
 //
 //  SessionInfoTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 26/02/25.
 //

@@ -1,6 +1,6 @@
 //
-//  AnalyticsTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests.swift
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 17/09/24.
 //
@@ -8,7 +8,7 @@
 import XCTest
 @testable import RudderStackAnalytics
 
-final class AnalyticsTests: XCTestCase {
+final class RudderStackAnalyticsTests: XCTestCase {
     var analytics_disk: AnalyticsClient?
     var analytics_memory: AnalyticsClient?
 
@@ -39,7 +39,7 @@ final class AnalyticsTests: XCTestCase {
 }
 
 // MARK: - Disk Store
-extension AnalyticsTests {
+extension RudderStackAnalyticsTests {
     
     func test_anonymousId() {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
@@ -229,7 +229,7 @@ extension AnalyticsTests {
 
 // MARK: - Identify Reset Behavior Tests
     
-extension AnalyticsTests {
+extension RudderStackAnalyticsTests {
     
     func test_identify_noResetWhenCurrentUserIdIsEmpty() async {
         given("Analytics client with no previous user identification") {

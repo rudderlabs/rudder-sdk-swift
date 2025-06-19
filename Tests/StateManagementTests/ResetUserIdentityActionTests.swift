@@ -1,6 +1,6 @@
 //
 //  ResetUserIdentityActionTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 04/02/25.
 //

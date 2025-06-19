@@ -1,6 +1,6 @@
 //
 //  NetworkInfoPluginTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 16/12/24.
 //

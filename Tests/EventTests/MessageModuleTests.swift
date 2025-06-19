@@ -1,6 +1,6 @@
 //
 //  MessageModuleTests.swift
-//  AnalyticsTests
+//  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 13/11/24.
 //
