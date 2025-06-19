@@ -1,12 +1,12 @@
 //
 //  ContentView.swift
-//  AnalyticsAppMac
+//  macOSExample
 //
 //  Created by Satheesh Kannan on 30/05/25.
 //
 
 import SwiftUI
-import Analytics
+import RudderStackAnalytics
 
 // MARK: - ContentView
 struct ContentView: View {

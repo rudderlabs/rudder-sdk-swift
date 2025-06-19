@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "53E01BEA2DE999FA00602AFD"
-               BuildableName = "AnalyticsAppMac.app"
-               BlueprintName = "AnalyticsAppMac"
-               ReferencedContainer = "container:AnalyticsAppMac.xcodeproj">
+               BuildableName = "macOSExample.app"
+               BlueprintName = "macOSExample"
+               ReferencedContainer = "container:macOSExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "53E01BEA2DE999FA00602AFD"
-            BuildableName = "AnalyticsAppMac.app"
-            BlueprintName = "AnalyticsAppMac"
-            ReferencedContainer = "container:AnalyticsAppMac.xcodeproj">
+            BuildableName = "macOSExample.app"
+            BlueprintName = "macOSExample"
+            ReferencedContainer = "container:macOSExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "53E01BEA2DE999FA00602AFD"
-            BuildableName = "AnalyticsAppMac.app"
-            BlueprintName = "AnalyticsAppMac"
-            ReferencedContainer = "container:AnalyticsAppMac.xcodeproj">
+            BuildableName = "macOSExample.app"
+            BlueprintName = "macOSExample"
+            ReferencedContainer = "container:macOSExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

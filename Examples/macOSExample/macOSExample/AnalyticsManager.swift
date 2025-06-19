@@ -1,12 +1,12 @@
 //
 //  AnalyticsManager.swift
-//  AnalyticsAppMac
+//  macOSExample
 //
 //  Created by Satheesh Kannan on 30/05/25.
 //
 
 import Foundation
-import Analytics
+import RudderStackAnalytics
 
 // MARK: - AnalyticsManager
 class AnalyticsManager {

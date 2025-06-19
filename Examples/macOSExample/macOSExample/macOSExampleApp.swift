@@ -1,15 +1,15 @@
 //
-//  AnalyticsAppMacApp.swift
-//  AnalyticsAppMac
+//  macOSExampleApp.swift
+//  macOSExample
 //
 //  Created by Satheesh Kannan on 30/05/25.
 //
 
 import SwiftUI
 
-// MARK: - AnalyticsAppMacApp
+// MARK: - macOSExampleApp
 @main
-struct AnalyticsAppMacApp: App {
+struct macOSExampleApp: App {
     
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
