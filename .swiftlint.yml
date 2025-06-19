@@ -23,8 +23,8 @@ opt_in_rules:
 
 # File and Directory Exclusions
 excluded:
-    - '**/Analytics/AnalyticsTests/**'  # Excludes test files in AnalyticsTests
-    - '**/AnalyticsApp/**'  # Excludes files in the AnalyticsApp directory
+    - '**/Tests/**'  # Excludes test files in AnalyticsTests
+    - '**/Examples/**'  # Excludes files in the AnalyticsApp directory
 
 # Discourages using `as!`
 force_cast:
