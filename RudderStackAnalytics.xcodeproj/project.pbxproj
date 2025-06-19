@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		539E540E2C98CD7D00982E95 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */; };
-		53DEA5E02E03D05A00D6C371 /* Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 53DEA5DE2E03D05A00D6C371 /* Analytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		53DEA5E12E03D05A00D6C371 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D62E03D05A00D6C371 /* KeyValueStore.swift */; };
 		53DEA5E22E03D05A00D6C371 /* ResetUserIdentityAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */; };
 		53DEA5E32E03D05A00D6C371 /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */; };
@@ -123,6 +122,7 @@
 		53DEA68E2E03D06F00D6C371 /* group_with_options.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA62F2E03D06F00D6C371 /* group_with_options.json */; };
 		53DEA68F2E03D06F00D6C371 /* group_with_all_values.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA62D2E03D06F00D6C371 /* group_with_all_values.json */; };
 		53DEA6902E03D06F00D6C371 /* screen_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA6392E03D06F00D6C371 /* screen_with_default_arguments.json */; };
+		53DEA6F82E03EB4C00D6C371 /* RudderStackAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 53DEA6F72E03EB4C00D6C371 /* RudderStackAnalytics.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -202,7 +202,6 @@
 		53DEA5D92E03D05A00D6C371 /* StorageModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModels.swift; sourceTree = "<group>"; };
 		53DEA5DB2E03D05A00D6C371 /* BasicStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicStorage.swift; sourceTree = "<group>"; };
 		53DEA5DC2E03D05A00D6C371 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
-		53DEA5DE2E03D05A00D6C371 /* Analytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Analytics.h; sourceTree = "<group>"; };
 		53DEA6212E03D06F00D6C371 /* AliasEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasEventTests.swift; sourceTree = "<group>"; };
 		53DEA6222E03D06F00D6C371 /* GroupEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEventTests.swift; sourceTree = "<group>"; };
 		53DEA6232E03D06F00D6C371 /* IdentifyEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyEventTests.swift; sourceTree = "<group>"; };
@@ -253,6 +252,7 @@
 		53DEA65B2E03D06F00D6C371 /* FlushPolicyModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushPolicyModuleTests.swift; sourceTree = "<group>"; };
 		53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerAnalyticsTests.swift; sourceTree = "<group>"; };
 		53DEA65D2E03D06F00D6C371 /* StorageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModuleTests.swift; sourceTree = "<group>"; };
+		53DEA6F72E03EB4C00D6C371 /* RudderStackAnalytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RudderStackAnalytics.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -467,6 +467,7 @@
 		53DEA5DF2E03D05A00D6C371 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				53DEA6F72E03EB4C00D6C371 /* RudderStackAnalytics.h */,
 				53DEA5922E03D05A00D6C371 /* Base */,
 				53DEA59A2E03D05A00D6C371 /* Events */,
 				53DEA5A12E03D05A00D6C371 /* Helpers */,
@@ -479,7 +480,6 @@
 				53DEA5CD2E03D05A00D6C371 /* SessionManagement */,
 				53DEA5D32E03D05A00D6C371 /* StateManagement */,
 				53DEA5DD2E03D05A00D6C371 /* Storage */,
-				53DEA5DE2E03D05A00D6C371 /* Analytics.h */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -636,7 +636,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53DEA5E02E03D05A00D6C371 /* Analytics.h in Headers */,
+				53DEA6F82E03EB4C00D6C371 /* RudderStackAnalytics.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -699,7 +699,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5351AA602C6BE95D003C3C47 /* Build configuration list for PBXProject "Analytics" */;
+			buildConfigurationList = 5351AA602C6BE95D003C3C47 /* Build configuration list for PBXProject "RudderStackAnalytics" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -1162,7 +1162,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5351AA602C6BE95D003C3C47 /* Build configuration list for PBXProject "Analytics" */ = {
+		5351AA602C6BE95D003C3C47 /* Build configuration list for PBXProject "RudderStackAnalytics" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5351AA6B2C6BE95D003C3C47 /* Debug */,

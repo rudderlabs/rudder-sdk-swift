@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1540"
+   LastUpgradeVersion = "1640"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -18,7 +18,7 @@
                BlueprintIdentifier = "5351AA652C6BE95D003C3C47"
                BuildableName = "RudderStackAnalytics.framework"
                BlueprintName = "RudderStackAnalytics"
-               ReferencedContainer = "container:Analytics.xcodeproj">
+               ReferencedContainer = "container:RudderStackAnalytics.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,19 +29,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "539E54092C98CD7D00982E95"
-               BuildableName = "RudderStackAnalyticsTests.xctest"
-               BlueprintName = "RudderStackAnalyticsTests"
-               ReferencedContainer = "container:Analytics.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -66,7 +53,7 @@
             BlueprintIdentifier = "5351AA652C6BE95D003C3C47"
             BuildableName = "RudderStackAnalytics.framework"
             BlueprintName = "RudderStackAnalytics"
-            ReferencedContainer = "container:Analytics.xcodeproj">
+            ReferencedContainer = "container:RudderStackAnalytics.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

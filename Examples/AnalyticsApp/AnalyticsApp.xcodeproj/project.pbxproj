@@ -13,14 +13,14 @@
 		5351AA7F2C6BE9DE003C3C47 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */; };
 		5351AA812C6BE9E0003C3C47 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5351AA802C6BE9E0003C3C47 /* Assets.xcassets */; };
 		5351AA842C6BE9E0003C3C47 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5351AA832C6BE9E0003C3C47 /* Preview Assets.xcassets */; };
-		5351AA8C2C6BEA02003C3C47 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA8B2C6BEA02003C3C47 /* Analytics.framework */; };
-		5351AA8D2C6BEA02003C3C47 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA8B2C6BEA02003C3C47 /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5383D2C72D3E95FC00291B00 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2C62D3E95FC00291B00 /* AnalyticsManager.swift */; };
 		5383D2C92D3E97C700291B00 /* AdvertisingIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */; };
 		53CC353C2DB7A95900A2EF2F /* CustomLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */; };
 		53D7FDF72D63A42C00598443 /* BluetoothInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */; };
-		8CBEA31C2DF9ABD50034B8E8 /* SetAnonymousIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBEA31B2DF9ABD40034B8E8 /* SetAnonymousIdPlugin.swift */; };
+		53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; };
+		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53DF2DCF2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DF2DCE2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift */; };
+		8CBEA31C2DF9ABD50034B8E8 /* SetAnonymousIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBEA31B2DF9ABD40034B8E8 /* SetAnonymousIdPlugin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,13 +34,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		5351AA8E2C6BEA02003C3C47 /* Embed Frameworks */ = {
+		53DEA72F2E03EBB900D6C371 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5351AA8D2C6BEA02003C3C47 /* Analytics.framework in Embed Frameworks */,
+				53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -61,6 +61,7 @@
 		5383D2CE2D3EAC0C00291B00 /* AnalyticsAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnalyticsAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLogger.swift; sourceTree = "<group>"; };
 		53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPlugin.swift; sourceTree = "<group>"; };
+		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DF2DC72DF994D500FE2659 /* AnalyticsApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AnalyticsApp.entitlements; sourceTree = "<group>"; };
 		53DF2DCE2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPlugin.swift; sourceTree = "<group>"; };
 		53E01B0C2DDBA40200602AFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -76,7 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5351AA8C2C6BEA02003C3C47 /* Analytics.framework in Frameworks */,
+				53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +137,7 @@
 		5351AA8A2C6BEA02003C3C47 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */,
 				5351AA8B2C6BEA02003C3C47 /* Analytics.framework */,
 			);
 			name = Frameworks;
@@ -172,7 +174,7 @@
 				5351AA752C6BE9DE003C3C47 /* Sources */,
 				5351AA762C6BE9DE003C3C47 /* Frameworks */,
 				5351AA772C6BE9DE003C3C47 /* Resources */,
-				5351AA8E2C6BEA02003C3C47 /* Embed Frameworks */,
+				53DEA72F2E03EBB900D6C371 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
