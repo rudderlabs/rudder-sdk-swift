@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		539E540E2C98CD7D00982E95 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */; };
-		53DEA5E02E03D05A00D6C371 /* Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 53DEA5DE2E03D05A00D6C371 /* Analytics.h */; };
+		53DEA5E02E03D05A00D6C371 /* Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 53DEA5DE2E03D05A00D6C371 /* Analytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		53DEA5E12E03D05A00D6C371 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D62E03D05A00D6C371 /* KeyValueStore.swift */; };
 		53DEA5E22E03D05A00D6C371 /* ResetUserIdentityAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */; };
 		53DEA5E32E03D05A00D6C371 /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */; };
@@ -772,7 +772,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint --config \"${SRCROOT}/../.swiftlint.yml\"  # Move up one level\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint --config \"${PROJECT_DIR}/.swiftlint.yml\"\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
