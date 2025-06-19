@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Analytics
+@testable import RudderStackAnalytics
 
 // MARK: - DataPlaneModuleTests
 final class DataPlaneModuleTests: XCTestCase {

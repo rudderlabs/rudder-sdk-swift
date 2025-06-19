@@ -14,7 +14,7 @@ import WatchKit
 #endif
 
 import XCTest
-@testable import Analytics
+@testable import RudderStackAnalytics
 
 final class SessionHandlerTests: XCTestCase {
     private var analytics: AnalyticsClient?

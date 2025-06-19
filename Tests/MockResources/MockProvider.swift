@@ -7,7 +7,7 @@
 
 import XCTest
 import Network
-@testable import Analytics
+@testable import RudderStackAnalytics
 
 // MARK: - MockProvider
 final class MockProvider {

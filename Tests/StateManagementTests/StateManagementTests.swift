@@ -7,7 +7,7 @@
 
 import XCTest
 import Combine
-@testable import Analytics
+@testable import RudderStackAnalytics
 
 final class StateManagementTests: XCTestCase {
     

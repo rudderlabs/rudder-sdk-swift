@@ -7,7 +7,7 @@
 
 import Foundation
 import XCTest
-@testable import Analytics
+@testable import RudderStackAnalytics
 
 final class SessionActionTests: XCTestCase {
     

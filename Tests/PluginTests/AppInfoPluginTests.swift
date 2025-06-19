@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Analytics
+@testable import RudderStackAnalytics
 
 final class AppInfoPluginTests: XCTestCase {
     
