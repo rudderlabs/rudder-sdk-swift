@@ -1,6 +1,6 @@
 import Testing
 import RudderStackAnalytics
-@testable import AnalyticsApp
+@testable import SwiftUIApp
 
 struct SetAnonymousIdPluginTests {
     

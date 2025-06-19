@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "142B1F96-879C-446E-B8E2-F07B94D5D2AC",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:SwiftUIApp.xcodeproj",
+      "identifier" : "5351AA782C6BE9DE003C3C47",
+      "name" : "SwiftUIApp"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:SwiftUIApp.xcodeproj",
+        "identifier" : "5383D2CD2D3EAC0C00291B00",
+        "name" : "SwiftUIAppTests"
+      }
+    }
+  ],
+  "version" : 1
+}

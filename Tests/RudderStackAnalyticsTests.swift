@@ -160,7 +160,7 @@ extension RudderStackAnalyticsTests {
     func testDeepLinkTracking() async{
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        let testURL = URL(string: "analyticsapp://testing?id=127&ref=deeplink")!
+        let testURL = URL(string: "swiftuiapp://testing?id=127&ref=deeplink")!
         let testOptions = ["source": "unitTest"]
         
         client.openURL(testURL, options: testOptions)

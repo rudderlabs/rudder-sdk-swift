@@ -7,27 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		531E187B2E04174E0039885D /* BluetoothInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18762E04174E0039885D /* BluetoothInfoPluginTests.swift */; };
-		531E187C2E04174E0039885D /* AnalyticsAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18742E04174E0039885D /* AnalyticsAppTests.swift */; };
-		531E187D2E04174E0039885D /* AdvertisingIdPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18732E04174E0039885D /* AdvertisingIdPluginTests.swift */; };
-		531E187E2E04174E0039885D /* AppTestingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18752E04174E0039885D /* AppTestingHelper.swift */; };
-		531E187F2E04174E0039885D /* SetAnonymousIdPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18782E04174E0039885D /* SetAnonymousIdPluginTests.swift */; };
-		531E18802E04174E0039885D /* OptionPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18772E04174E0039885D /* OptionPluginTests.swift */; };
-		531E18812E04174E0039885D /* SetPushTokenPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18792E04174E0039885D /* SetPushTokenPluginTests.swift */; };
-		533624BB2D93E31F00F602CD /* OptionPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533624BA2D93E31F00F602CD /* OptionPlugin.swift */; };
-		53472F7A2D622B2900EF8042 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53472F792D622B2900EF8042 /* PermissionManager.swift */; };
-		5351AA7D2C6BE9DE003C3C47 /* AnalyticsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */; };
-		5351AA7F2C6BE9DE003C3C47 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */; };
-		5351AA812C6BE9E0003C3C47 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5351AA802C6BE9E0003C3C47 /* Assets.xcassets */; };
-		5351AA842C6BE9E0003C3C47 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5351AA832C6BE9E0003C3C47 /* Preview Assets.xcassets */; };
-		5383D2C72D3E95FC00291B00 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2C62D3E95FC00291B00 /* AnalyticsManager.swift */; };
-		5383D2C92D3E97C700291B00 /* AdvertisingIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */; };
-		53CC353C2DB7A95900A2EF2F /* CustomLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */; };
-		53D7FDF72D63A42C00598443 /* BluetoothInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */; };
+		531E18952E041A740039885D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 531E188F2E041A740039885D /* Assets.xcassets */; };
+		531E18962E041A740039885D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 531E188B2E041A740039885D /* Preview Assets.xcassets */; };
+		531E18972E041A740039885D /* SwiftUIAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E188E2E041A740039885D /* SwiftUIAppApp.swift */; };
+		531E18982E041A740039885D /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18882E041A740039885D /* AnalyticsManager.swift */; };
+		531E18992E041A740039885D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18902E041A740039885D /* ContentView.swift */; };
+		531E189A2E041A740039885D /* SetPushTokenPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18862E041A740039885D /* SetPushTokenPlugin.swift */; };
+		531E189B2E041A740039885D /* CustomLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18912E041A740039885D /* CustomLogger.swift */; };
+		531E189C2E041A740039885D /* SetAnonymousIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18852E041A740039885D /* SetAnonymousIdPlugin.swift */; };
+		531E189D2E041A740039885D /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18892E041A740039885D /* PermissionManager.swift */; };
+		531E189E2E041A740039885D /* BluetoothInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18832E041A740039885D /* BluetoothInfoPlugin.swift */; };
+		531E189F2E041A740039885D /* OptionPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18842E041A740039885D /* OptionPlugin.swift */; };
+		531E18A02E041A740039885D /* AdvertisingIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18822E041A740039885D /* AdvertisingIdPlugin.swift */; };
+		531E18A92E041A820039885D /* BluetoothInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A42E041A820039885D /* BluetoothInfoPluginTests.swift */; };
+		531E18AA2E041A820039885D /* SwiftUIAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A22E041A820039885D /* SwiftUIAppTests.swift */; };
+		531E18AB2E041A820039885D /* SetPushTokenPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A72E041A820039885D /* SetPushTokenPluginTests.swift */; };
+		531E18AC2E041A820039885D /* OptionPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A52E041A820039885D /* OptionPluginTests.swift */; };
+		531E18AD2E041A820039885D /* AppTestingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A32E041A820039885D /* AppTestingHelper.swift */; };
+		531E18AE2E041A820039885D /* SetAnonymousIdPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A62E041A820039885D /* SetAnonymousIdPluginTests.swift */; };
+		531E18AF2E041A820039885D /* AdvertisingIdPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18A12E041A820039885D /* AdvertisingIdPluginTests.swift */; };
 		53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		53DF2DCF2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DF2DCE2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift */; };
-		8CBEA31C2DF9ABD50034B8E8 /* SetAnonymousIdPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBEA31B2DF9ABD40034B8E8 /* SetAnonymousIdPlugin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,31 +55,30 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		531E18732E04174E0039885D /* AdvertisingIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPluginTests.swift; sourceTree = "<group>"; };
-		531E18742E04174E0039885D /* AnalyticsAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsAppTests.swift; sourceTree = "<group>"; };
-		531E18752E04174E0039885D /* AppTestingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTestingHelper.swift; sourceTree = "<group>"; };
-		531E18762E04174E0039885D /* BluetoothInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPluginTests.swift; sourceTree = "<group>"; };
-		531E18772E04174E0039885D /* OptionPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPluginTests.swift; sourceTree = "<group>"; };
-		531E18782E04174E0039885D /* SetAnonymousIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPluginTests.swift; sourceTree = "<group>"; };
-		531E18792E04174E0039885D /* SetPushTokenPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPluginTests.swift; sourceTree = "<group>"; };
-		533624BA2D93E31F00F602CD /* OptionPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPlugin.swift; sourceTree = "<group>"; };
-		53472F792D622B2900EF8042 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
-		5351AA792C6BE9DE003C3C47 /* AnalyticsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsApp.swift; sourceTree = "<group>"; };
-		5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		5351AA802C6BE9E0003C3C47 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		5351AA832C6BE9E0003C3C47 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		5351AA8B2C6BEA02003C3C47 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5383D2C62D3E95FC00291B00 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
-		5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPlugin.swift; sourceTree = "<group>"; };
-		5383D2CE2D3EAC0C00291B00 /* AnalyticsAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnalyticsAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLogger.swift; sourceTree = "<group>"; };
-		53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPlugin.swift; sourceTree = "<group>"; };
+		531E18822E041A740039885D /* AdvertisingIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPlugin.swift; sourceTree = "<group>"; };
+		531E18832E041A740039885D /* BluetoothInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPlugin.swift; sourceTree = "<group>"; };
+		531E18842E041A740039885D /* OptionPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPlugin.swift; sourceTree = "<group>"; };
+		531E18852E041A740039885D /* SetAnonymousIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPlugin.swift; sourceTree = "<group>"; };
+		531E18862E041A740039885D /* SetPushTokenPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPlugin.swift; sourceTree = "<group>"; };
+		531E18882E041A740039885D /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
+		531E18892E041A740039885D /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
+		531E188B2E041A740039885D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		531E188E2E041A740039885D /* SwiftUIAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAppApp.swift; sourceTree = "<group>"; };
+		531E188F2E041A740039885D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		531E18902E041A740039885D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		531E18912E041A740039885D /* CustomLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLogger.swift; sourceTree = "<group>"; };
+		531E18922E041A740039885D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		531E18A12E041A820039885D /* AdvertisingIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPluginTests.swift; sourceTree = "<group>"; };
+		531E18A22E041A820039885D /* SwiftUIAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAppTests.swift; sourceTree = "<group>"; };
+		531E18A32E041A820039885D /* AppTestingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTestingHelper.swift; sourceTree = "<group>"; };
+		531E18A42E041A820039885D /* BluetoothInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPluginTests.swift; sourceTree = "<group>"; };
+		531E18A52E041A820039885D /* OptionPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPluginTests.swift; sourceTree = "<group>"; };
+		531E18A62E041A820039885D /* SetAnonymousIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPluginTests.swift; sourceTree = "<group>"; };
+		531E18A72E041A820039885D /* SetPushTokenPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPluginTests.swift; sourceTree = "<group>"; };
+		531E18D62E042E7A0039885D /* SwiftUIApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftUIApp.entitlements; sourceTree = "<group>"; };
+		5351AA792C6BE9DE003C3C47 /* SwiftUIApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5383D2CE2D3EAC0C00291B00 /* SwiftUIAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		53DF2DC72DF994D500FE2659 /* AnalyticsApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AnalyticsApp.entitlements; sourceTree = "<group>"; };
-		53DF2DCE2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPlugin.swift; sourceTree = "<group>"; };
-		53E01B0C2DDBA40200602AFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8CBEA31B2DF9ABD40034B8E8 /* SetAnonymousIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,25 +100,70 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		531E187A2E04174E0039885D /* AnalyticsAppTests */ = {
+		531E18872E041A740039885D /* CustomPlugins */ = {
 			isa = PBXGroup;
 			children = (
-				531E18732E04174E0039885D /* AdvertisingIdPluginTests.swift */,
-				531E18742E04174E0039885D /* AnalyticsAppTests.swift */,
-				531E18752E04174E0039885D /* AppTestingHelper.swift */,
-				531E18762E04174E0039885D /* BluetoothInfoPluginTests.swift */,
-				531E18772E04174E0039885D /* OptionPluginTests.swift */,
-				531E18782E04174E0039885D /* SetAnonymousIdPluginTests.swift */,
-				531E18792E04174E0039885D /* SetPushTokenPluginTests.swift */,
+				531E18822E041A740039885D /* AdvertisingIdPlugin.swift */,
+				531E18832E041A740039885D /* BluetoothInfoPlugin.swift */,
+				531E18842E041A740039885D /* OptionPlugin.swift */,
+				531E18852E041A740039885D /* SetAnonymousIdPlugin.swift */,
+				531E18862E041A740039885D /* SetPushTokenPlugin.swift */,
 			);
-			path = AnalyticsAppTests;
+			path = CustomPlugins;
+			sourceTree = "<group>";
+		};
+		531E188A2E041A740039885D /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				531E18882E041A740039885D /* AnalyticsManager.swift */,
+				531E18892E041A740039885D /* PermissionManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		531E188C2E041A740039885D /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				531E188B2E041A740039885D /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		531E18932E041A740039885D /* SwiftUIApp */ = {
+			isa = PBXGroup;
+			children = (
+				531E188E2E041A740039885D /* SwiftUIAppApp.swift */,
+				531E18902E041A740039885D /* ContentView.swift */,
+				531E18912E041A740039885D /* CustomLogger.swift */,
+				531E18872E041A740039885D /* CustomPlugins */,
+				531E188A2E041A740039885D /* Managers */,
+				531E188C2E041A740039885D /* Preview Content */,
+				531E18D62E042E7A0039885D /* SwiftUIApp.entitlements */,
+				531E188F2E041A740039885D /* Assets.xcassets */,
+				531E18922E041A740039885D /* Info.plist */,
+			);
+			path = SwiftUIApp;
+			sourceTree = "<group>";
+		};
+		531E18A82E041A820039885D /* SwiftUIAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				531E18A12E041A820039885D /* AdvertisingIdPluginTests.swift */,
+				531E18A22E041A820039885D /* SwiftUIAppTests.swift */,
+				531E18A32E041A820039885D /* AppTestingHelper.swift */,
+				531E18A42E041A820039885D /* BluetoothInfoPluginTests.swift */,
+				531E18A52E041A820039885D /* OptionPluginTests.swift */,
+				531E18A62E041A820039885D /* SetAnonymousIdPluginTests.swift */,
+				531E18A72E041A820039885D /* SetPushTokenPluginTests.swift */,
+			);
+			path = SwiftUIAppTests;
 			sourceTree = "<group>";
 		};
 		5351AA702C6BE9DE003C3C47 = {
 			isa = PBXGroup;
 			children = (
-				5351AA7B2C6BE9DE003C3C47 /* AnalyticsApp */,
-				531E187A2E04174E0039885D /* AnalyticsAppTests */,
+				531E18932E041A740039885D /* SwiftUIApp */,
+				531E18A82E041A820039885D /* SwiftUIAppTests */,
 				5351AA7A2C6BE9DE003C3C47 /* Products */,
 				5351AA8A2C6BEA02003C3C47 /* Frameworks */,
 			);
@@ -128,72 +172,26 @@
 		5351AA7A2C6BE9DE003C3C47 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5351AA792C6BE9DE003C3C47 /* AnalyticsApp.app */,
-				5383D2CE2D3EAC0C00291B00 /* AnalyticsAppTests.xctest */,
+				5351AA792C6BE9DE003C3C47 /* SwiftUIApp.app */,
+				5383D2CE2D3EAC0C00291B00 /* SwiftUIAppTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		5351AA7B2C6BE9DE003C3C47 /* AnalyticsApp */ = {
-			isa = PBXGroup;
-			children = (
-				53DF2DC72DF994D500FE2659 /* AnalyticsApp.entitlements */,
-				53E01B0C2DDBA40200602AFD /* Info.plist */,
-				5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */,
-				5351AA7E2C6BE9DE003C3C47 /* ContentView.swift */,
-				53CC353B2DB7A95900A2EF2F /* CustomLogger.swift */,
-				53D7FE0D2D63C58C00598443 /* Managers */,
-				53D7FE0C2D63C57900598443 /* CustomPlugins */,
-				5351AA802C6BE9E0003C3C47 /* Assets.xcassets */,
-				5351AA822C6BE9E0003C3C47 /* Preview Content */,
-			);
-			path = AnalyticsApp;
-			sourceTree = "<group>";
-		};
-		5351AA822C6BE9E0003C3C47 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				5351AA832C6BE9E0003C3C47 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		5351AA8A2C6BEA02003C3C47 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */,
-				5351AA8B2C6BEA02003C3C47 /* Analytics.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		53D7FE0C2D63C57900598443 /* CustomPlugins */ = {
-			isa = PBXGroup;
-			children = (
-				8CBEA31B2DF9ABD40034B8E8 /* SetAnonymousIdPlugin.swift */,
-				5383D2C82D3E97C700291B00 /* AdvertisingIdPlugin.swift */,
-				53D7FDF62D63A42C00598443 /* BluetoothInfoPlugin.swift */,
-				533624BA2D93E31F00F602CD /* OptionPlugin.swift */,
-				53DF2DCE2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift */,
-			);
-			path = CustomPlugins;
-			sourceTree = "<group>";
-		};
-		53D7FE0D2D63C58C00598443 /* Managers */ = {
-			isa = PBXGroup;
-			children = (
-				5383D2C62D3E95FC00291B00 /* AnalyticsManager.swift */,
-				53472F792D622B2900EF8042 /* PermissionManager.swift */,
-			);
-			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5351AA782C6BE9DE003C3C47 /* AnalyticsApp */ = {
+		5351AA782C6BE9DE003C3C47 /* SwiftUIApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "AnalyticsApp" */;
+			buildConfigurationList = 5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "SwiftUIApp" */;
 			buildPhases = (
 				5351AA752C6BE9DE003C3C47 /* Sources */,
 				5351AA762C6BE9DE003C3C47 /* Frameworks */,
@@ -204,14 +202,14 @@
 			);
 			dependencies = (
 			);
-			name = AnalyticsApp;
+			name = SwiftUIApp;
 			productName = AnalyticsApp;
-			productReference = 5351AA792C6BE9DE003C3C47 /* AnalyticsApp.app */;
+			productReference = 5351AA792C6BE9DE003C3C47 /* SwiftUIApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5383D2CD2D3EAC0C00291B00 /* AnalyticsAppTests */ = {
+		5383D2CD2D3EAC0C00291B00 /* SwiftUIAppTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "AnalyticsAppTests" */;
+			buildConfigurationList = 5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "SwiftUIAppTests" */;
 			buildPhases = (
 				5383D2CA2D3EAC0C00291B00 /* Sources */,
 				5383D2CB2D3EAC0C00291B00 /* Frameworks */,
@@ -222,11 +220,11 @@
 			dependencies = (
 				5383D2D32D3EAC0C00291B00 /* PBXTargetDependency */,
 			);
-			name = AnalyticsAppTests;
+			name = SwiftUIAppTests;
 			packageProductDependencies = (
 			);
 			productName = AnalyticsAppTests;
-			productReference = 5383D2CE2D3EAC0C00291B00 /* AnalyticsAppTests.xctest */;
+			productReference = 5383D2CE2D3EAC0C00291B00 /* SwiftUIAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -248,7 +246,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5351AA742C6BE9DE003C3C47 /* Build configuration list for PBXProject "AnalyticsApp" */;
+			buildConfigurationList = 5351AA742C6BE9DE003C3C47 /* Build configuration list for PBXProject "SwiftUIApp" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -261,8 +259,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5351AA782C6BE9DE003C3C47 /* AnalyticsApp */,
-				5383D2CD2D3EAC0C00291B00 /* AnalyticsAppTests */,
+				5351AA782C6BE9DE003C3C47 /* SwiftUIApp */,
+				5383D2CD2D3EAC0C00291B00 /* SwiftUIAppTests */,
 			);
 		};
 /* End PBXProject section */
@@ -272,8 +270,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5351AA842C6BE9E0003C3C47 /* Preview Assets.xcassets in Resources */,
-				5351AA812C6BE9E0003C3C47 /* Assets.xcassets in Resources */,
+				531E18952E041A740039885D /* Assets.xcassets in Resources */,
+				531E18962E041A740039885D /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,16 +289,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53DF2DCF2DF9ABBA00FE2659 /* SetPushTokenPlugin.swift in Sources */,
-				53CC353C2DB7A95900A2EF2F /* CustomLogger.swift in Sources */,
-				8CBEA31C2DF9ABD50034B8E8 /* SetAnonymousIdPlugin.swift in Sources */,
-				5383D2C92D3E97C700291B00 /* AdvertisingIdPlugin.swift in Sources */,
-				53472F7A2D622B2900EF8042 /* PermissionManager.swift in Sources */,
-				5383D2C72D3E95FC00291B00 /* AnalyticsManager.swift in Sources */,
-				5351AA7F2C6BE9DE003C3C47 /* ContentView.swift in Sources */,
-				533624BB2D93E31F00F602CD /* OptionPlugin.swift in Sources */,
-				5351AA7D2C6BE9DE003C3C47 /* AnalyticsApp.swift in Sources */,
-				53D7FDF72D63A42C00598443 /* BluetoothInfoPlugin.swift in Sources */,
+				531E18972E041A740039885D /* SwiftUIAppApp.swift in Sources */,
+				531E18982E041A740039885D /* AnalyticsManager.swift in Sources */,
+				531E18992E041A740039885D /* ContentView.swift in Sources */,
+				531E189A2E041A740039885D /* SetPushTokenPlugin.swift in Sources */,
+				531E189B2E041A740039885D /* CustomLogger.swift in Sources */,
+				531E189C2E041A740039885D /* SetAnonymousIdPlugin.swift in Sources */,
+				531E189D2E041A740039885D /* PermissionManager.swift in Sources */,
+				531E189E2E041A740039885D /* BluetoothInfoPlugin.swift in Sources */,
+				531E189F2E041A740039885D /* OptionPlugin.swift in Sources */,
+				531E18A02E041A740039885D /* AdvertisingIdPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,13 +306,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				531E187B2E04174E0039885D /* BluetoothInfoPluginTests.swift in Sources */,
-				531E187C2E04174E0039885D /* AnalyticsAppTests.swift in Sources */,
-				531E187D2E04174E0039885D /* AdvertisingIdPluginTests.swift in Sources */,
-				531E187E2E04174E0039885D /* AppTestingHelper.swift in Sources */,
-				531E187F2E04174E0039885D /* SetAnonymousIdPluginTests.swift in Sources */,
-				531E18802E04174E0039885D /* OptionPluginTests.swift in Sources */,
-				531E18812E04174E0039885D /* SetPushTokenPluginTests.swift in Sources */,
+				531E18A92E041A820039885D /* BluetoothInfoPluginTests.swift in Sources */,
+				531E18AA2E041A820039885D /* SwiftUIAppTests.swift in Sources */,
+				531E18AB2E041A820039885D /* SetPushTokenPluginTests.swift in Sources */,
+				531E18AC2E041A820039885D /* OptionPluginTests.swift in Sources */,
+				531E18AD2E041A820039885D /* AppTestingHelper.swift in Sources */,
+				531E18AE2E041A820039885D /* SetAnonymousIdPluginTests.swift in Sources */,
+				531E18AF2E041A820039885D /* AdvertisingIdPluginTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,7 +321,7 @@
 /* Begin PBXTargetDependency section */
 		5383D2D32D3EAC0C00291B00 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5351AA782C6BE9DE003C3C47 /* AnalyticsApp */;
+			target = 5351AA782C6BE9DE003C3C47 /* SwiftUIApp */;
 			targetProxy = 5383D2D22D3EAC0C00291B00 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -453,14 +451,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = AnalyticsApp/AnalyticsApp.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SwiftUIApp/SwiftUIApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"AnalyticsApp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SwiftUIApp/Preview Content\"";
 				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AnalyticsApp/Info.plist;
+				INFOPLIST_FILE = SwiftUIApp/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app needs Bluetooth access to enhance your experience.";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This app needs Tracking access to improve your experience.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -474,7 +472,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ska.AnalyticsApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -490,14 +488,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = AnalyticsApp/AnalyticsApp.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SwiftUIApp/SwiftUIApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"AnalyticsApp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SwiftUIApp/Preview Content\"";
 				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AnalyticsApp/Info.plist;
+				INFOPLIST_FILE = SwiftUIApp/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app needs Bluetooth access to enhance your experience.";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This app needs Tracking access to improve your experience.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -511,7 +509,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ska.AnalyticsApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -532,7 +530,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiapptests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -540,7 +538,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnalyticsApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AnalyticsApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUIApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUIApp";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
@@ -555,7 +553,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.swiftuiapptests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -563,7 +561,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AnalyticsApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AnalyticsApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftUIApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SwiftUIApp";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
@@ -571,7 +569,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5351AA742C6BE9DE003C3C47 /* Build configuration list for PBXProject "AnalyticsApp" */ = {
+		5351AA742C6BE9DE003C3C47 /* Build configuration list for PBXProject "SwiftUIApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5351AA852C6BE9E0003C3C47 /* Debug */,
@@ -580,7 +578,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "AnalyticsApp" */ = {
+		5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "SwiftUIApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5351AA882C6BE9E0003C3C47 /* Debug */,
@@ -589,7 +587,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "AnalyticsAppTests" */ = {
+		5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "SwiftUIAppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5383D2D52D3EAC0C00291B00 /* Debug */,

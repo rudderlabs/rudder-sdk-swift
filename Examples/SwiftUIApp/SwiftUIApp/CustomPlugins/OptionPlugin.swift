@@ -1,6 +1,6 @@
 //
 //  OptionPlugin.swift
-//  AnalyticsApp
+//  SwiftUIApp
 //
 //  Created by Satheesh Kannan on 26/03/25.
 //

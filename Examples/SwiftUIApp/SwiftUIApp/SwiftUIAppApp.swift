@@ -1,6 +1,6 @@
 //
-//  AnalyticsAppApp.swift
-//  AnalyticsApp
+//  SwiftUIAppApp.swift
+//  SwiftUIApp
 //
 //  Created by Satheesh Kannan on 14/08/24.
 //
@@ -8,9 +8,9 @@
 import SwiftUI
 import UserNotifications
 
-// MARK: - AnalyticsAppApp
+// MARK: - SwiftUIAppApp
 @main
-struct AnalyticsApp: App {
+struct SwiftUIAppApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {

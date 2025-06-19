@@ -1,6 +1,6 @@
 //
 //  BluetoothInfoPlugin.swift
-//  AnalyticsApp
+//  SwiftUIApp
 //
 //  Created by Satheesh Kannan on 17/02/25.
 //

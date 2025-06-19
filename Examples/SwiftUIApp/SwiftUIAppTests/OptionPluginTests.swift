@@ -1,13 +1,13 @@
 //
 //  OptionPluginTests.swift
-//  AnalyticsAppTests
+//  SwiftUIAppTests
 //
 //  Created by Satheesh Kannan on 26/03/25.
 //
 
 import Testing
 import RudderStackAnalytics
-@testable import AnalyticsApp
+@testable import SwiftUIApp
 
 struct OptionPluginTests {
     

@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  AnalyticsApp
+//  SwiftUIApp
 //
 //  Created by Satheesh Kannan on 14/08/24.
 //

@@ -1,13 +1,13 @@
 //
 //  BluetoothInfoPluginTests.swift
-//  AnalyticsAppTests
+//  SwiftUIAppTests
 //
 //  Created by Satheesh Kannan on 17/02/25.
 //
 
 import Testing
 import RudderStackAnalytics
-@testable import AnalyticsApp
+@testable import SwiftUIApp
 
 struct BluetoothInfoPluginTests {
     

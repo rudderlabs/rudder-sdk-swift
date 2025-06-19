@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1540"
+   LastUpgradeVersion = "1640"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5351AA782C6BE9DE003C3C47"
-               BuildableName = "AnalyticsApp.app"
-               BlueprintName = "AnalyticsApp"
-               ReferencedContainer = "container:AnalyticsApp.xcodeproj">
+               BuildableName = "SwiftUIApp.app"
+               BlueprintName = "SwiftUIApp"
+               ReferencedContainer = "container:SwiftUIApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -27,21 +27,13 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5383D2CD2D3EAC0C00291B00"
-               BuildableName = "AnalyticsAppTests.xctest"
-               BlueprintName = "AnalyticsAppTests"
-               ReferencedContainer = "container:AnalyticsApp.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:../../TestPlans/SwiftUIApp.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+      </TestPlans>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -58,9 +50,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5351AA782C6BE9DE003C3C47"
-            BuildableName = "AnalyticsApp.app"
-            BlueprintName = "AnalyticsApp"
-            ReferencedContainer = "container:AnalyticsApp.xcodeproj">
+            BuildableName = "SwiftUIApp.app"
+            BlueprintName = "SwiftUIApp"
+            ReferencedContainer = "container:SwiftUIApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -75,9 +67,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5351AA782C6BE9DE003C3C47"
-            BuildableName = "AnalyticsApp.app"
-            BlueprintName = "AnalyticsApp"
-            ReferencedContainer = "container:AnalyticsApp.xcodeproj">
+            BuildableName = "SwiftUIApp.app"
+            BlueprintName = "SwiftUIApp"
+            ReferencedContainer = "container:SwiftUIApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

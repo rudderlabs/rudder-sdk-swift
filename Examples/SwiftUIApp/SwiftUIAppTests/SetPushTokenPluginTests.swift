@@ -1,13 +1,13 @@
 //
 //  SetPushTokenPluginTests.swift
-//  AnalyticsAppTests
+//  SwiftUIAppTests
 //
 //  Created by Satheesh Kannan on 11/06/25.
 //
 
 import Testing
 import RudderStackAnalytics
-@testable import AnalyticsApp
+@testable import SwiftUIApp
 
 struct SetPushTokenPluginTests {
 

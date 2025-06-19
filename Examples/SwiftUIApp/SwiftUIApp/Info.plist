@@ -8,10 +8,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.ska.AnalyticsApp</string>
+			<string>com.rudder.swiftuiapp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>analyticsapp</string>
+				<string>swiftuiapp</string>
 			</array>
 		</dict>
 	</array>

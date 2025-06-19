@@ -1,13 +1,13 @@
 //
 //  AdvertisingIdPluginTests.swift
-//  AnalyticsAppTests
+//  SwiftUIAppTests
 //
 //  Created by Satheesh Kannan on 20/01/25.
 //
 
 import Testing
 import RudderStackAnalytics
-@testable import AnalyticsApp
+@testable import SwiftUIApp
 
 struct AdvertisingIdPluginTests {
     
