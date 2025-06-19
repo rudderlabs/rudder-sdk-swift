@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "A81F7760-7A8B-44C3-9C21-EAD84F9A54C6",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:RudderStackAnalytics.xcodeproj",
+        "identifier" : "539E54092C98CD7D00982E95",
+        "name" : "RudderStackAnalyticsTests"
+      }
+    }
+  ],
+  "version" : 1
+}
