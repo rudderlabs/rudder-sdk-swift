@@ -51,7 +51,6 @@
 		53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DF2B782DEE0F7600FE2659 /* AnalyticsAppWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DF2B852DEE0F7700FE2659 /* AnalyticsAppWatchKitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppWatchKitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		53DF2BCD2DEE114600FE2659 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -109,7 +108,6 @@
 			isa = PBXGroup;
 			children = (
 				53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */,
-				53DF2BCD2DEE114600FE2659 /* Analytics.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

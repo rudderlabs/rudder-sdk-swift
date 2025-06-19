@@ -28,7 +28,6 @@
 /* Begin PBXFileReference section */
 		53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E01BEB2DE999FA00602AFD /* AnalyticsAppMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		53E01C0B2DE9A13800602AFD /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -72,7 +71,6 @@
 			isa = PBXGroup;
 			children = (
 				53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */,
-				53E01C0B2DE9A13800602AFD /* Analytics.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

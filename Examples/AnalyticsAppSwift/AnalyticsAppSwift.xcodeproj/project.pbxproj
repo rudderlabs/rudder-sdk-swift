@@ -45,7 +45,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5303DB322DBFF42F008C0784 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53CBA9532DC29AD200961D6A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		53CBA9542DC29AD200961D6A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		53CBA9552DC29AD200961D6A /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -92,7 +91,6 @@
 			isa = PBXGroup;
 			children = (
 				53DEA7302E03EBC800D6C371 /* RudderStackAnalytics.framework */,
-				5303DB322DBFF42F008C0784 /* Analytics.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

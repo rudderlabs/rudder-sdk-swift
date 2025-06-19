@@ -51,7 +51,6 @@
 		5352C7AA2DCBCBA10022B105 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		5352C7AB2DCBCBA10022B105 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		5352C7AC2DCBCBA10022B105 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		5352C7B72DCBCBD10022B105 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		535C9FD92DFABF6700F6618A /* SetPushTokenPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SetPushTokenPlugin.h; sourceTree = "<group>"; };
 		535C9FDA2DFABF6700F6618A /* SetPushTokenPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SetPushTokenPlugin.m; sourceTree = "<group>"; };
 		53DEA7342E03EBD600D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,7 +118,6 @@
 			isa = PBXGroup;
 			children = (
 				53DEA7342E03EBD600D6C371 /* RudderStackAnalytics.framework */,
-				5352C7B72DCBCBD10022B105 /* Analytics.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
