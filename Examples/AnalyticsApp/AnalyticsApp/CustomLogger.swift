@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Analytics
+import RudderStackAnalytics
 
 /**
  A basic implementation of the `Logger` protocol that prints analytics logs to the console.

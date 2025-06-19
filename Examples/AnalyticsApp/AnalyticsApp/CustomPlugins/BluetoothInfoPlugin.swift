@@ -5,7 +5,7 @@
 //  Created by Satheesh Kannan on 17/02/25.
 //
 
-import Analytics
+import RudderStackAnalytics
 import CoreBluetooth
 
 // MARK: - BluetoothInfoPlugin

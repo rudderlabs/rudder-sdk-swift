@@ -6,22 +6,22 @@
 //
 
 import Foundation
-import Analytics
+import RudderStackAnalytics
 
 // MARK: - MockEvent
 class MockEvent: Event {
     var anonymousId: String?
     var channel: String?
-    var integrations: [String : Analytics.AnyCodable]?
+    var integrations: [String : AnyCodable]?
     var sentAt: String?
-    var context: [String : Analytics.AnyCodable]?
-    var traits: Analytics.CodableCollection?
-    var type: Analytics.EventType = .track
+    var context: [String : AnyCodable]?
+    var traits: CodableCollection?
+    var type: EventType = .track
     var messageId: String = UUID().uuidString
     var originalTimestamp: String = Date().description
     var userId: String?
-    var userIdentity: Analytics.UserIdentity?
-    var options: Analytics.RudderOption?
+    var userIdentity: UserIdentity?
+    var options: RudderOption?
     
     enum CodingKeys: String, CodingKey {
         case anonymousId

@@ -3,10 +3,17 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		531E187B2E04174E0039885D /* BluetoothInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18762E04174E0039885D /* BluetoothInfoPluginTests.swift */; };
+		531E187C2E04174E0039885D /* AnalyticsAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18742E04174E0039885D /* AnalyticsAppTests.swift */; };
+		531E187D2E04174E0039885D /* AdvertisingIdPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18732E04174E0039885D /* AdvertisingIdPluginTests.swift */; };
+		531E187E2E04174E0039885D /* AppTestingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18752E04174E0039885D /* AppTestingHelper.swift */; };
+		531E187F2E04174E0039885D /* SetAnonymousIdPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18782E04174E0039885D /* SetAnonymousIdPluginTests.swift */; };
+		531E18802E04174E0039885D /* OptionPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18772E04174E0039885D /* OptionPluginTests.swift */; };
+		531E18812E04174E0039885D /* SetPushTokenPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531E18792E04174E0039885D /* SetPushTokenPluginTests.swift */; };
 		533624BB2D93E31F00F602CD /* OptionPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533624BA2D93E31F00F602CD /* OptionPlugin.swift */; };
 		53472F7A2D622B2900EF8042 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53472F792D622B2900EF8042 /* PermissionManager.swift */; };
 		5351AA7D2C6BE9DE003C3C47 /* AnalyticsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5351AA7C2C6BE9DE003C3C47 /* AnalyticsApp.swift */; };
@@ -48,6 +55,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		531E18732E04174E0039885D /* AdvertisingIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPluginTests.swift; sourceTree = "<group>"; };
+		531E18742E04174E0039885D /* AnalyticsAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsAppTests.swift; sourceTree = "<group>"; };
+		531E18752E04174E0039885D /* AppTestingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTestingHelper.swift; sourceTree = "<group>"; };
+		531E18762E04174E0039885D /* BluetoothInfoPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPluginTests.swift; sourceTree = "<group>"; };
+		531E18772E04174E0039885D /* OptionPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPluginTests.swift; sourceTree = "<group>"; };
+		531E18782E04174E0039885D /* SetAnonymousIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPluginTests.swift; sourceTree = "<group>"; };
+		531E18792E04174E0039885D /* SetPushTokenPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPluginTests.swift; sourceTree = "<group>"; };
 		533624BA2D93E31F00F602CD /* OptionPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPlugin.swift; sourceTree = "<group>"; };
 		53472F792D622B2900EF8042 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		5351AA792C6BE9DE003C3C47 /* AnalyticsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,10 +82,6 @@
 		8CBEA31B2DF9ABD40034B8E8 /* SetAnonymousIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		5383D2CF2D3EAC0C00291B00 /* AnalyticsAppTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AnalyticsAppTests; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		5351AA762C6BE9DE003C3C47 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -91,11 +101,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		531E187A2E04174E0039885D /* AnalyticsAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				531E18732E04174E0039885D /* AdvertisingIdPluginTests.swift */,
+				531E18742E04174E0039885D /* AnalyticsAppTests.swift */,
+				531E18752E04174E0039885D /* AppTestingHelper.swift */,
+				531E18762E04174E0039885D /* BluetoothInfoPluginTests.swift */,
+				531E18772E04174E0039885D /* OptionPluginTests.swift */,
+				531E18782E04174E0039885D /* SetAnonymousIdPluginTests.swift */,
+				531E18792E04174E0039885D /* SetPushTokenPluginTests.swift */,
+			);
+			path = AnalyticsAppTests;
+			sourceTree = "<group>";
+		};
 		5351AA702C6BE9DE003C3C47 = {
 			isa = PBXGroup;
 			children = (
 				5351AA7B2C6BE9DE003C3C47 /* AnalyticsApp */,
-				5383D2CF2D3EAC0C00291B00 /* AnalyticsAppTests */,
+				531E187A2E04174E0039885D /* AnalyticsAppTests */,
 				5351AA7A2C6BE9DE003C3C47 /* Products */,
 				5351AA8A2C6BEA02003C3C47 /* Frameworks */,
 			);
@@ -198,9 +222,6 @@
 			dependencies = (
 				5383D2D32D3EAC0C00291B00 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				5383D2CF2D3EAC0C00291B00 /* AnalyticsAppTests */,
-			);
 			name = AnalyticsAppTests;
 			packageProductDependencies = (
 			);
@@ -287,6 +308,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				531E187B2E04174E0039885D /* BluetoothInfoPluginTests.swift in Sources */,
+				531E187C2E04174E0039885D /* AnalyticsAppTests.swift in Sources */,
+				531E187D2E04174E0039885D /* AdvertisingIdPluginTests.swift in Sources */,
+				531E187E2E04174E0039885D /* AppTestingHelper.swift in Sources */,
+				531E187F2E04174E0039885D /* SetAnonymousIdPluginTests.swift in Sources */,
+				531E18802E04174E0039885D /* OptionPluginTests.swift in Sources */,
+				531E18812E04174E0039885D /* SetPushTokenPluginTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

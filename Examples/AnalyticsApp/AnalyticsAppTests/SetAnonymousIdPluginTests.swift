@@ -1,5 +1,5 @@
 import Testing
-import Analytics
+import RudderStackAnalytics
 @testable import AnalyticsApp
 
 struct SetAnonymousIdPluginTests {

@@ -5,7 +5,7 @@
 //  Created by Satheesh Kannan on 20/01/25.
 //
 
-import Analytics
+import RudderStackAnalytics
 import AdSupport
 import AppTrackingTransparency
 

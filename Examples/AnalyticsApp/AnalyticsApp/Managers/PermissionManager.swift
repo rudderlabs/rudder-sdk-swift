@@ -9,7 +9,7 @@ import Foundation
 import CoreBluetooth
 import AppTrackingTransparency
 import AdSupport
-import Analytics
+import RudderStackAnalytics
 import UIKit
 
 enum PermissionType {

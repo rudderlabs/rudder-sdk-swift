@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Analytics
+import RudderStackAnalytics
 
 struct ContentView: View {
     

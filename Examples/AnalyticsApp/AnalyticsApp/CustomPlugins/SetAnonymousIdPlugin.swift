@@ -1,5 +1,5 @@
 import Foundation
-import Analytics
+import RudderStackAnalytics
 
 // MARK: - SetAnonymousIdPlugin
 /**
