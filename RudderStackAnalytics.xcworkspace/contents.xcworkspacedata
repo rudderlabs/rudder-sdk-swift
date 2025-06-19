@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:RudderStackAnalytics/Analytics.xcodeproj">
+      location = "group:Analytics.xcodeproj">
    </FileRef>
 </Workspace>
