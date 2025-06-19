@@ -122,7 +122,7 @@
 		53DEA68E2E03D06F00D6C371 /* group_with_options.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA62F2E03D06F00D6C371 /* group_with_options.json */; };
 		53DEA68F2E03D06F00D6C371 /* group_with_all_values.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA62D2E03D06F00D6C371 /* group_with_all_values.json */; };
 		53DEA6902E03D06F00D6C371 /* screen_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA6392E03D06F00D6C371 /* screen_with_default_arguments.json */; };
-		53DEA6F82E03EB4C00D6C371 /* RudderStackAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 53DEA6F72E03EB4C00D6C371 /* RudderStackAnalytics.h */; };
+		53DEA6F82E03EB4C00D6C371 /* RudderStackAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 53DEA6F72E03EB4C00D6C371 /* RudderStackAnalytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

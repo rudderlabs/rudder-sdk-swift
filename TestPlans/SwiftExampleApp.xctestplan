@@ -18,6 +18,7 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:SwiftExample.xcodeproj",
         "identifier" : "53CBA9712DC29B8000961D6A",

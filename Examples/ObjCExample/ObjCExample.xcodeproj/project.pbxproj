@@ -39,7 +39,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5352C76D2DCBCB390022B105 /* ObjCExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjCExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5352C76D2DCBCB390022B105 /* ObjCExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjCExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		535BB4A52E048E8200E1DAB0 /* AnalyticsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalyticsManager.h; sourceTree = "<group>"; };
 		535BB4A62E048E8200E1DAB0 /* AnalyticsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalyticsManager.m; sourceTree = "<group>"; };
 		535BB4A82E048E8200E1DAB0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -90,7 +90,7 @@
 		5352C76E2DCBCB390022B105 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5352C76D2DCBCB390022B105 /* ObjCExample.app */,
+				5352C76D2DCBCB390022B105 /* ObjCExampleApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -216,9 +216,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5352C76C2DCBCB390022B105 /* ObjCExample */ = {
+		5352C76C2DCBCB390022B105 /* ObjCExampleApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5352C7852DCBCB3A0022B105 /* Build configuration list for PBXNativeTarget "ObjCExample" */;
+			buildConfigurationList = 5352C7852DCBCB3A0022B105 /* Build configuration list for PBXNativeTarget "ObjCExampleApp" */;
 			buildPhases = (
 				5352C7692DCBCB390022B105 /* Sources */,
 				5352C76A2DCBCB390022B105 /* Frameworks */,
@@ -229,11 +229,11 @@
 			);
 			dependencies = (
 			);
-			name = ObjCExample;
+			name = ObjCExampleApp;
 			packageProductDependencies = (
 			);
 			productName = AnalyticsAppObjC;
-			productReference = 5352C76D2DCBCB390022B105 /* ObjCExample.app */;
+			productReference = 5352C76D2DCBCB390022B105 /* ObjCExampleApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -265,7 +265,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5352C76C2DCBCB390022B105 /* ObjCExample */,
+				5352C76C2DCBCB390022B105 /* ObjCExampleApp */,
 			);
 		};
 /* End PBXProject section */
@@ -512,7 +512,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5352C7852DCBCB3A0022B105 /* Build configuration list for PBXNativeTarget "ObjCExample" */ = {
+		5352C7852DCBCB3A0022B105 /* Build configuration list for PBXNativeTarget "ObjCExampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5352C7862DCBCB3A0022B105 /* Debug */,

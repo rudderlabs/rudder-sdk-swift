@@ -55,7 +55,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5351AA792C6BE9DE003C3C47 /* SwiftUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5351AA792C6BE9DE003C3C47 /* SwiftUIExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		535BB3D02E04642400E1DAB0 /* AdvertisingIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPlugin.swift; sourceTree = "<group>"; };
 		535BB3D12E04642400E1DAB0 /* BluetoothInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPlugin.swift; sourceTree = "<group>"; };
 		535BB3D22E04642400E1DAB0 /* OptionPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPlugin.swift; sourceTree = "<group>"; };
@@ -77,7 +77,7 @@
 		535BB3F32E04643900E1DAB0 /* SetAnonymousIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPluginTests.swift; sourceTree = "<group>"; };
 		535BB3F42E04643900E1DAB0 /* SetPushTokenPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPluginTests.swift; sourceTree = "<group>"; };
 		535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAppTests.swift; sourceTree = "<group>"; };
-		5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIExampleAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -113,8 +113,8 @@
 		5351AA7A2C6BE9DE003C3C47 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5351AA792C6BE9DE003C3C47 /* SwiftUIExample.app */,
-				5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleTests.xctest */,
+				5351AA792C6BE9DE003C3C47 /* SwiftUIExampleApp.app */,
+				5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -189,9 +189,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5351AA782C6BE9DE003C3C47 /* SwiftUIExample */ = {
+		5351AA782C6BE9DE003C3C47 /* SwiftUIExampleApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "SwiftUIExample" */;
+			buildConfigurationList = 5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "SwiftUIExampleApp" */;
 			buildPhases = (
 				5351AA752C6BE9DE003C3C47 /* Sources */,
 				5351AA762C6BE9DE003C3C47 /* Frameworks */,
@@ -202,14 +202,14 @@
 			);
 			dependencies = (
 			);
-			name = SwiftUIExample;
+			name = SwiftUIExampleApp;
 			productName = AnalyticsApp;
-			productReference = 5351AA792C6BE9DE003C3C47 /* SwiftUIExample.app */;
+			productReference = 5351AA792C6BE9DE003C3C47 /* SwiftUIExampleApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5383D2CD2D3EAC0C00291B00 /* SwiftUIExampleTests */ = {
+		5383D2CD2D3EAC0C00291B00 /* SwiftUIExampleAppTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "SwiftUIExampleTests" */;
+			buildConfigurationList = 5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "SwiftUIExampleAppTests" */;
 			buildPhases = (
 				5383D2CA2D3EAC0C00291B00 /* Sources */,
 				5383D2CB2D3EAC0C00291B00 /* Frameworks */,
@@ -220,11 +220,11 @@
 			dependencies = (
 				5383D2D32D3EAC0C00291B00 /* PBXTargetDependency */,
 			);
-			name = SwiftUIExampleTests;
+			name = SwiftUIExampleAppTests;
 			packageProductDependencies = (
 			);
 			productName = AnalyticsAppTests;
-			productReference = 5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleTests.xctest */;
+			productReference = 5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -259,8 +259,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5351AA782C6BE9DE003C3C47 /* SwiftUIExample */,
-				5383D2CD2D3EAC0C00291B00 /* SwiftUIExampleTests */,
+				5351AA782C6BE9DE003C3C47 /* SwiftUIExampleApp */,
+				5383D2CD2D3EAC0C00291B00 /* SwiftUIExampleAppTests */,
 			);
 		};
 /* End PBXProject section */
@@ -321,7 +321,7 @@
 /* Begin PBXTargetDependency section */
 		5383D2D32D3EAC0C00291B00 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5351AA782C6BE9DE003C3C47 /* SwiftUIExample */;
+			target = 5351AA782C6BE9DE003C3C47 /* SwiftUIExampleApp */;
 			targetProxy = 5383D2D22D3EAC0C00291B00 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -578,7 +578,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "SwiftUIExample" */ = {
+		5351AA872C6BE9E0003C3C47 /* Build configuration list for PBXNativeTarget "SwiftUIExampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5351AA882C6BE9E0003C3C47 /* Debug */,
@@ -587,7 +587,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "SwiftUIExampleTests" */ = {
+		5383D2D42D3EAC0C00291B00 /* Build configuration list for PBXNativeTarget "SwiftUIExampleAppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5383D2D52D3EAC0C00291B00 /* Debug */,

@@ -36,7 +36,7 @@
 		535BB4F92E0491B800E1DAB0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		535BB4FA2E0491B800E1DAB0 /* macOSExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOSExample.entitlements; sourceTree = "<group>"; };
 		53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		53E01BEB2DE999FA00602AFD /* macOSExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macOSExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53E01BEB2DE999FA00602AFD /* macOSExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macOSExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +75,7 @@
 		53E01BEC2DE999FA00602AFD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				53E01BEB2DE999FA00602AFD /* macOSExample.app */,
+				53E01BEB2DE999FA00602AFD /* macOSExampleApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,9 +91,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		53E01BEA2DE999FA00602AFD /* macOSExample */ = {
+		53E01BEA2DE999FA00602AFD /* macOSExampleApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 53E01BF72DE999FB00602AFD /* Build configuration list for PBXNativeTarget "macOSExample" */;
+			buildConfigurationList = 53E01BF72DE999FB00602AFD /* Build configuration list for PBXNativeTarget "macOSExampleApp" */;
 			buildPhases = (
 				53E01BE72DE999FA00602AFD /* Sources */,
 				53E01BE82DE999FA00602AFD /* Frameworks */,
@@ -104,11 +104,11 @@
 			);
 			dependencies = (
 			);
-			name = macOSExample;
+			name = macOSExampleApp;
 			packageProductDependencies = (
 			);
 			productName = AnalyticsAppMac;
-			productReference = 53E01BEB2DE999FA00602AFD /* macOSExample.app */;
+			productReference = 53E01BEB2DE999FA00602AFD /* macOSExampleApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -140,7 +140,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				53E01BEA2DE999FA00602AFD /* macOSExample */,
+				53E01BEA2DE999FA00602AFD /* macOSExampleApp */,
 			);
 		};
 /* End PBXProject section */
@@ -354,7 +354,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		53E01BF72DE999FB00602AFD /* Build configuration list for PBXNativeTarget "macOSExample" */ = {
+		53E01BF72DE999FB00602AFD /* Build configuration list for PBXNativeTarget "macOSExampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				53E01BF82DE999FB00602AFD /* Debug */,

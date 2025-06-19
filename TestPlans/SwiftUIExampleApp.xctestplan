@@ -18,6 +18,7 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:SwiftUIExample.xcodeproj",
         "identifier" : "5383D2CD2D3EAC0C00291B00",

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		535BB5332E04987600E1DAB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB5302E04987600E1DAB0 /* Assets.xcassets */; };
+		535BB5342E04987600E1DAB0 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB52F2E04987600E1DAB0 /* AnalyticsManager.swift */; };
+		535BB5352E04987600E1DAB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB5312E04987600E1DAB0 /* ContentView.swift */; };
+		535BB5362E04987600E1DAB0 /* tvOSExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB52E2E04987600E1DAB0 /* tvOSExampleApp.swift */; };
 		53DEA7412E03EBFE00D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7402E03EBFE00D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA7422E03EBFE00D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7402E03EBFE00D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -26,17 +30,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		535BB52E2E04987600E1DAB0 /* tvOSExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tvOSExampleApp.swift; sourceTree = "<group>"; };
+		535BB52F2E04987600E1DAB0 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
+		535BB5302E04987600E1DAB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		535BB5312E04987600E1DAB0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		53DEA7402E03EBFE00D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		53DF2C0F2DF03E0400FE2659 /* AnalyticsAppTv.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsAppTv.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53DF2C0F2DF03E0400FE2659 /* tvOSExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tvOSExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		53DF2C112DF03E0400FE2659 /* AnalyticsAppTv */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AnalyticsAppTv;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		53DF2C0C2DF03E0400FE2659 /* Frameworks */ = {
@@ -50,10 +50,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		535BB5322E04987600E1DAB0 /* tvOSExample */ = {
+			isa = PBXGroup;
+			children = (
+				535BB52E2E04987600E1DAB0 /* tvOSExampleApp.swift */,
+				535BB52F2E04987600E1DAB0 /* AnalyticsManager.swift */,
+				535BB5302E04987600E1DAB0 /* Assets.xcassets */,
+				535BB5312E04987600E1DAB0 /* ContentView.swift */,
+			);
+			path = tvOSExample;
+			sourceTree = "<group>";
+		};
 		53DF2C062DF03E0400FE2659 = {
 			isa = PBXGroup;
 			children = (
-				53DF2C112DF03E0400FE2659 /* AnalyticsAppTv */,
+				535BB5322E04987600E1DAB0 /* tvOSExample */,
 				53DF2C252DF03F0700FE2659 /* Frameworks */,
 				53DF2C102DF03E0400FE2659 /* Products */,
 			);
@@ -62,7 +73,7 @@
 		53DF2C102DF03E0400FE2659 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				53DF2C0F2DF03E0400FE2659 /* AnalyticsAppTv.app */,
+				53DF2C0F2DF03E0400FE2659 /* tvOSExampleApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -78,9 +89,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		53DF2C0E2DF03E0400FE2659 /* AnalyticsAppTv */ = {
+		53DF2C0E2DF03E0400FE2659 /* tvOSExampleApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 53DF2C1A2DF03E0600FE2659 /* Build configuration list for PBXNativeTarget "AnalyticsAppTv" */;
+			buildConfigurationList = 53DF2C1A2DF03E0600FE2659 /* Build configuration list for PBXNativeTarget "tvOSExampleApp" */;
 			buildPhases = (
 				53DF2C0B2DF03E0400FE2659 /* Sources */,
 				53DF2C0C2DF03E0400FE2659 /* Frameworks */,
@@ -91,14 +102,11 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				53DF2C112DF03E0400FE2659 /* AnalyticsAppTv */,
-			);
-			name = AnalyticsAppTv;
+			name = tvOSExampleApp;
 			packageProductDependencies = (
 			);
 			productName = AnalyticsAppTv;
-			productReference = 53DF2C0F2DF03E0400FE2659 /* AnalyticsAppTv.app */;
+			productReference = 53DF2C0F2DF03E0400FE2659 /* tvOSExampleApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -116,7 +124,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 53DF2C0A2DF03E0400FE2659 /* Build configuration list for PBXProject "AnalyticsAppTv" */;
+			buildConfigurationList = 53DF2C0A2DF03E0400FE2659 /* Build configuration list for PBXProject "tvOSExample" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -130,7 +138,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				53DF2C0E2DF03E0400FE2659 /* AnalyticsAppTv */,
+				53DF2C0E2DF03E0400FE2659 /* tvOSExampleApp */,
 			);
 		};
 /* End PBXProject section */
@@ -140,6 +148,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535BB5332E04987600E1DAB0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,6 +159,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				535BB5342E04987600E1DAB0 /* AnalyticsManager.swift in Sources */,
+				535BB5352E04987600E1DAB0 /* ContentView.swift in Sources */,
+				535BB5362E04987600E1DAB0 /* tvOSExampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,7 +303,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppTv;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.tvosexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -316,7 +328,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.sk.AnalyticsAppTv;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.tvosexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -328,7 +340,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		53DF2C0A2DF03E0400FE2659 /* Build configuration list for PBXProject "AnalyticsAppTv" */ = {
+		53DF2C0A2DF03E0400FE2659 /* Build configuration list for PBXProject "tvOSExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				53DF2C182DF03E0600FE2659 /* Debug */,
@@ -337,7 +349,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		53DF2C1A2DF03E0600FE2659 /* Build configuration list for PBXNativeTarget "AnalyticsAppTv" */ = {
+		53DF2C1A2DF03E0600FE2659 /* Build configuration list for PBXNativeTarget "tvOSExampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				53DF2C1B2DF03E0600FE2659 /* Debug */,

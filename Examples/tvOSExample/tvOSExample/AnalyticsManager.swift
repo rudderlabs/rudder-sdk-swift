@@ -1,12 +1,12 @@
 //
 //  AnalyticsManager.swift
-//  AnalyticsAppTv
+//  tvOSExample
 //
 //  Created by Satheesh Kannan on 04/06/25.
 //
 
 import Foundation
-import Analytics
+import RudderStackAnalytics
 
 // MARK: - AnalyticsManager
 class AnalyticsManager {

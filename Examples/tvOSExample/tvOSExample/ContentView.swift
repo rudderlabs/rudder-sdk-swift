@@ -1,12 +1,12 @@
 //
 //  ContentView.swift
-//  AnalyticsAppTv
+//  tvOSExample
 //
 //  Created by Satheesh Kannan on 04/06/25.
 //
 
 import SwiftUI
-import Analytics
+import RudderStackAnalytics
 
 struct ContentView: View {
     @State private var displayUserId: String = "None"
