@@ -78,16 +78,13 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         print("Given an analytics configuration allows lifecycle tracking")
         analyticsMock?.configuration.trackApplicationLifecycleEvents = true
         guard let analyticsMock else { XCTFail("No disk client"); return }
-        plugin.setup(analytics: analyticsMock)
         
-        print("When the app got update")
-        plugin.appVersion = AppVersion(
-            currentVersionName: "2.0",
-            currentBuild: 20,
-            previousVersionName: "1.0",
-            previousBuild: 10
-        )
-        plugin.trackAppInstallAndUpdateEvents()
+        print("And given previous version info is stored")
+        analyticsMock.storage.write(value: "1.0", key: Constants.storageKeys.appVersion)
+        analyticsMock.storage.write(value: 10, key: Constants.storageKeys.appBuild)
+        
+        print("When the plugin setup with updated app version")
+        plugin.setup(analytics: analyticsMock)
         
         print("Then the plugin should track application updated event")
         let eventNames = await fetchTrackedEventNames()
@@ -102,7 +99,7 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         plugin.setup(analytics: analyticsMock)
         
         // Simulate app install/update events
-        plugin.trackAppInstallAndUpdateEvents()
+        plugin.trackAppInstallOrUpdateEvents()
         
         let eventNames = await fetchTrackedEventNames()
         guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
