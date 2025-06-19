@@ -1,17 +1,17 @@
 //
-//  ViewControllerToPush.swift
-//  AnalyticsAppSwift
+//  NextViewControllerToPush.swift
+//  SwiftExample
 //
 //  Created by Satheesh Kannan on 28/04/25.
 //
 
 import UIKit
 
-// MARK: - ViewControllerToPush
+// MARK: - NextViewControllerToPush
 /**
  View controller which will be pushed using `UINavigationController`.
  */
-class ViewControllerToPush: UIViewController {
+class NextViewControllerToPush: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

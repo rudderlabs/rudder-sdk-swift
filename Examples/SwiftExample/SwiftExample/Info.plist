@@ -8,10 +8,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.sk.AnalyticsAppSwift</string>
+			<string>com.sk.swiftexample</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>analyticsappswift</string>
+				<string>swiftexample</string>
 			</array>
 		</dict>
 	</array>

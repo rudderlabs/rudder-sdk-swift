@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1630"
+   LastUpgradeVersion = "1640"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "53CC34B92DB41F4000A2EF2F"
-               BuildableName = "AnalyticsAppSwift.app"
-               BlueprintName = "AnalyticsAppSwift"
-               ReferencedContainer = "container:AnalyticsAppSwift.xcodeproj">
+               BuildableName = "SwiftExample.app"
+               BlueprintName = "SwiftExample"
+               ReferencedContainer = "container:SwiftExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -27,21 +27,13 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "53CBA9712DC29B8000961D6A"
-               BuildableName = "AnalyticsAppSwiftTests.xctest"
-               BlueprintName = "AnalyticsAppSwiftTests"
-               ReferencedContainer = "container:AnalyticsAppSwift.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:../../TestPlans/SwiftExample.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+      </TestPlans>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -58,9 +50,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "53CC34B92DB41F4000A2EF2F"
-            BuildableName = "AnalyticsAppSwift.app"
-            BlueprintName = "AnalyticsAppSwift"
-            ReferencedContainer = "container:AnalyticsAppSwift.xcodeproj">
+            BuildableName = "SwiftExample.app"
+            BlueprintName = "SwiftExample"
+            ReferencedContainer = "container:SwiftExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -75,9 +67,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "53CC34B92DB41F4000A2EF2F"
-            BuildableName = "AnalyticsAppSwift.app"
-            BlueprintName = "AnalyticsAppSwift"
-            ReferencedContainer = "container:AnalyticsAppSwift.xcodeproj">
+            BuildableName = "SwiftExample.app"
+            BlueprintName = "SwiftExample"
+            ReferencedContainer = "container:SwiftExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

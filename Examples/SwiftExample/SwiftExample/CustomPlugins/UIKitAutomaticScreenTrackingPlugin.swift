@@ -1,12 +1,12 @@
 //
 //  UIKitAutomaticScreenTrackingPlugin.swift
-//  AnalyticsAppSwift
+//  SwiftExample
 //
 //  Created by Satheesh Kannan on 30/04/25.
 //
 
 import UIKit
-import Analytics
+import RudderStackAnalytics
 
 // MARK: - UIKitAutomaticScreenTrackingPlugin
 /**

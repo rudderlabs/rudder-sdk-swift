@@ -1,14 +1,14 @@
 //
 //  AutomaticScreenTrackingPluginTests.swift
-//  AnalyticsAppSwiftTests
+//  SwiftExampleTests
 //
 //  Created by Satheesh Kannan on 30/04/25.
 //
 
 import Testing
 import UIKit
-import Analytics
-@testable import AnalyticsAppSwift
+import RudderStackAnalytics
+@testable import SwiftExample
 
 struct AutomaticScreenTrackingPluginTests {
     @Test

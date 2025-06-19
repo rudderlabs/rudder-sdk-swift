@@ -1,6 +1,6 @@
 //
 //  NextViewControllerToPresent.swift
-//  AnalyticsAppSwift
+//  SwiftExample
 //
 //  Created by Satheesh Kannan on 28/04/25.
 //

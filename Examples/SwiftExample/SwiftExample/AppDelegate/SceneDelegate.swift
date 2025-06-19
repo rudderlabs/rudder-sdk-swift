@@ -1,6 +1,6 @@
 //
 //  SceneDelegate.swift
-//  AnalyticsAppSwift
+//  SwiftExample
 //
 //  Created by Satheesh Kannan on 19/04/25.
 //

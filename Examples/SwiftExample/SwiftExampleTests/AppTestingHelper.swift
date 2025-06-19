@@ -1,6 +1,6 @@
 //
 //  AppTestingHelper.swift
-//  AnalyticsAppSwiftTests
+//  SwiftExampleTests
 //
 //  Created by Satheesh Kannan on 01/05/25.
 //
