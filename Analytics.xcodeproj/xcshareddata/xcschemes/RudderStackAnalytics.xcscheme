@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5351AA652C6BE95D003C3C47"
-               BuildableName = "Analytics.framework"
-               BlueprintName = "Analytics"
+               BuildableName = "RudderStackAnalytics.framework"
+               BlueprintName = "RudderStackAnalytics"
                ReferencedContainer = "container:Analytics.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -36,8 +36,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "539E54092C98CD7D00982E95"
-               BuildableName = "AnalyticsTests.xctest"
-               BlueprintName = "AnalyticsTests"
+               BuildableName = "RudderStackAnalyticsTests.xctest"
+               BlueprintName = "RudderStackAnalyticsTests"
                ReferencedContainer = "container:Analytics.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -64,8 +64,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5351AA652C6BE95D003C3C47"
-            BuildableName = "Analytics.framework"
-            BlueprintName = "Analytics"
+            BuildableName = "RudderStackAnalytics.framework"
+            BlueprintName = "RudderStackAnalytics"
             ReferencedContainer = "container:Analytics.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		539E540E2C98CD7D00982E95 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA662C6BE95D003C3C47 /* Analytics.framework */; };
+		539E540E2C98CD7D00982E95 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */; };
 		53DEA5E02E03D05A00D6C371 /* Analytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 53DEA5DE2E03D05A00D6C371 /* Analytics.h */; };
 		53DEA5E12E03D05A00D6C371 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D62E03D05A00D6C371 /* KeyValueStore.swift */; };
 		53DEA5E22E03D05A00D6C371 /* ResetUserIdentityAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */; };
@@ -136,8 +136,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5351AA662C6BE95D003C3C47 /* Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		539E540A2C98CD7D00982E95 /* AnalyticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnalyticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		539E540A2C98CD7D00982E95 /* RudderStackAnalyticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderStackAnalyticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53DEA58F2E03D05A00D6C371 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
 		53DEA5902E03D05A00D6C371 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		53DEA5912E03D05A00D6C371 /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
@@ -267,7 +267,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				539E540E2C98CD7D00982E95 /* Analytics.framework in Frameworks */,
+				539E540E2C98CD7D00982E95 /* RudderStackAnalytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,8 +286,8 @@
 		5351AA672C6BE95D003C3C47 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5351AA662C6BE95D003C3C47 /* Analytics.framework */,
-				539E540A2C98CD7D00982E95 /* AnalyticsTests.xctest */,
+				5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */,
+				539E540A2C98CD7D00982E95 /* RudderStackAnalyticsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -643,9 +643,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		5351AA652C6BE95D003C3C47 /* Analytics */ = {
+		5351AA652C6BE95D003C3C47 /* RudderStackAnalytics */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5351AA6D2C6BE95D003C3C47 /* Build configuration list for PBXNativeTarget "Analytics" */;
+			buildConfigurationList = 5351AA6D2C6BE95D003C3C47 /* Build configuration list for PBXNativeTarget "RudderStackAnalytics" */;
 			buildPhases = (
 				5351AA612C6BE95D003C3C47 /* Headers */,
 				531744862D5618E000E98C03 /* SwiftLint */,
@@ -657,14 +657,14 @@
 			);
 			dependencies = (
 			);
-			name = Analytics;
+			name = RudderStackAnalytics;
 			productName = Analytics;
-			productReference = 5351AA662C6BE95D003C3C47 /* Analytics.framework */;
+			productReference = 5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		539E54092C98CD7D00982E95 /* AnalyticsTests */ = {
+		539E54092C98CD7D00982E95 /* RudderStackAnalyticsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 539E54112C98CD7D00982E95 /* Build configuration list for PBXNativeTarget "AnalyticsTests" */;
+			buildConfigurationList = 539E54112C98CD7D00982E95 /* Build configuration list for PBXNativeTarget "RudderStackAnalyticsTests" */;
 			buildPhases = (
 				539E54062C98CD7D00982E95 /* Sources */,
 				539E54072C98CD7D00982E95 /* Frameworks */,
@@ -675,9 +675,9 @@
 			dependencies = (
 				539E54102C98CD7D00982E95 /* PBXTargetDependency */,
 			);
-			name = AnalyticsTests;
+			name = RudderStackAnalyticsTests;
 			productName = AnalyticsTests;
-			productReference = 539E540A2C98CD7D00982E95 /* AnalyticsTests.xctest */;
+			productReference = 539E540A2C98CD7D00982E95 /* RudderStackAnalyticsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -712,8 +712,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5351AA652C6BE95D003C3C47 /* Analytics */,
-				539E54092C98CD7D00982E95 /* AnalyticsTests */,
+				5351AA652C6BE95D003C3C47 /* RudderStackAnalytics */,
+				539E54092C98CD7D00982E95 /* RudderStackAnalyticsTests */,
 			);
 		};
 /* End PBXProject section */
@@ -892,7 +892,7 @@
 /* Begin PBXTargetDependency section */
 		539E54102C98CD7D00982E95 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5351AA652C6BE95D003C3C47 /* Analytics */;
+			target = 5351AA652C6BE95D003C3C47 /* RudderStackAnalytics */;
 			targetProxy = 539E540F2C98CD7D00982E95 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1171,7 +1171,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5351AA6D2C6BE95D003C3C47 /* Build configuration list for PBXNativeTarget "Analytics" */ = {
+		5351AA6D2C6BE95D003C3C47 /* Build configuration list for PBXNativeTarget "RudderStackAnalytics" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5351AA6E2C6BE95D003C3C47 /* Debug */,
@@ -1180,7 +1180,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		539E54112C98CD7D00982E95 /* Build configuration list for PBXNativeTarget "AnalyticsTests" */ = {
+		539E54112C98CD7D00982E95 /* Build configuration list for PBXNativeTarget "RudderStackAnalyticsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				539E54122C98CD7D00982E95 /* Debug */,
