@@ -5,7 +5,7 @@
 //  Created by Satheesh Kannan on 27/02/25.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 #elseif os(macOS)
 import AppKit
@@ -103,6 +103,7 @@ final class SessionHandlerTests: XCTestCase {
             
             when("Start automatic session while there is no active session") {
                 let manager = SessionHandler(analytics: analytics)
+                manager.startAutomaticSessionIfNeeded()
                 
                 then("A new session should be started") {
                     XCTAssertNotNil(manager.sessionId, "A session should be started")
