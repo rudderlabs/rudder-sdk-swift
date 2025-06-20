@@ -59,7 +59,7 @@
 		53DEA6112E03D05A00D6C371 /* LifecycleManagementUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5A22E03D05A00D6C371 /* LifecycleManagementUtils.swift */; };
 		53DEA6122E03D05A00D6C371 /* SwiftLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5A62E03D05A00D6C371 /* SwiftLogger.swift */; };
 		53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5C82E03D05A00D6C371 /* StartupFlushPolicy.swift */; };
-		53DEA6142E03D05A00D6C371 /* AnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA58F2E03D05A00D6C371 /* AnalyticsClient.swift */; };
+		53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA58F2E03D05A00D6C371 /* Analytics.swift */; };
 		53DEA6152E03D05A00D6C371 /* BasicStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5DB2E03D05A00D6C371 /* BasicStorage.swift */; };
 		53DEA6162E03D05A00D6C371 /* ObjCOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5B12E03D05A00D6C371 /* ObjCOption.swift */; };
 		53DEA6172E03D05A00D6C371 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5902E03D05A00D6C371 /* Configuration.swift */; };
@@ -138,7 +138,7 @@
 /* Begin PBXFileReference section */
 		5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		539E540A2C98CD7D00982E95 /* RudderStackAnalyticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderStackAnalyticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		53DEA58F2E03D05A00D6C371 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
+		53DEA58F2E03D05A00D6C371 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		53DEA5902E03D05A00D6C371 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		53DEA5912E03D05A00D6C371 /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		53DEA5932E03D05A00D6C371 /* AliasEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasEvent.swift; sourceTree = "<group>"; };
@@ -295,7 +295,7 @@
 		53DEA5922E03D05A00D6C371 /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA58F2E03D05A00D6C371 /* AnalyticsClient.swift */,
+				53DEA58F2E03D05A00D6C371 /* Analytics.swift */,
 				53DEA5902E03D05A00D6C371 /* Configuration.swift */,
 				53DEA5912E03D05A00D6C371 /* EventManager.swift */,
 			);
@@ -833,7 +833,7 @@
 				53DEA6112E03D05A00D6C371 /* LifecycleManagementUtils.swift in Sources */,
 				53DEA6122E03D05A00D6C371 /* SwiftLogger.swift in Sources */,
 				53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */,
-				53DEA6142E03D05A00D6C371 /* AnalyticsClient.swift in Sources */,
+				53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */,
 				53DEA6152E03D05A00D6C371 /* BasicStorage.swift in Sources */,
 				53DEA6162E03D05A00D6C371 /* ObjCOption.swift in Sources */,
 				53DEA6172E03D05A00D6C371 /* Configuration.swift in Sources */,
