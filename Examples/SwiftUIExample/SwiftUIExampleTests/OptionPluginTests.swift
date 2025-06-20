@@ -7,7 +7,7 @@
 
 import Testing
 import RudderStackAnalytics
-@testable import SwiftUIExample
+@testable import SwiftUIExampleApp
 
 struct OptionPluginTests {
     

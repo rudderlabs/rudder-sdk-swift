@@ -8,7 +8,7 @@
 import Testing
 import UIKit
 import RudderStackAnalytics
-@testable import SwiftExample
+@testable import SwiftExampleApp
 
 struct AutomaticScreenTrackingPluginTests {
     @Test
