@@ -5,7 +5,7 @@
 @interface SetAnonymousIdPlugin()
 
 /// Reference to the analytics client
-@property(nonatomic, retain) RSAAnalytics *client;
+@property(nonatomic, retain) RSSAnalytics *client;
 
 /// The custom anonymous ID to be set on all events
 @property(nonatomic, copy) NSString *anonymousId;
@@ -23,15 +23,15 @@
     return self;
 }
 
-- (RSAPluginType)pluginType {
-    return RSAPluginTypeOnProcess;
+- (RSSPluginType)pluginType {
+    return RSSPluginTypeOnProcess;
 }
 
-- (void)setup:(RSAAnalytics * _Nonnull)analytics {
+- (void)setup:(RSSAnalytics * _Nonnull)analytics {
     self.client = analytics;
 }
 
-- (RSAEvent * _Nullable)intercept:(RSAEvent * _Nonnull)event {
+- (RSSEvent * _Nullable)intercept:(RSSEvent * _Nonnull)event {
     [self replaceAnonymousIdInEvent:event];
     return event;
 }
@@ -41,8 +41,8 @@
  
  @param event The event to modify
  */
-- (void)replaceAnonymousIdInEvent:(RSAEvent *)event {
-    [RSALoggerAnalytics verbose:[NSString stringWithFormat:@"SetAnonymousIdPlugin: Replacing anonymousId: %@ in the event payload", self.anonymousId]];
+- (void)replaceAnonymousIdInEvent:(RSSEvent *)event {
+    [RSSLoggerAnalytics verbose:[NSString stringWithFormat:@"SetAnonymousIdPlugin: Replacing anonymousId: %@ in the event payload", self.anonymousId]];
     
     event.anonymousId = self.anonymousId;
 }
