@@ -8,7 +8,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.rudder.objcexample</string>
+			<string>com.rudder.objc.example</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>objcexample</string>

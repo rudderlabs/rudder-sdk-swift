@@ -8,7 +8,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.sk.swiftexample</string>
+			<string>com.rudder.swift.example</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>swiftexample</string>
