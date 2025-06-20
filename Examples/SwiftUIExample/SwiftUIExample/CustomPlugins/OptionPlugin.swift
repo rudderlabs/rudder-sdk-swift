@@ -15,14 +15,14 @@ import RudderStackAnalytics
 
 final class OptionPlugin: Plugin {
     var pluginType: PluginType = .onProcess
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     var option: RudderOption?
     
     init(option: RudderOption) {
         self.option = option
     }
     
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
     }
     

@@ -27,7 +27,7 @@ class SetPushTokenPlugin: Plugin {
     var pluginType: PluginType = .preProcess
     
     /** The analytics client instance, set during setup. */
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     
     /**
      Initializes the plugin with the given push notification token.
@@ -43,7 +43,7 @@ class SetPushTokenPlugin: Plugin {
      
      - Parameter analytics: The analytics client instance to be used by the plugin.
     */
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
     }
     

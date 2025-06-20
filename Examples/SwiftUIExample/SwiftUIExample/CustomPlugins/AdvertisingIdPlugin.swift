@@ -15,7 +15,7 @@ import AppTrackingTransparency
  */
 class AdvertisingIdPlugin: Plugin {
     var pluginType: PluginType = .preProcess
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     
     var trackingAuthorizationStatus: () -> ATTrackingManager.AuthorizationStatus = {
         return ATTrackingManager.trackingAuthorizationStatus
@@ -24,7 +24,7 @@ class AdvertisingIdPlugin: Plugin {
         return ASIdentifierManager.shared().advertisingIdentifier.uuidString
     }
     
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
     }
     
