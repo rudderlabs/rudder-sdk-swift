@@ -13,6 +13,7 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:RudderStackAnalytics.xcodeproj",
         "identifier" : "539E54092C98CD7D00982E95",
