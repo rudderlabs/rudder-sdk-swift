@@ -18,19 +18,19 @@ final class MockProvider {
     }
     static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
     
-    static var clientWithDiskStorage: AnalyticsClient {
+    static var clientWithDiskStorage: Analytics {
         let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", flushPolicies: [])
-        return AnalyticsClient(configuration: configuration)
+        return Analytics(configuration: configuration)
     }
     
-    static var clientWithMemoryStorage: AnalyticsClient {
+    static var clientWithMemoryStorage: Analytics {
         let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", flushPolicies: [])
-        return AnalyticsClient(configuration: configuration)
+        return Analytics(configuration: configuration)
     }
     
-    static func clientWithSessionConfig(config: SessionConfiguration) -> AnalyticsClient{
+    static func clientWithSessionConfig(config: SessionConfiguration) -> Analytics{
         let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", flushPolicies: [], sessionConfiguration: config)
-        return AnalyticsClient(configuration: configuration)
+        return Analytics(configuration: configuration)
     }
 }
 
@@ -101,8 +101,8 @@ struct MockHelper {
     }
 }
 
-// MARK: - MockAnalyticsClient
-class MockAnalyticsClient: AnalyticsClient {
+// MARK: - MockAnalytics
+class MockAnalytics: Analytics {
     var isFlushed: Bool = false
     
     init() {
@@ -232,7 +232,7 @@ class MockKeyValueStorage: KeyValueStorage {
 // MARK: - Mock Plugin
 class MockPlugin: Plugin {
     var pluginType: PluginType = .preProcess
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     
     func intercept(event: Event) -> Event? {
         if var trackEvent = event as? TrackEvent {

@@ -27,9 +27,9 @@ final class SessionHandler {
     private var sessionCofiguration: SessionConfiguration { analytics.configuration.sessionConfiguration }
     private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
     
-    var analytics: AnalyticsClient
+    var analytics: Analytics
     
-    init(analytics: AnalyticsClient) {
+    init(analytics: Analytics) {
         self.analytics = analytics
         self.storage = analytics.configuration.storage
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))

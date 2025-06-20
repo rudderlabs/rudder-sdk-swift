@@ -17,7 +17,7 @@ import XCTest
 @testable import RudderStackAnalytics
 
 final class SessionHandlerTests: XCTestCase {
-    private var analytics: AnalyticsClient?
+    private var analytics: Analytics?
     
     override func setUpWithError() throws {
         try super.setUpWithError()

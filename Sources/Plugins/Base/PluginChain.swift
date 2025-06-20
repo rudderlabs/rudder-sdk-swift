@@ -14,9 +14,9 @@ typealias PluginClosure = (Plugin) -> Void
 class PluginChain {
     
     private var pluginList = [PluginType: PluginInteractor]()
-    var analytics: AnalyticsClient
+    var analytics: Analytics
     
-    init(analytics: AnalyticsClient) {
+    init(analytics: Analytics) {
         self.analytics = analytics
         PluginType.allCases.forEach { self.pluginList[$0] = PluginInteractor() }
     }

@@ -12,7 +12,7 @@ import Foundation
 /**
  A flush policy implementation that triggers periodic flushes based on a fixed time interval.
 
- The `FrequencyFlushPolicy` class uses a timer to periodically invoke the `flush` method on the associated `AnalyticsClient` instance. This ensures that events are flushed at regular intervals regardless of the number of events.
+ The `FrequencyFlushPolicy` class uses a timer to periodically invoke the `flush` method on the associated `Analytics` instance. This ensures that events are flushed at regular intervals regardless of the number of events.
 
  - Features:
    - Configurable flush interval in milliseconds.
@@ -24,7 +24,7 @@ import Foundation
    - The interval is clamped to a minimum threshold to avoid extremely short durations.
 
  - Usage:
-   - Use `scheduleFlush(analytics:)` to start periodic flush scheduling with a specified `AnalyticsClient`.
+   - Use `scheduleFlush(analytics:)` to start periodic flush scheduling with a specified `Analytics`.
    - Call `cancelScheduleFlush()` to stop the scheduled flush operations.
 
  - Thread Safety:
@@ -50,11 +50,11 @@ public final class FrequencyFlushPolicy: FlushPolicy {
     }
 
     /**
-     Schedules periodic flush operations using the provided `AnalyticsClient`.
+     Schedules periodic flush operations using the provided `Analytics`.
 
-     - Parameter analytics: The `AnalyticsClient` instance to invoke flush operations on.
+     - Parameter analytics: The `Analytics` instance to invoke flush operations on.
      */
-    func scheduleFlush(analytics: AnalyticsClient) {
+    func scheduleFlush(analytics: Analytics) {
         let millisecondsInSecond: TimeInterval = 1000.0
         
         self.flushTimer = Timer.scheduledTimer(

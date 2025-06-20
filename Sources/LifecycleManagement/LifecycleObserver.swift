@@ -12,12 +12,12 @@ import Foundation
  A class created to observe app lifecycle events.
  */
 final class LifecycleObserver {
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     
     private var observers: [WeakObserver] = []
     private var notificationObservers: [NSObjectProtocol] = []
     
-    init(analytics: AnalyticsClient) {
+    init(analytics: Analytics) {
         self.analytics = analytics
         self.registerNotifications()
     }

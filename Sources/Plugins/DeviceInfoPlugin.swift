@@ -20,10 +20,10 @@ import WatchKit
 final class DeviceInfoPlugin: Plugin {
     
     var pluginType: PluginType = .preProcess
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     var collectDeviceId = false
     
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
         self.collectDeviceId = analytics.configuration.collectDeviceId
     }

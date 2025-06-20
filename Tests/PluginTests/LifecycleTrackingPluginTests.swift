@@ -10,7 +10,7 @@ import XCTest
 @testable import RudderStackAnalytics
 
 final class LifecycleTrackingPluginTests: XCTestCase {
-    var analyticsMock: AnalyticsClient?
+    var analyticsMock: Analytics?
     var plugin: LifecycleTrackingPlugin!
     
     override func setUp() {

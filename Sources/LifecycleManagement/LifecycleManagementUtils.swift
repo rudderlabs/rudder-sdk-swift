@@ -94,7 +94,7 @@ class LifecycleSessionWrapper {
     var lifecycleObserver: LifecycleObserver?
     var sessionHandler: SessionHandler?
     
-    init(analytics: AnalyticsClient) {
+    init(analytics: Analytics) {
         self.lifecycleObserver = LifecycleObserver(analytics: analytics)
         self.sessionHandler = SessionHandler(analytics: analytics)
     }
@@ -106,11 +106,11 @@ class LifecycleSessionWrapper {
     }
 }
 
-// MARK: - AnalyticsClient
+// MARK: - Analytics
 /**
  Provides convenient access to the session handler and lifecycle observer from the lifecycle session handler.
  */
-extension AnalyticsClient {
+extension Analytics {
     var sessionHandler: SessionHandler? {
         return self.lifecycleSessionWrapper?.sessionHandler
     }

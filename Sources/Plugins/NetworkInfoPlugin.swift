@@ -15,10 +15,10 @@ import Network
 final class NetworkInfoPlugin: Plugin {
     
     var pluginType: PluginType = .preProcess
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     var networkInfoUtils = NetworkInfoPluginUtils()
     
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
     }
     
