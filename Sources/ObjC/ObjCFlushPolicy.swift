@@ -68,8 +68,8 @@ public final class ObjcCountFlushPolicy: NSObject, ObjCFlushPolicy {
      - Parameter count: The number of events after which a flush should occur.
      */
     @objc
-    public init(count: Int) {
-        self.flushPolicy = CountFlushPolicy(flushCount: count)
+    public init(flushAt: Int) {
+        self.flushPolicy = CountFlushPolicy(flushAt: flushAt)
         super.init()
     }
 
@@ -78,7 +78,7 @@ public final class ObjcCountFlushPolicy: NSObject, ObjCFlushPolicy {
      */
     @objc
     public convenience override init() {
-        self.init(count: Constants.flushEventCount.default)
+        self.init(flushAt: Constants.flushEventCount.default)
     }
 
     /**
