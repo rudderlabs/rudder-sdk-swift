@@ -40,7 +40,7 @@ public final class CountFlushPolicy: FlushPolicy {
     /**
      Initializes a new `CountFlushPolicy`.
 
-     - Parameter flushCount: The number of events required to trigger a flush. Defaults to `Constants.flushEventCount.default`.
+     - Parameter flushAt: The number of events required to trigger a flush. Defaults to `Constants.flushEventCount.default`.
      - Note: The flush count is clamped between `Constants.flushEventCount.min` and `Constants.flushEventCount.max`.
      */
     public init(flushAt: Int = Constants.flushEventCount.default) {

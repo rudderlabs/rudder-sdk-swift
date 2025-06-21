@@ -65,7 +65,7 @@ public final class ObjcCountFlushPolicy: NSObject, ObjCFlushPolicy {
     /**
      Initializes the flush policy with a custom event count threshold.
 
-     - Parameter count: The number of events after which a flush should occur.
+     - Parameter flushAt: The number of events after which a flush should occur.
      */
     @objc
     public init(flushAt: Int) {
