@@ -29,7 +29,7 @@ public struct UserIdentity {
     public internal(set) var userId = String.empty
     
     /// A dictionary of user-specific traits, used to store additional metadata about the user.
-    public internal(set) var traits = RudderTraits()
+    public internal(set) var traits = Traits()
     
     /**
      Creates and initializes a `UserIdentity` instance by reading data from the provided key-value storage.

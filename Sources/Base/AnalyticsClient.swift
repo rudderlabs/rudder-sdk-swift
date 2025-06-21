@@ -143,7 +143,7 @@ extension AnalyticsClient {
         - traits: An Optional traits associated with the group. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
-    public func group(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    public func group(groupId: String, traits: Traits? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
         let event = GroupEvent(groupId: groupId, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
@@ -158,7 +158,7 @@ extension AnalyticsClient {
         - traits: Custom traits or attributes associated with the user. Defaults to `nil`.
         - options: Custom options for the event, including integrations and context. Defaults to `nil`.
      */
-    public func identify(userId: String? = nil, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    public func identify(userId: String? = nil, traits: Traits? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
         if let currentUserId = self.userId, !currentUserId.isEmpty,
@@ -167,7 +167,7 @@ extension AnalyticsClient {
             reset()
         }
         
-        self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId ?? "", traits: traits ?? RudderTraits(), storage: self.storage))
+        self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId ?? "", traits: traits ?? Traits(), storage: self.storage))
         self.userIdentityState.state.value.storeUserIdAndTraits(self.storage)
         
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
@@ -390,7 +390,7 @@ extension AnalyticsClient {
     /**
      A computed property for accessing the `traits` in the current user identity state.
      */
-    public var traits: RudderTraits? {
+    public var traits: Traits? {
         return self.isAnalyticsActive ? self.userIdentityState.state.value.traits : nil
     }
     
@@ -447,4 +447,4 @@ public typealias RudderProperties = [String: Any]
 /**
  // A dictionary representing user traits with string keys and any values
  */
-public typealias RudderTraits = [String: Any]
+public typealias Traits = [String: Any]

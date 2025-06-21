@@ -34,7 +34,7 @@ class AnalyticsManager {
 
 // MARK: - Rudder methods
 extension AnalyticsManager {
-    func identify(userId: String? = nil, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    func identify(userId: String? = nil, traits: Traits? = nil, options: RudderOption? = nil) {
         self.analytics?.identify(userId: userId, traits: traits, options: options)
     }
     
@@ -46,7 +46,7 @@ extension AnalyticsManager {
         self.analytics?.screen(screenName: name, category: category, properties: properties, options: options)
     }
     
-    func group(id: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    func group(id: String, traits: Traits? = nil, options: RudderOption? = nil) {
         self.analytics?.group(groupId: id, traits: traits, options: options)
     }
     

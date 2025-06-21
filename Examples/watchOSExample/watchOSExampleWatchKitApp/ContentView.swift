@@ -52,7 +52,7 @@ struct ContentView: View {
                     }
                     
                     WatchButton(title: "Group Event") {
-                        let groupTraits: RudderTraits = [
+                        let groupTraits: Traits = [
                             "name": "Watch Corp",
                             "plan": "basic"
                         ]
@@ -78,7 +78,7 @@ struct ContentView: View {
                             ]
                         )
                         
-                        let traits: RudderTraits = [
+                        let traits: Traits = [
                             "name": "Watch User",
                             "email": "watch@example.com",
                             "platform": "watchOS"
