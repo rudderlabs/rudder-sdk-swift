@@ -112,7 +112,7 @@ extension AnalyticsClient {
         - properties: An optional object containing event-specific properties. Defaults to `nil`.
         - options: An optional object for providing additional options. Defaults to `nil`.
      */
-    public func track(name: String, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    public func track(name: String, properties: Properties? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
         let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
@@ -128,7 +128,7 @@ extension AnalyticsClient {
         - properties: An Optional properties associated with the screen view. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
-    public func screen(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    public func screen(screenName: String, category: String? = nil, properties: Properties? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
         let event = ScreenEvent(screenName: screenName, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
@@ -442,7 +442,7 @@ extension AnalyticsClient {
 /**
  A dictionary representing event properties with string keys and any values
  */
-public typealias RudderProperties = [String: Any]
+public typealias Properties = [String: Any]
 
 /**
  // A dictionary representing user traits with string keys and any values
