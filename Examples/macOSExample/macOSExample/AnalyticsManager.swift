@@ -99,6 +99,6 @@ extension AnalyticsManager {
     // MARK: - Deep Link Tracking
     
     func openURL(_ url: URL, options: [String: Any]? = nil) {
-        self.analytics?.openURL(url, options: options)
+        self.analytics?.open(url: url, options: options)
     }
 }

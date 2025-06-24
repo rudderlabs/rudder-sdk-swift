@@ -163,7 +163,7 @@ extension RudderStackAnalyticsTests {
         let testURL = URL(string: "swiftuiapp://testing?id=127&ref=deeplink")!
         let testOptions = ["source": "unitTest"]
         
-        client.openURL(testURL, options: testOptions)
+        client.open(url: testURL, options: testOptions)
         
         try? await Task.sleep(nanoseconds: 300_000_000)
         await client.configuration.storage.rollover()

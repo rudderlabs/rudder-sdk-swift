@@ -522,7 +522,7 @@ extension ObjCAnalytics {
      */
     @objc
     public func openURL(_ url: URL, options: [String: Any]?) {
-        self.analytics.openURL(url, options: options)
+        self.analytics.open(url: url, options: options)
     }
     
     /**
@@ -532,6 +532,6 @@ extension ObjCAnalytics {
      */
     @objc
     public func openURL(_ url: URL) {
-        self.analytics.openURL(url, options: nil)
+        self.analytics.open(url: url, options: nil)
     }
 }
