@@ -280,6 +280,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5319B8B52E0B0A3900D3BD66 /* RudderStackAnalytics */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA6F72E03EB4C00D6C371 /* RudderStackAnalytics.h */,
+				53DEA5922E03D05A00D6C371 /* Base */,
+				53DEA59A2E03D05A00D6C371 /* Events */,
+				53DEA5A12E03D05A00D6C371 /* Helpers */,
+				53DEA5A42E03D05A00D6C371 /* LifecycleManagement */,
+				53DEA5A72E03D05A00D6C371 /* Logger */,
+				53DEA5AA2E03D05A00D6C371 /* Network */,
+				53DEA5B42E03D05A00D6C371 /* ObjC */,
+				53DEA5C42E03D05A00D6C371 /* Plugins */,
+				53DEA5C92E03D05A00D6C371 /* Policies */,
+				53DEA5CD2E03D05A00D6C371 /* SessionManagement */,
+				53DEA5D32E03D05A00D6C371 /* StateManagement */,
+				53DEA5DD2E03D05A00D6C371 /* Storage */,
+			);
+			path = RudderStackAnalytics;
+			sourceTree = "<group>";
+		};
 		532904EE2E05BBDE00C8EFE2 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
@@ -483,19 +503,7 @@
 		53DEA5DF2E03D05A00D6C371 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA6F72E03EB4C00D6C371 /* RudderStackAnalytics.h */,
-				53DEA5922E03D05A00D6C371 /* Base */,
-				53DEA59A2E03D05A00D6C371 /* Events */,
-				53DEA5A12E03D05A00D6C371 /* Helpers */,
-				53DEA5A42E03D05A00D6C371 /* LifecycleManagement */,
-				53DEA5A72E03D05A00D6C371 /* Logger */,
-				53DEA5AA2E03D05A00D6C371 /* Network */,
-				53DEA5B42E03D05A00D6C371 /* ObjC */,
-				53DEA5C42E03D05A00D6C371 /* Plugins */,
-				53DEA5C92E03D05A00D6C371 /* Policies */,
-				53DEA5CD2E03D05A00D6C371 /* SessionManagement */,
-				53DEA5D32E03D05A00D6C371 /* StateManagement */,
-				53DEA5DD2E03D05A00D6C371 /* Storage */,
+				5319B8B52E0B0A3900D3BD66 /* RudderStackAnalytics */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
