@@ -57,23 +57,23 @@ public extension FlushPolicy {
    - Updates and resets event counts for count-based policies.
 
  - Usage:
-   - Instantiate the facade with an `AnalyticsClient`.
+   - Instantiate the facade with an `Analytics`.
    - Use the provided methods to evaluate flush conditions or manage scheduled flushes.
 
  - Dependencies:
-   - Requires `AnalyticsClient` to access configuration and active flush policies.
+   - Requires `Analytics` to access configuration and active flush policies.
 
  */
 final class FlushPolicyFacade {
     /// The analytics client used for accessing flush policy configurations.
-    private var analytics: AnalyticsClient
+    private var analytics: Analytics
 
     /**
      Initializes a new instance of `FlushPolicyFacade`.
 
-     - Parameter analytics: The `AnalyticsClient` instance for accessing flush configurations.
+     - Parameter analytics: The `Analytics` instance for accessing flush configurations.
      */
-    init(analytics: AnalyticsClient) {
+    init(analytics: Analytics) {
         self.analytics = analytics
     }
 

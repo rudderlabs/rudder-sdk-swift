@@ -137,7 +137,7 @@ final class FrequencyFlushPolicyTests: XCTestCase {
             let policy = FrequencyFlushPolicy(flushIntervalInMillis: UInt64(mills))
             
             when("initiate the shedule...") {
-                let client = MockAnalyticsClient()
+                let client = MockAnalytics()
                 policy.scheduleFlush(analytics: client)
                 
                 RunLoop.current.run(until: Date(timeIntervalSinceNow: MockHelper.seconds(from: mills * 2)))

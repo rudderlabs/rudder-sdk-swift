@@ -7,7 +7,7 @@ struct SetAnonymousIdPluginTests {
     @Test
     func test_customAnonymousId_isSet_whenInterceptingEvent() {
         given("a SetAnonymousIdPlugin with a custom anonymous ID") {
-            let analytics = AnalyticsClient(configuration: createTestConfiguration())
+            let analytics = Analytics(configuration: createTestConfiguration())
             
             let customAnonymousId = "custom-test-anonymous-id-12345"
             let setAnonymousIdPlugin = SetAnonymousIdPlugin(anonymousId: customAnonymousId)
@@ -30,7 +30,7 @@ struct SetAnonymousIdPluginTests {
     @Test
     func test_emptyAnonymousId_isSetCorrectly() {
         given("a SetAnonymousIdPlugin with an empty string as anonymous ID") {
-            let analytics = AnalyticsClient(configuration: createTestConfiguration())
+            let analytics = Analytics(configuration: createTestConfiguration())
             
             let emptyAnonymousId = ""
             let setAnonymousIdPlugin = SetAnonymousIdPlugin(anonymousId: emptyAnonymousId)
@@ -53,7 +53,7 @@ struct SetAnonymousIdPluginTests {
     @Test
     func test_veryLongAnonymousId_isHandledCorrectly() {
         given("a SetAnonymousIdPlugin with a very long anonymous ID") {
-            let analytics = AnalyticsClient(configuration: createTestConfiguration())
+            let analytics = Analytics(configuration: createTestConfiguration())
             
             let longAnonymousId = String(repeating: "a", count: 1000)
             let setAnonymousIdPlugin = SetAnonymousIdPlugin(anonymousId: longAnonymousId)

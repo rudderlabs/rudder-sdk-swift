@@ -5,7 +5,7 @@ import RudderStackAnalytics
 /**
  A plugin that sets a given `anonymousId` in the event payload for every event.
  
- **Note**: The `anonymousId` fetched using `AnalyticsClient.anonymousId` would be different from the `anonymousId` set here.
+ **Note**: The `anonymousId` fetched using `Analytics.anonymousId` would be different from the `anonymousId` set here.
  
  Set this plugin just after the SDK initialization to set the custom `anonymousId` in the event payload for every event:
  ```swift
@@ -20,7 +20,7 @@ class SetAnonymousIdPlugin: Plugin {
     var pluginType: PluginType = .onProcess
     
     /// Reference to the analytics client
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     
     /// The custom anonymous ID to be set on all events
     private let anonymousId: String
@@ -39,7 +39,7 @@ class SetAnonymousIdPlugin: Plugin {
      
      - Parameter analytics: The analytics client instance
      */
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
     }
     

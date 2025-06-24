@@ -14,13 +14,13 @@ class AnalyticsManager {
     static let shared = AnalyticsManager()
     private init() {}
     
-    private var analytics: AnalyticsClient?
+    private var analytics: Analytics?
     
     func initializeAnalyticsSDK() {
         LoggerAnalytics.logLevel = .verbose // Set the log level for analytics
         
         let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
-        self.analytics = AnalyticsClient(configuration: config)
+        self.analytics = Analytics(configuration: config)
         
         //Add external plugin to analytics..
         self.analytics?.add(plugin: AdvertisingIdPlugin())

@@ -13,9 +13,9 @@ import Foundation
  */
 final class TimeZoneInfoPlugin: Plugin {
     var pluginType: PluginType = .preProcess
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
     }
     

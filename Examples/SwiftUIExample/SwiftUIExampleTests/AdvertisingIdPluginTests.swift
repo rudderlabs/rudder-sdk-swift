@@ -15,7 +15,7 @@ struct AdvertisingIdPluginTests {
     func test_advertisingId_isInjected_whenTrackingIsAuthorized() {
         given("an analytics client and AdvertisingIdPlugin with authorized tracking") {
             let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
-            let analytics = AnalyticsClient(configuration: config)
+            let analytics = Analytics(configuration: config)
             
             let advertisingIdPlugin = AdvertisingIdPlugin()
             analytics.add(plugin: advertisingIdPlugin)
@@ -49,7 +49,7 @@ struct AdvertisingIdPluginTests {
     func test_advertisingId_isNotInjected_whenTrackingIsDenied() {
         given("an AdvertisingIdPlugin with denied tracking and an event with existing device context") {
             let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
-            let analytics = AnalyticsClient(configuration: config)
+            let analytics = Analytics(configuration: config)
 
             let advertisingIdPlugin = AdvertisingIdPlugin()
             analytics.add(plugin: advertisingIdPlugin)
