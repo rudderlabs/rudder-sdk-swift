@@ -417,7 +417,7 @@ extension Analytics {
      - Parameters:
         - url: The deep link `URL` to process and track.
         - options: An optional dictionary of additional metadata to include in the tracking event.
-     */
+     */  
     public func open(url: URL, options: [String: Any]? = nil) {
         guard self.isAnalyticsActive else { return }
 
