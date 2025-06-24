@@ -21,7 +21,11 @@ let package = Package(
         .target(name: "RudderStackAnalytics"),
         .testTarget(
             name: "RudderStackAnalyticsTests",
-            dependencies: ["RudderStackAnalytics"]
+            dependencies: ["RudderStackAnalytics"],
+            exclude: ["TestPlans"],  // Exclude Xcode-specific test plans
+            resources: [
+                .process("MockResources")  // Only include actual test resources
+            ]
         ),
     ]
 )
