@@ -11,7 +11,7 @@ import Foundation
 /**
  A wrapper class that exposes the Swift `Analytics` to Objective-C.
  */
-@objc(RSAAnalytics)
+@objc(RSSAnalytics)
 public final class ObjCAnalytics: NSObject {
     
     let analytics: Analytics

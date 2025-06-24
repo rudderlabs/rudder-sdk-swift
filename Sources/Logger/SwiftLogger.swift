@@ -110,7 +110,7 @@ public extension Logger {
     - `verbose`: Detailed messages for deep troubleshooting.
  */
 
-@objc(RSALogLevel)
+@objc(RSSLogLevel)
 public enum LogLevel: Int {
     case none, error, warn, info, debug, verbose
 }

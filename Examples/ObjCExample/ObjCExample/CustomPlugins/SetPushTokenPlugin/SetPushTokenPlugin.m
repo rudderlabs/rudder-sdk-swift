@@ -11,7 +11,7 @@
 
 @interface SetPushTokenPlugin()
 
-@property(nonatomic, retain) RSAAnalytics *client;
+@property(nonatomic, retain) RSSAnalytics *client;
 @property(nonatomic, retain) NSString *pushToken;
 
 @end
@@ -37,10 +37,10 @@
 /**
  Returns the plugin type for this plugin.
  
- @return RSAPluginTypeOnProcess, indicating this plugin runs during event processing.
+ @return RSSPluginTypeOnProcess, indicating this plugin runs during event processing.
  */
-- (RSAPluginType)pluginType {
-    return RSAPluginTypeOnProcess;
+- (RSSPluginType)pluginType {
+    return RSSPluginTypeOnProcess;
 }
 
 /**
@@ -49,7 +49,7 @@
  @param event The event to be processed.
  @return The modified event with the push token added to the device context.
  */
-- (RSAEvent * _Nullable)intercept:(RSAEvent * _Nonnull)event {
+- (RSSEvent * _Nullable)intercept:(RSSEvent * _Nonnull)event {
     [self addPushToken:event];
     return event;
 }
@@ -59,7 +59,7 @@
  
  @param event The event whose context will be updated.
  */
-- (void)addPushToken:(RSAEvent *)event {
+- (void)addPushToken:(RSSEvent *)event {
     NSMutableDictionary *contextDict = [NSMutableDictionary dictionaryWithDictionary: (event.context ?: @{})];
     NSMutableDictionary *deviceInfoDict = [NSMutableDictionary dictionaryWithDictionary: (contextDict[@"device"] ?: @{})];
     
@@ -74,7 +74,7 @@
  
  @param analytics The analytics client instance to be used by the plugin.
  */
-- (void)setup:(RSAAnalytics * _Nonnull)analytics {
+- (void)setup:(RSSAnalytics * _Nonnull)analytics {
     self.client = analytics;
 }
 

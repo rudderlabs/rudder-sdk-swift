@@ -11,7 +11,7 @@ import Foundation
 /**
  A builder class for constructing `RudderOption` instances in Objective-C.
  */
-@objc(RSAOptionBuilder)
+@objc(RSSOptionBuilder)
 public final class ObjCOptionBuilder: NSObject {
     
     private var integrations: [String: Any]?
