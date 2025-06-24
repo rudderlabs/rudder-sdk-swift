@@ -11,15 +11,15 @@
 
 @interface CustomOptionPlugin()
 
-@property(nonatomic, retain) RSAAnalytics *client;
-@property(nonatomic, retain) RSAOption *option;
+@property(nonatomic, retain) RSSAnalytics *client;
+@property(nonatomic, retain) RSSOption *option;
 
 @end
 
 @implementation CustomOptionPlugin
 @synthesize pluginType;
 
-- (instancetype)initWithOption:(RSAOption *)option
+- (instancetype)initWithOption:(RSSOption *)option
 {
     self = [super init];
     if (self) {
@@ -28,11 +28,11 @@
     return self;
 }
 
-- (RSAPluginType)pluginType {
-    return RSAPluginTypeOnProcess;
+- (RSSPluginType)pluginType {
+    return RSSPluginTypeOnProcess;
 }
 
-- (RSAEvent * _Nullable)intercept:(RSAEvent * _Nonnull)event {
+- (RSSEvent * _Nullable)intercept:(RSSEvent * _Nonnull)event {
     
     [self addCustomContext:event];
     [self addExternalIds:event];
@@ -41,18 +41,18 @@
     return event;
 }
 
-- (void)addCustomContext:(RSAEvent *)event {
+- (void)addCustomContext:(RSSEvent *)event {
     NSMutableDictionary *contextDict = [NSMutableDictionary dictionaryWithDictionary: (event.context ?: @{})];
     [contextDict addEntriesFromDictionary: (self.option.customContext ?: @{})];
     event.context = contextDict;
 }
 
-- (void)addExternalIds:(RSAEvent *)event {
+- (void)addExternalIds:(RSSEvent *)event {
     NSMutableDictionary *contextDict = [NSMutableDictionary dictionaryWithDictionary: (event.context ?: @{})];
     NSMutableArray *externalIdArray = [NSMutableArray arrayWithArray: (contextDict[@"externalId"] ?: @[])];
     
     // Merge option's externalIds into existing externalIds
-    [self.option.externalIds enumerateObjectsUsingBlock:^(RSAExternalId * _Nonnull externalId, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.option.externalIds enumerateObjectsUsingBlock:^(RSSExternalId * _Nonnull externalId, NSUInteger idx, BOOL * _Nonnull stop) {
         [externalIdArray addObject:@{@"id": externalId.id, @"type": externalId.type}];
     }];
     
@@ -60,13 +60,13 @@
     event.context = contextDict;
 }
 
-- (void)addIntegrations:(RSAEvent *)event {
+- (void)addIntegrations:(RSSEvent *)event {
     NSMutableDictionary *integrationsDict = [NSMutableDictionary dictionaryWithDictionary: (event.integrations ?: @{})];
     [integrationsDict addEntriesFromDictionary: (self.option.integrations ?: @{})];
     event.integrations = integrationsDict;
 }
 
-- (void)setup:(RSAAnalytics * _Nonnull)analytics {
+- (void)setup:(RSSAnalytics * _Nonnull)analytics {
     self.client = analytics;
 }
 

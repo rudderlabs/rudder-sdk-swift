@@ -1,5 +1,5 @@
 //
-//  AnalyticsClient.swift
+//  Analytics.swift
 //  Analytics
 //
 //  Created by Satheesh Kannan on 14/08/24.
@@ -9,9 +9,9 @@ import Foundation
 
 // MARK: - Analytics
 /**
- The `AnalyticsClient` class provides functionality for tracking events, managing user information, and processing data through a chain of plugins. It allows developers to track user actions, screen views, and group-specific data while enabling modular and extensible processing using plugins.
+ The `Analytics` class provides functionality for tracking events, managing user information, and processing data through a chain of plugins. It allows developers to track user actions, screen views, and group-specific data while enabling modular and extensible processing using plugins.
  */
-public class AnalyticsClient {
+public class Analytics {
     
     /**
      The configuration object for the analytics client. It contains settings and storage mechanisms
@@ -51,7 +51,7 @@ public class AnalyticsClient {
     private(set) var isAnalyticsShutdown: Bool = false
         
     /**
-     Initializes the `AnalyticsClient` with the given configuration.
+     Initializes the `Analytics` with the given configuration.
      
      - Parameter configuration: The configuration object containing settings and storage details.
      */
@@ -65,7 +65,7 @@ public class AnalyticsClient {
 
 // MARK: - Session
 
-extension AnalyticsClient {
+extension Analytics {
     
     /**
      Starts a session with a given `id`, or generates one if not provided.
@@ -102,7 +102,7 @@ extension AnalyticsClient {
 
 // MARK: - Events
 
-extension AnalyticsClient {
+extension Analytics {
     
     /**
      Tracks a custom event with the specified name and optional properties and options.
@@ -222,7 +222,7 @@ extension AnalyticsClient {
 
 // MARK: - Plugin Management
 
-extension AnalyticsClient {
+extension Analytics {
     
     /**
      Adds a custom plugin to the plugin chain for processing events and extending functionality.
@@ -247,7 +247,7 @@ extension AnalyticsClient {
 
 // MARK: - Shutdown
 
-extension AnalyticsClient {
+extension Analytics {
     /**
      Shuts down the analytics instance, ending all operations, removing plugins, and freeing resources.
      All events recorded before shutdown are saved to disk but are processed only after the next startup.
@@ -285,7 +285,7 @@ extension AnalyticsClient {
 
 // MARK: - Private Functions
 
-extension AnalyticsClient {
+extension Analytics {
     
     /**
      Sets up the analytics client by collecting configuration data and initializing the plugin chain.
@@ -347,7 +347,7 @@ extension AnalyticsClient {
 
 // MARK: - Backend Configuration
 
-extension AnalyticsClient {
+extension Analytics {
     
     /**
      Collects configuration data from the backend and saves it in the storage.
@@ -368,7 +368,7 @@ extension AnalyticsClient {
 
 // MARK: - Common Variables
 
-extension AnalyticsClient {
+extension Analytics {
     
     /**
      A computed property for accessing the `anonymousId` in the user identity state.
@@ -406,7 +406,7 @@ extension AnalyticsClient {
 
 // MARK: - DeepLink Tracking
 
-extension AnalyticsClient {
+extension Analytics {
     
     /**
      Handles a deep link URL by extracting its query parameters and tracking the event.

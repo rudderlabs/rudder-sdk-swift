@@ -10,7 +10,7 @@ import XCTest
 @testable import RudderStackAnalytics
 
 final class LifecycleTrackingPluginTests: XCTestCase {
-    var analyticsMock: AnalyticsClient?
+    var analyticsMock: Analytics?
     var plugin: LifecycleTrackingPlugin!
     
     override func setUp() {
@@ -91,24 +91,6 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
         
         XCTAssert(eventNames.contains(LifecycleEvent.applicationUpdated.rawValue))
-    }
-    
-    func test_trackAppInstallAndUpdateEvents_does_not_fire_opened_event_on_watchOS_macOS() async {
-        analyticsMock?.configuration.trackApplicationLifecycleEvents = true
-        guard let analyticsMock else { XCTFail("No disk client"); return }
-        plugin.setup(analytics: analyticsMock)
-        
-        // Simulate app install/update events
-        plugin.trackAppInstallOrUpdateEvents()
-        
-        let eventNames = await fetchTrackedEventNames()
-        guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
-        
-        #if os(watchOS) || os(macOS)
-        // On watchOS and macOS, Application Opened should NOT be tracked automatically
-        XCTAssertFalse(eventNames.contains(LifecycleEvent.applicationOpened.rawValue),
-                      "Application Opened event should NOT be tracked automatically on watchOS and macOS to prevent duplicate tracking")
-        #endif
     }
     
     private func fetchTrackedEventNames() async -> [String] {

@@ -12,8 +12,8 @@ import XCTest
 final class DataPlaneModuleTests: XCTestCase {
     
     var dpPlugin: RudderStackDataPlanePlugin?
-    var analytics_disk: AnalyticsClient?
-    var analytics_memory: AnalyticsClient?
+    var analytics_disk: Analytics?
+    var analytics_memory: Analytics?
     
     override func setUpWithError() throws {
         try super.setUpWithError()

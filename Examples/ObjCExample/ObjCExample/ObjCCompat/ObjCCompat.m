@@ -12,7 +12,7 @@
 
 @interface ObjCCompat()
 
-@property RSAAnalytics *client;
+@property RSSAnalytics *client;
 @property CustomOptionPlugin *customPlugin;
 
 @end
@@ -29,22 +29,22 @@
     NSString *writeKey = @"sample-write-key";
     NSString *dataPlaneUrl = @"https://data-plane.analytics.com";
     
-    [RSALoggerAnalytics setLogLevel: RSALogLevelVerbose];
+    [RSSLoggerAnalytics setLogLevel: RSSLogLevelVerbose];
     
-    RSAConfigurationBuilder *builder = [[RSAConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
+    RSSConfigurationBuilder *builder = [[RSSConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
     [builder setGzipEnabled: YES];
     
-    NSArray *flushPolicies = @[[RSAStartupFlushPolicy new], [RSAFrequencyFlushPolicy new], [RSACountFlushPolicy new]];
+    NSArray *flushPolicies = @[[RSSStartupFlushPolicy new], [RSSFrequencyFlushPolicy new], [RSSCountFlushPolicy new]];
     [builder setFlushPolicies: flushPolicies];
     [builder setTrackApplicationLifecycleEvents: YES];
 
-    RSASessionConfigurationBuilder *sessionBuilder = [RSASessionConfigurationBuilder new];
+    RSSSessionConfigurationBuilder *sessionBuilder = [RSSSessionConfigurationBuilder new];
     [sessionBuilder setAutomaticSessionTracking: true];
     [sessionBuilder setSessionTimeoutInMillis: @1000];
     
     [builder setSessionConfiguration: [sessionBuilder build]];
     
-    self.client = [[RSAAnalytics alloc] initWithConfiguration:[builder build]];
+    self.client = [[RSSAnalytics alloc] initWithConfiguration:[builder build]];
 }
 
 - (void)startSession {
@@ -72,10 +72,10 @@
 }
 
 - (void)addCustomPlugin {
-    RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
+    RSSOptionBuilder *optionBuilder = [RSSOptionBuilder new];
     [optionBuilder setIntegrations:@{@"CleverTap": @YES}];
     [optionBuilder setCustomContext:@{@"plugin_key": @"plugin_value"}];
-    [optionBuilder setExternalIds:@[[[RSAExternalId alloc] initWithType:@"external_id_type" id:@"external_id"]]];
+    [optionBuilder setExternalIds:@[[[RSSExternalId alloc] initWithType:@"external_id_type" id:@"external_id"]]];
     
     // Adding custom plugin..
     self.customPlugin = [[CustomOptionPlugin alloc] initWithOption:[optionBuilder build]];
@@ -96,7 +96,7 @@
 - (void)track {
     NSString *name = @"Sample Track Event";
     NSDictionary *property = [self preparedProperty];
-    RSAOption *option = [self preparedOption];
+    RSSOption *option = [self preparedOption];
     
     [self.client track: name];
     [self.client track: name options: option];
@@ -108,7 +108,7 @@
     NSString *screenName = @"Sample Screen Event";
     NSString *categoryName = @"Sample Screen Category";
     NSDictionary *property = [self preparedProperty];
-    RSAOption *option = [self preparedOption];
+    RSSOption *option = [self preparedOption];
     
     [self.client screen: screenName];
     [self.client screen: screenName options: option];
@@ -123,7 +123,7 @@
 - (void)group {
     NSString *groupId = @"Sample GroupId";
     NSDictionary *traits = [self preparedProperty];
-    RSAOption *option = [self preparedOption];
+    RSSOption *option = [self preparedOption];
     
     [self.client group: groupId];
     [self.client group: groupId traits: traits];
@@ -134,7 +134,7 @@
 - (void)identify {
     NSString *userId = @"Sample UserId";
     NSDictionary *traits = [self preparedProperty];
-    RSAOption *option = [self preparedOption];
+    RSSOption *option = [self preparedOption];
     
     [self.client identify: userId];
     [self.client identify: userId traits: traits];
@@ -147,7 +147,7 @@
 - (void)alias {
     NSString *newId = @"Sample Alias";
     NSString *previousId = @"Sample PreviousId";
-    RSAOption *option = [self preparedOption];
+    RSSOption *option = [self preparedOption];
     
     [self.client alias: newId];
     [self.client alias: newId options: option];
@@ -169,7 +169,7 @@
 
 - (void)addCustomLogger {
     CustomLogger *logger = [CustomLogger new];
-    [RSALoggerAnalytics setLogger: logger];
+    [RSSLoggerAnalytics setLogger: logger];
 }
 
 - (void)trackDeepLinking {
@@ -183,8 +183,8 @@
     return @{@"property_key": @"property_value"};
 }
 
-- (RSAOption *)preparedOption {
-    RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+- (RSSOption *)preparedOption {
+    RSSExternalId *externalId = [[RSSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
     
     NSDictionary *integrations = @{@"Amplitude": @YES, @"CleverTap": @NO};
     NSDictionary *customContext = @{
@@ -196,7 +196,7 @@
         @"Key_6": @YES
     };
     
-    RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
+    RSSOptionBuilder *optionBuilder = [RSSOptionBuilder new];
     [optionBuilder setIntegrations:integrations];
     [optionBuilder setCustomContext:customContext];
     [optionBuilder setExternalIds:@[externalId]];

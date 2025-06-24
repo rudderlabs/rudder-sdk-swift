@@ -15,7 +15,7 @@ struct BluetoothInfoPluginTests {
     func test_bluetoothAvailability_whenAuthorized() {
         given("a BluetoothInfoPlugin with authorized Bluetooth status") {
             let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
-            let analytics = AnalyticsClient(configuration: config)
+            let analytics = Analytics(configuration: config)
             
             let bluetoothInfoPlugin = BluetoothInfoPlugin()
             analytics.add(plugin: bluetoothInfoPlugin)
@@ -46,7 +46,7 @@ struct BluetoothInfoPluginTests {
     func test_bluetoothAvailability_whenDenied() {
         given("a BluetoothInfoPlugin with denied Bluetooth authorization") {
             let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
-            let analytics = AnalyticsClient(configuration: config)
+            let analytics = Analytics(configuration: config)
             
             let bluetoothInfoPlugin = BluetoothInfoPlugin()
             analytics.add(plugin: bluetoothInfoPlugin)

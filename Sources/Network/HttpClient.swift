@@ -25,9 +25,9 @@ enum HttpClientError: Error {
  This class provides the implementation for the `HttpClientRequests` protocol.
  */
 final class HttpClient {
-    let analytics: AnalyticsClient
+    let analytics: Analytics
     
-    init(analytics: AnalyticsClient) {
+    init(analytics: Analytics) {
         self.analytics = analytics
     }
     
@@ -77,7 +77,7 @@ enum HttpClientRequestType {
     case configuration
     case events
     
-    func url(_ analytics: AnalyticsClient) -> String {
+    func url(_ analytics: Analytics) -> String {
         return switch self {
         case .configuration: analytics.configuration.controlPlaneUrl
         case .events: analytics.configuration.dataPlaneUrl
@@ -98,7 +98,7 @@ enum HttpClientRequestType {
         }
     }
     
-    func headers(_ analytics: AnalyticsClient) -> [String: String] {
+    func headers(_ analytics: Analytics) -> [String: String] {
         
         let encodedAuthString = (analytics.configuration.writeKey + ":").base64Encoded ?? .empty
         var defaultHeaders = ["Content-Type": "application/json", "Authorization": "Basic \(encodedAuthString)"]

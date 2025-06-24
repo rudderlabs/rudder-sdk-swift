@@ -13,7 +13,7 @@ import Foundation
 
  This class provides Objective-C accessible static methods for logging at various levels.
  */
-@objc(RSALoggerAnalytics)
+@objc(RSSLoggerAnalytics)
 public final class ObjCLoggerAnalytics: NSObject {
     
     /** Private initializer to prevent instantiation. */
@@ -24,7 +24,7 @@ public final class ObjCLoggerAnalytics: NSObject {
     /**
      Sets the logger implementation to be used for all logging operations.
      
-     - Parameter logger: The `RSALogger` implementation to be used.
+     - Parameter logger: The `RSSLogger` implementation to be used.
      */
     @objc
     public static func setLogger(_ logger: ObjCLogger) {
@@ -34,7 +34,7 @@ public final class ObjCLoggerAnalytics: NSObject {
     /**
      Sets the log level that determines which logs will be processed.
      
-     - Parameter level: The log level to set `RSALogLevel`.
+     - Parameter level: The log level to set `RSSLogLevel`.
      */
     @objc
     public static func setLogLevel(_ level: LogLevel) {
@@ -44,7 +44,7 @@ public final class ObjCLoggerAnalytics: NSObject {
     /**
      Gets the current log level.
      
-     - Returns: The current log level as an `RSALogLevel`.
+     - Returns: The current log level as an `RSSLogLevel`.
      */
     @objc
     public static func getLogLevel() -> LogLevel {

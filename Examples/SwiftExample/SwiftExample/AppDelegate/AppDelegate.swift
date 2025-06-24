@@ -13,7 +13,7 @@ import RudderStackAnalytics
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -45,7 +45,7 @@ extension AppDelegate {
     func initializeAnalyticsSDK() {
         LoggerAnalytics.logLevel = .verbose // Set the log level for analytics
         let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
-        self.analytics = AnalyticsClient(configuration: config)
+        self.analytics = Analytics(configuration: config)
         
         self.analytics?.add(plugin: UIKitAutomaticScreenTrackingPlugin())
     }

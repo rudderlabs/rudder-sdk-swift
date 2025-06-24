@@ -13,11 +13,11 @@ import Foundation
 final class RudderStackDataPlanePlugin: EventPlugin {
     
     var pluginType: PluginType = .terminal
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     
     private var eventManager: EventManager?
     
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
         self.eventManager = EventManager(analytics: analytics)
     }

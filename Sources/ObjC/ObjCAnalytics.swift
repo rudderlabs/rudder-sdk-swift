@@ -9,12 +9,12 @@ import Foundation
 
 // MARK: - ObjCAnalytics
 /**
- A wrapper class that exposes the Swift `AnalyticsClient` to Objective-C.
+ A wrapper class that exposes the Swift `Analytics` to Objective-C.
  */
-@objc(RSAAnalytics)
+@objc(RSSAnalytics)
 public final class ObjCAnalytics: NSObject {
     
-    let analytics: AnalyticsClient
+    let analytics: Analytics
     
     /**
      Initializes the analytics client using the provided Objective-C configuration.
@@ -23,15 +23,15 @@ public final class ObjCAnalytics: NSObject {
      */
     @objc
     public init(configuration: Configuration) {
-        self.analytics = AnalyticsClient(configuration: configuration)
+        self.analytics = Analytics(configuration: configuration)
     }
     
     /**
-     Initializes the analytics wrapper with an existing `AnalyticsClient` instance.
+     Initializes the analytics wrapper with an existing `Analytics` instance.
      
      - Parameter analytics: The analytics client to wrap.
      */
-    public init(analytics: AnalyticsClient) {
+    public init(analytics: Analytics) {
         self.analytics = analytics
     }
 }

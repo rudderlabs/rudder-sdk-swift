@@ -13,7 +13,7 @@ import Foundation
 
  Conformers can intercept events, perform setup and teardown, and define their plugin type.
  */
-@objc(RSAPlugin)
+@objc(RSSPlugin)
 public protocol ObjCPlugin: AnyObject {
 
     /// The type of plugin (e.g., `preProcess`, `onProcess`, `terminal`, etc.).
@@ -55,7 +55,7 @@ final class ObjCPluginAdapter: Plugin {
     }
 
     /// The Swift analytics client reference.
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
 
     /// The wrapped Objective-C plugin instance.
     private let objcPlugin: ObjCPlugin
@@ -70,11 +70,11 @@ final class ObjCPluginAdapter: Plugin {
     }
 
     /**
-     Sets up the plugin using the provided `AnalyticsClient`.
+     Sets up the plugin using the provided `Analytics`.
 
      - Parameter analytics: The Swift analytics client managing the plugin lifecycle.
      */
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
         let objcAnalytics = ObjCAnalytics(analytics: analytics)
         objcPlugin.setup(objcAnalytics)

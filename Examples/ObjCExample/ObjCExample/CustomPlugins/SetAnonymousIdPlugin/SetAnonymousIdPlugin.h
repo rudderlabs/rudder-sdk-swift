@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A plugin that sets a given `anonymousId` in the event payload for every event.
  
- **Note**: The `anonymousId` fetched using `RSAAnalytics.anonymousId` would be different from the `anonymousId` set here.
+ **Note**: The `anonymousId` fetched using `RSSAnalytics.anonymousId` would be different from the `anonymousId` set here.
  
  Set this plugin just after the SDK initialization to set the custom `anonymousId` in the event payload for every event:
  ```objective-c
@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  - Parameter anonymousId: The anonymousId to be set in the event payload. Ensure to preserve this value across app launches.
  */
-@interface SetAnonymousIdPlugin : NSObject<RSAPlugin>
+@interface SetAnonymousIdPlugin : NSObject<RSSPlugin>
 
 /**
  Initializes the SetAnonymousIdPlugin with a custom anonymous ID.

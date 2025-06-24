@@ -9,8 +9,8 @@ import XCTest
 @testable import RudderStackAnalytics
 
 final class RudderStackAnalyticsTests: XCTestCase {
-    var analytics_disk: AnalyticsClient?
-    var analytics_memory: AnalyticsClient?
+    var analytics_disk: Analytics?
+    var analytics_memory: Analytics?
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -30,7 +30,7 @@ final class RudderStackAnalyticsTests: XCTestCase {
     func test_sourceConfiguration() {
         let configuration = Configuration(writeKey: MockProvider._mockWriteKey, dataPlaneUrl: "https://www.mock-url.com/")
         
-        let client = AnalyticsClient(configuration: configuration)
+        let client = Analytics(configuration: configuration)
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
         
         let config: String? = client.configuration.storage.read(key: Constants.storageKeys.sourceConfig)

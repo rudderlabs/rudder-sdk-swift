@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  * }
  * ```
  */
-@interface SetPushTokenPlugin : NSObject<RSAPlugin>
+@interface SetPushTokenPlugin : NSObject<RSSPlugin>
 
 /**
  * Initializes a new instance of SetPushTokenPlugin with the specified push token.

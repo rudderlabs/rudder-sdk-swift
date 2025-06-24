@@ -65,12 +65,12 @@
     
     switch (actionType) {
         case ActionTypeIdentify: {
-            RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSSExternalId *externalId = [[RSSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
 
             NSDictionary *integrations = @{@"Amplitude": @NO};
             NSDictionary *customContext = @{@"identify_key1": @"identify_value1"};
 
-            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
+            RSSOptionBuilder *optionBuilder = [RSSOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId]];
@@ -80,12 +80,12 @@
         }
             
         case ActionTypeAlias: {
-            RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSSExternalId *externalId = [[RSSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
 
             NSDictionary *integrations = @{@"Amplitude": @NO};
             NSDictionary *customContext = @{@"identify_key1": @"identify_value1"};
 
-            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
+            RSSOptionBuilder *optionBuilder = [RSSOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId]];
@@ -95,7 +95,7 @@
         }
     
         case ActionTypeTrack: {
-            RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSSExternalId *externalId = [[RSSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
             
             NSDictionary *integrations = @{@"Amplitude": @YES, @"CleverTap": @NO};
             NSDictionary *customContext = @{
@@ -108,7 +108,7 @@
                 @"Key_7": [NSURL URLWithString:@"https://www.rsa-test.com/"]
             };
             
-            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
+            RSSOptionBuilder *optionBuilder = [RSSOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId]];
@@ -118,12 +118,12 @@
         }
             
         case ActionTypeMultipleTrack: {
-            RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSSExternalId *externalId = [[RSSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
 
             NSDictionary *integrations = @{@"Amplitude": @YES, @"CleverTap": @NO};
             NSDictionary *customContext = @{ @"Key_1": @{@"Key123": @"Value123"}};
 
-            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
+            RSSOptionBuilder *optionBuilder = [RSSOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId]];
@@ -135,12 +135,12 @@
         }
             
         case ActionTypeScreen: {
-            RSAExternalId *externalId = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSSExternalId *externalId = [[RSSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
 
             NSDictionary *integrations = @{@"Facebook": @NO};
             NSDictionary *customContext = @{@"Key_1": @{@"Key1": @"Value1"}};
 
-            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
+            RSSOptionBuilder *optionBuilder = [RSSOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId]];
@@ -150,14 +150,14 @@
         }
             
         case ActionTypeGroup: {
-            RSAExternalId *externalId1 = [[RSAExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
-            RSAExternalId *externalId2 = [[RSAExternalId alloc] initWithType:@"official_idCardNumber" id:@"AB123CD"];
+            RSSExternalId *externalId1 = [[RSSExternalId alloc] initWithType:@"idCardNumber" id:@"12791"];
+            RSSExternalId *externalId2 = [[RSSExternalId alloc] initWithType:@"official_idCardNumber" id:@"AB123CD"];
 
             NSDictionary *twitterConfig = @{@"isEnabled": @YES, @"consumerKey": @"consumerSecret"};
             NSDictionary *integrations = @{@"Firebase": @NO, @"Twitter": twitterConfig};
             NSDictionary *customContext = @{@"Key_1": @{@"Key1": @"Value1"}};
 
-            RSAOptionBuilder *optionBuilder = [RSAOptionBuilder new];
+            RSSOptionBuilder *optionBuilder = [RSSOptionBuilder new];
             [optionBuilder setIntegrations:integrations];
             [optionBuilder setCustomContext:customContext];
             [optionBuilder setExternalIds:@[externalId1, externalId2]];
@@ -173,7 +173,7 @@
             
         case ActionTypeReadAnonymousId: {
             NSString *anonymousId = [[AnalyticsManager sharedManager] anonymousId];
-            [RSALoggerAnalytics debug:[NSString stringWithFormat:@"Current Anonymous Id: %@", (anonymousId == Nil) ? @"Nil" : anonymousId]];
+            [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"Current Anonymous Id: %@", (anonymousId == Nil) ? @"Nil" : anonymousId]];
             break;
         }
             
@@ -195,9 +195,9 @@
         case ActionTypeReadSessionId: {
             NSNumber *sessionId = [[AnalyticsManager sharedManager] sessionId];
             if (sessionId) {
-                [RSALoggerAnalytics debug:[NSString stringWithFormat:@"Current Session Id: %llu", sessionId.unsignedLongLongValue]];
+                [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"Current Session Id: %llu", sessionId.unsignedLongLongValue]];
             } else {
-                [RSALoggerAnalytics debug:@"No active session found."];
+                [RSSLoggerAnalytics debug:@"No active session found."];
             }
             break;
         }

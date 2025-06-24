@@ -11,7 +11,7 @@ import Foundation
 /**
  A builder class for configuring and constructing `Configuration` instances.
  */
-@objc(RSAConfigurationBuilder)
+@objc(RSSConfigurationBuilder)
 public final class ObjCConfigurationBuilder: NSObject {
     
     private var writeKey: String

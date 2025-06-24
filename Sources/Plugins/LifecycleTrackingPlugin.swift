@@ -14,13 +14,13 @@ import Foundation
 final class LifecycleTrackingPlugin: Plugin {
     var pluginType: PluginType = .utility
     
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     var appVersion: AppVersion?
     
     @Synchronized private var isFirstLaunch = true
     @Synchronized private var didAppEnterBackground = false
     
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
         
         self.appVersion = self.prepareAppVersion()

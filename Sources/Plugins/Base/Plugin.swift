@@ -16,7 +16,7 @@ import Foundation
 
  - Conforms to: `CaseIterable`
  */
-@objc(RSAPluginType)
+@objc(RSSPluginType)
 public enum PluginType: Int, CaseIterable {
     /// Plugins of this type are executed before any event processing begins. Useful for pre-processing events or adding context data.
     case preProcess
@@ -45,17 +45,17 @@ public protocol Plugin: AnyObject {
     /// The type of the plugin, indicating where it fits in the processing pipeline.
     var pluginType: PluginType { get set }
     
-    /// A reference to the `AnalyticsClient` instance associated with this plugin.
-    var analytics: AnalyticsClient? { get set }
+    /// A reference to the `Analytics` instance associated with this plugin.
+    var analytics: Analytics? { get set }
     
     /**
-     Sets up the plugin with the provided `AnalyticsClient` instance.
+     Sets up the plugin with the provided `Analytics` instance.
 
      This method is called when the plugin is registered, allowing it to initialize resources or configurations.
 
-     - Parameter analytics: The `AnalyticsClient` instance to associate with the plugin.
+     - Parameter analytics: The `Analytics` instance to associate with the plugin.
      */
-    func setup(analytics: AnalyticsClient)
+    func setup(analytics: Analytics)
     
     /**
      Intercepts the plugin's logic on the provided event.
@@ -80,9 +80,9 @@ public protocol Plugin: AnyObject {
  */
 public extension Plugin {
     /**
-     Sets up the plugin with the provided `AnalyticsClient` instance.
+     Sets up the plugin with the provided `Analytics` instance.
      */
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
     }
     

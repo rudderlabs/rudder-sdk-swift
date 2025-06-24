@@ -20,7 +20,7 @@ import Foundation
     - `externalIds`: An array of external IDs associated with the event.
  */
 
-@objc(RSAOption)
+@objc(RSSOption)
 public class RudderOption: NSObject {
     
     /// A dictionary of integration names as keys and their state values.
@@ -56,7 +56,7 @@ public class RudderOption: NSObject {
  - Conformance:
  - `Codable`: Allows the `ExternalId` to be encoded and decoded using `JSONEncoder` and `JSONDecoder`.
  */
-@objc(RSAExternalId)
+@objc(RSSExternalId)
 public class ExternalId: NSObject, Codable {
     /// The type of the external identifier.
     @objc private(set) public var type: String

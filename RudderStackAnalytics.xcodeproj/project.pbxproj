@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		532904EF2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */; };
+		532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */; };
+		532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */; };
 		539E540E2C98CD7D00982E95 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */; };
 		53DEA5E12E03D05A00D6C371 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D62E03D05A00D6C371 /* KeyValueStore.swift */; };
 		53DEA5E22E03D05A00D6C371 /* ResetUserIdentityAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */; };
@@ -59,7 +62,7 @@
 		53DEA6112E03D05A00D6C371 /* LifecycleManagementUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5A22E03D05A00D6C371 /* LifecycleManagementUtils.swift */; };
 		53DEA6122E03D05A00D6C371 /* SwiftLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5A62E03D05A00D6C371 /* SwiftLogger.swift */; };
 		53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5C82E03D05A00D6C371 /* StartupFlushPolicy.swift */; };
-		53DEA6142E03D05A00D6C371 /* AnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA58F2E03D05A00D6C371 /* AnalyticsClient.swift */; };
+		53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA58F2E03D05A00D6C371 /* Analytics.swift */; };
 		53DEA6152E03D05A00D6C371 /* BasicStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5DB2E03D05A00D6C371 /* BasicStorage.swift */; };
 		53DEA6162E03D05A00D6C371 /* ObjCOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5B12E03D05A00D6C371 /* ObjCOption.swift */; };
 		53DEA6172E03D05A00D6C371 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5902E03D05A00D6C371 /* Configuration.swift */; };
@@ -136,9 +139,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RudderStackAnalytics.xctestplan; sourceTree = "<group>"; };
+		532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftExampleApp.xctestplan; sourceTree = "<group>"; };
+		532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUIExampleApp.xctestplan; sourceTree = "<group>"; };
 		5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		539E540A2C98CD7D00982E95 /* RudderStackAnalyticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderStackAnalyticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		53DEA58F2E03D05A00D6C371 /* AnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsClient.swift; sourceTree = "<group>"; };
+		53DEA58F2E03D05A00D6C371 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		53DEA5902E03D05A00D6C371 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		53DEA5912E03D05A00D6C371 /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		53DEA5932E03D05A00D6C371 /* AliasEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasEvent.swift; sourceTree = "<group>"; };
@@ -274,6 +280,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		532904EE2E05BBDE00C8EFE2 /* TestPlans */ = {
+			isa = PBXGroup;
+			children = (
+				532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */,
+				532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */,
+				532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */,
+			);
+			path = TestPlans;
+			sourceTree = "<group>";
+		};
 		5351AA5C2C6BE95D003C3C47 = {
 			isa = PBXGroup;
 			children = (
@@ -295,7 +311,7 @@
 		53DEA5922E03D05A00D6C371 /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA58F2E03D05A00D6C371 /* AnalyticsClient.swift */,
+				53DEA58F2E03D05A00D6C371 /* Analytics.swift */,
 				53DEA5902E03D05A00D6C371 /* Configuration.swift */,
 				53DEA5912E03D05A00D6C371 /* EventManager.swift */,
 			);
@@ -625,6 +641,7 @@
 				53DEA64E2E03D06F00D6C371 /* PluginTests */,
 				53DEA6522E03D06F00D6C371 /* SessionManagementTests */,
 				53DEA6582E03D06F00D6C371 /* StateManagementTests */,
+				532904EE2E05BBDE00C8EFE2 /* TestPlans */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -749,6 +766,9 @@
 				53DEA68E2E03D06F00D6C371 /* group_with_options.json in Resources */,
 				53DEA68F2E03D06F00D6C371 /* group_with_all_values.json in Resources */,
 				53DEA6902E03D06F00D6C371 /* screen_with_default_arguments.json in Resources */,
+				532904EF2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan in Resources */,
+				532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */,
+				532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -833,7 +853,7 @@
 				53DEA6112E03D05A00D6C371 /* LifecycleManagementUtils.swift in Sources */,
 				53DEA6122E03D05A00D6C371 /* SwiftLogger.swift in Sources */,
 				53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */,
-				53DEA6142E03D05A00D6C371 /* AnalyticsClient.swift in Sources */,
+				53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */,
 				53DEA6152E03D05A00D6C371 /* BasicStorage.swift in Sources */,
 				53DEA6162E03D05A00D6C371 /* ObjCOption.swift in Sources */,
 				53DEA6172E03D05A00D6C371 /* Configuration.swift in Sources */,

@@ -14,7 +14,7 @@ import Foundation
  Useful for exposing analytics event data to Objective-C codebases, allowing manipulation
  of event metadata, integrations, context, traits, and other properties.
  */
-@objc(RSAEvent)
+@objc(RSSEvent)
 public class ObjCEvent: NSObject {
     /**
      The underlying Swift `Event` instance.
@@ -148,7 +148,7 @@ public class ObjCEvent: NSObject {
 
  Each case corresponds to a type of event that can be tracked.
  */
-@objc(RSAEventType)
+@objc(RSSEventType)
 public enum ObjCEventType: Int {
     /** Represents an `identify` event. */
     case identify = 1

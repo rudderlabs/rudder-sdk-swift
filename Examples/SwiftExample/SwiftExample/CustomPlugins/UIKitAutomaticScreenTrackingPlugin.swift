@@ -14,7 +14,7 @@ import RudderStackAnalytics
  */
 final class UIKitAutomaticScreenTrackingPlugin: Plugin {
     var pluginType: PluginType = .utility
-    var analytics: AnalyticsClient?
+    var analytics: Analytics?
     
     private var isSwizzled = false
     private var notificationObserver: NSObjectProtocol?
@@ -23,7 +23,7 @@ final class UIKitAutomaticScreenTrackingPlugin: Plugin {
         self.startTracking()
     }
     
-    func setup(analytics: AnalyticsClient) {
+    func setup(analytics: Analytics) {
         self.analytics = analytics
     }
     
