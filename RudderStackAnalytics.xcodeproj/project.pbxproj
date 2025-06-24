@@ -308,6 +308,7 @@
 				53DEA65B2E03D06F00D6C371 /* FlushPolicyModuleTests.swift */,
 				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
 				53DEA65D2E03D06F00D6C371 /* StorageModuleTests.swift */,
+				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
 				53DEA6272E03D06F00D6C371 /* EventTests */,
 				53DEA6292E03D06F00D6C371 /* LifecycleManagementTests */,
 				53DEA6432E03D06F00D6C371 /* MockResources */,
@@ -610,7 +611,6 @@
 				53DEA6362E03D06F00D6C371 /* Identify */,
 				53DEA63C2E03D06F00D6C371 /* Screen */,
 				53DEA6412E03D06F00D6C371 /* Track */,
-				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
 			);
 			path = MockResources;
 			sourceTree = "<group>";
