@@ -25,6 +25,11 @@ opt_in_rules:
 excluded:
     - '**/Tests/**'  # Excludes test files in AnalyticsTests
     - '**/Examples/**'  # Excludes files in the AnalyticsApp directory
+    - 'Package.swift'  # Excludes Package.swift from linting
+
+# Include only the Sources directory for linting
+included:
+    - 'Sources/RudderStackAnalytics/**'
 
 # Discourages using `as!`
 force_cast:
