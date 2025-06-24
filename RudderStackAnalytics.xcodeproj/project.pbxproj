@@ -300,6 +300,25 @@
 			path = RudderStackAnalytics;
 			sourceTree = "<group>";
 		};
+		5319B8B62E0B0B2B00D3BD66 /* RudderStackAnalyticsTests */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA6592E03D06F00D6C371 /* RudderStackAnalyticsTests.swift */,
+				53DEA65A2E03D06F00D6C371 /* DataPlaneModuleTests.swift */,
+				53DEA65B2E03D06F00D6C371 /* FlushPolicyModuleTests.swift */,
+				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
+				53DEA65D2E03D06F00D6C371 /* StorageModuleTests.swift */,
+				53DEA6272E03D06F00D6C371 /* EventTests */,
+				53DEA6292E03D06F00D6C371 /* LifecycleManagementTests */,
+				53DEA6432E03D06F00D6C371 /* MockResources */,
+				53DEA64E2E03D06F00D6C371 /* PluginTests */,
+				53DEA6522E03D06F00D6C371 /* SessionManagementTests */,
+				53DEA6582E03D06F00D6C371 /* StateManagementTests */,
+				532904EE2E05BBDE00C8EFE2 /* TestPlans */,
+			);
+			path = RudderStackAnalyticsTests;
+			sourceTree = "<group>";
+		};
 		532904EE2E05BBDE00C8EFE2 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
@@ -638,18 +657,7 @@
 		53DEA65E2E03D06F00D6C371 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA6592E03D06F00D6C371 /* RudderStackAnalyticsTests.swift */,
-				53DEA65A2E03D06F00D6C371 /* DataPlaneModuleTests.swift */,
-				53DEA65B2E03D06F00D6C371 /* FlushPolicyModuleTests.swift */,
-				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
-				53DEA65D2E03D06F00D6C371 /* StorageModuleTests.swift */,
-				53DEA6272E03D06F00D6C371 /* EventTests */,
-				53DEA6292E03D06F00D6C371 /* LifecycleManagementTests */,
-				53DEA6432E03D06F00D6C371 /* MockResources */,
-				53DEA64E2E03D06F00D6C371 /* PluginTests */,
-				53DEA6522E03D06F00D6C371 /* SessionManagementTests */,
-				53DEA6582E03D06F00D6C371 /* StateManagementTests */,
-				532904EE2E05BBDE00C8EFE2 /* TestPlans */,
+				5319B8B62E0B0B2B00D3BD66 /* RudderStackAnalyticsTests */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
