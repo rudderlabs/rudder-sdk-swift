@@ -50,11 +50,11 @@ extension AppDelegate {
         self.analytics?.add(plugin: UIKitAutomaticScreenTrackingPlugin())
     }
     
-    func track(name: String, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    func track(name: String, properties: Properties? = nil, options: RudderOption? = nil) {
         self.analytics?.track(name: name, properties: properties, options: options)
     }
     
-    func screen(name: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    func screen(name: String, category: String? = nil, properties: Properties? = nil, options: RudderOption? = nil) {
         self.analytics?.screen(screenName: name, category: category, properties: properties, options: options)
     }
 }

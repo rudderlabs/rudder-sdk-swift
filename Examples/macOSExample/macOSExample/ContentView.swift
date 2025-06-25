@@ -66,7 +66,7 @@ struct ContentView: View {
                 }
                 
                 CustomButton(title: "Group Event") {
-                    let groupTraits: RudderTraits = [
+                    let groupTraits: Traits = [
                         "name": "Acme Corp",
                         "plan": "enterprise",
                         "employees": 500
@@ -93,7 +93,7 @@ struct ContentView: View {
                         ]
                     )
                     
-                    let traits: RudderTraits = [
+                    let traits: Traits = [
                         "name": "John Doe",
                         "email": "john.doe@example.com",
                         "age": 30,
