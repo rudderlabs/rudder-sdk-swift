@@ -69,8 +69,23 @@ extension UserDefaults {
 // MARK: - FileManager
 extension FileManager {
     static var eventStorageURL: URL {
-        let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let storageURL = directory[0].appendingPathComponent("rudder/analytics/events", isDirectory: true)
+        let storageURL: URL
+        
+        // Check if we're running in a test environment
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
+            // Use temporary directory for tests to avoid polluting user files
+            let tempDir = FileManager.default.temporaryDirectory
+            storageURL = tempDir.appendingPathComponent("rudder-analytics-tests/events", isDirectory: true)
+        } else {
+            // Use Application Support directory for production (more appropriate than Documents)
+            #if os(macOS)
+            let directory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
+            #else
+            // On iOS/tvOS/watchOS, use Documents directory (sandboxed to app)
+            let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+            #endif
+            storageURL = directory[0].appendingPathComponent("rudder/analytics/events", isDirectory: true)
+        }
         
         try? FileManager.default.createDirectory(at: storageURL, withIntermediateDirectories: true, attributes: nil)
         return storageURL
