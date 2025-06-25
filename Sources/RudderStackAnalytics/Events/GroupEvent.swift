@@ -68,7 +68,7 @@ struct GroupEvent: Event {
 
      This initializer also processes and includes default values, such as default integrations and context if they are not provided.
      */
-    init(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
+    init(groupId: String, traits: Traits? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
         self.groupId = groupId
         self.traits = CodableCollection(dictionary: traits)
         self.userIdentity = userIdentity ?? UserIdentity()

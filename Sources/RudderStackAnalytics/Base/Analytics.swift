@@ -112,7 +112,7 @@ extension Analytics {
         - properties: An optional object containing event-specific properties. Defaults to `nil`.
         - options: An optional object for providing additional options. Defaults to `nil`.
      */
-    public func track(name: String, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    public func track(name: String, properties: Properties? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
         let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
@@ -128,7 +128,7 @@ extension Analytics {
         - properties: An Optional properties associated with the screen view. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
-    public func screen(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil) {
+    public func screen(screenName: String, category: String? = nil, properties: Properties? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
         let event = ScreenEvent(screenName: screenName, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
@@ -143,7 +143,7 @@ extension Analytics {
         - traits: An Optional traits associated with the group. Defaults to `nil`.
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
-    public func group(groupId: String, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    public func group(groupId: String, traits: Traits? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
         let event = GroupEvent(groupId: groupId, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
@@ -158,7 +158,7 @@ extension Analytics {
         - traits: Custom traits or attributes associated with the user. Defaults to `nil`.
         - options: Custom options for the event, including integrations and context. Defaults to `nil`.
      */
-    public func identify(userId: String? = nil, traits: RudderTraits? = nil, options: RudderOption? = nil) {
+    public func identify(userId: String? = nil, traits: Traits? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
         if let currentUserId = self.userId, !currentUserId.isEmpty,
@@ -167,7 +167,7 @@ extension Analytics {
             reset()
         }
         
-        self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId ?? "", traits: traits ?? RudderTraits(), storage: self.storage))
+        self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId ?? "", traits: traits ?? Traits(), storage: self.storage))
         self.userIdentityState.state.value.storeUserIdAndTraits(self.storage)
         
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
@@ -390,7 +390,7 @@ extension Analytics {
     /**
      A computed property for accessing the `traits` in the current user identity state.
      */
-    public var traits: RudderTraits? {
+    public var traits: Traits? {
         return self.isAnalyticsActive ? self.userIdentityState.state.value.traits : nil
     }
     
@@ -442,9 +442,9 @@ extension Analytics {
 /**
  A dictionary representing event properties with string keys and any values
  */
-public typealias RudderProperties = [String: Any]
+public typealias Properties = [String: Any]
 
 /**
  // A dictionary representing user traits with string keys and any values
  */
-public typealias RudderTraits = [String: Any]
+public typealias Traits = [String: Any]

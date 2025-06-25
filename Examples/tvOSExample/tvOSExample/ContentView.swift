@@ -76,7 +76,7 @@ struct ContentView: View {
                         .focused($focusedButton, equals: .screen)
                         
                         CustomButton(title: "Group Event") {
-                            let groupTraits: RudderTraits = [
+                            let groupTraits: Traits = [
                                 "name": "Acme Corp", "plan": "enterprise", "employees": 500
                             ]
                             AnalyticsManager.shared.group(id: "group_456", traits: groupTraits)
@@ -84,7 +84,7 @@ struct ContentView: View {
                         .focused($focusedButton, equals: .group)
                         
                         CustomButton(title: "Identify Event") {
-                            let traits: RudderTraits = [
+                            let traits: Traits = [
                                 "name": "John Doe", "email": "john.doe@example.com",
                                 "age": 30, "premium": true
                             ]
