@@ -32,7 +32,7 @@ import Foundation
  */
 public final class CountFlushPolicy: FlushPolicy {
     /// The maximum number of events before a flush is triggered.
-    private(set) var flushCount: Int
+    private(set) var flushAt: Int
 
     /// The current count of events, updated in a thread-safe manner.
     @Synchronized private var eventCount: Int = 0
@@ -40,11 +40,11 @@ public final class CountFlushPolicy: FlushPolicy {
     /**
      Initializes a new `CountFlushPolicy`.
 
-     - Parameter flushCount: The number of events required to trigger a flush. Defaults to `Constants.flushEventCount.default`.
+     - Parameter flushAt: The number of events required to trigger a flush. Defaults to `Constants.flushEventCount.default`.
      - Note: The flush count is clamped between `Constants.flushEventCount.min` and `Constants.flushEventCount.max`.
      */
-    public init(flushCount: Int = Constants.flushEventCount.default) {
-        self.flushCount = min(Constants.flushEventCount.max, max(flushCount, Constants.flushEventCount.min))
+    public init(flushAt: Int = Constants.flushEventCount.default) {
+        self.flushAt = min(Constants.flushEventCount.max, max(flushAt, Constants.flushEventCount.min))
     }
 
     /**
@@ -60,7 +60,7 @@ public final class CountFlushPolicy: FlushPolicy {
      - Returns: A `Bool` indicating whether the flush count has been reached or exceeded.
      */
     public func shouldFlush() -> Bool {
-        return self.eventCount >= self.flushCount
+        return self.eventCount >= self.flushAt
     }
 
     /**

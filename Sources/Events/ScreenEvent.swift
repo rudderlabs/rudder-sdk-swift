@@ -75,10 +75,10 @@ struct ScreenEvent: Event {
 
      This initializer also processes and includes default properties such as the screen name and category in the event's properties, if they are provided.
      */
-    init(screenName: String, category: String? = nil, properties: RudderProperties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
+    init(screenName: String, category: String? = nil, properties: Properties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
         self.event = screenName
         
-        var updatedProperties = properties ?? RudderProperties()
+        var updatedProperties = properties ?? Properties()
         updatedProperties["category"] = category?.isEmpty ?? true ? nil : category
         updatedProperties["name"] = screenName.isEmpty ? nil : screenName
         

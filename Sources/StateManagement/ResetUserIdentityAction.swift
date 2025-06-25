@@ -34,7 +34,7 @@ struct ResetUserIdentityAction: StateAction {
         var newState = currentState
         newState.anonymousId = .randomUUIDString
         newState.userId = String.empty
-        newState.traits = RudderTraits()
+        newState.traits = Traits()
         return newState
     }
 }
