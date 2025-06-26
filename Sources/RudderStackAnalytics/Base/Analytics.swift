@@ -30,9 +30,9 @@ public class Analytics {
     private var userIdentityState: StateImpl<UserIdentity>
     
     /**
-     A private asynchronous channel for queuing and processing events.
+     A private serial queue for processing events to ensure ordering without blocking the main thread.
      */
-    private var processEventChannel: AsyncChannel<Event>
+    private let eventProcessingQueue = DispatchQueue(label: "com.rudderstack.analytics.eventProcessing", qos: .utility)
     
     /**
      The handler instance responsible for managing lifecycle events and session-related operations.
@@ -57,7 +57,6 @@ public class Analytics {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
-        self.processEventChannel = AsyncChannel(capacity: Int.max)
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.setup()
     }
@@ -258,7 +257,6 @@ extension Analytics {
         guard self.isAnalyticsActive else { return }
         
         self.isAnalyticsShutdown = true
-        self.processEventChannel.close()
         
         self.pluginChain?.removeAll()
         self.pluginChain = nil
@@ -293,7 +291,6 @@ extension Analytics {
     private func setup() {
         self.storeAnonymousId()
         self.collectConfiguration()
-        self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
         self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
@@ -313,25 +310,15 @@ extension Analytics {
     }
     
     /**
-     Starts processing events from the `processEventChannel` stream. Processes an event by passing it through the plugin chain.
-     */
-    private func startProcessingEvents() {
-        Task {
-            for await event in self.processEventChannel.stream {
-                let updatedEvent = event.updateEventData()
-                self.pluginChain?.process(event: updatedEvent)
-            }
-        }
-    }
-    
-    /**
-     Sends an event to the `processEventChannel` asynchronously.
+     Processes an event by dispatching it to the serial queue to ensure ordering without blocking the main thread.
      
-     - Parameter event: The `Event` to be sent.
+     - Parameter event: The `Event` to be processed.
      */
     private func process(event: Event) {
-        Task {
-            try await self.processEventChannel.send(event)
+        eventProcessingQueue.async { [weak self] in
+            guard let self = self, self.isAnalyticsActive else { return }
+            let updatedEvent = event.updateEventData()
+            self.pluginChain?.process(event: updatedEvent)
         }
     }
     
@@ -417,7 +404,7 @@ extension Analytics {
      - Parameters:
         - url: The deep link `URL` to process and track.
         - options: An optional dictionary of additional metadata to include in the tracking event.
-     */  
+     */
     public func open(url: URL, options: [String: Any]? = nil) {
         guard self.isAnalyticsActive else { return }
 
