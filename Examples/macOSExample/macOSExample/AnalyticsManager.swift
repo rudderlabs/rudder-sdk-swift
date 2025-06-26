@@ -41,7 +41,6 @@ import RudderStackAnalytics
  * ```
  *
  * - Note: This is a singleton class. Use `AnalyticsManager.shared` to access the instance.
- * - Important: Call `initializeAnalyticsSDK()` before using any tracking methods.
  */
  
 class AnalyticsManager {
