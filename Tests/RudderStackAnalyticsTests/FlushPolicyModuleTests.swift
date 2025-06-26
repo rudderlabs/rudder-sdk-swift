@@ -12,7 +12,7 @@ final class CountFlushPolicyTests: XCTestCase {
     
     func test_defaultShouldFlush() {
         given("CountFlushPolicy with a flush count of 5") {
-            let policy = CountFlushPolicy(flushCount: 5)
+            let policy = CountFlushPolicy(flushAt: 5)
             
             then("initially returns false..") {
                 XCTAssertFalse(policy.shouldFlush())
@@ -22,7 +22,7 @@ final class CountFlushPolicyTests: XCTestCase {
     
     func test_shouldFlushAfterReachingFlushCount() {
         given("CountFlushPolicy with a flush count of 5") {
-            let policy = CountFlushPolicy(flushCount: 5)
+            let policy = CountFlushPolicy(flushAt: 5)
             
             when("flush count not reached the limit..") {
                 for _ in 1...4 {
@@ -46,7 +46,7 @@ final class CountFlushPolicyTests: XCTestCase {
     
     func test_resetCount() {
         given("CountFlushPolicy with a flush count of 5") {
-            let policy = CountFlushPolicy(flushCount: 5)
+            let policy = CountFlushPolicy(flushAt: 5)
             
             when("flush count reached the limit..") {
                 for _ in 1...5 {
@@ -87,7 +87,7 @@ final class CountFlushPolicyTests: XCTestCase {
             }
             
             when("pass the minimum flush count...") {
-                let policy = CountFlushPolicy(flushCount: minimum)
+                let policy = CountFlushPolicy(flushAt: minimum)
                 
                 for _ in 1..<minimum {
                     policy.updateEventCount()
@@ -107,7 +107,7 @@ final class CountFlushPolicyTests: XCTestCase {
             }
             
             when("pass the maximum flush count...") {
-                let policy = CountFlushPolicy(flushCount: maximum)
+                let policy = CountFlushPolicy(flushAt: maximum)
                 
                 for _ in 1..<maximum {
                     policy.updateEventCount()
