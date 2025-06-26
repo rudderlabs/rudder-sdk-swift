@@ -59,7 +59,7 @@
 - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
     for (UIOpenURLContext *context in URLContexts) {
         NSURL *url = context.URL;
-        [[AnalyticsManager sharedManager] openURL:url options: nil];
+        [[AnalyticsManager sharedManager] openURL:url options: nil]; // Handle the deep link URL with the AnalyticsManager
     }
 }
 
