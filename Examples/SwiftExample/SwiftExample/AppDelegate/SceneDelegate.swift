@@ -48,6 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        // Track deep links using the analytics client
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let client = appDelegate.analytics, let url = URLContexts.first?.url else { return }
         client.open(url: url, options: ["fromFunction": #function])
     }
