@@ -32,7 +32,7 @@ public class Analytics {
     /**
      A private serial queue for processing events to ensure ordering without blocking the main thread.
      */
-    private let eventProcessingQueue = DispatchQueue(label: "com.rudderstack.analytics.eventProcessing", qos: .utility)
+    private let eventProcessingQueue = DispatchQueue(label: "com.rudderstack.analytics.eventProcessing", qos: .default)
     
     /**
      The handler instance responsible for managing lifecycle events and session-related operations.
