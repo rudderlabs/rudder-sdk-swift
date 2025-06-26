@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <RudderStackAnalytics/RudderStackAnalytics.h>
+@import RudderStackAnalytics;
 
 NS_ASSUME_NONNULL_BEGIN
 
