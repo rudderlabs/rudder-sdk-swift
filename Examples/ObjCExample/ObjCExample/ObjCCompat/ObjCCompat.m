@@ -6,7 +6,7 @@
 //
 
 #import "ObjCCompat.h"
-#import <RudderStackAnalytics/RudderStackAnalytics.h>
+@import RudderStackAnalytics;
 #import "CustomOptionPlugin.h"
 #import "CustomLogger.h"
 
