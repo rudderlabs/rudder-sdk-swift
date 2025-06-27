@@ -17,10 +17,10 @@ final class AsyncChannel<T> {
     private var isClosed = false
     private let lock = NSLock()
     
-    init(capacity: Int = .max) {
+    init() {
         var continuation: AsyncStream<T>.Continuation!
         
-        let stream = AsyncStream<T>(bufferingPolicy: .bufferingOldest(capacity)) { cont in
+        let stream = AsyncStream<T>(bufferingPolicy: .unbounded) { cont in
             continuation = cont
         }
         self.continuation = continuation
@@ -44,14 +44,7 @@ final class AsyncChannel<T> {
         lock.lock()
         defer { lock.unlock() }
         
-        isClosed = true
-        continuation.finish()
-    }
-    
-    func cancel() {
-        lock.lock()
-        defer { lock.unlock() }
-        
+        guard !isClosed else { return }
         isClosed = true
         continuation.finish()
     }

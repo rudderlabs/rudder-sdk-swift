@@ -64,7 +64,7 @@ extension EventManager {
         self.flushPolicyFacade.cancelSchedule()
         
         self.writeChannel.close()
-        self.uploadChannel.cancel()
+        self.uploadChannel.close()
     }
 }
 
