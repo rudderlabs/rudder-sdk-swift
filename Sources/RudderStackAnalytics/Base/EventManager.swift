@@ -9,7 +9,6 @@ import Foundation
 // MARK: - EventManager
 /**
  A class responsible for managing events and handling their processing, storage, and uploading in the analytics system.
-
  This class integrates with the analytics client, manages flush policies, and ensures smooth event flow using asynchronous channels.
  */
 final class EventManager {
@@ -28,8 +27,8 @@ final class EventManager {
         self.analytics = analytics
         self.flushPolicyFacade = FlushPolicyFacade(analytics: analytics)
         self.httpClient = HttpClient(analytics: analytics)
-        self.writeChannel = AsyncChannel(capacity: Int.max)
-        self.uploadChannel = AsyncChannel(capacity: Int.max)
+        self.writeChannel = AsyncChannel()
+        self.uploadChannel = AsyncChannel()
         self.start()
     }
     
@@ -72,10 +71,12 @@ extension EventManager {
 // MARK: - Event Processing
 extension EventManager {
     func write() {
-        Task {
+        Task { [weak self] in
+            guard let self else { return }
+            
             for await event in self.writeChannel.stream {
                 let isFlushSignal = event.type == .flush
-
+                
                 if !isFlushSignal {
                     if let json = event.event?.jsonString {
                         LoggerAnalytics.debug(log: "Processing event: \(json)")
@@ -83,7 +84,7 @@ extension EventManager {
                         self.flushPolicyFacade.updateCount()
                     }
                 }
-
+                
                 if isFlushSignal || self.flushPolicyFacade.shouldFlush() {
                     do {
                         self.flushPolicyFacade.resetCount()
@@ -98,7 +99,9 @@ extension EventManager {
     }
     
     func upload() {
-        Task {
+        Task { [weak self] in
+            guard let self else { return }
+            
             for await _ in self.uploadChannel.stream {
                 let dataItems = await self.storage.read().dataItems
                 for item in dataItems {
