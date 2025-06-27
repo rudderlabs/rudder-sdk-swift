@@ -10,6 +10,13 @@
 #import "CustomOptionPlugin.h"
 #import "CustomLogger.h"
 
+/**
+ * ObjCCompat Implementation
+ *
+ * This class has all the Objective-C compatible APIs & used to check anything is breaking
+ * in Objective-C exposure of API, if any changes made in actual RudderStackAnalytics SDK.
+ */
+
 @interface ObjCCompat()
 
 @property RSSAnalytics *client;

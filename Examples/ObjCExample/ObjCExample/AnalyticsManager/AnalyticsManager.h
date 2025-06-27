@@ -10,6 +10,37 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * AnalyticsManager
+ *
+ * A singleton wrapper class that provides a simplified interface for the RudderStackAnalytics SDK.
+ * This manager handles SDK initialization, configuration, and provides convenient methods for
+ * tracking analytics events throughout the application.
+ *
+ * Features:
+ * - Singleton pattern for centralized analytics management
+ * - Pre-configured SDK setup with custom logger and plugins
+ * - Complete analytics event tracking (identify, track, screen, group, alias)
+ * - Session management capabilities
+ * - Deep linking support
+ * - SDK lifecycle management (flush, reset, shutdown)
+ *
+ * ## Usage
+ * ```objc
+ *     // Initialize the SDK
+ *     [[AnalyticsManager sharedManager] initializeAnalyticsSDK];
+ *
+ *     // Track events
+ *     [[AnalyticsManager sharedManager] track:@"Button Clicked"
+ *                                   properties:@{@"button_name": @"signup"}
+ *                                      options:nil];
+ *
+ *     // Identify users
+ *     [[AnalyticsManager sharedManager] identify:@"user123"
+ *                                         traits:@{@"email": @"user@example.com"}
+ *                                        options:nil];
+ * ```
+ */
 @interface AnalyticsManager : NSObject
 
 + (instancetype)sharedManager;

@@ -17,7 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [[AnalyticsManager sharedManager] initializeAnalyticsSDK];
+    [[AnalyticsManager sharedManager] initializeAnalyticsSDK]; // Initialize the analytics SDK
     
     return YES;
 }

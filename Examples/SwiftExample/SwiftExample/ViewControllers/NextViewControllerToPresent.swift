@@ -22,6 +22,11 @@ class NextViewControllerToPresent: UIViewController {
     }
 }
 
+// MARK: - UIKitScreenTrackable
+/**
+ This view controller conforms to `UIKitScreenTrackable` to enable automatic screen tracking.
+ It will automatically track when this view controller is presented.
+ */
 extension NextViewControllerToPresent: UIKitScreenTrackable {
     func trackUIKitScreen(name: String) {
         AppDelegate.default.screen(name: name, category: "Presented Screen", properties: ["fullName": "NextViewControllerToPresent", "automatic": true])

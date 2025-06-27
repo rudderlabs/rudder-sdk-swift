@@ -37,7 +37,6 @@ public class RudderOption: NSObject {
 
      The initial integrations are set to the default integrations defined in `Constants.payload.integration`.
      */
-    @objc
     public init(integrations: [String: Any]? = nil, customContext: [String: Any]? = nil, externalIds: [ExternalId]? = nil) {
         self.integrations = (integrations ?? [:]) + Constants.payload.integration
         self.customContext = customContext

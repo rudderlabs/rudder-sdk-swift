@@ -9,6 +9,37 @@ import Foundation
 import RudderStackAnalytics
 
 // MARK: - AnalyticsManager
+/**
+ A singleton wrapper around the `RudderStackAnalytics` SDK that provides a centralized interface for tracking user events, managing user identity, and handling analytics configurations across the SwiftUI application.
+ 
+ ## Features
+    - Event tracking (track, screen, group, identify, alias)
+    - User identity and trait management
+    - Session management with start/end capabilities
+    - Plugin system for extending analytics functionality
+    - Deep link tracking support
+
+ ## Usage
+ ```swift
+ // Initialize the analytics SDK (call this once at app startup)
+ AnalyticsManager.shared.initializeAnalyticsSDK()
+ 
+ // Track events
+ AnalyticsManager.shared.track(name: "Button Clicked", properties: ["button": "login"])
+ 
+ // Identify users
+ AnalyticsManager.shared.identify(userId: "user123", traits: ["email": "user@example.com"])
+ 
+ // Track screens
+ AnalyticsManager.shared.screen(name: "Dashboard", category: "Main")
+ 
+ // Manage sessions
+ AnalyticsManager.shared.startSession()
+ AnalyticsManager.shared.endSession()
+  ```
+  - Note: This is a singleton class. Use `AnalyticsManager.shared` to access the instance.
+ */
+
 class AnalyticsManager {
     
     static let shared = AnalyticsManager()

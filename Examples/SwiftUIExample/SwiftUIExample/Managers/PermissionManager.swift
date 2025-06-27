@@ -12,11 +12,49 @@ import AdSupport
 import RudderStackAnalytics
 import UIKit
 
+/**
+ Defines the different types of permissions that can be requested through the PermissionManager.
+ */
 enum PermissionType {
     case idfa
     case bluetooth
     case pushNotification
 }
+
+/**
+  A centralized manager for requesting and handling various iOS permissions in sequence.
+  This class provides a clean interface for requesting multiple permissions one after another,
+  ensuring a smooth user experience without overwhelming users with multiple permission dialogs at once.
+ 
+  ## What it does:
+  - Requests advertising identifier (IDFA) permission
+  - Requests Bluetooth permission
+  - Requests push notification permission
+  - Handles permissions sequentially to avoid dialog overload
+ 
+  ## Usage:
+  ```swift
+  let permissionManager = PermissionManager()
+  
+  // Request multiple permissions in sequence
+  permissionManager.requestPermissions([.idfa, .bluetooth, .pushNotification]) {
+      print("All permissions have been processed")
+      // Continue with app initialization
+  }
+  
+  // For push notifications, call this from AppDelegate when device token is received
+  permissionManager.didRegisterForRemoteNotifications()
+  ```
+ 
+  ## How it works:
+  1. **Sequential Processing** - Permissions are requested one at a time from a queue
+  2. **User-Friendly** - Prevents multiple permission dialogs from appearing simultaneously
+  3. **Completion Tracking** - Calls completion handler when all permissions are processed
+  4. **State Management** - Handles various permission states (granted, denied, not determined)
+ 
+  - Note: This class must be used from the main thread due to UI permission dialogs
+  - Important: For push notifications, make sure to call `didRegisterForRemoteNotifications()` from AppDelegate
+ */
 
 final class PermissionManager: NSObject {
     private var permissionQueue: [PermissionType] = []

@@ -24,6 +24,7 @@ struct watchOSExampleWatchKitApp: App {
 class AppDelegate: NSObject, WKApplicationDelegate {
     
     func applicationDidFinishLaunching() {
+        // Initialize the Analytics SDK
         AnalyticsManager.shared.initializeAnalyticsSDK()
     }
 }

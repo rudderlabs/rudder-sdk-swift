@@ -25,6 +25,6 @@ struct macOSExampleApp: App {
 class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        AnalyticsManager.shared.initializeAnalyticsSDK()
+        AnalyticsManager.shared.initializeAnalyticsSDK() // Initialize the analytics SDK
     }
 }

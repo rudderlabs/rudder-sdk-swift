@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        self.initializeAnalyticsSDK()
+        self.initializeAnalyticsSDK() // Initialize the analytics SDK
         return true
     }
 
@@ -43,13 +43,21 @@ extension AppDelegate {
     static var `default`: AppDelegate { UIApplication.shared.delegate as! AppDelegate }
     
     func initializeAnalyticsSDK() {
-        LoggerAnalytics.logLevel = .verbose // Set the log level for analytics
+        // Set the log level for analytics
+        LoggerAnalytics.logLevel = .verbose
+
+        // Initialize the RudderStack Analytics SDK 
         let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
         self.analytics = Analytics(configuration: config)
         
+        // Add plugins for automatic screen tracking
         self.analytics?.add(plugin: UIKitAutomaticScreenTrackingPlugin())
     }
     
+    // MARK: - Rudder methods
+    /** 
+     * They wrap the underlying RudderStack Analytics SDK methods for ease of use.
+     */
     func track(name: String, properties: Properties? = nil, options: RudderOption? = nil) {
         self.analytics?.track(name: name, properties: properties, options: options)
     }
