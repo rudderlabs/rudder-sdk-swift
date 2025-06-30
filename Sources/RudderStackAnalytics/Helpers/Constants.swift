@@ -168,8 +168,8 @@ public struct _DefaultConfig {
     /// Default control plane URL for the SDK.
     public let controlPlaneUrl: String = "https://api.rudderlabs.com"
 
-    /// Whether GZIP compression is enabled by default.
-    public let gzipEnabled: Bool = true
+    /// Whether GZIP compression is disabled by default.
+    public let gzipEnabled: Bool = false
 
     /// Default policies used to determine when to flush events.
     public let flushPolicies: [FlushPolicy] = [
@@ -209,3 +209,4 @@ public struct _DefaultConfig {
  Do not edit this value unless performing a manual release.
  */
 let RSVersion: String = "1.0.0-alpha.1"
+let RSLibraryName: String = "rudder-sdk-swift"
