@@ -24,6 +24,6 @@ final class LibraryInfoPlugin: Plugin {
     }
     
     private var preparedLibraryInfo: [String: Any] = {
-        return ["name": "rudder-sdk-swift", "version": "\(RSVersion)"]
+        return ["name": RSLibraryName, "version": RSVersion]
     }()
 }
