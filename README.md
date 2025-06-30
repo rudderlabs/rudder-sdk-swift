@@ -59,6 +59,8 @@ The SDK supports the following platforms:
 - tvOS 15.0+
 - watchOS 8.0+
 
+---
+
 ## Initializing the SDK
 
 To initialize the RudderStack Swift SDK, add the Analytics initialization snippet to your application's entry point:
@@ -115,6 +117,8 @@ analytics.track(
         ]
 )
 ```
+
+---
 
 ## Contact us
 
