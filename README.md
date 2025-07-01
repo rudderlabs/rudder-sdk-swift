@@ -27,7 +27,6 @@ The Swift SDK enables you to track customer event data from your iOS, macOS, tvO
 - [Initializing the SDK](#initializing-the-sdk)
 - [Identifying users](#identifying-users)
 - [Tracking user actions](#tracking-user-actions)
-- [Contribute](#contribute)
 - [Contact us](#contact-us)
 - [Follow Us](#follow-us)
 
