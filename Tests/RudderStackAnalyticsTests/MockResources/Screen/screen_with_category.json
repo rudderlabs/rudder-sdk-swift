@@ -1,0 +1,16 @@
+{
+  "anonymousId" : "<anonymous-id>",
+  "channel" : "mobile",
+  "event" : "Sample_Screen_Event",
+  "integrations" : {
+    "All" : true
+  },
+  "messageId" : "<message-id>",
+  "originalTimestamp" : "<original-timestamp>",
+  "properties" : {
+    "category" : "Main",
+    "name" : "Sample_Screen_Event"
+  },
+  "sentAt" : "{{_RSA_DEF_SENT_AT_TS_}}",
+  "type" : "screen"
+}

@@ -1,0 +1,12 @@
+{
+  "anonymousId" : "<anonymous-id>",
+  "channel" : "mobile",
+  "event" : "Sample_Track_Event",
+  "integrations" : {
+    "All" : true
+  },
+  "messageId" : "<message-id>",
+  "originalTimestamp" : "<original-timestamp>",
+  "sentAt" : "{{_RSA_DEF_SENT_AT_TS_}}",
+  "type" : "track"
+}
