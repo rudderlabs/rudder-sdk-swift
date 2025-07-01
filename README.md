@@ -131,7 +131,7 @@ Replace:
 The `identify` API lets you recognize a user and associate them with their traits:
 
 ```swift
-analytics.identify(
+analytics?.identify(
     userId: "1hKOmRA4el9Zt1WSfVJIVo4GRlm",
     traits: [
         "name": "Alex Keener",
@@ -145,7 +145,7 @@ analytics.identify(
 The `track` API lets you capture user events:
 
 ```swift
-analytics.track(
+analytics?.track(
     name: "Order Completed",
     properties: [
         "revenue": 30.0,
