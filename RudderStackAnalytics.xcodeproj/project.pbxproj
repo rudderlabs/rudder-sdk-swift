@@ -11,7 +11,7 @@
 		532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */; };
 		532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */; };
 		539E540E2C98CD7D00982E95 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */; };
-		53AC39702E15269A00B8E16C /* RudderOptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AC396F2E15269A00B8E16C /* RudderOptionTests.swift */; };
+		53AC39722E1533F300B8E16C /* RudderOptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AC39712E1533F300B8E16C /* RudderOptionTests.swift */; };
 		53DEA5E12E03D05A00D6C371 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D62E03D05A00D6C371 /* KeyValueStore.swift */; };
 		53DEA5E22E03D05A00D6C371 /* ResetUserIdentityAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */; };
 		53DEA5E32E03D05A00D6C371 /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */; };
@@ -144,7 +144,7 @@
 		532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUIExampleApp.xctestplan; sourceTree = "<group>"; };
 		5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		539E540A2C98CD7D00982E95 /* RudderStackAnalyticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderStackAnalyticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		53AC396F2E15269A00B8E16C /* RudderOptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderOptionTests.swift; sourceTree = "<group>"; };
+		53AC39712E1533F300B8E16C /* RudderOptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderOptionTests.swift; sourceTree = "<group>"; };
 		53DEA58F2E03D05A00D6C371 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		53DEA5902E03D05A00D6C371 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		53DEA5912E03D05A00D6C371 /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
@@ -535,8 +535,8 @@
 				53DEA6232E03D06F00D6C371 /* IdentifyEventTests.swift */,
 				53DEA6242E03D06F00D6C371 /* MessageModuleTests.swift */,
 				53DEA6252E03D06F00D6C371 /* ScreenEventTests.swift */,
+				53AC39712E1533F300B8E16C /* RudderOptionTests.swift */,
 				53DEA6262E03D06F00D6C371 /* TrackEventTests.swift */,
-				53AC396F2E15269A00B8E16C /* RudderOptionTests.swift */,
 			);
 			path = EventTests;
 			sourceTree = "<group>";
@@ -892,7 +892,7 @@
 				53DEA6602E03D06F00D6C371 /* ResetUserIdentityActionTests.swift in Sources */,
 				53DEA6612E03D06F00D6C371 /* SessionInfoTests.swift in Sources */,
 				53DEA6622E03D06F00D6C371 /* LifecycleObserverTests.swift in Sources */,
-				53AC39702E15269A00B8E16C /* RudderOptionTests.swift in Sources */,
+				53AC39722E1533F300B8E16C /* RudderOptionTests.swift in Sources */,
 				53DEA6632E03D06F00D6C371 /* UserIdTraitsActionTests.swift in Sources */,
 				53DEA6642E03D06F00D6C371 /* LifecycleTrackingPluginTests.swift in Sources */,
 				53DEA6652E03D06F00D6C371 /* DeviceInfoPluginTests.swift in Sources */,
