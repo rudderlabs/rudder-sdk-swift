@@ -127,13 +127,53 @@ final class CountFlushPolicyTests: XCTestCase {
             }
         }
     }
+    
+    func test_flushCountInvalidValues() {
+        given("Invalid flush count values...") {
+            let defaultValue = Constants.flushEventCount.default
+            
+            when("pass a value below minimum...") {
+                let belowMinimum = Constants.flushEventCount.min - 1
+                let policy = CountFlushPolicy(flushAt: belowMinimum)
+                
+                then("should use default value instead") {
+                    XCTAssertEqual(policy.flushAt, defaultValue)
+                }
+            }
+            
+            when("pass a value above maximum...") {
+                let aboveMaximum = Constants.flushEventCount.max + 1
+                let policy = CountFlushPolicy(flushAt: aboveMaximum)
+                
+                then("should use default value instead") {
+                    XCTAssertEqual(policy.flushAt, defaultValue)
+                }
+            }
+            
+            when("pass zero as flush count...") {
+                let policy = CountFlushPolicy(flushAt: 0)
+                
+                then("should use default value instead") {
+                    XCTAssertEqual(policy.flushAt, defaultValue)
+                }
+            }
+            
+            when("pass negative flush count...") {
+                let policy = CountFlushPolicy(flushAt: -5)
+                
+                then("should use default value instead") {
+                    XCTAssertEqual(policy.flushAt, defaultValue)
+                }
+            }
+        }
+    }
 }
 
 final class FrequencyFlushPolicyTests: XCTestCase {
     
     func test_validFlushFrequency() {
-        given("FrequentlyFlushPolicy with 0.5sec flush interval... ") {
-            let mills = MockHelper.milliseconds(from: 0.5)
+        given("FrequentlyFlushPolicy with 1.5sec flush interval... ") {
+            let mills = MockHelper.milliseconds(from: 1.5)
             let policy = FrequencyFlushPolicy(flushIntervalInMillis: UInt64(mills))
             
             when("initiate the shedule...") {
@@ -149,16 +189,35 @@ final class FrequencyFlushPolicyTests: XCTestCase {
         }
     }
     
-    func test_invalidFlushFrequency() {
-        given("FrequentlyFlushPolicy with -1.5sec flush interval... ") {
-            let mills = MockHelper.milliseconds(from: -1.5)
+    func test_flushFrequencyWithMinimumValue() {
+        given("FrequencyFlushPolicy with minimum valid flush interval...") {
+            let minimumInterval = Constants.flushInterval.min
+            let policy = FrequencyFlushPolicy(flushIntervalInMillis: minimumInterval)
             
-            when("preare the policy...") {
-                let policy = FrequencyFlushPolicy(flushIntervalInMillis: UInt64(max(0, mills)))
-                let minimum = Constants.flushInterval.min
+            then("should accept the minimum value") {
+                XCTAssertEqual(policy.flushIntervalInMillis, minimumInterval)
+            }
+        }
+    }
+    
+    func test_invalidFlushFrequency() {
+        given("FrequencyFlushPolicy with invalid flush intervals...") {
+            let defaultValue = Constants.flushInterval.default
+            
+            when("prepare the policy with zero interval...") {
+                let policy = FrequencyFlushPolicy(flushIntervalInMillis: 0)
                 
-                then("sets the flush interval to minimum..") {
-                    XCTAssertTrue(policy.flushIntervalInMillis == minimum)
+                then("sets the flush interval to default..") {
+                    XCTAssertEqual(policy.flushIntervalInMillis, defaultValue)
+                }
+            }
+            
+            when("prepare the policy with below minimum interval...") {
+                let belowMinimum = Constants.flushInterval.min - 1
+                let policy = FrequencyFlushPolicy(flushIntervalInMillis: belowMinimum)
+                
+                then("sets the flush interval to default..") {
+                    XCTAssertEqual(policy.flushIntervalInMillis, defaultValue)
                 }
             }
         }
