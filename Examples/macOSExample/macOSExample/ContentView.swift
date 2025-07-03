@@ -169,8 +169,6 @@ struct ContentView: View {
                 
                 CustomButton(title: "Shutdown Analytics") {
                     AnalyticsManager.shared.shutdown()
-                    updateUserInfo()
-                    updateSessionInfo()
                 }
             }
             .padding()

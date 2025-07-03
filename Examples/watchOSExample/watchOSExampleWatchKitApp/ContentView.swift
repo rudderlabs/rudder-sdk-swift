@@ -141,8 +141,6 @@ struct ContentView: View {
                 Section("System Management") {
                     WatchButton(title: "Shutdown Analytics") {
                         AnalyticsManager.shared.shutdown()
-                        updateUserInfo()
-                        updateSessionInfo()
                     }
                 }
             }

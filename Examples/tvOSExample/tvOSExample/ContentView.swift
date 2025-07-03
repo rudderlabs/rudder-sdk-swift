@@ -166,8 +166,6 @@ struct ContentView: View {
                         section("System Management:")
                         CustomButton(title: "Shutdown Analytics") {
                             AnalyticsManager.shared.shutdown()
-                            updateUserInfo()
-                            updateSessionInfo()
                         }
                         .focused($focusedButton, equals: .shutdown)
                         
