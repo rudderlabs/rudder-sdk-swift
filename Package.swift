@@ -20,7 +20,12 @@ let package = Package(
         ),
     ],
     targets: [
-        .target(name: "RudderStackAnalytics"),
+        .target(
+            name: "RudderStackAnalytics",
+            resources: [
+                .process("Resources")
+            ]
+        ),
         .testTarget(
             name: "RudderStackAnalyticsTests",
             dependencies: ["RudderStackAnalytics"],

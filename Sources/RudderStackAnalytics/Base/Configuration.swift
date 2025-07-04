@@ -30,7 +30,7 @@ public class Configuration: NSObject {
     var controlPlaneUrl: String
 
     /**
-     A boolean flag to enable GZip compression for network requests. Defaults to `true`.
+     A boolean flag to enable GZip compression for network requests. Defaults to `false`.
      */
     var gzipEnabled: Bool
 
