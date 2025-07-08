@@ -55,7 +55,7 @@ public final class ObjCSessionConfigurationBuilder: NSObject {
     @objc
     @discardableResult
     public func setSessionTimeoutInMillis(_ timeoutInMillis: NSNumber) -> Self {
-        if timeoutInMillis.int64Value > 0 {
+        if timeoutInMillis.int64Value >= 0 {
             self.sessionTimeoutInMillis = timeoutInMillis.uint64Value
         }
         return self
