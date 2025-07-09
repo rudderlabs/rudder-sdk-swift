@@ -12,44 +12,59 @@ import Foundation
  This class utilizes `AsyncStream` to implement a subscription pattern.
  */
 
-final class AsyncChannel<T> {
+actor AsyncChannel<T> {
     private let continuation: AsyncStream<T>.Continuation
     private var isClosed = false
-    private let lock = NSLock()
-    
+    nonisolated private let streamInternal: AsyncStream<T>
+
     init() {
-        var continuation: AsyncStream<T>.Continuation!
-        
+        var tempContinuation: AsyncStream<T>.Continuation!
+
         let stream = AsyncStream<T>(bufferingPolicy: .unbounded) { cont in
-            continuation = cont
+            tempContinuation = cont
         }
-        self.continuation = continuation
-        self.stream = stream
+
+        self.continuation = tempContinuation
+        self.streamInternal = stream
     }
-    
-    let stream: AsyncStream<T>
-    
-    func send(_ element: T) async throws {
-        lock.lock()
-        defer { lock.unlock() }
-        
+
+    nonisolated var stream: AsyncStream<T> {
+        return streamInternal
+    }
+
+    func send(_ element: T) throws {
         guard !isClosed else {
             throw ChannelError.closed
         }
         
         continuation.yield(element)
     }
-    
-    func close() {
-        lock.lock()
-        defer { lock.unlock() }
-        
+
+    private func closeChannel() {
         guard !isClosed else { return }
         isClosed = true
         continuation.finish()
+    }
+    
+    nonisolated func close() {
+        Task {
+            await self.closeChannel()
+        }
+    }
+    
+    /// Check if the channel is closed from outside
+    nonisolated func isChannelClosed() async -> Bool {
+        await self.isClosed
     }
 }
 
 enum ChannelError: Error {
     case closed
+    
+    var localizedDescription: String {
+        switch self {
+        case .closed:
+            return "Channel is closed"
+        }
+    }
 }
