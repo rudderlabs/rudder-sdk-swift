@@ -48,15 +48,23 @@ extension EventManager {
     
     func put(_ event: Event) {
         Task {
-            let processingEvent = ProcessingEvent(type: .message, event: event)
-            try await self.writeChannel.send(processingEvent)
+            do {
+                let processingEvent = ProcessingEvent(type: .message, event: event)
+                try await self.writeChannel.send(processingEvent)
+            } catch {
+                LoggerAnalytics.error(log: error.localizedDescription, error: error)
+            }
         }
     }
     
     func flush() {
         LoggerAnalytics.info(log: "Flush triggered...")
         Task {
-            try await self.writeChannel.send(self.flushEvent)
+            do {
+                try await self.writeChannel.send(self.flushEvent)
+            } catch {
+                LoggerAnalytics.error(log: error.localizedDescription, error: error)
+            }
         }
     }
     
