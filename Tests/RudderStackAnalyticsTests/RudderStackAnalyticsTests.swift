@@ -128,7 +128,8 @@ extension RudderStackAnalyticsTests {
     func test_shutdown() async {
         guard let client = analytics_disk else { XCTFail("No disk client"); return }
         client.shutdown()
-
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
         XCTAssertFalse(client.isAnalyticsActive)
         XCTAssertNil(client.lifecycleObserver)
         XCTAssertNil(client.sessionHandler)
