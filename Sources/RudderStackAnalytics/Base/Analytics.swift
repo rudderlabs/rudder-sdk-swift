@@ -198,13 +198,10 @@ extension Analytics {
     @objc
     public func flush() {
         guard self.isAnalyticsActive else { return }
-        self.eventProcessingQueue.async { [weak self] in
-            guard let self else { return }
-            
-            self.pluginChain?.apply { plugin in
-                if let plugin = plugin as? RudderStackDataPlanePlugin {
-                    plugin.flush()
-                }
+        
+        self.pluginChain?.apply { plugin in
+            if let plugin = plugin as? RudderStackDataPlanePlugin {
+                plugin.flush()
             }
         }
     }
@@ -214,14 +211,11 @@ extension Analytics {
      */
     public func reset() {
         guard self.isAnalyticsActive else { return }
-        self.eventProcessingQueue.async { [weak self] in
-            guard let self else { return }
-            
-            self.userIdentityState.dispatch(action: ResetUserIdentityAction())
-            self.userIdentityState.state.value.resetUserIdentity(storage: self.storage)
-            
-            self.sessionHandler?.refreshSession()
-        }
+        
+        self.userIdentityState.dispatch(action: ResetUserIdentityAction())
+        self.userIdentityState.state.value.resetUserIdentity(storage: self.storage)
+        
+        self.sessionHandler?.refreshSession()
     }
 }
 
