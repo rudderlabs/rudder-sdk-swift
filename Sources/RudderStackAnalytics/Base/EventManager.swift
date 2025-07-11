@@ -82,7 +82,7 @@ extension EventManager {
         Task { [weak self] in
             guard let self else { return }
             
-            for await event in self.writeChannel.stream {
+            for await event in await self.writeChannel.stream {
                 let isFlushSignal = event.type == .flush
                 
                 if !isFlushSignal {
@@ -110,7 +110,7 @@ extension EventManager {
         Task { [weak self] in
             guard let self else { return }
             
-            for await _ in self.uploadChannel.stream {
+            for await _ in await self.uploadChannel.stream {
                 let dataItems = await self.storage.read().dataItems
                 for item in dataItems {
                     LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
