@@ -15,7 +15,7 @@ import Foundation
 actor AsyncChannel<T> {
     private let continuation: AsyncStream<T>.Continuation
     private var isClosed = false
-    private let streamInternal: AsyncStream<T>
+    nonisolated private let streamInternal: AsyncStream<T>
 
     init() {
         var tempContinuation: AsyncStream<T>.Continuation!
@@ -28,7 +28,7 @@ actor AsyncChannel<T> {
         self.streamInternal = stream
     }
 
-    var stream: AsyncStream<T> {
+    nonisolated var stream: AsyncStream<T> {
         return streamInternal
     }
 
