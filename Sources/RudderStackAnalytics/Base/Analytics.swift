@@ -255,14 +255,17 @@ extension Analytics {
      */
     public func shutdown() {
         guard self.isAnalyticsActive else { return }
-        
-        self.isAnalyticsShutdown = true
-        
-        self.pluginChain?.removeAll()
-        self.pluginChain = nil
-        
-        self.lifecycleSessionWrapper?.tearDown()
-        self.lifecycleSessionWrapper = nil
+        self.eventProcessingQueue.async { [weak self] in
+            guard let self else { return }
+            
+            self.isAnalyticsShutdown = true
+            
+            self.pluginChain?.removeAll()
+            self.pluginChain = nil
+            
+            self.lifecycleSessionWrapper?.tearDown()
+            self.lifecycleSessionWrapper = nil
+        }
     }
     
     /**
@@ -315,7 +318,7 @@ extension Analytics {
      - Parameter event: The `Event` to be processed.
      */
     private func process(event: Event) {
-        eventProcessingQueue.async { [weak self] in
+        self.eventProcessingQueue.async { [weak self] in
             guard let self = self, self.isAnalyticsActive else { return }
             let updatedEvent = event.updateEventData()
             self.pluginChain?.process(event: updatedEvent)
