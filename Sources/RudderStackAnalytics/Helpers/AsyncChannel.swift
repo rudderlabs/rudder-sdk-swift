@@ -9,62 +9,96 @@ import Foundation
 
 // MARK: - AsyncChannel
 /**
- This class utilizes `AsyncStream` to implement a subscription pattern.
+ A thread-safe asynchronous channel for sending and receiving values.
+ 
+ This class provides a simple way to send values from one part of your code and receive them
+ asynchronously in another part using Swift's AsyncStream.
  */
 
-actor AsyncChannel<T> {
-    private let continuation: AsyncStream<T>.Continuation
-    private var isClosed = false
-    nonisolated private let streamInternal: AsyncStream<T>
-
+final class AsyncChannel<Element> {
+    private var continuation: AsyncStream<Element>.Continuation?
+    private let stream: AsyncStream<Element>
+    private let lock = NSLock()
+    
+    /**
+     Indicates whether the channel is closed.
+     */
+    var isClosed = false
+    
+    /**
+     Creates a new async channel.
+     */
     init() {
-        var tempContinuation: AsyncStream<T>.Continuation!
-
-        let stream = AsyncStream<T>(bufferingPolicy: .unbounded) { cont in
-            tempContinuation = cont
+        var continuationLocal: AsyncStream<Element>.Continuation!
+        
+        self.stream = AsyncStream<Element>(bufferingPolicy: .unbounded) { continuation in
+            continuationLocal = continuation
         }
-
-        self.continuation = tempContinuation
-        self.streamInternal = stream
+        
+        self.continuation = continuationLocal
     }
-
-    nonisolated var stream: AsyncStream<T> {
-        return streamInternal
-    }
-
-    func send(_ element: T) throws {
+    
+    /**
+     Sends a value to the channel.
+     
+     - Parameter value: The value to send.
+     - Throws: `ChannelError.closed` if the channel is closed.
+     */
+    func send(_ value: Element) throws {
+        lock.lock()
+        defer { lock.unlock() }
+        
         guard !isClosed else {
             throw ChannelError.closed
         }
         
-        continuation.yield(element)
-    }
-
-    private func closeChannel() {
-        guard !isClosed else { return }
-        isClosed = true
-        continuation.finish()
+        continuation?.yield(value)
     }
     
-    nonisolated func close() {
-        Task {
-            await self.closeChannel()
+    /**
+     Returns an async stream to receive values from the channel.
+     
+     - Returns: An `AsyncStream` that yields values sent to the channel.
+     */
+    func receive() -> AsyncStream<Element> {
+        return stream
+    }
+    
+    /**
+     Closes the channel. No more values can be sent after calling this method.
+     */
+    func close() {
+        lock.lock()
+        defer { lock.unlock() }
+        
+        guard !isClosed else { return }
+        isClosed = true
+        continuation?.finish()
+        continuation = nil
+    }
+    
+    /**
+     Sets a handler to be called when the channel terminates.
+     
+     - Parameter completion: The closure to call when the channel terminates.
+     */
+    func setTerminationHandler(_ completion: (() -> Void)?) {
+        continuation?.onTermination = { @Sendable _ in
+            completion?()
         }
     }
     
-    /// Check if the channel is closed from outside
-    nonisolated func isChannelClosed() async -> Bool {
-        await self.isClosed
-    }
-}
-
-enum ChannelError: Error {
-    case closed
-    
-    var localizedDescription: String {
-        switch self {
-        case .closed:
-            return "Channel is closed"
+    /**
+     Errors that can occur when working with the channel.
+     */
+    enum ChannelError: Error {
+        case closed
+        
+        var localizedDescription: String {
+            switch self {
+            case .closed:
+                return "Channel is closed"
+            }
         }
     }
 }
