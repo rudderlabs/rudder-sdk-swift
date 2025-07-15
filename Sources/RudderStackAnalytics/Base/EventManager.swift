@@ -19,6 +19,10 @@ final class EventManager {
     private let uploadChannel: AsyncChannel<String>
     private let flushEvent = ProcessingEvent(type: .flush)
     
+    private var writeEventTask: Task<Void, Never>?
+    private var uploadEventTask: Task<Void, Never>?
+    private var isShuttingDown = false
+    
     private var storage: Storage {
         return self.analytics.configuration.storage
     }
@@ -30,10 +34,6 @@ final class EventManager {
         self.writeChannel = AsyncChannel()
         self.uploadChannel = AsyncChannel()
         self.start()
-    }
-    
-    deinit {
-        self.stop()
     }
 }
 
@@ -48,41 +48,65 @@ extension EventManager {
     
     func put(_ event: Event) {
         Task {
-            do {
-                let processingEvent = ProcessingEvent(type: .message, event: event)
-                try await self.writeChannel.send(processingEvent)
-            } catch {
-                LoggerAnalytics.error(log: error.localizedDescription, error: error)
-            }
+            let processingEvent = ProcessingEvent(type: .message, event: event)
+            try self.writeChannel.send(processingEvent)
         }
     }
     
     func flush() {
         LoggerAnalytics.info(log: "Flush triggered...")
         Task {
-            do {
-                try await self.writeChannel.send(self.flushEvent)
-            } catch {
-                LoggerAnalytics.error(log: error.localizedDescription, error: error)
-            }
+            try self.writeChannel.send(self.flushEvent)
         }
     }
     
     func stop() {
+        // Guard against multiple shutdown calls
+        guard !isShuttingDown else { return }
+        isShuttingDown = true
+        
+        // Cancel flush policy first to prevent new uploads from being triggered
         self.flushPolicyFacade.cancelSchedule()
         
-        self.writeChannel.close()
-        self.uploadChannel.close()
+        // Close upload channel first to signal no more uploads should be initiated
+        // The current upload task will complete any ongoing upload before terminating
+        if !self.uploadChannel.isClosed {
+            self.uploadChannel.close()
+        }
+        
+        // Wait for upload task to complete naturally
+        // This allows ongoing uploads to finish
+        if let task = self.uploadEventTask {
+            task.waitForCompletion()
+        }
+        
+        // Close write channel last to allow incoming events to be saved before shutdown
+        if !self.writeChannel.isClosed {
+            self.writeChannel.close()
+        }
+        
+        // Wait for write task to complete any remaining events
+        if let task = self.writeEventTask {
+            task.waitForCompletion()
+        }
     }
 }
 
 // MARK: - Event Processing
 extension EventManager {
     func write() {
-        Task { [weak self] in
+        self.writeChannel.setTerminationHandler { [weak self] in
+            // Only cancel immediately if not shutting down gracefully
+            if self?.isShuttingDown != true {
+                self?.writeEventTask?.cancel()
+            }
+            self?.writeEventTask = nil
+        }
+        
+        self.writeEventTask = Task { [weak self] in
             guard let self else { return }
-            
-            for await event in self.writeChannel.stream {
+                        
+            for await event in self.writeChannel.receive() {
                 let isFlushSignal = event.type == .flush
                 
                 if !isFlushSignal {
@@ -97,7 +121,10 @@ extension EventManager {
                     do {
                         self.flushPolicyFacade.resetCount()
                         await self.storage.rollover()
-                        try await self.uploadChannel.send(Constants.defaultConfig.uploadSignal)
+                        
+                        if self.analytics.isAnalyticsActive {
+                            try self.uploadChannel.send(Constants.defaultConfig.uploadSignal)
+                        }
                     } catch {
                         LoggerAnalytics.error(log: "Error on upload signal", error: error)
                     }
@@ -107,14 +134,30 @@ extension EventManager {
     }
     
     func upload() {
-        Task { [weak self] in
+        
+        self.uploadChannel.setTerminationHandler { [weak self] in
+            // Only cancel immediately if not shutting down gracefully
+            if self?.isShuttingDown != true {
+                self?.uploadEventTask?.cancel()
+            }
+            self?.uploadEventTask = nil
+        }
+        
+        self.uploadEventTask = Task { [weak self] in
             guard let self else { return }
-            
-            for await _ in self.uploadChannel.stream {
+                        
+            for await _ in self.uploadChannel.receive() {
+                // If shutdown is initiated, don't start new upload cycles
+                if self.isShuttingDown { break }
+                
                 let dataItems = await self.storage.read().dataItems
                 for item in dataItems {
-                    LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
+                    // Check shutdown conditions
+                    if self.analytics.isAnalyticsShutdown || self.isShuttingDown { 
+                        break 
+                    }
                     
+                    LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
                     do {
                         let processed = item.batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
                         LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
