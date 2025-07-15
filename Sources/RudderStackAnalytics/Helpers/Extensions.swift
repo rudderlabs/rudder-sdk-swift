@@ -314,6 +314,25 @@ extension Data {
     }
 }
 
+// MARK: - Task
+extension Task where Success == Void, Failure == Never {
+    /**
+     Waits synchronously for the task to complete.
+     
+     This method blocks the current thread until the task finishes execution.
+     Useful for graceful shutdown scenarios where you need to wait for async tasks to complete.
+     */
+    func waitForCompletion() {
+        let group = DispatchGroup()
+        group.enter()
+        Task {
+            _ = await self.value
+            group.leave()
+        }
+        group.wait()
+    }
+}
+
 // MARK: - Gzip
 
 enum Gzip {
