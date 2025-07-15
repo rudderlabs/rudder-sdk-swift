@@ -30,9 +30,14 @@ public class Analytics {
     private var userIdentityState: StateImpl<UserIdentity>
     
     /**
-     A private serial queue for processing events to ensure ordering without blocking the main thread.
+     A private asynchronous channel for queuing and processing events.
      */
-    private let eventProcessingQueue = DispatchQueue(label: "com.rudderstack.analytics.eventProcessing", qos: .default)
+    private var processEventChannel: AsyncChannel<Event>
+    
+    /**
+     The background task responsible for processing events from the `processEventChannel`.
+     */
+    private var processEventTask: Task<Void, Never>?
     
     /**
      The handler instance responsible for managing lifecycle events and session-related operations.
@@ -57,6 +62,7 @@ public class Analytics {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
+        self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.setup()
     }
@@ -255,17 +261,46 @@ extension Analytics {
      */
     public func shutdown() {
         guard self.isAnalyticsActive else { return }
-        self.eventProcessingQueue.async { [weak self] in
-            guard let self else { return }
-            
-            self.isAnalyticsShutdown = true
-            
-            self.pluginChain?.removeAll()
-            self.pluginChain = nil
-            
-            self.lifecycleSessionWrapper?.tearDown()
-            self.lifecycleSessionWrapper = nil
+        
+        self.isAnalyticsShutdown = true
+        self.processEventChannel.close()
+        
+        // Don't cancel the task immediately - let it complete naturally
+        // The termination handler will clean up the task reference
+    }
+    
+    /**
+     Performs cleanup operations when the analytics instance is shutting down.
+     
+     This method is called automatically when the event processing task completes, either during
+     graceful shutdown or when the task is cancelled. It ensures that all resources are properly
+     cleaned up and prevents memory leaks.
+     
+     The cleanup process includes:
+     - Shutting down the data plane plugin
+     - Removing all plugins from the plugin chain
+     - Tearing down the lifecycle session wrapper
+     - Clearing references to prevent retain cycles
+     
+     - Note: This is a private method that should not be called directly. It's automatically
+     invoked during the shutdown process.
+     */
+    private func shutdownHook() {
+        
+        var dataPlanePlugin: RudderStackDataPlanePlugin?
+        self.pluginChain?.apply { plugin in
+            if plugin is RudderStackDataPlanePlugin {
+                dataPlanePlugin = plugin as? RudderStackDataPlanePlugin
+            }
         }
+        
+        dataPlanePlugin?.shutdown()
+        
+        self.pluginChain?.removeAll()
+        self.pluginChain = nil
+        
+        self.lifecycleSessionWrapper?.tearDown()
+        self.lifecycleSessionWrapper = nil
     }
     
     /**
@@ -294,6 +329,7 @@ extension Analytics {
     private func setup() {
         self.storeAnonymousId()
         self.collectConfiguration()
+        self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
         self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
@@ -313,15 +349,45 @@ extension Analytics {
     }
     
     /**
-     Processes an event by dispatching it to the serial queue to ensure ordering without blocking the main thread.
+     Starts the background task that processes events from the channel through the plugin chain.
      
-     - Parameter event: The `Event` to be processed.
+     This method creates a background task that continuously listens for events and processes them.
+     The task handles graceful shutdown and ensures proper cleanup when completed.
+     */
+    private func startProcessingEvents() {
+        
+        self.isAnalyticsShutdown = false
+        
+        self.processEventChannel.setTerminationHandler { [weak self] in
+            // Only cancel immediately if not shutting down gracefully
+            if self?.isAnalyticsShutdown != true {
+                self?.processEventTask?.cancel()
+            }
+            self?.processEventTask = nil
+        }
+        
+        self.processEventTask = Task { [weak self] in
+            
+            guard let self else { return }
+            defer { self.shutdownHook() }
+            
+            for await event in self.processEventChannel.receive() {
+                let updatedEvent = event.updateEventData()
+                self.pluginChain?.process(event: updatedEvent)
+            }
+        }
+    }
+    
+    /**
+     Sends an event to the processing channel.
+     
+     - Parameter event: The event to be processed.
      */
     private func process(event: Event) {
-        self.eventProcessingQueue.async { [weak self] in
-            guard let self = self, self.isAnalyticsActive else { return }
-            let updatedEvent = event.updateEventData()
-            self.pluginChain?.process(event: updatedEvent)
+        do {
+            try self.processEventChannel.send(event)
+        } catch {
+            LoggerAnalytics.error(log: "Failed to process event: \(error)")
         }
     }
     
