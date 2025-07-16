@@ -7,11 +7,11 @@
 
 import Foundation
 
-/**
- * EventUploader is responsible for uploading analytics events to the RudderStack data plane.
- * It handles reading batched events from storage, processing them, and sending them.
- */
 // MARK: - EventUploader
+/**
+ EventUploader is responsible for uploading analytics events to the RudderStack data plane.
+ It handles reading batched events from storage, processing them, and sending them.
+ */
 final class EventUploader {
     private let analytics: Analytics
     private let httpClient: HttpClient
@@ -35,9 +35,7 @@ final class EventUploader {
     }
     
     /**
-     * Stops the event uploader gracefully.
-     * Waits for any ongoing uploads to complete before shutting down.
-     * This method is idempotent - multiple calls are safe.
+      Stops the event uploader gracefully. Waits for any ongoing uploads to complete before shutting down.
      */
     func stop() {
         // Guard against multiple shutdown calls

@@ -7,11 +7,11 @@
 
 import Foundation
 
-/**
- * EventProcessor is responsible for processing analytics events in the RudderStackAnalytics SDK.
- * It handles event writing, flushing, and coordination between event storage and upload.
- */
 // MARK: - EventProcessor
+/**
+ EventProcessor is responsible for processing analytics events in the RudderStackAnalytics SDK.
+ It handles event writing, flushing, and coordination between event storage and upload.
+ */
 final class EventProcessor {
     private let analytics: Analytics
     private let flushPolicyFacade: FlushPolicyFacade
@@ -41,21 +41,27 @@ final class EventProcessor {
     
     func put(_ event: Event) {
         Task {
-            let processingEvent = ProcessingEvent(type: .message, event: event)
-            try self.writeChannel.send(processingEvent)
+            do {
+                let processingEvent = ProcessingEvent(type: .message, event: event)
+                try self.writeChannel.send(processingEvent)
+            } catch {
+                LoggerAnalytics.error(log: "Failed to send event to writeChannel", error: error)
+            }
         }
     }
     
     func flush() {
         Task {
-            try self.writeChannel.send(self.flushEvent)
+            do {
+                try self.writeChannel.send(self.flushEvent)
+            } catch {
+                LoggerAnalytics.error(log: "Failed to send flush signal to writeChannel", error: error)
+            }
         }
     }
     
     /**
-     * Stops the event processor gracefully.
-     * Waits for any pending write operations to complete before shutting down.
-     * This method is idempotent - multiple calls are safe.
+     Stops the event processor gracefully. Waits for any pending write operations to complete before shutting down.
      */
     func stop() {
         // Guard against multiple shutdown calls

@@ -8,12 +8,11 @@
 import Foundation
 // MARK: - EventManager
 /**
- * EventManager is the central coordinator for the analytics event system.
- * It orchestrates the flow of events from creation through processing to uploading.
- * 
- * The manager creates and manages async channels for communication between components,
- * coordinates the EventProcessor and EventUploader, and handles graceful shutdown.
- * It also manages flush policies and ensures proper sequencing of operations.
+ EventManager is the central coordinator for the analytics event system.
+ It orchestrates the flow of events from creation through processing to uploading.
+  
+ The manager creates and manages async channels for communication between components, coordinates the EventProcessor
+ and EventUploader, and handles graceful shutdown. It also manages flush policies and ensures proper sequencing of operations.
  */
 final class EventManager {
     private let analytics: Analytics
