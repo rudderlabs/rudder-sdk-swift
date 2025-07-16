@@ -8,8 +8,12 @@
 import Foundation
 // MARK: - EventManager
 /**
- A class responsible for managing events and handling their processing, storage, and uploading in the analytics system.
- This class integrates with the analytics client, manages flush policies, and ensures smooth event flow using asynchronous channels.
+ * EventManager is the central coordinator for the analytics event system.
+ * It orchestrates the flow of events from creation through processing to uploading.
+ * 
+ * The manager creates and manages async channels for communication between components,
+ * coordinates the EventProcessor and EventUploader, and handles graceful shutdown.
+ * It also manages flush policies and ensures proper sequencing of operations.
  */
 final class EventManager {
     private let analytics: Analytics
@@ -18,21 +22,22 @@ final class EventManager {
     private let eventUploader: EventUploader
     private let flushEvent = ProcessingEvent(type: .flush)
     
-    // Centralized channel management
+    /* Centralized channel management */
     private let writeChannel: AsyncChannel<ProcessingEvent>
     private let uploadChannel: AsyncChannel<String>
     
+    /* Flag to prevent multiple shutdown calls and coordinate cleanup */
     private var isShuttingDown = false
     
     init(analytics: Analytics) {
         self.analytics = analytics
         self.flushPolicyFacade = FlushPolicyFacade(analytics: analytics)
         
-        // Create channels centrally
+        // Create channels centrally for coordinated communication
         self.writeChannel = AsyncChannel()
         self.uploadChannel = AsyncChannel()
         
-        // Pass channels to respective classes
+        // Pass channels to respective classes for decoupled communication
         self.eventProcessor = EventProcessor(analytics: analytics, writeChannel: self.writeChannel, uploadChannel: self.uploadChannel)
         self.eventUploader = EventUploader(analytics: analytics, uploadChannel: self.uploadChannel)
         
@@ -58,6 +63,12 @@ extension EventManager {
         self.eventProcessor.flush()
     }
     
+    /**
+     * Gracefully stops the event management system.
+     * Ensures proper shutdown sequence: stops flush policies, closes channels,
+     * and allows ongoing operations to complete before full shutdown.
+     * This method is idempotent - multiple calls are safe.
+     */
     func stop() {
         // Guard against multiple shutdown calls
         guard !isShuttingDown else { return }
@@ -85,6 +96,10 @@ extension EventManager {
 }
 
 // MARK: - ProcessingEvent
+/**
+ * ProcessingEvent represents an event in the processing pipeline.
+ * It can be either a regular message event or a flush signal.
+ */
 class ProcessingEvent {
     var type: ProcessingEventType
     var event: Event?
@@ -96,6 +111,9 @@ class ProcessingEvent {
 }
 
 // MARK: - ProcessingEventType
+/**
+ * Enum representing the different types of processing events.
+ */
 enum ProcessingEventType {
     case message
     case flush

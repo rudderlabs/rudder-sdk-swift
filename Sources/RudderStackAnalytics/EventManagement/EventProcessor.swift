@@ -7,6 +7,10 @@
 
 import Foundation
 
+/**
+ * EventProcessor is responsible for processing analytics events in the RudderStackAnalytics SDK.
+ * It handles event writing, flushing, and coordination between event storage and upload.
+ */
 // MARK: - EventProcessor
 final class EventProcessor {
     private let analytics: Analytics
@@ -16,6 +20,8 @@ final class EventProcessor {
     private let flushEvent = ProcessingEvent(type: .flush)
     
     private var writeEventTask: Task<Void, Never>?
+    
+    /* Flag to prevent multiple shutdown calls */
     private var isShuttingDown = false
     
     private var storage: Storage {
@@ -46,6 +52,11 @@ final class EventProcessor {
         }
     }
     
+    /**
+     * Stops the event processor gracefully.
+     * Waits for any pending write operations to complete before shutting down.
+     * This method is idempotent - multiple calls are safe.
+     */
     func stop() {
         // Guard against multiple shutdown calls
         guard !isShuttingDown else { return }
@@ -69,6 +80,7 @@ final class EventProcessor {
             for await event in self.writeChannel.receive() {
                 let isFlushSignal = event.type == .flush
                 
+                // Process regular events (not flush signals)
                 if !isFlushSignal {
                     if let json = event.event?.jsonString {
                         LoggerAnalytics.debug(log: "Processing event: \(json)")
@@ -77,11 +89,13 @@ final class EventProcessor {
                     }
                 }
                 
+                // Check if we should flush (either explicit flush or policy-triggered)
                 if isFlushSignal || self.flushPolicyFacade.shouldFlush() {
                     do {
                         self.flushPolicyFacade.resetCount()
                         await self.storage.rollover()
                         
+                        // Only send upload signal if analytics is active
                         if self.analytics.isAnalyticsActive {
                             try self.uploadChannel.send(Constants.defaultConfig.uploadSignal)
                         }
