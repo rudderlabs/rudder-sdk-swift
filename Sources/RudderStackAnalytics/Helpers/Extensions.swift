@@ -40,18 +40,18 @@ extension String {
 
 // MARK: - Date
 extension Date {
-    fileprivate static let isoTimeStampFormater: ISO8601DateFormatter = {
+    fileprivate static let isoTimeStampFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter
     }()
     
     var iso8601TimeStamp: String {
-        return Date.isoTimeStampFormater.string(from: self)
+        return Date.isoTimeStampFormatter.string(from: self)
     }
     
     static func date(from timeStamp: String) -> Date? {
-        return Date.isoTimeStampFormater.date(from: timeStamp)
+        return Date.isoTimeStampFormatter.date(from: timeStamp)
     }
 }
 
