@@ -113,7 +113,10 @@ extension EventManager {
     // MARK: - Event Processing
     private func write() {
         self.writeChannel.setTerminationHandler { [weak self] in
-            // Just clean up the task reference when channel terminates
+            // Only cancel immediately if not shutting down gracefully
+            if self?.isShuttingDown != true {
+                self?.writeEventTask?.cancel()
+            }
             self?.writeEventTask = nil
         }
         
@@ -153,7 +156,10 @@ extension EventManager {
     // MARK: - Event Uploading
     private func upload() {
         self.uploadChannel.setTerminationHandler { [weak self] in
-            // Just clean up the task reference when channel terminates
+            // Only cancel immediately if not shutting down gracefully
+            if self?.isShuttingDown != true {
+                self?.uploadEventTask?.cancel()
+            }
             self?.uploadEventTask = nil
         }
         
