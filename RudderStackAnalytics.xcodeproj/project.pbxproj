@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5321F0CD2E278A67007D4EFD /* EventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5321F0CC2E278A67007D4EFD /* EventProcessor.swift */; };
-		5321F0CF2E278A79007D4EFD /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5321F0CE2E278A79007D4EFD /* EventUploader.swift */; };
 		532904EF2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */; };
 		532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */; };
 		532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */; };
@@ -142,8 +140,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5321F0CC2E278A67007D4EFD /* EventProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventProcessor.swift; sourceTree = "<group>"; };
-		5321F0CE2E278A79007D4EFD /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
 		532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RudderStackAnalytics.xctestplan; sourceTree = "<group>"; };
 		532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftExampleApp.xctestplan; sourceTree = "<group>"; };
 		532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUIExampleApp.xctestplan; sourceTree = "<group>"; };
@@ -290,7 +286,6 @@
 			isa = PBXGroup;
 			children = (
 				53DEA5922E03D05A00D6C371 /* Base */,
-				5321F0D02E278A81007D4EFD /* EventManagement */,
 				53DEA59A2E03D05A00D6C371 /* Events */,
 				53DEA5A12E03D05A00D6C371 /* Helpers */,
 				53DEA5A42E03D05A00D6C371 /* LifecycleManagement */,
@@ -325,16 +320,6 @@
 				532904EE2E05BBDE00C8EFE2 /* TestPlans */,
 			);
 			path = RudderStackAnalyticsTests;
-			sourceTree = "<group>";
-		};
-		5321F0D02E278A81007D4EFD /* EventManagement */ = {
-			isa = PBXGroup;
-			children = (
-				53DEA5912E03D05A00D6C371 /* EventManager.swift */,
-				5321F0CC2E278A67007D4EFD /* EventProcessor.swift */,
-				5321F0CE2E278A79007D4EFD /* EventUploader.swift */,
-			);
-			path = EventManagement;
 			sourceTree = "<group>";
 		};
 		532904EE2E05BBDE00C8EFE2 /* TestPlans */ = {
@@ -378,6 +363,7 @@
 			children = (
 				53DEA58F2E03D05A00D6C371 /* Analytics.swift */,
 				53DEA5902E03D05A00D6C371 /* Configuration.swift */,
+				53DEA5912E03D05A00D6C371 /* EventManager.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -891,14 +877,12 @@
 				53DEA60E2E03D05A00D6C371 /* PluginInteractor.swift in Sources */,
 				53DEA60F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift in Sources */,
 				53DEA6102E03D05A00D6C371 /* AsyncChannel.swift in Sources */,
-				5321F0CF2E278A79007D4EFD /* EventUploader.swift in Sources */,
 				53DEA6112E03D05A00D6C371 /* LifecycleManagementUtils.swift in Sources */,
 				53DEA6122E03D05A00D6C371 /* SwiftLogger.swift in Sources */,
 				53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */,
 				53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */,
 				53DEA6152E03D05A00D6C371 /* BasicStorage.swift in Sources */,
 				53DEA6162E03D05A00D6C371 /* ObjCOption.swift in Sources */,
-				5321F0CD2E278A67007D4EFD /* EventProcessor.swift in Sources */,
 				53DEA6172E03D05A00D6C371 /* Configuration.swift in Sources */,
 				53DEA6182E03D05A00D6C371 /* Constants.swift in Sources */,
 				53DEA6192E03D05A00D6C371 /* PropertyWrappers.swift in Sources */,
