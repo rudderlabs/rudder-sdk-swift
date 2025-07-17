@@ -38,23 +38,20 @@ extension String {
     }
 }
 
-// MARK: - DateFormatter
-extension DateFormatter {
-    static var timeStampFormat: ISO8601DateFormatter {
+// MARK: - Date
+extension Date {
+    fileprivate static let isoTimeStampFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter
-    }
-}
-
-// MARK: - Date
-extension Date {
+    }()
+    
     var iso8601TimeStamp: String {
-        return DateFormatter.timeStampFormat.string(from: self)
+        return Date.isoTimeStampFormatter.string(from: self)
     }
     
     static func date(from timeStamp: String) -> Date? {
-        return DateFormatter.timeStampFormat.date(from: timeStamp)
+        return Date.isoTimeStampFormatter.date(from: timeStamp)
     }
 }
 
@@ -311,6 +308,25 @@ extension Data {
     var prettyPrintedString: String? {
         guard let dict = try? JSONSerialization.jsonObject(with: self, options: []) as? [String: Any], let prettyData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted), let pretty = prettyData.jsonString else { return nil }
         return pretty
+    }
+}
+
+// MARK: - Task
+extension Task where Success == Void, Failure == Never {
+    /**
+     Waits synchronously for the task to complete.
+     
+     This method blocks the current thread until the task finishes execution.
+     Useful for graceful shutdown scenarios where you need to wait for async tasks to complete.
+     */
+    func waitForCompletion() {
+        let group = DispatchGroup()
+        group.enter()
+        Task {
+            _ = await self.value
+            group.leave()
+        }
+        group.wait()
     }
 }
 

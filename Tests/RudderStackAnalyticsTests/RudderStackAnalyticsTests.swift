@@ -127,12 +127,26 @@ extension RudderStackAnalyticsTests {
     
     func test_shutdown() async {
         guard let client = analytics_disk else { XCTFail("No disk client"); return }
+        
+        // Verify analytics is initially active
+        XCTAssertTrue(client.isAnalyticsActive)
+        XCTAssertNotNil(client.lifecycleObserver)
+        XCTAssertNotNil(client.sessionHandler)
+        
+        // Shutdown the analytics client
         client.shutdown()
+        
+        // Give some time for graceful shutdown to complete
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        // Verify shutdown state
+        XCTAssertFalse(client.isAnalyticsActive, "Analytics should be inactive after shutdown")
+        
+        // After shutdown, these should be nil due to shutdownHook cleanup
+        XCTAssertNil(client.lifecycleObserver, "Lifecycle observer should be nil after shutdown")
+        XCTAssertNil(client.sessionHandler, "Session handler should be nil after shutdown")
 
-        XCTAssertFalse(client.isAnalyticsActive)
-        XCTAssertNil(client.lifecycleObserver)
-        XCTAssertNil(client.sessionHandler)
-
+        // Test that events are not processed after shutdown
         client.track(name: "Track Event", properties: ["prop": "value"])
         try? await Task.sleep(nanoseconds: 300_000_000)
         
@@ -148,13 +162,15 @@ extension RudderStackAnalyticsTests {
         client.alias(newId: "Alias_user_id", previousId: nil)
         try? await Task.sleep(nanoseconds: 300_000_000)
         
+        // Verify no events were processed after shutdown
         let dataItems = await client.configuration.storage.read().dataItems
-        XCTAssert(dataItems.isEmpty)
+        XCTAssert(dataItems.isEmpty, "No events should be processed after shutdown")
         
-        XCTAssertNil(client.sessionId)
-        XCTAssertNil(client.anonymousId)
-        XCTAssertNil(client.userId)
-        XCTAssertNil(client.traits)
+        // Verify user-related properties return nil after shutdown
+        XCTAssertNil(client.sessionId, "Session ID should be nil after shutdown")
+        XCTAssertNil(client.anonymousId, "Anonymous ID should be nil after shutdown")
+        XCTAssertNil(client.userId, "User ID should be nil after shutdown")
+        XCTAssertNil(client.traits, "Traits should be nil after shutdown")
     }
     
     func testDeepLinkTracking() async{
