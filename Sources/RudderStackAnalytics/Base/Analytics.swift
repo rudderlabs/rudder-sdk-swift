@@ -32,7 +32,11 @@ public class Analytics {
     /**
      A private asynchronous channel for queuing and processing events.
      */
-    private var processEventChannel: AsyncChannel<Event>
+    private var processEventChannel: AsyncChannel<Event>{
+        didSet {
+            self.setupChannelCleanup()
+        }
+    }
     
     /**
      The background task responsible for processing events from the `processEventChannel`.
@@ -355,14 +359,6 @@ extension Analytics {
      The task handles graceful shutdown and ensures proper cleanup when completed.
      */
     private func startProcessingEvents() {
-        self.processEventChannel.setTerminationHandler { [weak self] in
-            // Only cancel immediately if not shutting down gracefully
-            if self?.isAnalyticsShutdown != true {
-                self?.processEventTask?.cancel()
-            }
-            self?.processEventTask = nil
-        }
-        
         self.processEventTask = Task { [weak self] in
             
             guard let self else { return }
@@ -395,6 +391,19 @@ extension Analytics {
      */
     private func storeAnonymousId() {
         self.userIdentityState.state.value.storeAnonymousId(self.storage)
+    }
+    
+    /**
+     Sets up cleanup handler to properly manage the event processing task when the channel terminates.
+     */
+    private func setupChannelCleanup() {
+        self.processEventChannel.setTerminationHandler { [weak self] in
+            // Only cancel immediately if not shutting down gracefully
+            if self?.isAnalyticsShutdown != true {
+                self?.processEventTask?.cancel()
+            }
+            self?.processEventTask = nil
+        }
     }
 }
 
