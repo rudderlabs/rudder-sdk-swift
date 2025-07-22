@@ -355,9 +355,6 @@ extension Analytics {
      The task handles graceful shutdown and ensures proper cleanup when completed.
      */
     private func startProcessingEvents() {
-        
-        self.isAnalyticsShutdown = false
-        
         self.processEventChannel.setTerminationHandler { [weak self] in
             // Only cancel immediately if not shutting down gracefully
             if self?.isAnalyticsShutdown != true {
