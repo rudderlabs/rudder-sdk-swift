@@ -25,9 +25,6 @@ final class EventManager {
     private var writeEventTask: Task<Void, Never>?
     private var uploadEventTask: Task<Void, Never>?
     
-    /* Flag to prevent multiple shutdown calls and coordinate cleanup */
-    private var isShuttingDown = false
-    
     private var storage: Storage {
         return self.analytics.configuration.storage
     }
@@ -76,16 +73,12 @@ extension EventManager {
     }
     
     /**
-     * Gracefully stops the event management system.
-     * Ensures proper shutdown sequence: stops flush policies, closes channels,
-     * and allows ongoing operations to complete before full shutdown.
-     * This method is idempotent - multiple calls are safe.
+     Stops the event management system by canceling flush policies and closing channels.
+     
+     This method immediately stops accepting new events and signals the processing tasks to terminate.
+     Task cleanup is handled automatically via defer blocks in the task implementations.
      */
     func stop() {
-        // Guard against multiple shutdown calls
-        guard !isShuttingDown else { return }
-        isShuttingDown = true
-        
         // Cancel flush policy first to prevent new uploads from being triggered
         self.flushPolicyFacade.cancelSchedule()
         
@@ -94,35 +87,21 @@ extension EventManager {
             self.uploadChannel.close()
         }
         
-        // Wait for upload task to complete naturally
-        if let task = self.uploadEventTask {
-            task.waitForCompletion()
-        }
-        
         // Close write channel to signal processor to stop receiving
         if !self.writeChannel.isClosed {
             self.writeChannel.close()
-        }
-        
-        // Wait for write task to complete any remaining events
-        if let task = self.writeEventTask {
-            task.waitForCompletion()
         }
     }
     
     // MARK: - Event Processing
     private func write() {
-        self.writeChannel.setTerminationHandler { [weak self] in
-            // Only cancel immediately if not shutting down gracefully
-            if self?.isShuttingDown != true {
-                self?.writeEventTask?.cancel()
-            }
-            self?.writeEventTask = nil
-        }
         
         self.writeEventTask = Task { [weak self] in
             guard let self else { return }
-                        
+            
+            // Clean up the task reference when the task completes or is canceled.
+            defer { self.cleanupWriteTask() }
+            
             for await event in self.writeChannel.receive() {
                 let isFlushSignal = event.type == .flush
                 
@@ -155,26 +134,21 @@ extension EventManager {
     
     // MARK: - Event Uploading
     private func upload() {
-        self.uploadChannel.setTerminationHandler { [weak self] in
-            // Only cancel immediately if not shutting down gracefully
-            if self?.isShuttingDown != true {
-                self?.uploadEventTask?.cancel()
-            }
-            self?.uploadEventTask = nil
-        }
-        
         self.uploadEventTask = Task { [weak self] in
             guard let self else { return }
-                        
+            
+            // Clean up the task reference when the task completes or is canceled.
+            defer { self.cleanupUploadTask() }
+            
             for await _ in self.uploadChannel.receive() {
                 // If shutdown is initiated, don't start new upload cycles
-                if self.isShuttingDown { break }
+                if self.analytics.isAnalyticsShutdown { break }
                 
                 // Read all available batched events from storage
                 let dataItems = await self.storage.read().dataItems
                 for item in dataItems {
                     // Check shutdown conditions before processing each item
-                    if self.analytics.isAnalyticsShutdown || self.isShuttingDown { break }
+                    if self.analytics.isAnalyticsShutdown { break }
                     
                     LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
                     do {
@@ -198,12 +172,27 @@ extension EventManager {
     }
 }
 
+// MARK: - Task Cleanup
+extension EventManager {
+    /** Cancels and clears the write task reference to prevent memory leaks. */
+    private func cleanupWriteTask() {
+        self.writeEventTask?.cancel()
+        self.writeEventTask = nil
+    }
+    
+    /** Cancels and clears the upload task reference to prevent memory leaks. */
+    private func cleanupUploadTask() {
+        self.uploadEventTask?.cancel()
+        self.uploadEventTask = nil
+    }
+}
+
 // MARK: - ProcessingEvent
 /**
  * ProcessingEvent represents an event in the processing pipeline.
  * It can be either a regular message event or a flush signal.
  */
-class ProcessingEvent {
+private class ProcessingEvent {
     var type: ProcessingEventType
     var event: Event?
     
@@ -217,7 +206,7 @@ class ProcessingEvent {
 /**
  * Enum representing the different types of processing events.
  */
-enum ProcessingEventType {
+private enum ProcessingEventType {
     case message
     case flush
 }

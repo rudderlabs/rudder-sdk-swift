@@ -30,10 +30,6 @@ final class RudderStackDataPlanePlugin: EventPlugin {
     func flush() {
         self.eventManager?.flush()
     }
-    
-    func shutdown() {
-        self.eventManager?.stop()
-    }
 }
 
 // MARK: - Incoming Events

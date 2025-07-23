@@ -32,11 +32,7 @@ public class Analytics {
     /**
      A private asynchronous channel for queuing and processing events.
      */
-    private var processEventChannel: AsyncChannel<Event>{
-        didSet {
-            self.setupChannelCleanup()
-        }
-    }
+    private var processEventChannel: AsyncChannel<Event>
     
     /**
      The background task responsible for processing events from the `processEventChannel`.
@@ -274,31 +270,15 @@ extension Analytics {
     }
     
     /**
-     Performs cleanup operations when the analytics instance is shutting down.
+     Cleans up resources when the event processing task completes.
      
-     This method is called automatically when the event processing task completes, either during
-     graceful shutdown or when the task is cancelled. It ensures that all resources are properly
-     cleaned up and prevents memory leaks.
-     
-     The cleanup process includes:
-     - Shutting down the data plane plugin
-     - Removing all plugins from the plugin chain
-     - Tearing down the lifecycle session wrapper
-     - Clearing references to prevent retain cycles
-     
-     - Note: This is a private method that should not be called directly. It's automatically
-     invoked during the shutdown process.
+     This method is automatically called via the `defer` block in `startProcessingEvents()` 
+     to ensure proper cleanup regardless of how the task ends. It cancels the processing task,
+     removes all plugins, and tears down the lifecycle wrapper to prevent memory leaks.
      */
     private func shutdownHook() {
-        
-        var dataPlanePlugin: RudderStackDataPlanePlugin?
-        self.pluginChain?.apply { plugin in
-            if plugin is RudderStackDataPlanePlugin {
-                dataPlanePlugin = plugin as? RudderStackDataPlanePlugin
-            }
-        }
-        
-        dataPlanePlugin?.shutdown()
+        self.processEventTask?.cancel()
+        self.processEventTask = nil
         
         self.pluginChain?.removeAll()
         self.pluginChain = nil
@@ -353,15 +333,15 @@ extension Analytics {
     }
     
     /**
-     Starts the background task that processes events from the channel through the plugin chain.
+     Creates and starts the event processing task that handles events from the channel.
      
-     This method creates a background task that continuously listens for events and processes them.
-     The task handles graceful shutdown and ensures proper cleanup when completed.
+     This method creates a concurrent task that continuously processes events through the plugin chain.
+     The task includes automatic cleanup via defer block to ensure proper resource management.
      */
     private func startProcessingEvents() {
         self.processEventTask = Task { [weak self] in
-            
             guard let self else { return }
+            
             defer { self.shutdownHook() }
             
             for await event in self.processEventChannel.receive() {
@@ -391,19 +371,6 @@ extension Analytics {
      */
     private func storeAnonymousId() {
         self.userIdentityState.state.value.storeAnonymousId(self.storage)
-    }
-    
-    /**
-     Sets up cleanup handler to properly manage the event processing task when the channel terminates.
-     */
-    private func setupChannelCleanup() {
-        self.processEventChannel.setTerminationHandler { [weak self] in
-            // Only cancel immediately if not shutting down gracefully
-            if self?.isAnalyticsShutdown != true {
-                self?.processEventTask?.cancel()
-            }
-            self?.processEventTask = nil
-        }
     }
 }
 
