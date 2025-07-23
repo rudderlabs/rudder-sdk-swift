@@ -321,7 +321,7 @@ extension Analytics {
     }
     
     /**
-     Creates and starts the event processing task that handles events from the channel.
+     Starts the event processing task that handles events from the channel.
      
      This method creates a concurrent task that continuously processes events through the plugin chain.
      The task includes automatic cleanup via defer block to ensure proper resource management.
