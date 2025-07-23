@@ -70,9 +70,6 @@ extension EventManager {
     
     /**
      Stops the event management system by canceling flush policies and closing channels.
-     
-     This method immediately stops accepting new events and signals the processing tasks to terminate.
-     Task cleanup is handled automatically via defer blocks in the task implementations.
      */
     func stop() {
         // Cancel flush policy first to prevent new uploads from being triggered
