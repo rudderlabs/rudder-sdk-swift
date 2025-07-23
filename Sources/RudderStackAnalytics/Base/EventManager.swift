@@ -95,7 +95,6 @@ extension EventManager {
     
     // MARK: - Event Processing
     private func write() {
-        
         self.writeEventTask = Task { [weak self] in
             guard let self else { return }
             

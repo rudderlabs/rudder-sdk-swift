@@ -23,7 +23,7 @@ final class AsyncChannel<Element> {
     /**
      Indicates whether the channel is closed.
      */
-    var isClosed = false
+    private(set) var isClosed = false
     
     /**
      Creates a new async channel.
