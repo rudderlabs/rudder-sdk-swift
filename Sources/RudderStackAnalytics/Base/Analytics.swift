@@ -35,11 +35,6 @@ public class Analytics {
     private var processEventChannel: AsyncChannel<Event>
     
     /**
-     The background task responsible for processing events from the `processEventChannel`.
-     */
-    private var processEventTask: Task<Void, Never>?
-    
-    /**
      The handler instance responsible for managing lifecycle events and session-related operations.
      
      - Note: When this property is set, `startAutomaticSessionIfNeeded()` is automatically triggered to ensure the automatic session begins as required.
@@ -264,22 +259,15 @@ extension Analytics {
         
         self.isAnalyticsShutdown = true
         self.processEventChannel.close()
-        
-        // Don't cancel the task immediately - let it complete naturally
-        // The termination handler will clean up the task reference
     }
     
     /**
      Cleans up resources when the event processing task completes.
      
-     This method is automatically called via the `defer` block in `startProcessingEvents()` 
-     to ensure proper cleanup regardless of how the task ends. It cancels the processing task,
-     removes all plugins, and tears down the lifecycle wrapper to prevent memory leaks.
+     This method is automatically called via the `defer` block to remove all plugins
+     and tear down the lifecycle wrapper to prevent memory leaks.
      */
     private func shutdownHook() {
-        self.processEventTask?.cancel()
-        self.processEventTask = nil
-        
         self.pluginChain?.removeAll()
         self.pluginChain = nil
         
@@ -339,7 +327,7 @@ extension Analytics {
      The task includes automatic cleanup via defer block to ensure proper resource management.
      */
     private func startProcessingEvents() {
-        self.processEventTask = Task { [weak self] in
+        Task { [weak self] in
             guard let self else { return }
             
             defer { self.shutdownHook() }

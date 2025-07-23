@@ -21,10 +21,6 @@ final class EventManager {
     private let writeChannel: AsyncChannel<ProcessingEvent>
     private let uploadChannel: AsyncChannel<String>
     
-    /* Task management */
-    private var writeEventTask: Task<Void, Never>?
-    private var uploadEventTask: Task<Void, Never>?
-    
     private var storage: Storage {
         return self.analytics.configuration.storage
     }
@@ -95,11 +91,8 @@ extension EventManager {
     
     // MARK: - Event Processing
     private func write() {
-        self.writeEventTask = Task { [weak self] in
+        Task { [weak self] in
             guard let self else { return }
-            
-            // Clean up the task reference when the task completes or is canceled.
-            defer { self.cleanupWriteTask() }
             
             for await event in self.writeChannel.receive() {
                 let isFlushSignal = event.type == .flush
@@ -133,11 +126,8 @@ extension EventManager {
     
     // MARK: - Event Uploading
     private func upload() {
-        self.uploadEventTask = Task { [weak self] in
+        Task { [weak self] in
             guard let self else { return }
-            
-            // Clean up the task reference when the task completes or is canceled.
-            defer { self.cleanupUploadTask() }
             
             for await _ in self.uploadChannel.receive() {
                 // If shutdown is initiated, don't start new upload cycles
@@ -168,21 +158,6 @@ extension EventManager {
                 }
             }
         }
-    }
-}
-
-// MARK: - Task Cleanup
-extension EventManager {
-    /** Cancels and clears the write task reference to prevent memory leaks. */
-    private func cleanupWriteTask() {
-        self.writeEventTask?.cancel()
-        self.writeEventTask = nil
-    }
-    
-    /** Cancels and clears the upload task reference to prevent memory leaks. */
-    private func cleanupUploadTask() {
-        self.uploadEventTask?.cancel()
-        self.uploadEventTask = nil
     }
 }
 
