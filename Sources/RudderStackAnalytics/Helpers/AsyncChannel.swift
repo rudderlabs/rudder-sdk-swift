@@ -78,17 +78,6 @@ final class AsyncChannel<Element> {
     }
     
     /**
-     Sets a handler to be called when the channel terminates.
-     
-     - Parameter completion: The closure to call when the channel terminates.
-     */
-    func setTerminationHandler(_ completion: (() -> Void)?) {
-        continuation?.onTermination = { @Sendable _ in
-            completion?()
-        }
-    }
-    
-    /**
      Errors that can occur when working with the channel.
      */
     enum ChannelError: Error {
