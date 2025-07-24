@@ -8,16 +8,18 @@
 import Foundation
 // MARK: - EventManager
 /**
- A class responsible for managing events and handling their processing, storage, and uploading in the analytics system.
- This class integrates with the analytics client, manages flush policies, and ensures smooth event flow using asynchronous channels.
- */
+ EventManager is the central coordinator for the analytics event system.
+ It orchestrates the flow of events from creation through processing to uploading.
+*/
 final class EventManager {
     private let analytics: Analytics
     private let flushPolicyFacade: FlushPolicyFacade
     private let httpClient: HttpClient
+    private let flushEvent = ProcessingEvent(type: .flush)
+    
+    /* Async channel management */
     private let writeChannel: AsyncChannel<ProcessingEvent>
     private let uploadChannel: AsyncChannel<String>
-    private let flushEvent = ProcessingEvent(type: .flush)
     
     private var storage: Storage {
         return self.analytics.configuration.storage
@@ -27,13 +29,11 @@ final class EventManager {
         self.analytics = analytics
         self.flushPolicyFacade = FlushPolicyFacade(analytics: analytics)
         self.httpClient = HttpClient(analytics: analytics)
+        
         self.writeChannel = AsyncChannel()
         self.uploadChannel = AsyncChannel()
+        
         self.start()
-    }
-    
-    deinit {
-        self.stop()
     }
 }
 
@@ -48,35 +48,53 @@ extension EventManager {
     
     func put(_ event: Event) {
         Task {
-            let processingEvent = ProcessingEvent(type: .message, event: event)
-            try await self.writeChannel.send(processingEvent)
+            do {
+                let processingEvent = ProcessingEvent(type: .message, event: event)
+                try self.writeChannel.send(processingEvent)
+            } catch {
+                LoggerAnalytics.error(log: "Failed to send event to writeChannel", error: error)
+            }
         }
     }
     
     func flush() {
         LoggerAnalytics.info(log: "Flush triggered...")
         Task {
-            try await self.writeChannel.send(self.flushEvent)
+            do {
+                try self.writeChannel.send(self.flushEvent)
+            } catch {
+                LoggerAnalytics.error(log: "Failed to send flush signal to writeChannel", error: error)
+            }
         }
     }
     
+    /**
+     Stops the event management system by canceling flush policies and closing channels.
+     */
     func stop() {
+        // Cancel flush policy first to prevent new uploads from being triggered
         self.flushPolicyFacade.cancelSchedule()
         
-        self.writeChannel.close()
-        self.uploadChannel.close()
+        // Close upload channel first to signal uploader to stop receiving
+        if !self.uploadChannel.isClosed {
+            self.uploadChannel.close()
+        }
+        
+        // Close write channel to signal processor to stop receiving
+        if !self.writeChannel.isClosed {
+            self.writeChannel.close()
+        }
     }
-}
-
-// MARK: - Event Processing
-extension EventManager {
-    func write() {
+    
+    // MARK: - Event Processing
+    private func write() {
         Task { [weak self] in
             guard let self else { return }
             
-            for await event in self.writeChannel.stream {
+            for await event in self.writeChannel.receive() {
                 let isFlushSignal = event.type == .flush
                 
+                // Process regular events (not flush signals)
                 if !isFlushSignal {
                     if let json = event.event?.jsonString {
                         LoggerAnalytics.debug(log: "Processing event: \(json)")
@@ -85,11 +103,16 @@ extension EventManager {
                     }
                 }
                 
+                // Check if we should flush (either explicit flush or policy-triggered)
                 if isFlushSignal || self.flushPolicyFacade.shouldFlush() {
                     do {
                         self.flushPolicyFacade.resetCount()
                         await self.storage.rollover()
-                        try await self.uploadChannel.send(Constants.defaultConfig.uploadSignal)
+                        
+                        // Only send upload signal if analytics is active
+                        if self.analytics.isAnalyticsActive {
+                            try self.uploadChannel.send(Constants.defaultConfig.uploadSignal)
+                        }
                     } catch {
                         LoggerAnalytics.error(log: "Error on upload signal", error: error)
                     }
@@ -98,22 +121,32 @@ extension EventManager {
         }
     }
     
-    func upload() {
+    // MARK: - Event Uploading
+    private func upload() {
         Task { [weak self] in
             guard let self else { return }
             
-            for await _ in self.uploadChannel.stream {
+            for await _ in self.uploadChannel.receive() {
+                // If shutdown is initiated, don't start new upload cycles
+                if self.analytics.isAnalyticsShutdown { break }
+                
+                // Read all available batched events from storage
                 let dataItems = await self.storage.read().dataItems
                 for item in dataItems {
-                    LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
+                    // Check shutdown conditions before processing each item
+                    if self.analytics.isAnalyticsShutdown { break }
                     
+                    LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
                     do {
+                        // Process the batch by replacing timestamp placeholder with current time
                         let processed = item.batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
                         LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
                         
+                        // Send the batch to the data plane
                         let responseData = try await self.httpClient.postBatchEvents(processed)
                         LoggerAnalytics.debug(log: "Upload response: \(responseData.jsonString ?? "No response")")
                         
+                        // Remove successfully uploaded batch from storage
                         await self.storage.remove(eventReference: item.reference)
                         LoggerAnalytics.debug(log: "Upload completed: \(item.reference)")
                     } catch {
@@ -126,6 +159,10 @@ extension EventManager {
 }
 
 // MARK: - ProcessingEvent
+/**
+ * ProcessingEvent represents an event in the processing pipeline.
+ * It can be either a regular message event or a flush signal.
+ */
 private class ProcessingEvent {
     var type: ProcessingEventType
     var event: Event?
@@ -137,6 +174,9 @@ private class ProcessingEvent {
 }
 
 // MARK: - ProcessingEventType
+/**
+ * Enum representing the different types of processing events.
+ */
 private enum ProcessingEventType {
     case message
     case flush

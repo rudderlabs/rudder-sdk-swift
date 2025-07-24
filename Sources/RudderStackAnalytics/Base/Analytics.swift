@@ -30,9 +30,9 @@ public class Analytics {
     private var userIdentityState: StateImpl<UserIdentity>
     
     /**
-     A private serial queue for processing events to ensure ordering without blocking the main thread.
+     A private asynchronous channel for queuing and processing events.
      */
-    private let eventProcessingQueue = DispatchQueue(label: "com.rudderstack.analytics.eventProcessing", qos: .default)
+    private var processEventChannel: AsyncChannel<Event>
     
     /**
      The handler instance responsible for managing lifecycle events and session-related operations.
@@ -57,6 +57,7 @@ public class Analytics {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
+        self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.setup()
     }
@@ -257,7 +258,16 @@ extension Analytics {
         guard self.isAnalyticsActive else { return }
         
         self.isAnalyticsShutdown = true
-        
+        self.processEventChannel.close()
+    }
+    
+    /**
+     Cleans up resources when the event processing task completes.
+     
+     This method is automatically called via the `defer` block to remove all plugins
+     and tear down the lifecycle wrapper to prevent memory leaks.
+     */
+    private func shutdownHook() {
         self.pluginChain?.removeAll()
         self.pluginChain = nil
         
@@ -291,6 +301,7 @@ extension Analytics {
     private func setup() {
         self.storeAnonymousId()
         self.collectConfiguration()
+        self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
         self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
@@ -310,15 +321,34 @@ extension Analytics {
     }
     
     /**
-     Processes an event by dispatching it to the serial queue to ensure ordering without blocking the main thread.
+     Starts the event processing task that handles events from the channel.
      
-     - Parameter event: The `Event` to be processed.
+     This method creates a concurrent task that continuously processes events through the plugin chain.
+     The task includes automatic cleanup via defer block to ensure proper resource management.
+     */
+    private func startProcessingEvents() {
+        Task { [weak self] in
+            guard let self else { return }
+            
+            defer { self.shutdownHook() }
+            
+            for await event in self.processEventChannel.receive() {
+                let updatedEvent = event.updateEventData()
+                self.pluginChain?.process(event: updatedEvent)
+            }
+        }
+    }
+    
+    /**
+     Sends an event to the processing channel.
+     
+     - Parameter event: The event to be processed.
      */
     private func process(event: Event) {
-        eventProcessingQueue.async { [weak self] in
-            guard let self = self, self.isAnalyticsActive else { return }
-            let updatedEvent = event.updateEventData()
-            self.pluginChain?.process(event: updatedEvent)
+        do {
+            try self.processEventChannel.send(event)
+        } catch {
+            LoggerAnalytics.error(log: "Failed to process event: \(error)")
         }
     }
     

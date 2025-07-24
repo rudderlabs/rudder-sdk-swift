@@ -38,23 +38,20 @@ extension String {
     }
 }
 
-// MARK: - DateFormatter
-extension DateFormatter {
-    static var timeStampFormat: ISO8601DateFormatter {
+// MARK: - Date
+extension Date {
+    fileprivate static let isoTimeStampFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter
-    }
-}
-
-// MARK: - Date
-extension Date {
+    }()
+    
     var iso8601TimeStamp: String {
-        return DateFormatter.timeStampFormat.string(from: self)
+        return Date.isoTimeStampFormatter.string(from: self)
     }
     
     static func date(from timeStamp: String) -> Date? {
-        return DateFormatter.timeStampFormat.date(from: timeStamp)
+        return Date.isoTimeStampFormatter.date(from: timeStamp)
     }
 }
 
