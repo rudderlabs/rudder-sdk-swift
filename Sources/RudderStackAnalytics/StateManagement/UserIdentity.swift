@@ -56,6 +56,21 @@ public struct UserIdentity {
         return identity
     }
     
+    /**
+     Creates a new `UserIdentity` instance with the specified identifiers and traits.
+     
+     - Parameters:
+       - anonymousId: A unique identifier for the user when they are not logged in. Defaults to an empty string.
+       - userId: The identifier for the user when they are logged in. Defaults to an empty string.
+       - traits: A dictionary of user-specific traits for storing additional metadata about the user. Defaults to an empty `Traits` object.
+     
+     This initializer allows you to create a `UserIdentity` instance with custom values for user identification and associated traits.
+     */
+    public init(anonymousId: String = "", userId: String = "", traits: Traits = Traits()) {
+        self.anonymousId = anonymousId
+        self.userId = userId
+        self.traits = traits
+    }
 }
 
 // MARK: - Helpers
