@@ -38,7 +38,7 @@ final class EventFilteringPlugin: Plugin {
      - Returns: The original event if it should be processed, or nil if it should be filtered out
      */
     func intercept(event: any Event) -> (any Event)? {
-        if let trackEvent = event as? TrackEvent, eventsToFilter.contains(trackEvent.event) {
+        if let trackEvent = event as? TrackEvent, self.eventsToFilter.contains(trackEvent.event) {
             LoggerAnalytics.verbose(log: "EventFilteringPlugin: Event \"\(trackEvent.event)\" is filtered out.")
             return nil
         }
@@ -47,6 +47,6 @@ final class EventFilteringPlugin: Plugin {
     
     /** Called when the plugin is being removed or the analytics instance is being torn down */
     func teardown() {
-        eventsToFilter.removeAll()
+        self.eventsToFilter.removeAll()
     }
 }
