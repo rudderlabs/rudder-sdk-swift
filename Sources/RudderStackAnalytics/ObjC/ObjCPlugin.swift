@@ -87,8 +87,23 @@ final class ObjCPluginAdapter: Plugin {
      - Returns: The processed event or `nil` to drop the event.
      */
     func intercept(event: Event) -> Event? {
-        let objcEvent = ObjCEvent(event: event)
+        let objcEvent = createObjCEvent(from: event)
         return objcPlugin.intercept(objcEvent)?.event
+    }
+    
+    /**
+     Creates the appropriate ObjC event wrapper based on the event type.
+     
+     - Parameter event: The Swift event to wrap.
+     - Returns: The appropriate ObjC event wrapper.
+     */
+    private func createObjCEvent(from event: Event) -> ObjCEvent {
+        switch event {
+        case let trackEvent as TrackEvent:
+            return ObjCTrackEvent(event: trackEvent)
+        default:
+            return ObjCEvent(event: event)
+        }
     }
 
     /**
