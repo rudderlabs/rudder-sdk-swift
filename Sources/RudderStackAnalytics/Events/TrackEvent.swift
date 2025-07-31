@@ -16,49 +16,49 @@ import Foundation
 
  - Conforms to: `Event`
  */
-struct TrackEvent: Event {
+public struct TrackEvent: Event {
     
     /// The type of the event, defaulting to `.track`.
-    var type: EventType = .track
+    public var type: EventType = .track
     
     /// A unique identifier for the event.
-    var messageId: String = .randomUUIDString
+    public var messageId: String = .randomUUIDString
     
     /// The timestamp of when the event occurred, defaulting to the current time.
-    var originalTimestamp: String = .currentTimeStamp
+    public var originalTimestamp: String = .currentTimeStamp
     
     /// The anonymous identifier for the user associated with the event.
-    var anonymousId: String?
+    public var anonymousId: String?
     
     /// The channel through which the event was sent.
-    var channel: String?
+    public var channel: String?
     
     /// A dictionary of integration settings for the event.
-    var integrations: [String: AnyCodable]?
+    public var integrations: [String: AnyCodable]?
     
     /// The timestamp of when the event was sent.
-    var sentAt: String?
+    public var sentAt: String?
     
     /// Additional context information for the event, provided as a dictionary.
-    var context: [String: AnyCodable]?
+    public var context: [String: AnyCodable]?
     
     /// Custom traits or attributes associated with the event.
-    var traits: CodableCollection?
+    public var traits: CodableCollection?
     
     /// The name of the event being tracked.
-    var event: String
+    public var event: String
     
     /// The unique identifier for the user.
-    var userId: String?
+    public var userId: String?
     
     /// Additional properties or metadata for the event.
-    var properties: CodableCollection?
+    public var properties: CodableCollection?
 
     /// Holds the associated values for an event.
-    var options: RudderOption?
+    public var options: RudderOption?
     
     /// The identity values of the user associated with the event.
-    var userIdentity: UserIdentity?
+    public var userIdentity: UserIdentity?
     
     /**
      Initializes a `TrackEvent` with the specified event name, properties, options and user identity values.
@@ -71,7 +71,7 @@ struct TrackEvent: Event {
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(event: String, properties: Properties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
+    public init(event: String, properties: Properties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
         self.event = event
         self.properties = CodableCollection(dictionary: properties)
         self.userIdentity = userIdentity ?? UserIdentity()
