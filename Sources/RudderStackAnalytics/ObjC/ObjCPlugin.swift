@@ -101,6 +101,14 @@ final class ObjCPluginAdapter: Plugin {
         switch event {
         case let trackEvent as TrackEvent:
             return ObjCTrackEvent(event: trackEvent)
+        case let screenEvent as ScreenEvent:
+            return ObjCScreenEvent(event: screenEvent)
+        case let groupEvent as GroupEvent:
+            return ObjCGroupEvent(event: groupEvent)
+        case let identifyEvent as IdentifyEvent:
+            return ObjCIdentifyEvent(event: identifyEvent)
+        case let aliasEvent as AliasEvent:
+            return ObjCAliasEvent(event: aliasEvent)
         default:
             return ObjCEvent(event: event)
         }

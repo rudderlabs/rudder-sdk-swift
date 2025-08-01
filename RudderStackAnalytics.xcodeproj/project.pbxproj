@@ -12,6 +12,7 @@
 		5328B87B2E3C8B760051A202 /* ObjCScreenEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */; };
 		5328B87D2E3C8C240051A202 /* ObjCGroupEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */; };
 		5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */; };
+		5328B8812E3C939D0051A202 /* ObjCAliasEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */; };
 		532904EF2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */; };
 		532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */; };
 		532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */; };
@@ -150,6 +151,7 @@
 		5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCScreenEvent.swift; sourceTree = "<group>"; };
 		5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCGroupEvent.swift; sourceTree = "<group>"; };
 		5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCIdentifyEvent.swift; sourceTree = "<group>"; };
+		5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCAliasEvent.swift; sourceTree = "<group>"; };
 		532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RudderStackAnalytics.xctestplan; sourceTree = "<group>"; };
 		532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftExampleApp.xctestplan; sourceTree = "<group>"; };
 		532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUIExampleApp.xctestplan; sourceTree = "<group>"; };
@@ -449,6 +451,7 @@
 				5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */,
 				5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */,
 				5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */,
+				5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */,
 			);
 			path = ObjC;
 			sourceTree = "<group>";
@@ -913,6 +916,7 @@
 				53DEA61E2E03D05A00D6C371 /* ObjCLoggerAnalytics.swift in Sources */,
 				53DEA61F2E03D05A00D6C371 /* GroupEvent.swift in Sources */,
 				53DEA6202E03D05A00D6C371 /* LifecycleTrackingPlugin.swift in Sources */,
+				5328B8812E3C939D0051A202 /* ObjCAliasEvent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
