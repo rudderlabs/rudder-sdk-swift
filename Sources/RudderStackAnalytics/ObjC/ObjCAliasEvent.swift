@@ -40,65 +40,47 @@ public class ObjCAliasEvent: ObjCEvent {
     }
     
     /**
-     Initializes an `ObjCAliasEvent` with the specified new ID, previous identifier, options, and user identity.
+     Initializes an `ObjCAliasEvent` with the specified previous identifier, options, and user identity.
      
      - Parameters:
-        - newId: The new user ID.
         - previousId: The existing identifier for the user that is being linked to a new identifier. Defaults to `nil`.
         - options: Custom options for the event, including integrations and context. Defaults to `nil`.
         - userIdentity: The user's identity information. Defaults to `nil`.
      */
     @objc
-    public init(newId: String, previousId: String? = nil, options: RudderOption? = nil, userIdentity: ObjCUserIdentity? = nil) {
+    public init(previousId: String, options: RudderOption? = nil, userIdentity: ObjCUserIdentity? = nil) {
         let swiftUserIdentity = userIdentity?.userIdentity
-        
-        // Use the previousId from parameter, or fallback to a default
-        let actualPreviousId = previousId ?? ""
-        
+                
         let aliasEvent = AliasEvent(
-            previousId: actualPreviousId,
+            previousId: previousId,
             options: options,
             userIdentity: swiftUserIdentity
         )
         
         super.init(event: aliasEvent)
-        
-        // Set the new user ID after initialization
-        self.userId = newId
     }
 
     /**
-     Convenience initializer for creating an alias event with just a new ID.
-     
-     - Parameter newId: The new user ID.
-     */
-    @objc
-    public convenience init(newId: String) {
-        self.init(newId: newId, previousId: nil, options: nil, userIdentity: nil)
-    }
-
-    /**
-     Convenience initializer for creating an alias event with a new ID and previous ID.
+     Convenience initializer for creating an alias event with a previous ID.
      
      - Parameters:
-        - newId: The new user ID.
         - previousId: The previous user ID.
      */
     @objc
-    public convenience init(newId: String, previousId: String) {
-        self.init(newId: newId, previousId: previousId, options: nil, userIdentity: nil)
+    public convenience init(previousId: String) {
+        self.init(previousId: previousId, options: nil, userIdentity: nil)
     }
 
     /**
-     Convenience initializer for creating an alias event with a new ID and options.
+     Convenience initializer for creating an alias event with a previous ID and options.
      
      - Parameters:
-        - newId: The new user ID.
-        - options: Additional options.
+        - previousId: The previous user ID.
+        - options: Custom options for the event.
      */
     @objc
-    public convenience init(newId: String, options: RudderOption) {
-        self.init(newId: newId, previousId: nil, options: options, userIdentity: nil)
+    public convenience init(previousId: String, options: RudderOption) {
+        self.init(previousId: previousId, options: options, userIdentity: nil)
     }
 
     // MARK: - Objective-C Compatible Properties

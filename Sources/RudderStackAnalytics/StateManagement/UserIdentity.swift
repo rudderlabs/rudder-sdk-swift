@@ -23,13 +23,13 @@ import Foundation
  */
 public struct UserIdentity {
     /// A unique identifier for the user when they are not logged in. Defaults to an empty string.
-    public internal(set) var anonymousId = String.empty
+    public var anonymousId = String.empty
     
     /// The identifier for the user when they are logged in. Defaults to an empty string.
-    public internal(set) var userId = String.empty
+    public var userId = String.empty
     
     /// A dictionary of user-specific traits, used to store additional metadata about the user.
-    public internal(set) var traits = Traits()
+    public var traits = Traits()
     
     /**
      Creates and initializes a `UserIdentity` instance by reading data from the provided key-value storage.

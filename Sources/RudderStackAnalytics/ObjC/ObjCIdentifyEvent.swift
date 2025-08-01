@@ -40,16 +40,14 @@ public class ObjCIdentifyEvent: ObjCEvent {
     }
     
     /**
-     Initializes an `ObjCIdentifyEvent` with the specified user ID, traits, options and user identity.
+     Initializes an `ObjCIdentifyEvent` with the specified options and user identity.
      
      - Parameters:
-        - userId: The user ID. Defaults to `nil`.
-        - traits: Custom traits or attributes for the user. Defaults to `nil`.
         - options: Custom options for the event, including integrations and context. Defaults to `nil`.
         - userIdentity: The user's identity information. Defaults to `nil`.
      */
     @objc
-    public init(userId: String? = nil, traits: [String: Any]? = nil, options: RudderOption? = nil, userIdentity: ObjCUserIdentity? = nil) {
+    public init(options: RudderOption? = nil, userIdentity: ObjCUserIdentity? = nil) {
         let swiftUserIdentity = userIdentity?.userIdentity
         
         let identifyEvent = IdentifyEvent(
@@ -58,14 +56,6 @@ public class ObjCIdentifyEvent: ObjCEvent {
         )
         
         super.init(event: identifyEvent)
-        
-        // Set userId and traits after initialization
-        if let userId = userId {
-            self.userId = userId
-        }
-        if let traits = traits {
-            self.traits = traits
-        }
     }
 
     /**
@@ -73,63 +63,7 @@ public class ObjCIdentifyEvent: ObjCEvent {
      */
     @objc
     public convenience init() {
-        self.init(userId: nil, traits: nil, options: nil, userIdentity: nil)
-    }
-
-    /**
-     Convenience initializer for identifying a user by user ID.
-     
-     - Parameter userId: The user ID.
-     */
-    @objc
-    public convenience init(userId: String) {
-        self.init(userId: userId, traits: nil, options: nil, userIdentity: nil)
-    }
-
-    /**
-     Convenience initializer for identifying a user by traits only.
-     
-     - Parameter traits: Traits associated with the user.
-     */
-    @objc
-    public convenience init(traits: [String: Any]) {
-        self.init(userId: nil, traits: traits, options: nil, userIdentity: nil)
-    }
-
-    /**
-     Convenience initializer for identifying a user by user ID and traits.
-     
-     - Parameters:
-        - userId: The user ID.
-        - traits: Traits associated with the user.
-     */
-    @objc
-    public convenience init(userId: String, traits: [String: Any]) {
-        self.init(userId: userId, traits: traits, options: nil, userIdentity: nil)
-    }
-
-    /**
-     Convenience initializer for identifying a user by user ID and options.
-     
-     - Parameters:
-        - userId: The user ID.
-        - options: Additional options.
-     */
-    @objc
-    public convenience init(userId: String, options: RudderOption) {
-        self.init(userId: userId, traits: nil, options: options, userIdentity: nil)
-    }
-
-    /**
-     Convenience initializer for identifying a user by traits and options.
-     
-     - Parameters:
-        - traits: Traits associated with the user.
-        - options: Additional options.
-     */
-    @objc
-    public convenience init(traits: [String: Any], options: RudderOption) {
-        self.init(userId: nil, traits: traits, options: options, userIdentity: nil)
+        self.init(options: nil, userIdentity: nil)
     }
 
     // MARK: - Objective-C Compatible Properties
