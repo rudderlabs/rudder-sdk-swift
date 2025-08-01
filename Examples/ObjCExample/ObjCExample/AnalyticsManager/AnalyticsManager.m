@@ -8,6 +8,7 @@
 #import "AnalyticsManager.h"
 #import "CustomLogger.h"
 #import "CustomOptionPlugin.h"
+#import "EventFilteringPlugin.h"
 
 @interface AnalyticsManager()
 
@@ -28,8 +29,8 @@
 
 - (void)initializeAnalyticsSDK {
 
-    NSString *writeKey = @"sample-write-key";
-    NSString *dataPlaneUrl = @"https://data-plane.analytics.com";
+    NSString *writeKey = @"2vPgTJJHX8Z1fpU8DWjDGlmyJpF";
+    NSString *dataPlaneUrl = @"https://rudderstacfbtt.dataplane.rudderstack.com";
     
     RSSConfigurationBuilder *builder = [[RSSConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
     [builder setGzipEnabled: YES];
@@ -57,6 +58,10 @@
     // Adding custom plugin..
     CustomOptionPlugin *plugin = [[CustomOptionPlugin alloc] initWithOption:[optionBuilder build]];
     [self.client addPlugin:plugin];
+    
+    EventFilteringPlugin *pp = [[EventFilteringPlugin alloc] init];
+    [self.client addPlugin:pp];
+
 }
 
 - (void)identify:(NSString * _Nullable)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSSOption* _Nullable)option {
