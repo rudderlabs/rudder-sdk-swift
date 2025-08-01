@@ -85,6 +85,18 @@ public class ObjCTrackEvent: ObjCEvent {
         self.init(eventName: eventName, properties: properties, options: nil, userIdentity: nil)
     }
 
+    /**
+     Convenience initializer for creating a track event with an event name and options.
+     
+     - Parameters:
+        - eventName: The name of the event being tracked.
+        - options: Additional tracking options.
+     */
+    @objc
+    public convenience init(eventName: String, options: RudderOption) {
+        self.init(eventName: eventName, properties: nil, options: options, userIdentity: nil)
+    }
+
     // MARK: - Objective-C Compatible Properties
 
     /**
