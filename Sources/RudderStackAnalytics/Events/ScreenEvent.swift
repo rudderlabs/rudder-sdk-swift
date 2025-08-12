@@ -16,52 +16,52 @@ import Foundation
 
  - Conforms to: `Event`
  */
-struct ScreenEvent: Event {
+public struct ScreenEvent: Event {
     
     /// The type of the event, defaulting to `.screen`.
-    var type: EventType = .screen
+    public var type: EventType = .screen
     
     /// A unique identifier for the event.
-    var messageId: String = .randomUUIDString
+    public var messageId: String = .randomUUIDString
     
     /// The timestamp of when the event occurred, defaulting to the current time.
-    var originalTimestamp: String = .currentTimeStamp
+    public var originalTimestamp: String = .currentTimeStamp
     
     /// The anonymous identifier for the user associated with the event.
-    var anonymousId: String?
+    public var anonymousId: String?
     
     /// The channel through which the event was sent.
-    var channel: String?
+    public var channel: String?
     
     /// A dictionary of integration settings for the event.
-    var integrations: [String: AnyCodable]?
+    public var integrations: [String: AnyCodable]?
     
     /// The timestamp of when the event was sent.
-    var sentAt: String?
+    public var sentAt: String?
     
     /// Additional context information for the event, provided as a dictionary.
-    var context: [String: AnyCodable]?
+    public var context: [String: AnyCodable]?
     
     /// Custom traits or attributes associated with the event.
-    var traits: CodableCollection?
+    public var traits: CodableCollection?
     
     /// The unique identifier for the user.
-    var userId: String?
+    public var userId: String?
     
     /// The name of the screen or page being tracked.
-    var event: String
+    public var event: String
     
     /// The category of the screen, if any.
-    var category: String?
+    public var category: String?
     
     /// Additional properties or metadata for the screen event.
-    var properties: CodableCollection?
+    public var properties: CodableCollection?
 
     /// Holds the associated values for an event.
-    var options: RudderOption?
+    public var options: RudderOption?
     
     /// The identity values of the user associated with the event.
-    var userIdentity: UserIdentity?
+    public var userIdentity: UserIdentity?
     
     /**
      Initializes a `ScreenEvent` with the specified screen name, category, properties, options and user identity values.
@@ -75,7 +75,7 @@ struct ScreenEvent: Event {
 
      This initializer also processes and includes default properties such as the screen name and category in the event's properties, if they are provided.
      */
-    init(screenName: String, category: String? = nil, properties: Properties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
+    public init(screenName: String, category: String? = nil, properties: Properties? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
         self.event = screenName
         
         var updatedProperties = properties ?? Properties()

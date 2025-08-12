@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5328B8772E3B7E4D0051A202 /* ObjCUserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */; };
+		5328B8792E3B817B0051A202 /* ObjCTrackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */; };
+		5328B87B2E3C8B760051A202 /* ObjCScreenEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */; };
+		5328B87D2E3C8C240051A202 /* ObjCGroupEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */; };
+		5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */; };
+		5328B8812E3C939D0051A202 /* ObjCAliasEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */; };
 		532904EF2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */; };
 		532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */; };
 		532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */; };
@@ -140,6 +146,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCUserIdentity.swift; sourceTree = "<group>"; };
+		5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCTrackEvent.swift; sourceTree = "<group>"; };
+		5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCScreenEvent.swift; sourceTree = "<group>"; };
+		5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCGroupEvent.swift; sourceTree = "<group>"; };
+		5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCIdentifyEvent.swift; sourceTree = "<group>"; };
+		5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCAliasEvent.swift; sourceTree = "<group>"; };
 		532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RudderStackAnalytics.xctestplan; sourceTree = "<group>"; };
 		532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftExampleApp.xctestplan; sourceTree = "<group>"; };
 		532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUIExampleApp.xctestplan; sourceTree = "<group>"; };
@@ -434,6 +446,12 @@
 				53DEA5B12E03D05A00D6C371 /* ObjCOption.swift */,
 				53DEA5B22E03D05A00D6C371 /* ObjCPlugin.swift */,
 				53DEA5B32E03D05A00D6C371 /* ObjCSessionConfiguration.swift */,
+				5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */,
+				5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */,
+				5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */,
+				5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */,
+				5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */,
+				5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */,
 			);
 			path = ObjC;
 			sourceTree = "<group>";
@@ -845,9 +863,11 @@
 				53DEA5EE2E03D05A00D6C371 /* SessionActions.swift in Sources */,
 				53DEA5EF2E03D05A00D6C371 /* LibraryInfoPlugin.swift in Sources */,
 				53DEA5F02E03D05A00D6C371 /* ObjCLogger.swift in Sources */,
+				5328B87B2E3C8B760051A202 /* ObjCScreenEvent.swift in Sources */,
 				53DEA5F12E03D05A00D6C371 /* SetUserIdAction.swift in Sources */,
 				53DEA5F22E03D05A00D6C371 /* SessionInfo.swift in Sources */,
 				53DEA5F32E03D05A00D6C371 /* LoggerAnalytics.swift in Sources */,
+				5328B87D2E3C8C240051A202 /* ObjCGroupEvent.swift in Sources */,
 				53DEA5F42E03D05A00D6C371 /* SetUserIdAndTraitsAction.swift in Sources */,
 				53DEA5F52E03D05A00D6C371 /* FlushPolicy.swift in Sources */,
 				53DEA5F62E03D05A00D6C371 /* Storage.swift in Sources */,
@@ -869,6 +889,7 @@
 				53DEA6062E03D05A00D6C371 /* TimeZoneInfoPlugin.swift in Sources */,
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
+				5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */,
 				53DEA6092E03D05A00D6C371 /* HttpClient.swift in Sources */,
 				53DEA60A2E03D05A00D6C371 /* ObjCConfiguration.swift in Sources */,
 				53DEA60B2E03D05A00D6C371 /* PluginChain.swift in Sources */,
@@ -877,9 +898,11 @@
 				53DEA60E2E03D05A00D6C371 /* PluginInteractor.swift in Sources */,
 				53DEA60F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift in Sources */,
 				53DEA6102E03D05A00D6C371 /* AsyncChannel.swift in Sources */,
+				5328B8772E3B7E4D0051A202 /* ObjCUserIdentity.swift in Sources */,
 				53DEA6112E03D05A00D6C371 /* LifecycleManagementUtils.swift in Sources */,
 				53DEA6122E03D05A00D6C371 /* SwiftLogger.swift in Sources */,
 				53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */,
+				5328B8792E3B817B0051A202 /* ObjCTrackEvent.swift in Sources */,
 				53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */,
 				53DEA6152E03D05A00D6C371 /* BasicStorage.swift in Sources */,
 				53DEA6162E03D05A00D6C371 /* ObjCOption.swift in Sources */,
@@ -893,6 +916,7 @@
 				53DEA61E2E03D05A00D6C371 /* ObjCLoggerAnalytics.swift in Sources */,
 				53DEA61F2E03D05A00D6C371 /* GroupEvent.swift in Sources */,
 				53DEA6202E03D05A00D6C371 /* LifecycleTrackingPlugin.swift in Sources */,
+				5328B8812E3C939D0051A202 /* ObjCAliasEvent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
