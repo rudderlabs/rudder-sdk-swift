@@ -47,8 +47,8 @@ struct EventDataItem {
      
      - Parameter batch: The batch of events to be stored in this item.
      */
-    init(batch: String) {
-        self.reference = UUID().uuidString
+    init(batch: String = .empty) {
+        self.reference = .randomUUIDString
         self.batch = batch
         self.isClosed = false
     }
