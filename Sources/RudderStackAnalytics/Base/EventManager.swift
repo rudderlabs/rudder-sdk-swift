@@ -138,7 +138,10 @@ extension EventManager {
                     
                     // Read the event batch from storage
                     let batch = self.analytics.storage.eventStorageMode == .memory ? item.batch : (FileManager.contentsOf(file: item.reference) ?? .empty)
-                    guard !batch.isEmpty else { continue }
+                    guard !batch.isEmpty else { 
+                        LoggerAnalytics.debug(log: "No batch found for reference: \(item.reference)")
+                        continue 
+                    }
 
                     LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
                     do {
