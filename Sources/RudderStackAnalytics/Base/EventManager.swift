@@ -136,10 +136,14 @@ extension EventManager {
                     // Check shutdown conditions before processing each item
                     if self.analytics.isAnalyticsShutdown { break }
                     
+                    // Read the event batch from storage
+                    let batch = self.analytics.storage.eventStorageMode == .memory ? item.batch : (FileManager.contentsOf(file: item.reference) ?? .empty)
+                    guard !batch.isEmpty else { continue }
+
                     LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
                     do {
                         // Process the batch by replacing timestamp placeholder with current time
-                        let processed = item.batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
+                        let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
                         LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
                         
                         // Send the batch to the data plane
