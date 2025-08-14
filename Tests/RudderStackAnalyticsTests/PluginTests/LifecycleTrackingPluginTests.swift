@@ -100,7 +100,13 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         await analyticsMock.configuration.storage.rollover()
         
         let dataItems = await analyticsMock.configuration.storage.read().dataItems
-        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        
+        guard let firstDataItem = dataItems.first else {
+            XCTFail("No data items to read"); return []
+        }
+        
+        let batch = analyticsMock.storage.eventStorageMode == .memory ? firstDataItem.batch : (FileManager.contentsOf(file: firstDataItem.reference) ?? "")
+        let batchData = batch.toDictionary?["batch"] as? [[String: Any]] ?? []
         let eventNames = batchData.compactMap { $0["event"] as? String }
         
         for item in dataItems {
