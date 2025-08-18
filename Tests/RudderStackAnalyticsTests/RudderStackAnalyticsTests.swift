@@ -184,7 +184,11 @@ extension RudderStackAnalyticsTests {
         try? await Task.sleep(nanoseconds: 300_000_000)
         await client.configuration.storage.rollover()
         let dataItems = await client.configuration.storage.read().dataItems
-        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        
+        guard let firstItem = dataItems.first else { XCTFail("No data item found"); return }
+        let batch = client.storage.eventStorageMode == .memory ? firstItem.batch : (FileManager.contentsOf(file: firstItem.reference) ?? "")
+        
+        let batchData = batch.toDictionary?["batch"] as? [[String: Any]] ?? []
         guard let lastEvent = batchData.last else { XCTFail("No event found"); return }
         
         XCTAssertEqual(lastEvent["event"] as? String, "Deep Link Opened")
@@ -216,10 +220,17 @@ extension RudderStackAnalyticsTests {
         let dataItems = await client.configuration.storage.read().dataItems
         XCTAssertFalse(dataItems.isEmpty, "Data items should not be empty")
         
-        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        guard let firstItem = dataItems.first else { XCTFail("No data item found"); return }
+        let batch = client.storage.eventStorageMode == .memory ? firstItem.batch : (FileManager.contentsOf(file: firstItem.reference) ?? "")
+        
+        let batchData = batch.toDictionary?["batch"] as? [[String: Any]] ?? []
         guard let lastEvent = batchData.last else { XCTFail("No event found"); return }
         
         XCTAssertTrue(lastEvent["event"] as? String == "New Event Name", "Event name should be modified by the plugin")
+        
+        for item in dataItems {
+            await client.configuration.storage.remove(eventReference: item.reference)
+        }
     }
 
     func test_removePlugin_disk() async {
@@ -236,10 +247,17 @@ extension RudderStackAnalyticsTests {
         let dataItems = await client.configuration.storage.read().dataItems
         XCTAssertFalse(dataItems.isEmpty, "Data items should not be empty")
         
-        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        guard let firstItem = dataItems.first else { XCTFail("No data item found"); return }
+        let batch = client.storage.eventStorageMode == .memory ? firstItem.batch : (FileManager.contentsOf(file: firstItem.reference) ?? "")
+        
+        let batchData = batch.toDictionary?["batch"] as? [[String: Any]] ?? []
         guard let lastEvent = batchData.last else { XCTFail("No event found"); return }
         
         XCTAssertTrue(lastEvent["event"] as? String == "Original Event", "Event name should remain unchanged after plugin removal")
+        
+        for item in dataItems {
+            await client.configuration.storage.remove(eventReference: item.reference)
+        }
     }
 }
 

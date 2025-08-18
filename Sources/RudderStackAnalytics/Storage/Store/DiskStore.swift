@@ -122,9 +122,9 @@ extension DiskStore: DataStore {
         await withCheckedContinuation { continuation in
             var dataItems = [EventDataItem]()
             for file in self.collectFiles() {
-                guard let batch = FileManager.contentsOf(file: file) else { continue }
+                guard FileManager.default.fileExists(atPath: file) else { continue }
                 
-                var item = EventDataItem(batch: batch)
+                var item = EventDataItem()
                 item.reference = file
                 item.isClosed = true
                 
