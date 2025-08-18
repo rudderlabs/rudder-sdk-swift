@@ -127,8 +127,6 @@ extension EventManager {
             guard let self else { return }
             
             for await _ in self.uploadChannel.receive() {
-                // If shutdown is initiated, don't start new upload cycles
-                if self.analytics.isAnalyticsShutdown { break }
                 
                 // Read all available batched events from storage
                 let dataItems = await self.storage.read().dataItems
