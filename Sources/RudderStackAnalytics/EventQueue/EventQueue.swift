@@ -18,7 +18,7 @@ import Foundation
 final class EventQueue {
     private let analytics: Analytics
     private let flushPolicyFacade: FlushPolicyFacade
-    private let eventWritter: EventWritter
+    private let eventWriter: EventWriter
     private let eventUploader: EventUploader
     
     /* Centralized channel management */
@@ -34,7 +34,7 @@ final class EventQueue {
         self.uploadChannel = AsyncChannel()
         
         // Pass channels to respective classes for decoupled communication
-        self.eventWritter = EventWritter(analytics: analytics, writeChannel: self.writeChannel, uploadChannel: self.uploadChannel)
+        self.eventWriter = EventWriter(analytics: analytics, writeChannel: self.writeChannel, uploadChannel: self.uploadChannel)
         self.eventUploader = EventUploader(analytics: analytics, uploadChannel: self.uploadChannel)
         
         self.start()
@@ -46,17 +46,17 @@ extension EventQueue {
     
     private func start() {
         self.flushPolicyFacade.startSchedule()
-        self.eventWritter.start()
+        self.eventWriter.start()
         self.eventUploader.start()
     }
     
     func put(_ event: Event) {
-        self.eventWritter.put(event)
+        self.eventWriter.put(event)
     }
     
     func flush() {
         LoggerAnalytics.info(log: "Flush triggered...")
-        self.eventWritter.flush()
+        self.eventWriter.flush()
     }
     
     /**
