@@ -29,10 +29,6 @@ final class EventWriter {
         self.uploadChannel = uploadChannel
     }
     
-    func start() {
-        self.write()
-    }
-    
     func put(_ event: Event) {
         Task {
             do {
@@ -55,7 +51,7 @@ final class EventWriter {
         }
     }
     
-    private func write() {
+    func start() {
         Task { [weak self] in
             guard let self else { return }
             

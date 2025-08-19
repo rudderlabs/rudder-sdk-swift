@@ -10,8 +10,7 @@ import Foundation
 // MARK: - EventQueue
 /**
  EventQueue manages the analytics event pipeline.
- It coordinates event writing to storage and uploading to the data plane.
- */
+*/
 final class EventQueue {
     private let analytics: Analytics
     private let flushPolicyFacade: FlushPolicyFacade

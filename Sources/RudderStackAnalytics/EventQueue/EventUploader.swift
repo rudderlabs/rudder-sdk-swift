@@ -10,7 +10,6 @@ import Foundation
 // MARK: - EventUploader
 /**
  EventUploader is responsible for uploading analytics events to the RudderStack data plane.
- It handles reading batched events from storage, processing them, and sending them.
  */
 final class EventUploader {
     private let analytics: Analytics
@@ -28,10 +27,6 @@ final class EventUploader {
     }
     
     func start() {
-        self.upload()
-    }
-    
-    private func upload() {
         Task { [weak self] in
             guard let self else { return }
             
@@ -52,7 +47,7 @@ final class EventUploader {
                         await self.storage.remove(eventReference: item.reference)
                         continue
                     }
-
+                    
                     LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
                     do {
                         // Process the batch by replacing timestamp placeholder with current time
