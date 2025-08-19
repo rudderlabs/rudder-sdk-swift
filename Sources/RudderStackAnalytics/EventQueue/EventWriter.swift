@@ -9,8 +9,8 @@ import Foundation
 
 // MARK: - EventWriter
 /**
- EventWriter is responsible for processing analytics events in the RudderStackAnalytics SDK.
-*/
+ EventWriter processes events and writes them to storage.
+ */
 final class EventWriter {
     private let analytics: Analytics
     private let flushPolicyFacade: FlushPolicyFacade

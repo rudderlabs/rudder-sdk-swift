@@ -9,11 +9,8 @@ import Foundation
 
 // MARK: - EventQueue
 /**
- EventQueue is the central coordinator for the analytics event system.
- It orchestrates the flow of events from creation through processing to uploading.
-  
- The manager creates and manages async channels for communication between components, coordinates the EventWriter
- and EventUploader, and handles graceful shutdown. It also manages flush policies and ensures proper sequencing of operations.
+ EventQueue manages the analytics event pipeline.
+ It coordinates event writing to storage and uploading to the data plane.
  */
 final class EventQueue {
     private let analytics: Analytics
