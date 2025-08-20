@@ -271,7 +271,7 @@ extension Analytics {
         self.pluginChain?.removeAll()
         self.pluginChain = nil
         
-        self.lifecycleSessionWrapper?.tearDown()
+        self.lifecycleSessionWrapper?.invalidate()
         self.lifecycleSessionWrapper = nil
     }
     
