@@ -21,7 +21,6 @@
 		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
 		539D871E2E54BB9A009FC144 /* EventQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D871D2E54BB9A009FC144 /* EventQueueTests.swift */; };
 		539D87202E55B8DD009FC144 /* ProcessingEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D871F2E55B8DD009FC144 /* ProcessingEvent.swift */; };
-		539D87212E55B8DD009FC144 /* ProcessingEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D871F2E55B8DD009FC144 /* ProcessingEvent.swift */; };
 		539E540E2C98CD7D00982E95 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */; };
 		53AC39722E1533F300B8E16C /* RudderOptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AC39712E1533F300B8E16C /* RudderOptionTests.swift */; };
 		53AC39B42E16FA6E00B8E16C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */; };
@@ -977,7 +976,6 @@
 				53DEA6772E03D06F00D6C371 /* LibraryInfoPluginTests.swift in Sources */,
 				53DEA6782E03D06F00D6C371 /* DataPlaneModuleTests.swift in Sources */,
 				53DEA6792E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift in Sources */,
-				539D87212E55B8DD009FC144 /* ProcessingEvent.swift in Sources */,
 				53DEA67A2E03D06F00D6C371 /* ScreenEventTests.swift in Sources */,
 				53DEA67B2E03D06F00D6C371 /* TrackEventTests.swift in Sources */,
 				53DEA67C2E03D06F00D6C371 /* MessageModuleTests.swift in Sources */,

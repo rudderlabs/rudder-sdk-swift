@@ -1,6 +1,6 @@
 //
 //  ProcessingEvent.swift
-//  RudderStackAnalyticsTests
+//  RudderStackAnalytics
 //
 //  Created by Satheesh Kannan on 20/08/25.
 //
