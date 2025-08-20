@@ -35,9 +35,12 @@ final class EventQueueTests: XCTestCase {
         // When
         eventQueue.put(event)
         
-        // Use a background task to poll storage without sleep
+        // Then - Poll for the event in storage
+        let startTime = Date()
+        let timeout: TimeInterval = 1.5
+        
         Task {
-            while true {
+            while Date().timeIntervalSince(startTime) < timeout {
                 await mockAnalytics.configuration.storage.rollover()
                 let dataItems = await mockAnalytics.configuration.storage.read().dataItems
                 
@@ -50,11 +53,11 @@ final class EventQueueTests: XCTestCase {
                     expectation.fulfill()
                     break
                 }
-                await Task.yield() // give control back to the executor
+                
+                await Task.yield()
             }
         }
         
-        // Then
         await fulfillment(of: [expectation], timeout: 2.0)
         
         // Cleanup
@@ -79,8 +82,11 @@ final class EventQueueTests: XCTestCase {
         }
         
         // Then - Poll until all events are in storage
+        let startTime = Date()
+        let timeout: TimeInterval = 1.5
+
         Task {
-            while true {
+            while Date().timeIntervalSince(startTime) < timeout {
                 await mockAnalytics.configuration.storage.rollover()
                 let dataItems = await mockAnalytics.configuration.storage.read().dataItems
                 
@@ -99,11 +105,12 @@ final class EventQueueTests: XCTestCase {
                     expectation.fulfill()
                     break
                 }
+                
                 await Task.yield()
             }
         }
         
-        await fulfillment(of: [expectation], timeout: 3.0)
+        await fulfillment(of: [expectation], timeout: 2.0)
         
         // Cleanup
         let dataItems = await mockAnalytics.configuration.storage.read().dataItems
@@ -124,13 +131,15 @@ final class EventQueueTests: XCTestCase {
         eventQueue.put(event)
         
         // Then - Verify no new events are processed
+        let startTime = Date()
+        let timeout: TimeInterval = 1.5
+
         Task {
-            while true {
+            while Date().timeIntervalSince(startTime) < timeout {
                 await mockAnalytics.configuration.storage.rollover()
                 let dataItems = await mockAnalytics.configuration.storage.read().dataItems
                 
                 // If any items got processed after stop, fail
-                var processed = false
                 for item in dataItems {
                     let batch = mockAnalytics.storage.eventStorageMode == .memory
                         ? item.batch
@@ -138,19 +147,16 @@ final class EventQueueTests: XCTestCase {
                     
                     if batch.contains("should_not_process") {
                         XCTFail("Event was processed even after stop() was called")
-                        processed = true
-                        break
+                        expectation.fulfill()
+                        return
                     }
-                }
-                
-                // If queue is stopped and nothing processed → success
-                if !processed {
-                    expectation.fulfill()
-                    break
                 }
                 
                 await Task.yield()
             }
+            
+            // If we reach here without finding the event, that's success
+            expectation.fulfill()
         }
         
         await fulfillment(of: [expectation], timeout: 2.0)
