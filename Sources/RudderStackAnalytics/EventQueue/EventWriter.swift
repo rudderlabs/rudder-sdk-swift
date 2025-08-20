@@ -92,8 +92,7 @@ final class EventWriter {
     }
     
     func stop() {
-        if !self.writeChannel.isClosed {
-            self.writeChannel.close()
-        }
+        guard !self.writeChannel.isClosed else { return }
+        self.writeChannel.close()
     }
 }

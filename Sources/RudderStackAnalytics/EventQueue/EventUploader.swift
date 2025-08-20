@@ -70,8 +70,7 @@ final class EventUploader {
     }
     
     func stop() {
-        if !self.uploadChannel.isClosed {
-            self.uploadChannel.close()
-        }
+        guard !self.uploadChannel.isClosed else { return }
+        self.uploadChannel.close()
     }
 }
