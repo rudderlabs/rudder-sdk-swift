@@ -13,7 +13,6 @@ import Foundation
 */
 final class EventQueue {
     private let analytics: Analytics
-    private let flushPolicyFacade: FlushPolicyFacade
     private var eventWriter: EventWriter?
     private var eventUploader: EventUploader?
     
@@ -23,7 +22,6 @@ final class EventQueue {
         
     init(analytics: Analytics) {
         self.analytics = analytics
-        self.flushPolicyFacade = FlushPolicyFacade(analytics: analytics)
         
         // Create channels centrally for coordinated communication
         self.writeChannel = AsyncChannel()
@@ -46,7 +44,6 @@ final class EventQueue {
 extension EventQueue {
     
     private func start() {
-        self.flushPolicyFacade.startSchedule()
         self.eventWriter?.start()
         self.eventUploader?.start()
     }
@@ -64,17 +61,13 @@ extension EventQueue {
      */
     func stop() {
         // Cancel flush policy first to prevent new uploads from being triggered
-        self.flushPolicyFacade.cancelSchedule()
+        self.eventWriter?.cancelSchedule()
         
         // Close upload channel first to signal uploader to stop receiving
-        if !self.uploadChannel.isClosed {
-            self.uploadChannel.close()
-        }
+        self.eventUploader?.stop()
         
         // Close write channel to signal processor to stop receiving
-        if !self.writeChannel.isClosed {
-            self.writeChannel.close()
-        }
+        self.eventWriter?.stop()
     }
 }
 

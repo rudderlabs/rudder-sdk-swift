@@ -68,4 +68,10 @@ final class EventUploader {
             }
         }
     }
+    
+    func stop() {
+        if !self.uploadChannel.isClosed {
+            self.uploadChannel.close()
+        }
+    }
 }
