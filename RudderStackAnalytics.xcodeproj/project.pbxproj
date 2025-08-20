@@ -16,6 +16,11 @@
 		532904EF2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */; };
 		532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */; };
 		532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */; };
+		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
+		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
+		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
+		539D871E2E54BB9A009FC144 /* EventQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D871D2E54BB9A009FC144 /* EventQueueTests.swift */; };
+		539D87202E55B8DD009FC144 /* ProcessingEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D871F2E55B8DD009FC144 /* ProcessingEvent.swift */; };
 		539E540E2C98CD7D00982E95 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */; };
 		53AC39722E1533F300B8E16C /* RudderOptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AC39712E1533F300B8E16C /* RudderOptionTests.swift */; };
 		53AC39B42E16FA6E00B8E16C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */; };
@@ -63,7 +68,6 @@
 		53DEA60A2E03D05A00D6C371 /* ObjCConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5AC2E03D05A00D6C371 /* ObjCConfiguration.swift */; };
 		53DEA60B2E03D05A00D6C371 /* PluginChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5B62E03D05A00D6C371 /* PluginChain.swift */; };
 		53DEA60C2E03D05A00D6C371 /* StorageModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D92E03D05A00D6C371 /* StorageModels.swift */; };
-		53DEA60D2E03D05A00D6C371 /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5912E03D05A00D6C371 /* EventManager.swift */; };
 		53DEA60E2E03D05A00D6C371 /* PluginInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5B72E03D05A00D6C371 /* PluginInteractor.swift */; };
 		53DEA60F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA59F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift */; };
 		53DEA6102E03D05A00D6C371 /* AsyncChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA59B2E03D05A00D6C371 /* AsyncChannel.swift */; };
@@ -156,12 +160,16 @@
 		532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftExampleApp.xctestplan; sourceTree = "<group>"; };
 		532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUIExampleApp.xctestplan; sourceTree = "<group>"; };
 		5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
+		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
+		539D86F82E5439E7009FC144 /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
+		539D871D2E54BB9A009FC144 /* EventQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueueTests.swift; sourceTree = "<group>"; };
+		539D871F2E55B8DD009FC144 /* ProcessingEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingEvent.swift; sourceTree = "<group>"; };
 		539E540A2C98CD7D00982E95 /* RudderStackAnalyticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderStackAnalyticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		53AC39712E1533F300B8E16C /* RudderOptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderOptionTests.swift; sourceTree = "<group>"; };
 		53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		53DEA58F2E03D05A00D6C371 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		53DEA5902E03D05A00D6C371 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
-		53DEA5912E03D05A00D6C371 /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		53DEA5932E03D05A00D6C371 /* AliasEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasEvent.swift; sourceTree = "<group>"; };
 		53DEA5942E03D05A00D6C371 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		53DEA5952E03D05A00D6C371 /* GroupEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEvent.swift; sourceTree = "<group>"; };
@@ -310,6 +318,7 @@
 				53DEA5D32E03D05A00D6C371 /* StateManagement */,
 				53DEA5DD2E03D05A00D6C371 /* Storage */,
 				53AC39B52E16FA7D00B8E16C /* Resources */,
+				539D86F32E5439AA009FC144 /* EventQueue */,
 			);
 			path = RudderStackAnalytics;
 			sourceTree = "<group>";
@@ -321,6 +330,7 @@
 				53DEA65A2E03D06F00D6C371 /* DataPlaneModuleTests.swift */,
 				53DEA65B2E03D06F00D6C371 /* FlushPolicyModuleTests.swift */,
 				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
+				539D871D2E54BB9A009FC144 /* EventQueueTests.swift */,
 				53DEA65D2E03D06F00D6C371 /* StorageModuleTests.swift */,
 				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
 				53DEA6272E03D06F00D6C371 /* EventTests */,
@@ -362,6 +372,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		539D86F32E5439AA009FC144 /* EventQueue */ = {
+			isa = PBXGroup;
+			children = (
+				539D86F12E543997009FC144 /* EventQueue.swift */,
+				539D86F42E5439CB009FC144 /* EventWriter.swift */,
+				539D86F82E5439E7009FC144 /* EventUploader.swift */,
+				539D871F2E55B8DD009FC144 /* ProcessingEvent.swift */,
+			);
+			path = EventQueue;
+			sourceTree = "<group>";
+		};
 		53AC39B52E16FA7D00B8E16C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -375,7 +396,6 @@
 			children = (
 				53DEA58F2E03D05A00D6C371 /* Analytics.swift */,
 				53DEA5902E03D05A00D6C371 /* Configuration.swift */,
-				53DEA5912E03D05A00D6C371 /* EventManager.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -878,6 +898,7 @@
 				53DEA5FB2E03D05A00D6C371 /* ObjCSessionConfiguration.swift in Sources */,
 				53DEA5FC2E03D05A00D6C371 /* ScreenEvent.swift in Sources */,
 				53DEA5FD2E03D05A00D6C371 /* DeviceInfoPlugin.swift in Sources */,
+				539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */,
 				53DEA5FE2E03D05A00D6C371 /* Extensions.swift in Sources */,
 				53DEA5FF2E03D05A00D6C371 /* StateManagement.swift in Sources */,
 				53DEA6002E03D05A00D6C371 /* Event.swift in Sources */,
@@ -887,14 +908,15 @@
 				53DEA6042E03D05A00D6C371 /* CodableTypes.swift in Sources */,
 				53DEA6052E03D05A00D6C371 /* SessionTrackingPlugin.swift in Sources */,
 				53DEA6062E03D05A00D6C371 /* TimeZoneInfoPlugin.swift in Sources */,
+				539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */,
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
 				5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */,
 				53DEA6092E03D05A00D6C371 /* HttpClient.swift in Sources */,
 				53DEA60A2E03D05A00D6C371 /* ObjCConfiguration.swift in Sources */,
+				539D86F22E543997009FC144 /* EventQueue.swift in Sources */,
 				53DEA60B2E03D05A00D6C371 /* PluginChain.swift in Sources */,
 				53DEA60C2E03D05A00D6C371 /* StorageModels.swift in Sources */,
-				53DEA60D2E03D05A00D6C371 /* EventManager.swift in Sources */,
 				53DEA60E2E03D05A00D6C371 /* PluginInteractor.swift in Sources */,
 				53DEA60F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift in Sources */,
 				53DEA6102E03D05A00D6C371 /* AsyncChannel.swift in Sources */,
@@ -912,6 +934,7 @@
 				53DEA61A2E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift in Sources */,
 				53DEA61B2E03D05A00D6C371 /* ObjCEvent.swift in Sources */,
 				53DEA61C2E03D05A00D6C371 /* FrequencyFlushPolicy.swift in Sources */,
+				539D87202E55B8DD009FC144 /* ProcessingEvent.swift in Sources */,
 				53DEA61D2E03D05A00D6C371 /* Plugin.swift in Sources */,
 				53DEA61E2E03D05A00D6C371 /* ObjCLoggerAnalytics.swift in Sources */,
 				53DEA61F2E03D05A00D6C371 /* GroupEvent.swift in Sources */,
@@ -942,6 +965,7 @@
 				53DEA66D2E03D06F00D6C371 /* ScreenInfoPluginTests.swift in Sources */,
 				53DEA66E2E03D06F00D6C371 /* LoggerAnalyticsTests.swift in Sources */,
 				53DEA66F2E03D06F00D6C371 /* LocaleInfoPluginTests.swift in Sources */,
+				539D871E2E54BB9A009FC144 /* EventQueueTests.swift in Sources */,
 				53DEA6702E03D06F00D6C371 /* AppInfoPluginTests.swift in Sources */,
 				53DEA6712E03D06F00D6C371 /* MockProvider.swift in Sources */,
 				53DEA6722E03D06F00D6C371 /* RudderStackAnalyticsTests.swift in Sources */,

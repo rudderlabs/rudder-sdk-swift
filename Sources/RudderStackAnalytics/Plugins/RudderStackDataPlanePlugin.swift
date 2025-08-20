@@ -15,20 +15,20 @@ final class RudderStackDataPlanePlugin: EventPlugin {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
     
-    private var eventManager: EventManager?
+    private var eventQueue: EventQueue?
     
     func setup(analytics: Analytics) {
         self.analytics = analytics
-        self.eventManager = EventManager(analytics: analytics)
+        self.eventQueue = EventQueue(analytics: analytics)
     }
     
     deinit {
-        self.eventManager?.stop()
-        self.eventManager = nil
+        self.eventQueue?.stop()
+        self.eventQueue = nil
     }
     
     func flush() {
-        self.eventManager?.flush()
+        self.eventQueue?.flush()
     }
 }
 
@@ -37,27 +37,27 @@ final class RudderStackDataPlanePlugin: EventPlugin {
 extension RudderStackDataPlanePlugin {
     
     func identify(payload: IdentifyEvent) -> (any Event)? {
-        self.eventManager?.put(payload)
+        self.eventQueue?.put(payload)
         return payload
     }
     
     func track(payload: TrackEvent) -> (any Event)? {
-        self.eventManager?.put(payload)
+        self.eventQueue?.put(payload)
         return payload
     }
     
     func screen(payload: ScreenEvent) -> (any Event)? {
-        self.eventManager?.put(payload)
+        self.eventQueue?.put(payload)
         return payload
     }
     
     func group(payload: GroupEvent) -> (any Event)? {
-        self.eventManager?.put(payload)
+        self.eventQueue?.put(payload)
         return payload
     }
     
     func alias(payload: AliasEvent) -> (any Event)? {
-        self.eventManager?.put(payload)
+        self.eventQueue?.put(payload)
         return payload
     }
 }
