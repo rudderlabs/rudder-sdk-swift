@@ -67,7 +67,6 @@
 		53DEA60A2E03D05A00D6C371 /* ObjCConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5AC2E03D05A00D6C371 /* ObjCConfiguration.swift */; };
 		53DEA60B2E03D05A00D6C371 /* PluginChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5B62E03D05A00D6C371 /* PluginChain.swift */; };
 		53DEA60C2E03D05A00D6C371 /* StorageModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D92E03D05A00D6C371 /* StorageModels.swift */; };
-		53DEA60D2E03D05A00D6C371 /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5912E03D05A00D6C371 /* EventManager.swift */; };
 		53DEA60E2E03D05A00D6C371 /* PluginInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5B72E03D05A00D6C371 /* PluginInteractor.swift */; };
 		53DEA60F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA59F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift */; };
 		53DEA6102E03D05A00D6C371 /* AsyncChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA59B2E03D05A00D6C371 /* AsyncChannel.swift */; };
@@ -169,7 +168,6 @@
 		53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		53DEA58F2E03D05A00D6C371 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		53DEA5902E03D05A00D6C371 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
-		53DEA5912E03D05A00D6C371 /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		53DEA5932E03D05A00D6C371 /* AliasEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasEvent.swift; sourceTree = "<group>"; };
 		53DEA5942E03D05A00D6C371 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		53DEA5952E03D05A00D6C371 /* GroupEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEvent.swift; sourceTree = "<group>"; };
@@ -395,7 +393,6 @@
 			children = (
 				53DEA58F2E03D05A00D6C371 /* Analytics.swift */,
 				53DEA5902E03D05A00D6C371 /* Configuration.swift */,
-				53DEA5912E03D05A00D6C371 /* EventManager.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -917,7 +914,6 @@
 				539D86F22E543997009FC144 /* EventQueue.swift in Sources */,
 				53DEA60B2E03D05A00D6C371 /* PluginChain.swift in Sources */,
 				53DEA60C2E03D05A00D6C371 /* StorageModels.swift in Sources */,
-				53DEA60D2E03D05A00D6C371 /* EventManager.swift in Sources */,
 				53DEA60E2E03D05A00D6C371 /* PluginInteractor.swift in Sources */,
 				53DEA60F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift in Sources */,
 				53DEA6102E03D05A00D6C371 /* AsyncChannel.swift in Sources */,
