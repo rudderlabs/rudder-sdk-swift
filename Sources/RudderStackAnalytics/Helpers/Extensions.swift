@@ -311,6 +311,32 @@ extension Data {
     }
 }
 
+// MARK: - Result<Data, Error>
+extension Result where Success == Data, Failure == Error {
+    var eventUploadResult: EventUploadResult {
+        switch self {
+        case .success(let data):
+            return .success(data)
+        case .failure(let error):
+            if let httpError = error as? HttpNetworkError {
+                return switch httpError {
+                case .networkUnavailable:
+                        .failure(RetryAbleEventUploadError.errorNetworkUnavailable)
+                case .requestFailed(let statusCode):
+                    if let nonRetryable = NonRetryAbleEventUploadError(rawValue: statusCode) {
+                        .failure(nonRetryable)
+                    } else {
+                        .failure(RetryAbleEventUploadError.errorRetry(statusCode: statusCode))
+                    }
+                case .invalidResponse, .unknownError:
+                        .failure(RetryAbleEventUploadError.errorUnknown)
+                }
+            }
+            return .failure(RetryAbleEventUploadError.errorUnknown)
+        }
+    }
+}
+
 // MARK: - Gzip
 
 enum Gzip {
