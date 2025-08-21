@@ -66,7 +66,7 @@ extension HttpClient: HttpClientRequests {
     
     func postBatchEvents(_ batch: String) async -> EventUploadResult {
         guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else {
-            return .failure(RetryAbleEventUploadError.unknown)
+            return .failure(RetryableEventUploadError.unknown)
         }
         urlRequest.httpBody = batch.utf8Data
         

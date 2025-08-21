@@ -36,7 +36,7 @@ protocol NonRetryableError: EventUploadError {}
 /**
  Represents different types of retryable event upload errors.
  */
-enum RetryAbleEventUploadError: RetryableError {
+enum RetryableEventUploadError: RetryableError {
     case retryable(statusCode: Int?)
     case networkUnavailable
     case unknown
@@ -52,7 +52,7 @@ enum RetryAbleEventUploadError: RetryableError {
 /**
  Represents different types of non-retryable event upload errors.
  */
-enum NonRetryAbleEventUploadError: Int, NonRetryableError {
+enum NonRetryableEventUploadError: Int, NonRetryableError {
     case error400 = 400
     case error401 = 401
     case error404 = 404

@@ -15,7 +15,7 @@ enum HttpNetworkError: Error {
     case requestFailed(Int)
     case invalidResponse
     case networkUnavailable
-    case unknownError
+    case unknown
 }
 
 // MARK: - HttpNetwork
@@ -71,7 +71,7 @@ final class HttpNetwork {
             }
             
             // For any other errors, return unknownError
-            return .failure(HttpNetworkError.unknownError)
+            return .failure(HttpNetworkError.unknown)
         }
     }
 }
