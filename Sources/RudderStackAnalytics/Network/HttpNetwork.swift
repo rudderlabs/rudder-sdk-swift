@@ -39,7 +39,7 @@ final class HttpNetwork {
         do {
             let (data, response) = try await session.data(for: request)
             
-            guard let httpResponse = response as? HTTPURLResponse else { 
+            guard let httpResponse = response as? HTTPURLResponse else {
                 return .failure(HttpNetworkError.invalidResponse)
             }
             
@@ -57,8 +57,8 @@ final class HttpNetwork {
             // Check if the error is network-related
             if let urlError = error as? URLError {
                 switch urlError.code {
-                case .notConnectedToInternet, .networkConnectionLost, .cannotConnectToHost, .timedOut,
-                        .dnsLookupFailed, .cannotFindHost, .dataNotAllowed:
+                case .notConnectedToInternet, .networkConnectionLost, .cannotConnectToHost,
+                        .timedOut, .dnsLookupFailed, .cannotFindHost, .dataNotAllowed:
                     return .failure(HttpNetworkError.networkUnavailable)
                 default:
                     break
@@ -85,7 +85,7 @@ struct HttpStateCode {
     private init() {
         /* Prevent instantiation (no-op) */
     }
-
+    
     static let success = 200
     static let notFound = 404
 }

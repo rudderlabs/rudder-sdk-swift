@@ -26,33 +26,33 @@ protocol EventUploadError: Error {}
 /**
  Represents an event upload error that can be retried.
  */
-protocol RetryAbleError: EventUploadError {}
+protocol RetryableError: EventUploadError {}
 
 /**
-Represents an event upload error that cannot be retried.
+ Represents an event upload error that cannot be retried.
  */
-protocol NonRetryAbleError: EventUploadError {}
+protocol NonRetryableError: EventUploadError {}
 
 /**
-Represents different types of retryable event upload errors.
+ Represents different types of retryable event upload errors.
  */
-enum RetryAbleEventUploadError: RetryAbleError {
-    case errorRetry(statusCode: Int?)
-    case errorNetworkUnavailable
-    case errorUnknown
+enum RetryAbleEventUploadError: RetryableError {
+    case retryable(statusCode: Int?)
+    case networkUnavailable
+    case unknown
     
     var statusCode: Int? {
-        switch self {
-        case .errorRetry(let code): return code
-        case .errorNetworkUnavailable, .errorUnknown: return nil
+        return switch self {
+        case .retryable(let code): code
+        case .networkUnavailable, .unknown: nil
         }
     }
 }
 
 /**
-Represents different types of non-retryable event upload errors.
+ Represents different types of non-retryable event upload errors.
  */
-enum NonRetryAbleEventUploadError: Int, NonRetryAbleError {
+enum NonRetryAbleEventUploadError: Int, NonRetryableError {
     case error400 = 400
     case error401 = 401
     case error404 = 404

@@ -321,18 +321,18 @@ extension Result where Success == Data, Failure == Error {
             if let httpError = error as? HttpNetworkError {
                 return switch httpError {
                 case .networkUnavailable:
-                        .failure(RetryAbleEventUploadError.errorNetworkUnavailable)
+                        .failure(RetryAbleEventUploadError.networkUnavailable)
                 case .requestFailed(let statusCode):
                     if let nonRetryable = NonRetryAbleEventUploadError(rawValue: statusCode) {
                         .failure(nonRetryable)
                     } else {
-                        .failure(RetryAbleEventUploadError.errorRetry(statusCode: statusCode))
+                        .failure(RetryAbleEventUploadError.retryable(statusCode: statusCode))
                     }
                 case .invalidResponse, .unknownError:
-                        .failure(RetryAbleEventUploadError.errorUnknown)
+                        .failure(RetryAbleEventUploadError.unknown)
                 }
             }
-            return .failure(RetryAbleEventUploadError.errorUnknown)
+            return .failure(RetryAbleEventUploadError.unknown)
         }
     }
 }

@@ -73,7 +73,7 @@ extension EventUploader {
         
         // Send the batch to the data plane
         let responseResult = await self.httpClient.postBatchEvents(processed)
-
+        
         // Handle the response
         switch responseResult {
         case .success(let data):
