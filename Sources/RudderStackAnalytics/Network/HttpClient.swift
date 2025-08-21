@@ -13,7 +13,7 @@ import Foundation
  */
 protocol HttpClientRequests {
     func getConfigurationData() async throws -> Data
-    func postBatchEvents(_ batch: String) async throws -> Data
+    func postBatchEvents(_ batch: String) async -> EventUploadResult
 }
 
 enum HttpClientError: Error {
@@ -54,18 +54,27 @@ final class HttpClient {
 extension HttpClient: HttpClientRequests {
     func getConfigurationData() async throws -> Data {
         guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { throw HttpClientError.invalidRequest }
-        return try await HttpNetwork.perform(request: urlRequest)
+        let result = await HttpNetwork.perform(request: urlRequest)
+        
+        switch result {
+        case .success(let data):
+            return data
+        case .failure(let error):
+            throw error
+        }
     }
     
-    func postBatchEvents(_ batch: String) async throws -> Data {
-        guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else { throw HttpClientError.invalidRequest }
+    func postBatchEvents(_ batch: String) async -> EventUploadResult {
+        guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else { 
+            return .failure(RetryAbleEventUploadError.errorUnknown)
+        }
         urlRequest.httpBody = batch.utf8Data
         
         if self.analytics.configuration.gzipEnabled, let gzipped = try? urlRequest.httpBody?.gzipped() as? Data {
             urlRequest.httpBody = gzipped
         }
         
-        return try await HttpNetwork.perform(request: urlRequest)
+        return await HttpNetwork.perform(request: urlRequest).eventUploadResult
     }
 }
 
