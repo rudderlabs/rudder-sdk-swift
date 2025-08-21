@@ -35,8 +35,7 @@ final class EventQueue {
     }
     
     deinit {
-        self.eventWriter = nil
-        self.eventUploader = nil
+        self.stop()
     }
 }
 
@@ -59,7 +58,7 @@ extension EventQueue {
     /**
      Stops the event management system by canceling flush policies and closing channels.
      */
-    func stop() {
+    private func stop() {
         // Cancel flush policy first to prevent new uploads from being triggered
         self.eventWriter?.cancelSchedule()
         

@@ -23,7 +23,6 @@ final class RudderStackDataPlanePlugin: EventPlugin {
     }
     
     deinit {
-        self.eventQueue?.stop()
         self.eventQueue = nil
     }
     
