@@ -92,5 +92,12 @@ extension EventUploader {
     
     private func handleBatchUploadFailure(_ error: EventUploadError, reference: String) {
         LoggerAnalytics.error(log: "Upload failed: \(reference)", error: error)
+        
+        // TODO: - Handle batch upload errors (use below tickets)
+        // https://linear.app/rudderstack/issue/SDK-3723/handle-status-code-400-from-batch-upload-request
+        // https://linear.app/rudderstack/issue/SDK-3724/handle-status-code-401-from-batch-upload-request
+        // https://linear.app/rudderstack/issue/SDK-3722/handle-status-code-404-from-batch-upload-request
+        // https://linear.app/rudderstack/issue/SDK-3725/handle-status-code-413-from-batch-upload-request
+        // https://linear.app/rudderstack/issue/SDK-3726/introduce-retry-logic-in-batch-upload-flow
     }
 }
