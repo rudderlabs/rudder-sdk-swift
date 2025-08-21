@@ -48,22 +48,8 @@ final class EventUploader {
                         continue
                     }
                     
-                    LoggerAnalytics.debug(log: "Upload started: \(item.reference)")
-                    do {
-                        // Process the batch by replacing timestamp placeholder with current time
-                        let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
-                        LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
-                        
-                        // Send the batch to the data plane
-                        let responseData = try await self.httpClient.postBatchEvents(processed)
-                        LoggerAnalytics.debug(log: "Upload response: \(responseData.jsonString ?? "No response")")
-                        
-                        // Remove successfully uploaded batch from storage
-                        await self.storage.remove(eventReference: item.reference)
-                        LoggerAnalytics.debug(log: "Upload completed: \(item.reference)")
-                    } catch {
-                        LoggerAnalytics.error(log: "Upload failed: \(item.reference)", error: error)
-                    }
+                    // Upload the batch
+                    await self.uploadBatch(batch, reference: item.reference)
                 }
             }
         }
@@ -72,5 +58,39 @@ final class EventUploader {
     func stop() {
         guard !self.uploadChannel.isClosed else { return }
         self.uploadChannel.close()
+    }
+}
+
+// MARK: - Batch Upload
+extension EventUploader {
+    
+    private func uploadBatch(_ batch: String, reference: String) async {
+        LoggerAnalytics.debug(log: "Upload started: \(reference)")
+        
+        // Process the batch by replacing timestamp placeholder with current time
+        let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
+        LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
+        
+        // Send the batch to the data plane
+        let responseResult = await self.httpClient.postBatchEvents(processed)
+
+        // Handle the response
+        switch responseResult {
+        case .success(let data):
+            LoggerAnalytics.debug(log: "Upload response: \(data.jsonString ?? "No response")")
+            await self.handleBatchUploadResponse(data, reference: reference)
+        case .failure(let error):
+            self.handleBatchUploadFailure(error, reference: reference)
+        }
+    }
+    
+    private func handleBatchUploadResponse(_ data: Data, reference: String) async {
+        // Remove successfully uploaded batch from storage
+        await self.storage.remove(eventReference: reference)
+        LoggerAnalytics.debug(log: "Upload completed: \(reference)")
+    }
+    
+    private func handleBatchUploadFailure(_ error: EventUploadError, reference: String) {
+        LoggerAnalytics.error(log: "Upload failed: \(reference)", error: error)
     }
 }
