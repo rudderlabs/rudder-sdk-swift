@@ -14,6 +14,8 @@ import Foundation
 enum HttpNetworkError: Error {
     case requestFailed(Int)
     case invalidResponse
+    case networkUnavailable
+    case unknownError
 }
 
 // MARK: - HttpNetwork
@@ -31,23 +33,46 @@ final class HttpNetwork {
         return URLSession(configuration: configuration)
     }()
     
-    static func perform(request: URLRequest) async throws -> Data {
+    static func perform(request: URLRequest) async -> Result<Data, Error> {
         LoggerAnalytics.debug(log: "Request URL: \(request.url?.absoluteString ?? "No URL")")
         
-        let (data, response) = try await session.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse else { throw HttpNetworkError.invalidResponse }
-        
-        let statusCode = httpResponse.statusCode
-        
-        LoggerAnalytics.debug(log: "Response Status Code: \(statusCode)")
-        LoggerAnalytics.debug(log: "Response Data: \(data.jsonString ?? "No Data")")
-        
-        guard statusCode == HttpStateCode.success else {
-            throw HttpNetworkError.requestFailed(statusCode)
+        do {
+            let (data, response) = try await session.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else { 
+                return .failure(HttpNetworkError.invalidResponse)
+            }
+            
+            let statusCode = httpResponse.statusCode
+            
+            LoggerAnalytics.debug(log: "Response Status Code: \(statusCode)")
+            LoggerAnalytics.debug(log: "Response Data: \(data.jsonString ?? "No Data")")
+            
+            guard statusCode == HttpStateCode.success else {
+                return .failure(HttpNetworkError.requestFailed(statusCode))
+            }
+            
+            return .success(data)
+        } catch {
+            // Check if the error is network-related
+            if let urlError = error as? URLError {
+                switch urlError.code {
+                case .notConnectedToInternet, .networkConnectionLost, .cannotConnectToHost, .timedOut,
+                        .dnsLookupFailed, .cannotFindHost, .dataNotAllowed:
+                    return .failure(HttpNetworkError.networkUnavailable)
+                default:
+                    break
+                }
+            }
+            
+            // Return the original error if it's already an HttpNetworkError
+            if let httpNetworkError = error as? HttpNetworkError {
+                return .failure(httpNetworkError)
+            }
+            
+            // For any other errors, return unknownError
+            return .failure(HttpNetworkError.unknownError)
         }
-        
-        return data
     }
 }
 
