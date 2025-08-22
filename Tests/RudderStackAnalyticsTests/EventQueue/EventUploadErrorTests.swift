@@ -9,13 +9,16 @@ import XCTest
 @testable import RudderStackAnalytics
 
 final class EventUploadErrorTests: XCTestCase {
-
-    private var mockAnalytics: Analytics?
+    
+    private var mockAnalytics: Analytics!
+    private var eventQueue: EventQueue!
     private var defaultSession: URLSession?
     
     override func setUp() {
         super.setUp()
         mockAnalytics = MockProvider.clientWithDiskStorage
+        eventQueue = EventQueue(analytics: mockAnalytics)
+        
         URLProtocol.registerClass(MockURLProtocol.self)
         defaultSession = HttpNetwork.session
     }
@@ -23,6 +26,8 @@ final class EventUploadErrorTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         mockAnalytics = nil
+        eventQueue = nil
+        
         if let session = defaultSession {
             HttpNetwork.session = session
         }
@@ -31,48 +36,32 @@ final class EventUploadErrorTests: XCTestCase {
     }
     
     func test_uploadBatchHandles400Error() async {
-        guard let analytics = mockAnalytics else { return XCTFail("Analytics client not set up") }
-        
-        // Given - Track an event with a 400 Bad Request response
+        // Given
         HttpNetwork.session = self.prepareMockUrlSession(with: 400)
-        analytics.track(name: "Event_Error_400")
-
-        // When - Flush the event
-        analytics.flush()
+        let event = TrackEvent(event: "integration_test", properties: ["test": "value"])
         
-        // Then - Wait for error handling to complete and verify storage is empty
-        await self.waitForCondition(timeout: 5.0) {
-            let dataItems = await analytics.configuration.storage.read().dataItems
-            return dataItems.isEmpty
-        }
+        // When
+        eventQueue.put(event)
+        // Wait for event to be processed and written to storage
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         
-        // Final assertion
-        let dataItems = await analytics.configuration.storage.read().dataItems
-        XCTAssertTrue(dataItems.isEmpty, "Storage should be empty after 400 error handling")
+        // Trigger flush to rollover storage and start upload
+        self.eventQueue.flush()
+        // Wait for upload process and 400 error handling to complete
+        try? await Task.sleep(nanoseconds: 500_000_000) // 500ms
         
+        // Then
+        let dataItems = await mockAnalytics.configuration.storage.read().dataItems
+        XCTAssertTrue(dataItems.isEmpty, "Event should be removed after 400 error handling")
+       
         // Cleanup
         await self.cleanUpStorage()
     }
-    
-    // MARK: - Helper Methods
-    
-    private func waitForCondition(timeout: TimeInterval, condition: @escaping () async -> Bool) async {
-        let startTime = Date()
-        let checkInterval: TimeInterval = 0.05 // 50ms
-        var lastCheckTime = startTime
-        
-        while Date().timeIntervalSince(startTime) < timeout {
-            if await condition() {
-                return
-            }
-            
-            // Wait for the check interval before next iteration
-            while Date().timeIntervalSince(lastCheckTime) < checkInterval {
-                await Task.yield()
-            }
-            lastCheckTime = Date()
-        }
-    }
+}
+   
+// MARK: - Helper Methods
+
+extension EventUploadErrorTests {
     
     func prepareMockUrlSession(with responseCode: Int) -> URLSession {
         MockURLProtocol.requestHandler = { _ in
