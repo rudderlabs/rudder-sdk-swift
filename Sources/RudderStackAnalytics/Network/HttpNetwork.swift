@@ -28,7 +28,7 @@ final class HttpNetwork {
         /* Prevent instantiation (no-op) */
     }
     
-    private static let session: URLSession = {
+    static var session: URLSession = {
         let configuration = URLSessionConfiguration.ephemeral
         return URLSession(configuration: configuration)
     }()
