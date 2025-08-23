@@ -315,24 +315,22 @@ extension Data {
 extension Result where Success == Data, Failure == Error {
     var eventUploadResult: EventUploadResult {
         switch self {
-        case .success(let data):
-            return .success(data)
+        case .success(let data): .success(data)
         case .failure(let error):
             if let httpError = error as? HttpNetworkError {
-                return switch httpError {
-                case .networkUnavailable:
-                        .failure(RetryableEventUploadError.networkUnavailable)
+                switch httpError {
+                case .networkUnavailable: .failure(RetryableEventUploadError.networkUnavailable)
                 case .requestFailed(let statusCode):
                     if let nonRetryable = NonRetryableEventUploadError(rawValue: statusCode) {
                         .failure(nonRetryable)
                     } else {
                         .failure(RetryableEventUploadError.retryable(statusCode: statusCode))
                     }
-                case .invalidResponse, .unknown:
-                        .failure(RetryableEventUploadError.unknown)
+                case .invalidResponse, .unknown: .failure(RetryableEventUploadError.unknown)
                 }
+            } else {
+                .failure(RetryableEventUploadError.unknown)
             }
-            return .failure(RetryableEventUploadError.unknown)
         }
     }
 }

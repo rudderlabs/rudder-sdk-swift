@@ -99,8 +99,8 @@ extension EventUploader {
         // https://linear.app/rudderstack/issue/SDK-3725/handle-status-code-413-from-batch-upload-request
         // https://linear.app/rudderstack/issue/SDK-3726/introduce-retry-logic-in-batch-upload-flow
         
-        if let nonRetyableError = error as? NonRetryableEventUploadError {
-            switch nonRetyableError {
+        if let nonRetryableError = error as? NonRetryableEventUploadError {
+            switch nonRetryableError {
             case .error400:
                 // Delete the invalid batch file
                 await self.deleteBatchFile(reference)
