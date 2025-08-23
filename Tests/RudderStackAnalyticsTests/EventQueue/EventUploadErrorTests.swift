@@ -11,13 +11,15 @@ import XCTest
 final class EventUploadErrorTests: XCTestCase {
     
     private var mockAnalytics: Analytics!
-    private var eventQueue: EventQueue!
+    private var eventUploader: EventUploader!
+    private var uploadChannel: AsyncChannel<String>!
     private var defaultSession: URLSession?
     
     override func setUp() {
         super.setUp()
         mockAnalytics = MockProvider.clientWithDiskStorage
-        eventQueue = EventQueue(analytics: mockAnalytics)
+        uploadChannel = AsyncChannel<String>()
+        eventUploader = EventUploader(analytics: mockAnalytics, uploadChannel: uploadChannel)
         
         URLProtocol.registerClass(MockURLProtocol.self)
         defaultSession = HttpNetwork.session
@@ -25,8 +27,10 @@ final class EventUploadErrorTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
+        eventUploader?.stop()
+        eventUploader = nil
+        uploadChannel = nil
         mockAnalytics = nil
-        eventQueue = nil
         
         if let session = defaultSession {
             HttpNetwork.session = session
@@ -38,24 +42,39 @@ final class EventUploadErrorTests: XCTestCase {
     func test_uploadBatchHandles400Error() async {
         // Given
         HttpNetwork.session = self.prepareMockUrlSession(with: 400)
-        let event = TrackEvent(event: "integration_test", properties: ["test": "value"])
+        let event = TrackEvent(event: "error_400_test", properties: ["test": "value"])
+        
+        // Store event in analytics storage
+        if let eventJson = event.jsonString {
+            await mockAnalytics.configuration.storage.write(event: eventJson)
+            await mockAnalytics.configuration.storage.rollover()
+        }
         
         // When
-        eventQueue.put(event)
-        // Wait for event to be processed and written to storage
-        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
+        eventUploader.start()
         
-        // Trigger flush to rollover storage and start upload
-        self.eventQueue.flush()
-        // Wait for upload process and 400 error handling to complete
-        try? await Task.sleep(nanoseconds: 500_000_000) // 500ms
+        // Trigger upload by sending signal
+        let expectation = expectation(description: "Upload should handle 400 error and remove batch")
+        
+        Task {
+            try? uploadChannel.send("upload_signal")
+            
+            // Wait for upload processing
+            while true {
+                let dataItems = await self.mockAnalytics.configuration.storage.read().dataItems
+                if dataItems.isEmpty {
+                    expectation.fulfill()
+                    break
+                }
+                await Task.yield()
+            }
+        }
+        
+        await fulfillment(of: [expectation], timeout: 3.0)
         
         // Then
         let dataItems = await mockAnalytics.configuration.storage.read().dataItems
-        XCTAssertTrue(dataItems.isEmpty, "Event should be removed after 400 error handling")
-       
-        // Cleanup
-        await self.cleanUpStorage()
+        XCTAssertTrue(dataItems.isEmpty, "Batch should be removed after 400 error")
     }
 }
    
@@ -63,9 +82,9 @@ final class EventUploadErrorTests: XCTestCase {
 
 extension EventUploadErrorTests {
     
-    func prepareMockUrlSession(with responseCode: Int) -> URLSession {
+    private func prepareMockUrlSession(with responseCode: Int) -> URLSession {
         MockURLProtocol.requestHandler = { _ in
-            let json = ["error": "Not Found"]
+            let json = responseCode == 200 ? ["status": "success"] : ["error": "Server error"]
             let data = try JSONSerialization.data(withJSONObject: json)
             return (responseCode, data, ["Content-Type": "application/json"])
         }
@@ -75,7 +94,7 @@ extension EventUploadErrorTests {
         return URLSession(configuration: config)
     }
     
-    func cleanUpStorage() async {
+    private func cleanUpStorage() async {
         guard let analytics = mockAnalytics else { return }
         let dataItems = await analytics.configuration.storage.read().dataItems
         for item in dataItems {
