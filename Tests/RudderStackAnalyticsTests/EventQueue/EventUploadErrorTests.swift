@@ -75,6 +75,8 @@ final class EventUploadErrorTests: XCTestCase {
         // Then
         let dataItems = await mockAnalytics.configuration.storage.read().dataItems
         XCTAssertTrue(dataItems.isEmpty, "Batch should be removed after 400 error")
+        
+        await self.cleanUpStorage()
     }
 }
    
