@@ -94,7 +94,6 @@ extension EventUploader {
         LoggerAnalytics.error(log: "Upload failed: \(reference)", error: error)
         
         // TODO: - Handle batch upload errors (use below tickets)
-        // https://linear.app/rudderstack/issue/SDK-3724/handle-status-code-401-from-batch-upload-request
         // https://linear.app/rudderstack/issue/SDK-3722/handle-status-code-404-from-batch-upload-request
         // https://linear.app/rudderstack/issue/SDK-3725/handle-status-code-413-from-batch-upload-request
         // https://linear.app/rudderstack/issue/SDK-3726/introduce-retry-logic-in-batch-upload-flow
@@ -104,6 +103,8 @@ extension EventUploader {
             case .error400:
                 // Delete the invalid batch file
                 await self.deleteBatchFile(reference)
+            case .error401:
+                self.analytics.shutdown()
             default:
                 break
             }
