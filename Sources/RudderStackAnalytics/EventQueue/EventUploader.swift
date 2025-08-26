@@ -102,7 +102,7 @@ extension EventUploader {
         if let nonRetryableError = error as? NonRetryableEventUploadError {
             switch nonRetryableError {
             case .error400:
-                // Delete the invalid batch file
+                LoggerAnalytics.error(log:"EventUpload: \(nonRetryableError.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties.")
                 await self.deleteBatchFile(reference)
             default:
                 break
