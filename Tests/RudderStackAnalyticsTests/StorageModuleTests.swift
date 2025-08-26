@@ -138,7 +138,7 @@ extension StorageModuleTests {
         
         guard let item = result.first else { XCTFail(); return }
         
-        let isRemoved = await storage.remove(eventReference: item.reference)
+        let isRemoved = await storage.remove(batchReference: item.reference)
         XCTAssertTrue(isRemoved)
     }
     
@@ -149,7 +149,7 @@ extension StorageModuleTests {
         await storage.rollover()
         let files = await storage.read().dataItems
         for file in files {
-            await storage.remove(eventReference: file.reference)
+            await storage.remove(batchReference: file.reference)
         }
         
         await storage.write(event: eventJson)
@@ -194,7 +194,7 @@ extension StorageModuleTests {
         
         let resultItems = await storage.read().dataItems
         for item in resultItems {
-            await storage.remove(eventReference: item.reference)
+            await storage.remove(batchReference: item.reference)
         }
         
         let dataItems = await storage.read().dataItems
@@ -207,7 +207,7 @@ extension StorageModuleTests {
         await storage.rollover()
         let resultItems1 = await storage.read().dataItems
         for item in resultItems1 {
-            await storage.remove(eventReference: item.reference)
+            await storage.remove(batchReference: item.reference)
         }
 
         await storage.write(event: eventJson)

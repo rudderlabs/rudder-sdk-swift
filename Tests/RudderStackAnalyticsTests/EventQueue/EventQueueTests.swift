@@ -62,7 +62,7 @@ final class EventQueueTests: XCTestCase {
         // Cleanup
         let dataItems = await mockAnalytics.configuration.storage.read().dataItems
         for item in dataItems {
-            await mockAnalytics.configuration.storage.remove(eventReference: item.reference)
+            await mockAnalytics.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -114,7 +114,7 @@ final class EventQueueTests: XCTestCase {
         // Cleanup
         let dataItems = await mockAnalytics.configuration.storage.read().dataItems
         for item in dataItems {
-            await mockAnalytics.configuration.storage.remove(eventReference: item.reference)
+            await mockAnalytics.configuration.storage.remove(batchReference: item.reference)
         }
     }
 }
