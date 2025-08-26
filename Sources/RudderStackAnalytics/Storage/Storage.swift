@@ -73,14 +73,14 @@ protocol EventStorage {
     func read() async -> EventDataResult
 
     /**
-     Removes a specific event from the storage.
+     Removes a specific batch from the storage.
 
-     - Parameter eventReference: The reference of the event to be removed.
-     - Returns: A `Bool` indicating whether the event was successfully removed.
+     - Parameter batchReference: The reference of the batch to be removed.
+     - Returns: A `Bool` indicating whether the batch was successfully removed.
      */
     @discardableResult
-    func remove(eventReference: String) async -> Bool
-
+    func remove(batchReference: String) async -> Bool
+    
     /**
      Performs a rollover operation on the storage.
 

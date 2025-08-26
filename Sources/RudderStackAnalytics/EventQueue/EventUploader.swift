@@ -115,6 +115,6 @@ extension EventUploader {
 // MARK: - Helpers
 extension EventUploader {
     private func deleteBatchFile(_ reference: String) async {
-        await self.storage.remove(eventReference: reference)
+        await self.storage.remove(batchReference: reference)
     }
 }
