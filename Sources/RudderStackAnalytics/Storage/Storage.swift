@@ -80,6 +80,13 @@ protocol EventStorage {
      */
     @discardableResult
     func remove(batchReference: String) async -> Bool
+
+    /**
+     Removes all batches associated with the given reference from the storage.
+
+     - Parameter batchReference: The reference of the batches to be removed.
+     */
+    func removeAll(batchReference: String) async
     
     /**
      Performs a rollover operation on the storage.
