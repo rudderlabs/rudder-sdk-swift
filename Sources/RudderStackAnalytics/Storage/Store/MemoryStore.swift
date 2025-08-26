@@ -89,12 +89,12 @@ final actor MemoryStore {
  Helper functions for managing batch references.
  */
 extension MemoryStore {
-    func appendWriteKey(with reference: String) -> String {
+    private func appendWriteKey(with reference: String) -> String {
         guard !reference.hasPrefix(self.writeKey) else { return reference }
         return self.writeKey + DataStoreConstants.referenceSeparator + reference
     }
     
-    func recoverWriteKey(from reference: String) -> String? {
+    private func recoverWriteKey(from reference: String) -> String? {
         return reference.components(separatedBy: DataStoreConstants.referenceSeparator).first
     }
 }
