@@ -57,4 +57,8 @@ enum NonRetryableEventUploadError: Int, NonRetryableError {
     case error401 = 401
     case error404 = 404
     case error413 = 413
+    
+    var formatStatusCodeMessage: String {
+        "Status code: \(self.rawValue)"
+    }
 }
