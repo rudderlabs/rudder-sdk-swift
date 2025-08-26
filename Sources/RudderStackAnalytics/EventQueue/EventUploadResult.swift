@@ -42,7 +42,7 @@ enum RetryableEventUploadError: RetryableError {
     case unknown
     
     var statusCode: Int? {
-        return switch self {
+        switch self {
         case .retryable(let code): code
         case .networkUnavailable, .unknown: nil
         }
@@ -57,4 +57,8 @@ enum NonRetryableEventUploadError: Int, NonRetryableError {
     case error401 = 401
     case error404 = 404
     case error413 = 413
+    
+    var formatStatusCodeMessage: String {
+        "Status code: \(self.rawValue)"
+    }
 }
