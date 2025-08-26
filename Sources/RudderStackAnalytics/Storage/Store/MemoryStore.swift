@@ -80,7 +80,7 @@ final actor MemoryStore {
     
     private func removeItems(using reference: String) {
         guard let writeKey = self.recoverWriteKey(from: reference) else { return }
-        self.dataItems.removeAll { $0.reference.hasPrefix(writeKey) }
+        self.dataItems.removeAll { $0.reference.hasPrefix(writeKey + DataStoreConstants.referenceSeparator) }
         LoggerAnalytics.debug(log: "Items removed related to reference: \(reference)")
     }
 }

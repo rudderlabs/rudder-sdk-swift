@@ -61,7 +61,11 @@ final actor DiskStore {
         return FileManager.contentsOf(directory: directory.path)
             .filter { $0.pathExtension.isEmpty }
             .map { directory.appendingPathComponent($0.lastPathComponent).path }
-            .sorted { (Int($0) ?? 0) < (Int($1) ?? 0) }
+            .sorted {
+                let lhsIndex = Int(URL(fileURLWithPath: $0).lastPathComponent) ?? 0
+                let rhsIndex = Int(URL(fileURLWithPath: $1).lastPathComponent) ?? 0
+                return lhsIndex < rhsIndex
+            }
     }
     
     private func removeItems(using reference: String) {
