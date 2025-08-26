@@ -84,8 +84,11 @@ extension FileManager {
             storageURL = directory[0].appendingPathComponent("rudder/analytics/events", isDirectory: true)
         }
         
-        try? FileManager.default.createDirectory(at: storageURL, withIntermediateDirectories: true, attributes: nil)
         return storageURL
+    }
+    
+    static func createDirectoryIfNeeded(at url: URL) {
+        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
     }
     
     static func createFile(at filePath: String) -> String? {
@@ -121,11 +124,11 @@ extension FileManager {
     }
     
     @discardableResult
-    static func delete(file filePath: String) -> Bool {
-        let fileUrl = URL(fileURLWithPath: filePath)
+    static func delete(item path: String) -> Bool {
+        let fileUrl = URL(fileURLWithPath: path)
         do {
             try FileManager.default.removeItem(at: fileUrl)
-            LoggerAnalytics.debug(log: "File deleted: \(filePath)")
+            LoggerAnalytics.debug(log: "Item deleted: \(path)")
             return true
         } catch {
             return false
