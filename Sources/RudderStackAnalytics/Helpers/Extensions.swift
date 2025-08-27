@@ -335,16 +335,16 @@ extension Result where Success == Data, Failure == Error {
     }
 }
 
-// MARK: - Identifiable
+// MARK: - TypeIdentifiable
 /**
  A protocol to provide class name information for conforming types.
  */
-protocol Identifiable {
+protocol TypeIdentifiable {
     static var className: String { get }
     var className: String { get }
 }
 
-extension Identifiable {
+extension TypeIdentifiable {
     static var className: String {
         String(describing: Self.self)
     }

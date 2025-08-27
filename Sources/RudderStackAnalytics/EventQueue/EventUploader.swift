@@ -62,7 +62,7 @@ final class EventUploader {
 }
 
 // MARK: - Batch Upload
-extension EventUploader: Identifiable {
+extension EventUploader: TypeIdentifiable {
     
     private func uploadBatch(_ batch: String, reference: String) async {
         LoggerAnalytics.debug(log: "Upload started: \(reference)")
