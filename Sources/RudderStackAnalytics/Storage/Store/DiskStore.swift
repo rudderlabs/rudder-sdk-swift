@@ -70,8 +70,7 @@ final actor DiskStore {
     
     private func removeItems(using reference: String) {
         let folderPath = (reference as NSString).deletingLastPathComponent
-        let result = FileManager.delete(item: folderPath)
-        result ? LoggerAnalytics.debug(log: "Successfully removed folder: \(folderPath)") : LoggerAnalytics.debug(log: "Folder does not exist: \(folderPath)")
+        FileManager.delete(item: folderPath)
     }
 }
 
