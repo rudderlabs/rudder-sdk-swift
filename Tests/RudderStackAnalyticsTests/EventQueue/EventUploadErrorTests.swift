@@ -59,8 +59,11 @@ final class EventUploadErrorTests: XCTestCase {
         Task {
             try? uploadChannel.send("upload_signal")
             
+            let startTime = Date()
+            let timeout: TimeInterval = 2.0
+            
             // Wait for upload processing
-            while true {
+            while Date().timeIntervalSince(startTime) < timeout {
                 let dataItems = await self.mockAnalytics.configuration.storage.read().dataItems
                 if dataItems.isEmpty {
                     expectation.fulfill()
@@ -75,6 +78,49 @@ final class EventUploadErrorTests: XCTestCase {
         // Then
         let dataItems = await mockAnalytics.configuration.storage.read().dataItems
         XCTAssertTrue(dataItems.isEmpty, "Batch should be removed after 400 error")
+        
+        await self.cleanUpStorage()
+    }
+    
+    func test_uploadBatchHandles413Error() async {
+        // Given
+        HttpNetwork.session = self.prepareMockUrlSession(with: 413)
+        let event = TrackEvent(event: "error_413_test", properties: ["test": "value"])
+        
+        // Store event in analytics storage
+        if let eventJson = event.jsonString {
+            await mockAnalytics.configuration.storage.write(event: eventJson)
+            await mockAnalytics.configuration.storage.rollover()
+        }
+        
+        // When
+        eventUploader.start()
+        
+        // Trigger upload by sending signal
+        let expectation = expectation(description: "Upload should handle 413 error and remove batch")
+        
+        Task {
+            try? uploadChannel.send("upload_signal")
+            
+            let startTime = Date()
+            let timeout: TimeInterval = 2.0
+            
+            // Wait for upload processing
+            while Date().timeIntervalSince(startTime) < timeout {
+                let dataItems = await self.mockAnalytics.configuration.storage.read().dataItems
+                if dataItems.isEmpty {
+                    expectation.fulfill()
+                    break
+                }
+                await Task.yield()
+            }
+        }
+        
+        await fulfillment(of: [expectation], timeout: 3.0)
+        
+        // Then
+        let dataItems = await mockAnalytics.configuration.storage.read().dataItems
+        XCTAssertTrue(dataItems.isEmpty, "Batch should be removed after 413 error")
         
         await self.cleanUpStorage()
     }
