@@ -84,7 +84,7 @@ protocol EventStorage {
     /**
      Removes all batches associated with the current write key.
 
-     Note: This operation is irreversible and will permanently delete all associated events.
+     **Note**: It is recommended to use this API during shutdown to ensure storage is not removed abruptly, which could lead to unexpected errors.
      */
     func removeAll() async
     
