@@ -62,7 +62,7 @@ final class EventUploader {
 }
 
 // MARK: - Batch Upload
-extension EventUploader {
+extension EventUploader: TypeIdentifiable {
     
     private func uploadBatch(_ batch: String, reference: String) async {
         LoggerAnalytics.debug(log: "Upload started: \(reference)")
@@ -96,14 +96,18 @@ extension EventUploader {
         // TODO: - Handle batch upload errors (use below tickets)
         // https://linear.app/rudderstack/issue/SDK-3724/handle-status-code-401-from-batch-upload-request
         // https://linear.app/rudderstack/issue/SDK-3722/handle-status-code-404-from-batch-upload-request
-        // https://linear.app/rudderstack/issue/SDK-3725/handle-status-code-413-from-batch-upload-request
         // https://linear.app/rudderstack/issue/SDK-3726/introduce-retry-logic-in-batch-upload-flow
         
         if let nonRetryableError = error as? NonRetryableEventUploadError {
             switch nonRetryableError {
             case .error400:
-                LoggerAnalytics.error(log:"EventUpload: \(nonRetryableError.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties.")
+                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties")
                 await self.deleteBatchFile(reference)
+                
+            case .error413:
+                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
+                await self.deleteBatchFile(reference)
+                
             default:
                 break
             }
