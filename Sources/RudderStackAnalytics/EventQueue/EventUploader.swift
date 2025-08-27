@@ -100,13 +100,14 @@ extension EventUploader: TypeIdentifiable {
         
         if let nonRetryableError = error as? NonRetryableEventUploadError {
             switch nonRetryableError {
-            case .error400, .error413:
-                if nonRetryableError == .error400 {
-                    LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties")
-                } else {
-                    LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
-                }
+            case .error400:
+                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties")
                 await self.deleteBatchFile(reference)
+                
+            case .error413:
+                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
+                await self.deleteBatchFile(reference)
+                
             default:
                 break
             }
