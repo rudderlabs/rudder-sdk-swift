@@ -155,11 +155,9 @@ extension StorageModuleTests {
         
         let resultItems = await storage.read().dataItems
         XCTAssertFalse(resultItems.isEmpty)
-        
-        guard let firstItem = resultItems.first else { XCTFail(); return }
-        
+                
         // Remove all events using removeAll method
-        await storage.removeAll(batchReference: firstItem.reference)
+        await storage.removeAll()
         
         let dataItemsAfterRemoval = await storage.read().dataItems
         XCTAssertTrue(dataItemsAfterRemoval.isEmpty)
@@ -237,11 +235,9 @@ extension StorageModuleTests {
         
         let resultItems = await storage.read().dataItems
         XCTAssertFalse(resultItems.isEmpty)
-        
-        guard let firstItem = resultItems.first else { XCTFail(); return }
-        
+                
         // Remove all events using removeAll method
-        await storage.removeAll(batchReference: firstItem.reference)
+        await storage.removeAll()
         
         let dataItemsAfterRemoval = await storage.read().dataItems
         XCTAssertTrue(dataItemsAfterRemoval.isEmpty)

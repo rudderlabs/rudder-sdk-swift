@@ -68,8 +68,8 @@ final actor DiskStore {
             }
     }
     
-    private func removeItems(using reference: String) {
-        let folderPath = (reference as NSString).deletingLastPathComponent
+    private func removeAllItems() {
+        let folderPath = self.currentFileURL.deletingLastPathComponent().path
         FileManager.delete(item: folderPath)
     }
 }
@@ -150,9 +150,9 @@ extension DiskStore: DataStore {
         }
     }
     
-    func removeAll(reference: String) async {
+    func removeAll() async {
         await withCheckedContinuation { continuation in
-            self.removeItems(using: reference)
+            self.removeAllItems()
             continuation.resume()
         }
     }

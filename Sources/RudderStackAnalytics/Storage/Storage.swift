@@ -82,11 +82,9 @@ protocol EventStorage {
     func remove(batchReference: String) async -> Bool
 
     /**
-     Removes all batches associated with the given reference from the storage.
-
-     - Parameter batchReference: The reference of the batches to be removed.
+     Removes all batches associated with the current write key.
      */
-    func removeAll(batchReference: String) async
+    func removeAll() async
     
     /**
      Performs a rollover operation on the storage.

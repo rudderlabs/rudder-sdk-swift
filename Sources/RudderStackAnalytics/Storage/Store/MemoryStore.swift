@@ -78,10 +78,9 @@ final actor MemoryStore {
         return true
     }
     
-    private func removeItems(using reference: String) {
-        guard let writeKey = self.recoverWriteKey(from: reference) else { return }
+    private func removeAllItems() {
         self.dataItems.removeAll { $0.reference.hasPrefix(writeKey + DataStoreConstants.referenceSeparator) }
-        LoggerAnalytics.debug(log: "Items removed related to reference: \(reference)")
+        LoggerAnalytics.debug(log: "Items removed related to reference: \(writeKey)")
     }
 }
 
@@ -92,10 +91,6 @@ extension MemoryStore {
     private func appendWriteKey(with reference: String) -> String {
         guard !reference.hasPrefix(self.writeKey) else { return reference }
         return self.writeKey + DataStoreConstants.referenceSeparator + reference
-    }
-    
-    private func recoverWriteKey(from reference: String) -> String? {
-        return reference.components(separatedBy: DataStoreConstants.referenceSeparator).first
     }
 }
 
@@ -143,9 +138,9 @@ extension MemoryStore: DataStore {
         }
     }
     
-    func removeAll(reference: String) async {
+    func removeAll() async {
         await withCheckedContinuation { continuation in
-            self.removeItems(using: reference)
+            self.removeAllItems()
             continuation.resume()
         }
     }

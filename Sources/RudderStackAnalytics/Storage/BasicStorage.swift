@@ -50,8 +50,8 @@ extension BasicStorage {
         return await self.dataStore.remove(reference: batchReference)
     }
     
-    func removeAll(batchReference: String) async {
-        await self.dataStore.removeAll(reference: batchReference)
+    func removeAll() async {
+        await self.dataStore.removeAll()
     }
     
     func rollover() async {
