@@ -59,6 +59,16 @@ extension KeyValueStore {
         self.userDefaults?.removeObject(forKey: key)
         self.userDefaults?.synchronize()
     }
+    
+    /**
+     Wipes all stored values in the `UserDefaults` instance.
+     */
+    func reset() {
+        guard let userDefaults = self.userDefaults else { return }
+        
+        userDefaults.dictionaryRepresentation().keys.forEach { userDefaults.removeObject(forKey: $0) }
+        userDefaults.synchronize()
+    }
 }
 
 /**
