@@ -73,14 +73,21 @@ protocol EventStorage {
     func read() async -> EventDataResult
 
     /**
-     Removes a specific event from the storage.
+     Removes a specific batch from the storage.
 
-     - Parameter eventReference: The reference of the event to be removed.
-     - Returns: A `Bool` indicating whether the event was successfully removed.
+     - Parameter batchReference: The reference of the batch to be removed.
+     - Returns: A `Bool` indicating whether the batch was successfully removed.
      */
     @discardableResult
-    func remove(eventReference: String) async -> Bool
+    func remove(batchReference: String) async -> Bool
 
+    /**
+     Removes all batches associated with the current write key.
+
+     **Note**: It is recommended to use this API during shutdown to ensure storage is not removed abruptly, which could lead to unexpected errors.
+     */
+    func removeAll() async
+    
     /**
      Performs a rollover operation on the storage.
 

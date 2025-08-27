@@ -146,7 +146,7 @@ extension EventUploadErrorTests {
         guard let analytics = mockAnalytics else { return }
         let dataItems = await analytics.configuration.storage.read().dataItems
         for item in dataItems {
-            await analytics.configuration.storage.remove(eventReference: item.reference)
+            await analytics.configuration.storage.remove(batchReference: item.reference)
         }
     }
 }

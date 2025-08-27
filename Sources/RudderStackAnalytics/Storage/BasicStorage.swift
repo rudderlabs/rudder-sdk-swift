@@ -46,8 +46,12 @@ extension BasicStorage {
         return await EventDataResult(dataItems: self.dataStore.retrieve())
     }
     
-    func remove(eventReference: String) async -> Bool {
-        return await self.dataStore.remove(reference: eventReference)
+    func remove(batchReference: String) async -> Bool {
+        return await self.dataStore.remove(reference: batchReference)
+    }
+    
+    func removeAll() async {
+        await self.dataStore.removeAll()
     }
     
     func rollover() async {

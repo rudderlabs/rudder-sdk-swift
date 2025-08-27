@@ -110,7 +110,7 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         let eventNames = batchData.compactMap { $0["event"] as? String }
         
         for item in dataItems {
-            await analyticsMock.configuration.storage.remove(eventReference: item.reference)
+            await analyticsMock.configuration.storage.remove(batchReference: item.reference)
         }
 
         return eventNames
