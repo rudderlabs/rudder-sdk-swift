@@ -335,6 +335,25 @@ extension Result where Success == Data, Failure == Error {
     }
 }
 
+// MARK: - Identifiable
+/**
+ A protocol to provide class name information for conforming types.
+ */
+protocol Identifiable {
+    static var className: String { get }
+    var className: String { get }
+}
+
+extension Identifiable {
+    static var className: String {
+        String(describing: Self.self)
+    }
+
+    var className: String {
+        String(describing: Self.self)
+    }
+}
+
 // MARK: - Gzip
 
 enum Gzip {
