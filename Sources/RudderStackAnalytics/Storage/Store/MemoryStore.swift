@@ -138,7 +138,7 @@ extension MemoryStore: DataStore {
         }
     }
     
-    func removeAll() async {
+    func reset() async {
         await withCheckedContinuation { continuation in
             self.removeAllItems()
             continuation.resume()
