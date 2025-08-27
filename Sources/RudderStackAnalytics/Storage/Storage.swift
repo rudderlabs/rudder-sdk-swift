@@ -83,6 +83,8 @@ protocol EventStorage {
 
     /**
      Removes all batches associated with the current write key.
+
+     Note: This operation is irreversible and will permanently delete all associated events.
      */
     func removeAll() async
     
