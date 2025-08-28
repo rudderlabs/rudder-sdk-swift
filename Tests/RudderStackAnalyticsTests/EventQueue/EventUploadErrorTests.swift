@@ -82,6 +82,60 @@ final class EventUploadErrorTests: XCTestCase {
         await self.cleanUpStorage()
     }
     
+    func test_uploadBatchHandles404Error() async {
+        // Given
+        HttpNetwork.session = self.prepareMockUrlSession(with: 404)
+        let event = TrackEvent(event: "error_404_test", properties: ["test": "value"])
+        
+        // Store event in analytics storage
+        if let eventJson = event.jsonString {
+            await mockAnalytics.configuration.storage.write(event: eventJson)
+            await mockAnalytics.configuration.storage.rollover()
+        }
+        
+        // Verify storage has data initially
+        let initialDataItems = await mockAnalytics.configuration.storage.read().dataItems
+        XCTAssertFalse(initialDataItems.isEmpty, "Storage should have data initially")
+        
+        // When
+        eventUploader.start()
+        
+        // Trigger upload by sending signal
+        let expectation = expectation(description: "Upload should handle 404 error and stop uploader")
+        
+        Task {
+            try? uploadChannel.send("upload_signal")
+            
+            let startTime = Date()
+            let timeout: TimeInterval = 2.0
+            
+            // Wait for upload processing and uploader to stop
+            while Date().timeIntervalSince(startTime) < timeout {
+                // Check if upload channel has been closed (indicating uploader stopped)
+                if self.uploadChannel.isClosed {
+                    expectation.fulfill()
+                    break
+                }
+                await Task.yield()
+            }
+        }
+        
+        await fulfillment(of: [expectation], timeout: 3.0)
+        
+        // Then
+        // Verify upload channel has been closed (uploader stopped)
+        XCTAssertTrue(uploadChannel.isClosed, "Upload channel should be closed after 404 error")
+        
+        // Verify batch is NOT removed (unlike 400 and 413 errors)
+        let dataItems = await mockAnalytics.configuration.storage.read().dataItems
+        XCTAssertFalse(dataItems.isEmpty, "Batch should NOT be removed after 404 error - it should be retained for retry when source is enabled again")
+        
+        // Verify analytics is still active (unlike 401 error)
+        XCTAssertTrue(mockAnalytics.isAnalyticsActive, "Analytics should remain active after 404 error")
+        
+        await self.cleanUpStorage()
+    }
+
     func test_uploadBatchHandles413Error() async {
         // Given
         HttpNetwork.session = self.prepareMockUrlSession(with: 413)
