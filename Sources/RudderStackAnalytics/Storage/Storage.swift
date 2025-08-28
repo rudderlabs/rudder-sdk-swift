@@ -82,13 +82,6 @@ protocol EventStorage {
     func remove(batchReference: String) async -> Bool
 
     /**
-     Removes all batches associated with the current write key.
-
-     **Note**: It is recommended to use this API during shutdown to ensure storage is not removed abruptly, which could lead to unexpected errors.
-     */
-    func removeAll() async
-    
-    /**
      Performs a rollover operation on the storage.
 
      This is typically used to finalize or batch stored events for processing or uploading.
@@ -116,6 +109,13 @@ protocol Storage: KeyValueStorage, EventStorage {
      This property indicates the current `StorageMode` being used, which determines how events are managed within the storage system.
      */
     var eventStorageMode: StorageMode { get }
+    
+    /**
+     Removes all batches and `UserDefaults` values associated with the current write key.
+
+     **Note**: It is recommended to use this API during shutdown to ensure storage is not removed abruptly, which could lead to unexpected errors.
+     */
+    func removeAll() async
 }
 
 // MARK: - StorageMode
