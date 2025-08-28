@@ -32,8 +32,8 @@ final class BasicStorage: Storage {
     }
     
     func removeAll() async {
-        await self.dataStore.reset()
-        self.keyValueStore.reset()
+        await self.dataStore.removeAll()
+        self.keyValueStore.removeAll()
     }
 }
 

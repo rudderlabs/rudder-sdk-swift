@@ -17,7 +17,7 @@ protocol DataStore {
     func retrieve() async -> [EventDataItem]
     func remove(reference: String) async -> Bool
     func rollover() async
-    func reset() async
+    func removeAll() async
 }
 
 // MARK: - StoreProvider
