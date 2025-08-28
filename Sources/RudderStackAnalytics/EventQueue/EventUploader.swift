@@ -105,7 +105,9 @@ extension EventUploader: TypeIdentifiable {
                 await self.deleteBatchFile(reference)
               
             case .error401:
+                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Invalid write key. Ensure the write key is valid.")
                 self.analytics.shutdown()
+                await self.storage.removeAll()
                 
             case .error413:
                 LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
