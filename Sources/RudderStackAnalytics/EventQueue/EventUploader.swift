@@ -15,6 +15,7 @@ final class EventUploader {
     private let analytics: Analytics
     private let httpClient: HttpClient
     private let uploadChannel: AsyncChannel<String>
+    private let backoff: BackoffPolicyHandler
     
     private var storage: Storage {
         return self.analytics.configuration.storage
@@ -24,6 +25,7 @@ final class EventUploader {
         self.analytics = analytics
         self.httpClient = HttpClient(analytics: analytics)
         self.uploadChannel = uploadChannel
+        self.backoff = BackoffPolicyHandler()
     }
     
     func start() {
@@ -62,30 +64,36 @@ final class EventUploader {
 }
 
 // MARK: - Batch Upload
-extension EventUploader: TypeIdentifiable {
-    
+extension EventUploader {
     private func uploadBatch(_ batch: String, reference: String) async {
-        LoggerAnalytics.debug(log: "Upload started: \(reference)")
-        
-        // Process the batch by replacing timestamp placeholder with current time
-        let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
-        LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
-        
-        // Send the batch to the data plane
-        let responseResult = await self.httpClient.postBatchEvents(processed)
-        
-        // Handle the response
-        switch responseResult {
-        case .success(let data):
-            LoggerAnalytics.debug(log: "Upload response: \(data.jsonString ?? "No response")")
-            await self.handleBatchUploadResponse(data, reference: reference)
-        case .failure(let error):
-            await self.handleBatchUploadFailure(error, reference: reference)
-        }
+        var shouldRetry = false
+        repeat {
+            LoggerAnalytics.debug(log: "Upload started: \(reference)")
+            
+            // Process the batch by replacing timestamp placeholder with current time
+            let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
+            LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
+            
+            // Send the batch to the data plane
+            let responseResult = await self.httpClient.postBatchEvents(processed)
+            
+            // Handle the response and determine if retry is needed
+            switch responseResult {
+            case .success(let data):
+                LoggerAnalytics.debug(log: "Upload response: \(data.jsonString ?? "No response")")
+                await self.handleBatchUploadResponse(data, reference: reference)
+                shouldRetry = false
+            
+            case .failure(let error):
+                await self.handleBatchUploadFailure(error, reference: reference)
+                shouldRetry = error is RetryableEventUploadError
+            }
+        } while shouldRetry
     }
     
     private func handleBatchUploadResponse(_ data: Data, reference: String) async {
         // Remove successfully uploaded batch from storage
+        await self.backoff.reset()
         await self.deleteBatchFile(reference)
         LoggerAnalytics.debug(log: "Upload completed: \(reference)")
     }
@@ -93,30 +101,40 @@ extension EventUploader: TypeIdentifiable {
     private func handleBatchUploadFailure(_ error: EventUploadError, reference: String) async {
         LoggerAnalytics.error(log: "Upload failed: \(reference)", error: error)
         
-        // TODO: - Handle batch upload errors (use below tickets)
-
-        // https://linear.app/rudderstack/issue/SDK-3726/introduce-retry-logic-in-batch-upload-flow
-        
+        // Handle non-retryable errors
         if let nonRetryableError = error as? NonRetryableEventUploadError {
-            switch nonRetryableError {
-            case .error400:
-                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties")
-                await self.deleteBatchFile(reference)
-              
-            case .error401:
-                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Invalid write key. Ensure the write key is valid.")
-                self.analytics.shutdown()
-                await self.storage.removeAll()
-                
-            case .error404:
-                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.")
-                self.stop()
-                // TODO: - When working on SourceConfig items, implement logic to wait for source to be enabled again.
+            await self.backoff.reset()
+            await self.handleNonRetryableError(nonRetryableError, reference: reference)
+        }
+        
+        // Apply backoff for retryable errors
+        if error is RetryableEventUploadError {
+            await self.backoff.waitWithBackoff()
+        }
+    }
+}
 
-            case .error413:
-                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
-                await self.deleteBatchFile(reference)
-            }
+// MARK: - Error Handlers
+extension EventUploader: TypeIdentifiable {
+    private func handleNonRetryableError(_ error: NonRetryableEventUploadError, reference: String) async {
+        switch error {
+        case .error400:
+            LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties.")
+            await self.deleteBatchFile(reference)
+          
+        case .error401:
+            LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Invalid write key. Ensure the write key is valid.")
+            self.analytics.shutdown()
+            await self.storage.removeAll()
+            
+        case .error404:
+            LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.")
+            self.stop()
+            // TODO: - When working on SourceConfig items, implement logic to wait for source to be enabled again.
+
+        case .error413:
+            LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
+            await self.deleteBatchFile(reference)
         }
     }
 }
