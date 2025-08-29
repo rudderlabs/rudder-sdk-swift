@@ -67,23 +67,29 @@ final class EventUploader {
 extension EventUploader {
     
     private func uploadBatch(_ batch: String, reference: String) async {
-        LoggerAnalytics.debug(log: "Upload started: \(reference)")
-        
-        // Process the batch by replacing timestamp placeholder with current time
-        let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
-        LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
-        
-        // Send the batch to the data plane
-        let responseResult = await self.httpClient.postBatchEvents(processed)
-        
-        // Handle the response
-        switch responseResult {
-        case .success(let data):
-            LoggerAnalytics.debug(log: "Upload response: \(data.jsonString ?? "No response")")
-            await self.handleBatchUploadResponse(data, reference: reference)
-        case .failure(let error):
-            await self.handleBatchUploadFailure(error, reference: reference)
-        }
+        var shouldRetry = false
+        repeat {
+            LoggerAnalytics.debug(log: "Upload started: \(reference)")
+            
+            // Process the batch by replacing timestamp placeholder with current time
+            let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
+            LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
+            
+            // Send the batch to the data plane
+            let responseResult = await self.httpClient.postBatchEvents(processed)
+            
+            // Handle the response and determine if retry is needed
+            switch responseResult {
+            case .success(let data):
+                LoggerAnalytics.debug(log: "Upload response: \(data.jsonString ?? "No response")")
+                await self.handleBatchUploadResponse(data, reference: reference)
+                shouldRetry = false
+            
+            case .failure(let error):
+                await self.handleBatchUploadFailure(error, reference: reference)
+                shouldRetry = error is RetryableEventUploadError
+            }
+        } while shouldRetry
     }
     
     private func handleBatchUploadResponse(_ data: Data, reference: String) async {
