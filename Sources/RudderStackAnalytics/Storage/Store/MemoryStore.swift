@@ -24,6 +24,8 @@ final actor MemoryStore {
     
     private func store(event: String) {
         var dataItem = self.currentDataItem ?? EventDataItem(batch: DataStoreConstants.fileBatchPrefix)
+        dataItem.reference = self.appendWriteKey(with: dataItem.reference)
+        
         let newEntry = dataItem.batch == DataStoreConstants.fileBatchPrefix
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > DataStoreConstants.maxBatchSize {
@@ -75,6 +77,21 @@ final actor MemoryStore {
         LoggerAnalytics.debug(log: "Item removed: \(id)")
         return true
     }
+    
+    private func removeAllItems() {
+        self.dataItems.removeAll { $0.reference.hasPrefix(writeKey + DataStoreConstants.referenceSeparator) }
+        LoggerAnalytics.debug(log: "Items removed related to reference: \(writeKey)")
+    }
+}
+
+/**
+ Helper functions for managing batch references.
+ */
+extension MemoryStore {
+    private func appendWriteKey(with reference: String) -> String {
+        guard !reference.hasPrefix(self.writeKey) else { return reference }
+        return self.writeKey + DataStoreConstants.referenceSeparator + reference
+    }
 }
 
 /**
@@ -118,6 +135,13 @@ extension MemoryStore: DataStore {
     func remove(reference: String) async -> Bool {
         await withCheckedContinuation { continuation in
             continuation.resume(returning: self.removeItem(using: reference))
+        }
+    }
+    
+    func removeAll() async {
+        await withCheckedContinuation { continuation in
+            self.removeAllItems()
+            continuation.resume()
         }
     }
     
