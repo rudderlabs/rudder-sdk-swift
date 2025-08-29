@@ -82,6 +82,58 @@ final class EventUploadErrorTests: XCTestCase {
         await self.cleanUpStorage()
     }
     
+    func test_uploadBatchHandles401Error() async {
+        // Given
+        HttpNetwork.session = self.prepareMockUrlSession(with: 401)
+        let event = TrackEvent(event: "error_401_test", properties: ["test": "value"])
+        
+        // Store event in analytics storage
+        if let eventJson = event.jsonString {
+            await mockAnalytics.configuration.storage.write(event: eventJson)
+            await mockAnalytics.configuration.storage.rollover()
+        }
+        
+        // Verify analytics is initially active and storage has data
+        XCTAssertTrue(mockAnalytics.isAnalyticsActive, "Analytics should be active initially")
+        let initialDataItems = await mockAnalytics.configuration.storage.read().dataItems
+        XCTAssertFalse(initialDataItems.isEmpty, "Storage should have data initially")
+        
+        // When
+        eventUploader.start()
+        
+        // Trigger upload by sending signal
+        let expectation = expectation(description: "Upload should handle 401 error, shutdown analytics and clear storage")
+        
+        Task {
+            try? uploadChannel.send("upload_signal")
+            
+            let startTime = Date()
+            let timeout: TimeInterval = 2.0
+            
+            // Wait for upload processing and analytics shutdown
+            while Date().timeIntervalSince(startTime) < timeout {
+                // Check if analytics has been shutdown
+                if !self.mockAnalytics.isAnalyticsActive {
+                    expectation.fulfill()
+                    break
+                }
+                await Task.yield()
+            }
+        }
+        
+        await fulfillment(of: [expectation], timeout: 3.0)
+        
+        // Then
+        // Verify analytics has been shutdown
+        XCTAssertFalse(mockAnalytics.isAnalyticsActive, "Analytics should be shutdown after 401 error")
+        
+        // Verify all storage has been cleared
+        let dataItems = await mockAnalytics.configuration.storage.read().dataItems
+        XCTAssertTrue(dataItems.isEmpty, "All storage should be cleared after 401 error")
+        
+        await self.cleanUpStorage()
+    }
+    
     func test_uploadBatchHandles413Error() async {
         // Given
         HttpNetwork.session = self.prepareMockUrlSession(with: 413)
@@ -146,7 +198,7 @@ extension EventUploadErrorTests {
         guard let analytics = mockAnalytics else { return }
         let dataItems = await analytics.configuration.storage.read().dataItems
         for item in dataItems {
-            await analytics.configuration.storage.remove(eventReference: item.reference)
+            await analytics.configuration.storage.remove(batchReference: item.reference)
         }
     }
 }

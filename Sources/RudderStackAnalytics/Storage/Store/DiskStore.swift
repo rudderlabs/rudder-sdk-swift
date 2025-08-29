@@ -13,15 +13,20 @@ import Foundation
 final actor DiskStore {
     
     let writeKey: String
-    let fileStorageURL: URL = FileManager.eventStorageURL
+    var fileStorageURL: URL
     private let keyValueStore: KeyValueStore
     
     init(writeKey: String) {
         self.writeKey = writeKey
+        self.fileStorageURL = FileManager.eventStorageURL.appendingPathComponent(self.writeKey)
         self.keyValueStore = KeyValueStore(writeKey: writeKey)
     }
     
     private func store(event: String) {
+        
+        // Create directory if it doesn't exist
+        FileManager.createDirectoryIfNeeded(at: self.fileStorageURL)
+        
         var currentFilePath = self.currentFileURL.path
         var newFile = false
         if !FileManager.default.fileExists(atPath: currentFilePath) {
@@ -54,13 +59,18 @@ final actor DiskStore {
     private func collectFiles() -> [String] {
         let directory = self.currentFileURL.deletingLastPathComponent()
         return FileManager.contentsOf(directory: directory.path)
-            .filter { $0.lastPathComponent.contains(self.writeKey) && $0.pathExtension.isEmpty }
+            .filter { $0.pathExtension.isEmpty }
             .map { directory.appendingPathComponent($0.lastPathComponent).path }
             .sorted {
-                let idx1 = Int($0.components(separatedBy: DataStoreConstants.fileNameSeparator).last ?? .empty) ?? 0
-                let idx2 = Int($1.components(separatedBy: DataStoreConstants.fileNameSeparator).last ?? .empty) ?? 0
-                return idx1 < idx2
+                let lhsIndex = Int(URL(fileURLWithPath: $0).lastPathComponent) ?? 0
+                let rhsIndex = Int(URL(fileURLWithPath: $1).lastPathComponent) ?? 0
+                return lhsIndex < rhsIndex
             }
+    }
+    
+    private func removeAllItems() {
+        let folderPath = self.currentFileURL.deletingLastPathComponent().path
+        FileManager.delete(item: folderPath)
     }
 }
 
@@ -78,7 +88,7 @@ extension DiskStore {
     }
     
     private var currentFileURL: URL {
-        return self.fileStorageURL.appendingPathComponent(self.writeKey + "\(DataStoreConstants.fileNameSeparator)\(self.currentFileIndex)").appendingPathExtension(DataStoreConstants.fileType)
+        return self.fileStorageURL.appendingPathComponent( "\(self.currentFileIndex)").appendingPathExtension(DataStoreConstants.fileType)
     }
     
     private func incrementFileIndex() {
@@ -136,7 +146,14 @@ extension DiskStore: DataStore {
     
     func remove(reference filePath: String) async -> Bool {
         await withCheckedContinuation { continuation in
-            continuation.resume(returning: FileManager.delete(file: filePath))
+            continuation.resume(returning: FileManager.delete(item: filePath))
+        }
+    }
+    
+    func removeAll() async {
+        await withCheckedContinuation { continuation in
+            self.removeAllItems()
+            continuation.resume()
         }
     }
     

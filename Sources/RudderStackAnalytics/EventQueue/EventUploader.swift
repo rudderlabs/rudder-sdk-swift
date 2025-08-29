@@ -94,7 +94,7 @@ extension EventUploader: TypeIdentifiable {
         LoggerAnalytics.error(log: "Upload failed: \(reference)", error: error)
         
         // TODO: - Handle batch upload errors (use below tickets)
-        // https://linear.app/rudderstack/issue/SDK-3724/handle-status-code-401-from-batch-upload-request
+
         // https://linear.app/rudderstack/issue/SDK-3722/handle-status-code-404-from-batch-upload-request
         // https://linear.app/rudderstack/issue/SDK-3726/introduce-retry-logic-in-batch-upload-flow
         
@@ -103,6 +103,11 @@ extension EventUploader: TypeIdentifiable {
             case .error400:
                 LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties")
                 await self.deleteBatchFile(reference)
+              
+            case .error401:
+                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Invalid write key. Ensure the write key is valid.")
+                self.analytics.shutdown()
+                await self.storage.removeAll()
                 
             case .error413:
                 LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
@@ -118,6 +123,6 @@ extension EventUploader: TypeIdentifiable {
 // MARK: - Helpers
 extension EventUploader {
     private func deleteBatchFile(_ reference: String) async {
-        await self.storage.remove(eventReference: reference)
+        await self.storage.remove(batchReference: reference)
     }
 }
