@@ -47,6 +47,7 @@ final actor BackoffPolicyHandler {
 
 extension BackoffPolicyHandler {
     func sleep(seconds: Int) async throws {
-        try await Task.sleep(nanoseconds: UInt64(seconds) * 1_000_000_000)
+        let nanosecondsPerSecond: UInt64 = 1_000_000_000
+        try await Task.sleep(nanoseconds: UInt64(seconds) * nanosecondsPerSecond)
     }
 }
