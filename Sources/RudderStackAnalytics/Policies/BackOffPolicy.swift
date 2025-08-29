@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - BackoffPolicy Protocol
+// MARK: - BackoffPolicy
 /**
  Protocol representing a backoff policy for retrying operations.
  Implementations should provide a strategy for calculating the next delay
@@ -15,11 +15,11 @@ import Foundation
  */
 protocol BackoffPolicy {
     /**
-     Calculates the next delay in milliseconds based on the backoff policy.
+     Calculates the next delay in seconds based on the backoff policy.
      
-     - Returns: The next delay in milliseconds.
+     - Returns: The next delay in seconds.
      */
-    func nextDelayInMilliseconds() -> Int
+    func nextDelayInSeconds() -> Int
     
     /**
      Resets the backoff policy to its initial state.
@@ -39,6 +39,6 @@ struct BackOffPolicyConstants {
         /* Default implementation (no-op) */
     }
 
-    static let minDelayInMillis = 3000
-    static let base = 2.0
+    static let maxAttempts = 5
+    static let coolOffPeriodInSeconds = 30 * 60 // 30 minutes
 }
