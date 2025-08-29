@@ -40,5 +40,5 @@ struct BackOffPolicyConstants {
     }
 
     static let maxAttempts = 5
-    static let coolOffPeriodInSeconds = 30 * 60 // 30 minutes
+    static let coolOffPeriodInSeconds = 1800 // 30 minutes
 }
