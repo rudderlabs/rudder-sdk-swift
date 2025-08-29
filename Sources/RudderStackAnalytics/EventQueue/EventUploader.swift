@@ -95,7 +95,6 @@ extension EventUploader: TypeIdentifiable {
         
         // TODO: - Handle batch upload errors (use below tickets)
 
-        // https://linear.app/rudderstack/issue/SDK-3722/handle-status-code-404-from-batch-upload-request
         // https://linear.app/rudderstack/issue/SDK-3726/introduce-retry-logic-in-batch-upload-flow
         
         if let nonRetryableError = error as? NonRetryableEventUploadError {
@@ -109,12 +108,14 @@ extension EventUploader: TypeIdentifiable {
                 self.analytics.shutdown()
                 await self.storage.removeAll()
                 
+            case .error404:
+                LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.")
+                self.stop()
+                // TODO: - When working on SourceConfig items, implement logic to wait for source to be enabled again.
+
             case .error413:
                 LoggerAnalytics.error(log: "\(className): \(nonRetryableError.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
                 await self.deleteBatchFile(reference)
-                
-            default:
-                break
             }
         }
     }
