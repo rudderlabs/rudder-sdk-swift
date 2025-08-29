@@ -65,7 +65,6 @@ final class EventUploader {
 
 // MARK: - Batch Upload
 extension EventUploader {
-    
     private func uploadBatch(_ batch: String, reference: String) async {
         var shouldRetry = false
         repeat {
