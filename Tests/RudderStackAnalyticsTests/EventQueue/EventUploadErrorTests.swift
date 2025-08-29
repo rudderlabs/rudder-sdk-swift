@@ -83,12 +83,9 @@ final class EventUploadErrorTests: XCTestCase {
     }
     
     func test_uploadBatchHandles401Error() async {
-    func test_uploadBatchHandles404Error() async {
         // Given
         HttpNetwork.session = self.prepareMockUrlSession(with: 401)
         let event = TrackEvent(event: "error_401_test", properties: ["test": "value"])
-        HttpNetwork.session = self.prepareMockUrlSession(with: 404)
-        let event = TrackEvent(event: "error_404_test", properties: ["test": "value"])
         
         // Store event in analytics storage
         if let eventJson = event.jsonString {
@@ -98,16 +95,12 @@ final class EventUploadErrorTests: XCTestCase {
         
         // Verify analytics is initially active and storage has data
         XCTAssertTrue(mockAnalytics.isAnalyticsActive, "Analytics should be active initially")
-        // Verify storage has data initially
-        let initialDataItems = await mockAnalytics.configuration.storage.read().dataItems
-        XCTAssertFalse(initialDataItems.isEmpty, "Storage should have data initially")
         
         // When
         eventUploader.start()
         
         // Trigger upload by sending signal
         let expectation = expectation(description: "Upload should handle 401 error, shutdown analytics and clear storage")
-        let expectation = expectation(description: "Upload should handle 404 error and stop uploader")
         
         Task {
             try? uploadChannel.send("upload_signal")
@@ -116,12 +109,9 @@ final class EventUploadErrorTests: XCTestCase {
             let timeout: TimeInterval = 2.0
             
             // Wait for upload processing and analytics shutdown
-            // Wait for upload processing and uploader to stop
             while Date().timeIntervalSince(startTime) < timeout {
                 // Check if analytics has been shutdown
                 if !self.mockAnalytics.isAnalyticsActive {
-                // Check if upload channel has been closed (indicating uploader stopped)
-                if self.uploadChannel.isClosed {
                     expectation.fulfill()
                     break
                 }
@@ -134,13 +124,60 @@ final class EventUploadErrorTests: XCTestCase {
         // Then
         // Verify analytics has been shutdown
         XCTAssertFalse(mockAnalytics.isAnalyticsActive, "Analytics should be shutdown after 401 error")
+        
+        // Verify all storage has been cleared
+        let dataItems = await mockAnalytics.configuration.storage.read().dataItems
+        XCTAssertTrue(dataItems.isEmpty, "All storage should be cleared after 401 error")
+        
+        await self.cleanUpStorage()
+    }
+    
+    func test_uploadBatchHandles404Error() async {
+        // Given
+        HttpNetwork.session = self.prepareMockUrlSession(with: 404)
+        let event = TrackEvent(event: "error_404_test", properties: ["test": "value"])
+        
+        // Store event in analytics storage
+        if let eventJson = event.jsonString {
+            await mockAnalytics.configuration.storage.write(event: eventJson)
+            await mockAnalytics.configuration.storage.rollover()
+        }
+        
+        // Verify storage has data initially
+        let initialDataItems = await mockAnalytics.configuration.storage.read().dataItems
+        XCTAssertFalse(initialDataItems.isEmpty, "Storage should have data initially")
+        
+        // When
+        eventUploader.start()
+        
+        // Trigger upload by sending signal
+        let expectation = expectation(description: "Upload should handle 404 error and stop uploader")
+        
+        Task {
+            try? uploadChannel.send("upload_signal")
+            
+            let startTime = Date()
+            let timeout: TimeInterval = 2.0
+            
+            // Wait for upload processing and uploader to stop
+            while Date().timeIntervalSince(startTime) < timeout {
+                // Check if upload channel has been closed (indicating uploader stopped)
+                if self.uploadChannel.isClosed {
+                    expectation.fulfill()
+                    break
+                }
+                await Task.yield()
+            }
+        }
+        
+        await fulfillment(of: [expectation], timeout: 3.0)
+        
+        // Then
         // Verify upload channel has been closed (uploader stopped)
         XCTAssertTrue(uploadChannel.isClosed, "Upload channel should be closed after 404 error")
         
-        // Verify all storage has been cleared
         // Verify batch is NOT removed (unlike 400 and 413 errors)
         let dataItems = await mockAnalytics.configuration.storage.read().dataItems
-        XCTAssertTrue(dataItems.isEmpty, "All storage should be cleared after 401 error")
         XCTAssertFalse(dataItems.isEmpty, "Batch should NOT be removed after 404 error - it should be retained for retry when source is enabled again")
         
         // Verify analytics is still active (unlike 401 error)
@@ -148,8 +185,7 @@ final class EventUploadErrorTests: XCTestCase {
         
         await self.cleanUpStorage()
     }
-    
-
+        
     func test_uploadBatchHandles413Error() async {
         // Given
         HttpNetwork.session = self.prepareMockUrlSession(with: 413)
