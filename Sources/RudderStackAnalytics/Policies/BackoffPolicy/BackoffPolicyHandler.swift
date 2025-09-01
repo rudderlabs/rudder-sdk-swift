@@ -14,13 +14,13 @@ import Foundation
 final actor BackoffPolicyHandler {
     private let maxAttempts: Int
     private let coolOffSecs: Int
-    private var policy: BackoffPolicy
     private var currentAttempt: Int
+    private var policy: BackoffPolicy
     
-    init() {
+    init(policy: BackoffPolicy = ExponentialBackoffPolicy()) {
         self.maxAttempts = BackOffPolicyConstants.maxAttempts
         self.coolOffSecs = BackOffPolicyConstants.coolOffPeriodInSeconds
-        self.policy = ExponentialBackoffPolicy()
+        self.policy = policy
         self.currentAttempt = 0
     }
 
@@ -67,7 +67,7 @@ extension BackoffPolicyHandler {
     /**
      Sleeps for the specified number of seconds.
      */
-    func sleep(seconds: Int) async throws {
+    private func sleep(seconds: Int) async throws {
         let nanosecondsPerSecond: UInt64 = 1_000_000_000
         try await Task.sleep(nanoseconds: UInt64(seconds) * nanosecondsPerSecond)
     }
@@ -75,7 +75,7 @@ extension BackoffPolicyHandler {
     /**
      Formats the given total seconds into a human-readable string.
      */
-    func formatSeconds(_ totalSeconds: Int) -> String {
+    private func formatSeconds(_ totalSeconds: Int) -> String {
         let secondsPerMinute = 60
 
         let minutes = totalSeconds / secondsPerMinute
