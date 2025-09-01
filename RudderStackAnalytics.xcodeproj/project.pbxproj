@@ -364,6 +364,7 @@
 				53DEA6592E03D06F00D6C371 /* RudderStackAnalyticsTests.swift */,
 				53DEA65A2E03D06F00D6C371 /* DataPlaneModuleTests.swift */,
 				53DEA65B2E03D06F00D6C371 /* FlushPolicyModuleTests.swift */,
+				5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */,
 				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
 				53DEA65D2E03D06F00D6C371 /* StorageModuleTests.swift */,
 				539D87392E588951009FC144 /* EventQueue */,
@@ -375,7 +376,6 @@
 				53DEA6522E03D06F00D6C371 /* SessionManagementTests */,
 				53DEA6582E03D06F00D6C371 /* StateManagementTests */,
 				532904EE2E05BBDE00C8EFE2 /* TestPlans */,
-				5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */,
 			);
 			path = RudderStackAnalyticsTests;
 			sourceTree = "<group>";
