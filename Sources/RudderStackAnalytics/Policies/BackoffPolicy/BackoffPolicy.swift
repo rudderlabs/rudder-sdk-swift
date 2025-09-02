@@ -1,5 +1,5 @@
 //
-//  BackOffPolicy.swift
+//  BackoffPolicy.swift
 //  RudderStackAnalytics
 //
 //  Created by Satheesh Kannan on 29/08/25.
@@ -28,12 +28,12 @@ protocol BackoffPolicy {
     func resetBackoff()
 }
 
-// MARK: - BackOffPolicyConstants
+// MARK: - BackoffPolicyConstants
 
 /**
  A struct containing constants used in backoff policies.
  */
-struct BackOffPolicyConstants {
+struct BackoffPolicyConstants {
 
     private init() {
         /* Default implementation (no-op) */
