@@ -38,10 +38,10 @@ protocol NonRetryableError: EventUploadError {}
  */
 enum RetryableEventUploadError: RetryableError {
     
-    /** Indicates a retry able error, typically associated with HTTP status code 4xx-5xx, excluding non-retryable errors. */
+    /** Indicates a retryable error, typically associated with HTTP status code 4xx-5xx, excluding non-retryable errors. */
     case retryable(statusCode: Int?)
     
-    /** Indicates a retry able error, typically happens when the network is unavailable. */
+    /** Indicates a retryable error, typically happens when the network is unavailable. */
     case networkUnavailable
     
     /** Indicates a fatal error, typically associated with some exception or failure that can be retried. */
