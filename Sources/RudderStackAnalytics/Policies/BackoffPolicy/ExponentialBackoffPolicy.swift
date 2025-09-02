@@ -15,7 +15,7 @@ import Foundation
  */
 final class ExponentialBackoffPolicy: BackoffPolicy {
     
-    private var minDelayInSecs: Int
+    private var minDelayInMillis: Int
     private var base: Double
     private var attempt: Int
     
@@ -23,33 +23,33 @@ final class ExponentialBackoffPolicy: BackoffPolicy {
      Initializes the exponential backoff policy with configurable parameters.
      */
     init() {
-        self.minDelayInSecs = ExponentialBackoffConstants.minDelayInSecs
+        self.minDelayInMillis = ExponentialBackoffConstants.minDelayInMillis
         self.base = ExponentialBackoffConstants.defaultBase
         self.attempt = 0
     }
     
     /**
-     Calculates the next delay in seconds based on the exponential backoff policy.
+     Calculates the next delay in milliseconds based on the exponential backoff policy.
      
-     - Returns: The next delay in seconds with jitter applied.
+     - Returns: The next delay in milliseconds with jitter applied.
      */
-    func nextDelayInSeconds() -> Int {
-        let delayInSeconds = Int(Double(minDelayInSecs) * pow(base, Double(attempt)))
+    func nextDelayInMilliseconds() -> Int {
+        let delayInMilliseconds = Int(Double(minDelayInMillis) * pow(base, Double(attempt)))
         attempt += 1
         
-        let delayWithJitterInSeconds = withJitter(delayInSeconds)
-        return delayWithJitterInSeconds
+        let delayWithJitterInMilliseconds = withJitter(delayInMilliseconds)
+        return delayWithJitterInMilliseconds
     }
     
     /**
      Applies random jitter to the delay to avoid synchronized retries.
      
-     - Parameter delayInSeconds: The base delay in seconds
+     - Parameter delayInMilliseconds: The base delay in milliseconds
      - Returns: The delay with jitter applied
      */
-    private func withJitter(_ delayInSeconds: Int) -> Int {
-        let jitter = Int.random(in: 0..<delayInSeconds)
-        return delayInSeconds + jitter
+    private func withJitter(_ delayInMilliseconds: Int) -> Int {
+        let jitter = Int.random(in: 0..<delayInMilliseconds)
+        return delayInMilliseconds + jitter
     }
     
     /**
@@ -73,5 +73,5 @@ struct ExponentialBackoffConstants {
     }
     
     static let defaultBase = 2.0
-    static let minDelayInSecs = 3
+    static let minDelayInMillis = 3000 // 3 seconds
 }

@@ -15,11 +15,11 @@ import Foundation
  */
 protocol BackoffPolicy {
     /**
-     Calculates the next delay in seconds based on the backoff policy.
+     Calculates the next delay in milliseconds based on the backoff policy.
      
-     - Returns: The next delay in seconds.
+     - Returns: The next delay in milliseconds.
      */
-    func nextDelayInSeconds() -> Int
+    func nextDelayInMilliseconds() -> Int
     
     /**
      Resets the backoff policy to its initial state.
@@ -40,5 +40,5 @@ struct BackOffPolicyConstants {
     }
 
     static let maxAttempts = 5
-    static let coolOffPeriodInSeconds = 1800 // 30 minutes
+    static let coolOffPeriodInMilliseconds = 1800000 // 30 minutes
 }

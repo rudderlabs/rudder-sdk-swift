@@ -13,13 +13,13 @@ import Foundation
  */
 final actor BackoffPolicyHandler {
     private let maxAttempts: Int
-    private let coolOffSecs: Int
+    private let coolOffPeriodMillis: Int
     private var currentAttempt: Int
     private var policy: BackoffPolicy
     
     init(policy: BackoffPolicy = ExponentialBackoffPolicy()) {
         self.maxAttempts = BackOffPolicyConstants.maxAttempts
-        self.coolOffSecs = BackOffPolicyConstants.coolOffPeriodInSeconds
+        self.coolOffPeriodMillis = BackOffPolicyConstants.coolOffPeriodInMilliseconds
         self.policy = policy
         self.currentAttempt = 0
     }
@@ -38,17 +38,17 @@ final actor BackoffPolicyHandler {
     private func applyCoolOffPeriod() async {
         LoggerAnalytics.verbose(log: "Max attempts reached. Entering cool-off period.")
         self.reset()
-        LoggerAnalytics.verbose(log: "Next attempt will be after \(formatSeconds(coolOffSecs)).")
-        try? await self.sleep(seconds: coolOffSecs)
+        LoggerAnalytics.verbose(log: "Next attempt will be after \(formatMilliseconds(coolOffPeriodMillis)).")
+        try? await self.sleep(milliseconds: coolOffPeriodMillis)
     }
 
     /**
      Applies the backoff strategy before the next retry attempt.
      */
     private func applyBackoff() async {
-        let delay = self.policy.nextDelayInSeconds()
-        LoggerAnalytics.verbose(log: "Sleeping for \(formatSeconds(delay)) (attempt \(currentAttempt) of \(maxAttempts)).")
-        try? await self.sleep(seconds: delay)
+        let delay = self.policy.nextDelayInMilliseconds()
+        LoggerAnalytics.verbose(log: "Sleeping for \(formatMilliseconds(delay)) (attempt \(currentAttempt) of \(maxAttempts)).")
+        try? await self.sleep(milliseconds: delay)
     }
 
     /**
@@ -65,19 +65,22 @@ final actor BackoffPolicyHandler {
 // MARK: - Helpers
 extension BackoffPolicyHandler {
     /**
-     Sleeps for the specified number of seconds.
+     Sleeps for the specified number of milliseconds.
      */
-    private func sleep(seconds: Int) async throws {
-        let nanosecondsPerSecond: UInt64 = 1_000_000_000
-        try await Task.sleep(nanoseconds: UInt64(seconds) * nanosecondsPerSecond)
+    private func sleep(milliseconds: Int) async throws {
+        let nanosecondsPerMillisecond: UInt64 = 1_000_000
+        try await Task.sleep(nanoseconds: UInt64(milliseconds) * nanosecondsPerMillisecond)
     }
 
     /**
-     Formats the given total seconds into a human-readable string.
+     Formats the given total milliseconds into a human-readable string.
      */
-    private func formatSeconds(_ totalSeconds: Int) -> String {
+    private func formatMilliseconds(_ totalMilliseconds: Int) -> String {
+        let millisecondsPerSecond = 1000
         let secondsPerMinute = 60
-
+        
+        let totalSeconds = totalMilliseconds / millisecondsPerSecond
+        let milliseconds = totalMilliseconds % millisecondsPerSecond
         let minutes = totalSeconds / secondsPerMinute
         let seconds = totalSeconds % secondsPerMinute
         
@@ -85,12 +88,20 @@ extension BackoffPolicyHandler {
             value == 1 ? "\(value) \(label)" : "\(value) \(label)s"
         }
         
-        if minutes > 0 && seconds > 0 {
-            return "\(unit(minutes, "min")) \(unit(seconds, "sec"))"
-        } else if minutes > 0 {
-            return unit(minutes, "min")
+        if minutes > 0 {
+            if seconds > 0 {
+                return "\(unit(minutes, "min")) \(unit(seconds, "sec"))"
+            } else {
+                return unit(minutes, "min")
+            }
+        } else if seconds > 0 {
+            if milliseconds > 0 {
+                return "\(unit(seconds, "sec")) \(milliseconds)ms"
+            } else {
+                return unit(seconds, "sec")
+            }
         } else {
-            return unit(seconds, "sec")
+            return "\(milliseconds)ms"
         }
     }
 }
