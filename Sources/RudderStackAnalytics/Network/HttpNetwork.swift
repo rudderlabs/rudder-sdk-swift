@@ -48,7 +48,7 @@ final class HttpNetwork {
             LoggerAnalytics.debug(log: "Response Status Code: \(statusCode)")
             LoggerAnalytics.debug(log: "Response Data: \(data.jsonString ?? "No Data")")
             
-            guard statusCode == HttpStateCode.success else {
+            guard (HttpStateCode.success200...HttpStateCode.success299).contains(statusCode) else {
                 return .failure(HttpNetworkError.requestFailed(statusCode))
             }
             
@@ -86,6 +86,6 @@ struct HttpStateCode {
         /* Prevent instantiation (no-op) */
     }
     
-    static let success = 200
-    static let notFound = 404
+    static let success200 = 200
+    static let success299 = 299
 }
