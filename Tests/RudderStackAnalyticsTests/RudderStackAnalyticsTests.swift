@@ -55,7 +55,7 @@ extension RudderStackAnalyticsTests {
         XCTAssertFalse(dataItems.isEmpty)
         
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -68,7 +68,7 @@ extension RudderStackAnalyticsTests {
         XCTAssertFalse(dataItems.isEmpty)
         
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -81,7 +81,7 @@ extension RudderStackAnalyticsTests {
         XCTAssertFalse(dataItems.isEmpty)
         
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -93,7 +93,7 @@ extension RudderStackAnalyticsTests {
         let dataItems = await client.configuration.storage.read().dataItems
         XCTAssertFalse(dataItems.isEmpty)
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -203,7 +203,7 @@ extension RudderStackAnalyticsTests {
         }
         
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -229,7 +229,7 @@ extension RudderStackAnalyticsTests {
         XCTAssertTrue(lastEvent["event"] as? String == "New Event Name", "Event name should be modified by the plugin")
         
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
 
@@ -256,7 +256,7 @@ extension RudderStackAnalyticsTests {
         XCTAssertTrue(lastEvent["event"] as? String == "Original Event", "Event name should remain unchanged after plugin removal")
         
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
 }

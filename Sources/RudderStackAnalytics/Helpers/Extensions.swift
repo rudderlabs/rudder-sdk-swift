@@ -84,8 +84,11 @@ extension FileManager {
             storageURL = directory[0].appendingPathComponent("rudder/analytics/events", isDirectory: true)
         }
         
-        try? FileManager.default.createDirectory(at: storageURL, withIntermediateDirectories: true, attributes: nil)
         return storageURL
+    }
+    
+    static func createDirectoryIfNeeded(at url: URL) {
+        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
     }
     
     static func createFile(at filePath: String) -> String? {
@@ -121,13 +124,14 @@ extension FileManager {
     }
     
     @discardableResult
-    static func delete(file filePath: String) -> Bool {
-        let fileUrl = URL(fileURLWithPath: filePath)
+    static func delete(item path: String) -> Bool {
+        let fileUrl = URL(fileURLWithPath: path)
         do {
             try FileManager.default.removeItem(at: fileUrl)
-            LoggerAnalytics.debug(log: "File deleted: \(filePath)")
+            LoggerAnalytics.debug(log: "Removed item at path: \(path)")
             return true
         } catch {
+            LoggerAnalytics.error(log: "Failed to remove item at path: \(path)", error: error)
             return false
         }
     }
@@ -308,6 +312,49 @@ extension Data {
     var prettyPrintedString: String? {
         guard let dict = try? JSONSerialization.jsonObject(with: self, options: []) as? [String: Any], let prettyData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted), let pretty = prettyData.jsonString else { return nil }
         return pretty
+    }
+}
+
+// MARK: - Result<Data, Error>
+extension Result where Success == Data, Failure == Error {
+    var eventUploadResult: EventUploadResult {
+        switch self {
+        case .success(let data): .success(data)
+        case .failure(let error):
+            if let httpError = error as? HttpNetworkError {
+                switch httpError {
+                case .networkUnavailable: .failure(RetryableEventUploadError.networkUnavailable)
+                case .requestFailed(let statusCode):
+                    if let nonRetryable = NonRetryableEventUploadError(rawValue: statusCode) {
+                        .failure(nonRetryable)
+                    } else {
+                        .failure(RetryableEventUploadError.retryable(statusCode: statusCode))
+                    }
+                case .invalidResponse, .unknown: .failure(RetryableEventUploadError.unknown)
+                }
+            } else {
+                .failure(RetryableEventUploadError.unknown)
+            }
+        }
+    }
+}
+
+// MARK: - TypeIdentifiable
+/**
+ A protocol to provide class name information for conforming types.
+ */
+protocol TypeIdentifiable {
+    static var className: String { get }
+    var className: String { get }
+}
+
+extension TypeIdentifiable {
+    static var className: String {
+        String(describing: Self.self)
+    }
+
+    var className: String {
+        String(describing: Self.self)
     }
 }
 

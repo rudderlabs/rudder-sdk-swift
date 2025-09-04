@@ -138,8 +138,29 @@ extension StorageModuleTests {
         
         guard let item = result.first else { XCTFail(); return }
         
-        let isRemoved = await storage.remove(eventReference: item.reference)
+        let isRemoved = await storage.remove(batchReference: item.reference)
         XCTAssertTrue(isRemoved)
+    }
+    
+    func test_remove_all_event_disk() async {
+        guard let storage = self.analytics_disk?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
+        
+        // Write multiple events
+        await storage.write(event: eventJson)
+        await storage.rollover()
+        await storage.write(event: eventJson)
+        await storage.rollover()
+        await storage.write(event: eventJson)
+        await storage.rollover()
+        
+        let resultItems = await storage.read().dataItems
+        XCTAssertFalse(resultItems.isEmpty)
+                
+        // Remove all events using removeAll method
+        await storage.removeAll()
+        
+        let dataItemsAfterRemoval = await storage.read().dataItems
+        XCTAssertTrue(dataItemsAfterRemoval.isEmpty)
     }
     
     func test_rollover_event_disk() async {
@@ -149,7 +170,7 @@ extension StorageModuleTests {
         await storage.rollover()
         let files = await storage.read().dataItems
         for file in files {
-            await storage.remove(eventReference: file.reference)
+            await storage.remove(batchReference: file.reference)
         }
         
         await storage.write(event: eventJson)
@@ -194,11 +215,32 @@ extension StorageModuleTests {
         
         let resultItems = await storage.read().dataItems
         for item in resultItems {
-            await storage.remove(eventReference: item.reference)
+            await storage.remove(batchReference: item.reference)
         }
         
         let dataItems = await storage.read().dataItems
         XCTAssertTrue(dataItems.isEmpty)
+    }
+    
+    func test_remove_all_event_memory() async {
+        guard let storage = self.analytics_memory?.configuration.storage, let eventJson = MockProvider.simpleTrackEvent.jsonString else { XCTFail(); return }
+        
+        // Write multiple events
+        await storage.write(event: eventJson)
+        await storage.rollover()
+        await storage.write(event: eventJson)
+        await storage.rollover()
+        await storage.write(event: eventJson)
+        await storage.rollover()
+        
+        let resultItems = await storage.read().dataItems
+        XCTAssertFalse(resultItems.isEmpty)
+                
+        // Remove all events using removeAll method
+        await storage.removeAll()
+        
+        let dataItemsAfterRemoval = await storage.read().dataItems
+        XCTAssertTrue(dataItemsAfterRemoval.isEmpty)
     }
     
     func test_rollover_event_memory() async {
@@ -207,7 +249,7 @@ extension StorageModuleTests {
         await storage.rollover()
         let resultItems1 = await storage.read().dataItems
         for item in resultItems1 {
-            await storage.remove(eventReference: item.reference)
+            await storage.remove(batchReference: item.reference)
         }
 
         await storage.write(event: eventJson)
