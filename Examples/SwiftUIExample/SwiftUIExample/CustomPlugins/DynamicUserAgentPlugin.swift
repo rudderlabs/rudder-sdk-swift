@@ -15,6 +15,7 @@ import WebKit
 // MARK: - DynamicUserAgentPlugin
 /**
  A plugin that dynamically adds User Agent information to the event payload.
+ Supported on iOS, macOS, and tvOS only (requires WebKit framework).
  
  ## Usage:
  ```swift
