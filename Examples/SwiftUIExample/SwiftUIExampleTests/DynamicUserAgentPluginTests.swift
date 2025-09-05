@@ -143,8 +143,7 @@ struct DynamicUserAgentPluginTests {
     
    @Test @MainActor
    func readUserAgent_returnsNonEmptyString() async {
-       let plugin = DynamicUserAgentPlugin()
-       guard let userAgent = await plugin.readUserAgent() else {
+       guard let userAgent = await DynamicUserAgentPlugin.readUserAgent() else {
            #expect(Bool(false), "Expected userAgent to not be nil")
            return
        }
