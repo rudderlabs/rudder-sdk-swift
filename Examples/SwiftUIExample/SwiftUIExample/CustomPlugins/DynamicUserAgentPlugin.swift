@@ -61,7 +61,7 @@ extension DynamicUserAgentPlugin {
     /**
      Reads the User Agent string using a WKWebView instance.
      
-     - Returns: The User Agent string if available, otherwise nil.
+     - Returns: The User Agent string from WebKit's `navigator.userAgent` if available, otherwise nil.
      - Note: This method must be called on the main thread as `WKWebView` requires it.
      */
     

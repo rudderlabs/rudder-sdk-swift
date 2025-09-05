@@ -14,7 +14,7 @@ import UIKit
 
 // MARK: - StaticUserAgentPlugin
 /**
- A plugin that add static User Agent information to the event payload.
+ A plugin that adds static User Agent information to the event payload.
  
  ## Usage:
  ```swift
