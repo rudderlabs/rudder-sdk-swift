@@ -1,5 +1,5 @@
 //
-//  UserAgentPlugin.swift
+//  DynamicUserAgentPlugin.swift
 //  SwiftUIExampleApp
 //
 //  Created by Satheesh Kannan on 04/09/25.
@@ -12,18 +12,18 @@ import RudderStackAnalytics
 import WebKit
 #endif
 
-// MARK: - UserAgentPlugin
+// MARK: - DynamicUserAgentPlugin
 /**
  A plugin that adds User Agent information to the event payload.
  
  ## Usage:
  ```swift
  // Create and add the plugin
- let userAgentPlugin = UserAgentPlugin()
+ let userAgentPlugin = DynamicUserAgentPlugin()
  analytics.add(plugin: userAgentPlugin)
  ```
  */
-final class UserAgentPlugin: Plugin {
+final class DynamicUserAgentPlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: Analytics?
     var userAgent: String?
@@ -55,7 +55,7 @@ final class UserAgentPlugin: Plugin {
 }
 
 // MARK: - UserAgent
-extension UserAgentPlugin {
+extension DynamicUserAgentPlugin {
     
     @MainActor
     func readUserAgent() async -> String? {
