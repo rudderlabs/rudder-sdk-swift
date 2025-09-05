@@ -30,6 +30,7 @@
 		535BB3FD2E04643900E1DAB0 /* AppTestingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F02E04643900E1DAB0 /* AppTestingHelper.swift */; };
 		539301A02E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */; };
 		539301C82E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */; };
+		539301CA2E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */; };
 		53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -86,6 +87,7 @@
 		5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIExampleAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicUserAgentPlugin.swift; sourceTree = "<group>"; };
 		539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicUserAgentPluginTests.swift; sourceTree = "<group>"; };
+		539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticUserAgentPlugin.swift; sourceTree = "<group>"; };
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -143,6 +145,7 @@
 				535BB3D22E04642400E1DAB0 /* OptionPlugin.swift */,
 				535BB3D32E04642400E1DAB0 /* SetAnonymousIdPlugin.swift */,
 				535BB3D42E04642400E1DAB0 /* SetPushTokenPlugin.swift */,
+				539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */,
 				5328B86B2E3B48820051A202 /* EventFilteringPlugin.swift */,
 				5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */,
 			);
@@ -303,6 +306,7 @@
 			files = (
 				535BB3E52E04642400E1DAB0 /* SwiftUIExampleApp.swift in Sources */,
 				535BB3E62E04642400E1DAB0 /* AnalyticsManager.swift in Sources */,
+				539301CA2E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift in Sources */,
 				535BB3E72E04642400E1DAB0 /* SetPushTokenPlugin.swift in Sources */,
 				535BB3E82E04642400E1DAB0 /* CustomLogger.swift in Sources */,
 				535BB3E92E04642400E1DAB0 /* SetAnonymousIdPlugin.swift in Sources */,
