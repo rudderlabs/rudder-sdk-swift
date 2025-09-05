@@ -29,6 +29,7 @@
 		535BB3FC2E04643900E1DAB0 /* SwiftUIAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */; };
 		535BB3FD2E04643900E1DAB0 /* AppTestingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F02E04643900E1DAB0 /* AppTestingHelper.swift */; };
 		539301A02E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */; };
+		539301C82E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */; };
 		53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -84,6 +85,7 @@
 		535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAppTests.swift; sourceTree = "<group>"; };
 		5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIExampleAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicUserAgentPlugin.swift; sourceTree = "<group>"; };
+		539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicUserAgentPluginTests.swift; sourceTree = "<group>"; };
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -191,6 +193,7 @@
 				535BB3F32E04643900E1DAB0 /* SetAnonymousIdPluginTests.swift */,
 				535BB3F42E04643900E1DAB0 /* SetPushTokenPluginTests.swift */,
 				535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */,
+				539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */,
 			);
 			path = SwiftUIExampleTests;
 			sourceTree = "<group>";
@@ -323,6 +326,7 @@
 				535BB3F92E04643900E1DAB0 /* SetAnonymousIdPluginTests.swift in Sources */,
 				535BB3FA2E04643900E1DAB0 /* OptionPluginTests.swift in Sources */,
 				535BB3FB2E04643900E1DAB0 /* BluetoothInfoPluginTests.swift in Sources */,
+				539301C82E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift in Sources */,
 				535BB3FC2E04643900E1DAB0 /* SwiftUIAppTests.swift in Sources */,
 				535BB3FD2E04643900E1DAB0 /* AppTestingHelper.swift in Sources */,
 			);
