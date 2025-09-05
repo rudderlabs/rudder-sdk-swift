@@ -15,28 +15,59 @@ import WebKit
 // MARK: - DynamicUserAgentPlugin
 /**
  A plugin that dynamically adds User Agent information to the event payload.
-
+ 
  ## Usage:
  ```swift
  // Create and add the plugin
  let userAgentPlugin = DynamicUserAgentPlugin()
  analytics.add(plugin: userAgentPlugin)
  ```
+ 
+ **Note**: Early events may be sent without User Agent since it's fetched asynchronously.
+ For production, pre-fetch before plugin initialization:
+ 
+ **Recommended:**
+ ```swift
+ // Pre-fetch User Agent before SDK initialization
+ let userAgent = await DynamicUserAgentPlugin.readUserAgent()
+ let userAgentPlugin = DynamicUserAgentPlugin(precomputedUserAgent: userAgent)
+ 
+ // Initialize analytics with the plugin
+ let analytics = Analytics(configuration: configuration)
+ analytics.add(plugin: userAgentPlugin)
+ ```
+ 
+ This ensures the User Agent is available immediately when the plugin starts intercepting events,
+ providing consistent behavior across all tracked events.
  */
 final class DynamicUserAgentPlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: Analytics?
     var userAgent: String?
     
+    /**
+     Read user agent on initialization on main thread.
+     
+     - Note: This async operation may not complete before events start being processed, potentially causing early events to be sent without User Agent information. For production use, consider pre-fetching the User Agent before plugin initialization.
+     */
     init() {
-        // Read user agent on initialization on main thread
         Task { @MainActor [weak self] in
             guard let self else {
-                LoggerAnalytics.debug(log: "Failed to read user agent")
+                LoggerAnalytics.debug(log: "Plugin deallocated before reading user agent")
                 return
             }
-            self.userAgent = await self.readUserAgent()
+            self.userAgent = await Self.readUserAgent()
         }
+    }
+    
+    /**
+     Initializes the plugin with a pre-computed User Agent string.
+     
+     - Parameter precomputedUserAgent: The User Agent string to use for all events.
+     - Note: This initializer is recommended for production use to ensure consistent User Agent availability.
+     */
+    init(precomputedUserAgent: String?) {
+        self.userAgent = precomputedUserAgent
     }
     
     func setup(analytics: Analytics) {
@@ -66,7 +97,7 @@ extension DynamicUserAgentPlugin {
      */
     
     @MainActor
-    func readUserAgent() async -> String? {
+    static func readUserAgent() async -> String? {
 #if canImport(WebKit)
         do {
             let webView = WKWebView(frame: .zero)
