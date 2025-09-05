@@ -43,7 +43,7 @@ final class DynamicUserAgentPlugin: Plugin {
     }
     
     func intercept(event: any Event) -> (any Event)? {
-        guard let userAgent = userAgent else { return event }
+        guard let userAgent else { return event }
         
         var updatedEvent = event
         var contextDict = updatedEvent.context?.rawDictionary ?? [:]

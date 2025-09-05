@@ -31,6 +31,7 @@
 		539301A02E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */; };
 		539301C82E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */; };
 		539301CA2E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */; };
+		539301CC2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */; };
 		53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -88,6 +89,7 @@
 		5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicUserAgentPlugin.swift; sourceTree = "<group>"; };
 		539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicUserAgentPluginTests.swift; sourceTree = "<group>"; };
 		539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticUserAgentPlugin.swift; sourceTree = "<group>"; };
+		539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticUserAgentPluginTests.swift; sourceTree = "<group>"; };
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -197,6 +199,7 @@
 				535BB3F42E04643900E1DAB0 /* SetPushTokenPluginTests.swift */,
 				535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */,
 				539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */,
+				539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */,
 			);
 			path = SwiftUIExampleTests;
 			sourceTree = "<group>";
@@ -332,6 +335,7 @@
 				535BB3FB2E04643900E1DAB0 /* BluetoothInfoPluginTests.swift in Sources */,
 				539301C82E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift in Sources */,
 				535BB3FC2E04643900E1DAB0 /* SwiftUIAppTests.swift in Sources */,
+				539301CC2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift in Sources */,
 				535BB3FD2E04643900E1DAB0 /* AppTestingHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

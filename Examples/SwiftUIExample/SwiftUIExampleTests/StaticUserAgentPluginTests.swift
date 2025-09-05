@@ -1,5 +1,5 @@
 //
-//  DynamicUserAgentPluginTests.swift
+//  StaticUserAgentPluginTests.swift
 //  SwiftUIExampleAppTests
 //
 //  Created by Satheesh Kannan on 05/09/25.
@@ -9,12 +9,12 @@ import Testing
 import RudderStackAnalytics
 @testable import SwiftUIExampleApp
 
-struct DynamicUserAgentPluginTests {
+struct StaticUserAgentPluginTests {
     
     @Test
     func userAgent_isInjected_whenUserAgentIsAvailable() {
         given("a UserAgentPlugin with userAgent set and event with no userAgent context") {
-            let plugin = DynamicUserAgentPlugin()
+            let plugin = StaticUserAgentPlugin()
             let event = MockEvent()
             
             // Directly set userAgent to test the intercept logic
@@ -22,7 +22,7 @@ struct DynamicUserAgentPluginTests {
             
             when("the plugin intercepts the event") {
                 let result = plugin.intercept(event: event)
-
+                
                 then("it should inject the user agent into the context") {
                     guard let contextDict = result?.context?.rawDictionary,
                           let userAgent = contextDict["userAgent"] as? String else {
@@ -36,11 +36,11 @@ struct DynamicUserAgentPluginTests {
             }
         }
     }
-
+    
     @Test
     func userAgent_replacesExistingUserAgent_inContext() {
         given("a UserAgentPlugin with userAgent set and event with existing userAgent") {
-            let plugin = DynamicUserAgentPlugin()
+            let plugin = StaticUserAgentPlugin()
             let event = MockEvent()
             let newUserAgent = "Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
             
@@ -52,7 +52,7 @@ struct DynamicUserAgentPluginTests {
             
             when("the plugin intercepts the event") {
                 let result = plugin.intercept(event: event)
-
+                
                 then("it should replace the existing userAgent and preserve other fields") {
                     guard let contextDict = result?.context?.rawDictionary else {
                         #expect(Bool(false), "Expected context to exist")
@@ -69,21 +69,21 @@ struct DynamicUserAgentPluginTests {
             }
         }
     }
-
+    
     @Test
     func userAgent_returnsOriginalEvent_whenUserAgentNotAvailable() {
         given("a UserAgentPlugin with no userAgent available") {
-            let plugin = DynamicUserAgentPlugin()
+            let plugin = StaticUserAgentPlugin()
             let event = MockEvent()
             event.context = [
                 "app": ["name": "TestApp"]
             ].codableWrapped
             // Ensure userAgent is nil (it starts as nil anyway)
             plugin.userAgent = nil
-
+            
             when("the plugin intercepts the event") {
                 let result = plugin.intercept(event: event)
-
+                
                 then("it should return the original event unchanged") {
                     guard let contextDict = result?.context?.rawDictionary else {
                         #expect(Bool(false), "Expected the same event instance to be returned")
@@ -101,7 +101,7 @@ struct DynamicUserAgentPluginTests {
     @Test
     func userAgent_preservesOtherContextFields_whenAdding() {
         given("a UserAgentPlugin and event with existing context fields") {
-            let plugin = DynamicUserAgentPlugin()
+            let plugin = StaticUserAgentPlugin()
             let event = MockEvent()
             
             plugin.userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15"
@@ -113,7 +113,7 @@ struct DynamicUserAgentPluginTests {
             
             when("the plugin intercepts the event") {
                 let result = plugin.intercept(event: event)
-
+                
                 then("it should add userAgent and preserve all existing context fields") {
                     guard let contextDict = result?.context?.rawDictionary else {
                         #expect(Bool(false), "Expected context to exist")
@@ -141,16 +141,21 @@ struct DynamicUserAgentPluginTests {
         }
     }
     
-   @Test @MainActor
-   func readUserAgent_returnsNonEmptyString() async {
-       let plugin = DynamicUserAgentPlugin()
-       guard let userAgent = await plugin.readUserAgent() else {
-           #expect(Bool(false), "Expected userAgent to not be nil")
-           return
-       }
-       
-       #expect(!userAgent.isEmpty, "Expected userAgent to not be empty")
-       #expect(userAgent.contains("Mozilla/5.0"), "Expected userAgent to contain Mozilla/5.0")
-       #expect(userAgent.contains("AppleWebKit"), "Expected userAgent to contain AppleWebKit")
-   }
+    @Test
+    func readUserAgent_generatesValidUserAgentString() {
+        given("a UserAgentPlugin") {
+            let plugin = StaticUserAgentPlugin()
+            
+            when("readUserAgent is called") {
+                let userAgent = plugin.readUserAgent()
+                
+                then("it should generate a valid user agent string") {
+                    #expect(!userAgent.isEmpty, "Expected userAgent to not be empty")
+                    #expect(userAgent.contains("Mozilla/5.0"), "Expected userAgent to contain Mozilla/5.0")
+                    #expect(userAgent.contains("AppleWebKit"), "Expected userAgent to contain AppleWebKit")
+                    #expect(userAgent.contains("KHTML, like Gecko"), "Expected userAgent to contain KHTML, like Gecko")
+                }
+            }
+        }
+    }
 }
