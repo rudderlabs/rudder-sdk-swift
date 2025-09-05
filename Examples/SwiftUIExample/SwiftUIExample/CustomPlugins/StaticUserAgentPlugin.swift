@@ -14,7 +14,7 @@ import UIKit
 
 // MARK: - StaticUserAgentPlugin
 /**
- A plugin that adds User Agent information to the event payload.
+ A plugin that add static User Agent information to the event payload.
  
  ## Usage:
  ```swift
@@ -48,6 +48,12 @@ final class StaticUserAgentPlugin: Plugin {
 // MARK: - UserAgent
 extension StaticUserAgentPlugin {
     
+    /**
+     Reads the User Agent string based on the current platform.
+     
+     - Returns: The User Agent string.
+     - Note: This method can be called from any thread.
+     */
     func readUserAgent() -> String {
         let appName = applicationName
         let separator = appName.isEmpty ? "" : " "

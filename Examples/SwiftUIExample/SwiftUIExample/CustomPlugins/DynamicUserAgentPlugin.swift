@@ -14,8 +14,8 @@ import WebKit
 
 // MARK: - DynamicUserAgentPlugin
 /**
- A plugin that adds User Agent information to the event payload.
- 
+ A plugin that dynamically adds User Agent information to the event payload.
+
  ## Usage:
  ```swift
  // Create and add the plugin
@@ -29,6 +29,7 @@ final class DynamicUserAgentPlugin: Plugin {
     var userAgent: String?
     
     init() {
+        // Read user agent on initialization on main thread
         Task { @MainActor [weak self] in
             guard let self else {
                 LoggerAnalytics.debug(log: "Failed to read user agent")
@@ -56,6 +57,13 @@ final class DynamicUserAgentPlugin: Plugin {
 
 // MARK: - UserAgent
 extension DynamicUserAgentPlugin {
+    
+    /**
+     Reads the User Agent string using a WKWebView instance.
+     
+     - Returns: The User Agent string if available, otherwise nil.
+     - Note: This method must be called on the main thread as `WKWebView` requires it.
+     */
     
     @MainActor
     func readUserAgent() async -> String? {
