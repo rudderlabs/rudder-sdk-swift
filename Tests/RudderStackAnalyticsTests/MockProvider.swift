@@ -91,6 +91,7 @@ struct MockHelper {
     static func readJson(from file: String) -> String? {
         let bundles = [
             Bundle(for: MockProvider.self),
+            Bundle.module,
             Bundle.main,
         ]
          for bundle in bundles {
