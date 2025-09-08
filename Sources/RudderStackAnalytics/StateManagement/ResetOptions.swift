@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - ResetOptions
 /**
  Class representing options for resetting user data in the analytics SDK.
  */
@@ -26,6 +27,7 @@ public class ResetOptions {
     }
 }
 
+// MARK: - ResetEntries
 /**
  Class representing specific entries to reset during a user data reset operation.
  */

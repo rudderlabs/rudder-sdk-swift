@@ -17,7 +17,7 @@ final class ResetUserIdentityActionTests: XCTestCase {
             let traits = ["testKey": "testValue"]
             
             let state = createState(initialState: UserIdentity(anonymousId: anonymousId, userId: userId, traits: traits))
-            let action = ResetUserIdentityAction()
+            let action = ResetUserIdentityAction(options: ResetOptions())
             when("Update state with action..") {
                 state.dispatch(action: action)
                 
