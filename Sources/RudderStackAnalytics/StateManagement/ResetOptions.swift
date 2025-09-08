@@ -11,6 +11,8 @@ import Foundation
  Class representing options for resetting user data in the analytics SDK.
  */
 public class ResetOptions {
+    
+    /** An instance of `ResetEntries` specifying which data to reset. */
     public let entries: ResetEntries
     
     /**
@@ -28,9 +30,17 @@ public class ResetOptions {
  Class representing specific entries to reset during a user data reset operation.
  */
 public class ResetEntries {
+
+    /** A Boolean indicating whether to reset the anonymous ID. Default is `true`. */
     public let anonymousId: Bool
+    
+    /** A Boolean indicating whether to reset the user ID. Default is `true`. */
     public let userId: Bool
+
+    /** A Boolean indicating whether to reset user traits. Default is `true`. */
     public let traits: Bool
+    
+    /** A Boolean indicating whether to reset session information. Default is `true`. */
     public let session: Bool
 
     /**
@@ -45,7 +55,7 @@ public class ResetEntries {
     public init(anonymousId: Bool = true, userId: Bool = true, traits: Bool = true, session: Bool = true) {
         self.anonymousId = anonymousId
         self.userId = userId
-        self.traits = traits    
+        self.traits = traits
         self.session = session
     }
 }
