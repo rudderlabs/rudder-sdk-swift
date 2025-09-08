@@ -89,9 +89,17 @@ struct MockHelper {
     }
     
     static func readJson(from file: String) -> String? {
-        let bundle = Bundle(for: MockProvider.self)
-        guard let fileUrl = bundle.url(forResource: file, withExtension: "json"), let data = try? Data(contentsOf: fileUrl) else { return nil }
-        return data.jsonString
+        let bundles = [
+            Bundle(for: MockProvider.self),
+            Bundle.main,
+        ]
+         for bundle in bundles {
+             if let fileUrl = bundle.url(forResource: file, withExtension: "json"),
+                let data = try? Data(contentsOf: fileUrl) {
+                 return data.jsonString
+             }
+         }
+         return nil
     }
     
     static func resetDynamicValues(_ event: inout Event) {
