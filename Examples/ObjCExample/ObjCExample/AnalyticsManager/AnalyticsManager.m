@@ -28,8 +28,8 @@
 
 - (void)initializeAnalyticsSDK {
 
-    NSString *writeKey = @"sample-write-key";
-    NSString *dataPlaneUrl = @"https://data-plane.analytics.com";
+    NSString *writeKey = @"2vPgTJJHX8Z1fpU8DWjDGlmyJpF";
+    NSString *dataPlaneUrl = @"https://rudderstacfbtt.dataplane.rudderstack.com";
     
     RSSConfigurationBuilder *builder = [[RSSConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
     [builder setGzipEnabled: YES];
@@ -85,6 +85,16 @@
 
 - (void)reset {
     [self.client reset];
+}
+
+- (void)resetWithOptions {
+    RSSResetOptionsBuilder *builder = [RSSResetOptionsBuilder new];
+    [builder setResetAnonymousId: YES];
+    [builder setResetUserId: YES];
+    [builder setResetTraits: YES];
+    [builder setResetSession: YES];
+    
+    [self.client resetWithOptions: [builder build]];
 }
 
 - (void)startSession {
