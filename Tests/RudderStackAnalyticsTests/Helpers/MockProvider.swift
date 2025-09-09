@@ -116,21 +116,46 @@ class MockAnalytics: Analytics {
 }
 
 // MARK: - Given_When_Then
-extension XCTestCase {
-    func given(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("Given \(description)") }
-        closure()
-    }
+
+func given(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("Given \(description)") }
+    closure()
+}
+
+func when(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("When \(description)") }
+    closure()
+}
+
+func then(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("Then \(description)") }
+    closure()
+}
+
+func given(_ description: String = "", closure: () async throws -> Void) async rethrows {
+    if !description.isEmpty { print("Given \(description)") }
+    try await closure()
+}
+
+func when(_ description: String = "", closure: () async throws -> Void) async rethrows {
+    if !description.isEmpty { print("When \(description)") }
+    try await closure()
+}
+
+func then(_ description: String = "", closure: () async throws -> Void) async rethrows {
+    if !description.isEmpty { print("Then \(description)") }
+    try await closure()
+}
+
+// MARK: - Run After
+
+func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
+    // Suspend the current task for the specified duration
+    let nanoseconds = UInt64(seconds * 1_000_000_000)
+    try? await Task.sleep(nanoseconds: nanoseconds)
     
-    func when(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("When \(description)") }
-        closure()
-    }
-    
-    func then(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("Then \(description)") }
-        closure()
-    }
+    // Execute the block after the delay
+    await block()
 }
 
 // MARK: - String(Extension)
