@@ -16,46 +16,46 @@ import Foundation
 
  - Conforms to: `Event`
  */
-struct GroupEvent: Event {
+public struct GroupEvent: Event {
     
     /// The type of the event, defaulting to `.group`.
-    var type: EventType = .group
+    public var type: EventType = .group
     
     /// A unique identifier for the event.
-    var messageId: String = .randomUUIDString
+    public var messageId: String = .randomUUIDString
     
     /// The timestamp of when the event occurred, defaulting to the current time.
-    var originalTimestamp: String = .currentTimeStamp
+    public var originalTimestamp: String = .currentTimeStamp
     
     /// The anonymous identifier for the user associated with the event.
-    var anonymousId: String?
+    public var anonymousId: String?
     
     /// The channel through which the event was sent.
-    var channel: String?
+    public var channel: String?
     
     /// A dictionary of integration settings for the event.
-    var integrations: [String: AnyCodable]?
+    public var integrations: [String: AnyCodable]?
     
     /// The timestamp of when the event was sent.
-    var sentAt: String?
+    public var sentAt: String?
     
     /// Additional context information for the event, provided as a dictionary.
-    var context: [String: AnyCodable]?
+    public var context: [String: AnyCodable]?
     
     /// The unique identifier for the user.
-    var userId: String?
+    public var userId: String?
     
     /// The unique identifier of the group being associated with the user.
-    var groupId: String
+    public var groupId: String
     
     /// Custom traits or attributes associated with the group.
-    var traits: CodableCollection?
+    public var traits: CodableCollection?
 
     /// Holds the associated values for an event.
-    var options: RudderOption?
+    public var options: RudderOption?
     
     /// The identity values of the user associated with the event.
-    var userIdentity: UserIdentity?
+    public var userIdentity: UserIdentity?
     
     /**
      Initializes a `GroupEvent` with the specified group identifier, traits, and options and user identity values.
@@ -68,7 +68,7 @@ struct GroupEvent: Event {
 
      This initializer also processes and includes default values, such as default integrations and context if they are not provided.
      */
-    init(groupId: String, traits: Traits? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
+    public init(groupId: String, traits: Traits? = nil, options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
         self.groupId = groupId
         self.traits = CodableCollection(dictionary: traits)
         self.userIdentity = userIdentity ?? UserIdentity()

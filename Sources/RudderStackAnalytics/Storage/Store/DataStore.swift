@@ -17,6 +17,7 @@ protocol DataStore {
     func retrieve() async -> [EventDataItem]
     func remove(reference: String) async -> Bool
     func rollover() async
+    func removeAll() async
 }
 
 // MARK: - StoreProvider
@@ -44,7 +45,7 @@ struct DataStoreConstants {
     
     static let memoryIndex = "rudderstack.event.memory.index."
     static let fileIndex = "rudderstack.event.file.index."
-    static let fileNameSeparator: String = "-"
+    static let referenceSeparator: String = "~"
     static let fileType = "tmp"
     static let fileBatchPrefix = "{\"batch\":["
     static let fileBatchSentAtSuffix = "],\"sentAt\":\""

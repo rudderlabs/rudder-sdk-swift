@@ -99,7 +99,7 @@ class LifecycleSessionWrapper {
         self.sessionHandler = SessionHandler(analytics: analytics)
     }
     
-    func tearDown() {
+    func invalidate() {
         // Don't change the order..
         self.sessionHandler = nil
         self.lifecycleObserver = nil

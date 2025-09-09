@@ -14,46 +14,46 @@ import Foundation
 
  - Conforms to: `Event`
  */
-struct IdentifyEvent: Event {
+public struct IdentifyEvent: Event {
     
     /// The type of the event, defaulting to `.identify`.
-    var type: EventType = .identify
+    public var type: EventType = .identify
 
     /// A unique identifier for the event, initialized with a random UUID string.
-    var messageId: String = .randomUUIDString
+    public var messageId: String = .randomUUIDString
 
     /// The timestamp of when the event occurred, defaulting to the current time.
-    var originalTimestamp: String = .currentTimeStamp
+    public var originalTimestamp: String = .currentTimeStamp
 
     /// The anonymous identifier for the user associated with the event.
-    var anonymousId: String?
+    public var anonymousId: String?
 
     /// The channel through which the event was sent (e.g., "mobile" or "web").
-    var channel: String?
+    public var channel: String?
 
     /// A dictionary of integration settings for the event.
-    var integrations: [String: AnyCodable]?
+    public var integrations: [String: AnyCodable]?
 
     /// The timestamp of when the event was sent.
-    var sentAt: String?
+    public var sentAt: String?
 
     /// Additional context information for the event, provided as a dictionary.
-    var context: [String: AnyCodable]?
+    public var context: [String: AnyCodable]?
 
     /// Custom traits or attributes associated with the user profile.
-    var traits: CodableCollection?
+    public var traits: CodableCollection?
 
     /// The name of the event being tracked.
-    var event: String
+    public var event: String
     
     /// The unique identifier for the user.
-    var userId: String?
+    public var userId: String?
 
     /// Holds the associated values for an event.
-    var options: RudderOption?
+    public var options: RudderOption?
     
     /// The identity values of the user associated with the event.
-    var userIdentity: UserIdentity?
+    public var userIdentity: UserIdentity?
 
     /**
      Initializes an `IdentifyEvent` with the specified traits, options, and user identity values.
@@ -65,7 +65,7 @@ struct IdentifyEvent: Event {
 
      This initializer also populates default values such as the anonymous ID and integrations if they are not provided.
      */
-    init(options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
+    public init(options: RudderOption? = nil, userIdentity: UserIdentity? = nil) {
         self.userIdentity = userIdentity ?? UserIdentity()
         self.event = self.type.rawValue
         self.options = options ?? RudderOption()

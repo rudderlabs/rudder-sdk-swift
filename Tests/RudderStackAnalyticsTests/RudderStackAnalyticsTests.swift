@@ -55,7 +55,7 @@ extension RudderStackAnalyticsTests {
         XCTAssertFalse(dataItems.isEmpty)
         
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -68,7 +68,7 @@ extension RudderStackAnalyticsTests {
         XCTAssertFalse(dataItems.isEmpty)
         
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -81,7 +81,7 @@ extension RudderStackAnalyticsTests {
         XCTAssertFalse(dataItems.isEmpty)
         
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -93,7 +93,7 @@ extension RudderStackAnalyticsTests {
         let dataItems = await client.configuration.storage.read().dataItems
         XCTAssertFalse(dataItems.isEmpty)
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -127,12 +127,26 @@ extension RudderStackAnalyticsTests {
     
     func test_shutdown() async {
         guard let client = analytics_disk else { XCTFail("No disk client"); return }
+        
+        // Verify analytics is initially active
+        XCTAssertTrue(client.isAnalyticsActive)
+        XCTAssertNotNil(client.lifecycleObserver)
+        XCTAssertNotNil(client.sessionHandler)
+        
+        // Shutdown the analytics client
         client.shutdown()
+        
+        // Give some time for graceful shutdown to complete
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        // Verify shutdown state
+        XCTAssertFalse(client.isAnalyticsActive, "Analytics should be inactive after shutdown")
+        
+        // After shutdown, these should be nil due to shutdownHook cleanup
+        XCTAssertNil(client.lifecycleObserver, "Lifecycle observer should be nil after shutdown")
+        XCTAssertNil(client.sessionHandler, "Session handler should be nil after shutdown")
 
-        XCTAssertFalse(client.isAnalyticsActive)
-        XCTAssertNil(client.lifecycleObserver)
-        XCTAssertNil(client.sessionHandler)
-
+        // Test that events are not processed after shutdown
         client.track(name: "Track Event", properties: ["prop": "value"])
         try? await Task.sleep(nanoseconds: 300_000_000)
         
@@ -148,13 +162,15 @@ extension RudderStackAnalyticsTests {
         client.alias(newId: "Alias_user_id", previousId: nil)
         try? await Task.sleep(nanoseconds: 300_000_000)
         
+        // Verify no events were processed after shutdown
         let dataItems = await client.configuration.storage.read().dataItems
-        XCTAssert(dataItems.isEmpty)
+        XCTAssert(dataItems.isEmpty, "No events should be processed after shutdown")
         
-        XCTAssertNil(client.sessionId)
-        XCTAssertNil(client.anonymousId)
-        XCTAssertNil(client.userId)
-        XCTAssertNil(client.traits)
+        // Verify user-related properties return nil after shutdown
+        XCTAssertNil(client.sessionId, "Session ID should be nil after shutdown")
+        XCTAssertNil(client.anonymousId, "Anonymous ID should be nil after shutdown")
+        XCTAssertNil(client.userId, "User ID should be nil after shutdown")
+        XCTAssertNil(client.traits, "Traits should be nil after shutdown")
     }
     
     func testDeepLinkTracking() async{
@@ -168,7 +184,11 @@ extension RudderStackAnalyticsTests {
         try? await Task.sleep(nanoseconds: 300_000_000)
         await client.configuration.storage.rollover()
         let dataItems = await client.configuration.storage.read().dataItems
-        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        
+        guard let firstItem = dataItems.first else { XCTFail("No data item found"); return }
+        let batch = client.storage.eventStorageMode == .memory ? firstItem.batch : (FileManager.contentsOf(file: firstItem.reference) ?? "")
+        
+        let batchData = batch.toDictionary?["batch"] as? [[String: Any]] ?? []
         guard let lastEvent = batchData.last else { XCTFail("No event found"); return }
         
         XCTAssertEqual(lastEvent["event"] as? String, "Deep Link Opened")
@@ -183,7 +203,7 @@ extension RudderStackAnalyticsTests {
         }
         
         for item in dataItems {
-            await client.configuration.storage.remove(eventReference: item.reference)
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     
@@ -200,10 +220,17 @@ extension RudderStackAnalyticsTests {
         let dataItems = await client.configuration.storage.read().dataItems
         XCTAssertFalse(dataItems.isEmpty, "Data items should not be empty")
         
-        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        guard let firstItem = dataItems.first else { XCTFail("No data item found"); return }
+        let batch = client.storage.eventStorageMode == .memory ? firstItem.batch : (FileManager.contentsOf(file: firstItem.reference) ?? "")
+        
+        let batchData = batch.toDictionary?["batch"] as? [[String: Any]] ?? []
         guard let lastEvent = batchData.last else { XCTFail("No event found"); return }
         
         XCTAssertTrue(lastEvent["event"] as? String == "New Event Name", "Event name should be modified by the plugin")
+        
+        for item in dataItems {
+            await client.configuration.storage.remove(batchReference: item.reference)
+        }
     }
 
     func test_removePlugin_disk() async {
@@ -220,10 +247,17 @@ extension RudderStackAnalyticsTests {
         let dataItems = await client.configuration.storage.read().dataItems
         XCTAssertFalse(dataItems.isEmpty, "Data items should not be empty")
         
-        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        guard let firstItem = dataItems.first else { XCTFail("No data item found"); return }
+        let batch = client.storage.eventStorageMode == .memory ? firstItem.batch : (FileManager.contentsOf(file: firstItem.reference) ?? "")
+        
+        let batchData = batch.toDictionary?["batch"] as? [[String: Any]] ?? []
         guard let lastEvent = batchData.last else { XCTFail("No event found"); return }
         
         XCTAssertTrue(lastEvent["event"] as? String == "Original Event", "Event name should remain unchanged after plugin removal")
+        
+        for item in dataItems {
+            await client.configuration.storage.remove(batchReference: item.reference)
+        }
     }
 }
 

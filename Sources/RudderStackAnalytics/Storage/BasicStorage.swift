@@ -30,6 +30,11 @@ final class BasicStorage: Storage {
     var eventStorageMode: StorageMode {
         return self.storageMode
     }
+    
+    func removeAll() async {
+        await self.dataStore.removeAll()
+        self.keyValueStore.removeAll()
+    }
 }
 
 // MARK: - EventStorage
@@ -46,8 +51,8 @@ extension BasicStorage {
         return await EventDataResult(dataItems: self.dataStore.retrieve())
     }
     
-    func remove(eventReference: String) async -> Bool {
-        return await self.dataStore.remove(reference: eventReference)
+    func remove(batchReference: String) async -> Bool {
+        return await self.dataStore.remove(reference: batchReference)
     }
     
     func rollover() async {

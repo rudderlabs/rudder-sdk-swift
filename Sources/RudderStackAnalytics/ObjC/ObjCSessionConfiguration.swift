@@ -49,13 +49,13 @@ public final class ObjCSessionConfigurationBuilder: NSObject {
     /**
      Sets the session timeout duration in milliseconds.
 
-     - Parameter timeoutInMillis: A positive number representing the timeout duration.
+     - Parameter timeoutInMillis: A positive number representing the timeout duration. Zero(0) indicates immediate timeout.
      - Returns: The builder instance for chaining.
      */
     @objc
     @discardableResult
     public func setSessionTimeoutInMillis(_ timeoutInMillis: NSNumber) -> Self {
-        if timeoutInMillis.int64Value > 0 {
+        if timeoutInMillis.int64Value >= 0 {
             self.sessionTimeoutInMillis = timeoutInMillis.uint64Value
         }
         return self

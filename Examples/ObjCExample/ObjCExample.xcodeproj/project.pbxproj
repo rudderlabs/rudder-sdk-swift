@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5328B8752E3B7BEA0051A202 /* EventFilteringPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 5328B8732E3B7BEA0051A202 /* EventFilteringPlugin.m */; };
 		535BB4C82E048E8200E1DAB0 /* CustomOptionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 535BB4B12E048E8200E1DAB0 /* CustomOptionPlugin.m */; };
 		535BB4C92E048E8200E1DAB0 /* ObjCCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = 535BB4B72E048E8200E1DAB0 /* ObjCCompat.m */; };
 		535BB4CA2E048E8200E1DAB0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 535BB4C22E048E8200E1DAB0 /* ViewController.m */; };
@@ -39,6 +40,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5328B8722E3B7BEA0051A202 /* EventFilteringPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventFilteringPlugin.h; sourceTree = "<group>"; };
+		5328B8732E3B7BEA0051A202 /* EventFilteringPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventFilteringPlugin.m; sourceTree = "<group>"; };
 		5352C76D2DCBCB390022B105 /* ObjCExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjCExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		535BB4A52E048E8200E1DAB0 /* AnalyticsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnalyticsManager.h; sourceTree = "<group>"; };
 		535BB4A62E048E8200E1DAB0 /* AnalyticsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnalyticsManager.m; sourceTree = "<group>"; };
@@ -78,6 +81,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5328B8742E3B7BEA0051A202 /* EventFilteringPlugin */ = {
+			isa = PBXGroup;
+			children = (
+				5328B8722E3B7BEA0051A202 /* EventFilteringPlugin.h */,
+				5328B8732E3B7BEA0051A202 /* EventFilteringPlugin.m */,
+			);
+			path = EventFilteringPlugin;
+			sourceTree = "<group>";
+		};
 		5352C7642DCBCB390022B105 = {
 			isa = PBXGroup;
 			children = (
@@ -144,6 +156,7 @@
 		535BB4B52E048E8200E1DAB0 /* CustomPlugins */ = {
 			isa = PBXGroup;
 			children = (
+				5328B8742E3B7BEA0051A202 /* EventFilteringPlugin */,
 				535BB4BB2E048E8200E1DAB0 /* SetPushTokenPlugin */,
 				535BB4B22E048E8200E1DAB0 /* CustomOptionPlugin */,
 				535BB4F52E04907200E1DAB0 /* SetAnonymousIdPlugin */,
@@ -296,6 +309,7 @@
 				535BB4CD2E048E8200E1DAB0 /* main.m in Sources */,
 				535BB4CE2E048E8200E1DAB0 /* SceneDelegate.m in Sources */,
 				535BB4CF2E048E8200E1DAB0 /* SetAnonymousIdPlugin.m in Sources */,
+				5328B8752E3B7BEA0051A202 /* EventFilteringPlugin.m in Sources */,
 				535BB4D02E048E8200E1DAB0 /* SetPushTokenPlugin.m in Sources */,
 				535BB4D12E048E8200E1DAB0 /* CustomLogger.m in Sources */,
 			);

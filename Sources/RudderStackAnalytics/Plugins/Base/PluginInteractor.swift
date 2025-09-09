@@ -25,9 +25,11 @@ class PluginInteractor {
     }
     
     func execute(_ event: Event) -> Event? {
-        var result = event
+        var result: Event? = event
         self.pluginList.forEach {
-            if let processed = $0.intercept(event: result) { result = processed }
+            if let processing = result {
+                result = $0.intercept(event: processing)
+            }
         }
         return result
     }
