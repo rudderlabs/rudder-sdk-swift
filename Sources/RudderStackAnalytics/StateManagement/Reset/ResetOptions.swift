@@ -13,10 +13,11 @@ import Foundation
  
  Encapsulates reset preferences through ResetEntries, enabling selective clearing of user identity components while maintaining backward compatibility with default full reset behavior.
  */
-public class ResetOptions {
+@objc(RSSResetOptions)
+public class ResetOptions: NSObject {
     
     /** An instance of `ResetEntries` specifying which data to reset. */
-    public let entries: ResetEntries
+    @objc public let entries: ResetEntries
     
     /**
      Initializes a new instance of `ResetOptions`.
