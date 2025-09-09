@@ -9,7 +9,9 @@ import Foundation
 
 // MARK: - ResetOptions
 /**
- Class representing options for resetting user data in the analytics SDK.
+ Configuration class for customizing user data reset behavior in the analytics SDK.
+ 
+ Encapsulates reset preferences through ResetEntries, enabling selective clearing of user identity components while maintaining backward compatibility with default full reset behavior.
  */
 public class ResetOptions {
     
@@ -24,40 +26,5 @@ public class ResetOptions {
      */
     public init(entries: ResetEntries = ResetEntries()) {
         self.entries = entries
-    }
-}
-
-// MARK: - ResetEntries
-/**
- Class representing specific entries to reset during a user data reset operation.
- */
-public class ResetEntries {
-
-    /** A Boolean indicating whether to reset the anonymous ID. Default is `true`. */
-    public let anonymousId: Bool
-    
-    /** A Boolean indicating whether to reset the user ID. Default is `true`. */
-    public let userId: Bool
-
-    /** A Boolean indicating whether to reset user traits. Default is `true`. */
-    public let traits: Bool
-    
-    /** A Boolean indicating whether to reset session information. Default is `true`. */
-    public let session: Bool
-
-    /**
-     Initializes a new instance of `ResetEntries`.
-     
-     - Parameters:
-       - anonymousId: Whether to reset the anonymous ID. Default is `true`.
-       - userId: Whether to reset the user ID. Default is `true`.
-       - traits: Whether to reset user traits. Default is `true`.
-       - session: Whether to reset session information. Default is `true`.
-     */
-    public init(anonymousId: Bool = true, userId: Bool = true, traits: Bool = true, session: Bool = true) {
-        self.anonymousId = anonymousId
-        self.userId = userId
-        self.traits = traits
-        self.session = session
     }
 }
