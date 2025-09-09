@@ -28,8 +28,8 @@
 
 - (void)initializeAnalyticsSDK {
 
-    NSString *writeKey = @"2vPgTJJHX8Z1fpU8DWjDGlmyJpF";
-    NSString *dataPlaneUrl = @"https://rudderstacfbtt.dataplane.rudderstack.com";
+    NSString *writeKey = @"sample-write-key";
+    NSString *dataPlaneUrl = @"https://data-plane.analytics.com";
     
     RSSConfigurationBuilder *builder = [[RSSConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
     [builder setGzipEnabled: YES];
