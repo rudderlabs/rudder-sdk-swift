@@ -412,6 +412,27 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		5358C58E2E70906B0058E117 /* UserIdentity */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */,
+				53DEA5CF2E03D05A00D6C371 /* SetUserIdAction.swift */,
+				53DEA5D02E03D05A00D6C371 /* SetUserIdAndTraitsAction.swift */,
+				53DEA5D12E03D05A00D6C371 /* StateManagement.swift */,
+				53DEA5D22E03D05A00D6C371 /* UserIdentity.swift */,
+			);
+			path = UserIdentity;
+			sourceTree = "<group>";
+		};
+		5358C58F2E7090770058E117 /* Reset */ = {
+			isa = PBXGroup;
+			children = (
+				539301D82E6F10A300DAEAD1 /* ResetOptions.swift */,
+				5358C58C2E702FCC0058E117 /* ResetEntries.swift */,
+			);
+			path = Reset;
+			sourceTree = "<group>";
+		};
 		539D86F32E5439AA009FC144 /* EventQueue */ = {
 			isa = PBXGroup;
 			children = (
@@ -586,13 +607,8 @@
 		53DEA5D32E03D05A00D6C371 /* StateManagement */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */,
-				53DEA5CF2E03D05A00D6C371 /* SetUserIdAction.swift */,
-				53DEA5D02E03D05A00D6C371 /* SetUserIdAndTraitsAction.swift */,
-				53DEA5D12E03D05A00D6C371 /* StateManagement.swift */,
-				53DEA5D22E03D05A00D6C371 /* UserIdentity.swift */,
-				539301D82E6F10A300DAEAD1 /* ResetOptions.swift */,
-				5358C58C2E702FCC0058E117 /* ResetEntries.swift */,
+				5358C58E2E70906B0058E117 /* UserIdentity */,
+				5358C58F2E7090770058E117 /* Reset */,
 			);
 			path = StateManagement;
 			sourceTree = "<group>";
