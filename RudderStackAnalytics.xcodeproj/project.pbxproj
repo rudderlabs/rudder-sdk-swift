@@ -20,6 +20,7 @@
 		532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */; };
 		532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */; };
 		5358C58D2E702FCC0058E117 /* ResetEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C58C2E702FCC0058E117 /* ResetEntries.swift */; };
+		5358C5912E7092FD0058E117 /* ObjCResetOptionsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */; };
 		5393019E2E65562100DAEAD1 /* BackoffPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */; };
 		539301D92E6F10A300DAEAD1 /* ResetOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301D82E6F10A300DAEAD1 /* ResetOptions.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
@@ -173,6 +174,7 @@
 		532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUIExampleApp.xctestplan; sourceTree = "<group>"; };
 		5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5358C58C2E702FCC0058E117 /* ResetEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetEntries.swift; sourceTree = "<group>"; };
+		5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCResetOptionsBuilder.swift; sourceTree = "<group>"; };
 		5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyTests.swift; sourceTree = "<group>"; };
 		539301D82E6F10A300DAEAD1 /* ResetOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetOptions.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
@@ -552,6 +554,7 @@
 				5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */,
 				5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */,
 				5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */,
+				5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */,
 			);
 			path = ObjC;
 			sourceTree = "<group>";
@@ -986,6 +989,7 @@
 				53DEA6042E03D05A00D6C371 /* CodableTypes.swift in Sources */,
 				53DEA6052E03D05A00D6C371 /* SessionTrackingPlugin.swift in Sources */,
 				530F89282E61F3BE007A81B2 /* BackoffPolicyHandler.swift in Sources */,
+				5358C5912E7092FD0058E117 /* ObjCResetOptionsBuilder.swift in Sources */,
 				53DEA6062E03D05A00D6C371 /* TimeZoneInfoPlugin.swift in Sources */,
 				539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */,
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
