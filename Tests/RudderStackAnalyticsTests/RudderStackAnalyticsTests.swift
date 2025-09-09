@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
 final class RudderStackAnalyticsTests: XCTestCase {
@@ -355,28 +356,29 @@ extension RudderStackAnalyticsTests {
 
 extension RudderStackAnalyticsTests {
     
-    func test_reset_defaultOptions_resetsAllUserIdentityData() {
+    func test_reset_defaultOptions_resetsAllUserIdentityData() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        given("Analytics client with identified user, traits, and active session") {
+        await given("Analytics client with identified user, traits, and active session") {
             // Set up user identity
             client.identify(userId: "test_user_123", traits: ["name": "John Doe", "email": "john@example.com"])
             
-            runAfter(0.3) {
-                // Store initial values for comparison
-                let initialAnonymousId = client.anonymousId
-                let initialUserId = client.userId
-                let initialTraits = client.traits
-                let initialSessionId = client.sessionId
-                
-                // Verify data exists before reset
-                XCTAssertNotNil(initialAnonymousId, "Anonymous ID should exist")
-                XCTAssertEqual(initialUserId, "test_user_123", "User ID should be set")
-                XCTAssertEqual(initialTraits?["name"] as? String, "John Doe", "Traits should be set")
-                XCTAssertNotNil(initialSessionId, "Session ID should exist")
-                
-                when("calling reset with default options") {
+            // Store initial values for comparison
+            let initialAnonymousId = client.anonymousId
+            let initialUserId = client.userId
+            let initialTraits = client.traits
+            let initialSessionId = client.sessionId
+            
+            // Verify data exists before reset
+            XCTAssertNotNil(initialAnonymousId, "Anonymous ID should exist")
+            XCTAssertEqual(initialUserId, "test_user_123", "User ID should be set")
+            XCTAssertEqual(initialTraits?["name"] as? String, "John Doe", "Traits should be set")
+            XCTAssertNotNil(initialSessionId, "Session ID should exist")
+            
+            await when("calling reset with default options") {
+                await runAfter(0.3) {
                     client.reset()
+                    
                     then("should reset all user identity data") {
                         // Anonymous ID should be regenerated (different from initial)
                         XCTAssertNotEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should be regenerated")
@@ -391,6 +393,7 @@ extension RudderStackAnalyticsTests {
                         
                         // Session should still exist
                         XCTAssertNotNil(client.sessionId, "Session ID should exist after reset")
+                        XCTAssertNotEqual(initialSessionId, client.sessionId, "Session ID should be regenerated")
                         
                         // Verify storage is also cleared
                         let storedUserId: String? = client.storage.read(key: Constants.storageKeys.userId)
@@ -403,15 +406,15 @@ extension RudderStackAnalyticsTests {
         }
     }
     
-    
+
     func test_reset_customOptions_onlyAnonymousId() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        given("Analytics client with identified user and traits") {
+        await given("Analytics client with identified user and traits") {
             // Set up user identity
             client.identify(userId: "test_user_456", traits: ["age": 25, "location": "NYC"])
             
-            runAfter(0.3) {
+            await runAfter(0.3) {
                 
                 let initialAnonymousId = client.anonymousId
                 let initialUserId = client.userId
@@ -450,10 +453,10 @@ extension RudderStackAnalyticsTests {
     func test_reset_customOptions_onlyUserId() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        given("Analytics client with identified user and traits") {
+        await given("Analytics client with identified user and traits") {
             client.identify(userId: "test_user_789", traits: ["company": "RudderStack", "role": "Developer"])
             
-            runAfter(0.3) {
+            await runAfter(0.3) {
                 
                 let initialAnonymousId = client.anonymousId
                 let initialTraits = client.traits
@@ -492,12 +495,12 @@ extension RudderStackAnalyticsTests {
         }
     }
     
-    func test_reset_customOptions_onlyTraits() {
+    func test_reset_customOptions_onlyTraits() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        given("Analytics client with identified user and traits") {
+        await given("Analytics client with identified user and traits") {
             client.identify(userId: "test_user_101", traits: ["subscription": "premium", "plan": "monthly"])
-            runAfter(0.3) {
+            await runAfter(0.3) {
                 let initialAnonymousId = client.anonymousId
                 let initialUserId = client.userId
                 let initialSessionId = client.sessionId
@@ -533,12 +536,12 @@ extension RudderStackAnalyticsTests {
         }
     }
     
-    func test_reset_customOptions_onlySession() {
+    func test_reset_customOptions_onlySession() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        given("Analytics client with identified user, traits, and active session") {
+        await given("Analytics client with identified user, traits, and active session") {
             client.identify(userId: "test_user_202", traits: ["device": "iPhone", "os": "iOS"])
-            runAfter(0.3) {
+            await runAfter(0.3) {
                 let initialAnonymousId = client.anonymousId
                 let initialUserId = client.userId
                 let initialTraits = client.traits
@@ -574,13 +577,13 @@ extension RudderStackAnalyticsTests {
         }
     }
     
-    func test_reset_customOptions_multipleEntries() {
+    func test_reset_customOptions_multipleEntries() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        given("Analytics client with identified user, traits, and active session") {
+        await given("Analytics client with identified user, traits, and active session") {
             client.identify(userId: "test_user_303", traits: ["category": "premium", "status": "active"])
             
-            runAfter(0.3) {
+            await runAfter(0.3) {
                 
                 let initialAnonymousId = client.anonymousId
                 let initialSessionId = client.sessionId
@@ -612,12 +615,12 @@ extension RudderStackAnalyticsTests {
         }
     }
     
-    func test_reset_noOptions_doesNothing() {
+    func test_reset_noOptions_doesNothing() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        given("Analytics client with identified user and traits") {
+        await given("Analytics client with identified user and traits") {
             client.identify(userId: "test_user_404", traits: ["version": "1.0", "beta": true])
-            runAfter(0.3) {
+            await runAfter(0.3) {
                 
                 let initialAnonymousId = client.anonymousId
                 let initialUserId = client.userId
@@ -646,17 +649,17 @@ extension RudderStackAnalyticsTests {
         }
     }
     
-    func test_reset_afterShutdown_doesNotExecute()  {
+    func test_reset_afterShutdown_doesNotExecute() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        given("Analytics client that has been shut down") {
+        await given("Analytics client that has been shut down") {
             // Set up user identity
             client.identify(userId: "test_user_shutdown", traits: ["test": "value"])
-            runAfter(0.3) {
+            await runAfter(0.3) {
                 // Shutdown the client
                 client.shutdown()
                 
-                runAfter(0.3) {
+                await runAfter(0.3) {
                     let initialAnonymousId = client.anonymousId
                     let initialUserId = client.userId
                     let initialTraits = client.traits
@@ -709,14 +712,13 @@ extension RudderStackAnalyticsTests {
         }
     }
     
-    func test_reset_storageConsistency() {
+    func test_reset_storageConsistency() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
-        given("Analytics client with identified user and traits") {
+        await given("Analytics client with identified user and traits") {
             client.identify(userId: "storage_test_user", traits: ["key1": "value1", "key2": 42])
             
-            runAfter(0.3) {
-                
+            await runAfter(0.3) {
                 // Verify data exists in storage before reset
                 let storedUserIdBefore: String? = client.storage.read(key: Constants.storageKeys.userId)
                 let storedTraitsBefore: String? = client.storage.read(key: Constants.storageKeys.traits)
