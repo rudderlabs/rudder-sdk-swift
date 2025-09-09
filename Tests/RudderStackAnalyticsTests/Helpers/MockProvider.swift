@@ -116,20 +116,29 @@ class MockAnalytics: Analytics {
 }
 
 // MARK: - Given_When_Then
-extension XCTestCase {
-    func given(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("Given \(description)") }
-        closure()
-    }
-    
-    func when(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("When \(description)") }
-        closure()
-    }
-    
-    func then(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("Then \(description)") }
-        closure()
+
+func given(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("Given \(description)") }
+    closure()
+}
+
+func when(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("When \(description)") }
+    closure()
+}
+
+func then(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("Then \(description)") }
+    closure()
+}
+
+// MARK: - Run After
+
+func runAfter(_ seconds: Double, block: @escaping @MainActor () async -> Void) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+        Task { @MainActor in
+            await block()
+        }
     }
 }
 
