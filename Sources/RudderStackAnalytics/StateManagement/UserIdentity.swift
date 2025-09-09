@@ -153,18 +153,18 @@ extension UserIdentity {
 
      - Parameters:
        - storage: The storage instance used to remove user-related data.
-       - options: An instance of `ResetOptions` specifying which entries to reset.
+       - entries: An instance of `ResetEntries` specifying which items to reset.
     */
-    func resetUserIdentity(storage: Storage, options: ResetOptions) {
-        if options.entries.anonymousId {
+    func resetUserIdentity(storage: Storage, entries: ResetEntries) {
+        if entries.anonymousId {
             self.storeAnonymousId(storage)
         }
         
-        if options.entries.userId {
+        if entries.userId {
             self.resetUserId(storage)
         }
         
-        if options.entries.traits {
+        if entries.traits {
             self.resetTraits(storage)
         }
     }

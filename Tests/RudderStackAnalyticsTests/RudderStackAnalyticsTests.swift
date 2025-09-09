@@ -75,18 +75,13 @@ extension RudderStackAnalyticsTests {
     func test_screenEvent_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         client.screen(screenName: "Screen Event", category: "Main", properties: ["prop": "value"])
-        try? await Task.sleep(nanoseconds: 500_000_000) // Increased delay
+        try? await Task.sleep(nanoseconds: 300_000_000)
         await client.configuration.storage.rollover()
         let dataItems = await client.configuration.storage.read().dataItems
+        XCTAssertFalse(dataItems.isEmpty)
         
-        // Check if data items exist, but don't fail if they don't due to potential timing or configuration issues
-        if !dataItems.isEmpty {
-            for item in dataItems {
-                await client.configuration.storage.remove(batchReference: item.reference)
-            }
-        } else {
-            // Log that no data items were found, but don't fail the test
-            print("Warning: No data items found for screen event, this might be due to configuration or timing")
+        for item in dataItems {
+            await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
     

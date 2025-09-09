@@ -209,12 +209,14 @@ extension Analytics {
     
     /**
      Resets the user identity information, using the provided options to determine which data to reset.
+     
+     - Parameter options: An instance of `ResetOptions` specifying which entries to reset. Defaults to resetting all entries.
      */
     public func reset(options: ResetOptions = ResetOptions()) {
         guard self.isAnalyticsActive else { return }
         
-        self.userIdentityState.dispatch(action: ResetUserIdentityAction(options: options))
-        self.userIdentityState.state.value.resetUserIdentity(storage: self.storage, options: options)
+        self.userIdentityState.dispatch(action: ResetUserIdentityAction(entries: options.entries))
+        self.userIdentityState.state.value.resetUserIdentity(storage: self.storage, entries: options.entries)
         
         if options.entries.session {
             self.sessionHandler?.refreshSession()

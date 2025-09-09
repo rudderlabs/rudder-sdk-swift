@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - ResetUserIdentityAction
 /**
- An action that resets the `UserIdentity` state using the provided `ResetOptions`.
+ An action that resets the `UserIdentity` state using the provided `ResetEntries`.
 
  This struct conforms to `StateAction` and is responsible for resetting user identity-related values.
  
@@ -20,7 +20,7 @@ struct ResetUserIdentityAction: StateAction {
     
     typealias T = UserIdentity
     
-    let options: ResetOptions
+    let entries: ResetEntries
     
     /**
      Reduces the current user identity state by resetting its values by the specified options.
@@ -31,9 +31,9 @@ struct ResetUserIdentityAction: StateAction {
     func reduce(currentState: UserIdentity) -> UserIdentity {
         var newState = currentState
         
-        if options.entries.anonymousId { newState.anonymousId = .randomUUIDString }
-        if options.entries.userId { newState.userId = String.empty }
-        if options.entries.traits { newState.traits = Traits() }
+        if entries.anonymousId { newState.anonymousId = .randomUUIDString }
+        if entries.userId { newState.userId = String.empty }
+        if entries.traits { newState.traits = Traits() }
         
         return newState
     }
