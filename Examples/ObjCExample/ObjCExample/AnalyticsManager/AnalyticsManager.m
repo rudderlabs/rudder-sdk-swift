@@ -88,13 +88,16 @@
 }
 
 - (void)resetWithOptions {
-    RSSResetOptionsBuilder *builder = [RSSResetOptionsBuilder new];
-    [builder setResetAnonymousId: YES];
-    [builder setResetUserId: YES];
-    [builder setResetTraits: YES];
-    [builder setResetSession: YES];
+    RSSResetEntriedBuilder *entriesBuilder = [RSSResetEntriedBuilder new];
+    [entriesBuilder setResetAnonymousId: YES];
+    [entriesBuilder setResetUserId: YES];
+    [entriesBuilder setResetTraits: YES];
+    [entriesBuilder setResetSession: YES];
     
-    [self.client resetWithOptions: [builder build]];
+    RSSResetOptionsBuilder *optionsBuilder = [RSSResetOptionsBuilder new];
+    [optionsBuilder setResetEntries:[entriesBuilder build]];
+    
+    [self.client resetWithOptions: [optionsBuilder build]];
 }
 
 - (void)startSession {
