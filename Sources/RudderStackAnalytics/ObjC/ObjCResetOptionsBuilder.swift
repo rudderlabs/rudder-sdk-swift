@@ -10,7 +10,7 @@ import Foundation
 /**
  Builder pattern class for constructing ResetOptions instances in Objective-C environments.
  
- Accommodates a fluent interface for configuring ResetOptions.
+ Provides a fluent interface for configuring ResetOptions.
  */
 @objc(RSSResetOptionsBuilder)
 public final class ObjCResetOptionsBuilder: NSObject {

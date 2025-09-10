@@ -10,7 +10,7 @@ import Foundation
 /**
  Builder pattern class for constructing ResetEntries instances in Objective-C environments.
  
- Accommodates a fluent interface for configuring ResetEntries used in reset operations.
+ Provides a fluent interface for configuring ResetEntries used in reset operations.
  */
 @objc(RSSResetEntriesBuilder)
 public final class ObjCResetEntriesBuilder: NSObject {
@@ -80,7 +80,7 @@ public final class ObjCResetEntriesBuilder: NSObject {
     }
     
     /**
-     Builds and returns a ResetEntries instance configured with the specified options.
+     Builds and returns a ResetEntries instance configured with the current builder settings.
      */
     @objc
     public func build() -> ResetEntries {
