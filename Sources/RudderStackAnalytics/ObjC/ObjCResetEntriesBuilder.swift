@@ -7,7 +7,12 @@
 
 import Foundation
 
-@objc(RSSResetEntriedBuilder)
+/**
+ Builder pattern class for constructing ResetEntries instances in Objective-C environments.
+ 
+ Accommodates a fluent interface for configuring ResetEntries used in reset operations.
+ */
+@objc(RSSResetEntriesBuilder)
 public final class ObjCResetEntriesBuilder: NSObject {
     private var anonymousId: Bool = true
     private var userId: Bool = true
@@ -75,7 +80,7 @@ public final class ObjCResetEntriesBuilder: NSObject {
     }
     
     /**
-     Builds and returns the configured `ObjCResetOptions` instance.
+     Builds and returns a ResetEntries instance configured with the specified options.
      */
     @objc
     public func build() -> ResetEntries {

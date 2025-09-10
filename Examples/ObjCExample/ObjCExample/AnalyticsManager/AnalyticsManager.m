@@ -88,7 +88,7 @@
 }
 
 - (void)resetWithOptions {
-    RSSResetEntriedBuilder *entriesBuilder = [RSSResetEntriedBuilder new];
+    RSSResetEntriesBuilder *entriesBuilder = [RSSResetEntriesBuilder new];
     [entriesBuilder setResetAnonymousId: YES];
     [entriesBuilder setResetUserId: YES];
     [entriesBuilder setResetTraits: YES];
