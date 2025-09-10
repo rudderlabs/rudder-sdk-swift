@@ -462,6 +462,15 @@ extension ObjCAnalytics {
     public func reset() {
         self.analytics.reset()
     }
+    
+    /**
+     Resets analytics state with specified options.
+     */
+    @objc
+    public func reset(options: ResetOptions) {
+        self.analytics.reset(options: options)
+    }
+
 }
 
 extension ObjCAnalytics {

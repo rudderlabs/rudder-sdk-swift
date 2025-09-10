@@ -87,6 +87,16 @@
     [self.client reset];
 }
 
+- (void)resetWithOptions {
+    RSSResetOptionsBuilder *builder = [RSSResetOptionsBuilder new];
+    [builder setResetAnonymousId: YES];
+    [builder setResetUserId: YES];
+    [builder setResetTraits: YES];
+    [builder setResetSession: YES];
+    
+    [self.client resetWithOptions: [builder build]];
+}
+
 - (void)startSession {
     [self.client startSession];
 }

@@ -13,19 +13,20 @@ import Foundation
  
  Provides granular control over which user identity components should be cleared, allowing selective reset of anonymous ID, user ID, traits, and session information.
  */
-public class ResetEntries {
+@objc(RSSResetEntries)
+public class ResetEntries: NSObject {
 
     /** A Boolean indicating whether to reset the anonymous ID. Default is `true`. */
-    public let anonymousId: Bool
+    @objc public let anonymousId: Bool
     
     /** A Boolean indicating whether to reset the user ID. Default is `true`. */
-    public let userId: Bool
+    @objc public let userId: Bool
 
     /** A Boolean indicating whether to reset user traits. Default is `true`. */
-    public let traits: Bool
+    @objc public let traits: Bool
     
     /** A Boolean indicating whether to reset session information. Default is `true`. */
-    public let session: Bool
+    @objc public let session: Bool
 
     /**
      Initializes a new instance of `ResetEntries`.
