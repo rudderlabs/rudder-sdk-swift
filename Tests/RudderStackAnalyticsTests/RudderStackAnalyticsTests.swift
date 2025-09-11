@@ -6,7 +6,6 @@
 //
 
 import XCTest
-import Testing
 @testable import RudderStackAnalytics
 
 final class RudderStackAnalyticsTests: XCTestCase {
