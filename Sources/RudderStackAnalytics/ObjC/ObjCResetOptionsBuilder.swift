@@ -32,7 +32,7 @@ public final class ObjCResetOptionsBuilder: NSObject {
      */
     @objc
     @discardableResult
-    public func setResetEntries(_ entries: ResetEntries) -> Self {
+    public func setEntries(_ entries: ResetEntries) -> Self {
         self.resetEntries = entries
         return self
     }

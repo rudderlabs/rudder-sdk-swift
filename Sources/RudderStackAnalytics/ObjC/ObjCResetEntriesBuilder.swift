@@ -35,7 +35,7 @@ public final class ObjCResetEntriesBuilder: NSObject {
      */
     @objc
     @discardableResult
-    public func setResetAnonymousId(_ reset: Bool) -> Self {
+    public func setAnonymousIdResetEntry(_ reset: Bool) -> Self {
         self.anonymousId = reset
         return self
     }
@@ -48,7 +48,7 @@ public final class ObjCResetEntriesBuilder: NSObject {
      */
     @objc
     @discardableResult
-    public func setResetUserId(_ reset: Bool) -> Self {
+    public func setUserIdResetEntry(_ reset: Bool) -> Self {
         self.userId = reset
         return self
     }
@@ -61,7 +61,7 @@ public final class ObjCResetEntriesBuilder: NSObject {
      */
     @objc
     @discardableResult
-    public func setResetTraits(_ reset: Bool) -> Self {
+    public func setTraitsResetEntry(_ reset: Bool) -> Self {
         self.traits = reset
         return self
     }
@@ -74,7 +74,7 @@ public final class ObjCResetEntriesBuilder: NSObject {
      */
     @objc
     @discardableResult
-    public func setResetSession(_ reset: Bool) -> Self {
+    public func setSessionResetEntry(_ reset: Bool) -> Self {
         self.session = reset
         return self
     }
