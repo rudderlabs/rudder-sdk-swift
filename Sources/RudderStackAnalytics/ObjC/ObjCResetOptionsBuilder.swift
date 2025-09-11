@@ -6,21 +6,18 @@
 //
 
 import Foundation
+
 /**
  Builder pattern class for constructing ResetOptions instances in Objective-C environments.
  
- Provides a fluent interface for configuring selective user data reset preferences, allowing fine-grained control over which identity components should be cleared during reset operations.
+ Provides a fluent interface for configuring ResetOptions.
  */
 @objc(RSSResetOptionsBuilder)
 public final class ObjCResetOptionsBuilder: NSObject {
-    
-    private var anonymousId: Bool = true
-    private var userId: Bool = true
-    private var traits: Bool = true
-    private var session: Bool = true
+    private var resetEntries = ResetEntries()
     
     /**
-     Initializes a new builder with default values.
+     Initializes a new instance of the ObjCResetOptionsBuilder.
      */
     @objc
     public override init() {
@@ -28,63 +25,25 @@ public final class ObjCResetOptionsBuilder: NSObject {
     }
     
     /**
-     Sets whether to reset the anonymous ID.
+     Sets the ResetEntries to be used in the ResetOptions.
      
-     - Parameter reset: Whether to reset the anonymous ID. Defaults to `true`.
+     - Parameter entries: The ResetEntries instance specifying what to reset.
      - Returns: The builder instance for chaining.
      */
     @objc
     @discardableResult
-    public func setResetAnonymousId(_ reset: Bool) -> Self {
-        self.anonymousId = reset
+    public func setEntries(_ entries: ResetEntries) -> Self {
+        self.resetEntries = entries
         return self
     }
     
     /**
-     Sets whether to reset the user ID.
+     Builds and returns a ResetOptions instance configured with the specified entries.
      
-     - Parameter reset: Whether to reset the user ID. Defaults to `true`.
-     - Returns: The builder instance for chaining.
-     */
-    @objc
-    @discardableResult
-    public func setResetUserId(_ reset: Bool) -> Self {
-        self.userId = reset
-        return self
-    }
-    
-    /**
-     Sets whether to reset the traits.
-     
-     - Parameter reset: Whether to reset the traits. Defaults to `true`.
-     - Returns: The builder instance for chaining.
-     */
-    @objc
-    @discardableResult
-    public func setResetTraits(_ reset: Bool) -> Self {
-        self.traits = reset
-        return self
-    }
-    
-    /**
-     Sets whether to reset the session.
-     
-     - Parameter reset: Whether to reset the session. Defaults to `true`.
-     - Returns: The builder instance for chaining.
-     */
-    @objc
-    @discardableResult
-    public func setResetSession(_ reset: Bool) -> Self {
-        self.session = reset
-        return self
-    }
-    
-    /**
-     Builds and returns the configured `ObjCResetOptions` instance.
+     - Returns: A ResetOptions instance.
      */
     @objc
     public func build() -> ResetOptions {
-        let entries = ResetEntries(anonymousId: anonymousId, userId: userId, traits: traits, session: session)
-        return ResetOptions(entries: entries)
+        return ResetOptions(entries: resetEntries)
     }
 }
