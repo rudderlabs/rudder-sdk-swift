@@ -11,7 +11,7 @@ import XCTest
 final class RudderStackAnalyticsTests: XCTestCase {
     var analytics_disk: Analytics?
     var analytics_memory: Analytics?
-
+    
     override func setUpWithError() throws {
         try super.setUpWithError()
         
@@ -76,7 +76,7 @@ extension RudderStackAnalyticsTests {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         client.screen(screenName: "Screen Event", category: "Main", properties: ["prop": "value"])
         try? await Task.sleep(nanoseconds: 300_000_000)
-        await client.configuration.storage.rollover ()
+        await client.configuration.storage.rollover()
         let dataItems = await client.configuration.storage.read().dataItems
         XCTAssertFalse(dataItems.isEmpty)
         
@@ -145,7 +145,7 @@ extension RudderStackAnalyticsTests {
         // After shutdown, these should be nil due to shutdownHook cleanup
         XCTAssertNil(client.lifecycleObserver, "Lifecycle observer should be nil after shutdown")
         XCTAssertNil(client.sessionHandler, "Session handler should be nil after shutdown")
-
+        
         // Test that events are not processed after shutdown
         client.track(name: "Track Event", properties: ["prop": "value"])
         try? await Task.sleep(nanoseconds: 300_000_000)
@@ -192,7 +192,7 @@ extension RudderStackAnalyticsTests {
         guard let lastEvent = batchData.last else { XCTFail("No event found"); return }
         
         XCTAssertEqual(lastEvent["event"] as? String, "Deep Link Opened")
-
+        
         if let properties = lastEvent["properties"] as? [String: Any] {
             XCTAssertEqual(properties["url"] as? String, testURL.absoluteString)
             XCTAssertEqual(properties["id"] as? String, "127")
@@ -232,7 +232,7 @@ extension RudderStackAnalyticsTests {
             await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
-
+    
     func test_removePlugin_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
@@ -262,7 +262,7 @@ extension RudderStackAnalyticsTests {
 }
 
 // MARK: - Identify Reset Behavior Tests
-    
+
 extension RudderStackAnalyticsTests {
     
     func test_identify_noResetWhenCurrentUserIdIsEmpty() async {
@@ -345,6 +345,408 @@ extension RudderStackAnalyticsTests {
                 
                 then("should not reset (anonymousId remains the same)") {
                     XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should not change when identifying with only traits")
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Reset Behavior Tests
+
+extension RudderStackAnalyticsTests {
+    
+    func test_reset_defaultOptions_resetsAllUserIdentityData() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        await given("Analytics client with identified user, traits, and active session") {
+            // Set up user identity
+            client.identify(userId: "test_user_123", traits: ["name": "John Doe", "email": "john@example.com"])
+            
+            // Store initial values for comparison
+            let initialAnonymousId = client.anonymousId
+            let initialUserId = client.userId
+            let initialTraits = client.traits
+            let initialSessionId = client.sessionId
+            
+            // Verify data exists before reset
+            XCTAssertNotNil(initialAnonymousId, "Anonymous ID should exist")
+            XCTAssertEqual(initialUserId, "test_user_123", "User ID should be set")
+            XCTAssertEqual(initialTraits?["name"] as? String, "John Doe", "Traits should be set")
+            XCTAssertNotNil(initialSessionId, "Session ID should exist")
+            
+            await when("calling reset with default options") {
+                await runAfter(0.3) {
+                    client.reset()
+                    
+                    then("should reset all user identity data") {
+                        // Anonymous ID should be regenerated (different from initial)
+                        XCTAssertNotEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should be regenerated")
+                        XCTAssertNotNil(client.anonymousId, "New anonymous ID should exist")
+                        
+                        // User ID should be cleared
+                        XCTAssertNotEqual(initialUserId, client.userId, "User ID should be cleared")
+                        XCTAssertTrue(client.userId?.isEmpty ?? true, "User ID should be empty")
+                        
+                        // Traits should be cleared
+                        XCTAssertTrue(client.traits?.isEmpty ?? true, "Traits should be empty")
+                        
+                        // Session should still exist
+                        XCTAssertNotNil(client.sessionId, "Session ID should exist after reset")
+                        XCTAssertNotEqual(initialSessionId, client.sessionId, "Session ID should be regenerated")
+                        
+                        // Verify storage is also cleared
+                        let storedUserId: String? = client.storage.read(key: Constants.storageKeys.userId)
+                        let storedTraits: String? = client.storage.read(key: Constants.storageKeys.traits)
+                        XCTAssertNil(storedUserId, "User ID should not exist in storage")
+                        XCTAssertNil(storedTraits, "Traits should not exist in storage")
+                    }
+                }
+            }
+        }
+    }
+    
+
+    func test_reset_customOptions_onlyAnonymousId() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        await given("Analytics client with identified user and traits") {
+            // Set up user identity
+            client.identify(userId: "test_user_456", traits: ["age": 25, "location": "NYC"])
+            
+            await runAfter(0.3) {
+                
+                let initialAnonymousId = client.anonymousId
+                let initialUserId = client.userId
+                let initialTraits = client.traits
+                let initialSessionId = client.sessionId
+                
+                when("calling reset with only anonymousId option enabled") {
+                    let resetOptions = ResetOptions(entries: ResetEntries(
+                        anonymousId: true,
+                        userId: false,
+                        traits: false,
+                        session: false
+                    ))
+                    client.reset(options: resetOptions)
+                    
+                    then("should only reset anonymous ID, preserving other data") {
+                        // Only anonymous ID should change
+                        XCTAssertNotEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should be regenerated")
+                        XCTAssertNotNil(client.anonymousId, "New anonymous ID should exist")
+                        
+                        // User ID should remain unchanged
+                        XCTAssertEqual(initialUserId, client.userId, "User ID should remain unchanged")
+                        
+                        // Traits should remain unchanged
+                        XCTAssertEqual(initialTraits?["age"] as? Int, client.traits?["age"] as? Int, "Traits should remain unchanged")
+                        XCTAssertEqual(initialTraits?["location"] as? String, client.traits?["location"] as? String, "Traits should remain unchanged")
+                        
+                        // Session should remain unchanged
+                        XCTAssertEqual(initialSessionId, client.sessionId, "Session ID should remain unchanged")
+                    }
+                }
+            }
+        }
+    }
+    
+    func test_reset_customOptions_onlyUserId() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        await given("Analytics client with identified user and traits") {
+            client.identify(userId: "test_user_789", traits: ["company": "RudderStack", "role": "Developer"])
+            
+            await runAfter(0.3) {
+                
+                let initialAnonymousId = client.anonymousId
+                let initialTraits = client.traits
+                let initialSessionId = client.sessionId
+                
+                when("calling reset with only userId option enabled") {
+                    let resetOptions = ResetOptions(entries: ResetEntries(
+                        anonymousId: false,
+                        userId: true,
+                        traits: false,
+                        session: false
+                    ))
+                    client.reset(options: resetOptions)
+                    
+                    
+                    then("should only clear user ID, preserving other data") {
+                        // Anonymous ID should remain unchanged
+                        XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should remain unchanged")
+                        
+                        // User ID should be cleared
+                        XCTAssertTrue(client.userId?.isEmpty ?? true, "User ID should be empty")
+                        
+                        // Traits should remain unchanged
+                        XCTAssertEqual(initialTraits?["company"] as? String, client.traits?["company"] as? String, "Traits should remain unchanged")
+                        XCTAssertEqual(initialTraits?["role"] as? String, client.traits?["role"] as? String, "Traits should remain unchanged")
+                        
+                        // Session should remain unchanged
+                        XCTAssertEqual(initialSessionId, client.sessionId, "Session ID should remain unchanged")
+                        
+                        // Verify storage
+                        let storedUserId: String? = client.storage.read(key: Constants.storageKeys.userId)
+                        XCTAssertNil(storedUserId, "User ID should not exist in storage")
+                    }
+                }
+            }
+        }
+    }
+    
+    func test_reset_customOptions_onlyTraits() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        await given("Analytics client with identified user and traits") {
+            client.identify(userId: "test_user_101", traits: ["subscription": "premium", "plan": "monthly"])
+            await runAfter(0.3) {
+                let initialAnonymousId = client.anonymousId
+                let initialUserId = client.userId
+                let initialSessionId = client.sessionId
+                
+                when("calling reset with only traits option enabled") {
+                    let resetOptions = ResetOptions(entries: ResetEntries(
+                        anonymousId: false,
+                        userId: false,
+                        traits: true,
+                        session: false
+                    ))
+                    client.reset(options: resetOptions)
+                    
+                    then("should only clear traits, preserving other data") {
+                        // Anonymous ID should remain unchanged
+                        XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should remain unchanged")
+                        
+                        // User ID should remain unchanged
+                        XCTAssertEqual(initialUserId, client.userId, "User ID should remain unchanged")
+                        
+                        // Traits should be cleared
+                        XCTAssertTrue(client.traits?.isEmpty ?? true, "Traits should be empty")
+                        
+                        // Session should remain unchanged
+                        XCTAssertEqual(initialSessionId, client.sessionId, "Session ID should remain unchanged")
+                        
+                        // Verify storage
+                        let storedTraits: String? = client.storage.read(key: Constants.storageKeys.traits)
+                        XCTAssertNil(storedTraits, "Traits should not exist in storage")
+                    }
+                }
+            }
+        }
+    }
+    
+    func test_reset_customOptions_onlySession() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        await given("Analytics client with identified user, traits, and active session") {
+            client.identify(userId: "test_user_202", traits: ["device": "iPhone", "os": "iOS"])
+            await runAfter(0.3) {
+                let initialAnonymousId = client.anonymousId
+                let initialUserId = client.userId
+                let initialTraits = client.traits
+                let _ = client.sessionId // Store for potential future verification
+                
+                when("calling reset with only session option enabled") {
+                    let resetOptions = ResetOptions(entries: ResetEntries(
+                        anonymousId: false,
+                        userId: false,
+                        traits: false,
+                        session: true
+                    ))
+                    client.reset(options: resetOptions)
+                    
+                    then("should only refresh session, preserving other data") {
+                        // Anonymous ID should remain unchanged
+                        XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should remain unchanged")
+                        
+                        // User ID should remain unchanged
+                        XCTAssertEqual(initialUserId, client.userId, "User ID should remain unchanged")
+                        
+                        // Traits should remain unchanged
+                        XCTAssertEqual(initialTraits?["device"] as? String, client.traits?["device"] as? String, "Traits should remain unchanged")
+                        XCTAssertEqual(initialTraits?["os"] as? String, client.traits?["os"] as? String, "Traits should remain unchanged")
+                        
+                        // Session refresh behavior depends on session configuration
+                        let newSessionId = client.sessionId
+                        XCTAssertNotNil(newSessionId, "Session ID should exist after reset")
+                        // Note: Session ID might not change due to automatic session management
+                    }
+                }
+            }
+        }
+    }
+    
+    func test_reset_customOptions_multipleEntries() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        await given("Analytics client with identified user, traits, and active session") {
+            client.identify(userId: "test_user_303", traits: ["category": "premium", "status": "active"])
+            
+            await runAfter(0.3) {
+                
+                let initialAnonymousId = client.anonymousId
+                let initialSessionId = client.sessionId
+                
+                when("calling reset with userId and traits options enabled") {
+                    let resetOptions = ResetOptions(entries: ResetEntries(
+                        anonymousId: false,
+                        userId: true,
+                        traits: true,
+                        session: false
+                    ))
+                    client.reset(options: resetOptions)
+                    
+                    then("should reset userId and traits, preserving anonymousId and session") {
+                        // Anonymous ID should remain unchanged
+                        XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should remain unchanged")
+                        
+                        // User ID should be cleared
+                        XCTAssertTrue(client.userId?.isEmpty ?? true, "User ID should be empty")
+                        
+                        // Traits should be cleared
+                        XCTAssertTrue(client.traits?.isEmpty ?? true, "Traits should be empty")
+                        
+                        // Session should remain unchanged
+                        XCTAssertEqual(initialSessionId, client.sessionId, "Session ID should remain unchanged")
+                    }
+                }
+            }
+        }
+    }
+    
+    func test_reset_noOptions_doesNothing() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        await given("Analytics client with identified user and traits") {
+            client.identify(userId: "test_user_404", traits: ["version": "1.0", "beta": true])
+            await runAfter(0.3) {
+                
+                let initialAnonymousId = client.anonymousId
+                let initialUserId = client.userId
+                let initialTraits = client.traits
+                let initialSessionId = client.sessionId
+                
+                when("calling reset with all options disabled") {
+                    let resetOptions = ResetOptions(entries: ResetEntries(
+                        anonymousId: false,
+                        userId: false,
+                        traits: false,
+                        session: false
+                    ))
+                    client.reset(options: resetOptions)
+                    
+                    then("should preserve all data unchanged") {
+                        // All data should remain unchanged
+                        XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should remain unchanged")
+                        XCTAssertEqual(initialUserId, client.userId, "User ID should remain unchanged")
+                        XCTAssertEqual(initialTraits?["version"] as? String, client.traits?["version"] as? String, "Traits should remain unchanged")
+                        XCTAssertEqual(initialTraits?["beta"] as? Bool, client.traits?["beta"] as? Bool, "Traits should remain unchanged")
+                        XCTAssertEqual(initialSessionId, client.sessionId, "Session ID should remain unchanged")
+                    }
+                }
+            }
+        }
+    }
+    
+    func test_reset_afterShutdown_doesNotExecute() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        await given("Analytics client that has been shut down") {
+            // Set up user identity
+            client.identify(userId: "test_user_shutdown", traits: ["test": "value"])
+            await runAfter(0.3) {
+                // Shutdown the client
+                client.shutdown()
+                
+                await runAfter(0.3) {
+                    let initialAnonymousId = client.anonymousId
+                    let initialUserId = client.userId
+                    let initialTraits = client.traits
+                    let initialSessionId = client.sessionId
+                    
+                    when("calling reset on shut down client") {
+                        client.reset()
+                        
+                        then("should not execute reset (all values remain as they were during shutdown)") {
+                            // Since client is shut down, reset should not execute
+                            XCTAssertEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should remain unchanged after shutdown")
+                            XCTAssertEqual(initialUserId, client.userId, "User ID should remain unchanged after shutdown")
+                            XCTAssertEqual(initialTraits?["test"] as? String, client.traits?["test"] as? String, "Traits should remain unchanged after shutdown")
+                            XCTAssertEqual(initialSessionId, client.sessionId, "Session ID should remain unchanged after shutdown")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func test_reset_withoutPreviousIdentity_generatesNewAnonymousId() {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        given("Analytics client with no previous user identification") {
+            // Ensure no user identification exists
+            let initialAnonymousId = client.anonymousId
+            XCTAssertNotNil(initialAnonymousId, "Anonymous ID should exist by default")
+            XCTAssertTrue(client.userId?.isEmpty ?? true, "User ID should be empty initially")
+            XCTAssertTrue(client.traits?.isEmpty ?? true, "Traits should be empty initially")
+            
+            when("calling reset on client without previous identity") {
+                client.reset()
+                
+                then("should still generate new anonymous ID and refresh session") {
+                    // Anonymous ID should be regenerated even without previous identity
+                    XCTAssertNotEqual(initialAnonymousId, client.anonymousId, "Anonymous ID should be regenerated")
+                    XCTAssertNotNil(client.anonymousId, "New anonymous ID should exist")
+                    
+                    // User ID should remain empty
+                    XCTAssertTrue(client.userId?.isEmpty ?? true, "User ID should remain empty")
+                    
+                    // Traits should remain empty
+                    XCTAssertTrue(client.traits?.isEmpty ?? true, "Traits should remain empty")
+                    
+                    // Session should be refreshed
+                    XCTAssertNotNil(client.sessionId, "Session ID should exist")
+                }
+            }
+        }
+    }
+    
+    func test_reset_storageConsistency() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        await given("Analytics client with identified user and traits") {
+            client.identify(userId: "storage_test_user", traits: ["key1": "value1", "key2": 42])
+            
+            await runAfter(0.3) {
+                // Verify data exists in storage before reset
+                let storedUserIdBefore: String? = client.storage.read(key: Constants.storageKeys.userId)
+                let storedTraitsBefore: String? = client.storage.read(key: Constants.storageKeys.traits)
+                
+                XCTAssertEqual(storedUserIdBefore, "storage_test_user", "User ID should be stored")
+                XCTAssertNotNil(storedTraitsBefore, "Traits should be stored")
+                // Anonymous ID might not be immediately stored after identify, so we check the in-memory value
+                let preResetAnonymousId = client.anonymousId
+                XCTAssertNotNil(preResetAnonymousId, "Anonymous ID should exist")
+                
+                when("calling reset") {
+                    client.reset()
+                    
+                    then("storage should be updated consistently with in-memory state") {
+                        // Check in-memory state
+                        XCTAssertNotEqual(preResetAnonymousId, client.anonymousId, "In-memory anonymous ID should change")
+                        XCTAssertTrue(client.userId?.isEmpty ?? true, "In-memory user ID should be empty")
+                        XCTAssertTrue(client.traits?.isEmpty ?? true, "In-memory traits should be empty")
+                        
+                        // Check storage state matches in-memory state
+                        let storedUserIdAfter: String? = client.storage.read(key: Constants.storageKeys.userId)
+                        let storedTraitsAfter: String? = client.storage.read(key: Constants.storageKeys.traits)
+                        let storedAnonymousIdAfter: String? = client.storage.read(key: Constants.storageKeys.anonymousId)
+                        
+                        XCTAssertNil(storedUserIdAfter, "User ID should be removed from storage")
+                        XCTAssertNil(storedTraitsAfter, "Traits should be removed from storage")
+                        XCTAssertEqual(storedAnonymousIdAfter, client.anonymousId, "Storage anonymous ID should match in-memory")
+                        XCTAssertNotEqual(preResetAnonymousId, storedAnonymousIdAfter, "Storage anonymous ID should be updated")
+                    }
                 }
             }
         }

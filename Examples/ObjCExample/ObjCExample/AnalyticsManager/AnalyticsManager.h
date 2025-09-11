@@ -54,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)alias:(NSString * _Nonnull)newId previousId:(NSString* _Nullable)previousId options:(RSSOption* _Nullable)option;
 - (void)flush;
 - (void)reset;
+- (void)resetWithOptions;
 - (void)startSession;
 - (void)startSession:(NSNumber *)sessionId;
 - (void)endSession;
@@ -80,6 +81,7 @@ typedef NS_ENUM(NSInteger, ActionType) {
     ActionTypeUpdateAnonymousId,
     ActionTypeReadAnonymousId,
     ActionTypeReset,
+    ActionTypeResetWithOptions,
     ActionTypeStartSession,
     ActionTypeStartSessionWithSessionId,
     ActionTypeReadSessionId,

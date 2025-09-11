@@ -118,27 +118,55 @@ extension UserIdentity {
 
      - Parameters:
         - storage: An instance of `KeyValueStorage` where the values will be removed.
-     
-     The method performs the following:
-     1. Removes the `userId` from the storage using the `Constants.storageKeys.userId` key.
-     2. Removes the `traits` from the storage using the `Constants.storageKeys.traits` key.
      */
     func resetUserIdAndTraits(_ storage: KeyValueStorage) {
+        self.resetUserId(storage)
+        self.resetTraits(storage)
+    }
+    
+    /**
+     Removes the user ID from the specified key-value storage.
+
+     - Parameters:
+        - storage: An instance of `KeyValueStorage` where the user ID will be removed.
+     
+     The method removes the `userId` from the storage using the `Constants.storageKeys.userId` key.
+     */
+    func resetUserId(_ storage: KeyValueStorage) {
         storage.remove(key: Constants.storageKeys.userId)
+    }
+    
+    /**
+     Removes the traits from the specified key-value storage.
+
+     - Parameters:
+        - storage: An instance of `KeyValueStorage` where the traits will be removed.
+     
+     The method removes the `traits` from the storage using the `Constants.storageKeys.traits` key.
+     */
+    func resetTraits(_ storage: KeyValueStorage) {
         storage.remove(key: Constants.storageKeys.traits)
     }
     
     /**
-     Resets the user identity by clearing stored identifiers and traits.
+     Resets the user identity by clearing stored identifiers and traits using the specified options.
 
      - Parameters:
        - storage: The storage instance used to remove user-related data.
-
-     This function stores the current anonymous ID and reset other user identity-related data, such as user ID and traits.
+       - entries: An instance of `ResetEntries` specifying which items to reset.
     */
-    func resetUserIdentity(storage: Storage) {
-        self.storeAnonymousId(storage)
-        self.resetUserIdAndTraits(storage)
+    func resetUserIdentity(storage: Storage, entries: ResetEntries) {
+        if entries.anonymousId {
+            self.storeAnonymousId(storage)
+        }
+        
+        if entries.userId {
+            self.resetUserId(storage)
+        }
+        
+        if entries.traits {
+            self.resetTraits(storage)
+        }
     }
     
     /**
