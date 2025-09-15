@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939CF2E78226E00E22EE1 /* SourceConfig.swift */; };
 		530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D22E78299100E22EE1 /* SourceConfigProvider.swift */; };
+		530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D52E78629C00E22EE1 /* SourceConfigResult.swift */; };
 		530F89242E61D9CA007A81B2 /* BackoffPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89232E61D9CA007A81B2 /* BackoffPolicy.swift */; };
 		530F89262E61DC67007A81B2 /* ExponentialBackoffPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89252E61DC67007A81B2 /* ExponentialBackoffPolicy.swift */; };
 		530F89282E61F3BE007A81B2 /* BackoffPolicyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89272E61F3BE007A81B2 /* BackoffPolicyHandler.swift */; };
@@ -161,6 +162,7 @@
 /* Begin PBXFileReference section */
 		530939CF2E78226E00E22EE1 /* SourceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfig.swift; sourceTree = "<group>"; };
 		530939D22E78299100E22EE1 /* SourceConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigProvider.swift; sourceTree = "<group>"; };
+		530939D52E78629C00E22EE1 /* SourceConfigResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigResult.swift; sourceTree = "<group>"; };
 		530F89232E61D9CA007A81B2 /* BackoffPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicy.swift; sourceTree = "<group>"; };
 		530F89252E61DC67007A81B2 /* ExponentialBackoffPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponentialBackoffPolicy.swift; sourceTree = "<group>"; };
 		530F89272E61F3BE007A81B2 /* BackoffPolicyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHandler.swift; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 			children = (
 				530939CF2E78226E00E22EE1 /* SourceConfig.swift */,
 				530939D22E78299100E22EE1 /* SourceConfigProvider.swift */,
+				530939D52E78629C00E22EE1 /* SourceConfigResult.swift */,
 			);
 			path = SourceConfig;
 			sourceTree = "<group>";
@@ -951,6 +954,7 @@
 				530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */,
 				53DEA5E72E03D05A00D6C371 /* LifecycleObserver.swift in Sources */,
 				53DEA5E82E03D05A00D6C371 /* UserIdentity.swift in Sources */,
+				530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */,
 				530F89262E61DC67007A81B2 /* ExponentialBackoffPolicy.swift in Sources */,
 				53DEA5E92E03D05A00D6C371 /* DataStore.swift in Sources */,
 				53DEA5EA2E03D05A00D6C371 /* TrackEvent.swift in Sources */,
