@@ -51,6 +51,11 @@ public class Analytics {
     private(set) internal var sourceConfigState: StateImpl<SourceConfig>
     
     /**
+     The manager responsible for SourceConfig operations.
+     */
+    private(set) var sourceConfigProvider: SourceConfigProvider?
+    
+    /**
      Tracks the shutdown state of the analytics instance.
      */
     private(set) var isAnalyticsShutdown: Bool = false
@@ -279,6 +284,8 @@ extension Analytics {
         
         self.lifecycleSessionWrapper?.invalidate()
         self.lifecycleSessionWrapper = nil
+        
+        self.sourceConfigProvider = nil
     }
     
     /**
@@ -376,10 +383,10 @@ extension Analytics {
      Collects configuration data from the backend and saves it in the storage.
      */
     private func setupSourceConfig() {
-        let sourceConfigProvider = SourceConfigProvider(analytics: self)
+        self.sourceConfigProvider = SourceConfigProvider(analytics: self)
         
-        sourceConfigProvider.fetchCachedConfigAndNotifyObservers()
-        sourceConfigProvider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider?.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider?.refreshConfigAndNotifyObservers()
     }
     
     /**
