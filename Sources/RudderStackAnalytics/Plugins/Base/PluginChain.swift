@@ -21,7 +21,7 @@ class PluginChain {
         PluginType.allCases.forEach { self.pluginList[$0] = PluginInteractor() }
     }
     
-    func process(event: Event) {        
+    func process(event: Event) {
         let preProcessedResult = self.applyPlugins(pluginType: .preProcess, event: event)
         let onProcessedResult = self.applyPlugins(pluginType: .onProcess, event: preProcessedResult)
         
@@ -52,10 +52,11 @@ class PluginChain {
             mediator.removeAll()
         }
     }
-
+    
     func find<T: Plugin>(type: T.Type) -> T? {
-        for (_, mediator) in pluginList {
-            if let found = mediator.find(type) {
+        for pluginType in PluginType.allCases {
+            if let mediator = pluginList[pluginType],
+               let found = mediator.find(type) {
                 return found
             }
         }

@@ -250,7 +250,8 @@ extension Analytics {
      - Parameter type: The type of plugin to find
      - Returns: The plugin instance if found, nil otherwise
      */
-    public func find<T: Plugin>(type: T.Type) -> T? {
+    public func find<T: Plugin>(_ type: T.Type) -> T? {
+        guard self.isAnalyticsActive else { return nil}
         return pluginChain?.find(type: type)
     }
     
