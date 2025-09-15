@@ -16,7 +16,33 @@ final class SourceConfigProvider {
         self.sourceConfigState = analytics.sourceConfigState
     }
     
-    func fetchCachedConfigAndNotifyObservers() {}
+    func fetchCachedConfigAndNotifyObservers() {
+        guard let cachedSourceConfig = self.fetchCachedSourceConfig() else { return }
+        self.notifyObservers(config: cachedSourceConfig)
+    }
+}
+
+extension SourceConfigProvider {
     
-    func refreshConfigAndNotifyObservers() {}
+    private func fetchCachedSourceConfig() -> SourceConfig? {
+        guard let storedSourceConfig = self.analytics?.storage.read(key: Constants.storageKeys.sourceConfig) as String?,
+              let sourceConfigData = storedSourceConfig.utf8Data else {
+            LoggerAnalytics.info(log: "SourceConfig not found in storage")
+            return nil
+        }
+        
+        do {
+            let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: sourceConfigData)
+            LoggerAnalytics.info(log: "SourceConfig fetched from storage: \(sourceConfig)")
+            
+            return sourceConfig
+        } catch {
+            LoggerAnalytics.error(log: "Failed to decode SourceConfig from storage: \(error)")
+            return nil
+        }
+    }
+    
+    private func notifyObservers(config: SourceConfig) {
+        LoggerAnalytics.debug(log: "Notifying observers with sourceConfig.")
+    }
 }
