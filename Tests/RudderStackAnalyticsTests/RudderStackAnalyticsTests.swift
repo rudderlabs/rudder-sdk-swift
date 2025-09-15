@@ -259,6 +259,22 @@ extension RudderStackAnalyticsTests {
             await client.configuration.storage.remove(batchReference: item.reference)
         }
     }
+
+    func test_findPlugin_disk() {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        let customPlugin = MockPlugin()
+        client.add(plugin: customPlugin)
+        
+        let foundPlugin = client.find(type: MockPlugin.self)
+        XCTAssertNotNil(foundPlugin, "Should find the added plugin")
+        XCTAssertTrue(foundPlugin === customPlugin, "Should return the same plugin instance")
+        
+        client.remove(plugin: customPlugin)
+        
+        let removedPlugin = client.find(type: MockPlugin.self)
+        XCTAssertNil(removedPlugin, "Should not find plugin after removal")
+    }
 }
 
 // MARK: - Identify Reset Behavior Tests
