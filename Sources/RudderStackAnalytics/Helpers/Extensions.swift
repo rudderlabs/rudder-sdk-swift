@@ -337,6 +337,27 @@ extension Result where Success == Data, Failure == Error {
             }
         }
     }
+    
+    var sourceConfigResult: SourceConfigResult {
+        switch self {
+        case .success(let data): .success(data)
+        case .failure(let error):
+            if let httpError = error as? HttpNetworkError {
+                switch httpError {
+                case .networkUnavailable: .failure(SourceConfigError.networkUnavailable)
+                case .requestFailed(let statusCode):
+                    if statusCode == NonRetryableEventUploadError.error400.rawValue {
+                        .failure(SourceConfigError.invalidWriteKey)
+                    } else {
+                        .failure(SourceConfigError.requestFailed(statusCode))
+                    }
+                case .invalidResponse, .unknown: .failure(SourceConfigError.unknown)
+                }
+            } else {
+                .failure(SourceConfigError.unknown)
+            }
+        }
+    }
 }
 
 // MARK: - TypeIdentifiable
