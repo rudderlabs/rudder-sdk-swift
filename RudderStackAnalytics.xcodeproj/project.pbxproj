@@ -329,6 +329,17 @@
 			path = SourceConfig;
 			sourceTree = "<group>";
 		};
+		530939D42E783EF200E22EE1 /* UserIdentity */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */,
+				53DEA5CF2E03D05A00D6C371 /* SetUserIdAction.swift */,
+				53DEA5D02E03D05A00D6C371 /* SetUserIdAndTraitsAction.swift */,
+				53DEA5D22E03D05A00D6C371 /* UserIdentity.swift */,
+			);
+			path = UserIdentity;
+			sourceTree = "<group>";
+		};
 		530F89292E6225D7007A81B2 /* FlushPolicy */ = {
 			isa = PBXGroup;
 			children = (
@@ -596,11 +607,8 @@
 		53DEA5D32E03D05A00D6C371 /* StateManagement */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */,
-				53DEA5CF2E03D05A00D6C371 /* SetUserIdAction.swift */,
-				53DEA5D02E03D05A00D6C371 /* SetUserIdAndTraitsAction.swift */,
+				530939D42E783EF200E22EE1 /* UserIdentity */,
 				53DEA5D12E03D05A00D6C371 /* StateManagement.swift */,
-				53DEA5D22E03D05A00D6C371 /* UserIdentity.swift */,
 			);
 			path = StateManagement;
 			sourceTree = "<group>";
