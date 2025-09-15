@@ -46,6 +46,11 @@ public class Analytics {
     }
     
     /**
+     The state container for SourceConfig management within the analytics system.
+     */
+    private(set) internal var sourceConfigState: StateImpl<SourceConfig>
+    
+    /**
      Tracks the shutdown state of the analytics instance.
      */
     private(set) var isAnalyticsShutdown: Bool = false
@@ -59,6 +64,7 @@ public class Analytics {
         self.configuration = configuration
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
+        self.sourceConfigState = createState(initialState: SourceConfig.initialState())
         self.setup()
     }
 }
@@ -300,7 +306,7 @@ extension Analytics {
      */
     private func setup() {
         self.storeAnonymousId()
-        self.collectConfiguration()
+        self.setupSourceConfig()
         self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
@@ -369,17 +375,22 @@ extension Analytics {
     /**
      Collects configuration data from the backend and saves it in the storage.
      */
-    private func collectConfiguration() {
-        Task {
-            let client = HttpClient(analytics: self)
-            do {
-                let data = try await client.getConfigurationData()
-                self.storage.write(value: data.jsonString, key: Constants.storageKeys.sourceConfig)
-                LoggerAnalytics.info(log: data.prettyPrintedString ?? "Bad response")
-            } catch {
-                LoggerAnalytics.error(log: "Failed to get sourceConfig", error: error)
-            }
+    private func setupSourceConfig() {
+        let sourceConfigProvider = SourceConfigProvider(analytics: self)
+        
+        sourceConfigProvider.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider.refreshConfigAndNotifyObservers()
+    }
+    
+    /**
+     Checks if the source is enabled.
+     */
+    var isSourceEnabled: Bool {
+        if !self.sourceConfigState.state.value.source.isSourceEnabled {
+            LoggerAnalytics.error(log: "Source is disabled. This operation is not allowed.")
+            return false
         }
+        return true
     }
 }
 
