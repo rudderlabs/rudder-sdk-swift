@@ -243,6 +243,17 @@ extension Analytics {
         guard self.isAnalyticsActive else { return }
         self.pluginChain?.remove(plugin: plugin)
     }
+    
+    /**
+     Finds a plugin of the specified type in the plugin chain.
+
+     - Parameter type: The type of plugin to find
+     - Returns: The plugin instance if found, nil otherwise
+     */
+    public func find<T: Plugin>(type: T.Type) -> T? {
+        return pluginChain?.find(type: type)
+    }
+    
 }
 
 // MARK: - Shutdown

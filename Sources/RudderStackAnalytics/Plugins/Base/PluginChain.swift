@@ -52,6 +52,15 @@ class PluginChain {
             mediator.removeAll()
         }
     }
+
+    func find<T: Plugin>(type: T.Type) -> T? {
+        for (_, mediator) in pluginList {
+            if let found = mediator.find(type) {
+                return found
+            }
+        }
+        return nil
+    }
 }
 
 // MARK: - Private functions
