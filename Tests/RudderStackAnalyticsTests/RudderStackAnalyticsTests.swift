@@ -266,13 +266,13 @@ extension RudderStackAnalyticsTests {
         let customPlugin = MockPlugin()
         client.add(plugin: customPlugin)
         
-        let foundPlugin = client.find(type: MockPlugin.self)
+        let foundPlugin = client.find(MockPlugin.self)
         XCTAssertNotNil(foundPlugin, "Should find the added plugin")
         XCTAssertTrue(foundPlugin === customPlugin, "Should return the same plugin instance")
         
         client.remove(plugin: customPlugin)
         
-        let removedPlugin = client.find(type: MockPlugin.self)
+        let removedPlugin = client.find(MockPlugin.self)
         XCTAssertNil(removedPlugin, "Should not find plugin after removal")
     }
 }
