@@ -7,11 +7,13 @@
 
 import Foundation
 
+/**
+ Manages fetching, caching, and providing the source configuration data from the RudderStack server.
+ */
 final class SourceConfigProvider {
     private weak var analytics: Analytics?
     private let sourceConfigState: StateImpl<SourceConfig>
     private let httpClient: HttpClient
-    private static let maxRetryAttempts = 5
     
     init(analytics: Analytics) {
         self.analytics = analytics
@@ -59,27 +61,21 @@ extension SourceConfigProvider {
 }
 
 // MARK: - Downloaded SourceConfig
-
 extension SourceConfigProvider {
     private func downloadSourceConfig() async -> SourceConfig? {
-        var attemptCount = 0
         
-        repeat {
-            attemptCount += 1
-            let configResult = await self.httpClient.getConfigurationData()
+        let configResult = await self.httpClient.getConfigurationData()
+        
+        switch configResult {
+        case .success(let data):
+            return self.handleSourceConfigResponse(data: data)
             
-            switch configResult {
-            case .success(let data):
-                return self.handleSourceConfigResponse(data: data)
-                
-            case .failure(let error):
-                LoggerAnalytics.error(log: "Error downloading SourceConfig: \(error.errorDescription)", error: error)
-                // TODO: - When working on SourceConfig failure ticket, handle this scenario here.
-                // https://linear.app/rudderstack/issue/SDK-3144/parent-source-config-on-unsuccessful-response
-            }
-        } while attemptCount <= Self.maxRetryAttempts
-        
-        return nil
+        case .failure(let error):
+            LoggerAnalytics.error(log: "Error downloading SourceConfig: \(error.errorDescription)", error: error)
+            // TODO: - When working on SourceConfig failure ticket, handle this scenario here.
+            // https://linear.app/rudderstack/issue/SDK-3144/parent-source-config-on-unsuccessful-response
+            return nil
+        }
     }
     
     private func handleSourceConfigResponse(data: Data) -> SourceConfig? {

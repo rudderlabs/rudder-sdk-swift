@@ -48,7 +48,7 @@ public class Analytics {
     /**
      The state container for SourceConfig management within the analytics system.
      */
-    private(set) internal var sourceConfigState: StateImpl<SourceConfig>
+    private(set) var sourceConfigState: StateImpl<SourceConfig>
     
     /**
      The manager responsible for SourceConfig operations.
@@ -375,12 +375,12 @@ extension Analytics {
     }
 }
 
-// MARK: - Backend Configuration
+// MARK: - Source Configuration
 
 extension Analytics {
     
     /**
-     Collects configuration data from the backend and saves it in the storage.
+     Sets up the source configuration provider and fetches the initial configuration.
      */
     private func setupSourceConfig() {
         self.sourceConfigProvider = SourceConfigProvider(analytics: self)

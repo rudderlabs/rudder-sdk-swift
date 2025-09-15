@@ -20,12 +20,12 @@ struct SourceConfig: Codable {
     static func initialState() -> SourceConfig {
         return SourceConfig(
             source: RudderServerConfigSource(
-                sourceId: "",
-                sourceName: "",
-                writeKey: "",
+                sourceId: .empty,
+                sourceName: .empty,
+                writeKey: .empty,
                 isSourceEnabled: true,
-                workspaceId: "",
-                updatedAt: "",
+                workspaceId: .empty,
+                updatedAt: .empty,
                 metricConfig: MetricsConfig(),
                 destinations: []
             )
