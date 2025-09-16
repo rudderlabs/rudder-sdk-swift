@@ -84,6 +84,7 @@ extension EventQueue {
                 config.source.isSourceEnabled
             }
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isSourceEnabled in
                 
                 guard let self else { return }
