@@ -76,6 +76,20 @@ extension MockProvider {
     ]
 }
 
+extension MockProvider {
+    
+    static var sourceConfiguration: SourceConfig? {
+        guard let mockJson = MockHelper.readJson(from: "mock_source_config")?.trimmed, let mockJsonData = mockJson.utf8Data else { return nil }
+        do {
+            let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: mockJsonData)
+            return sourceConfig
+        } catch {
+            print("Error parsing JSON: \(error)")
+            return nil
+        }
+    }
+}
+
 // MARK: - MockHelper
 struct MockHelper {
     private init() {}
@@ -145,6 +159,17 @@ extension XCTestCase {
         if !description.isEmpty { print("Then \(description)") }
         closure()
     }
+}
+
+// MARK: - Run After
+
+func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
+    // Suspend the current task for the specified duration
+    let nanoseconds = UInt64(seconds * 1_000_000_000)
+    try? await Task.sleep(nanoseconds: nanoseconds)
+    
+    // Execute the block after the delay
+    await block()
 }
 
 // MARK: - String(Extension)
