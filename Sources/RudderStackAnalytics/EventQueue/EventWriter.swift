@@ -68,7 +68,7 @@ final class EventWriter {
                 }
                 
                 // Check if we should flush (either explicit flush or policy-triggered)
-                if isFlushSignal || self.flushPolicyFacade.shouldFlush() {
+                if (isFlushSignal || self.flushPolicyFacade.shouldFlush()) && self.analytics.isSourceEnabled {
                     do {
                         self.flushPolicyFacade.resetCount()
                         await self.storage.rollover()
