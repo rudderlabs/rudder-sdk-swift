@@ -355,6 +355,4 @@ struct SourceConfigTests {
             #expect(receivedConfigsCount >= 2) // Initial + first update, but not the second
         }
     }
-
-    
 }
