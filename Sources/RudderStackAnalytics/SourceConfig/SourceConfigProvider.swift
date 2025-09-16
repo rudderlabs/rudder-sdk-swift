@@ -35,6 +35,8 @@ final class SourceConfigProvider {
     
     private func notifyObservers(config: SourceConfig) {
         LoggerAnalytics.debug(log: "Notifying observers with sourceConfig.")
+        // TODO: - Finish this implementation when working on SourceConfig state management.
+        // https://linear.app/rudderstack/issue/SDK-3721/ios-integrate-sourceconfig-state-handling-across-apis
     }
 }
 
