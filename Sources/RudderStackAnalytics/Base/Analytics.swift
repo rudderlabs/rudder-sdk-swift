@@ -46,6 +46,16 @@ public class Analytics {
     }
     
     /**
+     The state container for SourceConfig management within the analytics system.
+     */
+    private(set) var sourceConfigState: StateImpl<SourceConfig>
+    
+    /**
+     The manager responsible for SourceConfig operations.
+     */
+    private(set) var sourceConfigProvider: SourceConfigProvider?
+    
+    /**
      Tracks the shutdown state of the analytics instance.
      */
     private(set) var isAnalyticsShutdown: Bool = false
@@ -59,6 +69,7 @@ public class Analytics {
         self.configuration = configuration
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
+        self.sourceConfigState = createState(initialState: SourceConfig.initialState())
         self.setup()
     }
 }
@@ -273,6 +284,8 @@ extension Analytics {
         
         self.lifecycleSessionWrapper?.invalidate()
         self.lifecycleSessionWrapper = nil
+        
+        self.sourceConfigProvider = nil
     }
     
     /**
@@ -300,7 +313,7 @@ extension Analytics {
      */
     private func setup() {
         self.storeAnonymousId()
-        self.collectConfiguration()
+        self.setupSourceConfig()
         self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
@@ -362,24 +375,29 @@ extension Analytics {
     }
 }
 
-// MARK: - Backend Configuration
+// MARK: - Source Configuration
 
 extension Analytics {
     
     /**
-     Collects configuration data from the backend and saves it in the storage.
+     Sets up the source configuration provider and fetches the initial configuration.
      */
-    private func collectConfiguration() {
-        Task {
-            let client = HttpClient(analytics: self)
-            do {
-                let data = try await client.getConfigurationData()
-                self.storage.write(value: data.jsonString, key: Constants.storageKeys.sourceConfig)
-                LoggerAnalytics.info(log: data.prettyPrintedString ?? "Bad response")
-            } catch {
-                LoggerAnalytics.error(log: "Failed to get sourceConfig", error: error)
-            }
+    private func setupSourceConfig() {
+        self.sourceConfigProvider = SourceConfigProvider(analytics: self)
+        
+        sourceConfigProvider?.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider?.refreshConfigAndNotifyObservers()
+    }
+    
+    /**
+     Checks if the source is enabled.
+     */
+    var isSourceEnabled: Bool {
+        if !self.sourceConfigState.state.value.source.isSourceEnabled {
+            LoggerAnalytics.error(log: "Source is disabled. This operation is not allowed.")
+            return false
         }
+        return true
     }
 }
 

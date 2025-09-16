@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939CF2E78226E00E22EE1 /* SourceConfig.swift */; };
+		530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D22E78299100E22EE1 /* SourceConfigProvider.swift */; };
+		530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D52E78629C00E22EE1 /* SourceConfigResult.swift */; };
 		530F89242E61D9CA007A81B2 /* BackoffPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89232E61D9CA007A81B2 /* BackoffPolicy.swift */; };
 		530F89262E61DC67007A81B2 /* ExponentialBackoffPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89252E61DC67007A81B2 /* ExponentialBackoffPolicy.swift */; };
 		530F89282E61F3BE007A81B2 /* BackoffPolicyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89272E61F3BE007A81B2 /* BackoffPolicyHandler.swift */; };
@@ -157,6 +160,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		530939CF2E78226E00E22EE1 /* SourceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfig.swift; sourceTree = "<group>"; };
+		530939D22E78299100E22EE1 /* SourceConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigProvider.swift; sourceTree = "<group>"; };
+		530939D52E78629C00E22EE1 /* SourceConfigResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigResult.swift; sourceTree = "<group>"; };
 		530F89232E61D9CA007A81B2 /* BackoffPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicy.swift; sourceTree = "<group>"; };
 		530F89252E61DC67007A81B2 /* ExponentialBackoffPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponentialBackoffPolicy.swift; sourceTree = "<group>"; };
 		530F89272E61F3BE007A81B2 /* BackoffPolicyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHandler.swift; sourceTree = "<group>"; };
@@ -316,6 +322,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		530939D12E78227900E22EE1 /* SourceConfig */ = {
+			isa = PBXGroup;
+			children = (
+				530939CF2E78226E00E22EE1 /* SourceConfig.swift */,
+				530939D22E78299100E22EE1 /* SourceConfigProvider.swift */,
+				530939D52E78629C00E22EE1 /* SourceConfigResult.swift */,
+			);
+			path = SourceConfig;
+			sourceTree = "<group>";
+		};
+		530939D42E783EF200E22EE1 /* UserIdentity */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */,
+				53DEA5CF2E03D05A00D6C371 /* SetUserIdAction.swift */,
+				53DEA5D02E03D05A00D6C371 /* SetUserIdAndTraitsAction.swift */,
+				53DEA5D22E03D05A00D6C371 /* UserIdentity.swift */,
+			);
+			path = UserIdentity;
+			sourceTree = "<group>";
+		};
 		530F89292E6225D7007A81B2 /* FlushPolicy */ = {
 			isa = PBXGroup;
 			children = (
@@ -354,6 +381,7 @@
 				53DEA5DD2E03D05A00D6C371 /* Storage */,
 				53AC39B52E16FA7D00B8E16C /* Resources */,
 				539D86F32E5439AA009FC144 /* EventQueue */,
+				530939D12E78227900E22EE1 /* SourceConfig */,
 			);
 			path = RudderStackAnalytics;
 			sourceTree = "<group>";
@@ -582,11 +610,8 @@
 		53DEA5D32E03D05A00D6C371 /* StateManagement */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */,
-				53DEA5CF2E03D05A00D6C371 /* SetUserIdAction.swift */,
-				53DEA5D02E03D05A00D6C371 /* SetUserIdAndTraitsAction.swift */,
+				530939D42E783EF200E22EE1 /* UserIdentity */,
 				53DEA5D12E03D05A00D6C371 /* StateManagement.swift */,
-				53DEA5D22E03D05A00D6C371 /* UserIdentity.swift */,
 			);
 			path = StateManagement;
 			sourceTree = "<group>";
@@ -926,8 +951,10 @@
 				53DEA5E42E03D05A00D6C371 /* ScreenInfoPlugin.swift in Sources */,
 				53DEA5E52E03D05A00D6C371 /* LocaleInfoPlugin.swift in Sources */,
 				53DEA5E62E03D05A00D6C371 /* AliasEvent.swift in Sources */,
+				530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */,
 				53DEA5E72E03D05A00D6C371 /* LifecycleObserver.swift in Sources */,
 				53DEA5E82E03D05A00D6C371 /* UserIdentity.swift in Sources */,
+				530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */,
 				530F89262E61DC67007A81B2 /* ExponentialBackoffPolicy.swift in Sources */,
 				53DEA5E92E03D05A00D6C371 /* DataStore.swift in Sources */,
 				53DEA5EA2E03D05A00D6C371 /* TrackEvent.swift in Sources */,
@@ -991,6 +1018,7 @@
 				53DEA61A2E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift in Sources */,
 				53DEA61B2E03D05A00D6C371 /* ObjCEvent.swift in Sources */,
 				53DEA61C2E03D05A00D6C371 /* FrequencyFlushPolicy.swift in Sources */,
+				530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */,
 				539D87202E55B8DD009FC144 /* ProcessingEvent.swift in Sources */,
 				53DEA61D2E03D05A00D6C371 /* Plugin.swift in Sources */,
 				53DEA61E2E03D05A00D6C371 /* ObjCLoggerAnalytics.swift in Sources */,

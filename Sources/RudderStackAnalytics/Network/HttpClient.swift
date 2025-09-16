@@ -12,12 +12,8 @@ import Foundation
  This protocol is designed to execute predefined network requests.
  */
 protocol HttpClientRequests {
-    func getConfigurationData() async throws -> Data
+    func getConfigurationData() async -> SourceConfigResult
     func postBatchEvents(_ batch: String) async -> EventUploadResult
-}
-
-enum HttpClientError: Error {
-    case invalidRequest
 }
 
 // MARK: - HttpClient
@@ -52,16 +48,9 @@ final class HttpClient {
 
 // MARK: - HttpClientRequests
 extension HttpClient: HttpClientRequests {
-    func getConfigurationData() async throws -> Data {
-        guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { throw HttpClientError.invalidRequest }
-        let result = await HttpNetwork.perform(request: urlRequest)
-        
-        switch result {
-        case .success(let data):
-            return data
-        case .failure(let error):
-            throw error
-        }
+    func getConfigurationData() async -> SourceConfigResult {
+        guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { return .failure(SourceConfigError.unknown) }
+        return await HttpNetwork.perform(request: urlRequest).sourceConfigResult
     }
     
     func postBatchEvents(_ batch: String) async -> EventUploadResult {
