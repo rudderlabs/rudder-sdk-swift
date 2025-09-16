@@ -52,8 +52,6 @@ final class EventWriter {
     }
     
     func start() {
-        self.flushPolicyFacade.startSchedule()
-        
         Task { [weak self] in
             guard let self else { return }
             
@@ -85,6 +83,10 @@ final class EventWriter {
                 }
             }
         }
+    }
+    
+    func startSchedule() {
+        self.flushPolicyFacade.startSchedule()
     }
     
     func cancelSchedule() {

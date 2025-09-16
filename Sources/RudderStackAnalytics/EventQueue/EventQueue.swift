@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 // MARK: - EventQueue
 /**
@@ -16,10 +17,13 @@ final class EventQueue {
     private var eventWriter: EventWriter?
     private var eventUploader: EventUploader?
     
-    /* Centralized channel management */
+    /** Centralized channel management */
     private let writeChannel: AsyncChannel<ProcessingEvent>
     private let uploadChannel: AsyncChannel<String>
-        
+    
+    /** To hold Combine subscriptions */
+    private var cancellables = Set<AnyCancellable>()
+    
     init(analytics: Analytics) {
         self.analytics = analytics
         
@@ -43,8 +47,10 @@ final class EventQueue {
 extension EventQueue {
     
     private func start() {
-        self.eventWriter?.start()
         self.eventUploader?.start()
+        
+        self.observeConfigAndUpdateSchedule()
+        self.eventWriter?.start()
     }
     
     func put(_ event: Event) {
@@ -67,5 +73,29 @@ extension EventQueue {
         
         // Close write channel to signal processor to stop receiving
         self.eventWriter?.stop()
+        
+        // Clear any Combine subscriptions
+        self.cancellables.removeAll()
+    }
+    
+    func observeConfigAndUpdateSchedule() {
+        self.analytics.sourceConfigState.state
+            .map { (config: SourceConfig) -> Bool in
+                config.source.isSourceEnabled
+            }
+            .removeDuplicates()
+            .sink { [weak self] isSourceEnabled in
+                
+                guard let self else { return }
+                
+                if isSourceEnabled {
+                    self.eventWriter?.startSchedule()
+                    // TODO: Uncomment after dynamic update of source config is implemented
+                    // self.eventUploader?.start()
+                } else {
+                    self.eventWriter?.cancelSchedule()
+                }
+            }
+            .store(in: &cancellables)
     }
 }
