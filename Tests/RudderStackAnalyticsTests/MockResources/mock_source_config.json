@@ -1,0 +1,574 @@
+{
+  "source": {
+    "id": "<source-id>",
+    "name": "Marketing Site",
+    "writeKey": "<write-key>",
+    "config": {
+      "botBlocking": {
+        "eventManagement": {
+          "enabled": true,
+          "action": "flag"
+        }
+      },
+      "statsCollection": {
+        "errors": {
+          "enabled": true
+        },
+        "metrics": {
+          "enabled": false
+        }
+      }
+    },
+    "enabled": true,
+    "workspaceId": "<workspace-id>",
+    "destinations": [
+      {
+        "id": "<destination-id1>",
+        "name": "Rudder Google Ads",
+        "enabled": true,
+        "config": {
+          "v2": false,
+          "allowIdentify": false,
+          "conversionID": "<conversion-id1>",
+          "eventMappingFromConfig": [
+            {
+              "from": "page_view",
+              "to": "PageVisit"
+            }
+          ],
+          "pageLoadConversions": [
+            {
+              "conversionLabel": "<pageload-conversion-label1>",
+              "name": "Every Page view"
+            },
+            {
+              "conversionLabel": "<pageload-conversion-label2>",
+              "name": "Demo Request (1)"
+            },
+            {
+              "conversionLabel": "<pageload-conversion-label3>",
+              "name": "Enterprise Quote (1)"
+            },
+            {
+              "conversionLabel": "<pageload-conversion-label4>",
+              "name": "Webinar Signup - Live"
+            },
+            {
+              "conversionLabel": "<pageload-conversion-label5>",
+              "name": "Webinar Signup - Gated"
+            },
+            {
+              "name": "Join Slack Community",
+              "conversionLabel": "<pageload-conversion-label6>"
+            },
+            {
+              "conversionLabel": "<pageload-conversion-label7>",
+              "name": "Data Reading Guide"
+            },
+            {
+              "name": "Contact Form",
+              "conversionLabel": "<pageload-conversion-label8>"
+            },
+            {
+              "name": "App Sign-Up",
+              "conversionLabel": "<pageload-conversion-label9>"
+            },
+            {
+              "conversionLabel": "<pageload-conversion-label10>",
+              "name": "Marketing Site App Signup"
+            },
+            {
+              "name": "Whitepaper Download",
+              "conversionLabel": "<pageload-conversion-label11>"
+            },
+            {
+              "conversionLabel": "<pageload-conversion-label12>",
+              "name": "Gated Video Form Fill"
+            },
+            {
+              "name": "ads_cnv_test",
+              "conversionLabel": "<pageload-conversion-label13>"
+            }
+          ],
+          "clickEventConversions": [
+            {
+              "conversionLabel": "<click-conversion-label1>",
+              "name": "ads_cnv_form_demo"
+            },
+            {
+              "conversionLabel": "<click-conversion-label2>",
+              "name": "ads_cnv_form_enterprise"
+            },
+            {
+              "conversionLabel": "<click-conversion-label3>",
+              "name": "ads_cnv_form_webinar_live"
+            },
+            {
+              "conversionLabel": "<click-conversion-label4>",
+              "name": "ads_cnv_form_webinar_gated"
+            },
+            {
+              "name": "ads_cnv_form_community",
+              "conversionLabel": "<click-conversion-label5>"
+            },
+            {
+              "conversionLabel": "<click-conversion-label6>",
+              "name": "ads_cnv_form_reading_guide"
+            },
+            {
+              "name": "ads_cnv_form_contact",
+              "conversionLabel": "<click-conversion-label7>"
+            },
+            {
+              "name": "ads_cnv_app_signup",
+              "conversionLabel": "<click-conversion-label8>"
+            },
+            {
+              "conversionLabel": "<click-conversion-label9>",
+              "name": "ads_cnv_mkt_app_signup_started"
+            },
+            {
+              "name": "ads_cnv_form_whitepaper",
+              "conversionLabel": "<click-conversion-label10>"
+            },
+            {
+              "conversionLabel": "<click-conversion-label11>",
+              "name": "ads_cnv_gatedvideo"
+            },
+            {
+              "name": "ads_cnv_test",
+              "conversionLabel": "<click-conversion-label12>"
+            },
+            {
+              "name": "Demo request - enterprise (website)",
+              "conversionLabel": "<click-conversion-label13>"
+            },
+            {
+              "conversionLabel": "<click-conversion-label14>",
+              "name": "Demo request (website)"
+            }
+          ],
+          "defaultPageConversion": "",
+          "sendPageView": true,
+          "conversionLinker": true,
+          "disableAdPersonalization": false,
+          "blacklistedEvents": [
+            {
+              "eventName": ""
+            }
+          ],
+          "whitelistedEvents": [
+            {
+              "eventName": ""
+            }
+          ],
+          "oneTrustCookieCategories": [
+            {
+              "oneTrustCookieCategory": "C0004"
+            }
+          ],
+          "eventFilteringOption": "disable",
+          "dynamicRemarketing": false,
+          "trackConversions": true,
+          "enableConversionEventsFiltering": false,
+          "trackDynamicRemarketing": false,
+          "allowEnhancedConversions": false,
+          "enableConversionLabel": true,
+          "consentManagement": [
+            {
+              "provider": "oneTrust",
+              "consents": [
+                {
+                  "consent": "C0004"
+                }
+              ]
+            }
+          ]
+        },
+        "destinationDefinitionId": "<destination-definition-id1>",
+        "destinationDefinition": {
+          "name": "GOOGLEADS",
+          "displayName": "Google Ads"
+        },
+        "updatedAt": "2025-03-25T20:03:17.493Z",
+        "shouldApplyDeviceModeTransformation": false,
+        "propagateEventsUntransformedOnError": false
+      },
+      {
+        "id": "<destination-id2>",
+        "name": "MKT - Bing Ads",
+        "enabled": true,
+        "config": {
+          "tagID": "17551813",
+          "blacklistedEvents": [
+            {
+              "eventName": ""
+            }
+          ],
+          "whitelistedEvents": [
+            {
+              "eventName": "ads_cnv_form_demo"
+            },
+            {
+              "eventName": "form_submit"
+            },
+            {
+              "eventName": "userCompletedSignup"
+            },
+            {
+              "eventName": "click"
+            }
+          ],
+          "oneTrustCookieCategories": [
+            {
+              "oneTrustCookieCategory": "C0004"
+            }
+          ],
+          "eventFilteringOption": "whitelistedEvents",
+          "consentManagement": [
+            {
+              "provider": "oneTrust",
+              "consents": [
+                {
+                  "consent": "C0004"
+                }
+              ]
+            }
+          ]
+        },
+        "destinationDefinitionId": "<destination-definition-id2>",
+        "destinationDefinition": {
+          "name": "BINGADS",
+          "displayName": "Bing Ads"
+        },
+        "updatedAt": "2024-10-01T09:56:06.012Z",
+        "shouldApplyDeviceModeTransformation": false,
+        "propagateEventsUntransformedOnError": false
+      },
+      {
+        "id": "<destination-id3>",
+        "name": "Reddit - Mkt site",
+        "enabled": true,
+        "config": {
+          "advertiserId": "<advertiser-id3>",
+          "eventMappingFromConfig": [
+            {
+              "from": "ads_cnv_form_demo",
+              "to": "Lead"
+            },
+            {
+              "from": "ads_cnv_form_enterprise",
+              "to": "Lead"
+            },
+            {
+              "from": "ads_cnv_form_webinar_live",
+              "to": "Lead"
+            },
+            {
+              "from": "ads_cnv_form_webinar_gated",
+              "to": "Lead"
+            },
+            {
+              "from": "ads_cnv_form_community",
+              "to": "Lead"
+            },
+            {
+              "from": "ads_cnv_form_reading_guide",
+              "to": "Lead"
+            },
+            {
+              "from": "ads_cnv_form_contact",
+              "to": "Lead"
+            },
+            {
+              "from": "ads_cnv_app_signup",
+              "to": "Lead"
+            },
+            {
+              "from": "ads_cnv_mkt_app_signup_started",
+              "to": "Lead"
+            },
+            {
+              "from": "ads_cnv_form_whitepaper",
+              "to": "Lead"
+            },
+            {
+              "from": "ads_cnv_gatedvideo",
+              "to": "Lead"
+            }
+          ],
+          "blacklistedEvents": [
+            
+          ],
+          "whitelistedEvents": [
+            {
+              "eventName": "page_view"
+            }
+          ],
+          "oneTrustCookieCategories": [
+            {
+              "oneTrustCookieCategory": "C0004"
+            }
+          ],
+          "eventFilteringOption": "disable",
+          "consentManagement": [
+            {
+              "provider": "oneTrust",
+              "consents": [
+                {
+                  "consent": "C0004"
+                }
+              ]
+            }
+          ]
+        },
+        "destinationDefinitionId": "<destination-definition-id3>",
+        "destinationDefinition": {
+          "name": "REDDIT_PIXEL",
+          "displayName": "Reddit Pixel"
+        },
+        "updatedAt": "2024-10-01T10:06:49.745Z",
+        "shouldApplyDeviceModeTransformation": false,
+        "propagateEventsUntransformedOnError": false
+      },
+      {
+        "id": "<destination-id4>",
+        "name": "Linkedin - Mkt site",
+        "enabled": true,
+        "config": {
+          "partnerId": "<partner-id4>",
+          "blacklistedEvents": [
+            {
+              "eventName": ""
+            }
+          ],
+          "whitelistedEvents": [
+            {
+              "eventName": ""
+            }
+          ],
+          "oneTrustCookieCategories": [
+            {
+              "oneTrustCookieCategory": "C0004"
+            }
+          ],
+          "eventFilteringOption": "disable",
+          "consentManagement": [
+            {
+              "provider": "oneTrust",
+              "consents": [
+                {
+                  "consent": "C0004"
+                }
+              ]
+            }
+          ]
+        },
+        "destinationDefinitionId": "<destination-definition-id4>",
+        "destinationDefinition": {
+          "name": "LINKEDIN_INSIGHT_TAG",
+          "displayName": "Linkedin Insight Tag"
+        },
+        "updatedAt": "2024-10-01T10:00:32.581Z",
+        "shouldApplyDeviceModeTransformation": false,
+        "propagateEventsUntransformedOnError": false
+      },
+      {
+        "id": "<destination-id5>",
+        "name": "Hotjar",
+        "enabled": true,
+        "config": {
+          "siteID": "<site-id5>",
+          "blacklistedEvents": [
+            
+          ],
+          "whitelistedEvents": [
+            
+          ],
+          "eventFilteringOption": "disable",
+          "consentManagement": [
+            {
+              "provider": "oneTrust",
+              "resolutionStrategy": "",
+              "consents": [
+                
+              ]
+            },
+            {
+              "provider": "oneTrust",
+              "consents": [
+                
+              ]
+            }
+          ]
+        },
+        "destinationDefinitionId": "<destination-definition-id5>",
+        "destinationDefinition": {
+          "name": "HOTJAR",
+          "displayName": "Hotjar"
+        },
+        "updatedAt": "2024-07-29T14:39:50.515Z",
+        "shouldApplyDeviceModeTransformation": false,
+        "propagateEventsUntransformedOnError": false
+      },
+      {
+        "id": "<destination-id6>",
+        "name": "Quora Ads",
+        "enabled": true,
+        "config": {
+          "pixelId": "<pixel-id6>",
+          "eventsToQPEvents": [
+            {
+              "from": "ads_cnv_form_demo",
+              "to": "GenerateLead"
+            },
+            {
+              "from": "ads_cnv_form_enterprise",
+              "to": "GenerateLead"
+            },
+            {
+              "from": "ads_cnv_form_webinar_live",
+              "to": "GenerateLead"
+            },
+            {
+              "from": "ads_cnv_form_webinar_gated",
+              "to": "GenerateLead"
+            },
+            {
+              "from": "ads_cnv_form_community",
+              "to": "GenerateLead"
+            },
+            {
+              "from": "ads_cnv_form_reading_guide",
+              "to": "GenerateLead"
+            },
+            {
+              "from": "ads_cnv_form_contact",
+              "to": "GenerateLead"
+            },
+            {
+              "from": "ads_cnv_app_signup",
+              "to": "GenerateLead"
+            },
+            {
+              "from": "ads_cnv_mkt_app_signup_started",
+              "to": "GenerateLead"
+            },
+            {
+              "from": "ads_cnv_form_whitepaper",
+              "to": "GenerateLead"
+            },
+            {
+              "from": "ads_cnv_gatedvideo",
+              "to": "GenerateLead"
+            }
+          ],
+          "whitelistedEvents": [
+            
+          ],
+          "blacklistedEvents": [
+            
+          ],
+          "eventFilteringOption": "disable",
+          "oneTrustCookieCategories": [
+            {
+              "oneTrustCookieCategory": "C0004"
+            }
+          ],
+          "consentManagement": [
+            {
+              "provider": "oneTrust",
+              "consents": [
+                {
+                  "consent": "C0004"
+                }
+              ]
+            }
+          ]
+        },
+        "destinationDefinitionId": "<destination-definition-id6>",
+        "destinationDefinition": {
+          "name": "QUORA_PIXEL",
+          "displayName": "Quora Pixel"
+        },
+        "updatedAt": "2024-10-01T10:09:08.138Z",
+        "shouldApplyDeviceModeTransformation": false,
+        "propagateEventsUntransformedOnError": false
+      },
+      {
+        "id": "<destination-id7>",
+        "name": "GA4 Hybrid Mode - MKT",
+        "enabled": true,
+        "config": {
+          "debugView": true,
+          "measurementId": "<measurement-id7>",
+          "connectionMode": "device",
+          "capturePageView": "rs",
+          "whitelistedEvents": [
+            {
+              "eventName": ""
+            }
+          ],
+          "blacklistedEvents": [
+            {
+              "eventName": ""
+            }
+          ],
+          "useNativeSDKToSend": true,
+          "eventFilteringOption": "disable",
+          "extendPageViewParams": false,
+          "piiPropertiesToIgnore": [
+            {
+              "piiProperty": ""
+            }
+          ],
+          "overrideClientAndSessionId": true,
+          "oneTrustCookieCategories": [
+            {
+              "oneTrustCookieCategory": "C0002"
+            }
+          ],
+          "consentManagement": [
+            {
+              "provider": "oneTrust",
+              "consents": [
+                {
+                  "consent": "C0002"
+                }
+              ]
+            }
+          ]
+        },
+        "destinationDefinitionId": "<destination-definition-id7>",
+        "destinationDefinition": {
+          "name": "GA4",
+          "displayName": "Google Analytics 4 (GA4)"
+        },
+        "updatedAt": "2025-04-15T16:45:14.410Z",
+        "shouldApplyDeviceModeTransformation": false,
+        "propagateEventsUntransformedOnError": false
+      }
+    ],
+    "updatedAt": "2025-07-14T13:24:28.461Z",
+    "dataplanes": {
+      
+    }
+  },
+  "updatedAt": "2025-09-03T16:55:24.440Z",
+  "consentManagementMetadata": {
+    "providers": [
+      {
+        "provider": "oneTrust",
+        "resolutionStrategy": "and"
+      },
+      {
+        "provider": "ketch",
+        "resolutionStrategy": "or"
+      },
+      {
+        "provider": "iubenda",
+        "resolutionStrategy": "or"
+      }
+    ]
+  }
+}

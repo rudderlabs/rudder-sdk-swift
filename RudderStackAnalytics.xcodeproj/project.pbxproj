@@ -7,9 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939CF2E78226E00E22EE1 /* SourceConfig.swift */; };
+		530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D22E78299100E22EE1 /* SourceConfigProvider.swift */; };
+		530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D52E78629C00E22EE1 /* SourceConfigResult.swift */; };
 		530F89242E61D9CA007A81B2 /* BackoffPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89232E61D9CA007A81B2 /* BackoffPolicy.swift */; };
 		530F89262E61DC67007A81B2 /* ExponentialBackoffPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89252E61DC67007A81B2 /* ExponentialBackoffPolicy.swift */; };
 		530F89282E61F3BE007A81B2 /* BackoffPolicyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89272E61F3BE007A81B2 /* BackoffPolicyHandler.swift */; };
+		531F0D2C2E79B1C200180C05 /* mock_source_config.json in Resources */ = {isa = PBXBuildFile; fileRef = 531F0D2B2E79B1C200180C05 /* mock_source_config.json */; };
+		531F0D2D2E79B1C200180C05 /* mock_source_config.json in Resources */ = {isa = PBXBuildFile; fileRef = 531F0D2B2E79B1C200180C05 /* mock_source_config.json */; };
+		531F0D2F2E79CA6E00180C05 /* SourceConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531F0D2E2E79CA6E00180C05 /* SourceConfigTests.swift */; };
 		5328B8772E3B7E4D0051A202 /* ObjCUserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */; };
 		5328B8792E3B817B0051A202 /* ObjCTrackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */; };
 		5328B87B2E3C8B760051A202 /* ObjCScreenEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */; };
@@ -19,6 +25,7 @@
 		532904EF2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */; };
 		532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */; };
 		532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */; };
+		538F82C72E79583900C7ECEB /* UpdateSourceConfigAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */; };
 		5393019E2E65562100DAEAD1 /* BackoffPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
 		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
@@ -157,9 +164,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		530939CF2E78226E00E22EE1 /* SourceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfig.swift; sourceTree = "<group>"; };
+		530939D22E78299100E22EE1 /* SourceConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigProvider.swift; sourceTree = "<group>"; };
+		530939D52E78629C00E22EE1 /* SourceConfigResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigResult.swift; sourceTree = "<group>"; };
 		530F89232E61D9CA007A81B2 /* BackoffPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicy.swift; sourceTree = "<group>"; };
 		530F89252E61DC67007A81B2 /* ExponentialBackoffPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponentialBackoffPolicy.swift; sourceTree = "<group>"; };
 		530F89272E61F3BE007A81B2 /* BackoffPolicyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHandler.swift; sourceTree = "<group>"; };
+		531F0D2B2E79B1C200180C05 /* mock_source_config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = mock_source_config.json; sourceTree = "<group>"; };
+		531F0D2E2E79CA6E00180C05 /* SourceConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigTests.swift; sourceTree = "<group>"; };
 		5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCUserIdentity.swift; sourceTree = "<group>"; };
 		5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCTrackEvent.swift; sourceTree = "<group>"; };
 		5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCScreenEvent.swift; sourceTree = "<group>"; };
@@ -170,6 +182,7 @@
 		532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftExampleApp.xctestplan; sourceTree = "<group>"; };
 		532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUIExampleApp.xctestplan; sourceTree = "<group>"; };
 		5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSourceConfigAction.swift; sourceTree = "<group>"; };
 		5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyTests.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
@@ -316,6 +329,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		530939D12E78227900E22EE1 /* SourceConfig */ = {
+			isa = PBXGroup;
+			children = (
+				530939CF2E78226E00E22EE1 /* SourceConfig.swift */,
+				530939D22E78299100E22EE1 /* SourceConfigProvider.swift */,
+				530939D52E78629C00E22EE1 /* SourceConfigResult.swift */,
+			);
+			path = SourceConfig;
+			sourceTree = "<group>";
+		};
+		530939D42E783EF200E22EE1 /* UserIdentity */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */,
+				53DEA5CF2E03D05A00D6C371 /* SetUserIdAction.swift */,
+				53DEA5D02E03D05A00D6C371 /* SetUserIdAndTraitsAction.swift */,
+				53DEA5D22E03D05A00D6C371 /* UserIdentity.swift */,
+			);
+			path = UserIdentity;
+			sourceTree = "<group>";
+		};
 		530F89292E6225D7007A81B2 /* FlushPolicy */ = {
 			isa = PBXGroup;
 			children = (
@@ -354,6 +388,7 @@
 				53DEA5DD2E03D05A00D6C371 /* Storage */,
 				53AC39B52E16FA7D00B8E16C /* Resources */,
 				539D86F32E5439AA009FC144 /* EventQueue */,
+				530939D12E78227900E22EE1 /* SourceConfig */,
 			);
 			path = RudderStackAnalytics;
 			sourceTree = "<group>";
@@ -365,6 +400,7 @@
 				53DEA65A2E03D06F00D6C371 /* DataPlaneModuleTests.swift */,
 				53DEA65B2E03D06F00D6C371 /* FlushPolicyModuleTests.swift */,
 				5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */,
+				531F0D2E2E79CA6E00180C05 /* SourceConfigTests.swift */,
 				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
 				53DEA65D2E03D06F00D6C371 /* StorageModuleTests.swift */,
 				539D87392E588951009FC144 /* EventQueue */,
@@ -406,6 +442,14 @@
 				539E540A2C98CD7D00982E95 /* RudderStackAnalyticsTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		538F82C82E79584000C7ECEB /* SourceConfig */ = {
+			isa = PBXGroup;
+			children = (
+				538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */,
+			);
+			path = SourceConfig;
 			sourceTree = "<group>";
 		};
 		539D86F32E5439AA009FC144 /* EventQueue */ = {
@@ -582,11 +626,9 @@
 		53DEA5D32E03D05A00D6C371 /* StateManagement */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */,
-				53DEA5CF2E03D05A00D6C371 /* SetUserIdAction.swift */,
-				53DEA5D02E03D05A00D6C371 /* SetUserIdAndTraitsAction.swift */,
+				538F82C82E79584000C7ECEB /* SourceConfig */,
+				530939D42E783EF200E22EE1 /* UserIdentity */,
 				53DEA5D12E03D05A00D6C371 /* StateManagement.swift */,
-				53DEA5D22E03D05A00D6C371 /* UserIdentity.swift */,
 			);
 			path = StateManagement;
 			sourceTree = "<group>";
@@ -713,6 +755,7 @@
 				53DEA6362E03D06F00D6C371 /* Identify */,
 				53DEA63C2E03D06F00D6C371 /* Screen */,
 				53DEA6412E03D06F00D6C371 /* Track */,
+				531F0D2B2E79B1C200180C05 /* mock_source_config.json */,
 			);
 			path = MockResources;
 			sourceTree = "<group>";
@@ -857,6 +900,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				531F0D2D2E79B1C200180C05 /* mock_source_config.json in Resources */,
 				53AC39B42E16FA6E00B8E16C /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -874,6 +918,7 @@
 				53DEA6842E03D06F00D6C371 /* track_with_properties.json in Resources */,
 				53DEA6852E03D06F00D6C371 /* screen_with_all_values.json in Resources */,
 				53DEA6862E03D06F00D6C371 /* alias_with_default_arguments.json in Resources */,
+				531F0D2C2E79B1C200180C05 /* mock_source_config.json in Resources */,
 				53DEA6872E03D06F00D6C371 /* identify_with_all_values.json in Resources */,
 				53DEA6882E03D06F00D6C371 /* screen_with_category.json in Resources */,
 				53DEA6892E03D06F00D6C371 /* alias_with_options.json in Resources */,
@@ -926,12 +971,15 @@
 				53DEA5E42E03D05A00D6C371 /* ScreenInfoPlugin.swift in Sources */,
 				53DEA5E52E03D05A00D6C371 /* LocaleInfoPlugin.swift in Sources */,
 				53DEA5E62E03D05A00D6C371 /* AliasEvent.swift in Sources */,
+				530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */,
 				53DEA5E72E03D05A00D6C371 /* LifecycleObserver.swift in Sources */,
 				53DEA5E82E03D05A00D6C371 /* UserIdentity.swift in Sources */,
+				530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */,
 				530F89262E61DC67007A81B2 /* ExponentialBackoffPolicy.swift in Sources */,
 				53DEA5E92E03D05A00D6C371 /* DataStore.swift in Sources */,
 				53DEA5EA2E03D05A00D6C371 /* TrackEvent.swift in Sources */,
 				53DEA5EB2E03D05A00D6C371 /* RudderOption.swift in Sources */,
+				538F82C72E79583900C7ECEB /* UpdateSourceConfigAction.swift in Sources */,
 				53DEA5EC2E03D05A00D6C371 /* HttpNetwork.swift in Sources */,
 				53DEA5ED2E03D05A00D6C371 /* ObjCAnalytics.swift in Sources */,
 				53DEA5EE2E03D05A00D6C371 /* SessionActions.swift in Sources */,
@@ -991,6 +1039,7 @@
 				53DEA61A2E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift in Sources */,
 				53DEA61B2E03D05A00D6C371 /* ObjCEvent.swift in Sources */,
 				53DEA61C2E03D05A00D6C371 /* FrequencyFlushPolicy.swift in Sources */,
+				530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */,
 				539D87202E55B8DD009FC144 /* ProcessingEvent.swift in Sources */,
 				53DEA61D2E03D05A00D6C371 /* Plugin.swift in Sources */,
 				53DEA61E2E03D05A00D6C371 /* ObjCLoggerAnalytics.swift in Sources */,
@@ -1015,6 +1064,7 @@
 				53DEA6662E03D06F00D6C371 /* GroupEventTests.swift in Sources */,
 				53DEA6672E03D06F00D6C371 /* UserIdActionTests.swift in Sources */,
 				53DEA6682E03D06F00D6C371 /* FlushPolicyModuleTests.swift in Sources */,
+				531F0D2F2E79CA6E00180C05 /* SourceConfigTests.swift in Sources */,
 				53DEA6692E03D06F00D6C371 /* IdentifyEventTests.swift in Sources */,
 				53DEA66A2E03D06F00D6C371 /* UserIdentityTests.swift in Sources */,
 				53DEA66B2E03D06F00D6C371 /* SessionHandlerTests.swift in Sources */,
