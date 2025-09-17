@@ -124,7 +124,7 @@ extension Analytics {
         - options: An optional object for providing additional options. Defaults to `nil`.
      */
     public func track(name: String, properties: Properties? = nil, options: RudderOption? = nil) {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -140,7 +140,7 @@ extension Analytics {
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
     public func screen(screenName: String, category: String? = nil, properties: Properties? = nil, options: RudderOption? = nil) {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         let event = ScreenEvent(screenName: screenName, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -155,7 +155,7 @@ extension Analytics {
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
     public func group(groupId: String, traits: Traits? = nil, options: RudderOption? = nil) {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         let event = GroupEvent(groupId: groupId, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -181,6 +181,8 @@ extension Analytics {
         self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId ?? "", traits: traits ?? Traits(), storage: self.storage))
         self.userIdentityState.state.value.storeUserIdAndTraits(self.storage)
         
+        guard self.isSourceEnabled else { return }
+        
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -200,6 +202,8 @@ extension Analytics {
         self.userIdentityState.dispatch(action: SetUserIdAction(userId: newId))
         self.userIdentityState.state.value.storeUserId(self.storage)
         
+        guard self.isSourceEnabled else { return }
+        
         let event = AliasEvent(previousId: preferedPreviousId, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -209,7 +213,7 @@ extension Analytics {
      */
     @objc
     public func flush() {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         self.pluginChain?.apply { plugin in
             if let plugin = plugin as? RudderStackDataPlanePlugin {
