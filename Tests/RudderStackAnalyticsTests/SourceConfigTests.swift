@@ -685,7 +685,7 @@ struct SourceConfigTests {
         async let refresh2: Void = { provider.refreshConfigAndNotifyObservers() }()
         async let refresh3: Void = { provider.refreshConfigAndNotifyObservers() }()
         
-        let _ = await [refresh1, refresh2, refresh3]
+        let _ = await (refresh1, refresh2, refresh3)
         
         // Wait for all operations to complete
         await runAfter(0.5) {

@@ -14,10 +14,10 @@ import Combine
 class SourceConfigProvider: TypeIdentifiable {
     private weak var analytics: Analytics?
     private let sourceConfigState: StateImpl<SourceConfig>
-    private let httpClient: HttpClient?
+    private let httpClient: HttpClient
     private var backoffPolicy: BackoffPolicy?
     
-    private var connectivityMoniter: Connectivity? = Connectivity()
+    private var connectivityMonitor: Connectivity? = Connectivity()
     private var cancellables = Set<AnyCancellable>()
     
     private static let maxRetryAttempts = 5
@@ -36,7 +36,7 @@ class SourceConfigProvider: TypeIdentifiable {
     
     func refreshConfigAndNotifyObservers() {
         // Attempt to download the latest SourceConfig
-        self.connectivityMoniter?.connectivityState
+        self.connectivityMonitor?.connectivityState
             .filter { $0 } // Proceed only when connected
             .first() // Take only the first true value
             .sink { _ in
@@ -87,13 +87,11 @@ extension SourceConfigProvider {
 // MARK: - Downloaded SourceConfig
 extension SourceConfigProvider {
     private func downloadSourceConfig() async -> SourceConfig? {
-        guard let httpClient else { return nil }
-
         var attemptCount = 0
         
         repeat {
             attemptCount += 1
-            let configResult = await httpClient.getConfigurationData()
+            let configResult = await self.httpClient.getConfigurationData()
             
             switch configResult {
             case .success(let data):
