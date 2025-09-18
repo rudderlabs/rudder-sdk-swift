@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 /**
  Manages fetching, caching, and providing the source configuration data from the RudderStack server.
@@ -16,6 +17,9 @@ class SourceConfigProvider: TypeIdentifiable {
     private let httpClient: HttpClient?
     private var backoffPolicy: BackoffPolicy?
     
+    private var connectivity: Connectivity?
+    private var cancellables = Set<AnyCancellable>()
+    
     private static let maxRetryAttempts = 5
     
     init(analytics: Analytics) {
@@ -23,6 +27,7 @@ class SourceConfigProvider: TypeIdentifiable {
         self.sourceConfigState = analytics.sourceConfigState
         self.httpClient = HttpClient(analytics: analytics)
         self.backoffPolicy = provideBackoffPolicy()
+        self.connectivity = Connectivity()
     }
     
     func fetchCachedConfigAndNotifyObservers() {
@@ -31,10 +36,17 @@ class SourceConfigProvider: TypeIdentifiable {
     }
     
     func refreshConfigAndNotifyObservers() {
-        Task { [weak self] in
-            guard let self, let downloadedSourceConfig = await self.downloadSourceConfig() else { return }
-            self.notifyObservers(config: downloadedSourceConfig)
-        }
+        connectivity?.connectivityState
+            .filter { $0 }
+            .first()
+            .sink { _ in
+                print("\(type(of: self)) ~ \(#function): Thread: \(Thread.current), isMainThread: \(Thread.isMainThread)")
+                Task { [weak self] in
+                    guard let self, let downloadedSourceConfig = await self.downloadSourceConfig() else { return }
+                    self.notifyObservers(config: downloadedSourceConfig)
+                }
+            }
+            .store(in: &cancellables)
     }
     
     private func notifyObservers(config: SourceConfig) {
@@ -44,6 +56,10 @@ class SourceConfigProvider: TypeIdentifiable {
     
     func provideBackoffPolicy() -> BackoffPolicy {
         return ExponentialBackoffPolicy()
+    }
+    
+    deinit {
+        self.cancellables.removeAll()
     }
 }
 
