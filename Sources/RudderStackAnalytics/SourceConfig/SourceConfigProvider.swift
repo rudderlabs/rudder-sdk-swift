@@ -40,7 +40,6 @@ class SourceConfigProvider: TypeIdentifiable {
             .filter { $0 }
             .first()
             .sink { _ in
-                print("\(type(of: self)) ~ \(#function): Thread: \(Thread.current), isMainThread: \(Thread.isMainThread)")
                 Task { [weak self] in
                     guard let self, let downloadedSourceConfig = await self.downloadSourceConfig() else { return }
                     self.notifyObservers(config: downloadedSourceConfig)
