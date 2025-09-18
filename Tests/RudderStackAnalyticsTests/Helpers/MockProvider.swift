@@ -88,6 +88,11 @@ extension MockProvider {
             return nil
         }
     }
+    
+    static var sourceConfigurationDictionary: [String: Any]? {
+        guard let sourceConfig = sourceConfiguration else { return nil }
+        return sourceConfig.dictionary
+    }
 }
 
 // MARK: - MockHelper
