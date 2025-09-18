@@ -17,7 +17,7 @@ class SourceConfigProvider: TypeIdentifiable {
     private let httpClient: HttpClient?
     private var backoffPolicy: BackoffPolicy?
     
-    private var connectivity: Connectivity?
+    private var connectivityMoniter: Connectivity? = Connectivity()
     private var cancellables = Set<AnyCancellable>()
     
     private static let maxRetryAttempts = 5
@@ -27,7 +27,6 @@ class SourceConfigProvider: TypeIdentifiable {
         self.sourceConfigState = analytics.sourceConfigState
         self.httpClient = HttpClient(analytics: analytics)
         self.backoffPolicy = provideBackoffPolicy()
-        self.connectivity = Connectivity()
     }
     
     func fetchCachedConfigAndNotifyObservers() {
@@ -36,9 +35,10 @@ class SourceConfigProvider: TypeIdentifiable {
     }
     
     func refreshConfigAndNotifyObservers() {
-        connectivity?.connectivityState
-            .filter { $0 }
-            .first()
+        // Attempt to download the latest SourceConfig
+        self.connectivityMoniter?.connectivityState
+            .filter { $0 } // Proceed only when connected
+            .first() // Take only the first true value
             .sink { _ in
                 Task { [weak self] in
                     guard let self, let downloadedSourceConfig = await self.downloadSourceConfig() else { return }
