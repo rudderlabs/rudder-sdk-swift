@@ -28,7 +28,7 @@ struct SourceConfigTests {
             .sink { receivedConfig = $0 }
             .store(in: &cancellables)
         
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         provider.fetchCachedConfigAndNotifyObservers()
         
         // Then
@@ -55,7 +55,7 @@ struct SourceConfigTests {
             }
             .store(in: &cancellables)
         
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         provider.fetchCachedConfigAndNotifyObservers()
         
         // Then
@@ -179,7 +179,7 @@ struct SourceConfigTests {
             }
             .store(in: &cancellables)
         
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         provider.fetchCachedConfigAndNotifyObservers()
         
         // Then
@@ -362,7 +362,7 @@ struct SourceConfigTests {
     func testSourceConfigProvider_HandleHTTP400InvalidWriteKey() async {
         // Given
         let mockAnalytics = MockAnalytics()
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         
         // Setup MockURLProtocol to return 400 error
         URLProtocol.registerClass(MockURLProtocol.self)
@@ -408,7 +408,7 @@ struct SourceConfigTests {
     func testSourceConfigProvider_HandleHTTP500WithRetries() async {
         // Given
         let mockAnalytics = MockAnalytics()
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         
         // Setup MockURLProtocol to return 500 error
         URLProtocol.registerClass(MockURLProtocol.self)
@@ -439,14 +439,14 @@ struct SourceConfigTests {
         provider.refreshConfigAndNotifyObservers()
         
         // Wait for all retry attempts to complete (should take significant time due to backoff)
-        await runAfter(2.0) {
+        await runAfter(1.0) {
             let endTime = Date()
             let elapsed = endTime.timeIntervalSince(startTime)
             
             // Then
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
             #expect(configUpdateCount == 1) // No update due to persistent 500 error
-            #expect(elapsed >= 1.0) // Should take significant time due to multiple retries with backoff
+            #expect(elapsed >= 0.5) // Should take significant time due to multiple retries with backoff
         }
     }
     
@@ -454,7 +454,7 @@ struct SourceConfigTests {
     func testSourceConfigProvider_HandleNetworkTimeout() async {
         // Given
         let mockAnalytics = MockAnalytics()
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         
         // Setup MockURLProtocol to simulate network timeout
         URLProtocol.registerClass(MockURLProtocol.self)
@@ -485,14 +485,14 @@ struct SourceConfigTests {
         provider.refreshConfigAndNotifyObservers()
         
         // Wait for retries to complete
-        await runAfter(4.0) {
+        await runAfter(2.0) {
             let endTime = Date()
             let elapsed = endTime.timeIntervalSince(startTime)
             
             // Then
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
             #expect(configUpdateCount == 1) // No update due to network timeout
-            #expect(elapsed >= 3.0) // Should take time due to retries with backoff
+            #expect(elapsed >= 1.5) // Should take time due to retries with backoff
         }
     }
     
@@ -500,7 +500,7 @@ struct SourceConfigTests {
     func testSourceConfigProvider_HandleSuccessAfterRetries() async {
         // Given
         let mockAnalytics = MockAnalytics()
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         let expectedConfig = MockProvider.sourceConfiguration
         #expect(expectedConfig != nil, "Mock source config should not be nil")
         
@@ -530,7 +530,7 @@ struct SourceConfigTests {
         provider.refreshConfigAndNotifyObservers()
         
         // Wait for retries and eventual success
-        await runAfter(4.0) {
+        await runAfter(2.0) {
             // Then
             #expect(receivedConfig?.source.sourceId == expectedConfig?.source.sourceId)
             #expect(configUpdateCount == 2) // Initial state + successful update
@@ -541,7 +541,7 @@ struct SourceConfigTests {
     func testSourceConfigProvider_HandleMalformedJSON() async {
         // Given
         let mockAnalytics = MockAnalytics()
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         
         // Setup MockURLProtocol to return malformed JSON
         URLProtocol.registerClass(MockURLProtocol.self)
@@ -570,7 +570,7 @@ struct SourceConfigTests {
         provider.refreshConfigAndNotifyObservers()
         
         // Wait for async operation
-        await runAfter(1.0) {
+        await runAfter(0.5) {
             // Then
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
             #expect(configUpdateCount == 1) // No update due to JSON decode error
@@ -581,7 +581,7 @@ struct SourceConfigTests {
     func testSourceConfigProvider_HandleConcurrentRefreshCalls() async {
         // Given
         let mockAnalytics = MockAnalytics()
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         
         // Setup MockURLProtocol to return success
         URLProtocol.registerClass(MockURLProtocol.self)
@@ -611,7 +611,7 @@ struct SourceConfigTests {
         let _ = await (refresh1, refresh2, refresh3)
         
         // Wait for all operations to complete
-        await runAfter(2.0) {
+        await runAfter(0.5) {
             // Then
             #expect(receivedConfigs.count >= 2) // At least initial + one successful update
             // Should not crash or cause race conditions
@@ -667,7 +667,7 @@ struct SourceConfigTests {
     func testSourceConfigProvider_ConcurrentRefreshCalls() async {
         // Given
         let mockAnalytics = MockAnalytics()
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         
         var receivedConfigs: [SourceConfig] = []
         var cancellables = Set<AnyCancellable>()
@@ -688,7 +688,7 @@ struct SourceConfigTests {
         let _ = await [refresh1, refresh2, refresh3]
         
         // Wait for all operations to complete
-        await runAfter(1.0) {
+        await runAfter(0.5) {
             // Then
             // Should handle concurrent calls without crashes
             #expect(receivedConfigs.count >= 1) // At least initial state
@@ -709,7 +709,7 @@ struct SourceConfigTests {
         // Store valid cached config
         mockAnalytics.storage.write(value: mockConfig?.jsonString, key: Constants.storageKeys.sourceConfig)
         
-        let provider = SourceConfigProvider(analytics: mockAnalytics)
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         
         // Setup MockURLProtocol to return success
         URLProtocol.registerClass(MockURLProtocol.self)
@@ -735,7 +735,7 @@ struct SourceConfigTests {
         provider.fetchCachedConfigAndNotifyObservers() // Should load from cache
         provider.refreshConfigAndNotifyObservers() // Should attempt network fetch
         
-        await runAfter(0.5) {
+        await runAfter(0.75) {
             // Then
             #expect(receivedConfigs.count >= 2) // Initial + cached config, possibly + network attempt
             
@@ -810,5 +810,13 @@ extension SourceConfigTests {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [MockURLProtocol.self]
         return URLSession(configuration: config)
+    }
+}
+
+// MARK: - MockSourceConfigProvider
+
+final class MockSourceConfigProvider: SourceConfigProvider {
+    override func provideBackoffPolicy() -> any BackoffPolicy {
+        return ExponentialBackoffPolicy(minDelayInMillis: 500) // 0.5 secs
     }
 }

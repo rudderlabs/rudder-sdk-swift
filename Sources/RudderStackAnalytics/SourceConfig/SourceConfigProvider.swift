@@ -10,11 +10,11 @@ import Foundation
 /**
  Manages fetching, caching, and providing the source configuration data from the RudderStack server.
  */
-final class SourceConfigProvider: TypeIdentifiable {
+class SourceConfigProvider: TypeIdentifiable {
     private weak var analytics: Analytics?
     private let sourceConfigState: StateImpl<SourceConfig>
     private let httpClient: HttpClient?
-    private let backoffPolicy: BackoffPolicy?
+    private var backoffPolicy: BackoffPolicy?
     
     private static let maxRetryAttempts = 5
     
@@ -22,7 +22,7 @@ final class SourceConfigProvider: TypeIdentifiable {
         self.analytics = analytics
         self.sourceConfigState = analytics.sourceConfigState
         self.httpClient = HttpClient(analytics: analytics)
-        self.backoffPolicy = ExponentialBackoffPolicy()
+        self.backoffPolicy = provideBackoffPolicy()
     }
     
     func fetchCachedConfigAndNotifyObservers() {
@@ -40,6 +40,10 @@ final class SourceConfigProvider: TypeIdentifiable {
     private func notifyObservers(config: SourceConfig) {
         LoggerAnalytics.debug(log: "Notifying observers with sourceConfig.")
         self.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: config))
+    }
+    
+    func provideBackoffPolicy() -> BackoffPolicy {
+        return ExponentialBackoffPolicy()
     }
 }
 
