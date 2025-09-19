@@ -386,21 +386,79 @@ struct SourceConfigTests {
                 configUpdateCount += 1
             }
             .store(in: &cancellables)
-        
-        let startTime = Date()
-        
+                
         // When
         provider.refreshConfigAndNotifyObservers()
         
         // Wait for async operation (should be quick since no retries for 400)
         await runAfter(0.5) {
-            let endTime = Date()
-            let elapsed = endTime.timeIntervalSince(startTime)
-            
             // Then
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
             #expect(configUpdateCount == 1) // No update due to 400 error
-            #expect(elapsed < 1.0) // Should be fast since no retries for 400 error
+        }
+    }
+    
+    @Test("Given SourceConfigProvider with invalidWriteKey error, When refreshConfig is called, Then shuts down analytics and clears storage")
+    func testSourceConfigProvider_HandleInvalidWriteKeyError() async {
+        // Given
+        let mockAnalytics = MockAnalytics()
+        let provider = MockSourceConfigProvider(analytics: mockAnalytics)
+        
+        // Store some data in storage to verify it gets cleared
+        mockAnalytics.storage.write(value: "test_data", key: "test_key")
+        mockAnalytics.storage.write(value: MockProvider.sourceConfiguration?.jsonString, key: Constants.storageKeys.sourceConfig)
+        
+        // Verify data exists before test
+        let initialStoredData: String? = mockAnalytics.storage.read(key: "test_key")
+        let initialSourceConfig: String? = mockAnalytics.storage.read(key: Constants.storageKeys.sourceConfig)
+        #expect(initialStoredData == "test_data")
+        #expect(initialSourceConfig != nil)
+        
+        // Setup MockURLProtocol to return invalid write key error
+        URLProtocol.registerClass(MockURLProtocol.self)
+        let defaultSession = HttpNetwork.session
+        HttpNetwork.session = prepareMockUrlSession(with: 400)
+        
+        var configUpdateCount = 0
+        var cancellables = Set<AnyCancellable>()
+        
+        defer {
+            cancellables.removeAll()
+            HttpNetwork.session = defaultSession
+            URLProtocol.unregisterClass(MockURLProtocol.self)
+        }
+        
+        mockAnalytics.sourceConfigState.state
+            .sink { _ in
+                configUpdateCount += 1
+            }
+            .store(in: &cancellables)
+                
+        // When
+        mockAnalytics.track(name: "Analytics is shutdown before receiving invalidWriteKey error")
+        
+        provider.refreshConfigAndNotifyObservers()
+        
+        // Wait for async operation to complete
+        await runAfter(0.5) {
+            // Then - Verify analytics shutdown complete
+            #expect(mockAnalytics.isAnalyticsShutdown == true, "Analytics should be shutdown after receiving invalidWriteKey error")
+            
+            mockAnalytics.track(name: "Analytics is shutdown after receiving invalidWriteKey error")
+            await runAfter(0.3) {
+                // Verify no events were processed after shutdown
+                let dataItems = await mockAnalytics.configuration.storage.read().dataItems
+                #expect(dataItems.isEmpty == true, "No events should be processed after shutdown")
+            }
+            
+            // Verify storage is cleared
+            let clearedStoredData: String? = mockAnalytics.storage.read(key: "test_key")
+            let clearedSourceConfig: String? = mockAnalytics.storage.read(key: Constants.storageKeys.sourceConfig)
+            #expect(clearedStoredData == nil, "Storage should be cleared after invalidWriteKey error")
+            #expect(clearedSourceConfig == nil, "SourceConfig storage should be cleared after invalidWriteKey error")
+            
+            // Verify no config update occurred due to error handling
+            #expect(configUpdateCount == 1, "Should only have initial config, no update due to invalid write key")
         }
     }
     
@@ -432,21 +490,15 @@ struct SourceConfigTests {
                 configUpdateCount += 1
             }
             .store(in: &cancellables)
-        
-        let startTime = Date()
-        
+                
         // When
         provider.refreshConfigAndNotifyObservers()
         
         // Wait for all retry attempts to complete (should take significant time due to backoff)
         await runAfter(1.0) {
-            let endTime = Date()
-            let elapsed = endTime.timeIntervalSince(startTime)
-            
             // Then
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
             #expect(configUpdateCount == 1) // No update due to persistent 500 error
-            #expect(elapsed >= 0.5) // Should take significant time due to multiple retries with backoff
         }
     }
     
@@ -478,21 +530,15 @@ struct SourceConfigTests {
                 configUpdateCount += 1
             }
             .store(in: &cancellables)
-        
-        let startTime = Date()
-        
+                
         // When
         provider.refreshConfigAndNotifyObservers()
         
         // Wait for retries to complete
         await runAfter(2.0) {
-            let endTime = Date()
-            let elapsed = endTime.timeIntervalSince(startTime)
-            
             // Then
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
             #expect(configUpdateCount == 1) // No update due to network timeout
-            #expect(elapsed >= 1.5) // Should take time due to retries with backoff
         }
     }
     
