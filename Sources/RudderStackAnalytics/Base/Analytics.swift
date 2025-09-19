@@ -223,19 +223,15 @@ extension Analytics {
     }
     
     /**
-     Resets the user identity information, using the provided options to determine which data to reset.
-     
-     - Parameter options: An instance of `ResetOptions` specifying which entries to reset. Defaults to resetting all entries.
+     Resets the user identity state by clearing stored identifiers and traits.
      */
-    public func reset(options: ResetOptions = ResetOptions()) {
+    public func reset() {
         guard self.isAnalyticsActive else { return }
         
-        self.userIdentityState.dispatch(action: ResetUserIdentityAction(entries: options.entries))
-        self.userIdentityState.state.value.resetUserIdentity(storage: self.storage, entries: options.entries)
+        self.userIdentityState.dispatch(action: ResetUserIdentityAction())
+        self.userIdentityState.state.value.resetUserIdentity(storage: self.storage)
         
-        if options.entries.session {
-            self.sessionHandler?.refreshSession()
-        }
+        self.sessionHandler?.refreshSession()
     }
 }
 

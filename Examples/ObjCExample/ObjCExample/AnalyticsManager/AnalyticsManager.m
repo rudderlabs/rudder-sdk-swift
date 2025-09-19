@@ -87,19 +87,6 @@
     [self.client reset];
 }
 
-- (void)resetWithOptions {
-    RSSResetEntriesBuilder *entriesBuilder = [RSSResetEntriesBuilder new];
-    [entriesBuilder setAnonymousIdResetEntry: YES];
-    [entriesBuilder setUserIdResetEntry: YES];
-    [entriesBuilder setTraitsResetEntry: YES];
-    [entriesBuilder setSessionResetEntry: YES];
-    
-    RSSResetOptionsBuilder *optionsBuilder = [RSSResetOptionsBuilder new];
-    [optionsBuilder setEntries:[entriesBuilder build]];
-    
-    [self.client resetWithOptions: [optionsBuilder build]];
-}
-
 - (void)startSession {
     [self.client startSession];
 }

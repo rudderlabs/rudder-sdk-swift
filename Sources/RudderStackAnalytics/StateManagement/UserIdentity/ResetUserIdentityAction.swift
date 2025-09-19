@@ -9,32 +9,32 @@ import Foundation
 
 // MARK: - ResetUserIdentityAction
 /**
- An action that resets the `UserIdentity` state using the provided `ResetEntries`.
+ An action that resets the `UserIdentity` state.
 
  This struct conforms to `StateAction` and is responsible for resetting user identity-related values.
  
  - Methods:
-    - `reduce(currentState:)`: Resets the `UserIdentity` values of the current state using the specified options.
+    - `reduce(currentState:)`: Resets the `UserIdentity` values of the current state.
  */
 struct ResetUserIdentityAction: StateAction {
     
     typealias T = UserIdentity
     
-    let entries: ResetEntries
-    
     /**
-     Reduces the current user identity state by resetting its values by the specified options.
+     Reduces the current user identity state by resetting its values.
      
      - Parameter currentState: The existing `UserIdentity` state.
-     - Returns: A new `UserIdentity` state with refreshed values.
+     - Returns: A new `UserIdentity` state with reset values.
+     
+     - A new anonymous ID is generated.
+     - The user ID is set to an empty string.
+     - Traits value will be cleared.
      */
     func reduce(currentState: UserIdentity) -> UserIdentity {
         var newState = currentState
-        
-        if entries.anonymousId { newState.anonymousId = .randomUUIDString }
-        if entries.userId { newState.userId = String.empty }
-        if entries.traits { newState.traits = Traits() }
-        
+        newState.anonymousId = .randomUUIDString
+        newState.userId = String.empty
+        newState.traits = Traits()
         return newState
     }
 }
