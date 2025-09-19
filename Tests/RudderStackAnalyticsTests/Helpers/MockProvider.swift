@@ -144,21 +144,35 @@ class MockAnalytics: Analytics {
 }
 
 // MARK: - Given_When_Then
-extension XCTestCase {
-    func given(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("Given \(description)") }
-        closure()
-    }
-    
-    func when(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("When \(description)") }
-        closure()
-    }
-    
-    func then(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("Then \(description)") }
-        closure()
-    }
+
+func given(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("Given \(description)") }
+    closure()
+}
+
+func when(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("When \(description)") }
+    closure()
+}
+
+func then(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("Then \(description)") }
+    closure()
+}
+
+func given(_ description: String = "", closure: () async throws -> Void) async rethrows {
+    if !description.isEmpty { print("Given \(description)") }
+    try await closure()
+}
+
+func when(_ description: String = "", closure: () async throws -> Void) async rethrows {
+    if !description.isEmpty { print("When \(description)") }
+    try await closure()
+}
+
+func then(_ description: String = "", closure: () async throws -> Void) async rethrows {
+    if !description.isEmpty { print("Then \(description)") }
+    try await closure()
 }
 
 // MARK: - Run After
