@@ -22,8 +22,8 @@ final class ExponentialBackoffPolicy: BackoffPolicy {
     /**
      Initializes the exponential backoff policy with configurable parameters.
      */
-    init() {
-        self.minDelayInMillis = ExponentialBackoffConstants.minDelayInMillis
+    init(minDelayInMillis: Int = ExponentialBackoffConstants.minDelayInMillis) {
+        self.minDelayInMillis = minDelayInMillis
         self.base = ExponentialBackoffConstants.defaultBase
         self.attempt = 0
     }

@@ -6,19 +6,27 @@
 //
 
 import Foundation
+import Combine
 
 /**
  Manages fetching, caching, and providing the source configuration data from the RudderStack server.
  */
-final class SourceConfigProvider {
+class SourceConfigProvider: TypeIdentifiable {
     private weak var analytics: Analytics?
     private let sourceConfigState: StateImpl<SourceConfig>
     private let httpClient: HttpClient
+    private var backoffPolicy: BackoffPolicy?
+    
+    private var connectivityMonitor: Connectivity? = Connectivity()
+    private var cancellables = Set<AnyCancellable>()
+    
+    private static let maxRetryAttempts = 5
     
     init(analytics: Analytics) {
         self.analytics = analytics
         self.sourceConfigState = analytics.sourceConfigState
         self.httpClient = HttpClient(analytics: analytics)
+        self.backoffPolicy = provideBackoffPolicy()
     }
     
     func fetchCachedConfigAndNotifyObservers() {
@@ -27,15 +35,30 @@ final class SourceConfigProvider {
     }
     
     func refreshConfigAndNotifyObservers() {
-        Task { [weak self] in
-            guard let self, let downloadedSourceConfig = await self.downloadSourceConfig() else { return }
-            self.notifyObservers(config: downloadedSourceConfig)
-        }
+        // Attempt to download the latest SourceConfig
+        self.connectivityMonitor?.connectivityState
+            .filter { $0 } // Proceed only when connected
+            .first() // Take only the first true value
+            .sink { _ in
+                Task { [weak self] in
+                    guard let self, let downloadedSourceConfig = await self.downloadSourceConfig() else { return }
+                    self.notifyObservers(config: downloadedSourceConfig)
+                }
+            }
+            .store(in: &cancellables)
     }
     
     private func notifyObservers(config: SourceConfig) {
         LoggerAnalytics.debug(log: "Notifying observers with sourceConfig.")
         self.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: config))
+    }
+    
+    func provideBackoffPolicy() -> BackoffPolicy {
+        return ExponentialBackoffPolicy()
+    }
+    
+    deinit {
+        self.cancellables.removeAll()
     }
 }
 
@@ -64,19 +87,22 @@ extension SourceConfigProvider {
 // MARK: - Downloaded SourceConfig
 extension SourceConfigProvider {
     private func downloadSourceConfig() async -> SourceConfig? {
+        var attemptCount = 0
         
-        let configResult = await self.httpClient.getConfigurationData()
-        
-        switch configResult {
-        case .success(let data):
-            return self.handleSourceConfigResponse(data: data)
+        repeat {
+            attemptCount += 1
+            let configResult = await self.httpClient.getConfigurationData()
             
-        case .failure(let error):
-            LoggerAnalytics.error(log: "Error downloading SourceConfig: \(error.errorDescription)", error: error)
-            // TODO: - When working on SourceConfig failure ticket, handle this scenario here.
-            // https://linear.app/rudderstack/issue/SDK-3144/parent-source-config-on-unsuccessful-response
-            return nil
-        }
+            switch configResult {
+            case .success(let data):
+                return self.handleSourceConfigResponse(data: data)
+                
+            case .failure(let error):
+                guard await self.handleSourceConfigError(error, attemptCount: attemptCount) else { return nil }
+            }
+        } while attemptCount <= Self.maxRetryAttempts
+        
+        return nil
     }
     
     private func handleSourceConfigResponse(data: Data) -> SourceConfig? {
@@ -89,6 +115,28 @@ extension SourceConfigProvider {
         } catch {
             LoggerAnalytics.error(log: "Failed to decode SourceConfig from response: \(error)")
             return nil
+        }
+    }
+    
+    private func handleSourceConfigError(_ error: SourceConfigError, attemptCount: Int) async -> Bool {
+        LoggerAnalytics.error(log: "\(className): Error downloading SourceConfig: \(error.errorDescription)", error: error)
+
+        switch error {
+        case .invalidWriteKey:
+            // TODO: - When working on SourceConfig failure (HTTP status code 400) ticket, handle this scenario here.
+            // https://linear.app/rudderstack/issue/SDK-3612/ios-implement-delete-all-files-logic-on-400-error-code
+            return false
+            
+        default:
+            guard let backoffPolicy, attemptCount <= Self.maxRetryAttempts else {
+                LoggerAnalytics.info(log: "All retry attempts for fetching SourceConfig have been exhausted. Returning nil.")
+                return false
+            }
+    
+            let delay = backoffPolicy.nextDelayInMilliseconds()
+            LoggerAnalytics.verbose(log: "Retrying fetching of SourceConfig, attempt: \(attemptCount) in \(BackoffPolicyHelper.formatMilliseconds(delay))")
+            try? await BackoffPolicyHelper.sleep(milliseconds: delay)
+            return true
         }
     }
 }
