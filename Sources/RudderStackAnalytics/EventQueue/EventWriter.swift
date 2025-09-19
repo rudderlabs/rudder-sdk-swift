@@ -17,7 +17,7 @@ final class EventWriter {
     private let writeChannel: AsyncChannel<ProcessingEvent>
     private let uploadChannel: AsyncChannel<String>
     private let flushEvent = ProcessingEvent(type: .flush)
-    
+    private var lastEventAnonymousId: String
     private var storage: Storage {
         return self.analytics.configuration.storage
     }
@@ -27,6 +27,8 @@ final class EventWriter {
         self.flushPolicyFacade = FlushPolicyFacade(analytics: analytics)
         self.writeChannel = writeChannel
         self.uploadChannel = uploadChannel
+        self.lastEventAnonymousId = analytics.configuration.storage.read(key: Constants.storageKeys.lastEventAnonymousId) ??
+                                   analytics.anonymousId ?? ""
     }
     
     func put(_ event: Event) {
@@ -60,6 +62,8 @@ final class EventWriter {
                 
                 // Process regular events (not flush signals)
                 if !isFlushSignal {
+                    await self.updateAnonymousIdAndRolloverIfNeeded(processingEvent: event)
+
                     if let json = event.event?.jsonString {
                         LoggerAnalytics.debug(log: "Processing event: \(json)")
                         await self.storage.write(event: json)
@@ -96,5 +100,16 @@ final class EventWriter {
     func stop() {
         guard !self.writeChannel.isClosed else { return }
         self.writeChannel.close()
+    }
+
+    private func updateAnonymousIdAndRolloverIfNeeded(processingEvent: ProcessingEvent) async {
+        let currentEventAnonymousId = processingEvent.event?.anonymousId ?? ""
+
+        if currentEventAnonymousId != self.lastEventAnonymousId {
+            // Rollover when last and current anonymousId are different
+            await self.storage.rollover()
+            self.lastEventAnonymousId = currentEventAnonymousId
+            self.storage.write(value: self.lastEventAnonymousId, key: Constants.storageKeys.lastEventAnonymousId)
+        }
     }
 }
