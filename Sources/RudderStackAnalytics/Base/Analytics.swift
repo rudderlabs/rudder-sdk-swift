@@ -46,6 +46,16 @@ public class Analytics {
     }
     
     /**
+     The state container for SourceConfig management within the analytics system.
+     */
+    private(set) var sourceConfigState: StateImpl<SourceConfig>
+    
+    /**
+     The manager responsible for SourceConfig operations.
+     */
+    private(set) var sourceConfigProvider: SourceConfigProvider?
+    
+    /**
      Tracks the shutdown state of the analytics instance.
      */
     private(set) var isAnalyticsShutdown: Bool = false
@@ -59,6 +69,7 @@ public class Analytics {
         self.configuration = configuration
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
+        self.sourceConfigState = createState(initialState: SourceConfig.initialState())
         self.setup()
     }
 }
@@ -113,7 +124,7 @@ extension Analytics {
         - options: An optional object for providing additional options. Defaults to `nil`.
      */
     public func track(name: String, properties: Properties? = nil, options: RudderOption? = nil) {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -129,7 +140,7 @@ extension Analytics {
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
     public func screen(screenName: String, category: String? = nil, properties: Properties? = nil, options: RudderOption? = nil) {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         let event = ScreenEvent(screenName: screenName, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -144,7 +155,7 @@ extension Analytics {
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
     public func group(groupId: String, traits: Traits? = nil, options: RudderOption? = nil) {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         let event = GroupEvent(groupId: groupId, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -170,6 +181,8 @@ extension Analytics {
         self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId ?? "", traits: traits ?? Traits(), storage: self.storage))
         self.userIdentityState.state.value.storeUserIdAndTraits(self.storage)
         
+        guard self.isSourceEnabled else { return }
+        
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -189,6 +202,8 @@ extension Analytics {
         self.userIdentityState.dispatch(action: SetUserIdAction(userId: newId))
         self.userIdentityState.state.value.storeUserId(self.storage)
         
+        guard self.isSourceEnabled else { return }
+        
         let event = AliasEvent(previousId: preferedPreviousId, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -198,7 +213,7 @@ extension Analytics {
      */
     @objc
     public func flush() {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         self.pluginChain?.apply { plugin in
             if let plugin = plugin as? RudderStackDataPlanePlugin {
@@ -277,6 +292,8 @@ extension Analytics {
         
         self.lifecycleSessionWrapper?.invalidate()
         self.lifecycleSessionWrapper = nil
+        
+        self.sourceConfigProvider = nil
     }
     
     /**
@@ -304,7 +321,7 @@ extension Analytics {
      */
     private func setup() {
         self.storeAnonymousId()
-        self.collectConfiguration()
+        self.setupSourceConfig()
         self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
@@ -366,24 +383,29 @@ extension Analytics {
     }
 }
 
-// MARK: - Backend Configuration
+// MARK: - Source Configuration
 
 extension Analytics {
     
     /**
-     Collects configuration data from the backend and saves it in the storage.
+     Sets up the source configuration provider and fetches the initial configuration.
      */
-    private func collectConfiguration() {
-        Task {
-            let client = HttpClient(analytics: self)
-            do {
-                let data = try await client.getConfigurationData()
-                self.storage.write(value: data.jsonString, key: Constants.storageKeys.sourceConfig)
-                LoggerAnalytics.info(log: data.prettyPrintedString ?? "Bad response")
-            } catch {
-                LoggerAnalytics.error(log: "Failed to get sourceConfig", error: error)
-            }
+    private func setupSourceConfig() {
+        self.sourceConfigProvider = SourceConfigProvider(analytics: self)
+        
+        sourceConfigProvider?.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider?.refreshConfigAndNotifyObservers()
+    }
+    
+    /**
+     Checks if the source is enabled.
+     */
+    var isSourceEnabled: Bool {
+        if !self.sourceConfigState.state.value.source.isSourceEnabled {
+            LoggerAnalytics.error(log: "Source is disabled. This operation is not allowed.")
+            return false
         }
+        return true
     }
 }
 

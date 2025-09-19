@@ -76,6 +76,20 @@ extension MockProvider {
     ]
 }
 
+extension MockProvider {
+    
+    static var sourceConfiguration: SourceConfig? {
+        guard let mockJson = MockHelper.readJson(from: "mock_source_config")?.trimmed, let mockJsonData = mockJson.utf8Data else { return nil }
+        do {
+            let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: mockJsonData)
+            return sourceConfig
+        } catch {
+            print("Error parsing JSON: \(error)")
+            return nil
+        }
+    }
+}
+
 // MARK: - MockHelper
 struct MockHelper {
     private init() {}
@@ -89,11 +103,16 @@ struct MockHelper {
     }
     
     static func readJson(from file: String) -> String? {
-        let bundles = [
+        var bundles = [
             Bundle(for: MockProvider.self),
-            Bundle.module,
             Bundle.main,
         ]
+        
+        // Try to add Bundle.module if available (Swift Package Manager)
+        #if SWIFT_PACKAGE
+        bundles.insert(Bundle.module, at: 0)
+        #endif
+        
          for bundle in bundles {
              if let fileUrl = bundle.url(forResource: file, withExtension: "json"),
                 let data = try? Data(contentsOf: fileUrl) {
