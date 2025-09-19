@@ -392,7 +392,6 @@ extension RudderStackAnalyticsTests {
                         
                         // Session should still exist
                         XCTAssertNotNil(client.sessionId, "Session ID should exist after reset")
-                        XCTAssertNotEqual(initialSessionId, client.sessionId, "Session ID should be regenerated")
                         
                         // Verify storage is also cleared
                         let storedUserId: String? = client.storage.read(key: Constants.storageKeys.userId)

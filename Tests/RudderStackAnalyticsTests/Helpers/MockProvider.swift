@@ -191,17 +191,6 @@ func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
     await block()
 }
 
-// MARK: - Run After
-
-func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
-    // Suspend the current task for the specified duration
-    let nanoseconds = UInt64(seconds * 1_000_000_000)
-    try? await Task.sleep(nanoseconds: nanoseconds)
-    
-    // Execute the block after the delay
-    await block()
-}
-
 // MARK: - String(Extension)
 extension String {
     var trimmed: String {
