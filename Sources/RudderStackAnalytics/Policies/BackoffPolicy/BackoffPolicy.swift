@@ -56,6 +56,7 @@ struct BackoffPolicyHelper {
      Sleeps for the specified number of milliseconds.
      */
     static func sleep(milliseconds: Int) async throws {
+        guard milliseconds > 0 else { return }
         let nanosecondsPerMillisecond: UInt64 = 1_000_000
         try await Task.sleep(nanoseconds: UInt64(milliseconds) * nanosecondsPerMillisecond)
     }

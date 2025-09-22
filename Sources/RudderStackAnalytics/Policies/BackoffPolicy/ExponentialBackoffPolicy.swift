@@ -48,6 +48,7 @@ final class ExponentialBackoffPolicy: BackoffPolicy {
      - Returns: The delay with jitter applied
      */
     private func withJitter(_ delayInMilliseconds: Int) -> Int {
+        guard delayInMilliseconds > 0 else { return 0 }
         let jitter = Int.random(in: 0..<delayInMilliseconds)
         return delayInMilliseconds + jitter
     }

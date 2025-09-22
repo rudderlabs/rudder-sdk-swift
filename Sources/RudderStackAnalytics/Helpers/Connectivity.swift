@@ -10,9 +10,9 @@ import Combine
 
 /**
  Class to monitor network connectivity status using NWPathMonitor. Provides a publisher to observe connectivity changes.
-*/
+ */
 final class Connectivity {
-    private let monitor: NWPathMonitor
+    private var monitor: NWPathMonitor?
     private let queue = DispatchQueue(label: "ConnectivityMonitor")
     private let subject: CurrentValueSubject<Bool, Never>
     private var isMonitoring = false
@@ -28,14 +28,7 @@ final class Connectivity {
     }
     
     init() {
-        monitor = NWPathMonitor()
         subject = CurrentValueSubject(false) // default: offline
-        
-        // Set up the path update handler
-        monitor.pathUpdateHandler = { [weak self] path in
-            self?.subject.send(path.status == .satisfied)
-        }
-
         startMonitoring()
     }
     
@@ -43,16 +36,22 @@ final class Connectivity {
     func startMonitoring() {
         guard !isMonitoring else { return }
         isMonitoring = true
-        monitor.start(queue: queue)
+        let mon = NWPathMonitor()
+        mon.pathUpdateHandler = { [weak self] path in
+            self?.subject.send(path.status == .satisfied)
+        }
+        mon.start(queue: queue)
+        self.monitor = mon
     }
     
     /// Stops monitoring network connectivity
     func stopMonitoring() {
         guard isMonitoring else { return }
         isMonitoring = false
-        monitor.cancel()
+        monitor?.cancel()
+        monitor = nil
     }
-
+    
     deinit {
         stopMonitoring()
     }
