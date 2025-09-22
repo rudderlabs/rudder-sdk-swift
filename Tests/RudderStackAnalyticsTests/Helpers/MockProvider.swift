@@ -93,6 +93,30 @@ extension MockProvider {
         guard let sourceConfig = sourceConfiguration else { return nil }
         return sourceConfig.dictionary
     }
+    
+    static func prepareMockSessionConfigSession(with responseCode: Int) -> URLSession {
+        MockURLProtocol.requestHandler = { _ in
+            let json = responseCode == 200 ? (MockProvider.sourceConfigurationDictionary ?? [:]) : ["error": "Server error"]
+            let data = try JSONSerialization.data(withJSONObject: json)
+            return (responseCode, data, ["Content-Type": "application/json"])
+        }
+        
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        return URLSession(configuration: config)
+    }
+    
+    static func prepareMockDataPlaneSession(with responseCode: Int) -> URLSession {
+        MockURLProtocol.requestHandler = { _ in
+            let json = responseCode == 200 ? ["Success": "Ok"] : ["error": "Server error"]
+            let data = try JSONSerialization.data(withJSONObject: json)
+            return (responseCode, data, ["Content-Type": "application/json"])
+        }
+        
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        return URLSession(configuration: config)
+    }
 }
 
 // MARK: - MockHelper
@@ -143,7 +167,7 @@ class MockAnalytics: Analytics {
         super.init(configuration: config)
     }
     
-    override func flush() {
+    override func flush() { 
         self.isFlushed = true
     }
 }

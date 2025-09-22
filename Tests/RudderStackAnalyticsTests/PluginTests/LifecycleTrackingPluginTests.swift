@@ -12,9 +12,15 @@ import XCTest
 final class LifecycleTrackingPluginTests: XCTestCase {
     var analyticsMock: Analytics?
     var plugin: LifecycleTrackingPlugin!
+    var defaultSession: URLSession?
     
     override func setUp() {
         super.setUp()
+        
+        URLProtocol.registerClass(MockURLProtocol.self)
+        self.defaultSession = HttpNetwork.session
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 200)
+        
         analyticsMock = MockProvider.clientWithMemoryStorage
         plugin = LifecycleTrackingPlugin()
     }
@@ -22,6 +28,12 @@ final class LifecycleTrackingPluginTests: XCTestCase {
     override func tearDown() {
         analyticsMock = nil
         plugin = nil
+        
+        if let defaultSession {
+            HttpNetwork.session = defaultSession
+        }
+        URLProtocol.unregisterClass(MockURLProtocol.self)
+        
         super.tearDown()
     }
     

@@ -367,7 +367,7 @@ struct SourceConfigTests {
         // Setup MockURLProtocol to return 400 error
         URLProtocol.registerClass(MockURLProtocol.self)
         let defaultSession = HttpNetwork.session
-        HttpNetwork.session = prepareMockUrlSession(with: 400)
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 400)
         
         let initialConfig = mockAnalytics.sourceConfigState.state.value
         var receivedConfig: SourceConfig?
@@ -417,7 +417,7 @@ struct SourceConfigTests {
         // Setup MockURLProtocol to return invalid write key error
         URLProtocol.registerClass(MockURLProtocol.self)
         let defaultSession = HttpNetwork.session
-        HttpNetwork.session = prepareMockUrlSession(with: 400)
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 400)
         
         var configUpdateCount = 0
         var cancellables = Set<AnyCancellable>()
@@ -471,7 +471,7 @@ struct SourceConfigTests {
         // Setup MockURLProtocol to return 500 error
         URLProtocol.registerClass(MockURLProtocol.self)
         let defaultSession = HttpNetwork.session
-        HttpNetwork.session = prepareMockUrlSession(with: 500)
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 500)
         
         let initialConfig = mockAnalytics.sourceConfigState.state.value
         var receivedConfig: SourceConfig?
@@ -632,7 +632,7 @@ struct SourceConfigTests {
         // Setup MockURLProtocol to return success
         URLProtocol.registerClass(MockURLProtocol.self)
         let defaultSession = HttpNetwork.session
-        HttpNetwork.session = prepareMockUrlSession(with: 200)
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 200)
         
         var receivedConfigs: [SourceConfig] = []
         var cancellables = Set<AnyCancellable>()
@@ -760,7 +760,7 @@ struct SourceConfigTests {
         // Setup MockURLProtocol to return success
         URLProtocol.registerClass(MockURLProtocol.self)
         let defaultSession = HttpNetwork.session
-        HttpNetwork.session = prepareMockUrlSession(with: 200)
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 200)
         
         var receivedConfigs: [SourceConfig] = []
         var cancellables = Set<AnyCancellable>()
@@ -797,18 +797,6 @@ struct SourceConfigTests {
 // MARK: - MockURL Helpers
 
 extension SourceConfigTests {
-    
-    private func prepareMockUrlSession(with responseCode: Int) -> URLSession {
-        MockURLProtocol.requestHandler = { _ in
-            let json = responseCode == 200 ? (MockProvider.sourceConfigurationDictionary ?? [:]) : ["error": "Server error"]
-            let data = try JSONSerialization.data(withJSONObject: json)
-            return (responseCode, data, ["Content-Type": "application/json"])
-        }
-        
-        let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [MockURLProtocol.self]
-        return URLSession(configuration: config)
-    }
     
     private func prepareMockUrlSessionWithEventualSuccess(failureCount: Int) -> URLSession {
         var attemptCount = 0
