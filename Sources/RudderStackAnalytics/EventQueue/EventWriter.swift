@@ -102,8 +102,8 @@ final class EventWriter {
     }
 
     private func updateAnonymousIdAndRolloverIfNeeded(processingEvent: ProcessingEvent) async {
-        guard let currentEventAnonymousId = processingEvent.event?.anonymousId,
-              currentEventAnonymousId != self.lastEventAnonymousId else { return }
+        guard let lastEventAnonymousId, let currentEventAnonymousId = processingEvent.event?.anonymousId,
+              currentEventAnonymousId != lastEventAnonymousId else { return }
         
         // Rollover when last and current anonymousId are different
         await self.storage.rollover()
