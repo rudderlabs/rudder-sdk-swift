@@ -120,8 +120,6 @@ final class EventQueueTests: XCTestCase {
 
     func test_eventQueue_rolloverOnAnonymousIdChange() async {
         // Given - Events with different anonymous IDs
-        let expectation = expectation(description: "Storage should rollover when anonymousId changes")
-
         var event1 = TrackEvent(event: "event_1", properties: ["test": "value1"])
         event1.anonymousId = "anonymousId1"
 
@@ -148,9 +146,6 @@ final class EventQueueTests: XCTestCase {
         // We should have at least 2 batches (one for anonymousId1, one for anonymousId2)
         XCTAssertEqual(finalBatchCount - initialBatchCount, 2, "Storage should have rolled over when anonymousId changed")
 
-        expectation.fulfill()
-        await fulfillment(of: [expectation], timeout: 2.0)
-
         // Cleanup
         for item in finalDataItems {
             await mockAnalytics.configuration.storage.remove(batchReference: item.reference)
@@ -159,8 +154,6 @@ final class EventQueueTests: XCTestCase {
 
     func test_eventQueue_sameAnonymousIdSingleBatch() async {
         // Given - Multiple events with the same anonymous ID
-        let expectation = expectation(description: "Events with same anonymousId should create only one batch")
-
         var event1 = TrackEvent(event: "event_1", properties: ["test": "value1"])
         event1.anonymousId = "consistentAnonymousId"
 
@@ -186,9 +179,6 @@ final class EventQueueTests: XCTestCase {
 
         // Should have exactly one new batch since all events have the same anonymousId
         XCTAssertEqual(finalBatchCount - initialBatchCount, 1, "Events with same anonymousId should create only one batch")
-
-        expectation.fulfill()
-        await fulfillment(of: [expectation], timeout: 2.0)
 
         // Cleanup
         for item in finalDataItems {
