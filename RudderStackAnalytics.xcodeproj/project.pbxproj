@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		53074DF92E8179D30062703A /* StateManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53074DF82E8179D30062703A /* StateManagement.swift */; };
+		53074DB02E7DEC240062703A /* StateManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53074DAF2E7DEC240062703A /* StateManagement.swift */; };
 		530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939CF2E78226E00E22EE1 /* SourceConfig.swift */; };
 		530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D22E78299100E22EE1 /* SourceConfigProvider.swift */; };
 		530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D52E78629C00E22EE1 /* SourceConfigResult.swift */; };
@@ -168,7 +168,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		53074DF82E8179D30062703A /* StateManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagement.swift; sourceTree = "<group>"; };
+		53074DAF2E7DEC240062703A /* StateManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagement.swift; sourceTree = "<group>"; };
 		530939CF2E78226E00E22EE1 /* SourceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfig.swift; sourceTree = "<group>"; };
 		530939D22E78299100E22EE1 /* SourceConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigProvider.swift; sourceTree = "<group>"; };
 		530939D52E78629C00E22EE1 /* SourceConfigResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigResult.swift; sourceTree = "<group>"; };
@@ -647,7 +647,7 @@
 		53DEA5D32E03D05A00D6C371 /* StateManagement */ = {
 			isa = PBXGroup;
 			children = (
-				53074DF82E8179D30062703A /* StateManagement.swift */,
+				53074DAF2E7DEC240062703A /* StateManagement.swift */,
 				5358C58F2E7090770058E117 /* Reset */,
 				538F82C82E79584000C7ECEB /* SourceConfig */,
 				530939D42E783EF200E22EE1 /* UserIdentity */,
@@ -1056,6 +1056,7 @@
 				53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */,
 				5328B8792E3B817B0051A202 /* ObjCTrackEvent.swift in Sources */,
 				53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */,
+				53074DB02E7DEC240062703A /* StateManagement.swift in Sources */,
 				53DEA6152E03D05A00D6C371 /* BasicStorage.swift in Sources */,
 				53DEA6162E03D05A00D6C371 /* ObjCOption.swift in Sources */,
 				53DEA6172E03D05A00D6C371 /* Configuration.swift in Sources */,

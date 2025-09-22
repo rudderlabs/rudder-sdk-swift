@@ -123,8 +123,7 @@ extension SourceConfigProvider {
 
         switch error {
         case .invalidWriteKey:
-            // TODO: - When working on SourceConfig failure (HTTP status code 400) ticket, handle this scenario here.
-            // https://linear.app/rudderstack/issue/SDK-3612/ios-implement-delete-all-files-logic-on-400-error-code
+            self.analytics?.handleInvalidWriteKey()
             return false
             
         default:
