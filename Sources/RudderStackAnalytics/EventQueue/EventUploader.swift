@@ -164,11 +164,8 @@ extension EventUploader {
             let anonymousIdRegex = try NSRegularExpression(pattern: "\"anonymousId\"\\s*:\\s*\"([^\"]+)\"")
             let range = NSRange(location: 0, length: batch.utf16.count)
 
-            guard let match = anonymousIdRegex.firstMatch(in: batch, options: [], range: range) else {
-                return nil
-            }
-
-            guard let anonymousIdRange = Range(match.range(at: 1), in: batch) else {
+            guard let match = anonymousIdRegex.firstMatch(in: batch, options: [], range: range),
+                  let anonymousIdRange = Range(match.range(at: 1), in: batch) else {
                 return nil
             }
 
