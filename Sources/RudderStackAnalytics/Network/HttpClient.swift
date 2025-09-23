@@ -46,6 +46,10 @@ final class HttpClient {
         }
         return url
     }
+
+    func updateAnonymousIdHeader(_ anonymousIdHeader: String) {
+        self.anonymousIdHeader = anonymousIdHeader
+    }
 }
 
 // MARK: - HttpClientRequests
@@ -66,10 +70,6 @@ extension HttpClient: HttpClientRequests {
         }
         
         return await HttpNetwork.perform(request: urlRequest).eventUploadResult
-    }
-
-    func updateAnonymousIdHeader(_ anonymousIdHeader: String) {
-        self.anonymousIdHeader = anonymousIdHeader
     }
 }
 
