@@ -11,9 +11,15 @@ import XCTest
 final class RudderStackAnalyticsTests: XCTestCase {
     var analytics_disk: Analytics?
     var analytics_memory: Analytics?
+    var defaultSession: URLSession?
     
     override func setUpWithError() throws {
         try super.setUpWithError()
+        
+        URLProtocol.registerClass(MockURLProtocol.self)
+        self.defaultSession = HttpNetwork.session
+        
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 200)
         
         self.analytics_disk = MockProvider.clientWithDiskStorage
         self.analytics_memory = MockProvider.clientWithMemoryStorage
@@ -23,18 +29,24 @@ final class RudderStackAnalyticsTests: XCTestCase {
     override func tearDownWithError() throws {
         try super.tearDownWithError()
         
+        if let defaultSession {
+            HttpNetwork.session = defaultSession
+        }
+        URLProtocol.unregisterClass(MockURLProtocol.self)
+        
         self.analytics_disk = nil
         self.analytics_memory = nil
     }
     
-    func test_sourceConfiguration() {
+    func test_sourceConfiguration() async {
         let configuration = Configuration(writeKey: MockProvider._mockWriteKey, dataPlaneUrl: "https://www.mock-url.com/")
         
         let client = Analytics(configuration: configuration)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
         
-        let config: String? = client.configuration.storage.read(key: Constants.storageKeys.sourceConfig)
-        XCTAssertFalse(((config?.isEmpty) != nil))
+        await runAfter(0.3) {
+            let config = client.configuration.storage.read(key: Constants.storageKeys.sourceConfig) ?? ""
+            XCTAssertFalse(config.isEmpty)
+        }
     }
 }
 
@@ -118,11 +130,14 @@ extension RudderStackAnalyticsTests {
     func test_flushEvents_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         client.track(name: "Track Event", properties: ["prop": "value"])
-        try? await Task.sleep(nanoseconds: 300_000_000)
-        client.flush()
-        try? await Task.sleep(nanoseconds: 300_000_000)
-        let dataItems = await client.configuration.storage.read().dataItems
-        XCTAssertFalse(dataItems.isEmpty) //Should be false.. Since no proper dataplane configured...
+        await runAfter(0.3) {
+            client.flush()
+            
+            await runAfter(0.3) {
+                let dataItems = await client.configuration.storage.read().dataItems
+                XCTAssertTrue(dataItems.isEmpty) // Should be false, but MockUrlProtocol configured to return 200..
+            }
+        }
     }
     
     func test_shutdown() async {

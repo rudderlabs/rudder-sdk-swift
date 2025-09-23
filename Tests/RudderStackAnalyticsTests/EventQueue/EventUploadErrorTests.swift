@@ -41,7 +41,7 @@ final class EventUploadErrorTests: XCTestCase {
     
     func test_uploadBatchHandles400Error() async {
         // Given
-        HttpNetwork.session = self.prepareMockUrlSession(with: 400)
+        HttpNetwork.session = MockProvider.prepareMockDataPlaneSession(with: 400)
         let event = TrackEvent(event: "error_400_test", properties: ["test": "value"])
         
         // Store event in analytics storage
@@ -84,7 +84,7 @@ final class EventUploadErrorTests: XCTestCase {
     
     func test_uploadBatchHandles401Error() async {
         // Given
-        HttpNetwork.session = self.prepareMockUrlSession(with: 401)
+        HttpNetwork.session = MockProvider.prepareMockDataPlaneSession(with: 401)
         let event = TrackEvent(event: "error_401_test", properties: ["test": "value"])
         
         // Store event in analytics storage
@@ -134,7 +134,7 @@ final class EventUploadErrorTests: XCTestCase {
     
     func test_uploadBatchHandles404Error() async {
         // Given
-        HttpNetwork.session = self.prepareMockUrlSession(with: 404)
+        HttpNetwork.session = MockProvider.prepareMockDataPlaneSession(with: 404)
         let event = TrackEvent(event: "error_404_test", properties: ["test": "value"])
         
         // Store event in analytics storage
@@ -188,7 +188,7 @@ final class EventUploadErrorTests: XCTestCase {
         
     func test_uploadBatchHandles413Error() async {
         // Given
-        HttpNetwork.session = self.prepareMockUrlSession(with: 413)
+        HttpNetwork.session = MockProvider.prepareMockDataPlaneSession(with: 413)
         let event = TrackEvent(event: "error_413_test", properties: ["test": "value"])
         
         // Store event in analytics storage
@@ -233,18 +233,6 @@ final class EventUploadErrorTests: XCTestCase {
 // MARK: - Helper Methods
 
 extension EventUploadErrorTests {
-    
-    private func prepareMockUrlSession(with responseCode: Int) -> URLSession {
-        MockURLProtocol.requestHandler = { _ in
-            let json = responseCode == 200 ? ["status": "success"] : ["error": "Server error"]
-            let data = try JSONSerialization.data(withJSONObject: json)
-            return (responseCode, data, ["Content-Type": "application/json"])
-        }
-        
-        let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [MockURLProtocol.self]
-        return URLSession(configuration: config)
-    }
     
     private func cleanUpStorage() async {
         guard let analytics = mockAnalytics else { return }

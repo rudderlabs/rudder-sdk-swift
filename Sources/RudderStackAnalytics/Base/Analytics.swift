@@ -59,6 +59,11 @@ public class Analytics {
      Tracks the shutdown state of the analytics instance.
      */
     private(set) var isAnalyticsShutdown: Bool = false
+    
+    /**
+     A flag indicating whether the write key provided is invalid.
+     */
+    var isInvalidWriteKey: Bool = false
         
     /**
      Initializes the `Analytics` with the given configuration.
@@ -275,7 +280,7 @@ extension Analytics {
      */
     public func shutdown() {
         guard self.isAnalyticsActive else { return }
-        
+        LoggerAnalytics.debug(log: "Shutting down analytics.")
         self.isAnalyticsShutdown = true
         self.processEventChannel.close()
     }
@@ -283,10 +288,10 @@ extension Analytics {
     /**
      Cleans up resources when the event processing task completes.
      
-     This method is automatically called via the `defer` block to remove all plugins
-     and tear down the lifecycle wrapper to prevent memory leaks.
+     This method is to be called when the event processing task finishes, ensuring that all resources are properly released.
+     It removes all plugins from the plugin chain, invalidates the lifecycle session wrapper, and clears the source configuration provider. If the write key is invalid, it also clears all stored data.
      */
-    private func shutdownHook() {
+    private func shutdownHook() async {
         self.pluginChain?.removeAll()
         self.pluginChain = nil
         
@@ -294,6 +299,23 @@ extension Analytics {
         self.lifecycleSessionWrapper = nil
         
         self.sourceConfigProvider = nil
+    
+        if self.isInvalidWriteKey {
+            await self.storage.removeAll()
+            LoggerAnalytics.debug(log: "Invalid write key, Storage cleared.")
+        }
+        
+        LoggerAnalytics.debug(log: "Analytics shutdown complete.")
+    }
+    
+    /**
+     Handles the scenario when an invalid write key is detected.
+     
+     This method sets the `isInvalidWriteKey` flag to true and initiates the shutdown process.
+     */
+    func handleInvalidWriteKey() {
+        self.isInvalidWriteKey = true
+        self.shutdown()
     }
     
     /**
@@ -351,12 +373,14 @@ extension Analytics {
         Task { [weak self] in
             guard let self else { return }
             
-            defer { self.shutdownHook() }
-            
-            for await event in self.processEventChannel.receive() {
-                let updatedEvent = event.updateEventData()
-                self.pluginChain?.process(event: updatedEvent)
+            do {
+                for await event in self.processEventChannel.receive() {
+                    let updatedEvent = event.updateEventData()
+                    self.pluginChain?.process(event: updatedEvent)
+                }
             }
+            
+            await self.shutdownHook()
         }
     }
     
