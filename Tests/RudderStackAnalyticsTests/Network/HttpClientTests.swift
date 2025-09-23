@@ -5,63 +5,61 @@
 //  Created by Abhishek Pandey on 19/09/25.
 //
 
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class HttpClientTests: XCTestCase {
-    
-    private var mockAnalytics: Analytics!
-    private var httpClient: HttpClient!
-    
-    override func setUp() {
-        super.setUp()
+struct HttpClientTests {
+
+    private let mockAnalytics: Analytics
+    private let httpClient: HttpClient
+
+    init() {
         mockAnalytics = MockProvider.clientWithDiskStorage
         httpClient = HttpClient(analytics: mockAnalytics)
     }
     
-    override func tearDown() {
-        super.tearDown()
-        httpClient = nil
-        mockAnalytics = nil
-    }
-    
-    func test_initializesWithAnalyticsAnonymousId() {
+    @Test("Initializes with analytics anonymousId")
+    func initializesWithAnalyticsAnonymousId() {
         let expectedAnonymousId = mockAnalytics.anonymousId ?? ""
-        
+
         let headers = HttpClientRequestType.events.headers(mockAnalytics, anonymousIdHeader: expectedAnonymousId)
-        XCTAssertEqual(headers["AnonymousId"], expectedAnonymousId)
+        #expect(headers["AnonymousId"] == expectedAnonymousId)
     }
     
-    func test_updateAnonymousIdHeader_updatesHeaderCorrectly() {
+    @Test("Update anonymousId header updates header correctly")
+    func updateAnonymousIdHeader_updatesHeaderCorrectly() {
         let newAnonymousId = "new-anonymous-id-123"
-        
+
         httpClient.updateAnonymousIdHeader(newAnonymousId)
-        
+
         let headers = HttpClientRequestType.events.headers(mockAnalytics, anonymousIdHeader: newAnonymousId)
-        XCTAssertEqual(headers["AnonymousId"], newAnonymousId)
+        #expect(headers["AnonymousId"] == newAnonymousId)
     }
     
-    func test_eventsHeaders_includesAnonymousIdHeader() {
+    @Test("Events headers includes anonymousId header")
+    func eventsHeaders_includesAnonymousIdHeader() {
         let testAnonymousId = "test-anonymous-id"
-        
+
         let headers = HttpClientRequestType.events.headers(mockAnalytics, anonymousIdHeader: testAnonymousId)
-        
-        XCTAssertEqual(headers["AnonymousId"], testAnonymousId)
-        XCTAssertEqual(headers["Content-Type"], "application/json")
-        XCTAssertTrue(headers["Authorization"]?.hasPrefix("Basic ") == true)
+
+        #expect(headers["AnonymousId"] == testAnonymousId)
+        #expect(headers["Content-Type"] == "application/json")
+        #expect(headers["Authorization"]?.hasPrefix("Basic ") == true)
     }
     
-    func test_configurationHeaders_doesNotIncludeAnonymousIdHeader() {
+    @Test("Configuration headers does not include anonymousId header")
+    func configurationHeaders_doesNotIncludeAnonymousIdHeader() {
         let testAnonymousId = "test-anonymous-id"
-        
+
         let headers = HttpClientRequestType.configuration.headers(mockAnalytics, anonymousIdHeader: testAnonymousId)
-        
-        XCTAssertNil(headers["AnonymousId"])
-        XCTAssertEqual(headers["Content-Type"], "application/json")
-        XCTAssertTrue(headers["Authorization"]?.hasPrefix("Basic ") == true)
+
+        #expect(headers["AnonymousId"] == nil)
+        #expect(headers["Content-Type"] == "application/json")
+        #expect(headers["Authorization"]?.hasPrefix("Basic ") == true)
     }
     
-    func test_eventsHeaders_withGzipEnabled_includesGzipHeader() {
+    @Test("Events headers with gzip enabled includes gzip header")
+    func eventsHeaders_withGzipEnabled_includesGzipHeader() {
         let configuration = Configuration(
             writeKey: "test-write-key",
             dataPlaneUrl: "https://test.com",
@@ -69,18 +67,19 @@ final class HttpClientTests: XCTestCase {
         )
         let gzipAnalytics = Analytics(configuration: configuration)
         let testAnonymousId = "test-anonymous-id"
-        
+
         let headers = HttpClientRequestType.events.headers(gzipAnalytics, anonymousIdHeader: testAnonymousId)
-        
-        XCTAssertEqual(headers["Content-Encoding"], "gzip")
-        XCTAssertEqual(headers["AnonymousId"], testAnonymousId)
+
+        #expect(headers["Content-Encoding"] == "gzip")
+        #expect(headers["AnonymousId"] == testAnonymousId)
     }
     
-    func test_eventsHeaders_withoutAnonymousId_usesAnalyticsAnonymousId() {
+    @Test("Events headers without anonymousId uses analytics anonymousId")
+    func eventsHeaders_withoutAnonymousId_usesAnalyticsAnonymousId() {
         let expectedAnonymousId = mockAnalytics.anonymousId ?? ""
-        
+
         let headers = HttpClientRequestType.events.headers(mockAnalytics, anonymousIdHeader: expectedAnonymousId)
-        
-        XCTAssertEqual(headers["AnonymousId"], expectedAnonymousId)
+
+        #expect(headers["AnonymousId"] == expectedAnonymousId)
     }
 }
