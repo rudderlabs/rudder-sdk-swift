@@ -70,6 +70,9 @@ struct _StorageKeys {
     /// Key for storing the anonymous user identifier.
     let anonymousId = "anonymous_id"
 
+    /// Key for storing the last event anonymous id, which is required for processing the batch of events.
+    let lastEventAnonymousId = "last_event_anonymous_id"
+
     /// Key for storing the identified user ID.
     let userId = "user_id"
 

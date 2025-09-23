@@ -117,4 +117,72 @@ final class EventQueueTests: XCTestCase {
             await mockAnalytics.configuration.storage.remove(batchReference: item.reference)
         }
     }
+
+    func test_eventQueue_rolloverOnAnonymousIdChange() async {
+        // Given - Events with different anonymous IDs
+        var event1 = TrackEvent(event: "event_1", properties: ["test": "value1"])
+        event1.anonymousId = "anonymousId1"
+
+        var event2 = TrackEvent(event: "event_2", properties: ["test": "value2"])
+        event2.anonymousId = "anonymousId2"
+
+        // Track initial batch count
+        let initialDataItems = await mockAnalytics.configuration.storage.read().dataItems
+        let initialBatchCount = initialDataItems.count
+
+        // When - Send events with different anonymous IDs
+        eventQueue.put(event1)
+        eventQueue.put(event2)
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        
+        // Force rollover to finalize the batch
+        await mockAnalytics.configuration.storage.rollover()
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        
+        // Then - Check that rollovers occurred
+        let finalDataItems = await mockAnalytics.configuration.storage.read().dataItems
+        let finalBatchCount = finalDataItems.count
+
+        // We should have at least 2 batches (one for anonymousId1, one for anonymousId2)
+        XCTAssertEqual(finalBatchCount - initialBatchCount, 2, "Storage should have rolled over when anonymousId changed")
+
+        // Cleanup
+        for item in finalDataItems {
+            await mockAnalytics.configuration.storage.remove(batchReference: item.reference)
+        }
+    }
+
+    func test_eventQueue_sameAnonymousIdSingleBatch() async {
+        // Given - Multiple events with the same anonymous ID
+        var event1 = TrackEvent(event: "event_1", properties: ["test": "value1"])
+        event1.anonymousId = "consistentAnonymousId"
+
+        var event2 = TrackEvent(event: "event_2", properties: ["test": "value2"])
+        event2.anonymousId = "consistentAnonymousId"
+
+        // Track initial batch count
+        let initialDataItems = await mockAnalytics.configuration.storage.read().dataItems
+        let initialBatchCount = initialDataItems.count
+
+        // When - Send events with same anonymous ID
+        eventQueue.put(event1)
+        eventQueue.put(event2)
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+
+        // Force rollover to finalize the batch
+        await mockAnalytics.configuration.storage.rollover()
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+
+        // Then - Check that only one additional batch was created
+        let finalDataItems = await mockAnalytics.configuration.storage.read().dataItems
+        let finalBatchCount = finalDataItems.count
+
+        // Should have exactly one new batch since all events have the same anonymousId
+        XCTAssertEqual(finalBatchCount - initialBatchCount, 1, "Events with same anonymousId should create only one batch")
+
+        // Cleanup
+        for item in finalDataItems {
+            await mockAnalytics.configuration.storage.remove(batchReference: item.reference)
+        }
+    }
 }
