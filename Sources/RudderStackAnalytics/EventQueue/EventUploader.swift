@@ -129,7 +129,7 @@ extension EventUploader: TypeIdentifiable {
         case .error404:
             LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.")
             self.stop()
-            // TODO: - When working on SourceConfig items, implement logic to wait for source to be enabled again.
+            self.analytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
 
         case .error413:
             LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
