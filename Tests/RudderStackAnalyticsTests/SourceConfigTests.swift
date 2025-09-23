@@ -158,6 +158,22 @@ struct SourceConfigTests {
         cancellables.removeAll()
     }
     
+    @Test("Given SourceConfig with state management, When DisableSourceConfigAction is dispatched, Then state is updated correctly")
+    func testDisableSourceConfig_StateManagement() async {
+        // Given
+        let mockAnalytics = MockAnalytics()
+        #expect(mockAnalytics.sourceConfigState.state.value.source.isSourceEnabled == true, "Source should be enabled by default")
+        
+        // When
+        mockAnalytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
+        
+        await runAfter(0.1) {
+            // Then
+            #expect(mockAnalytics.sourceConfigState.state.value.source.isSourceEnabled == false, "Source should be disabled")
+        }
+        mockAnalytics.storage.remove(key: Constants.storageKeys.sourceConfig)
+    }
+    
     @Test("Given corrupted cached SourceConfig, When fetchCachedConfigAndNotifyObservers is called, Then handles gracefully")
     func testFetchCachedConfigAndNotifyObservers_CorruptedCache() {
         // Given
