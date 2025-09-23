@@ -124,6 +124,7 @@ extension EventUploader: TypeIdentifiable {
           
         case .error401:
             LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Invalid write key. Ensure the write key is valid.")
+            self.stop()
             self.analytics.handleInvalidWriteKey()
             
         case .error404:
