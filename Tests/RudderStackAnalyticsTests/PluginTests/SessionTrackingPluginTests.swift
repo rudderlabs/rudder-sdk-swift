@@ -10,22 +10,32 @@ import XCTest
 
 final class SessionTrackingPluginTests: XCTestCase {
     
-    private var analytics = MockProvider.clientWithMemoryStorage
+    var defaultSession: URLSession?
     
     override func setUpWithError() throws {
         try super.setUpWithError()
+        URLProtocol.registerClass(MockURLProtocol.self)
+        self.defaultSession = HttpNetwork.session
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 200)
     }
     
     override func tearDownWithError() throws {
         try super.tearDownWithError()
+        
+        if let defaultSession {
+            HttpNetwork.session = defaultSession
+        }
+        URLProtocol.unregisterClass(MockURLProtocol.self)
     }
     
     func test_intercept_trackEvent() {
         given("Manual session is started..") {
             let plugin = SessionTrackingPlugin()
-            plugin.setup(analytics: self.analytics)
+            let analytics = MockAnalytics()
             
-            self.analytics.sessionHandler?.startSession(id: 1231231234, type: .manual)
+            plugin.setup(analytics: analytics)
+            
+            analytics.sessionHandler?.startSession(id: 1231231234, type: .manual)
             let track = TrackEvent(event: "Track")
             
             when("A simple track event is sent to the session tracking plugin..") {
@@ -43,9 +53,11 @@ final class SessionTrackingPluginTests: XCTestCase {
     func test_intercept_mulitple_groupEvent() {
         given("Start the session and trigger the first group event to the session tracking plugin..") {
             let plugin = SessionTrackingPlugin()
-            plugin.setup(analytics: self.analytics)
+            let analytics = MockAnalytics()
+            
+            plugin.setup(analytics: analytics)
         
-            self.analytics.sessionHandler?.startSession(id: 1231231234, type: .manual)
+            analytics.sessionHandler?.startSession(id: 1231231234, type: .manual)
             
             let group = GroupEvent(groupId: "Group_id")
             var interceptedEvent = plugin.intercept(event: group)
