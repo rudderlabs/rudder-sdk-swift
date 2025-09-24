@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		53074DB02E7DEC240062703A /* StateManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53074DAF2E7DEC240062703A /* StateManagement.swift */; };
+		53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53074DFA2E8271E90062703A /* DisableSourceConfigAction.swift */; };
 		530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939CF2E78226E00E22EE1 /* SourceConfig.swift */; };
 		530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D22E78299100E22EE1 /* SourceConfigProvider.swift */; };
 		530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D52E78629C00E22EE1 /* SourceConfigResult.swift */; };
@@ -171,6 +172,7 @@
 
 /* Begin PBXFileReference section */
 		53074DAF2E7DEC240062703A /* StateManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagement.swift; sourceTree = "<group>"; };
+		53074DFA2E8271E90062703A /* DisableSourceConfigAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableSourceConfigAction.swift; sourceTree = "<group>"; };
 		530939CF2E78226E00E22EE1 /* SourceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfig.swift; sourceTree = "<group>"; };
 		530939D22E78299100E22EE1 /* SourceConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigProvider.swift; sourceTree = "<group>"; };
 		530939D52E78629C00E22EE1 /* SourceConfigResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigResult.swift; sourceTree = "<group>"; };
@@ -471,6 +473,7 @@
 			isa = PBXGroup;
 			children = (
 				538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */,
+				53074DFA2E8271E90062703A /* DisableSourceConfigAction.swift */,
 			);
 			path = SourceConfig;
 			sourceTree = "<group>";
@@ -1052,6 +1055,7 @@
 				539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */,
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
+				53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */,
 				5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */,
 				53DEA6092E03D05A00D6C371 /* HttpClient.swift in Sources */,
 				53DEA60A2E03D05A00D6C371 /* ObjCConfiguration.swift in Sources */,
@@ -1077,7 +1081,6 @@
 				53DEA6182E03D05A00D6C371 /* Constants.swift in Sources */,
 				53DEA6192E03D05A00D6C371 /* PropertyWrappers.swift in Sources */,
 				53DEA61A2E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift in Sources */,
-				53074DF92E8179D30062703A /* StateManagement.swift in Sources */,
 				53DEA61B2E03D05A00D6C371 /* ObjCEvent.swift in Sources */,
 				53DEA61C2E03D05A00D6C371 /* FrequencyFlushPolicy.swift in Sources */,
 				530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */,
