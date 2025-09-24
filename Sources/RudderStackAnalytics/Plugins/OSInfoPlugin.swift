@@ -32,7 +32,7 @@ final class OSInfoPlugin: Plugin {
 
 // MARK: - OSInfo
 enum OSInfo {
-    static var preparedOSInfo: [String: Any] {
+    static let preparedOSInfo: [String: Any] = {
 #if os(iOS) || os(tvOS)
         let name = UIDevice.current.systemName
         let versionString = UIDevice.current.systemVersion
@@ -47,5 +47,5 @@ enum OSInfo {
         let versionString = WKInterfaceDevice.current().systemVersion
 #endif
         return ["name": name, "version": versionString]
-    }
+    }()
 }
