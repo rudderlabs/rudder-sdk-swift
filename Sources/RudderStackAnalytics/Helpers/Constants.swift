@@ -198,7 +198,7 @@ public struct _DefaultConfig {
     
     /// Default query parameters added to outgoing requests.
     var queryParams: [String: String] {
-        let params = ["p": "ios", "v": "\(RSVersion)"]
+        let params = ["p": "swift", "v": "\(RSVersion)"]
         guard let buildVersion = OSInfo.preparedOSInfo["version"] as? String else { return params }
         return params + ["bv": buildVersion]
     }
