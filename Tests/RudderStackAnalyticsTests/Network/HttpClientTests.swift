@@ -82,4 +82,13 @@ struct HttpClientTests {
 
         #expect(headers["AnonymousId"] == expectedAnonymousId)
     }
+    
+    @Test("Source Config requests has query params")
+    func sourceConfigRequest_hasQueryParams() {
+        let queryParams = Constants.defaultConfig.queryParams
+        
+        #expect(queryParams["p"] != nil, "Platform value should not be nil")
+        #expect(queryParams["v"] == RSVersion, "SDK version should match")
+        #expect(queryParams["bv"] != nil, "Build version value should not be nil")
+    }
 }
