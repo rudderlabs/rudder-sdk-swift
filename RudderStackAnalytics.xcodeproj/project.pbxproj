@@ -155,6 +155,8 @@
 		53DEA68F2E03D06F00D6C371 /* group_with_all_values.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA62D2E03D06F00D6C371 /* group_with_all_values.json */; };
 		53DEA6902E03D06F00D6C371 /* screen_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA6392E03D06F00D6C371 /* screen_with_default_arguments.json */; };
 		53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E112D92E7C4B9E005FEF67 /* Connectivity.swift */; };
+		8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCA98812E8178D0006C3537 /* HttpClientTests.swift */; };
+		8CCA98852E817966006C3537 /* EventUploaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCA98842E817966006C3537 /* EventUploaderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -317,6 +319,8 @@
 		53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerAnalyticsTests.swift; sourceTree = "<group>"; };
 		53DEA65D2E03D06F00D6C371 /* StorageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModuleTests.swift; sourceTree = "<group>"; };
 		53E112D92E7C4B9E005FEF67 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
+		8CCA98812E8178D0006C3537 /* HttpClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClientTests.swift; sourceTree = "<group>"; };
+		8CCA98842E817966006C3537 /* EventUploaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploaderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -417,6 +421,7 @@
 				53DEA6272E03D06F00D6C371 /* EventTests */,
 				53DEA6292E03D06F00D6C371 /* LifecycleManagementTests */,
 				53DEA6432E03D06F00D6C371 /* MockResources */,
+				8CCA98802E817881006C3537 /* Network */,
 				53DEA64E2E03D06F00D6C371 /* PluginTests */,
 				53DEA6522E03D06F00D6C371 /* SessionManagementTests */,
 				53DEA6582E03D06F00D6C371 /* StateManagementTests */,
@@ -496,6 +501,7 @@
 			children = (
 				539D871D2E54BB9A009FC144 /* EventQueueTests.swift */,
 				539D87372E58894B009FC144 /* EventUploadErrorTests.swift */,
+				8CCA98842E817966006C3537 /* EventUploaderTests.swift */,
 			);
 			path = EventQueue;
 			sourceTree = "<group>";
@@ -829,6 +835,14 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		8CCA98802E817881006C3537 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				8CCA98812E8178D0006C3537 /* HttpClientTests.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1088,9 +1102,11 @@
 				53DEA6632E03D06F00D6C371 /* UserIdTraitsActionTests.swift in Sources */,
 				53DEA6642E03D06F00D6C371 /* LifecycleTrackingPluginTests.swift in Sources */,
 				53DEA6652E03D06F00D6C371 /* DeviceInfoPluginTests.swift in Sources */,
+				8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */,
 				53DEA6662E03D06F00D6C371 /* GroupEventTests.swift in Sources */,
 				53DEA6672E03D06F00D6C371 /* UserIdActionTests.swift in Sources */,
 				53DEA6682E03D06F00D6C371 /* FlushPolicyModuleTests.swift in Sources */,
+				8CCA98852E817966006C3537 /* EventUploaderTests.swift in Sources */,
 				531F0D2F2E79CA6E00180C05 /* SourceConfigTests.swift in Sources */,
 				53DEA6692E03D06F00D6C371 /* IdentifyEventTests.swift in Sources */,
 				53DEA66A2E03D06F00D6C371 /* UserIdentityTests.swift in Sources */,

@@ -22,16 +22,18 @@ protocol HttpClientRequests {
  */
 final class HttpClient {
     let analytics: Analytics
-    
+    private var anonymousIdHeader: String
+
     init(analytics: Analytics) {
         self.analytics = analytics
+        self.anonymousIdHeader = analytics.anonymousId ?? String.empty
     }
     
     private func prepareGenericUrlRequest(for requestType: HttpClientRequestType) -> URLRequest? {
         guard let url = self.prepareRequestUrl(for: requestType) else { return nil }
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = requestType.httpMethod
-        urlRequest.allHTTPHeaderFields = requestType.headers(analytics)
+        urlRequest.allHTTPHeaderFields = requestType.headers(analytics, anonymousIdHeader: self.anonymousIdHeader)
         return urlRequest
     }
     
@@ -43,6 +45,10 @@ final class HttpClient {
             url = url.appendQueryParameters(Constants.defaultConfig.queryParams)
         }
         return url
+    }
+
+    func updateAnonymousIdHeader(_ anonymousIdHeader: String) {
+        self.anonymousIdHeader = anonymousIdHeader
     }
 }
 
@@ -96,17 +102,16 @@ enum HttpClientRequestType {
         }
     }
     
-    func headers(_ analytics: Analytics) -> [String: String] {
-        
+    func headers(_ analytics: Analytics, anonymousIdHeader: String) -> [String: String] {
         let encodedAuthString = (analytics.configuration.writeKey + ":").base64Encoded ?? .empty
         var defaultHeaders = ["Content-Type": "application/json", "Authorization": "Basic \(encodedAuthString)"]
-        
+
         if self == .events {
-            var specialHeaders = ["AnonymousId": analytics.anonymousId]
+            var specialHeaders = ["AnonymousId": anonymousIdHeader]
             if analytics.configuration.gzipEnabled { specialHeaders["Content-Encoding"] = "gzip" }
             specialHeaders.forEach { defaultHeaders[$0] = $1 }
         }
-        
+
         return defaultHeaders
     }
 }

@@ -16,6 +16,7 @@ final class EventUploader {
     private let httpClient: HttpClient
     private let uploadChannel: AsyncChannel<String>
     private let backoff: BackoffPolicyHandler
+    private var lastBatchAnonymousId: String = ""
     
     private var storage: Storage {
         return self.analytics.configuration.storage
@@ -50,6 +51,9 @@ final class EventUploader {
                         continue
                     }
                     
+                    // Update anonymousId header if needed
+                    self.updateAnonymousIdHeaderIfNeeded(batch)
+                    
                     // Upload the batch
                     await self.uploadBatch(batch, reference: item.reference)
                 }
@@ -69,7 +73,6 @@ extension EventUploader {
         var shouldRetry = false
         repeat {
             LoggerAnalytics.debug(log: "Upload started: \(reference)")
-            
             // Process the batch by replacing timestamp placeholder with current time
             let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
             LoggerAnalytics.debug(log: "Uploading (processed): \(processed)")
@@ -143,5 +146,33 @@ extension EventUploader: TypeIdentifiable {
 extension EventUploader {
     private func deleteBatchFile(_ reference: String) async {
         await self.storage.remove(batchReference: reference)
+    }
+
+    private func updateAnonymousIdHeaderIfNeeded(_ batch: String) {
+        guard let anonymousId = self.extractAnonymousIdFromBatch(batch) else {
+            return // No anonymousId found, don't update header
+        }
+
+        if anonymousId != lastBatchAnonymousId {
+            self.httpClient.updateAnonymousIdHeader(anonymousId)
+            self.lastBatchAnonymousId = anonymousId
+        }
+    }
+
+    func extractAnonymousIdFromBatch(_ batch: String) -> String? {
+        do {
+            let anonymousIdRegex = try NSRegularExpression(pattern: "\"anonymousId\"\\s*:\\s*\"([^\"]+)\"")
+            let range = NSRange(location: 0, length: batch.utf16.count)
+
+            guard let match = anonymousIdRegex.firstMatch(in: batch, options: [], range: range),
+                  let anonymousIdRange = Range(match.range(at: 1), in: batch) else {
+                return nil
+            }
+
+            return String(batch[anonymousIdRange])
+        } catch {
+            LoggerAnalytics.error(log: "Failed to create regex for anonymousId extraction: \(error)")
+            return nil
+        }
     }
 }
