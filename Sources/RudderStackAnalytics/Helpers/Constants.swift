@@ -197,8 +197,12 @@ public struct _DefaultConfig {
     let storageMode: StorageMode = .disk
     
     /// Default query parameters added to outgoing requests.
-    let queryParams = ["p": "ios", "v": "\(RSVersion)"]
-
+    var queryParams: [String: String] {
+        let params = ["p": "ios", "v": "\(RSVersion)"]
+        guard let buildVersion = OSInfo.preparedOSInfo["version"] as? String else { return params }
+        return params + ["bv": buildVersion]
+    }
+    
     /// Special signal string used to trigger uploads.
     let uploadSignal = "#!upload!#"
 }
