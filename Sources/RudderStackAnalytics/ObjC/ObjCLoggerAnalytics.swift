@@ -58,7 +58,7 @@ public final class ObjCLoggerAnalytics: NSObject {
      */
     @objc
     public static func verbose(_ log: String) {
-        LoggerAnalytics.verbose(log: log)
+        LoggerAnalytics.verbose(log)
     }
     
     /**

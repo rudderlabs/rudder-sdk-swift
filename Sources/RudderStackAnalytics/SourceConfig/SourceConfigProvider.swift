@@ -133,7 +133,7 @@ extension SourceConfigProvider {
             }
     
             let delay = backoffPolicy.nextDelayInMilliseconds()
-            LoggerAnalytics.verbose(log: "Retrying fetching of SourceConfig, attempt: \(attemptCount) in \(BackoffPolicyHelper.formatMilliseconds(delay))")
+            LoggerAnalytics.verbose("Retrying fetching of SourceConfig, attempt: \(attemptCount) in \(BackoffPolicyHelper.formatMilliseconds(delay))")
             try? await BackoffPolicyHelper.sleep(milliseconds: delay)
             return true
         }

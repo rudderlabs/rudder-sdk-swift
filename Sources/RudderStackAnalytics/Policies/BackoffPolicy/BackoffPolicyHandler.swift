@@ -36,9 +36,9 @@ final actor BackoffPolicyHandler {
      Applies the cool-off period before the next retry attempt.
      */
     private func applyCoolOffPeriod() async {
-        LoggerAnalytics.verbose(log: "Max attempts reached. Entering cool-off period.")
+        LoggerAnalytics.verbose("Max attempts reached. Entering cool-off period.")
         self.reset()
-        LoggerAnalytics.verbose(log: "Next attempt will be after \(BackoffPolicyHelper.formatMilliseconds(coolOffPeriodMillis)).")
+        LoggerAnalytics.verbose("Next attempt will be after \(BackoffPolicyHelper.formatMilliseconds(coolOffPeriodMillis)).")
         try? await BackoffPolicyHelper.sleep(milliseconds: coolOffPeriodMillis)
     }
 
@@ -47,7 +47,7 @@ final actor BackoffPolicyHandler {
      */
     private func applyBackoff() async {
         let delay = self.policy.nextDelayInMilliseconds()
-        LoggerAnalytics.verbose(log: "Sleeping for \(BackoffPolicyHelper.formatMilliseconds(delay)) (attempt \(currentAttempt) of \(maxAttempts)).")
+        LoggerAnalytics.verbose("Sleeping for \(BackoffPolicyHelper.formatMilliseconds(delay)) (attempt \(currentAttempt) of \(maxAttempts)).")
         try? await BackoffPolicyHelper.sleep(milliseconds: delay)
     }
 
@@ -56,7 +56,7 @@ final actor BackoffPolicyHandler {
      This method should be called when the backoff policy needs to be restarted.
      */
     func reset() {
-        LoggerAnalytics.verbose(log: "Resetting retry attempts and backoff policy.")
+        LoggerAnalytics.verbose("Resetting retry attempts and backoff policy.")
         self.currentAttempt = 0
         self.policy.resetBackoff()
     }

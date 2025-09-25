@@ -29,7 +29,7 @@ final class LoggerAnalyticsTests: XCTestCase {
             LoggerAnalytics.logLevel = .info
             
             when("calling each log method") {
-                LoggerAnalytics.verbose(log: "This is verbose")
+                LoggerAnalytics.verbose("This is verbose")
                 LoggerAnalytics.debug(log: "This is debug")
                 LoggerAnalytics.info(log: "This is info")
                 LoggerAnalytics.warn(log: "This is warn")
@@ -73,7 +73,7 @@ final class LoggerAnalyticsTests: XCTestCase {
             LoggerAnalytics.logLevel = .none
             
             when("all log methods are called") {
-                LoggerAnalytics.verbose(log: "V")
+                LoggerAnalytics.verbose("V")
                 LoggerAnalytics.debug(log: "D")
                 LoggerAnalytics.info(log: "I")
                 LoggerAnalytics.warn(log: "W")
