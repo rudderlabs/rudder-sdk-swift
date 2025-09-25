@@ -42,7 +42,7 @@ final class EventWriter {
     }
     
     func flush() {
-        LoggerAnalytics.info(log: "Flush triggered...")
+        LoggerAnalytics.info("Flush triggered...")
         Task {
             do {
                 try self.writeChannel.send(self.flushEvent)

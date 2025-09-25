@@ -30,7 +30,7 @@ final actor MemoryStore {
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > DataStoreConstants.maxBatchSize {
             self.finish()
-            LoggerAnalytics.info(log: "Batch size exceeded. Closing the current batch..")
+            LoggerAnalytics.info("Batch size exceeded. Closing the current batch..")
             self.store(event: event)
             return
         }

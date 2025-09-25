@@ -78,7 +78,7 @@ public final class ObjCLoggerAnalytics: NSObject {
      */
     @objc
     public static func info(_ log: String) {
-        LoggerAnalytics.info(log: log)
+        LoggerAnalytics.info(log)
     }
     
     /**

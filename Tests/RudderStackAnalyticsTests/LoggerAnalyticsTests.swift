@@ -31,7 +31,7 @@ final class LoggerAnalyticsTests: XCTestCase {
             when("calling each log method") {
                 LoggerAnalytics.verbose("This is verbose")
                 LoggerAnalytics.debug("This is debug")
-                LoggerAnalytics.info(log: "This is info")
+                LoggerAnalytics.info("This is info")
                 LoggerAnalytics.warn(log: "This is warn")
                 LoggerAnalytics.error(log: "This is error")
                 
@@ -75,7 +75,7 @@ final class LoggerAnalyticsTests: XCTestCase {
             when("all log methods are called") {
                 LoggerAnalytics.verbose("V")
                 LoggerAnalytics.debug("D")
-                LoggerAnalytics.info(log: "I")
+                LoggerAnalytics.info("I")
                 LoggerAnalytics.warn(log: "W")
                 LoggerAnalytics.error(log: "E")
                 

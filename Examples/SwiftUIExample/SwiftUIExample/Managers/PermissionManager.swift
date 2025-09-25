@@ -157,9 +157,9 @@ extension PermissionManager: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
-            LoggerAnalytics.info(log: "Bluetooth is On")
+            LoggerAnalytics.info("Bluetooth is On")
         case .poweredOff:
-            LoggerAnalytics.info(log: "Bluetooth is Off")
+            LoggerAnalytics.info("Bluetooth is Off")
         default:
             LoggerAnalytics.debug("Bluetooth state: \(central.state.rawValue)")
         }
