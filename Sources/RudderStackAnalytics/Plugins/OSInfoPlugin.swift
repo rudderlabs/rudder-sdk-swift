@@ -26,14 +26,17 @@ final class OSInfoPlugin: Plugin {
     }
     
     func intercept(event: any Event) -> (any Event)? {
-        return event.addToContext(info: ["os": self.preparedOSInfo])
+        return event.addToContext(info: ["os": OSInfo.preparedOSInfo])
     }
-    
-    private var preparedOSInfo: [String: Any] = {
+}
+
+// MARK: - OSInfo
+enum OSInfo {
+    static let preparedOSInfo: [String: Any] = {
 #if os(iOS) || os(tvOS)
         let name = UIDevice.current.systemName
         let versionString = UIDevice.current.systemVersion
-
+        
 #elseif os(macOS)
         let name = "macOS"
         let version = ProcessInfo.processInfo.operatingSystemVersion
