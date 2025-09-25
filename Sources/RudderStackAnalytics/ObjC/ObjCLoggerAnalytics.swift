@@ -100,6 +100,6 @@ public final class ObjCLoggerAnalytics: NSObject {
      */
     @objc
     public static func error(_ log: String, error: NSError?) {
-        LoggerAnalytics.error(log: log, error: error)
+        LoggerAnalytics.error(log, cause: error)
     }
 }

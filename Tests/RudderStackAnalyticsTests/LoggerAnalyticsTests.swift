@@ -33,7 +33,7 @@ final class LoggerAnalyticsTests: XCTestCase {
                 LoggerAnalytics.debug("This is debug")
                 LoggerAnalytics.info("This is info")
                 LoggerAnalytics.warn("This is warn")
-                LoggerAnalytics.error(log: "This is error")
+                LoggerAnalytics.error("This is error")
                 
                 then("only info, warn, and error messages should be logged") {
                     let loggedLevels = mockLogger.logs.map { $0.level }
@@ -54,8 +54,8 @@ final class LoggerAnalyticsTests: XCTestCase {
             LoggerAnalytics.logLevel = .error
             
             when("calling error with and without an error object") {
-                LoggerAnalytics.error(log: "Only log")
-                LoggerAnalytics.error(log: "With error", error: NSError(domain: "Test", code: 1))
+                LoggerAnalytics.error("Only log")
+                LoggerAnalytics.error("With error", cause: NSError(domain: "Test", code: 1))
                 
                 then("both error messages should be captured") {
                     XCTAssertEqual(mockLogger.logs.count, 2)
@@ -77,7 +77,7 @@ final class LoggerAnalyticsTests: XCTestCase {
                 LoggerAnalytics.debug("D")
                 LoggerAnalytics.info("I")
                 LoggerAnalytics.warn("W")
-                LoggerAnalytics.error(log: "E")
+                LoggerAnalytics.error("E")
                 
                 then("no messages should be logged") {
                     XCTAssertTrue(mockLogger.logs.isEmpty)

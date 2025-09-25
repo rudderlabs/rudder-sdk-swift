@@ -108,7 +108,7 @@ extension DynamicUserAgentPlugin {
             return ua
             
         } catch {
-            LoggerAnalytics.error(log: "Failed to read user agent", error: error)
+            LoggerAnalytics.error("Failed to read user agent", cause: error)
             return nil
         }
 #else

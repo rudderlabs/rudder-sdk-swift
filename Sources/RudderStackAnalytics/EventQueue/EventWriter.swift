@@ -36,7 +36,7 @@ final class EventWriter {
                 let processingEvent = ProcessingEvent(type: .message, event: event)
                 try self.writeChannel.send(processingEvent)
             } catch {
-                LoggerAnalytics.error(log: "Failed to send event to writeChannel", error: error)
+                LoggerAnalytics.error("Failed to send event to writeChannel", cause: error)
             }
         }
     }
@@ -47,7 +47,7 @@ final class EventWriter {
             do {
                 try self.writeChannel.send(self.flushEvent)
             } catch {
-                LoggerAnalytics.error(log: "Failed to send flush signal to writeChannel", error: error)
+                LoggerAnalytics.error("Failed to send flush signal to writeChannel", cause: error)
             }
         }
     }
@@ -81,7 +81,7 @@ final class EventWriter {
                             try self.uploadChannel.send(Constants.defaultConfig.uploadSignal)
                         }
                     } catch {
-                        LoggerAnalytics.error(log: "Error on upload signal", error: error)
+                        LoggerAnalytics.error("Error on upload signal", cause: error)
                     }
                 }
             }

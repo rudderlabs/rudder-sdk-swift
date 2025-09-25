@@ -131,7 +131,7 @@ extension FileManager {
             LoggerAnalytics.debug("Removed item at path: \(path)")
             return true
         } catch {
-            LoggerAnalytics.error(log: "Failed to remove item at path: \(path)", error: error)
+            LoggerAnalytics.error("Failed to remove item at path: \(path)", cause: error)
             return false
         }
     }
@@ -162,7 +162,7 @@ extension Encodable {
             let jsonData = try encoder.encode(self)
             return jsonData.jsonString
         } catch {
-            LoggerAnalytics.error(log: "Encoding JSON Error", error: error)
+            LoggerAnalytics.error("Encoding JSON Error", cause: error)
             return nil
         }
     }

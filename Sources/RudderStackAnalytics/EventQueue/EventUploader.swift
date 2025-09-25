@@ -102,7 +102,7 @@ extension EventUploader {
     }
     
     private func handleBatchUploadFailure(_ error: EventUploadError, reference: String) async {
-        LoggerAnalytics.error(log: "Upload failed: \(reference)", error: error)
+        LoggerAnalytics.error("Upload failed: \(reference)", cause: error)
         
         // Handle non-retryable errors
         if let nonRetryableError = error as? NonRetryableEventUploadError {
@@ -122,21 +122,21 @@ extension EventUploader: TypeIdentifiable {
     private func handleNonRetryableError(_ error: NonRetryableEventUploadError, reference: String) async {
         switch error {
         case .error400:
-            LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties.")
+            LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties.")
             await self.deleteBatchFile(reference)
           
         case .error401:
-            LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Invalid write key. Ensure the write key is valid.")
+            LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). " + "Invalid write key. Ensure the write key is valid.")
             self.stop()
             self.analytics.handleInvalidWriteKey()
             
         case .error404:
-            LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.")
+            LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.")
             self.stop()
             self.analytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
 
         case .error413:
-            LoggerAnalytics.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
+            LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
             await self.deleteBatchFile(reference)
         }
     }
@@ -171,7 +171,7 @@ extension EventUploader {
 
             return String(batch[anonymousIdRange])
         } catch {
-            LoggerAnalytics.error(log: "Failed to create regex for anonymousId extraction: \(error)")
+            LoggerAnalytics.error("Failed to create regex for anonymousId extraction: \(error)")
             return nil
         }
     }

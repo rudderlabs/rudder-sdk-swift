@@ -78,7 +78,7 @@ extension SourceConfigProvider {
             
             return sourceConfig
         } catch {
-            LoggerAnalytics.error(log: "Failed to decode SourceConfig from storage: \(error)")
+            LoggerAnalytics.error("Failed to decode SourceConfig from storage: \(error)")
             return nil
         }
     }
@@ -113,13 +113,13 @@ extension SourceConfigProvider {
             self.analytics?.storage.write(value: sourceConfig.jsonString, key: Constants.storageKeys.sourceConfig)
             return sourceConfig
         } catch {
-            LoggerAnalytics.error(log: "Failed to decode SourceConfig from response: \(error)")
+            LoggerAnalytics.error("Failed to decode SourceConfig from response: \(error)")
             return nil
         }
     }
     
     private func handleSourceConfigError(_ error: SourceConfigError, attemptCount: Int) async -> Bool {
-        LoggerAnalytics.error(log: "\(className): Error downloading SourceConfig: \(error.errorDescription)", error: error)
+        LoggerAnalytics.error("\(className): Error downloading SourceConfig: \(error.errorDescription)", cause: error)
 
         switch error {
         case .invalidWriteKey:
