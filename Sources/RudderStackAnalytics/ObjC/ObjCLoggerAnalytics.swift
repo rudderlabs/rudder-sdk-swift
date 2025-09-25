@@ -88,7 +88,7 @@ public final class ObjCLoggerAnalytics: NSObject {
      */
     @objc
     public static func warn(_ log: String) {
-        LoggerAnalytics.warn(log: log)
+        LoggerAnalytics.warn(log)
     }
     
     /**

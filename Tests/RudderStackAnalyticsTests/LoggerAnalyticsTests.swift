@@ -32,7 +32,7 @@ final class LoggerAnalyticsTests: XCTestCase {
                 LoggerAnalytics.verbose("This is verbose")
                 LoggerAnalytics.debug("This is debug")
                 LoggerAnalytics.info("This is info")
-                LoggerAnalytics.warn(log: "This is warn")
+                LoggerAnalytics.warn("This is warn")
                 LoggerAnalytics.error(log: "This is error")
                 
                 then("only info, warn, and error messages should be logged") {
@@ -76,7 +76,7 @@ final class LoggerAnalyticsTests: XCTestCase {
                 LoggerAnalytics.verbose("V")
                 LoggerAnalytics.debug("D")
                 LoggerAnalytics.info("I")
-                LoggerAnalytics.warn(log: "W")
+                LoggerAnalytics.warn("W")
                 LoggerAnalytics.error(log: "E")
                 
                 then("no messages should be logged") {
