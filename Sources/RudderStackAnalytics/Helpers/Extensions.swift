@@ -128,7 +128,7 @@ extension FileManager {
         let fileUrl = URL(fileURLWithPath: path)
         do {
             try FileManager.default.removeItem(at: fileUrl)
-            LoggerAnalytics.debug(log: "Removed item at path: \(path)")
+            LoggerAnalytics.debug("Removed item at path: \(path)")
             return true
         } catch {
             LoggerAnalytics.error(log: "Failed to remove item at path: \(path)", error: error)

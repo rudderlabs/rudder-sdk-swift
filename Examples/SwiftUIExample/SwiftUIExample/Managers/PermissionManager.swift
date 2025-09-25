@@ -122,10 +122,10 @@ extension PermissionManager {
         }
 
         ATTrackingManager.requestTrackingAuthorization { status in
-            LoggerAnalytics.debug(log: "IDFA Status: \(status.rawValue)")
+            LoggerAnalytics.debug("IDFA Status: \(status.rawValue)")
             if status == .authorized {
                 let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString.lowercased()
-                LoggerAnalytics.debug(log: "IDFA: \(idfa)")
+                LoggerAnalytics.debug("IDFA: \(idfa)")
             }
             completion()
         }
@@ -136,10 +136,10 @@ extension PermissionManager {
 
         ATTrackingManager.requestTrackingAuthorization { [weak self] status in
             guard let self else { return }
-            LoggerAnalytics.debug(log: "IDFA Status: \(status.rawValue)")
+            LoggerAnalytics.debug("IDFA Status: \(status.rawValue)")
             if status == .authorized {
                 let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString.lowercased()
-                LoggerAnalytics.debug(log: "IDFA: \(idfa)")
+                LoggerAnalytics.debug("IDFA: \(idfa)")
             }
             self.requestNextPermission()
         }
@@ -161,7 +161,7 @@ extension PermissionManager: CBCentralManagerDelegate {
         case .poweredOff:
             LoggerAnalytics.info(log: "Bluetooth is Off")
         default:
-            LoggerAnalytics.debug(log: "Bluetooth state: \(central.state.rawValue)")
+            LoggerAnalytics.debug("Bluetooth state: \(central.state.rawValue)")
         }
         // Trigger completion only after user interaction with Bluetooth alert
         bluetoothCompletion?()

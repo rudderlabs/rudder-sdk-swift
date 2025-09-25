@@ -37,7 +37,7 @@ final actor DiskStore {
         
         if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > DataStoreConstants.maxBatchSize {
             self.finish()
-            LoggerAnalytics.debug(log: "Batch size exceeded. Closing the current batch.")
+            LoggerAnalytics.debug("Batch size exceeded. Closing the current batch.")
             self.store(event: event)
             return
         }

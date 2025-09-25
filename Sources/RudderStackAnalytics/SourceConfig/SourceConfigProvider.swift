@@ -49,7 +49,7 @@ class SourceConfigProvider: TypeIdentifiable {
     }
     
     private func notifyObservers(config: SourceConfig) {
-        LoggerAnalytics.debug(log: "Notifying observers with sourceConfig.")
+        LoggerAnalytics.debug("Notifying observers with sourceConfig.")
         self.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: config))
     }
     

@@ -68,7 +68,7 @@ public final class ObjCLoggerAnalytics: NSObject {
      */
     @objc
     public static func debug(_ log: String) {
-        LoggerAnalytics.debug(log: log)
+        LoggerAnalytics.debug(log)
     }
     
     /**

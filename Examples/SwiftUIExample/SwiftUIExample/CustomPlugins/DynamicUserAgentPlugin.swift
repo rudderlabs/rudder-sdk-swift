@@ -54,7 +54,7 @@ final class DynamicUserAgentPlugin: Plugin {
     init() {
         Task { @MainActor [weak self] in
             guard let self else {
-                LoggerAnalytics.debug(log: "Plugin deallocated before reading user agent")
+                LoggerAnalytics.debug("Plugin deallocated before reading user agent")
                 return
             }
             self.userAgent = await Self.readUserAgent()
@@ -104,7 +104,7 @@ extension DynamicUserAgentPlugin {
             let webView = WKWebView(frame: .zero)
             guard let ua = try await webView.evaluateJavaScript("navigator.userAgent") as? String,
                   !ua.isEmpty else {  return nil }
-            LoggerAnalytics.debug(log: "User Agent: \(ua)")
+            LoggerAnalytics.debug("User Agent: \(ua)")
             return ua
             
         } catch {

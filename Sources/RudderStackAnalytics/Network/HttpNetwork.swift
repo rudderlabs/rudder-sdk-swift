@@ -34,7 +34,7 @@ final class HttpNetwork {
     }()
     
     static func perform(request: URLRequest) async -> Result<Data, Error> {
-        LoggerAnalytics.debug(log: "Request URL: \(request.url?.absoluteString ?? "No URL")")
+        LoggerAnalytics.debug("Request URL: \(request.url?.absoluteString ?? "No URL")")
         
         do {
             let (data, response) = try await session.data(for: request)
@@ -45,8 +45,8 @@ final class HttpNetwork {
             
             let statusCode = httpResponse.statusCode
             
-            LoggerAnalytics.debug(log: "Response Status Code: \(statusCode)")
-            LoggerAnalytics.debug(log: "Response Data: \(data.jsonString ?? "No Data")")
+            LoggerAnalytics.debug("Response Status Code: \(statusCode)")
+            LoggerAnalytics.debug("Response Data: \(data.jsonString ?? "No Data")")
             
             guard (HttpStateCode.success200...HttpStateCode.success299).contains(statusCode) else {
                 return .failure(HttpNetworkError.requestFailed(statusCode))

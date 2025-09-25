@@ -280,7 +280,7 @@ extension Analytics {
      */
     public func shutdown() {
         guard self.isAnalyticsActive else { return }
-        LoggerAnalytics.debug(log: "Shutting down analytics.")
+        LoggerAnalytics.debug("Shutting down analytics.")
         self.isAnalyticsShutdown = true
         self.processEventChannel.close()
     }
@@ -302,10 +302,10 @@ extension Analytics {
     
         if self.isInvalidWriteKey {
             await self.storage.removeAll()
-            LoggerAnalytics.debug(log: "Invalid write key, Storage cleared.")
+            LoggerAnalytics.debug("Invalid write key, Storage cleared.")
         }
         
-        LoggerAnalytics.debug(log: "Analytics shutdown complete.")
+        LoggerAnalytics.debug("Analytics shutdown complete.")
     }
     
     /**
@@ -498,7 +498,7 @@ extension Analytics {
             }
         }
         
-        LoggerAnalytics.debug(log: "Deep Link Opened: \(url.absoluteString)")
+        LoggerAnalytics.debug("Deep Link Opened: \(url.absoluteString)")
         
         // Track the event
         self.track(name: "Deep Link Opened", properties: properties)

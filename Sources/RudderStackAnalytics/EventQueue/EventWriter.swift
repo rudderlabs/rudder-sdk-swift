@@ -64,7 +64,7 @@ final class EventWriter {
                     await self.updateAnonymousIdAndRolloverIfNeeded(processingEvent: event)
 
                     if let json = event.event?.jsonString {
-                        LoggerAnalytics.debug(log: "Processing event: \(json)")
+                        LoggerAnalytics.debug("Processing event: \(json)")
                         await self.storage.write(event: json)
                         self.flushPolicyFacade.updateCount()
                     }

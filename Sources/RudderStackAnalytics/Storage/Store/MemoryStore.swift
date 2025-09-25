@@ -74,13 +74,13 @@ final actor MemoryStore {
     private func removeItem(using id: String) -> Bool {
         guard let firstIndex = self.dataItems.firstIndex(where: { $0.reference == id }) else { return false }
         self.dataItems.remove(at: firstIndex)
-        LoggerAnalytics.debug(log: "Item removed: \(id)")
+        LoggerAnalytics.debug("Item removed: \(id)")
         return true
     }
     
     private func removeAllItems() {
         self.dataItems.removeAll { $0.reference.hasPrefix(writeKey + DataStoreConstants.referenceSeparator) }
-        LoggerAnalytics.debug(log: "Items removed related to reference: \(writeKey)")
+        LoggerAnalytics.debug("Items removed related to reference: \(writeKey)")
     }
 }
 
