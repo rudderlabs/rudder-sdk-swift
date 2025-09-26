@@ -121,7 +121,7 @@ public final class LoggerAnalytics {
      
      - Parameters:
      - log: The error message to be logged.
-     - error: An optional `cause` instance to be included with the log.
+     - cause: An optional `cause` instance to be included with the log.
      */
     public static func error(_ log: String, cause: Error? = nil) {
         guard shared.currentLogLevel.rawValue >= LogLevel.error.rawValue else { return }
