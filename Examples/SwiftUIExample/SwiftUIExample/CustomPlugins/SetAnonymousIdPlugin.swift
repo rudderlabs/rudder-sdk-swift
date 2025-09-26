@@ -60,7 +60,7 @@ class SetAnonymousIdPlugin: Plugin {
      - Returns: The event with the updated anonymousId
      */
     private func replaceAnonymousId(event: any Event) -> any Event {
-        LoggerAnalytics.debug(log: "SetAnonymousIdPlugin: Replacing anonymousId: \(anonymousId) in the event payload")
+        LoggerAnalytics.debug("SetAnonymousIdPlugin: Replacing anonymousId: \(anonymousId) in the event payload")
         
         var updatedEvent = event
         updatedEvent.anonymousId = anonymousId

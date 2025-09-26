@@ -39,7 +39,7 @@ final class EventFilteringPlugin: Plugin {
      */
     func intercept(event: any Event) -> (any Event)? {
         if let trackEvent = event as? TrackEvent, self.eventsToFilter.contains(trackEvent.event) {
-            LoggerAnalytics.verbose(log: "EventFilteringPlugin: Event \"\(trackEvent.event)\" is filtered out.")
+            LoggerAnalytics.verbose("EventFilteringPlugin: Event \"\(trackEvent.event)\" is filtered out.")
             return nil
         }
         return event

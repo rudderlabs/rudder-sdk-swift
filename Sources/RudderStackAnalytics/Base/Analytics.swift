@@ -92,7 +92,7 @@ extension Analytics {
         guard self.isAnalyticsActive else { return }
         
         if let sessionId, String(sessionId).count < SessionConstants.minSessionIdLength {
-            LoggerAnalytics.error(log: "Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
+            LoggerAnalytics.error("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
             return
         }
         
@@ -280,7 +280,7 @@ extension Analytics {
      */
     public func shutdown() {
         guard self.isAnalyticsActive else { return }
-        LoggerAnalytics.debug(log: "Shutting down analytics.")
+        LoggerAnalytics.debug("Shutting down analytics.")
         self.isAnalyticsShutdown = true
         self.processEventChannel.close()
     }
@@ -302,10 +302,10 @@ extension Analytics {
     
         if self.isInvalidWriteKey {
             await self.storage.removeAll()
-            LoggerAnalytics.debug(log: "Invalid write key, Storage cleared.")
+            LoggerAnalytics.debug("Invalid write key, Storage cleared.")
         }
         
-        LoggerAnalytics.debug(log: "Analytics shutdown complete.")
+        LoggerAnalytics.debug("Analytics shutdown complete.")
     }
     
     /**
@@ -324,7 +324,7 @@ extension Analytics {
     var isAnalyticsActive: Bool {
         get {
             if isAnalyticsShutdown {
-                LoggerAnalytics.error(log: Constants.log.shutdownMessage)
+                LoggerAnalytics.error(Constants.log.shutdownMessage)
             }
             return !isAnalyticsShutdown
         }
@@ -393,7 +393,7 @@ extension Analytics {
         do {
             try self.processEventChannel.send(event)
         } catch {
-            LoggerAnalytics.error(log: "Failed to process event: \(error)")
+            LoggerAnalytics.error("Failed to process event: \(error)")
         }
     }
     
@@ -426,7 +426,7 @@ extension Analytics {
      */
     var isSourceEnabled: Bool {
         if !self.sourceConfigState.state.value.source.isSourceEnabled {
-            LoggerAnalytics.error(log: "Source is disabled. This operation is not allowed.")
+            LoggerAnalytics.error("Source is disabled. This operation is not allowed.")
             return false
         }
         return true
@@ -498,7 +498,7 @@ extension Analytics {
             }
         }
         
-        LoggerAnalytics.debug(log: "Deep Link Opened: \(url.absoluteString)")
+        LoggerAnalytics.debug("Deep Link Opened: \(url.absoluteString)")
         
         // Track the event
         self.track(name: "Deep Link Opened", properties: properties)

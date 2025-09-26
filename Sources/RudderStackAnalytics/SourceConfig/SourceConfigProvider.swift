@@ -49,7 +49,7 @@ class SourceConfigProvider: TypeIdentifiable {
     }
     
     private func notifyObservers(config: SourceConfig) {
-        LoggerAnalytics.debug(log: "Notifying observers with sourceConfig.")
+        LoggerAnalytics.debug("Notifying observers with sourceConfig.")
         self.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: config))
     }
     
@@ -68,17 +68,17 @@ extension SourceConfigProvider {
     private func fetchCachedSourceConfig() -> SourceConfig? {
         guard let storedSourceConfig = self.analytics?.storage.read(key: Constants.storageKeys.sourceConfig) as String?,
               let sourceConfigData = storedSourceConfig.utf8Data else {
-            LoggerAnalytics.info(log: "SourceConfig not found in storage")
+            LoggerAnalytics.info("SourceConfig not found in storage")
             return nil
         }
         
         do {
             let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: sourceConfigData)
-            LoggerAnalytics.info(log: "SourceConfig fetched from storage: \(sourceConfig)")
+            LoggerAnalytics.info("SourceConfig fetched from storage: \(sourceConfig)")
             
             return sourceConfig
         } catch {
-            LoggerAnalytics.error(log: "Failed to decode SourceConfig from storage: \(error)")
+            LoggerAnalytics.error("Failed to decode SourceConfig from storage: \(error)")
             return nil
         }
     }
@@ -108,18 +108,18 @@ extension SourceConfigProvider {
     private func handleSourceConfigResponse(data: Data) -> SourceConfig? {
         do {
             let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: data)
-            LoggerAnalytics.info(log: "SourceConfig downloaded: \(sourceConfig)")
+            LoggerAnalytics.info("SourceConfig downloaded: \(sourceConfig)")
             
             self.analytics?.storage.write(value: sourceConfig.jsonString, key: Constants.storageKeys.sourceConfig)
             return sourceConfig
         } catch {
-            LoggerAnalytics.error(log: "Failed to decode SourceConfig from response: \(error)")
+            LoggerAnalytics.error("Failed to decode SourceConfig from response: \(error)")
             return nil
         }
     }
     
     private func handleSourceConfigError(_ error: SourceConfigError, attemptCount: Int) async -> Bool {
-        LoggerAnalytics.error(log: "\(className): Error downloading SourceConfig: \(error.errorDescription)", error: error)
+        LoggerAnalytics.error("\(className): Error downloading SourceConfig: \(error.errorDescription)", cause: error)
 
         switch error {
         case .invalidWriteKey:
@@ -128,12 +128,12 @@ extension SourceConfigProvider {
             
         default:
             guard let backoffPolicy, attemptCount <= Self.maxRetryAttempts else {
-                LoggerAnalytics.info(log: "All retry attempts for fetching SourceConfig have been exhausted. Returning nil.")
+                LoggerAnalytics.info("All retry attempts for fetching SourceConfig have been exhausted. Returning nil.")
                 return false
             }
     
             let delay = backoffPolicy.nextDelayInMilliseconds()
-            LoggerAnalytics.verbose(log: "Retrying fetching of SourceConfig, attempt: \(attemptCount) in \(BackoffPolicyHelper.formatMilliseconds(delay))")
+            LoggerAnalytics.verbose("Retrying fetching of SourceConfig, attempt: \(attemptCount) in \(BackoffPolicyHelper.formatMilliseconds(delay))")
             try? await BackoffPolicyHelper.sleep(milliseconds: delay)
             return true
         }

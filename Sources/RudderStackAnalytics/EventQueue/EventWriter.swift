@@ -36,18 +36,18 @@ final class EventWriter {
                 let processingEvent = ProcessingEvent(type: .message, event: event)
                 try self.writeChannel.send(processingEvent)
             } catch {
-                LoggerAnalytics.error(log: "Failed to send event to writeChannel", error: error)
+                LoggerAnalytics.error("Failed to send event to writeChannel", cause: error)
             }
         }
     }
     
     func flush() {
-        LoggerAnalytics.info(log: "Flush triggered...")
+        LoggerAnalytics.info("Flush triggered...")
         Task {
             do {
                 try self.writeChannel.send(self.flushEvent)
             } catch {
-                LoggerAnalytics.error(log: "Failed to send flush signal to writeChannel", error: error)
+                LoggerAnalytics.error("Failed to send flush signal to writeChannel", cause: error)
             }
         }
     }
@@ -64,7 +64,7 @@ final class EventWriter {
                     await self.updateAnonymousIdAndRolloverIfNeeded(processingEvent: event)
 
                     if let json = event.event?.jsonString {
-                        LoggerAnalytics.debug(log: "Processing event: \(json)")
+                        LoggerAnalytics.debug("Processing event: \(json)")
                         await self.storage.write(event: json)
                         self.flushPolicyFacade.updateCount()
                     }
@@ -81,7 +81,7 @@ final class EventWriter {
                             try self.uploadChannel.send(Constants.defaultConfig.uploadSignal)
                         }
                     } catch {
-                        LoggerAnalytics.error(log: "Error on upload signal", error: error)
+                        LoggerAnalytics.error("Error on upload signal", cause: error)
                     }
                 }
             }
