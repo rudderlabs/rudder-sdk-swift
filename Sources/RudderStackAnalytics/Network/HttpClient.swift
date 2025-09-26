@@ -37,12 +37,12 @@ final class HttpClient {
         return urlRequest
     }
     
-    private func prepareRequestUrl(for requestType: HttpClientRequestType) -> URL? {
+    func prepareRequestUrl(for requestType: HttpClientRequestType) -> URL? {
         guard var url = URL(string: requestType.url(analytics).trimmedUrlString) else { return nil }
         url = url.appendingPathComponent(requestType.endpoint)
         
         if requestType == .configuration {
-            url = url.appendQueryParameters(Constants.defaultConfig.queryParams)
+            url = url.appendQueryParameters(Constants.defaultConfig.queryParams + ["writeKey": analytics.configuration.writeKey])
         }
         return url
     }

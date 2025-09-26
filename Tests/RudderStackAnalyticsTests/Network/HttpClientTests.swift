@@ -5,6 +5,7 @@
 //  Created by Abhishek Pandey on 19/09/25.
 //
 
+import Foundation
 import Testing
 @testable import RudderStackAnalytics
 
@@ -90,5 +91,22 @@ struct HttpClientTests {
         #expect(queryParams["p"] != nil, "Platform value should not be nil")
         #expect(queryParams["v"] == RSVersion, "SDK version should match")
         #expect(queryParams["bv"] != nil, "Build version value should not be nil")
+        #expect(queryParams["writeKey"] == nil, "WriteKey should not be in Constants, it's added in HttpClient")
+    }
+    
+    @Test("PrepareRequestUrl adds query parameters for configuration request")
+    func prepareRequestUrl_addsQueryParametersForConfigurationRequest() {
+        
+        guard let url = httpClient.prepareRequestUrl(for: .configuration) as? URL else {
+            #expect(Bool(false), "SourceConfig request URL should not be null.")
+            return
+        }
+        
+        let queryParameters = url.queryParameters
+        
+        #expect(queryParameters["p"] != nil, "Platform parameter should be present")
+        #expect(queryParameters["v"] == RSVersion, "Version parameter should be present")
+        #expect(queryParameters["bv"] != nil, "Build version value should not be nil")
+        #expect(queryParameters["writeKey"] == mockAnalytics.configuration.writeKey)
     }
 }
