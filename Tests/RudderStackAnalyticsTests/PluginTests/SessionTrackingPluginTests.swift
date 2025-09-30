@@ -32,6 +32,7 @@ final class SessionTrackingPluginTests: XCTestCase {
         given("Manual session is started..") {
             let plugin = SessionTrackingPlugin()
             let analytics = MockAnalytics()
+            analytics.endSession()
             
             plugin.setup(analytics: analytics)
             
@@ -54,6 +55,7 @@ final class SessionTrackingPluginTests: XCTestCase {
         given("Start the session and trigger the first group event to the session tracking plugin..") {
             let plugin = SessionTrackingPlugin()
             let analytics = MockAnalytics()
+            analytics.endSession()
             
             plugin.setup(analytics: analytics)
         

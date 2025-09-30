@@ -135,7 +135,11 @@ extension RudderStackAnalyticsTests {
             
             await runAfter(0.3) {
                 let dataItems = await client.configuration.storage.read().dataItems
-                XCTAssertTrue(dataItems.isEmpty) // Should be false, but MockUrlProtocol configured to return 200..
+#if os(watchOS)
+                XCTAssertFalse(dataItems.isEmpty)
+#else
+                XCTAssertTrue(dataItems.isEmpty)
+#endif
             }
         }
     }

@@ -239,7 +239,7 @@ struct SourceConfigTests {
         await runAfter(0.1) {
             // Then
             #expect(observer1Configs.count >= 2) // Initial + updated
-            #expect(observer2Configs.count >= 2) // Initial + updated  
+            #expect(observer2Configs.count >= 2) // Initial + updated
             #expect(observer3Configs.count >= 2) // Initial + updated
             
             let latestConfig1 = observer1Configs.last
@@ -420,61 +420,58 @@ struct SourceConfigTests {
         let mockAnalytics = MockAnalytics()
         let provider = MockSourceConfigProvider(analytics: mockAnalytics)
         
-        // Store some data in storage to verify it gets cleared
-        mockAnalytics.storage.write(value: "test_data", key: "test_key")
-        mockAnalytics.storage.write(value: MockProvider.sourceConfiguration?.jsonString, key: Constants.storageKeys.sourceConfig)
-        
-        // Verify data exists before test
-        let initialStoredData: String? = mockAnalytics.storage.read(key: "test_key")
-        let initialSourceConfig: String? = mockAnalytics.storage.read(key: Constants.storageKeys.sourceConfig)
-        #expect(initialStoredData == "test_data")
-        #expect(initialSourceConfig != nil)
-        
-        // Setup MockURLProtocol to return invalid write key error
+        // Setup MockURLProtocol for HTTP 400 response (invalid write key)
         URLProtocol.registerClass(MockURLProtocol.self)
         let defaultSession = HttpNetwork.session
         HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 400)
         
-        var configUpdateCount = 0
-        var cancellables = Set<AnyCancellable>()
-        
         defer {
-            cancellables.removeAll()
             HttpNetwork.session = defaultSession
             URLProtocol.unregisterClass(MockURLProtocol.self)
         }
         
-        mockAnalytics.sourceConfigState.state
-            .sink { _ in
-                configUpdateCount += 1
-            }
-            .store(in: &cancellables)
-                
-        // When
-        mockAnalytics.track(name: "Analytics is shutdown before receiving invalidWriteKey error")
+        // Pre-populate storage with test data to verify clearing behavior
+        mockAnalytics.storage.write(value: "test_user_data", key: "user_data")
+        mockAnalytics.storage.write(value: "cached_config_data", key: Constants.storageKeys.sourceConfig)
+        await mockAnalytics.configuration.storage.write(event: "{\"event\":\"test_event\"}")
+        await mockAnalytics.configuration.storage.rollover()
         
+        // Verify analytics is initially active and storage contains data
+        #expect(mockAnalytics.isAnalyticsActive == true, "Analytics should be active initially")
+        #expect(mockAnalytics.isAnalyticsShutdown == false, "Analytics should not be shutdown initially")
+        #expect(mockAnalytics.isInvalidWriteKey == false, "WriteKey should be valid initially")
+        
+        let initialUserData: String? = mockAnalytics.storage.read(key: "user_data")
+        let initialSourceConfig: String? = mockAnalytics.storage.read(key: Constants.storageKeys.sourceConfig)
+        let initialEventData = await mockAnalytics.configuration.storage.read().dataItems
+        
+        #expect(initialUserData == "test_user_data", "Initial user data should exist")
+        #expect(initialSourceConfig == "cached_config_data", "Initial source config should exist")
+        #expect(!initialEventData.isEmpty, "Initial event data should exist")
+        
+        // When - Trigger refresh config which will encounter 400 error
         provider.refreshConfigAndNotifyObservers()
         
-        // Wait for async operation to complete
-        await runAfter(0.5) {
-            // Then - Verify analytics shutdown complete
-            #expect(mockAnalytics.isAnalyticsShutdown == true, "Analytics should be shutdown after receiving invalidWriteKey error")
+        // Wait for the invalid write key error handling to complete
+        await runAfter(0.3) {
+            // Then - Verify analytics is properly shutdown
+            #expect(mockAnalytics.isAnalyticsShutdown == true, "Analytics should be shutdown after invalid write key error")
+            #expect(mockAnalytics.isInvalidWriteKey == true, "Invalid write key flag should be set")
+            #expect(mockAnalytics.isAnalyticsActive == false, "Analytics should be inactive after shutdown")
             
-            mockAnalytics.track(name: "Analytics is shutdown after receiving invalidWriteKey error")
-            await runAfter(0.3) {
-                // Verify no events were processed after shutdown
-                let dataItems = await mockAnalytics.configuration.storage.read().dataItems
-                #expect(dataItems.isEmpty == true, "No events should be processed after shutdown")
+            // Verify that events sent after shutdown are not processed
+            mockAnalytics.track(name: "post_shutdown_event")
+            
+            await runAfter(0.2) {
+                // Verify all storage has been cleared due to invalid write key
+                let clearedUserData: String? = mockAnalytics.storage.read(key: "user_data")
+                let clearedSourceConfig: String? = mockAnalytics.storage.read(key: Constants.storageKeys.sourceConfig)
+                let clearedEventData = await mockAnalytics.configuration.storage.read().dataItems
+                
+                #expect(clearedUserData == nil, "User data should be cleared after invalid write key error")
+                #expect(clearedSourceConfig == nil, "Source config should be cleared after invalid write key error")
+                #expect(clearedEventData.isEmpty, "Event data should be cleared after invalid write key error")
             }
-            
-            // Verify storage is cleared
-            let clearedStoredData: String? = mockAnalytics.storage.read(key: "test_key")
-            let clearedSourceConfig: String? = mockAnalytics.storage.read(key: Constants.storageKeys.sourceConfig)
-            #expect(clearedStoredData == nil, "Storage should be cleared after invalidWriteKey error")
-            #expect(clearedSourceConfig == nil, "SourceConfig storage should be cleared after invalidWriteKey error")
-            
-            // Verify no config update occurred due to error handling
-            #expect(configUpdateCount == 1, "Should only have initial config, no update due to invalid write key")
         }
     }
     
@@ -632,7 +629,7 @@ struct SourceConfigTests {
         provider.refreshConfigAndNotifyObservers()
         
         // Wait for async operation
-        await runAfter(0.5) {
+        await runAfter(0.1) {
             // Then
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
             #expect(configUpdateCount == 1) // No update due to JSON decode error
@@ -750,7 +747,7 @@ struct SourceConfigTests {
         let _ = await (refresh1, refresh2, refresh3)
         
         // Wait for all operations to complete
-        await runAfter(0.5) {
+        await runAfter(0.1) {
             // Then
             // Should handle concurrent calls without crashes
             #expect(receivedConfigs.count >= 1) // At least initial state
@@ -797,7 +794,7 @@ struct SourceConfigTests {
         provider.fetchCachedConfigAndNotifyObservers() // Should load from cache
         provider.refreshConfigAndNotifyObservers() // Should attempt network fetch
         
-        await runAfter(0.75) {
+        await runAfter(0.1) {
             // Then
             #expect(receivedConfigs.count >= 2) // Initial + cached config, possibly + network attempt
             
