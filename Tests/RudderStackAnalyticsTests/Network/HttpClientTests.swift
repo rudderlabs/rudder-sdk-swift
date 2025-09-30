@@ -97,7 +97,7 @@ struct HttpClientTests {
     @Test("PrepareRequestUrl adds query parameters for configuration request")
     func prepareRequestUrl_addsQueryParametersForConfigurationRequest() {
         
-        guard let url = httpClient.prepareRequestUrl(for: .configuration) as? URL else {
+        guard let url = httpClient.prepareRequestUrl(for: .configuration) else {
             #expect(Bool(false), "SourceConfig request URL should not be null.")
             return
         }
