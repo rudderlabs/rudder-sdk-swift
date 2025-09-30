@@ -21,9 +21,9 @@ import Foundation
  LoggerAnalytics.setLogger(MyCustomLogger())
  
  // Log messages
- LoggerAnalytics.verbose(log: "Some message")
- LoggerAnalytics.debug(log: "Debug message")
- LoggerAnalytics.error(log: "Something went wrong", error: error)
+ LoggerAnalytics.verbose("Some message")
+ LoggerAnalytics.debug("Debug message")
+ LoggerAnalytics.error("Something went wrong", cause: error)
  ```
  */
 
@@ -81,7 +81,7 @@ public final class LoggerAnalytics {
      
      - Parameter log: The verbose message to be logged.
      */
-    public static func verbose(log: String) {
+    public static func verbose(_ log: String) {
         guard shared.currentLogLevel.rawValue >= LogLevel.verbose.rawValue else { return }
         shared.logger.verbose(log: log)
     }
@@ -91,7 +91,7 @@ public final class LoggerAnalytics {
      
      - Parameter log: The debug message to be logged.
      */
-    public static func debug(log: String) {
+    public static func debug(_ log: String) {
         guard shared.currentLogLevel.rawValue >= LogLevel.debug.rawValue else { return }
         shared.logger.debug(log: log)
     }
@@ -101,7 +101,7 @@ public final class LoggerAnalytics {
      
      - Parameter log: The info message to be logged.
      */
-    public static func info(log: String) {
+    public static func info(_ log: String) {
         guard shared.currentLogLevel.rawValue >= LogLevel.info.rawValue else { return }
         shared.logger.info(log: log)
     }
@@ -111,7 +111,7 @@ public final class LoggerAnalytics {
      
      - Parameter log: The warning message to be logged.
      */
-    public static func warn(log: String) {
+    public static func warn(_ log: String) {
         guard shared.currentLogLevel.rawValue >= LogLevel.warn.rawValue else { return }
         shared.logger.warn(log: log)
     }
@@ -121,10 +121,10 @@ public final class LoggerAnalytics {
      
      - Parameters:
      - log: The error message to be logged.
-     - error: An optional `Error` instance to be included with the log.
+     - cause: An optional `cause` instance to be included with the log.
      */
-    public static func error(log: String, error: Error? = nil) {
+    public static func error(_ log: String, cause: Error? = nil) {
         guard shared.currentLogLevel.rawValue >= LogLevel.error.rawValue else { return }
-        shared.logger.error(log: log, error: error)
+        shared.logger.error(log: log, error: cause)
     }
 }

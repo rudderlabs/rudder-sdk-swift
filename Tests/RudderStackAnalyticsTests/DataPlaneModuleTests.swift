@@ -14,10 +14,16 @@ final class DataPlaneModuleTests: XCTestCase {
     var dpPlugin: RudderStackDataPlanePlugin?
     var analytics_disk: Analytics?
     var analytics_memory: Analytics?
+    var defaultSession: URLSession?
     
     override func setUpWithError() throws {
         try super.setUpWithError()
         self.dpPlugin = RudderStackDataPlanePlugin()
+        
+        URLProtocol.registerClass(MockURLProtocol.self)
+        self.defaultSession = HttpNetwork.session
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 200)
+        
         self.analytics_disk = MockProvider.clientWithDiskStorage
         self.analytics_memory = MockProvider.clientWithMemoryStorage
     }
@@ -27,6 +33,11 @@ final class DataPlaneModuleTests: XCTestCase {
         self.dpPlugin = nil
         self.analytics_disk = nil
         self.analytics_memory = nil
+        
+        if let defaultSession {
+            HttpNetwork.session = defaultSession
+        }
+        URLProtocol.unregisterClass(MockURLProtocol.self)
     }
     
     func test_dataPlaneModule_init() {

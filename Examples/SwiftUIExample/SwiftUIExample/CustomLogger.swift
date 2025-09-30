@@ -18,7 +18,7 @@ import RudderStackAnalytics
  analytics.setLogger(logger: CustomLogger())
 
  // 2. Use `LoggerAnalytics` to log messages
- LoggerAnalytics.info(log: "Custom logger initialized.")
+ LoggerAnalytics.info("Custom logger initialized.")
  */
 
 class CustomLogger: Logger {

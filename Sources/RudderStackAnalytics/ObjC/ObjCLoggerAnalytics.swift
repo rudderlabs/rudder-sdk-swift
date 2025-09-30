@@ -58,7 +58,7 @@ public final class ObjCLoggerAnalytics: NSObject {
      */
     @objc
     public static func verbose(_ log: String) {
-        LoggerAnalytics.verbose(log: log)
+        LoggerAnalytics.verbose(log)
     }
     
     /**
@@ -68,7 +68,7 @@ public final class ObjCLoggerAnalytics: NSObject {
      */
     @objc
     public static func debug(_ log: String) {
-        LoggerAnalytics.debug(log: log)
+        LoggerAnalytics.debug(log)
     }
     
     /**
@@ -78,7 +78,7 @@ public final class ObjCLoggerAnalytics: NSObject {
      */
     @objc
     public static func info(_ log: String) {
-        LoggerAnalytics.info(log: log)
+        LoggerAnalytics.info(log)
     }
     
     /**
@@ -88,7 +88,7 @@ public final class ObjCLoggerAnalytics: NSObject {
      */
     @objc
     public static func warn(_ log: String) {
-        LoggerAnalytics.warn(log: log)
+        LoggerAnalytics.warn(log)
     }
     
     /**
@@ -100,6 +100,6 @@ public final class ObjCLoggerAnalytics: NSObject {
      */
     @objc
     public static func error(_ log: String, error: NSError?) {
-        LoggerAnalytics.error(log: log, error: error)
+        LoggerAnalytics.error(log, cause: error)
     }
 }

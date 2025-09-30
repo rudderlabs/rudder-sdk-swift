@@ -76,6 +76,49 @@ extension MockProvider {
     ]
 }
 
+extension MockProvider {
+    
+    static var sourceConfiguration: SourceConfig? {
+        guard let mockJson = MockHelper.readJson(from: "mock_source_config")?.trimmed, let mockJsonData = mockJson.utf8Data else { return nil }
+        do {
+            let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: mockJsonData)
+            return sourceConfig
+        } catch {
+            print("Error parsing JSON: \(error)")
+            return nil
+        }
+    }
+    
+    static var sourceConfigurationDictionary: [String: Any]? {
+        guard let sourceConfig = sourceConfiguration else { return nil }
+        return sourceConfig.dictionary
+    }
+    
+    static func prepareMockSessionConfigSession(with responseCode: Int) -> URLSession {
+        MockURLProtocol.requestHandler = { _ in
+            let json = responseCode == 200 ? (MockProvider.sourceConfigurationDictionary ?? [:]) : ["error": "Server error"]
+            let data = try JSONSerialization.data(withJSONObject: json)
+            return (responseCode, data, ["Content-Type": "application/json"])
+        }
+        
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        return URLSession(configuration: config)
+    }
+    
+    static func prepareMockDataPlaneSession(with responseCode: Int) -> URLSession {
+        MockURLProtocol.requestHandler = { _ in
+            let json = responseCode == 200 ? ["Success": "Ok"] : ["error": "Server error"]
+            let data = try JSONSerialization.data(withJSONObject: json)
+            return (responseCode, data, ["Content-Type": "application/json"])
+        }
+        
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        return URLSession(configuration: config)
+    }
+}
+
 // MARK: - MockHelper
 struct MockHelper {
     private init() {}
@@ -89,9 +132,23 @@ struct MockHelper {
     }
     
     static func readJson(from file: String) -> String? {
-        let bundle = Bundle(for: MockProvider.self)
-        guard let fileUrl = bundle.url(forResource: file, withExtension: "json"), let data = try? Data(contentsOf: fileUrl) else { return nil }
-        return data.jsonString
+        var bundles = [
+            Bundle(for: MockProvider.self),
+            Bundle.main,
+        ]
+        
+        // Try to add Bundle.module if available (Swift Package Manager)
+        #if SWIFT_PACKAGE
+        bundles.insert(Bundle.module, at: 0)
+        #endif
+        
+         for bundle in bundles {
+             if let fileUrl = bundle.url(forResource: file, withExtension: "json"),
+                let data = try? Data(contentsOf: fileUrl) {
+                 return data.jsonString
+             }
+         }
+         return nil
     }
     
     static func resetDynamicValues(_ event: inout Event) {
@@ -110,27 +167,52 @@ class MockAnalytics: Analytics {
         super.init(configuration: config)
     }
     
-    override func flush() {
+    override func flush() { 
         self.isFlushed = true
     }
 }
 
 // MARK: - Given_When_Then
-extension XCTestCase {
-    func given(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("Given \(description)") }
-        closure()
-    }
+
+func given(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("Given \(description)") }
+    closure()
+}
+
+func when(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("When \(description)") }
+    closure()
+}
+
+func then(_ description: String = "", closure: () -> Void) {
+    if !description.isEmpty { print("Then \(description)") }
+    closure()
+}
+
+func given(_ description: String = "", closure: () async throws -> Void) async rethrows {
+    if !description.isEmpty { print("Given \(description)") }
+    try await closure()
+}
+
+func when(_ description: String = "", closure: () async throws -> Void) async rethrows {
+    if !description.isEmpty { print("When \(description)") }
+    try await closure()
+}
+
+func then(_ description: String = "", closure: () async throws -> Void) async rethrows {
+    if !description.isEmpty { print("Then \(description)") }
+    try await closure()
+}
+
+// MARK: - Run After
+
+func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
+    // Suspend the current task for the specified duration
+    let nanoseconds = UInt64(seconds * 1_000_000_000)
+    try? await Task.sleep(nanoseconds: nanoseconds)
     
-    func when(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("When \(description)") }
-        closure()
-    }
-    
-    func then(_ description: String = "", closure: () -> Void) {
-        if !description.isEmpty { print("Then \(description)") }
-        closure()
-    }
+    // Execute the block after the delay
+    await block()
 }
 
 // MARK: - String(Extension)

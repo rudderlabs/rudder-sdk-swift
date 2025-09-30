@@ -70,6 +70,9 @@ struct _StorageKeys {
     /// Key for storing the anonymous user identifier.
     let anonymousId = "anonymous_id"
 
+    /// Key for storing the last event anonymous id, which is required for processing the batch of events.
+    let lastEventAnonymousId = "last_event_anonymous_id"
+
     /// Key for storing the identified user ID.
     let userId = "user_id"
 
@@ -194,8 +197,12 @@ public struct _DefaultConfig {
     let storageMode: StorageMode = .disk
     
     /// Default query parameters added to outgoing requests.
-    let queryParams = ["p": "ios", "v": "\(RSVersion)"]
-
+    var queryParams: [String: String] {
+        let params = ["p": "swift", "v": "\(RSVersion)"]
+        guard let buildVersion = OSInfo.preparedOSInfo["version"] as? String else { return params }
+        return params + ["bv": buildVersion]
+    }
+    
     /// Special signal string used to trigger uploads.
     let uploadSignal = "#!upload!#"
 }
@@ -208,5 +215,5 @@ public struct _DefaultConfig {
  **Important:**
  Do not edit this value unless performing a manual release.
  */
-let RSVersion: String = "1.0.0-alpha.1"
+let RSVersion: String = "1.0.0-beta.1"
 let RSLibraryName: String = "rudder-sdk-swift"

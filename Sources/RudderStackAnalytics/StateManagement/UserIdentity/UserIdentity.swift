@@ -23,13 +23,13 @@ import Foundation
  */
 public struct UserIdentity {
     /// A unique identifier for the user when they are not logged in. Defaults to an empty string.
-    public internal(set) var anonymousId = String.empty
+    public var anonymousId = String.empty
     
     /// The identifier for the user when they are logged in. Defaults to an empty string.
-    public internal(set) var userId = String.empty
+    public var userId = String.empty
     
     /// A dictionary of user-specific traits, used to store additional metadata about the user.
-    public internal(set) var traits = Traits()
+    public var traits = Traits()
     
     /**
      Creates and initializes a `UserIdentity` instance by reading data from the provided key-value storage.
@@ -56,6 +56,21 @@ public struct UserIdentity {
         return identity
     }
     
+    /**
+     Creates a new `UserIdentity` instance with the specified identifiers and traits.
+     
+     - Parameters:
+       - anonymousId: A unique identifier for the user when they are not logged in. Defaults to an empty string.
+       - userId: The identifier for the user when they are logged in. Defaults to an empty string.
+       - traits: A dictionary of user-specific traits for storing additional metadata about the user. Defaults to an empty `Traits` object.
+     
+     This initializer allows you to create a `UserIdentity` instance with custom values for user identification and associated traits.
+     */
+    public init(anonymousId: String = "", userId: String = "", traits: Traits = Traits()) {
+        self.anonymousId = anonymousId
+        self.userId = userId
+        self.traits = traits
+    }
 }
 
 // MARK: - Helpers
@@ -103,27 +118,55 @@ extension UserIdentity {
 
      - Parameters:
         - storage: An instance of `KeyValueStorage` where the values will be removed.
-     
-     The method performs the following:
-     1. Removes the `userId` from the storage using the `Constants.storageKeys.userId` key.
-     2. Removes the `traits` from the storage using the `Constants.storageKeys.traits` key.
      */
     func resetUserIdAndTraits(_ storage: KeyValueStorage) {
+        self.resetUserId(storage)
+        self.resetTraits(storage)
+    }
+    
+    /**
+     Removes the user ID from the specified key-value storage.
+
+     - Parameters:
+        - storage: An instance of `KeyValueStorage` where the user ID will be removed.
+     
+     The method removes the `userId` from the storage using the `Constants.storageKeys.userId` key.
+     */
+    func resetUserId(_ storage: KeyValueStorage) {
         storage.remove(key: Constants.storageKeys.userId)
+    }
+    
+    /**
+     Removes the traits from the specified key-value storage.
+
+     - Parameters:
+        - storage: An instance of `KeyValueStorage` where the traits will be removed.
+     
+     The method removes the `traits` from the storage using the `Constants.storageKeys.traits` key.
+     */
+    func resetTraits(_ storage: KeyValueStorage) {
         storage.remove(key: Constants.storageKeys.traits)
     }
     
     /**
-     Resets the user identity by clearing stored identifiers and traits.
+     Resets the user identity by clearing stored identifiers and traits using the specified options.
 
      - Parameters:
        - storage: The storage instance used to remove user-related data.
-
-     This function stores the current anonymous ID and reset other user identity-related data, such as user ID and traits.
+       - entries: An instance of `ResetEntries` specifying which items to reset.
     */
-    func resetUserIdentity(storage: Storage) {
-        self.storeAnonymousId(storage)
-        self.resetUserIdAndTraits(storage)
+    func resetUserIdentity(storage: Storage, entries: ResetEntries) {
+        if entries.anonymousId {
+            self.storeAnonymousId(storage)
+        }
+        
+        if entries.userId {
+            self.resetUserId(storage)
+        }
+        
+        if entries.traits {
+            self.resetTraits(storage)
+        }
     }
     
     /**

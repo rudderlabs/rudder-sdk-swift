@@ -12,9 +12,15 @@ import XCTest
 final class LifecycleTrackingPluginTests: XCTestCase {
     var analyticsMock: Analytics?
     var plugin: LifecycleTrackingPlugin!
+    var defaultSession: URLSession?
     
     override func setUp() {
         super.setUp()
+        
+        URLProtocol.registerClass(MockURLProtocol.self)
+        self.defaultSession = HttpNetwork.session
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 200)
+        
         analyticsMock = MockProvider.clientWithMemoryStorage
         plugin = LifecycleTrackingPlugin()
     }
@@ -22,6 +28,12 @@ final class LifecycleTrackingPluginTests: XCTestCase {
     override func tearDown() {
         analyticsMock = nil
         plugin = nil
+        
+        if let defaultSession {
+            HttpNetwork.session = defaultSession
+        }
+        URLProtocol.unregisterClass(MockURLProtocol.self)
+        
         super.tearDown()
     }
     
@@ -100,11 +112,17 @@ final class LifecycleTrackingPluginTests: XCTestCase {
         await analyticsMock.configuration.storage.rollover()
         
         let dataItems = await analyticsMock.configuration.storage.read().dataItems
-        let batchData = dataItems.first?.batch.toDictionary?["batch"] as? [[String: Any]] ?? []
+        
+        guard let firstDataItem = dataItems.first else {
+            XCTFail("No data items to read"); return []
+        }
+        
+        let batch = analyticsMock.storage.eventStorageMode == .memory ? firstDataItem.batch : (FileManager.contentsOf(file: firstDataItem.reference) ?? "")
+        let batchData = batch.toDictionary?["batch"] as? [[String: Any]] ?? []
         let eventNames = batchData.compactMap { $0["event"] as? String }
         
         for item in dataItems {
-            await analyticsMock.configuration.storage.remove(eventReference: item.reference)
+            await analyticsMock.configuration.storage.remove(batchReference: item.reference)
         }
 
         return eventNames

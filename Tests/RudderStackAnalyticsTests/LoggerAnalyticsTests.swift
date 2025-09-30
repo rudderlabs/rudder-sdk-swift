@@ -29,11 +29,11 @@ final class LoggerAnalyticsTests: XCTestCase {
             LoggerAnalytics.logLevel = .info
             
             when("calling each log method") {
-                LoggerAnalytics.verbose(log: "This is verbose")
-                LoggerAnalytics.debug(log: "This is debug")
-                LoggerAnalytics.info(log: "This is info")
-                LoggerAnalytics.warn(log: "This is warn")
-                LoggerAnalytics.error(log: "This is error")
+                LoggerAnalytics.verbose("This is verbose")
+                LoggerAnalytics.debug("This is debug")
+                LoggerAnalytics.info("This is info")
+                LoggerAnalytics.warn("This is warn")
+                LoggerAnalytics.error("This is error")
                 
                 then("only info, warn, and error messages should be logged") {
                     let loggedLevels = mockLogger.logs.map { $0.level }
@@ -54,8 +54,8 @@ final class LoggerAnalyticsTests: XCTestCase {
             LoggerAnalytics.logLevel = .error
             
             when("calling error with and without an error object") {
-                LoggerAnalytics.error(log: "Only log")
-                LoggerAnalytics.error(log: "With error", error: NSError(domain: "Test", code: 1))
+                LoggerAnalytics.error("Only log")
+                LoggerAnalytics.error("With error", cause: NSError(domain: "Test", code: 1))
                 
                 then("both error messages should be captured") {
                     XCTAssertEqual(mockLogger.logs.count, 2)
@@ -73,11 +73,11 @@ final class LoggerAnalyticsTests: XCTestCase {
             LoggerAnalytics.logLevel = .none
             
             when("all log methods are called") {
-                LoggerAnalytics.verbose(log: "V")
-                LoggerAnalytics.debug(log: "D")
-                LoggerAnalytics.info(log: "I")
-                LoggerAnalytics.warn(log: "W")
-                LoggerAnalytics.error(log: "E")
+                LoggerAnalytics.verbose("V")
+                LoggerAnalytics.debug("D")
+                LoggerAnalytics.info("I")
+                LoggerAnalytics.warn("W")
+                LoggerAnalytics.error("E")
                 
                 then("no messages should be logged") {
                     XCTAssertTrue(mockLogger.logs.isEmpty)

@@ -9,27 +9,42 @@ import Foundation
 
 // MARK: - AsyncChannel
 /**
- This class utilizes `AsyncStream` to implement a subscription pattern.
+ A thread-safe asynchronous channel for sending and receiving values.
+ 
+ This class provides a simple way to send values from one part of your code and receive them
+ asynchronously in another part using Swift's AsyncStream.
  */
 
-final class AsyncChannel<T> {
-    private let continuation: AsyncStream<T>.Continuation
-    private var isClosed = false
+final class AsyncChannel<Element> {
+    private var continuation: AsyncStream<Element>.Continuation?
+    private let stream: AsyncStream<Element>
     private let lock = NSLock()
     
+    /**
+     Indicates whether the channel is closed.
+     */
+    private(set) var isClosed = false
+    
+    /**
+     Creates a new async channel.
+     */
     init() {
-        var continuation: AsyncStream<T>.Continuation!
+        var continuationLocal: AsyncStream<Element>.Continuation!
         
-        let stream = AsyncStream<T>(bufferingPolicy: .unbounded) { cont in
-            continuation = cont
+        self.stream = AsyncStream<Element>(bufferingPolicy: .unbounded) { continuation in
+            continuationLocal = continuation
         }
-        self.continuation = continuation
-        self.stream = stream
+        
+        self.continuation = continuationLocal
     }
     
-    let stream: AsyncStream<T>
-    
-    func send(_ element: T) async throws {
+    /**
+     Sends a value to the channel.
+     
+     - Parameter value: The value to send.
+     - Throws: `ChannelError.closed` if the channel is closed.
+     */
+    func send(_ value: Element) throws {
         lock.lock()
         defer { lock.unlock() }
         
@@ -37,19 +52,42 @@ final class AsyncChannel<T> {
             throw ChannelError.closed
         }
         
-        continuation.yield(element)
+        continuation?.yield(value)
     }
     
+    /**
+     Returns an async stream to receive values from the channel.
+     
+     - Returns: An `AsyncStream` that yields values sent to the channel.
+     */
+    func receive() -> AsyncStream<Element> {
+        return stream
+    }
+    
+    /**
+     Closes the channel. No more values can be sent after calling this method.
+     */
     func close() {
         lock.lock()
         defer { lock.unlock() }
         
         guard !isClosed else { return }
         isClosed = true
-        continuation.finish()
+        continuation?.finish()
+        continuation = nil
     }
-}
-
-enum ChannelError: Error {
-    case closed
+    
+    /**
+     Errors that can occur when working with the channel.
+     */
+    enum ChannelError: Error {
+        case closed
+        
+        var localizedDescription: String {
+            switch self {
+            case .closed:
+                return "Channel is closed"
+            }
+        }
+    }
 }

@@ -55,7 +55,7 @@ extension ObjCAnalytics {
     @objc
     public func startSession(sessionId: NSNumber) {
         if sessionId.int64Value < 0 {
-            LoggerAnalytics.error(log: "Negative session IDs are invalid.")
+            LoggerAnalytics.error("Negative session IDs are invalid.")
             return
         }
         self.analytics.startSession(sessionId: sessionId.uint64Value)
@@ -462,6 +462,15 @@ extension ObjCAnalytics {
     public func reset() {
         self.analytics.reset()
     }
+    
+    /**
+     Resets analytics state with specified options.
+     */
+    @objc
+    public func reset(options: ResetOptions) {
+        self.analytics.reset(options: options)
+    }
+
 }
 
 extension ObjCAnalytics {

@@ -30,9 +30,9 @@ public class Analytics {
     private var userIdentityState: StateImpl<UserIdentity>
     
     /**
-     A private serial queue for processing events to ensure ordering without blocking the main thread.
+     A private asynchronous channel for queuing and processing events.
      */
-    private let eventProcessingQueue = DispatchQueue(label: "com.rudderstack.analytics.eventProcessing", qos: .default)
+    private var processEventChannel: AsyncChannel<Event>
     
     /**
      The handler instance responsible for managing lifecycle events and session-related operations.
@@ -46,9 +46,24 @@ public class Analytics {
     }
     
     /**
+     The state container for SourceConfig management within the analytics system.
+     */
+    private(set) var sourceConfigState: StateImpl<SourceConfig>
+    
+    /**
+     The manager responsible for SourceConfig operations.
+     */
+    private(set) var sourceConfigProvider: SourceConfigProvider?
+    
+    /**
      Tracks the shutdown state of the analytics instance.
      */
     private(set) var isAnalyticsShutdown: Bool = false
+    
+    /**
+     A flag indicating whether the write key provided is invalid.
+     */
+    var isInvalidWriteKey: Bool = false
         
     /**
      Initializes the `Analytics` with the given configuration.
@@ -57,7 +72,9 @@ public class Analytics {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
+        self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
+        self.sourceConfigState = createState(initialState: SourceConfig.initialState())
         self.setup()
     }
 }
@@ -75,7 +92,7 @@ extension Analytics {
         guard self.isAnalyticsActive else { return }
         
         if let sessionId, String(sessionId).count < SessionConstants.minSessionIdLength {
-            LoggerAnalytics.error(log: "Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
+            LoggerAnalytics.error("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
             return
         }
         
@@ -112,7 +129,7 @@ extension Analytics {
         - options: An optional object for providing additional options. Defaults to `nil`.
      */
     public func track(name: String, properties: Properties? = nil, options: RudderOption? = nil) {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -128,7 +145,7 @@ extension Analytics {
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
     public func screen(screenName: String, category: String? = nil, properties: Properties? = nil, options: RudderOption? = nil) {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         let event = ScreenEvent(screenName: screenName, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -143,7 +160,7 @@ extension Analytics {
         - options: An Optional options for additional customization. Defaults to `nil`.
      */
     public func group(groupId: String, traits: Traits? = nil, options: RudderOption? = nil) {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         let event = GroupEvent(groupId: groupId, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
@@ -169,6 +186,8 @@ extension Analytics {
         self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId ?? "", traits: traits ?? Traits(), storage: self.storage))
         self.userIdentityState.state.value.storeUserIdAndTraits(self.storage)
         
+        guard self.isSourceEnabled else { return }
+        
         let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -188,6 +207,8 @@ extension Analytics {
         self.userIdentityState.dispatch(action: SetUserIdAction(userId: newId))
         self.userIdentityState.state.value.storeUserId(self.storage)
         
+        guard self.isSourceEnabled else { return }
+        
         let event = AliasEvent(previousId: preferedPreviousId, options: options, userIdentity: self.userIdentityState.state.value)
         self.process(event: event)
     }
@@ -197,7 +218,7 @@ extension Analytics {
      */
     @objc
     public func flush() {
-        guard self.isAnalyticsActive else { return }
+        guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
         self.pluginChain?.apply { plugin in
             if let plugin = plugin as? RudderStackDataPlanePlugin {
@@ -207,15 +228,19 @@ extension Analytics {
     }
     
     /**
-     Resets the user identity state by clearing stored identifiers and traits.
+     Resets the user identity information, using the provided options to determine which data to reset.
+     
+     - Parameter options: An instance of `ResetOptions` specifying which entries to reset. Defaults to resetting all entries.
      */
-    public func reset() {
+    public func reset(options: ResetOptions = ResetOptions()) {
         guard self.isAnalyticsActive else { return }
         
-        self.userIdentityState.dispatch(action: ResetUserIdentityAction())
-        self.userIdentityState.state.value.resetUserIdentity(storage: self.storage)
+        self.userIdentityState.dispatch(action: ResetUserIdentityAction(entries: options.entries))
+        self.userIdentityState.state.value.resetUserIdentity(storage: self.storage, entries: options.entries)
         
-        self.sessionHandler?.refreshSession()
+        if options.entries.session {
+            self.sessionHandler?.refreshSession()
+        }
     }
 }
 
@@ -255,14 +280,42 @@ extension Analytics {
      */
     public func shutdown() {
         guard self.isAnalyticsActive else { return }
-        
+        LoggerAnalytics.debug("Shutting down analytics.")
         self.isAnalyticsShutdown = true
-        
+        self.processEventChannel.close()
+    }
+    
+    /**
+     Cleans up resources when the event processing task completes.
+     
+     This method is to be called when the event processing task finishes, ensuring that all resources are properly released.
+     It removes all plugins from the plugin chain, invalidates the lifecycle session wrapper, and clears the source configuration provider. If the write key is invalid, it also clears all stored data.
+     */
+    private func shutdownHook() async {
         self.pluginChain?.removeAll()
         self.pluginChain = nil
         
-        self.lifecycleSessionWrapper?.tearDown()
+        self.lifecycleSessionWrapper?.invalidate()
         self.lifecycleSessionWrapper = nil
+        
+        self.sourceConfigProvider = nil
+    
+        if self.isInvalidWriteKey {
+            await self.storage.removeAll()
+            LoggerAnalytics.debug("Invalid write key, Storage cleared.")
+        }
+        
+        LoggerAnalytics.debug("Analytics shutdown complete.")
+    }
+    
+    /**
+     Handles the scenario when an invalid write key is detected.
+     
+     This method sets the `isInvalidWriteKey` flag to true and initiates the shutdown process.
+     */
+    func handleInvalidWriteKey() {
+        self.isInvalidWriteKey = true
+        self.shutdown()
     }
     
     /**
@@ -271,7 +324,7 @@ extension Analytics {
     var isAnalyticsActive: Bool {
         get {
             if isAnalyticsShutdown {
-                LoggerAnalytics.error(log: Constants.log.shutdownMessage)
+                LoggerAnalytics.error(Constants.log.shutdownMessage)
             }
             return !isAnalyticsShutdown
         }
@@ -290,7 +343,8 @@ extension Analytics {
      */
     private func setup() {
         self.storeAnonymousId()
-        self.collectConfiguration()
+        self.setupSourceConfig()
+        self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
         self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
@@ -310,15 +364,36 @@ extension Analytics {
     }
     
     /**
-     Processes an event by dispatching it to the serial queue to ensure ordering without blocking the main thread.
+     Starts the event processing task that handles events from the channel.
      
-     - Parameter event: The `Event` to be processed.
+     This method creates a concurrent task that continuously processes events through the plugin chain.
+     The task includes automatic cleanup via defer block to ensure proper resource management.
+     */
+    private func startProcessingEvents() {
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                for await event in self.processEventChannel.receive() {
+                    let updatedEvent = event.updateEventData()
+                    self.pluginChain?.process(event: updatedEvent)
+                }
+            }
+            
+            await self.shutdownHook()
+        }
+    }
+    
+    /**
+     Sends an event to the processing channel.
+     
+     - Parameter event: The event to be processed.
      */
     private func process(event: Event) {
-        eventProcessingQueue.async { [weak self] in
-            guard let self = self, self.isAnalyticsActive else { return }
-            let updatedEvent = event.updateEventData()
-            self.pluginChain?.process(event: updatedEvent)
+        do {
+            try self.processEventChannel.send(event)
+        } catch {
+            LoggerAnalytics.error("Failed to process event: \(error)")
         }
     }
     
@@ -332,24 +407,29 @@ extension Analytics {
     }
 }
 
-// MARK: - Backend Configuration
+// MARK: - Source Configuration
 
 extension Analytics {
     
     /**
-     Collects configuration data from the backend and saves it in the storage.
+     Sets up the source configuration provider and fetches the initial configuration.
      */
-    private func collectConfiguration() {
-        Task {
-            let client = HttpClient(analytics: self)
-            do {
-                let data = try await client.getConfigurationData()
-                self.storage.write(value: data.jsonString, key: Constants.storageKeys.sourceConfig)
-                LoggerAnalytics.info(log: data.prettyPrintedString ?? "Bad response")
-            } catch {
-                LoggerAnalytics.error(log: "Failed to get sourceConfig", error: error)
-            }
+    private func setupSourceConfig() {
+        self.sourceConfigProvider = SourceConfigProvider(analytics: self)
+        
+        sourceConfigProvider?.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider?.refreshConfigAndNotifyObservers()
+    }
+    
+    /**
+     Checks if the source is enabled.
+     */
+    var isSourceEnabled: Bool {
+        if !self.sourceConfigState.state.value.source.isSourceEnabled {
+            LoggerAnalytics.error("Source is disabled. This operation is not allowed.")
+            return false
         }
+        return true
     }
 }
 
@@ -418,7 +498,7 @@ extension Analytics {
             }
         }
         
-        LoggerAnalytics.debug(log: "Deep Link Opened: \(url.absoluteString)")
+        LoggerAnalytics.debug("Deep Link Opened: \(url.absoluteString)")
         
         // Track the event
         self.track(name: "Deep Link Opened", properties: properties)
