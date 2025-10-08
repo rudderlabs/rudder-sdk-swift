@@ -112,7 +112,7 @@ public extension Plugin {
 
  - Conforms to: `Plugin`
  */
-protocol EventPlugin: Plugin {
+public protocol EventPlugin: Plugin {
     
     /**
      Processes a `IdentifyEvent` payload.

@@ -156,6 +156,8 @@
 		53DEA68F2E03D06F00D6C371 /* group_with_all_values.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA62D2E03D06F00D6C371 /* group_with_all_values.json */; };
 		53DEA6902E03D06F00D6C371 /* screen_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA6392E03D06F00D6C371 /* screen_with_default_arguments.json */; };
 		53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E112D92E7C4B9E005FEF67 /* Connectivity.swift */; };
+		851CD0702E96844000E0D595 /* DestinationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851CD06F2E96844000E0D595 /* DestinationResult.swift */; };
+		85AB1D102E966D480072388B /* IntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AB1D0F2E966D480072388B /* IntegrationPlugin.swift */; };
 		8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCA98812E8178D0006C3537 /* HttpClientTests.swift */; };
 		8CCA98852E817966006C3537 /* EventUploaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCA98842E817966006C3537 /* EventUploaderTests.swift */; };
 /* End PBXBuildFile section */
@@ -321,6 +323,8 @@
 		53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerAnalyticsTests.swift; sourceTree = "<group>"; };
 		53DEA65D2E03D06F00D6C371 /* StorageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModuleTests.swift; sourceTree = "<group>"; };
 		53E112D92E7C4B9E005FEF67 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
+		851CD06F2E96844000E0D595 /* DestinationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationResult.swift; sourceTree = "<group>"; };
+		85AB1D0F2E966D480072388B /* IntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPlugin.swift; sourceTree = "<group>"; };
 		8CCA98812E8178D0006C3537 /* HttpClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClientTests.swift; sourceTree = "<group>"; };
 		8CCA98842E817966006C3537 /* EventUploaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploaderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -630,6 +634,7 @@
 				53DEA5C12E03D05A00D6C371 /* ScreenInfoPlugin.swift */,
 				53DEA5C22E03D05A00D6C371 /* SessionTrackingPlugin.swift */,
 				53DEA5C32E03D05A00D6C371 /* TimeZoneInfoPlugin.swift */,
+				85AB1D112E966D530072388B /* DeviceMode */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -838,6 +843,15 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		85AB1D112E966D530072388B /* DeviceMode */ = {
+			isa = PBXGroup;
+			children = (
+				85AB1D0F2E966D480072388B /* IntegrationPlugin.swift */,
+				851CD06F2E96844000E0D595 /* DestinationResult.swift */,
+			);
+			path = DeviceMode;
+			sourceTree = "<group>";
+		};
 		8CCA98802E817881006C3537 /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -1009,6 +1023,7 @@
 				53DEA5E42E03D05A00D6C371 /* ScreenInfoPlugin.swift in Sources */,
 				53DEA5E52E03D05A00D6C371 /* LocaleInfoPlugin.swift in Sources */,
 				53DEA5E62E03D05A00D6C371 /* AliasEvent.swift in Sources */,
+				851CD0702E96844000E0D595 /* DestinationResult.swift in Sources */,
 				530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */,
 				53DEA5E72E03D05A00D6C371 /* LifecycleObserver.swift in Sources */,
 				53DEA5E82E03D05A00D6C371 /* UserIdentity.swift in Sources */,
@@ -1088,6 +1103,7 @@
 				53DEA61D2E03D05A00D6C371 /* Plugin.swift in Sources */,
 				53DEA61E2E03D05A00D6C371 /* ObjCLoggerAnalytics.swift in Sources */,
 				53DEA61F2E03D05A00D6C371 /* GroupEvent.swift in Sources */,
+				85AB1D102E966D480072388B /* IntegrationPlugin.swift in Sources */,
 				53DEA6202E03D05A00D6C371 /* LifecycleTrackingPlugin.swift in Sources */,
 				5328B8812E3C939D0051A202 /* ObjCAliasEvent.swift in Sources */,
 			);
