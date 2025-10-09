@@ -32,6 +32,10 @@ open class IntegrationPlugin: EventPlugin {
     private var isPluginSetup = false
     internal var isDestinationReady = false
     
+    // MARK: - Initializer
+    
+    public init() {}
+    
     // MARK: - Abstract Properties (must be overridden)
     
     /**
@@ -86,6 +90,58 @@ open class IntegrationPlugin: EventPlugin {
      Override this method to control the behaviour of reset for this destination.
      */
     open func reset() {
+        // Default implementation (no-op)
+    }
+    
+    // MARK: - Event Handling Methods
+    
+    /**
+     Processes a `IdentifyEvent` payload.
+     Override this method to handle identify events for your destination.
+     
+     - Parameter payload: The `IdentifyEvent` payload to be processed.
+     */
+    open func identify(payload: IdentifyEvent) {
+        // Default implementation (no-op)
+    }
+    
+    /**
+     Processes a `TrackEvent` payload.
+     Override this method to handle track events for your destination.
+     
+     - Parameter payload: The `TrackEvent` payload to be processed.
+     */
+    open func track(payload: TrackEvent) {
+        // Default implementation (no-op)
+    }
+    
+    /**
+     Processes a `ScreenEvent` payload.
+     Override this method to handle screen events for your destination.
+     
+     - Parameter payload: The `ScreenEvent` payload to be processed.
+     */
+    open func screen(payload: ScreenEvent) {
+        // Default implementation (no-op)
+    }
+    
+    /**
+     Processes a `GroupEvent` payload.
+     Override this method to handle group events for your destination.
+     
+     - Parameter payload: The `GroupEvent` payload to be processed.
+     */
+    open func group(payload: GroupEvent) {
+        // Default implementation (no-op)
+    }
+    
+    /**
+     Processes a `AliasEvent` payload.
+     Override this method to handle alias events for your destination.
+     
+     - Parameter payload: The `AliasEvent` payload to be processed.
+     */
+    open func alias(payload: AliasEvent) {
         // Default implementation (no-op)
     }
     
