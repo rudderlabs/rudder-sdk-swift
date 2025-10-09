@@ -56,8 +56,16 @@ class PluginChain {
 
 // MARK: - Private functions
 extension PluginChain {
+    
+    /**
+     Applies plugins of a specific type to an event.
+     
+     - Parameter pluginType: The type of plugins to apply
+     - Parameter event: The event to process
+     - Returns: The processed event or nil
+     */
     @discardableResult
-    private func applyPlugins(pluginType: PluginType, event: Event?) -> Event? {
+    func applyPlugins(pluginType: PluginType, event: Event?) -> Event? {
         guard let mediator = self.pluginList[pluginType] else { return event }
         return self.applyPlugins(mediator: mediator, event: event)
     }
