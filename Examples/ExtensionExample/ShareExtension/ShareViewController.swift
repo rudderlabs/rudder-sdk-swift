@@ -10,6 +10,7 @@ import Social
 import SwiftUI
 import RudderStackAnalytics
 
+// MARK: - ShareViewController
 class ShareViewController: UIViewController {
     
     var analytics: Analytics?
@@ -96,6 +97,8 @@ class ShareViewController: UIViewController {
         }
     }
 }
+
+// MARK: - RudderStackAnalytics
 
 extension ShareViewController {
     func initializeAnalyticsSDK() {
