@@ -64,6 +64,11 @@ public class Analytics {
      A flag indicating whether the write key provided is invalid.
      */
     var isInvalidWriteKey: Bool = false
+    
+    /**
+     Management plugin for all integrations.
+     */
+    var integrationManager: IntegrationsManagementPlugin
         
     /**
      Initializes the `Analytics` with the given configuration.
@@ -75,6 +80,7 @@ public class Analytics {
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())
+        self.integrationManager = IntegrationsManagementPlugin()
         self.setup()
     }
 }
@@ -348,6 +354,8 @@ extension Analytics {
         
         self.pluginChain = PluginChain(analytics: self)
         self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
+        
+        self.pluginChain?.add(plugin: self.integrationManager)
         
         // Add default plugins
         self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())

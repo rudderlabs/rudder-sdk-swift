@@ -112,60 +112,55 @@ public extension Plugin {
 
  - Conforms to: `Plugin`
  */
-protocol EventPlugin: Plugin {
+public protocol EventPlugin: Plugin {
     
     /**
      Processes a `IdentifyEvent` payload.
      
      - Parameter payload: The `IdentifyEvent` payload to be processed.
-     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func identify(payload: IdentifyEvent) -> Event?
+    func identify(payload: IdentifyEvent)
     
     /**
      Processes a `TrackEvent` payload.
      
      - Parameter payload: The `TrackEvent` payload to be processed.
-     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func track(payload: TrackEvent) -> Event?
+    func track(payload: TrackEvent)
     
     /**
      Processes a `ScreenEvent` payload.
      
      - Parameter payload: The `ScreenEvent` payload to be processed.
-     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func screen(payload: ScreenEvent) -> Event?
+    func screen(payload: ScreenEvent)
     
     /**
      Processes a `GroupEvent` payload.
      
      - Parameter payload: The `GroupEvent` payload to be processed.
-     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func group(payload: GroupEvent) -> Event?
+    func group(payload: GroupEvent)
     
     /**
      Processes a `AliasEvent` payload.
      
      - Parameter payload: The `AliasEvent` payload to be processed.
-     - Returns: A modified `Event` or `nil` if the event is to be filtered out.
      */
-    func alias(payload: AliasEvent) -> Event?
+    func alias(payload: AliasEvent)
 }
 
-extension EventPlugin {
+public extension EventPlugin {
     
-    func identify(payload: IdentifyEvent) -> Event? { payload }
+    func identify(payload: IdentifyEvent) { }
     
-    func track(payload: TrackEvent) -> Event? { payload }
+    func track(payload: TrackEvent) { }
     
-    func screen(payload: ScreenEvent) -> Event? { payload }
+    func screen(payload: ScreenEvent) { }
     
-    func group(payload: GroupEvent) -> Event? { payload }
+    func group(payload: GroupEvent) { }
     
-    func alias(payload: AliasEvent) -> Event? { payload }
+    func alias(payload: AliasEvent) { }
         
     /**
      Intercepts the appropriate method based on the event type.
@@ -178,19 +173,27 @@ extension EventPlugin {
      - Returns: A processed `Event`, or `nil` if the event type is unsupported.
      */
     func intercept(event: any Event) -> (any Event)? {
+        self.handleEvent(event: event)
+        return event
+    }
+    
+    /**
+     Executes the appropriate method for the given event.
+     */
+    func handleEvent(event: any Event) {
         switch event {
         case let event as IdentifyEvent:
-            return self.identify(payload: event)
+            self.identify(payload: event)
         case let event as TrackEvent:
-            return self.track(payload: event)
+            self.track(payload: event)
         case let event as ScreenEvent:
-            return self.screen(payload: event)
+            self.screen(payload: event)
         case let event as GroupEvent:
-            return self.group(payload: event)
+            self.group(payload: event)
         case let event as AliasEvent:
-            return self.alias(payload: event)
+            self.alias(payload: event)
         default:
-            return nil
+            return
         }
     }
 }

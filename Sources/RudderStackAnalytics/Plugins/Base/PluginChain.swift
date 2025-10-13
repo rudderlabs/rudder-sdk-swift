@@ -52,19 +52,49 @@ class PluginChain {
             mediator.removeAll()
         }
     }
+    
+    func find<T: Plugin>(type: T.Type) -> T? {
+        for pluginType in PluginType.allCases {
+            if let mediator = pluginList[pluginType],
+               let found = mediator.find(type) {
+                return found
+            }
+        }
+        return nil
+    }
 }
 
-// MARK: - Private functions
 extension PluginChain {
+    
+    /**
+     Applies plugins of a specific type to an event.
+
+     - Parameter pluginType: The type of plugins to apply
+     - Parameter event: The event to process
+     - Returns: The processed event or nil
+     */
     @discardableResult
-    private func applyPlugins(pluginType: PluginType, event: Event?) -> Event? {
+    func applyPlugins(pluginType: PluginType, event: Event?) -> Event? {
         guard let mediator = self.pluginList[pluginType] else { return event }
         return self.applyPlugins(mediator: mediator, event: event)
     }
     
     @discardableResult
-    private func applyPlugins(mediator: PluginInteractor, event: Event?) -> Event? {
+    func applyPlugins(mediator: PluginInteractor, event: Event?) -> Event? {
         guard let event else { return nil }
         return mediator.execute(event)
+    }
+}
+
+extension PluginChain {
+    func find(key: String) -> IntegrationPlugin? {
+        var found = [Plugin]()
+        if let mediator = pluginList[.terminal] {
+            found.append(contentsOf: mediator.pluginList.filter{ plugin in
+                guard let p = plugin as? IntegrationPlugin else { return false }
+                return p.key == key
+            })
+        }
+        return found.first as? IntegrationPlugin
     }
 }
