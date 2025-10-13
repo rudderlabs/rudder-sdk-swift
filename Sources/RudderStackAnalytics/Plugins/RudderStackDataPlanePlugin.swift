@@ -35,28 +35,23 @@ final class RudderStackDataPlanePlugin: EventPlugin {
 
 extension RudderStackDataPlanePlugin {
     
-    func identify(payload: IdentifyEvent) -> (any Event)? {
+    func identify(payload: IdentifyEvent) {
         self.eventQueue?.put(payload)
-        return payload
     }
     
-    func track(payload: TrackEvent) -> (any Event)? {
+    func track(payload: TrackEvent) {
         self.eventQueue?.put(payload)
-        return payload
     }
     
-    func screen(payload: ScreenEvent) -> (any Event)? {
+    func screen(payload: ScreenEvent) {
         self.eventQueue?.put(payload)
-        return payload
     }
     
-    func group(payload: GroupEvent) -> (any Event)? {
+    func group(payload: GroupEvent) {
         self.eventQueue?.put(payload)
-        return payload
     }
     
-    func alias(payload: AliasEvent) -> (any Event)? {
+    func alias(payload: AliasEvent) {
         self.eventQueue?.put(payload)
-        return payload
     }
 }
