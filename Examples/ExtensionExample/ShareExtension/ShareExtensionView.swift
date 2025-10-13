@@ -45,7 +45,7 @@ struct ShareExtensionView: View {
             
             Spacer()
             
-            Text("This is not a proper share extension; it’s a demo app built only to showcase how RudderStackAnalytics works inside an extension.")
+            Text("This is not a proper share extension; it’s a demo app built only to showcase how RudderStackAnalytics SDK works inside an extension.")
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(.gray.opacity(0.2))
