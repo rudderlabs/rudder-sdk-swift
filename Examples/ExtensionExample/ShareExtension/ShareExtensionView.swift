@@ -28,24 +28,37 @@ struct ShareExtensionView: View {
             HStack {
                 ShareExtensionButton(action: {
                     onButtonTapped(text, .track)
-                }, tite: "Track")
+                }, title: "Track")
                 
                 ShareExtensionButton(action: {
                     onButtonTapped(nil, .flush)
-                }, tite: "Flush")
+                }, title: "Flush")
             }
             
             ShareExtensionButton(action: {
                 onButtonTapped(nil, .shutdown)
-            }, tite: "Shutdown")
+            }, title: "Shutdown")
             
             ShareExtensionButton(action: {
                 onButtonTapped(nil, .cancel)
-            }, tite: "Cancel", isCancel: true)
+            }, title: "Cancel", isCancel: true)
+            
+            Spacer()
+            
+            Text("This is not a proper share extension; it’s a demo app built only to showcase how RudderStackAnalytics works inside an extension.")
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(.gray.opacity(0.2))
+                .foregroundColor(.black.opacity(0.5))
+                .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.gray.opacity(0.4), lineWidth: 1))
+            Spacer()
         }
         .padding()
         .background(Color(UIColor.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .frame(maxHeight: .infinity, alignment: .top)
     }
 }
@@ -53,12 +66,12 @@ struct ShareExtensionView: View {
 // MARK: - ShareExtensionButton
 struct ShareExtensionButton: View {
     var action: @MainActor () -> Void
-    var tite: String
+    var title: String
     var isCancel: Bool = false
     
     var body: some View {
         Button(action: action) {
-            Text(tite)
+            Text(title)
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(isCancel ? .gray.opacity(0.2) : .blue)
