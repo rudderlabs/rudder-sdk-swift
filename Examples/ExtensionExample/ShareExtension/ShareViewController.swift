@@ -29,6 +29,16 @@ class ShareViewController: UIViewController {
         handleIncomingText()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    
+        // Deinitialize analytics when the share sheet is closed
+        self.analytics?.shutdown()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.analytics = nil
+        }
+    }
+    
     private func handleIncomingText() {
         guard let item = extensionContext?.inputItems.first as? NSExtensionItem,
               let attachments = item.attachments else { return }
@@ -60,9 +70,10 @@ class ShareViewController: UIViewController {
     }
     
     private func showSwiftUIView(with text: String) {
-        let contentView = UIHostingController(rootView: ShareExtensionView(text: text) {
-            self.handleSend(text: $0)
+        let shareView = ShareExtensionView(text: text, onButtonTapped: { editedText, buttonAction in
+            self.handleButtonAction(text: editedText, buttonAction: buttonAction)
         })
+        let contentView = UIHostingController(rootView: shareView)
         
         addChild(contentView)
         view.addSubview(contentView.view)
@@ -78,22 +89,26 @@ class ShareViewController: UIViewController {
         contentView.didMove(toParent: self)
     }
     
-    private func handleSend(text: String) {
-        // ✅ Handle your send action here
-        // e.g., save to shared UserDefaults, write to a shared file, or trigger an API
+    private func handleButtonAction(text: String?, buttonAction: ShareButtonActionType) {
+        // ✅ Handle your button actions here
+        // e.g., save to shared UserDefaults, write to a shared file, or trigger an API if needed
         
-        self.analytics?.track(name: text)
-        
-        // Complete the share
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        switch buttonAction {
+        case .track:
+            guard let text else { return }
+            self.analytics?.track(name: text)
+            
+        case .flush:
             self.analytics?.flush()
-            // Wait briefly before ending the extension
+            
+        case .shutdown:
+            self.analytics?.shutdown()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.analytics?.shutdown()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.analytics = nil
-                    self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)}
+                self.analytics = nil
             }
+            
+        case .cancel:
+            self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
         }
     }
 }
