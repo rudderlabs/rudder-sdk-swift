@@ -5,200 +5,189 @@
 //  Created by Vishal Gupta on 13/10/25.
 //
 
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class IntegrationPluginStoreTests: XCTestCase {
+struct IntegrationPluginStoreTests {
     
-    var analytics: Analytics!
-    var pluginStore: IntegrationPluginStore!
-    
-    override func setUp() {
-        super.setUp()
-        analytics = MockProvider.clientWithDiskStorage
-        pluginStore = IntegrationPluginStore(analytics: analytics)
+    @Test("Given an analytics instance, When IntegrationPluginStore is initialized, Then store should be properly initialized with default values")
+    func initialization() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        
+        // When
+        let store = IntegrationPluginStore(analytics: analytics)
+        
+        // Then
+        #expect(store.analytics != nil)
+        #expect(store.pluginChain != nil)
+        #expect(store.destinationReadyCallbacks.isEmpty)
+        #expect(store.isStandardIntegration == true)
+        #expect(store.isDestinationReady == false)
     }
     
-    override func tearDown() {
-        pluginStore = nil
-        analytics = nil
-        super.tearDown()
+    @Test("Given an initialized plugin store, When analytics property is accessed, Then analytics should be the same instance")
+    func analyticsProperty() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        let pluginStore = IntegrationPluginStore(analytics: analytics)
+        
+        // When
+        let storeAnalytics = pluginStore.analytics
+        
+        // Then
+        #expect(storeAnalytics === analytics)
     }
     
-    func test_initialization() {
-        given("An analytics instance") {
-            let analytics = MockProvider.clientWithDiskStorage
-            
-            when("IntegrationPluginStore is initialized") {
-                let store = IntegrationPluginStore(analytics: analytics)
-                
-                then("store should be properly initialized with default values") {
-                    XCTAssertNotNil(store.analytics)
-                    XCTAssertNotNil(store.pluginChain)
-                    XCTAssertTrue(store.destinationReadyCallbacks.isEmpty)
-                    XCTAssertTrue(store.isStandardIntegration)
-                    XCTAssertFalse(store.isDestinationReady)
-                }
-            }
+    @Test("Given an initialized plugin store, When pluginChain is accessed, Then pluginChain should be initialized and linked to analytics")
+    func pluginChainInitialization() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        let pluginStore = IntegrationPluginStore(analytics: analytics)
+        
+        // When
+        let chain = pluginStore.pluginChain
+        
+        // Then
+        #expect(chain != nil)
+        #expect(chain?.analytics === analytics)
+    }
+    
+    @Test("Given an initialized plugin store, When destinationReadyCallbacks is accessed, Then callbacks array should be empty")
+    func destinationReadyCallbacksInitialization() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        let pluginStore = IntegrationPluginStore(analytics: analytics)
+        
+        // When
+        let callbacks = pluginStore.destinationReadyCallbacks
+        
+        // Then
+        #expect(callbacks.isEmpty)
+    }
+    
+    @Test("Given an initialized plugin store, When isStandardIntegration is accessed, Then isStandardIntegration should be true by default")
+    func isStandardIntegrationDefaultValue() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        let pluginStore = IntegrationPluginStore(analytics: analytics)
+        
+        // When
+        let isStandard = pluginStore.isStandardIntegration
+        
+        // Then
+        #expect(isStandard == true)
+    }
+    
+    @Test("Given an initialized plugin store, When isDestinationReady is accessed, Then isDestinationReady should be false by default")
+    func isDestinationReadyDefaultValue() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        let pluginStore = IntegrationPluginStore(analytics: analytics)
+        
+        // When
+        let isReady = pluginStore.isDestinationReady
+        
+        // Then
+        #expect(isReady == false)
+    }
+    
+    @Test("Given an initialized plugin store, When isStandardIntegration is modified, Then isStandardIntegration should reflect the new value")
+    func isStandardIntegrationModification() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        let pluginStore = IntegrationPluginStore(analytics: analytics)
+        
+        // When
+        pluginStore.isStandardIntegration = false
+        
+        // Then
+        #expect(pluginStore.isStandardIntegration == false)
+    }
+    
+    @Test("Given an initialized plugin store, When isDestinationReady is modified, Then isDestinationReady should reflect the new value")
+    func isDestinationReadyModification() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        let pluginStore = IntegrationPluginStore(analytics: analytics)
+        
+        // When
+        pluginStore.isDestinationReady = true
+        
+        // Then
+        #expect(pluginStore.isDestinationReady == true)
+    }
+    
+    @Test("Given an initialized plugin store, When callback is added to destinationReadyCallbacks, Then callbacks array should contain the added callback")
+    func destinationReadyCallbacksModification() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        let pluginStore = IntegrationPluginStore(analytics: analytics)
+        let callback: IntegrationCallback = { instance, result in
+            // Mock callback
         }
+        
+        // When
+        pluginStore.destinationReadyCallbacks.append(callback)
+        
+        // Then
+        #expect(pluginStore.destinationReadyCallbacks.count == 1)
     }
     
-    func test_analytics_property() {
-        given("An initialized plugin store") {
-            when("analytics property is accessed") {
-                let storeAnalytics = pluginStore.analytics
-                
-                then("analytics should be the same instance") {
-                    XCTAssertTrue(storeAnalytics === analytics)
-                }
-            }
-        }
+    @Test("Given an initialized plugin store, When multiple callbacks are added, Then callbacks array should contain all added callbacks")
+    func multipleCallbacksAddition() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        let pluginStore = IntegrationPluginStore(analytics: analytics)
+        let callback1: IntegrationCallback = { _, _ in }
+        let callback2: IntegrationCallback = { _, _ in }
+        let callback3: IntegrationCallback = { _, _ in }
+        
+        // When
+        pluginStore.destinationReadyCallbacks.append(callback1)
+        pluginStore.destinationReadyCallbacks.append(callback2)
+        pluginStore.destinationReadyCallbacks.append(callback3)
+        
+        // Then
+        #expect(pluginStore.destinationReadyCallbacks.count == 3)
     }
     
-    func test_pluginChain_initialization() {
-        given("An initialized plugin store") {
-            when("pluginChain is accessed") {
-                let chain = pluginStore.pluginChain
-                
-                then("pluginChain should be initialized and linked to analytics") {
-                    XCTAssertNotNil(chain)
-                    XCTAssertTrue(chain?.analytics === analytics)
-                }
-            }
-        }
+    @Test("Given an analytics instance, When store is deallocated, Then plugin chain should be deallocated")
+    func deinitCleanup() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        var store: IntegrationPluginStore? = IntegrationPluginStore(analytics: analytics)
+        
+        // Add some callbacks to test cleanup
+        let callback: IntegrationCallback = { _, _ in }
+        store?.destinationReadyCallbacks.append(callback)
+        
+        // When
+        weak var weakPluginChain = store?.pluginChain
+        store = nil
+        
+        // Then
+        #expect(weakPluginChain == nil)
     }
     
-    func test_destinationReadyCallbacks_initialization() {
-        given("An initialized plugin store") {
-            when("destinationReadyCallbacks is accessed") {
-                let callbacks = pluginStore.destinationReadyCallbacks
-                
-                then("callbacks array should be empty") {
-                    XCTAssertTrue(callbacks.isEmpty)
-                }
-            }
-        }
-    }
-    
-    func test_isStandardIntegration_defaultValue() {
-        given("An initialized plugin store") {
-            when("isStandardIntegration is accessed") {
-                let isStandard = pluginStore.isStandardIntegration
-                
-                then("isStandardIntegration should be true by default") {
-                    XCTAssertTrue(isStandard)
-                }
-            }
-        }
-    }
-    
-    func test_isDestinationReady_defaultValue() {
-        given("An initialized plugin store") {
-            when("isDestinationReady is accessed") {
-                let isReady = pluginStore.isDestinationReady
-                
-                then("isDestinationReady should be false by default") {
-                    XCTAssertFalse(isReady)
-                }
-            }
-        }
-    }
-    
-    func test_isStandardIntegration_modification() {
-        given("An initialized plugin store") {
-            when("isStandardIntegration is modified") {
-                pluginStore.isStandardIntegration = false
-                
-                then("isStandardIntegration should reflect the new value") {
-                    XCTAssertFalse(pluginStore.isStandardIntegration)
-                }
-            }
-        }
-    }
-    
-    func test_isDestinationReady_modification() {
-        given("An initialized plugin store") {
-            when("isDestinationReady is modified") {
-                pluginStore.isDestinationReady = true
-                
-                then("isDestinationReady should reflect the new value") {
-                    XCTAssertTrue(pluginStore.isDestinationReady)
-                }
-            }
-        }
-    }
-    
-    func test_destinationReadyCallbacks_modification() {
-        given("An initialized plugin store") {
-            let callback: IntegrationCallback = { instance, result in
-                // Mock callback
-            }
-            
-            when("callback is added to destinationReadyCallbacks") {
-                pluginStore.destinationReadyCallbacks.append(callback)
-                
-                then("callbacks array should contain the added callback") {
-                    XCTAssertEqual(pluginStore.destinationReadyCallbacks.count, 1)
-                }
-            }
-        }
-    }
-    
-    func test_multiple_callbacks_addition() {
-        given("An initialized plugin store") {
-            let callback1: IntegrationCallback = { _, _ in }
-            let callback2: IntegrationCallback = { _, _ in }
-            let callback3: IntegrationCallback = { _, _ in }
-            
-            when("multiple callbacks are added") {
-                pluginStore.destinationReadyCallbacks.append(callback1)
-                pluginStore.destinationReadyCallbacks.append(callback2)
-                pluginStore.destinationReadyCallbacks.append(callback3)
-                
-                then("callbacks array should contain all added callbacks") {
-                    XCTAssertEqual(pluginStore.destinationReadyCallbacks.count, 3)
-                }
-            }
-        }
-    }
-    
-    func test_deinit_cleanup() {
-        given("An analytics instance") {
-            let analytics = MockProvider.clientWithDiskStorage
-            var store: IntegrationPluginStore? = IntegrationPluginStore(analytics: analytics)
-            
-            // Add some callbacks to test cleanup
-            let callback: IntegrationCallback = { _, _ in }
-            store?.destinationReadyCallbacks.append(callback)
-            
-            when("store is deallocated") {
-                weak var weakPluginChain = store?.pluginChain
-                store = nil
-                
-                then("plugin chain should be deallocated") {
-                    XCTAssertNil(weakPluginChain)
-                }
-            }
-        }
-    }
-    
-    func test_state_consistency() {
-        given("An initialized plugin store") {
-            when("multiple state changes are made") {
-                pluginStore.isStandardIntegration = false
-                pluginStore.isDestinationReady = true
-                
-                let callback: IntegrationCallback = { _, _ in }
-                pluginStore.destinationReadyCallbacks.append(callback)
-                
-                then("all state should be consistent") {
-                    XCTAssertFalse(pluginStore.isStandardIntegration)
-                    XCTAssertTrue(pluginStore.isDestinationReady)
-                    XCTAssertEqual(pluginStore.destinationReadyCallbacks.count, 1)
-                    XCTAssertNotNil(pluginStore.analytics)
-                    XCTAssertNotNil(pluginStore.pluginChain)
-                }
-            }
-        }
+    @Test("Given an initialized plugin store, When multiple state changes are made, Then all state should be consistent")
+    func stateConsistency() {
+        // Given
+        let analytics = MockProvider.clientWithDiskStorage
+        let pluginStore = IntegrationPluginStore(analytics: analytics)
+        
+        // When
+        pluginStore.isStandardIntegration = false
+        pluginStore.isDestinationReady = true
+        
+        let callback: IntegrationCallback = { _, _ in }
+        pluginStore.destinationReadyCallbacks.append(callback)
+        
+        // Then
+        #expect(pluginStore.isStandardIntegration == false)
+        #expect(pluginStore.isDestinationReady == true)
+        #expect(pluginStore.destinationReadyCallbacks.count == 1)
+        #expect(pluginStore.analytics != nil)
+        #expect(pluginStore.pluginChain != nil)
     }
 }
