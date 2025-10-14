@@ -88,13 +88,12 @@ extension PluginChain {
 
 extension PluginChain {
     func find(key: String) -> IntegrationPlugin? {
-        var found = [Plugin]()
         if let mediator = pluginList[.terminal] {
-            found.append(contentsOf: mediator.pluginList.filter{ plugin in
+            return mediator.pluginList.first { plugin in
                 guard let p = plugin as? IntegrationPlugin else { return false }
                 return p.key == key
-            })
+            } as? IntegrationPlugin
         }
-        return found.first as? IntegrationPlugin
+        return nil
     }
 }
