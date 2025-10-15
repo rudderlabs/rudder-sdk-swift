@@ -41,6 +41,7 @@
 		539D87352E5888C7009FC144 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D87342E5888C7009FC144 /* MockURLProtocol.swift */; };
 		539D87382E58894B009FC144 /* EventUploadErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D87372E58894B009FC144 /* EventUploadErrorTests.swift */; };
 		539E540E2C98CD7D00982E95 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */; };
+		53A83F9C2E9F750400DDA0CC /* MockStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A83F9B2E9F750400DDA0CC /* MockStorage.swift */; };
 		53AC39722E1533F300B8E16C /* RudderOptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AC39712E1533F300B8E16C /* RudderOptionTests.swift */; };
 		53AC39B42E16FA6E00B8E16C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */; };
 		53DEA5E12E03D05A00D6C371 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D62E03D05A00D6C371 /* KeyValueStore.swift */; };
@@ -206,6 +207,7 @@
 		539D87342E5888C7009FC144 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		539D87372E58894B009FC144 /* EventUploadErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploadErrorTests.swift; sourceTree = "<group>"; };
 		539E540A2C98CD7D00982E95 /* RudderStackAnalyticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderStackAnalyticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		53A83F9B2E9F750400DDA0CC /* MockStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStorage.swift; sourceTree = "<group>"; };
 		53AC39712E1533F300B8E16C /* RudderOptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderOptionTests.swift; sourceTree = "<group>"; };
 		53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		53DEA58F2E03D05A00D6C371 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 			children = (
 				539D87342E5888C7009FC144 /* MockURLProtocol.swift */,
 				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
+				53A83F9B2E9F750400DDA0CC /* MockStorage.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1132,6 +1135,7 @@
 				53DEA6792E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift in Sources */,
 				539D87352E5888C7009FC144 /* MockURLProtocol.swift in Sources */,
 				53DEA67A2E03D06F00D6C371 /* ScreenEventTests.swift in Sources */,
+				53A83F9C2E9F750400DDA0CC /* MockStorage.swift in Sources */,
 				539D87382E58894B009FC144 /* EventUploadErrorTests.swift in Sources */,
 				53DEA67B2E03D06F00D6C371 /* TrackEventTests.swift in Sources */,
 				53DEA67C2E03D06F00D6C371 /* MessageModuleTests.swift in Sources */,
