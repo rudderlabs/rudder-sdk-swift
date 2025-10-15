@@ -17,7 +17,7 @@ struct StorageModuleTests {
     
     // MARK: - Key-Value Storage Tests
     
-    @Test("Given MockStorage when writing primitive types then values are stored and retrievable")
+    @Test("given MockStorage, when writing primitive types, then values are stored and retrievable")
     func writePrimitiveTypes() {
         let storage = MockStorage.forMemoryStorage()
         
@@ -50,7 +50,7 @@ struct StorageModuleTests {
         #expect(storedBool == boolValue)
     }
     
-    @Test("Given MockStorage when writing complex Codable objects then objects are properly encoded and decoded")
+    @Test("given MockStorage, when writing complex Codable objects, then objects are properly encoded and decoded")
     func writeComplexObjects() {
         struct TestObject: Codable, Equatable {
             let name: String
@@ -68,7 +68,7 @@ struct StorageModuleTests {
         #expect(storedObject == testObject)
     }
     
-    @Test("Given stored values when removing by key then values are no longer retrievable")
+    @Test("given stored values, when removing by key, then values are no longer retrievable")
     func removeValues() {
         let storage = MockStorage.forMemoryStorage()
         
@@ -93,7 +93,7 @@ struct StorageModuleTests {
         #expect(removedString == nil)
     }
     
-    @Test("Given stored key-value pairs when accessing helper methods then all data is visible for inspection")
+    @Test("given stored key-value pairs, when accessing helper methods, then all data is visible for inspection")
     func testHelperMethods() {
         let storage = MockStorage.forMemoryStorage()
         
@@ -110,7 +110,7 @@ struct StorageModuleTests {
     
     // MARK: - Event Storage Tests
     
-    @Test("Given memory storage when writing events then events are batched and readable")
+    @Test("given memory storage, when writing events, then events are batched and readable")
     func writeAndReadEventsMemory() async {
         let storage = MockStorage.forMemoryStorage()
         #expect(storage.eventStorageMode == .memory)
@@ -124,7 +124,7 @@ struct StorageModuleTests {
         #expect(batch.isClosed == true)
     }
     
-    @Test("Given disk storage when writing events then events are batched and readable")
+    @Test("given disk storage, when writing events, then events are batched and readable")
     func writeAndReadEventsDisk() async {
         let storage = MockStorage.forDiskStorage()
         #expect(storage.eventStorageMode == .disk)
@@ -138,7 +138,7 @@ struct StorageModuleTests {
         #expect(batch.isClosed == true)
     }
     
-    @Test("Given storage when writing multiple events then all events are included in single batch")
+    @Test("given storage, when writing multiple events, then all events are included in single batch")
     func writeMultipleEvents() async {
         let storage = MockStorage.forMemoryStorage()
         
@@ -159,7 +159,7 @@ struct StorageModuleTests {
         #expect(batch.batch.contains(event3))
     }
     
-    @Test("Given events and rollover operations when batches are closed then events are separated into distinct batches")
+    @Test("given events and rollover operations, when batches are closed, then events are separated into distinct batches")
     func rolloverFunctionality() async {
         let storage = MockStorage.forMemoryStorage()
         
@@ -186,7 +186,7 @@ struct StorageModuleTests {
         #expect(result.dataItems[1].batch.contains(event2))
     }
     
-    @Test("Given stored batch when removing by reference then specific batch is deleted and others remain")
+    @Test("given stored batch, when removing by reference, then specific batch is deleted and others remain")
     func removeBatchByReference() async {
         let storage = MockStorage.forMemoryStorage()
         
@@ -205,7 +205,7 @@ struct StorageModuleTests {
         #expect(resultAfterRemoval.dataItems.count == 0)
     }
     
-    @Test("Given multiple stored batches when calling removeAll then all event data is cleared")
+    @Test("given multiple stored batches, when calling removeAll, then all event data is cleared")
     func removeAllEvents() async {
         let storage = MockStorage.forMemoryStorage()
         
@@ -227,7 +227,7 @@ struct StorageModuleTests {
         #expect(resultAfterRemoval.dataItems.count == 0)
     }
     
-    @Test("Given events in various batches when checking event count then accurate count is returned")
+    @Test("given events in various batches, when checking event count, then accurate count is returned")
     func eventCountHelper() async {
         let storage = MockStorage.forMemoryStorage()
         
@@ -250,7 +250,7 @@ struct StorageModuleTests {
         #expect(countAfterRollover == 2) // Now in separate batches
     }
     
-    @Test("Given events in open and closed batches when accessing all events then complete event list is returned")
+    @Test("given events in open and closed batches, when accessing all events, then complete event list is returned")
     func getAllEventsHelper() async {
         let storage = MockStorage.forMemoryStorage()
         
@@ -266,7 +266,7 @@ struct StorageModuleTests {
         #expect(allEvents[1].isClosed == false)
     }
     
-    @Test("Given storage with both key-value and event data when clearing all then complete storage is reset")
+    @Test("given storage with both key-value and event data, when clearing all, then complete storage is reset")
     func clearAllFunctionality() async {
         let storage = MockStorage.forMemoryStorage()
         
@@ -292,14 +292,13 @@ struct StorageModuleTests {
     }
     
     // MARK: - Storage Mode Tests
-    
-    @Test("Given storage mode configuration when creating MockStorage then correct mode is set", arguments: [StorageMode.disk, StorageMode.memory])
+    @Test("given storage mode configuration, when creating MockStorage, then correct mode is set", arguments: [StorageMode.disk, StorageMode.memory])
     func storageMode(_ mode: StorageMode) {
         let storage = MockStorage(storageMode: mode)
         #expect(storage.eventStorageMode == mode)
     }
     
-    @Test("Given factory methods when creating storage instances then appropriate storage modes are configured")
+    @Test("given factory methods, when creating storage instances, then appropriate storage modes are configured")
     func factoryMethods() {
         let diskStorage = MockStorage.forDiskStorage()
         let memoryStorage = MockStorage.forMemoryStorage()
@@ -308,3 +307,4 @@ struct StorageModuleTests {
         #expect(memoryStorage.eventStorageMode == .memory)
     }
 }
+
