@@ -230,6 +230,8 @@ extension Analytics {
                 plugin.flush()
             }
         }
+        
+        self.integrationsController?.flush()
     }
     
     /**
@@ -246,6 +248,10 @@ extension Analytics {
         if options.entries.session {
             self.sessionHandler?.refreshSession()
         }
+
+        guard self.isSourceEnabled else { return }
+
+        self.integrationsController?.reset()
     }
 }
 
@@ -260,7 +266,12 @@ extension Analytics {
      */
     public func add(plugin: Plugin) {
         guard self.isAnalyticsActive else { return }
-        self.pluginChain?.add(plugin: plugin)
+        
+        if let integrationPlugin = plugin as? IntegrationPlugin {
+            integrationsController?.add(integration: integrationPlugin)
+        } else {
+            pluginChain?.add(plugin: plugin)
+        }
     }
     
     /**
@@ -270,7 +281,12 @@ extension Analytics {
      */
     public func remove(plugin: Plugin) {
         guard self.isAnalyticsActive else { return }
-        self.pluginChain?.remove(plugin: plugin)
+        
+        if let integrationPlugin = plugin as? IntegrationPlugin {
+            integrationsController?.remove(integration: integrationPlugin)
+        } else {
+            self.pluginChain?.remove(plugin: plugin)
+        }
     }
 }
 
