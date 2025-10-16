@@ -22,8 +22,6 @@ class IntegrationsManagementPlugin: Plugin {
     
     private let queuedEventsChannel: AsyncChannel<Event> = AsyncChannel(bufferingPolicy: .bufferingNewest(MAX_QUEUE_SIZE))
     
-    
-    
     // TODO: - Create list of defaultPlugins
     var defaultPlugins: [Plugin] = []
     
@@ -37,7 +35,6 @@ class IntegrationsManagementPlugin: Plugin {
             .receive(on: DispatchQueue.global(qos: .default))
             .sink { [weak self] sourceConfig in
                 guard let self, sourceConfig.source.isSourceEnabled else { return }
-                
                 
                 self.integrationPluginChain?.apply { plugin in
                     if let integrationPlugin = plugin as? IntegrationPlugin {
@@ -68,10 +65,6 @@ class IntegrationsManagementPlugin: Plugin {
         return event
     }
     
-    
-    
-    
-    
     private func processEvents() {
         LoggerAnalytics.debug("IntegrationsManagementPlugin: Starting to process queued events")
         
@@ -81,8 +74,6 @@ class IntegrationsManagementPlugin: Plugin {
             }
         }
     }
-    
-    
     
     deinit {
         self.cancellables.removeAll()

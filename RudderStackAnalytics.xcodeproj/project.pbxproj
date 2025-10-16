@@ -157,9 +157,14 @@
 		53DEA6902E03D06F00D6C371 /* screen_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA6392E03D06F00D6C371 /* screen_with_default_arguments.json */; };
 		53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E112D92E7C4B9E005FEF67 /* Connectivity.swift */; };
 		859CEE102E9CC58C00519C90 /* DestinationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE0F2E9CC58C00519C90 /* DestinationResult.swift */; };
-		859CEE122E9CDDE900519C90 /* MockIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE112E9CDDE900519C90 /* MockIntegrationPlugin.swift */; };
+		859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */; };
 		859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */; };
-		859CEE162E9CDE9B00519C90 /* IntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE152E9CDE9B00519C90 /* IntegrationPluginTests.swift */; };
+		859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */; };
+		85A10BB92EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */; };
+		85A10BBB2EA0B21500E47E01 /* IntegrationsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBA2EA0B21500E47E01 /* IntegrationsControllerTests.swift */; };
+		85A10BBD2EA0B76C00E47E01 /* MockDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBC2EA0B76C00E47E01 /* MockDestination.swift */; };
+		85A10BBF2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */; };
+		85A10BC12EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */; };
 		85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */; };
 		85E7C4EE2E9BB53200520FDB /* IntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */; };
 		85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */; };
@@ -330,9 +335,14 @@
 		53DEA65D2E03D06F00D6C371 /* StorageModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageModuleTests.swift; sourceTree = "<group>"; };
 		53E112D92E7C4B9E005FEF67 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
 		859CEE0F2E9CC58C00519C90 /* DestinationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationResult.swift; sourceTree = "<group>"; };
-		859CEE112E9CDDE900519C90 /* MockIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockIntegrationPlugin.swift; sourceTree = "<group>"; };
+		859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStandardIntegrationPlugin.swift; sourceTree = "<group>"; };
 		859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginStoreTests.swift; sourceTree = "<group>"; };
-		859CEE152E9CDE9B00519C90 /* IntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginTests.swift; sourceTree = "<group>"; };
+		859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardIntegrationPluginTests.swift; sourceTree = "<group>"; };
+		85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsManagementPluginTests.swift; sourceTree = "<group>"; };
+		85A10BBA2EA0B21500E47E01 /* IntegrationsControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsControllerTests.swift; sourceTree = "<group>"; };
+		85A10BBC2EA0B76C00E47E01 /* MockDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDestination.swift; sourceTree = "<group>"; };
+		85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCustomIntegrationPlugin.swift; sourceTree = "<group>"; };
+		85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomIntegrationPluginTests.swift; sourceTree = "<group>"; };
 		85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsController.swift; sourceTree = "<group>"; };
 		85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPlugin.swift; sourceTree = "<group>"; };
 		85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsManagementPlugin.swift; sourceTree = "<group>"; };
@@ -511,7 +521,9 @@
 			children = (
 				539D87342E5888C7009FC144 /* MockURLProtocol.swift */,
 				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
-				859CEE112E9CDDE900519C90 /* MockIntegrationPlugin.swift */,
+				859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */,
+				85A10BBC2EA0B76C00E47E01 /* MockDestination.swift */,
+				85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -823,7 +835,10 @@
 				53DEA64C2E03D06F00D6C371 /* SessionTrackingPluginTests.swift */,
 				53DEA64D2E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift */,
 				859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */,
-				859CEE152E9CDE9B00519C90 /* IntegrationPluginTests.swift */,
+				859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */,
+				85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */,
+				85A10BBA2EA0B21500E47E01 /* IntegrationsControllerTests.swift */,
+				85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */,
 			);
 			path = PluginTests;
 			sourceTree = "<group>";
@@ -1136,16 +1151,19 @@
 			files = (
 				53DEA65F2E03D06F00D6C371 /* NetworkInfoPluginTests.swift in Sources */,
 				53DEA6602E03D06F00D6C371 /* ResetUserIdentityActionTests.swift in Sources */,
+				85A10BBB2EA0B21500E47E01 /* IntegrationsControllerTests.swift in Sources */,
 				53DEA6612E03D06F00D6C371 /* SessionInfoTests.swift in Sources */,
 				53DEA6622E03D06F00D6C371 /* LifecycleObserverTests.swift in Sources */,
 				53AC39722E1533F300B8E16C /* RudderOptionTests.swift in Sources */,
+				85A10BBD2EA0B76C00E47E01 /* MockDestination.swift in Sources */,
 				53DEA6632E03D06F00D6C371 /* UserIdTraitsActionTests.swift in Sources */,
 				53DEA6642E03D06F00D6C371 /* LifecycleTrackingPluginTests.swift in Sources */,
 				53DEA6652E03D06F00D6C371 /* DeviceInfoPluginTests.swift in Sources */,
 				8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */,
 				53DEA6662E03D06F00D6C371 /* GroupEventTests.swift in Sources */,
+				85A10BBF2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift in Sources */,
 				53DEA6672E03D06F00D6C371 /* UserIdActionTests.swift in Sources */,
-				859CEE122E9CDDE900519C90 /* MockIntegrationPlugin.swift in Sources */,
+				859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */,
 				53DEA6682E03D06F00D6C371 /* FlushPolicyModuleTests.swift in Sources */,
 				8CCA98852E817966006C3537 /* EventUploaderTests.swift in Sources */,
 				531F0D2F2E79CA6E00180C05 /* SourceConfigTests.swift in Sources */,
@@ -1161,7 +1179,7 @@
 				53DEA6712E03D06F00D6C371 /* MockProvider.swift in Sources */,
 				53DEA6722E03D06F00D6C371 /* RudderStackAnalyticsTests.swift in Sources */,
 				5393019E2E65562100DAEAD1 /* BackoffPolicyTests.swift in Sources */,
-				859CEE162E9CDE9B00519C90 /* IntegrationPluginTests.swift in Sources */,
+				859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */,
 				53DEA6732E03D06F00D6C371 /* AliasEventTests.swift in Sources */,
 				53DEA6742E03D06F00D6C371 /* StorageModuleTests.swift in Sources */,
 				859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */,
@@ -1171,11 +1189,13 @@
 				53DEA6782E03D06F00D6C371 /* DataPlaneModuleTests.swift in Sources */,
 				53DEA6792E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift in Sources */,
 				539D87352E5888C7009FC144 /* MockURLProtocol.swift in Sources */,
+				85A10BC12EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift in Sources */,
 				53DEA67A2E03D06F00D6C371 /* ScreenEventTests.swift in Sources */,
 				539D87382E58894B009FC144 /* EventUploadErrorTests.swift in Sources */,
 				53DEA67B2E03D06F00D6C371 /* TrackEventTests.swift in Sources */,
 				53DEA67C2E03D06F00D6C371 /* MessageModuleTests.swift in Sources */,
 				53DEA67D2E03D06F00D6C371 /* StateManagementTests.swift in Sources */,
+				85A10BB92EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

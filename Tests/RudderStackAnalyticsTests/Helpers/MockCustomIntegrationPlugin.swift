@@ -1,14 +1,14 @@
 //
-//  MockIntegrationPlugin.swift
+//  MockCustomIntegrationPlugin.swift
 //  RudderStackAnalyticsTests
 //
-//  Created by Vishal Gupta on 13/10/25.
+//  Created by Vishal Gupta on 16/10/25.
 //
 
 import Foundation
 @testable import RudderStackAnalytics
 
-class MockIntegrationPlugin: IntegrationPlugin {
+class MockCustomIntegrationPlugin: IntegrationPlugin {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
     var key: String
@@ -57,9 +57,11 @@ class MockIntegrationPlugin: IntegrationPlugin {
         }
         
         // Simulate successful creation
-        destinationInstance = MockDestination(config: destinationConfig)
+        // hard coded config for custom integration
+        destinationInstance = MockDestination(config: ["apiKey": "MyKey"])
     }
     
+    // update is overriden (for testing) but should not be called for custom integration
     func update(destinationConfig: [String: Any]) throws {
         updateCalled = true
         lastDestinationConfig = destinationConfig
@@ -117,26 +119,4 @@ class MockIntegrationPlugin: IntegrationPlugin {
         groupEventReceived = nil
         aliasEventReceived = nil
     }
-}
-
-// Mock destination class
-class MockDestination {
-    let config: [String: Any]
-    
-    init(config: [String: Any]) {
-        self.config = config
-    }
-}
-
-// Standard plugin implementation for testing
-class MockStandardIntegrationPlugin: MockIntegrationPlugin, StandardPlugin {
-    
-}
-
-// Error types for testing
-enum MockIntegrationError: Error {
-    case createFailed
-    case updateFailed
-    case configurationMissing
-    case destinationDisabled
 }

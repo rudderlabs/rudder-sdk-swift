@@ -14,6 +14,7 @@ class IntegrationsController {
     @Synchronized
     var isSourceEnabledFetchedAtLeastOnce = false
     
+    @Synchronized
     var integrationPluginStores: [String: IntegrationPluginStore] = [:]
     
     // TODO: - Create list of defaultPlugins
@@ -111,6 +112,7 @@ class IntegrationsController {
         guard let pluginStore = integration.pluginStore else { return }
         
         do {
+            // updating is only done for standard integrations as they depend on SourceConfig
             if pluginStore.isStandardIntegration {
                 try integration.update(destinationConfig: destinationConfig)
                 block()
@@ -137,11 +139,13 @@ class IntegrationsController {
         self.integrationPluginChain?.add(plugin: integration)
         
         let key = integration.key
-        if integrationPluginStores[key] == nil, let analytics {
-            let pluginStore = IntegrationPluginStore(analytics: analytics)
-            
-            pluginStore.isStandardIntegration = integration is StandardPlugin
-            integrationPluginStores[key] = pluginStore
+        $integrationPluginStores.modify { stores in
+            if stores[key] == nil, let analytics {
+                let pluginStore = IntegrationPluginStore(analytics: analytics)
+                
+                pluginStore.isStandardIntegration = integration is StandardPlugin
+                stores[key] = pluginStore
+            }
         }
         
         // If the source config is already fetched once and enabled, then initialise the destination
@@ -153,7 +157,9 @@ class IntegrationsController {
     
     func remove(integration: IntegrationPlugin) {
         let key = integration.key
-        integrationPluginStores.removeValue(forKey: key)
+        $integrationPluginStores.modify { stores in
+            stores.removeValue(forKey: key)
+        }
         self.integrationPluginChain?.remove(plugin: integration)
     }
     
@@ -186,7 +192,9 @@ class IntegrationsController {
     }
     
     deinit {
-        self.integrationPluginStores.removeAll()
+        $integrationPluginStores.modify { stores in
+            stores.removeAll()
+        }
         self.integrationPluginChain?.removeAll()
         self.defaultPlugins.removeAll()
         self.analytics = nil
