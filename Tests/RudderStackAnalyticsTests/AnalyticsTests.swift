@@ -1,0 +1,632 @@
+//
+//  AnalyticsTests.swift
+//  RudderStackAnalyticsTests
+//
+//  Created by Satheesh Kannan on 16/10/25.
+//
+
+import Testing
+import Foundation
+@testable import RudderStackAnalytics
+
+// MARK: - Analytics Unit Tests
+
+@Suite("Analytics Unit Tests")
+@MainActor
+class AnalyticsTests {
+    
+    var analytics: Analytics
+    var mockStorage: MockStorage
+    var mockPlugin: MockEventCapturePlugin
+    
+    init() {
+        // Create mock storage instance
+        mockStorage = MockStorage()
+        
+        // Create analytics with mock configuration using our mock storage
+        let config = SwiftTestMockProvider.createMockConfiguration(
+            writeKey: SwiftTestMockProvider.mockWriteKey,
+            dataPlaneUrl: SwiftTestMockProvider.mockDataPlaneUrl,
+            storage: mockStorage
+        )
+        
+        config.trackApplicationLifecycleEvents = false
+        config.sessionConfiguration.automaticSessionTracking = false
+        
+        // Create analytics instance
+        analytics = Analytics(configuration: config)
+        
+        analytics.isAnalyticsActive = true
+        
+        mockPlugin = MockEventCapturePlugin()
+        analytics.add(plugin: mockPlugin)
+    }
+    
+    // MARK: - Track Event Tests
+    
+    @Test("given Analytics, when tracking simple event, then event is captured with correct properties and stored")
+    func testTrackSimpleEvent() async {
+        let eventName = "Test Event"
+        
+        analytics.track(name: eventName)
+        
+        // Allow some time for event processing
+        await runAfter(0.1) {
+            #expect(self.mockPlugin.eventCount >= 1)
+            
+            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
+            #expect(trackEvents.count >= 1)
+            #expect(trackEvents.first?.event == eventName)
+        }
+    }
+    
+    @Test("given Analytics, when tracking event with properties, then event contains all properties")
+    func testTrackEventWithProperties() async {
+        let eventName = "Product Purchased"
+        let properties: Properties = [
+            "product_id": "123",
+            "price": 29.99,
+            "quantity": 2,
+            "category": "electronics"
+        ]
+        
+        analytics.track(name: eventName, properties: properties)
+        
+        await runAfter(0.1) {
+            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
+            #expect(trackEvents.count >= 1)
+            
+            let event = trackEvents.first!
+            #expect(event.event == eventName)
+            #expect(event.properties?.dictionary?.rawDictionary["product_id"] as? String == "123")
+            #expect(event.properties?.dictionary?.rawDictionary["price"] as? Double == 29.99)
+            #expect(event.properties?.dictionary?.rawDictionary["quantity"] as? Int == 2)
+        }
+    }
+    
+    @Test("given Analytics, when tracking event with options, then event is processed with options")
+    func testTrackEventWithOptions() async {
+        let eventName = "Test Event With Options"
+        let options = RudderOption()
+        options.customContext = ["test_context": "test_value"]
+        
+        analytics.track(name: eventName, options: options)
+        
+        await runAfter(0.1) {
+            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
+            #expect(trackEvents.count >= 1)
+            #expect(trackEvents.first?.event == eventName)
+        }
+    }
+    
+    // MARK: - Screen Event Tests
+    
+    @Test("given Analytics, when tracking screen event, then screen event is captured correctly")
+    func testScreenEvent() async {
+        let screenName = "Home Screen"
+        let category = "Main"
+        let properties: Properties = ["screen_property": "test_value"]
+        
+        analytics.screen(screenName: screenName, category: category, properties: properties)
+        
+        await runAfter(0.1) {
+            let screenEvents = self.mockPlugin.getEventsOfType(ScreenEvent.self)
+            #expect(screenEvents.count >= 1)
+            
+            let event = screenEvents.first!
+            #expect(event.event == screenName)
+            #expect(event.properties?.dictionary?.rawDictionary["category"] as? String == "Main")
+            #expect(event.properties?.dictionary?.rawDictionary["screen_property"] as? String == "test_value")
+        }
+    }
+    
+    @Test("given Analytics, when tracking screen without category, then screen event is captured with nil category")
+    func testScreenEventWithoutCategory() async {
+        let screenName = "Profile Screen"
+        
+        analytics.screen(screenName: screenName)
+        
+        await runAfter(0.1) {
+            let screenEvents = self.mockPlugin.getEventsOfType(ScreenEvent.self)
+            #expect(screenEvents.count >= 1)
+            #expect(screenEvents.first?.event == screenName)
+            #expect(screenEvents.first?.category == nil)
+        }
+    }
+    
+    // MARK: - Identify Event Tests
+    
+    @Test("given Analytics, when identifying user with userId, then user identity is updated")
+    func testIdentifyWithUserId() async {
+        let userId = "test-user-123"
+        let traits: Traits = ["email": "test@example.com", "name": "Test User"]
+        
+        analytics.identify(userId: userId, traits: traits)
+        
+        await runAfter(0.1) {
+            #expect(self.analytics.userId == userId)
+            #expect(self.analytics.traits?["email"] as? String == "test@example.com")
+            
+            let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
+            #expect(identifyEvents.count >= 1)
+        }
+    }
+    
+    @Test("given Analytics, when identifying user with traits only, then traits are updated without changing userId")
+    func testIdentifyWithTraitsOnly() async {
+        let traits: Traits = ["subscription": "premium", "age": 30]
+        
+        analytics.identify(traits: traits)
+        
+        await runAfter(0.1) {
+            #expect(self.analytics.traits?["subscription"] as? String == "premium")
+            #expect(self.analytics.traits?["age"] as? Int == 30)
+            
+            let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
+            #expect(identifyEvents.count >= 1)
+        }
+    }
+    
+    @Test("given Analytics with existing user, when identifying with different userId, then reset is triggered")
+    func testIdentifyWithDifferentUserIdTriggersReset() async {
+        // First identify
+        analytics.identify(userId: "user-1", traits: ["first": "true"])
+        await runAfter(0.1) {
+            #expect(self.analytics.userId == "user-1")
+        }
+        
+        // Identify with different user ID (should trigger reset)
+        analytics.identify(userId: "user-2", traits: ["second": "true"])
+        await runAfter(0.1) {
+            #expect(self.analytics.userId == "user-2")
+            #expect(self.analytics.traits?["second"] as? String == "true")
+            
+            let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
+            #expect(identifyEvents.count >= 2) // Should have both identify events
+        }
+    }
+    
+    // MARK: - Group Event Tests
+    
+    @Test("given Analytics, when tracking group event, then group event is captured correctly")
+    func testGroupEvent() async {
+        let groupId = "company-123"
+        let traits: Traits = ["company_name": "Test Company", "industry": "Technology"]
+        
+        analytics.group(groupId: groupId, traits: traits)
+        
+        await runAfter(0.1) {
+            let groupEvents = self.mockPlugin.getEventsOfType(GroupEvent.self)
+            #expect(groupEvents.count >= 1)
+            
+            let event = groupEvents.first!
+            #expect(event.groupId == groupId)
+            #expect(event.traits?.dictionary?.rawDictionary["company_name"] as? String == "Test Company")
+        }
+    }
+    
+    @Test("given Analytics, when tracking group without traits, then group event is captured with groupId only")
+    func testGroupEventWithoutTraits() async {
+        let groupId = "team-456"
+        
+        analytics.group(groupId: groupId)
+        
+        await runAfter(0.1) {
+            let groupEvents = self.mockPlugin.getEventsOfType(GroupEvent.self)
+            #expect(groupEvents.count >= 1)
+            #expect(groupEvents.first?.groupId == groupId)
+            #expect(groupEvents.first?.traits?.dictionary?.isEmpty ?? true)
+        }
+    }
+    
+    // MARK: - Alias Event Tests
+    
+    @Test("given Analytics, when aliasing user, then alias event is captured correctly")
+    func testAliasEvent() async {
+        // First identify a user
+        analytics.identify(userId: "old-user-id")
+        
+        let newId = "new-user-id"
+        let previousId = "old-user-id"
+        
+        await runAfter(0.1) {
+            self.analytics.alias(newId: newId, previousId: previousId)
+            
+            await runAfter(0.1) {
+                #expect(self.analytics.userId == newId)
+                
+                let aliasEvents = self.mockPlugin.getEventsOfType(AliasEvent.self)
+                #expect(aliasEvents.count >= 1)
+                #expect(aliasEvents.first?.previousId == previousId)
+            }
+        }
+        
+        #expect(analytics.userId == newId)
+        
+        let aliasEvents = mockPlugin.getEventsOfType(AliasEvent.self)
+        #expect(aliasEvents.count >= 1)
+        #expect(aliasEvents.first?.previousId == previousId)
+    }
+    
+    @Test("given Analytics, when aliasing without previousId, then previous userId is resolved automatically")
+    func testAliasEventWithoutPreviousId() async {
+        // First identify a user
+        let originalUserId = "original-user"
+        analytics.identify(userId: originalUserId)
+        
+        let newId = "aliased-user"
+        
+        await runAfter(0.1) {
+            self.analytics.alias(newId: newId)
+            
+            await runAfter(0.1) {
+                #expect(self.analytics.userId == newId)
+                
+                let aliasEvents = self.mockPlugin.getEventsOfType(AliasEvent.self)
+                #expect(aliasEvents.count >= 1)
+                // Previous ID should be resolved to the original user ID
+                #expect(aliasEvents.first?.previousId == originalUserId)
+            }
+        }
+    }
+    
+    // MARK: - Session Management Tests
+    
+    @Test("given Analytics, when starting manual session, then session ID is set correctly")
+    func testStartManualSession() async {
+        let customSessionId: UInt64 = 1234567890
+        
+        analytics.startSession(sessionId: customSessionId)
+        
+        await runAfter(0.1) {
+            #expect(self.analytics.sessionId == customSessionId)
+        }
+    }
+    
+    @Test("given Analytics, when starting session without ID, then session ID is generated")
+    func testStartSessionWithGeneratedId() async {
+        let originalSessionId = analytics.sessionId
+        
+        analytics.startSession()
+        
+        await runAfter(0.1) {
+            #expect(self.analytics.sessionId != nil)
+            #expect(self.analytics.sessionId != originalSessionId) // Should be different
+        }
+    }
+    
+    @Test("given Analytics, when ending session, then session is properly ended")
+    func testEndSession() async {
+        // Start a session first
+        analytics.startSession(sessionId: 9876543210)
+        await runAfter(0.1) {
+            #expect(self.analytics.sessionId == 9876543210)
+            
+            // End the session
+            self.analytics.endSession()
+            
+            await runAfter(0.1) {
+                // If sessionId nil, no active session
+                #expect(self.analytics.sessionId == nil)
+            }
+        }
+    }
+    
+    @Test("given Analytics, when starting session with invalid ID, then error is logged and session is not set")
+    func testStartSessionWithInvalidId() async {
+        let invalidSessionId: UInt64 = 123 // Too short
+        let originalSessionId = analytics.sessionId
+        
+        analytics.startSession(sessionId: invalidSessionId)
+        
+        await runAfter(0.1) {
+            // Session ID should remain unchanged
+            #expect(self.analytics.sessionId == originalSessionId)
+        }
+    }
+    
+    // MARK: - Plugin Management Tests
+    
+    @Test("given Analytics, when adding plugin, then plugin receives events")
+    func testAddPlugin() async {
+        let additionalPlugin = MockEventCapturePlugin()
+        
+        analytics.add(plugin: additionalPlugin)
+        analytics.track(name: "Test Plugin Event")
+        
+        await runAfter(0.1) {
+            #expect(additionalPlugin.setupCalled == true)
+            #expect(additionalPlugin.eventCount >= 1)
+        }
+    }
+    
+    @Test("given Analytics with plugin, when removing plugin, then plugin no longer receives events")
+    func testRemovePlugin() async {
+        let removablePlugin = MockEventCapturePlugin()
+        
+        // Add plugin
+        analytics.add(plugin: removablePlugin)
+        analytics.track(name: "Before Remove")
+        
+        await runAfter(0.1) {
+            let eventsBeforeRemoval = removablePlugin.eventCount
+            #expect(eventsBeforeRemoval >= 1)
+            
+            // Remove plugin
+            self.analytics.remove(plugin: removablePlugin)
+            removablePlugin.clearEvents()
+            
+            self.analytics.track(name: "After Remove")
+            
+            await runAfter(0.1) {
+                #expect(removablePlugin.eventCount == 0)
+            }
+        }
+        
+    }
+    
+    // MARK: - Reset Tests
+    
+    @Test("given Analytics with user data, when resetting, then user data is cleared from storage")
+    func testReset() async {
+        // Set up user data
+        analytics.identify(userId: "test-user", traits: ["email": "test@example.com"])
+        analytics.track(name: "Before Reset Event")
+        
+        await runAfter(0.1) {
+            #expect(self.analytics.userId == "test-user")
+            #expect(self.analytics.traits?["email"] as? String == "test@example.com")
+            
+            // Verify data exists in storage
+            let initialKeyValueCount = self.mockStorage.allKeyValuePairs.count
+            let initialEventCount = self.mockStorage.eventCount
+            #expect(initialKeyValueCount > 0)
+            #expect(initialEventCount >= 1)
+            
+            // Reset
+            self.analytics.reset()
+            
+            await runAfter(0.1) {
+                #expect(self.analytics.userId?.isEmpty ?? true)
+                #expect(self.analytics.traits?.isEmpty ?? true)
+                #expect(self.analytics.anonymousId?.isEmpty == false) // Anonymous ID should be regenerated
+            }
+        }
+    }
+    
+    @Test("given Analytics, when resetting with specific options, then only specified data is cleared")
+    func testResetWithOptions() async {
+        // Set up user data
+        analytics.identify(userId: "test-user", traits: ["email": "test@example.com"])
+        
+        // Reset only traits, keep userId
+        let resetEntries = ResetEntries(anonymousId: false, userId: false, traits: true, session: false)
+        let resetOptions = ResetOptions(entries: resetEntries)
+        
+        await runAfter(0.1) {
+            self.analytics.reset(options: resetOptions)
+            
+            await runAfter(0.1) {
+                #expect(self.analytics.userId == "test-user") // Should remain
+                #expect(self.analytics.traits?.isEmpty ?? true) // Should be cleared
+            }
+        }
+    }
+    
+    // MARK: - Flush Tests
+    
+    @Test("given Analytics, when calling flush, then flush is propagated to plugins")
+    func testFlush() async {
+        // Track some events first
+        analytics.track(name: "Test Event")
+        
+        await runAfter(0.1) {
+            #expect(self.mockStorage.eventCount == 1)
+            
+            self.analytics.flush()
+            await runAfter(0.3) {
+                #expect(self.mockStorage.eventCount == 0)
+            }
+        }
+    }
+    
+    // MARK: - Deep Link Tests
+    
+    @Test("given Analytics, when opening deep link URL, then deep link event is tracked")
+    func testDeepLinkTracking() async {
+        let testURL = URL(string: "myapp://product?id=123&ref=deeplink")!
+        let options = ["source": "test"]
+        
+        analytics.open(url: testURL, options: options)
+        
+        await runAfter(0.1) {
+            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
+            let deepLinkEvent = trackEvents.first { $0.event == "Deep Link Opened" }
+            
+            #expect(deepLinkEvent != nil)
+            #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["url"] as? String == testURL.absoluteString)
+            #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["id"] as? String == "123")
+            #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["ref"] as? String == "deeplink")
+            #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["source"] as? String == "test")
+        }
+    }
+    
+    @Test("given Analytics, when opening URL without query parameters, then basic deep link event is tracked")
+    func testDeepLinkWithoutParameters() async {
+        let testURL = URL(string: "myapp://home")!
+        
+        analytics.open(url: testURL)
+        
+        await runAfter(0.1) {
+            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
+            let deepLinkEvent = trackEvents.first { $0.event == "Deep Link Opened" }
+            
+            #expect(deepLinkEvent != nil)
+            #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["url"] as? String == testURL.absoluteString)
+        }
+    }
+    
+    // MARK: - Shutdown Tests
+    
+    @Test("given Analytics, when shutting down, then analytics becomes inactive")
+    func testShutdown() async {
+        #expect(analytics.isAnalyticsActive == true)
+        analytics.shutdown()
+        #expect(analytics.isAnalyticsActive == false)
+    }
+    
+    @Test("given shutdown Analytics, when attempting to track events, then events are not processed")
+    func testEventsNotProcessedAfterShutdown() async {
+        analytics.shutdown()
+        
+        await runAfter(0.1) {
+            
+            let initialEventCount = self.mockPlugin.eventCount
+            
+            // Try to track events after shutdown
+            self.analytics.track(name: "Should Not Track")
+            self.analytics.screen(screenName: "Should Not Track")
+            self.analytics.identify(userId: "Should Not Track")
+            self.analytics.group(groupId: "Should Not Track")
+            self.analytics.alias(newId: "Should Not Track")
+            
+            await runAfter(0.1) {
+                // No new events should be processed
+                #expect(self.mockPlugin.eventCount == initialEventCount)
+            }
+        }
+    }
+    
+    @Test("given shutdown Analytics, when accessing user properties, then nil is returned")
+    func testUserPropertiesReturnNilAfterShutdown() async {
+        // Set up user data first
+        analytics.identify(userId: "test-user", traits: ["email": "test@example.com"])
+        await runAfter(0.1) {
+            #expect(self.analytics.userId == "test-user")
+            #expect(self.analytics.anonymousId?.isEmpty == false)
+            
+            // Shutdown
+            self.analytics.shutdown()
+            
+            await runAfter(0.1) {
+                // Properties should return nil
+                #expect(self.analytics.userId == nil)
+                #expect(self.analytics.anonymousId == nil)
+                #expect(self.analytics.traits == nil)
+                #expect(self.analytics.sessionId == nil)
+            }
+        }
+    }
+    
+    // MARK: - Concurrent Operations Tests
+    
+    @Test("given Analytics, when tracking multiple events concurrently, then all events are processed")
+    func testConcurrentEventTracking() async {
+        let eventCount = 10
+        
+        // Track events sequentially to avoid actor isolation issues
+        for i in 0..<eventCount {
+            analytics.track(name: "Concurrent Event \(i)", properties: ["index": i])
+        }
+        
+        await runAfter(0.1) {
+            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
+            #expect(trackEvents.count >= eventCount)
+            
+            // Verify all events were processed
+            for i in 0..<eventCount {
+                let eventExists = trackEvents.contains { $0.event == "Concurrent Event \(i)" }
+                #expect(eventExists == true)
+            }
+        }
+    }
+    
+    @Test("given Analytics, when performing concurrent user operations, then state remains consistent")
+    func testConcurrentUserOperations() async {
+        // Perform identify operations sequentially to avoid actor isolation issues
+        for i in 0..<5 {
+            analytics.identify(userId: "user-\(i)", traits: ["batch": i])
+        }
+        
+        await runAfter(0.1) {
+            // Final user ID should be the last set value
+            let finalUserId = self.analytics.userId
+            #expect(finalUserId?.hasPrefix("user-") == true)
+            
+            let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
+            #expect(identifyEvents.count >= 5)
+        }
+    }
+    
+    // MARK: - Edge Cases Tests
+    
+    @Test("given Analytics, when tracking event with empty name, then event is still processed")
+    func testTrackEventWithEmptyName() async {
+        analytics.track(name: "")
+        
+        await runAfter(0.1) {
+            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
+            #expect(trackEvents.count >= 1)
+            #expect(trackEvents.first?.event == "")
+        }
+    }
+    
+    @Test("given Analytics, when identifying with empty userId, then operation completes")
+    func testIdentifyWithEmptyUserId() async {
+        analytics.identify(userId: "", traits: ["test": "value"])
+        
+        await runAfter(0.1) {
+            #expect(self.analytics.userId == "")
+            
+            let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
+            #expect(identifyEvents.count >= 1)
+        }
+    }
+    
+    @Test("given Analytics, when performing operations with nil optional parameters, then operations complete successfully")
+    func testNilOptionalParameters() async {
+        analytics.track(name: "Test", properties: nil, options: nil)
+        analytics.screen(screenName: "Test", category: nil, properties: nil, options: nil)
+        analytics.group(groupId: "test", traits: nil, options: nil)
+        analytics.identify(userId: nil, traits: nil, options: nil)
+        analytics.alias(newId: "test", previousId: nil, options: nil)
+        
+        await runAfter(0.1) {
+            // All events should be processed
+            #expect(self.mockPlugin.eventCount >= 5)
+        }
+    }
+    
+    // MARK: - Storage Integration Tests
+    
+    @Test("given Analytics, when events are tracked, then user identity is persisted to storage")
+    func testUserIdentityPersistence() async {
+        let userId = "persistent-user"
+        let traits: Traits = ["email": "persistent@example.com"]
+        
+        analytics.identify(userId: userId, traits: traits)
+        
+        await runAfter(0.1) {
+            // Check if user data is stored in the underlying storage
+            #expect(self.analytics.userId == userId)
+            #expect(self.analytics.traits?["email"] as? String == "persistent@example.com")
+            
+            // Verify data is in mock storage
+            let storedData = self.mockStorage.allKeyValuePairs
+            #expect(storedData.count > 0)
+        }
+    }
+    
+    @Test("given Analytics, when anonymous ID is accessed, then it is consistent across calls")
+    func testAnonymousIdConsistency() async {
+        let anonymousId1 = analytics.anonymousId
+        let anonymousId2 = analytics.anonymousId
+        
+        #expect(anonymousId1 == anonymousId2)
+        #expect(anonymousId1?.isEmpty == false)
+        
+        // Verify anonymous ID is stored in mock storage
+        let storedData = mockStorage.allKeyValuePairs
+        #expect(storedData.count > 0)
+    }
+}

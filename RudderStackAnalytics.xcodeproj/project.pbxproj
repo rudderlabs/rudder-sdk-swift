@@ -33,6 +33,8 @@
 		539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */; };
 		539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FE2EA105D600DAC164 /* DiskStoreTests.swift */; };
 		539001012EA110C300DAC164 /* BasicStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539001002EA110C300DAC164 /* BasicStorageTests.swift */; };
+		539001042EA119CA00DAC164 /* SwiftTestMockProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539001032EA119CA00DAC164 /* SwiftTestMockProvider.swift */; };
+		539001062EA11A7400DAC164 /* AnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539001052EA11A7400DAC164 /* AnalyticsTests.swift */; };
 		5393019E2E65562100DAEAD1 /* BackoffPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */; };
 		539301D92E6F10A300DAEAD1 /* ResetOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301D82E6F10A300DAEAD1 /* ResetOptions.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
@@ -201,6 +203,8 @@
 		539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryStoreTests.swift; sourceTree = "<group>"; };
 		539000FE2EA105D600DAC164 /* DiskStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskStoreTests.swift; sourceTree = "<group>"; };
 		539001002EA110C300DAC164 /* BasicStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicStorageTests.swift; sourceTree = "<group>"; };
+		539001032EA119CA00DAC164 /* SwiftTestMockProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftTestMockProvider.swift; sourceTree = "<group>"; };
+		539001052EA11A7400DAC164 /* AnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsTests.swift; sourceTree = "<group>"; };
 		5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyTests.swift; sourceTree = "<group>"; };
 		539301D82E6F10A300DAEAD1 /* ResetOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetOptions.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
@@ -434,6 +438,7 @@
 				53DEA6582E03D06F00D6C371 /* StateManagementTests */,
 				532904EE2E05BBDE00C8EFE2 /* TestPlans */,
 				539001022EA110E200DAC164 /* StorageModuleTests */,
+				539001052EA11A7400DAC164 /* AnalyticsTests.swift */,
 			);
 			path = RudderStackAnalyticsTests;
 			sourceTree = "<group>";
@@ -509,6 +514,7 @@
 		539D87362E5888DE009FC144 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				539001032EA119CA00DAC164 /* SwiftTestMockProvider.swift */,
 				539D87342E5888C7009FC144 /* MockURLProtocol.swift */,
 				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
 				53A83F9B2E9F750400DDA0CC /* MockStorage.swift */,
@@ -1124,6 +1130,7 @@
 				53DEA6652E03D06F00D6C371 /* DeviceInfoPluginTests.swift in Sources */,
 				539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */,
 				8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */,
+				539001062EA11A7400DAC164 /* AnalyticsTests.swift in Sources */,
 				53DEA6662E03D06F00D6C371 /* GroupEventTests.swift in Sources */,
 				539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */,
 				53DEA6672E03D06F00D6C371 /* UserIdActionTests.swift in Sources */,
@@ -1132,6 +1139,7 @@
 				531F0D2F2E79CA6E00180C05 /* SourceConfigTests.swift in Sources */,
 				53DEA6692E03D06F00D6C371 /* IdentifyEventTests.swift in Sources */,
 				53DEA66A2E03D06F00D6C371 /* UserIdentityTests.swift in Sources */,
+				539001042EA119CA00DAC164 /* SwiftTestMockProvider.swift in Sources */,
 				53DEA66B2E03D06F00D6C371 /* SessionHandlerTests.swift in Sources */,
 				53DEA66C2E03D06F00D6C371 /* SessionActionTests.swift in Sources */,
 				53DEA66D2E03D06F00D6C371 /* ScreenInfoPluginTests.swift in Sources */,

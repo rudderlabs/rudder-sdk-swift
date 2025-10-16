@@ -48,7 +48,7 @@ final class MockStorage: Storage {
     // MARK: - Storage Protocol
     
     func removeAll() async {
-        await mockEventStorage.removeAll()
+        mockEventStorage.removeAll()
         mockKeyValueStorage.removeAll()
     }
 }
@@ -73,19 +73,19 @@ extension MockStorage {
 
 extension MockStorage {
     func write(event: String) async {
-        await mockEventStorage.write(event: event)
+        mockEventStorage.write(event: event)
     }
     
     func read() async -> EventDataResult {
-        return await mockEventStorage.read()
+        return mockEventStorage.read()
     }
     
     func remove(batchReference: String) async -> Bool {
-        return await mockEventStorage.remove(batchReference: batchReference)
+        return mockEventStorage.remove(batchReference: batchReference)
     }
     
     func rollover() async {
-        await mockEventStorage.rollover()
+        mockEventStorage.rollover()
     }
 }
 
@@ -103,9 +103,7 @@ extension MockStorage {
      Returns all stored events for inspection in tests.
      */
     var allEvents: [EventDataItem] {
-        get async {
-            return await mockEventStorage.getAllEvents()
-        }
+        return mockEventStorage.getAllEvents()
     }
     
     /**
@@ -119,9 +117,7 @@ extension MockStorage {
      Returns the count of stored events.
      */
     var eventCount: Int {
-        get async {
-            return await mockEventStorage.getEventCount()
-        }
+        return mockEventStorage.getEventCount()
     }
 }
 
@@ -188,90 +184,103 @@ class MockKeyValueStorageImpl: KeyValueStorage {
 
 // MARK: - MockEventStorage
 /**
- Actor-based mock event storage for thread-safe operations.
+ Class-based mock event storage for thread-safe test operations.
  */
-actor MockEventStorage {
+final class MockEventStorage {
     
     // MARK: - Properties
     
     private var currentBatch: EventDataItem = EventDataItem()
     private var closedBatches: [EventDataItem] = []
+    private let queue = DispatchQueue(label: "MockEventStorage.queue", attributes: .concurrent)
     
     // MARK: - EventStorage Protocol Methods
     
     func write(event: String) {
-        if currentBatch.batch.isEmpty {
-            currentBatch.batch = "{\"batch\":[\(event)"
-        } else {
-            currentBatch.batch += ",\(event)"
+        queue.async(flags: .barrier) {
+            if self.currentBatch.batch.isEmpty {
+                self.currentBatch.batch = "{\"batch\":[\(event)"
+            } else {
+                self.currentBatch.batch += ",\(event)"
+            }
         }
     }
     
     func read() -> EventDataResult {
-        var allBatches = closedBatches
-        
-        // Include current batch if it has events
-        if !currentBatch.batch.isEmpty {
-            var batchToInclude = currentBatch
-            batchToInclude.batch += "]}"
-            batchToInclude.isClosed = true
-            allBatches.append(batchToInclude)
+        return queue.sync {
+            var allBatches = self.closedBatches
+            
+            // Include current batch if it has events
+            if !self.currentBatch.batch.isEmpty {
+                var batchToInclude = self.currentBatch
+                batchToInclude.batch += "]}"
+                batchToInclude.isClosed = true
+                allBatches.append(batchToInclude)
+            }
+            
+            return EventDataResult(dataItems: allBatches)
         }
-        
-        return EventDataResult(dataItems: allBatches)
     }
     
     func remove(batchReference: String) -> Bool {
-        // Remove from closed batches
-        if let index = closedBatches.firstIndex(where: { $0.reference == batchReference }) {
-            closedBatches.remove(at: index)
-            return true
+        return queue.sync(flags: .barrier) {
+            // Remove from closed batches
+            if let index = self.closedBatches.firstIndex(where: { $0.reference == batchReference }) {
+                self.closedBatches.remove(at: index)
+                return true
+            }
+            
+            // Check if it's the current batch
+            if self.currentBatch.reference == batchReference {
+                self.currentBatch = EventDataItem()
+                return true
+            }
+            
+            return false
         }
-        
-        // Check if it's the current batch
-        if currentBatch.reference == batchReference {
-            currentBatch = EventDataItem()
-            return true
-        }
-        
-        return false
     }
     
     func rollover() {
-        guard !currentBatch.batch.isEmpty else { return }
-        
-        // Close current batch and move to closed batches
-        currentBatch.batch += "]}"
-        currentBatch.isClosed = true
-        closedBatches.append(currentBatch)
-        
-        // Start new batch
-        currentBatch = EventDataItem()
+        queue.async(flags: .barrier) {
+            guard !self.currentBatch.batch.isEmpty else { return }
+            
+            // Close current batch and move to closed batches
+            self.currentBatch.batch += "]}"
+            self.currentBatch.isClosed = true
+            self.closedBatches.append(self.currentBatch)
+            
+            // Start new batch
+            self.currentBatch = EventDataItem()
+        }
     }
     
     func removeAll() {
-        currentBatch = EventDataItem()
-        closedBatches.removeAll()
+        queue.async(flags: .barrier) {
+            self.currentBatch = EventDataItem()
+            self.closedBatches.removeAll()
+        }
     }
     
     // MARK: - Test Helper Methods
     
     func getAllEvents() -> [EventDataItem] {
-        var allBatches = closedBatches
-        
-        if !currentBatch.batch.isEmpty {
-            allBatches.append(currentBatch)
+        return queue.sync {
+            var allBatches = self.closedBatches
+            if !self.currentBatch.batch.isEmpty {
+                allBatches.append(self.currentBatch)
+            }
+            return allBatches
         }
-        
-        return allBatches
     }
     
     func getEventCount() -> Int {
-        var count = closedBatches.count
-        if !currentBatch.batch.isEmpty {
-            count += 1
+        return queue.sync {
+            var count = self.closedBatches.count
+            if !self.currentBatch.batch.isEmpty {
+                count += 1
+            }
+            return count
         }
-        return count
     }
 }
 
