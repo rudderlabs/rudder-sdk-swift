@@ -108,7 +108,7 @@ public extension IntegrationPlugin {
 
 extension IntegrationPlugin {
     var pluginStore: IntegrationPluginStore? {
-        return self.analytics?.integrationManager.integrationPluginStores[self.key]
+        return self.analytics?.integrationsController?.integrationPluginStores[self.key]
     }
     
     var pluginChain: PluginChain? {

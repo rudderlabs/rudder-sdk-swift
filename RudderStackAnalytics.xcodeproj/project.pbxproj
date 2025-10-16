@@ -160,6 +160,7 @@
 		859CEE122E9CDDE900519C90 /* MockIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE112E9CDDE900519C90 /* MockIntegrationPlugin.swift */; };
 		859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */; };
 		859CEE162E9CDE9B00519C90 /* IntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE152E9CDE9B00519C90 /* IntegrationPluginTests.swift */; };
+		85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */; };
 		85E7C4EE2E9BB53200520FDB /* IntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */; };
 		85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */; };
 		85E7C4F22E9BB95100520FDB /* IntegrationPluginStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */; };
@@ -332,6 +333,7 @@
 		859CEE112E9CDDE900519C90 /* MockIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockIntegrationPlugin.swift; sourceTree = "<group>"; };
 		859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginStoreTests.swift; sourceTree = "<group>"; };
 		859CEE152E9CDE9B00519C90 /* IntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginTests.swift; sourceTree = "<group>"; };
+		85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsController.swift; sourceTree = "<group>"; };
 		85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPlugin.swift; sourceTree = "<group>"; };
 		85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsManagementPlugin.swift; sourceTree = "<group>"; };
 		85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginStore.swift; sourceTree = "<group>"; };
@@ -863,6 +865,7 @@
 				85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */,
 				85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */,
 				859CEE0F2E9CC58C00519C90 /* DestinationResult.swift */,
+				85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */,
 			);
 			path = DeviceMode;
 			sourceTree = "<group>";
@@ -1086,6 +1089,7 @@
 				539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */,
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
+				85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */,
 				53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */,
 				5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */,
 				53DEA6092E03D05A00D6C371 /* HttpClient.swift in Sources */,

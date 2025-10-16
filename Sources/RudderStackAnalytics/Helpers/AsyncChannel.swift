@@ -28,10 +28,10 @@ final class AsyncChannel<Element> {
     /**
      Creates a new async channel.
      */
-    init() {
+    init(bufferingPolicy: AsyncStream<Element>.Continuation.BufferingPolicy = .unbounded) {
         var continuationLocal: AsyncStream<Element>.Continuation!
         
-        self.stream = AsyncStream<Element>(bufferingPolicy: .unbounded) { continuation in
+        self.stream = AsyncStream<Element>(bufferingPolicy: bufferingPolicy) { continuation in
             continuationLocal = continuation
         }
         

@@ -66,9 +66,9 @@ public class Analytics {
     var isInvalidWriteKey: Bool = false
     
     /**
-     Management plugin for all integrations.
+     A class which manages/controls all the integration plugins.
      */
-    var integrationManager: IntegrationsManagementPlugin
+    var integrationsController: IntegrationsController?
         
     /**
      Initializes the `Analytics` with the given configuration.
@@ -80,7 +80,6 @@ public class Analytics {
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())
-        self.integrationManager = IntegrationsManagementPlugin()
         self.setup()
     }
 }
@@ -305,6 +304,8 @@ extension Analytics {
         self.lifecycleSessionWrapper = nil
         
         self.sourceConfigProvider = nil
+        
+        self.integrationsController = nil
     
         if self.isInvalidWriteKey {
             await self.storage.removeAll()
@@ -354,10 +355,10 @@ extension Analytics {
         
         self.pluginChain = PluginChain(analytics: self)
         self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
-        
-        self.pluginChain?.add(plugin: self.integrationManager)
+        self.integrationsController = IntegrationsController(analytics: self)
         
         // Add default plugins
+        self.pluginChain?.add(plugin: IntegrationsManagementPlugin())
         self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())
         self.pluginChain?.add(plugin: DeviceInfoPlugin())
         self.pluginChain?.add(plugin: LocaleInfoPlugin())
