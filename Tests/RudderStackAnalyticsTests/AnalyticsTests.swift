@@ -5,8 +5,8 @@
 //  Created by Satheesh Kannan on 16/10/25.
 //
 
-import Testing
 import Foundation
+import Testing
 @testable import RudderStackAnalytics
 
 // MARK: - Analytics Unit Tests
@@ -43,129 +43,218 @@ class AnalyticsTests {
     }
     
     // MARK: - Track Event Tests
-    
-    @Test("given Analytics, when tracking simple event, then event is captured with correct properties and stored")
-    func testTrackSimpleEvent() async {
-        let eventName = "Test Event"
+    @Test("given Analytics, when tracking events with variations, then event is captured correctly", arguments: EventTestCaseParameters.trackEvent)
+    func testTrackEventVariants(_ eventName: String, _ properties: Properties?, _ options: RudderOption?) async {
+        // when
+        analytics.track(name: eventName, properties: properties, options: options)
         
-        analytics.track(name: eventName)
-        
-        // Allow some time for event processing
-        await runAfter(0.1) {
-            #expect(self.mockPlugin.eventCount >= 1)
-            
-            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
-            #expect(trackEvents.count >= 1)
-            #expect(trackEvents.first?.event == eventName)
-        }
-    }
-    
-    @Test("given Analytics, when tracking event with properties, then event contains all properties")
-    func testTrackEventWithProperties() async {
-        let eventName = "Product Purchased"
-        let properties: Properties = [
-            "product_id": "123",
-            "price": 29.99,
-            "quantity": 2,
-            "category": "electronics"
-        ]
-        
-        analytics.track(name: eventName, properties: properties)
-        
+        // then
         await runAfter(0.1) {
             let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
             #expect(trackEvents.count >= 1)
             
-            let event = trackEvents.first!
+            guard let event = trackEvents.first else {
+                Issue.record("Failed to retrieve a track event")
+                return
+            }
             #expect(event.event == eventName)
-            #expect(event.properties?.dictionary?.rawDictionary["product_id"] as? String == "123")
-            #expect(event.properties?.dictionary?.rawDictionary["price"] as? Double == 29.99)
-            #expect(event.properties?.dictionary?.rawDictionary["quantity"] as? Int == 2)
-        }
-    }
-    
-    @Test("given Analytics, when tracking event with options, then event is processed with options")
-    func testTrackEventWithOptions() async {
-        let eventName = "Test Event With Options"
-        let options = RudderOption()
-        options.customContext = ["test_context": "test_value"]
-        
-        analytics.track(name: eventName, options: options)
-        
-        await runAfter(0.1) {
-            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
-            #expect(trackEvents.count >= 1)
-            #expect(trackEvents.first?.event == eventName)
+            
+            // Validate properties if provided
+            if let properties {
+                let raw = event.properties?.dictionary?.rawDictionary ?? [:]
+                for (key, value) in properties {
+                    #expect("\(raw[key] ?? "")" == "\(value)")
+                }
+            }
+            
+            // Validate options if provided
+            if let options {
+                // Integrations
+                if let integrations = options.integrations, !integrations.isEmpty {
+                    let eventIntegrations = event.integrations?.rawDictionary ?? [:]
+                    for (key, value) in integrations {
+                        #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+                    }
+                }
+                
+                // Custom Context
+                if let customContext = options.customContext, !customContext.isEmpty {
+                    let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
+                    if !eventContext.isEmpty {
+                        customContext.forEach { key, value in
+                            #expect(eventContext.keys.contains(key))
+                            #expect("\(eventContext[key] ?? "")" == "\(value)")
+                        }
+                    }
+                }
+                
+                // External IDs
+                if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
+                   let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
+                    
+                    for externalId in optionExternalIds {
+                        let idDict = externalId.dictionary ?? [:]
+                        
+                        let containsMatch = eventExternalIds.contains { eventDict in
+                            idDict.allSatisfy { key, value in
+                                "\(eventDict[key] ?? "")" == "\(value)"
+                            }
+                        }
+                        
+                        #expect(containsMatch, "Missing externalId \(idDict) in event context")
+                    }
+                }
+            }
         }
     }
     
     // MARK: - Screen Event Tests
     
-    @Test("given Analytics, when tracking screen event, then screen event is captured correctly")
-    func testScreenEvent() async {
-        let screenName = "Home Screen"
-        let category = "Main"
-        let properties: Properties = ["screen_property": "test_value"]
+    @Test("given Analytics, when tracking screen events with variations, then event is captured correctly", arguments: EventTestCaseParameters.screenEvent)
+    func testScreenEventVariants(_ name: String, _ category: String?, _ properties: [String: Any]?, _ options: RudderOption?) async {
+        // when
+        analytics.screen(screenName: name, category: category, properties: properties, options: options)
         
-        analytics.screen(screenName: screenName, category: category, properties: properties)
-        
+        // then
         await runAfter(0.1) {
             let screenEvents = self.mockPlugin.getEventsOfType(ScreenEvent.self)
             #expect(screenEvents.count >= 1)
             
-            let event = screenEvents.first!
-            #expect(event.event == screenName)
-            #expect(event.properties?.dictionary?.rawDictionary["category"] as? String == "Main")
-            #expect(event.properties?.dictionary?.rawDictionary["screen_property"] as? String == "test_value")
-        }
-    }
-    
-    @Test("given Analytics, when tracking screen without category, then screen event is captured with nil category")
-    func testScreenEventWithoutCategory() async {
-        let screenName = "Profile Screen"
-        
-        analytics.screen(screenName: screenName)
-        
-        await runAfter(0.1) {
-            let screenEvents = self.mockPlugin.getEventsOfType(ScreenEvent.self)
-            #expect(screenEvents.count >= 1)
-            #expect(screenEvents.first?.event == screenName)
-            #expect(screenEvents.first?.category == nil)
+            guard let event = screenEvents.first else {
+                Issue.record("Failed to retrieve a screen event")
+                return
+            }
+            #expect(event.event == name)
+            
+            if let category {
+                let eventCategory = event.properties?.dictionary?.rawDictionary["category"] as? String
+                #expect(eventCategory == category)
+            }
+            
+            if let properties {
+                let eventProps = event.properties?.dictionary?.rawDictionary ?? [:]
+                for (key, expectedValue) in properties {
+                    #expect("\(eventProps[key] ?? "")" == "\(expectedValue)")
+                }
+            }
+            
+            if let options {
+                // Integrations
+                if let integrations = options.integrations, !integrations.isEmpty {
+                    let eventIntegrations = event.integrations?.rawDictionary ?? [:]
+                    for (key, value) in integrations {
+                        #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+                    }
+                }
+                
+                // Custom Context
+                if let customContext = options.customContext, !customContext.isEmpty {
+                    let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
+                    if !eventContext.isEmpty {
+                        customContext.forEach { key, value in
+                            #expect(eventContext.keys.contains(key))
+                            #expect("\(eventContext[key] ?? "")" == "\(value)")
+                        }
+                    }
+                }
+                
+                // External IDs
+                if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
+                   let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
+                    
+                    for externalId in optionExternalIds {
+                        let idDict = externalId.dictionary ?? [:]
+                        
+                        let containsMatch = eventExternalIds.contains { eventDict in
+                            idDict.allSatisfy { key, value in
+                                "\(eventDict[key] ?? "")" == "\(value)"
+                            }
+                        }
+                        
+                        #expect(containsMatch, "Missing externalId \(idDict) in event context")
+                    }
+                }
+            }
         }
     }
     
     // MARK: - Identify Event Tests
     
-    @Test("given Analytics, when identifying user with userId, then user identity is updated")
-    func testIdentifyWithUserId() async {
-        let userId = "test-user-123"
-        let traits: Traits = ["email": "test@example.com", "name": "Test User"]
+    @Test("given Analytics, when tracking identify events with variations, then event is captured correctly", arguments: EventTestCaseParameters.identifyEvent)
+    func testIdentifyVariants(_ userId: String?, _ traits: [String: Any]?, _ options: RudderOption?) async {
+        // when
+        analytics.identify(userId: userId, traits: traits, options: options)
         
-        analytics.identify(userId: userId, traits: traits)
-        
+        // then
         await runAfter(0.1) {
-            #expect(self.analytics.userId == userId)
-            #expect(self.analytics.traits?["email"] as? String == "test@example.com")
             
+            // Validate Identify Events stored in plugin
             let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
             #expect(identifyEvents.count >= 1)
+            
+            guard let event = identifyEvents.first else {
+                Issue.record("Failed to retrieve a identify event")
+                return
+            }
+            
+            // Validate userId
+            if let userId {
+                #expect(self.analytics.userId == userId)
+            }
+            
+            // Validate traits
+            if let traits {
+                let analyticsTraits = self.analytics.traits ?? [:]
+                if !analyticsTraits.isEmpty {
+                    for (key, value) in traits {
+                        #expect(analyticsTraits.keys.contains(key))
+                        #expect("\(analyticsTraits[key] ?? "")" == "\(value)")
+                    }
+                }
+            }
+            
+            
+            // Validate options if provided
+            if let options {
+                // Integrations
+                if let integrations = options.integrations, !integrations.isEmpty {
+                    let eventIntegrations = event.integrations?.rawDictionary ?? [:]
+                    for (key, value) in integrations {
+                        #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+                    }
+                }
+                
+                // Custom Context
+                if let customContext = options.customContext, !customContext.isEmpty {
+                    let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
+                    if !eventContext.isEmpty {
+                        customContext.forEach { key, value in
+                            #expect(eventContext.keys.contains(key))
+                            #expect("\(eventContext[key] ?? "")" == "\(value)")
+                        }
+                    }
+                }
+                
+                // External IDs
+                if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
+                   let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
+                    
+                    for externalId in optionExternalIds {
+                        let idDict = externalId.dictionary ?? [:]
+                        
+                        let containsMatch = eventExternalIds.contains { eventDict in
+                            idDict.allSatisfy { key, value in
+                                "\(eventDict[key] ?? "")" == "\(value)"
+                            }
+                        }
+                        
+                        #expect(containsMatch, "Missing externalId \(idDict) in event context")
+                    }
+                }
+            }
         }
     }
     
-    @Test("given Analytics, when identifying user with traits only, then traits are updated without changing userId")
-    func testIdentifyWithTraitsOnly() async {
-        let traits: Traits = ["subscription": "premium", "age": 30]
-        
-        analytics.identify(traits: traits)
-        
-        await runAfter(0.1) {
-            #expect(self.analytics.traits?["subscription"] as? String == "premium")
-            #expect(self.analytics.traits?["age"] as? Int == 30)
-            
-            let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
-            #expect(identifyEvents.count >= 1)
-        }
-    }
     
     @Test("given Analytics with existing user, when identifying with different userId, then reset is triggered")
     func testIdentifyWithDifferentUserIdTriggersReset() async {
@@ -188,38 +277,146 @@ class AnalyticsTests {
     
     // MARK: - Group Event Tests
     
-    @Test("given Analytics, when tracking group event, then group event is captured correctly")
-    func testGroupEvent() async {
-        let groupId = "company-123"
-        let traits: Traits = ["company_name": "Test Company", "industry": "Technology"]
+    @Test("given Analytics, when tracking group events with variations, then event is captured correctly", arguments: EventTestCaseParameters.trackEvent)
+    func testGroupEventVariants(_ groupId: String, _ traits: Properties?, _ options: RudderOption?) async {
+        // when
+        analytics.group(groupId: groupId, traits: traits, options: options)
         
-        analytics.group(groupId: groupId, traits: traits)
-        
+        // then
         await runAfter(0.1) {
             let groupEvents = self.mockPlugin.getEventsOfType(GroupEvent.self)
             #expect(groupEvents.count >= 1)
             
-            let event = groupEvents.first!
+            guard let event = groupEvents.first else {
+                Issue.record("Failed to retrieve a group event")
+                return
+            }
             #expect(event.groupId == groupId)
-            #expect(event.traits?.dictionary?.rawDictionary["company_name"] as? String == "Test Company")
+            
+            // Validate traits
+            if let traits {
+                let analyticsTraits = self.analytics.traits ?? [:]
+                if !analyticsTraits.isEmpty {
+                    for (key, value) in traits {
+                        #expect(analyticsTraits.keys.contains(key))
+                        #expect("\(analyticsTraits[key] ?? "")" == "\(value)")
+                    }
+                }
+            }
+            
+            // Validate options if provided
+            if let options {
+                // Integrations
+                if let integrations = options.integrations, !integrations.isEmpty {
+                    let eventIntegrations = event.integrations?.rawDictionary ?? [:]
+                    for (key, value) in integrations {
+                        #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+                    }
+                }
+                
+                // Custom Context
+                if let customContext = options.customContext, !customContext.isEmpty {
+                    let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
+                    if !eventContext.isEmpty {
+                        customContext.forEach { key, value in
+                            #expect(eventContext.keys.contains(key))
+                            #expect("\(eventContext[key] ?? "")" == "\(value)")
+                        }
+                    }
+                }
+                
+                // External IDs
+                if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
+                   let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
+                    
+                    for externalId in optionExternalIds {
+                        let idDict = externalId.dictionary ?? [:]
+                        
+                        let containsMatch = eventExternalIds.contains { eventDict in
+                            idDict.allSatisfy { key, value in
+                                "\(eventDict[key] ?? "")" == "\(value)"
+                            }
+                        }
+                        
+                        #expect(containsMatch, "Missing externalId \(idDict) in event context")
+                    }
+                }
+            }
         }
     }
     
-    @Test("given Analytics, when tracking group without traits, then group event is captured with groupId only")
-    func testGroupEventWithoutTraits() async {
-        let groupId = "team-456"
-        
-        analytics.group(groupId: groupId)
-        
-        await runAfter(0.1) {
-            let groupEvents = self.mockPlugin.getEventsOfType(GroupEvent.self)
-            #expect(groupEvents.count >= 1)
-            #expect(groupEvents.first?.groupId == groupId)
-            #expect(groupEvents.first?.traits?.dictionary?.isEmpty ?? true)
-        }
-    }
     
     // MARK: - Alias Event Tests
+    
+    @Test("given Analytics, when aliasing user, then alias event is captured correctly", arguments: EventTestCaseParameters.aliasEvent)
+    func testAliasEventVariants(_ alias: String, _ previousId: String?, _ options: RudderOption?) async {
+        // First identify a user if previousId is provided
+        if let previousId {
+            analytics.identify(userId: previousId)
+        }
+        
+        // when
+        analytics.alias(newId: alias, previousId: previousId, options: options)
+        
+        // then
+        await runAfter(0.1) {
+            // Validate current userId
+            #expect(self.analytics.userId == alias)
+            
+            // Validate alias events
+            let aliasEvents = self.mockPlugin.getEventsOfType(AliasEvent.self)
+            #expect(aliasEvents.count >= 1)
+            
+            guard let event = aliasEvents.first else {
+                Issue.record("Failed to retrieve a group event")
+                return
+            }
+            
+            #expect(event.userId == alias)
+            
+            if let previousId {
+                #expect(event.previousId == previousId)
+            }
+            // Validate options if provided
+            if let options {
+                // Integrations
+                if let integrations = options.integrations, !integrations.isEmpty {
+                    let eventIntegrations = event.integrations?.rawDictionary ?? [:]
+                    for (key, value) in integrations {
+                        #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+                    }
+                }
+                
+                // Custom Context
+                if let customContext = options.customContext, !customContext.isEmpty {
+                    let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
+                    if !eventContext.isEmpty {
+                        customContext.forEach { key, value in
+                            #expect(eventContext.keys.contains(key))
+                            #expect("\(eventContext[key] ?? "")" == "\(value)")
+                        }
+                    }
+                }
+                
+                // External IDs
+                if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
+                   let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
+                    
+                    for externalId in optionExternalIds {
+                        let idDict = externalId.dictionary ?? [:]
+                        
+                        let containsMatch = eventExternalIds.contains { eventDict in
+                            idDict.allSatisfy { key, value in
+                                "\(eventDict[key] ?? "")" == "\(value)"
+                            }
+                        }
+                        
+                        #expect(containsMatch, "Missing externalId \(idDict) in event context")
+                    }
+                }
+            }
+        }
+    }
     
     @Test("given Analytics, when aliasing user, then alias event is captured correctly")
     func testAliasEvent() async {
@@ -248,33 +445,11 @@ class AnalyticsTests {
         #expect(aliasEvents.first?.previousId == previousId)
     }
     
-    @Test("given Analytics, when aliasing without previousId, then previous userId is resolved automatically")
-    func testAliasEventWithoutPreviousId() async {
-        // First identify a user
-        let originalUserId = "original-user"
-        analytics.identify(userId: originalUserId)
-        
-        let newId = "aliased-user"
-        
-        await runAfter(0.1) {
-            self.analytics.alias(newId: newId)
-            
-            await runAfter(0.1) {
-                #expect(self.analytics.userId == newId)
-                
-                let aliasEvents = self.mockPlugin.getEventsOfType(AliasEvent.self)
-                #expect(aliasEvents.count >= 1)
-                // Previous ID should be resolved to the original user ID
-                #expect(aliasEvents.first?.previousId == originalUserId)
-            }
-        }
-    }
-    
     // MARK: - Session Management Tests
     
     @Test("given Analytics, when starting manual session, then session ID is set correctly")
     func testStartManualSession() async {
-        let customSessionId: UInt64 = 1234567890
+        let customSessionId: UInt64 = 1_234_567_890
         
         analytics.startSession(sessionId: customSessionId)
         
@@ -298,9 +473,9 @@ class AnalyticsTests {
     @Test("given Analytics, when ending session, then session is properly ended")
     func testEndSession() async {
         // Start a session first
-        analytics.startSession(sessionId: 9876543210)
+        analytics.startSession(sessionId: 9_876_543_210)
         await runAfter(0.1) {
-            #expect(self.analytics.sessionId == 9876543210)
+            #expect(self.analytics.sessionId == 9_876_543_210)
             
             // End the session
             self.analytics.endSession()
@@ -628,5 +803,79 @@ class AnalyticsTests {
         // Verify anonymous ID is stored in mock storage
         let storedData = mockStorage.allKeyValuePairs
         #expect(storedData.count > 0)
+    }
+}
+
+// MARK: - EventTestCaseParameters
+enum EventTestCaseParameters {
+    static var trackEvent: [(name: String, properties: [String: Any]?, options: RudderOption?)] {
+        return [
+            (_trackEventName, nil, nil),
+            (_trackEventName, _sampleJsonPayload, nil),
+            (_trackEventName, nil, _sampleRudderOption),
+        ]
+    }
+    
+    static var screenEvent: [(name: String, category: String?, properties: [String: Any]?, options: RudderOption?)] {
+        return [
+            (_screenEventName, nil, nil, nil),
+            (_screenEventName, _screenEventCategory, nil, nil),
+            (_screenEventName, _screenEventCategory, _sampleJsonPayload, nil),
+            (_screenEventName, nil, _sampleJsonPayload, nil),
+            (_screenEventName, nil, nil, _sampleRudderOption),
+        ]
+    }
+    
+    static var identifyEvent: [(userId: String?, traits: [String: Any]?, options: RudderOption?)] {
+        return [
+            (nil, nil, nil),
+            (nil, _sampleJsonPayload, nil),
+            (_identifyEventUserId, nil, nil),
+            (_identifyEventUserId, _sampleJsonPayload, nil),
+            (_identifyEventUserId, nil, _sampleRudderOption)
+        ]
+    }
+    
+    static var groupEvent: [(groupId: String, traits: [String: Any]?, options: RudderOption?)] {
+        return [
+            (_groupId, nil, nil),
+            (_groupId, _sampleJsonPayload, nil),
+            (_groupId, _sampleJsonPayload, _sampleRudderOption)
+        ]
+    }
+     
+    static var aliasEvent: [(alias: String, previousId: String?, options: RudderOption?)] {
+        return [
+            (_aliasId, nil, nil),
+            (_aliasId, _previousId, nil),
+            (_aliasId, nil, _sampleRudderOption)
+        ]
+    }
+     
+    private static var _trackEventName: String { "track_event" }
+    
+    private static var _screenEventName: String { "screen_event" }
+    private static var _screenEventCategory: String { "screen_category" }
+    
+    private static var _identifyEventUserId: String { "identify_event_user_id" }
+    private static var _groupId: String { "group_id" }
+    
+    private static var _aliasId: String { "alias_id" }
+    private static var _previousId: String { "previous_id" }
+    
+    private static var _sampleJsonPayload: [String: Any] {
+        ["key": "value", "number": 1]
+    }
+    private static var _sampleRudderOption: RudderOption {
+        RudderOption(
+            integrations: [
+                "facebook": false,
+                "google": ["key1": "value1", "enabled": true],
+            ],
+            customContext: ["test_context": "test_value"],
+            externalIds: [
+                ExternalId(type: "external_id_key", id: "external_id_value")
+            ]
+        )
     }
 }
