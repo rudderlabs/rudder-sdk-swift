@@ -56,6 +56,7 @@ class AnalyticsManager {
         //Add external plugin to analytics..
         self.analytics?.add(plugin: AdvertisingIdPlugin())
         self.analytics?.add(plugin: BluetoothInfoPlugin())
+        self.analytics?.add(plugin: SampleCustomIntegrationPlugin())
         
         let customOption = RudderOption(integrations: ["CleverTap": true], customContext: ["plugin_key": "plugin_value"], externalIds: [ExternalId(type: "external_id_type", id: "external_id")])
         

@@ -34,6 +34,7 @@
 		539301CC2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */; };
 		53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		85A10BC32EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticUserAgentPlugin.swift; sourceTree = "<group>"; };
 		539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticUserAgentPluginTests.swift; sourceTree = "<group>"; };
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCustomIntegrationPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 				539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */,
 				5328B86B2E3B48820051A202 /* EventFilteringPlugin.swift */,
 				5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */,
+				85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */,
 			);
 			path = CustomPlugins;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 			files = (
 				535BB3E52E04642400E1DAB0 /* SwiftUIExampleApp.swift in Sources */,
 				535BB3E62E04642400E1DAB0 /* AnalyticsManager.swift in Sources */,
+				85A10BC32EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift in Sources */,
 				539301CA2E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift in Sources */,
 				535BB3E72E04642400E1DAB0 /* SetPushTokenPlugin.swift in Sources */,
 				535BB3E82E04642400E1DAB0 /* CustomLogger.swift in Sources */,
