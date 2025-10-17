@@ -36,7 +36,7 @@ class BasicStorageTests {
         #expect(retrievedValue == value)
     }
     
-    @Test("given BasicStorage, when writing and reading integer value, then value is persisted correctly")
+    @Test("given BasicStorage, when writing integer value, then value is persisted correctly")
     func testKeyValueIntegerStorage() async {
         let key = "test_int_key"
         let value = 42
@@ -47,7 +47,7 @@ class BasicStorageTests {
         #expect(retrievedValue == value)
     }
     
-    @Test("given BasicStorage, when writing and reading boolean value, then value is persisted correctly")
+    @Test("given BasicStorage, when writing boolean value, then value is persisted correctly")
     func testKeyValueBooleanStorage() async {
         let key = "test_bool_key"
         let value = true
@@ -58,7 +58,7 @@ class BasicStorageTests {
         #expect(retrievedValue == value)
     }
     
-    @Test("given BasicStorage, when writing and reading codable object, then object is persisted correctly")
+    @Test("given BasicStorage, when writing codable object, then object is persisted correctly")
     func testKeyValueCodableStorage() async {
         struct TestObject: Codable, Equatable {
             let id: String
