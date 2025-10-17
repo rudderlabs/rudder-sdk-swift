@@ -25,7 +25,7 @@ class BasicStorageTests {
     
     // MARK: - KeyValueStorage Tests
     
-    @Test("given BasicStorage, when writing and reading string value, then value is persisted correctly")
+    @Test("given BasicStorage, when writing string value, then value is persisted correctly")
     func testKeyValueStringStorage() async {
         let key = "test_string_key"
         let value = "test_string_value"

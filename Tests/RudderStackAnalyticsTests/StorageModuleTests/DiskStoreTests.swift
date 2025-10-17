@@ -13,7 +13,7 @@ import Foundation
 @Suite("DiskStore Unit Tests")
 class DiskStoreTests {
     
-    private let testWriteKey = "test-disk-write-key-123"
+    private let testWriteKey = "test-disk-write-key-\(String.randomUUIDString)"
     private let sampleEventJson = """
         {"messageId":"test-msg-123","type":"track","event":"Test Event","properties":{"test":true}}
         """
@@ -50,7 +50,7 @@ class DiskStoreTests {
         // Check if file exists on disk but isn't marked as complete
         let fileStorageURL = await store.fileStorageURL
         let contents = FileManager.contentsOf(directory: fileStorageURL.path)
-        #expect(contents.count >= 1) // Should have at least one .tmp file
+        #expect(contents.count == 1)
         
         // Clean up the store
         await store.removeAll()
