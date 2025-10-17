@@ -3,7 +3,6 @@ import Foundation
 @testable import RudderStackAnalytics
 
 // MARK: - MockProvider for Swift Testing
-@MainActor
 final class SwiftTestMockProvider {
     private init() {}
     
@@ -296,18 +295,6 @@ final class MockEventCapturePlugin: Plugin {
         return capturedEvents
     }
     
-    var eventsReceived: [Event] {
-        eventLock.lock()
-        defer { eventLock.unlock() }
-        return capturedEvents
-    }
-    
-    func getLastEvent() -> Event? {
-        eventLock.lock()
-        defer { eventLock.unlock() }
-        return capturedEvents.last
-    }
-    
     func getEventsOfType<T: Event>(_ type: T.Type) -> [T] {
         eventLock.lock()
         defer { eventLock.unlock() }
@@ -318,10 +305,6 @@ final class MockEventCapturePlugin: Plugin {
         eventLock.lock()
         capturedEvents.removeAll()
         eventLock.unlock()
-    }
-    
-    func clearCapturedEvents() {
-        clearEvents()
     }
     
     var eventCount: Int {
