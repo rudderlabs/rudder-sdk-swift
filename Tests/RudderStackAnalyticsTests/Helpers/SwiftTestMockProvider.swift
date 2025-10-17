@@ -362,7 +362,7 @@ extension MockEventCapturePlugin {
         let start = Date()
         
         while true {
-            let events = capturedEvents
+            let events = receivedEvents
             if events.count >= expectedCount {
                 return events
             }
@@ -451,9 +451,7 @@ extension SwiftTestMockProvider {
     
     /// Universal JSON reader for MockResources files - throws error if file not found
     static func loadMockJSON(_ fileName: String) throws -> [String: Any] {
-        var bundles = [
-            Bundle.main,
-        ]
+        var bundles = [Bundle(for: SwiftTestMockProvider.self), Bundle.main]
         
         // Try to add Bundle.module if available (Swift Package Manager)
         #if SWIFT_PACKAGE

@@ -356,7 +356,7 @@ class AnalyticsTests {
         #expect(self.analytics.userId == alias)
         
         guard let event = aliasEvents.first else {
-            Issue.record("Failed to retrieve a group event")
+            Issue.record("Failed to retrieve a alias event")
             return
         }
         
@@ -687,7 +687,7 @@ class AnalyticsTests {
     }
     
     @Test("given Analytics, when performing concurrent user operations, then state remains consistent")
-    func testConcurrentUserOperations() async {
+    func testSequentialUserOperations() async {
         // Perform identify operations sequentially to avoid actor isolation issues
         for i in 0..<5 {
             analytics.identify(userId: "user-\(i)", traits: ["batch": i])
