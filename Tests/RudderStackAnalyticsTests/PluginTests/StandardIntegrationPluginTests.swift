@@ -266,7 +266,6 @@ struct StandardIntegrationPluginTests {
         
         // Since destination is not ready, callback should be stored
         #expect(callbackCalled == false)
-        // Note: Testing internal state would require access to plugin store
     }
     
     @Test("Given a plugin with ready destination, When onDestinationReady is called, Then callback should be called immediately with success")
@@ -303,5 +302,29 @@ struct StandardIntegrationPluginTests {
         case .failure, .none:
             #expect(Bool(false), "Expected success result")
         }
+    }
+    
+    @Test("Given a standard plugin added to IntegrationsController, When plugin store is created, Then isStandardIntegration should be true")
+    func customPluginStoreConfiguration() {
+        let analytics = MockProvider.clientWithDiskStorage
+        let controller = analytics.integrationsController!
+        let mockPlugin = MockStandardIntegrationPlugin(key: "standard_destination")
+        
+        controller.add(integration: mockPlugin)
+        mockPlugin.setup(analytics: analytics)
+        
+        let pluginStore = controller.integrationPluginStores["standard_destination"]
+        #expect(pluginStore != nil)
+        #expect(pluginStore?.isStandardIntegration == true)
+    }
+    
+    @Test("Given a standard integration plugin, When plugin is checked for StandardPlugin conformance, Then plugin should conform to StandardPlugin")
+    func customPluginNotStandardPlugin() {
+        let analytics = MockProvider.clientWithDiskStorage
+        let customPlugin = MockStandardIntegrationPlugin(key: "standard_destination")
+        customPlugin.setup(analytics: analytics)
+        
+        #expect(customPlugin.key == "standard_destination")
+        #expect(customPlugin is StandardPlugin)
     }
 }

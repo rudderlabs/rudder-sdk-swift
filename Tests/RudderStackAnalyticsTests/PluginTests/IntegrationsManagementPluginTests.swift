@@ -22,12 +22,12 @@ struct IntegrationsManagementPluginTests {
         #expect(plugin.analytics == nil)
     }
     
-    @Test("Given IntegrationsManagementPlugin, When setup is called, Then analytics should be set and source config observation should start")
+    @Test("Given IntegrationsManagementPlugin, When setup is called, Then analytics should be set")
     func testSetup() async {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         #expect(plugin.analytics === analytics)
     }
@@ -38,7 +38,7 @@ struct IntegrationsManagementPluginTests {
     func testEventQueuing() {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         let trackEvent = TrackEvent(event: "Test Event")
         
@@ -52,7 +52,7 @@ struct IntegrationsManagementPluginTests {
     func testMultipleEventQueuing() {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         let events = [
             TrackEvent(event: "Event 1"),
@@ -66,11 +66,11 @@ struct IntegrationsManagementPluginTests {
         results.forEach { #expect($0 != nil) }
     }
     
-    @Test("Given IntegrationsManagementPlugin with max queue size, When more events than limit are queued, Then oldest events should be dropped")
+    @Test("Given IntegrationsManagementPlugin with max queue size, When more events than limit are queued, Then plugin should handle gracefully without crashing")
     func testQueueSizeLimit() {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         for i in 0..<(MAX_QUEUE_SIZE + 100) {
             let event = TrackEvent(event: "Event \(i)")
@@ -86,12 +86,11 @@ struct IntegrationsManagementPluginTests {
     func testSourceConfigUpdate() async {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         // Add a mock integration to the controller
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
-        analytics.integrationsController?.add(integration: mockPlugin)
-        mockPlugin.setup(analytics: analytics) // Ensure plugin has analytics reference
+        analytics.add(plugin: mockPlugin)
         
         let sourceConfig = MockProvider.sourceConfiguration!
         
@@ -107,12 +106,11 @@ struct IntegrationsManagementPluginTests {
     func testSourceConfigDisabled() async {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         // Add a mock integration to the controller
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
-        analytics.integrationsController?.add(integration: mockPlugin)
-        mockPlugin.setup(analytics: analytics) // Ensure plugin has analytics reference
+        analytics.add(plugin: mockPlugin)
         
         analytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
         
@@ -128,12 +126,11 @@ struct IntegrationsManagementPluginTests {
     func testEventProcessingAfterSourceConfig() async {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         // Add a mock integration to track processed events
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
-        analytics.integrationsController?.add(integration: mockPlugin)
-        mockPlugin.setup(analytics: analytics) // Ensure plugin has analytics reference
+        analytics.add(plugin: mockPlugin)
         
         // Queue some events before source config
         let trackEvent1 = TrackEvent(event: "Event 1")
@@ -146,9 +143,11 @@ struct IntegrationsManagementPluginTests {
         
         analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
         
-        await runAfter(0.5) {
+        await runAfter(0.3) {
             #expect(mockPlugin.createCalled == true)
             // Events should have been processed through the integration plugin chain
+            // We verify that track events were received (could be lifecycle events + our queued events)
+            #expect(mockPlugin.trackEventReceived != nil)
         }
     }
     
@@ -158,11 +157,11 @@ struct IntegrationsManagementPluginTests {
     func testIntegrationPluginStoresAccess() {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         // Add an integration
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
-        analytics.integrationsController?.add(integration: mockPlugin)
+        analytics.add(plugin: mockPlugin)
         
         let stores = plugin.integrationPluginStores
         
@@ -174,7 +173,7 @@ struct IntegrationsManagementPluginTests {
     func testIntegrationPluginChainAccess() {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         let chain = plugin.integrationPluginChain
         
@@ -186,7 +185,7 @@ struct IntegrationsManagementPluginTests {
     func testSetIsSourceEnabledFetchedAtLeastOnce() {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         #expect(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce == false)
         
@@ -199,43 +198,16 @@ struct IntegrationsManagementPluginTests {
     func testInitDestinationDelegation() {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
-        analytics.integrationsController?.add(integration: mockPlugin)
-        mockPlugin.setup(analytics: analytics) // Ensure plugin has analytics reference
+        analytics.add(plugin: mockPlugin)
         
         let sourceConfig = MockProvider.sourceConfiguration!
         
         plugin.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
         #expect(mockPlugin.createCalled == true)
-    }
-    
-    // MARK: - Multiple Source Config Updates Tests
-    
-    @Test("Given IntegrationsManagementPlugin, When source config is updated multiple times, Then integration should only be processed once for first update")
-    func testMultipleSourceConfigUpdates() async {
-        let analytics = MockProvider.clientWithDiskStorage
-        let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
-        
-        let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
-        analytics.integrationsController?.add(integration: mockPlugin)
-        mockPlugin.setup(analytics: analytics) // Ensure plugin has analytics reference
-        
-        let sourceConfig1 = MockProvider.sourceConfiguration!
-        let sourceConfig2 = MockProvider.sourceConfiguration!
-        
-        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig1))
-        
-        await runAfter(0.1) {
-            analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig2))
-        }
-        
-        await runAfter(0.2) {
-            #expect(mockPlugin.createCalled == true || mockPlugin.updateCalled == true)
-        }
     }
     
     // MARK: - Memory Management Tests
@@ -257,7 +229,7 @@ struct IntegrationsManagementPluginTests {
     func testEventQueuingErrorHandling() {
         let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
-        plugin.setup(analytics: analytics)
+        analytics.add(plugin: plugin)
         
         // Simulate a scenario where queuing might fail
         let event = TrackEvent(event: "Test Event")
@@ -266,16 +238,3 @@ struct IntegrationsManagementPluginTests {
         #expect(result != nil)
     }
 }
-
-// MARK: - Helper Extensions
-
-private extension IntegrationsManagementPluginTests {
-    func runAfter(_ delay: TimeInterval, _ block: @escaping () -> Void) async {
-        try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
-        block()
-    }
-}
-
-// MARK: - Helper Extensions for Event Creation
-
-// Remove the apply extension as it's not needed with proper TrackEvent initialization

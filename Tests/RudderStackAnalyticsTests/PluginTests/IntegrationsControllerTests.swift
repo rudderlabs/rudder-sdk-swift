@@ -14,15 +14,12 @@ struct IntegrationsControllerTests {
     
     // MARK: - Initialization Tests
     
-        @Test("Given Analytics instance, When IntegrationsController is initialized, Then controller should be properly set up")
+    @Test("Given Analytics instance, When IntegrationsController is initialized, Then controller should be properly set up")
     func testIntegrationsControllerInitialization() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         
-        // When
         let controller = analytics.integrationsController!
         
-        // Then
         #expect(controller.analytics != nil)
         #expect(controller.analytics === analytics)
         #expect(controller.integrationPluginStores.isEmpty)
@@ -31,25 +28,21 @@ struct IntegrationsControllerTests {
     
     // MARK: - Add Integration Tests
     
-        @Test("Given IntegrationsController, When integration plugin is added, Then plugin should be added to chain and store created")
+    @Test("Given IntegrationsController, When integration plugin is added, Then plugin should be added to chain and store created")
     func testAddIntegrationPlugin() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "TestPlugin")
         
-        // When
         controller.add(integration: mockPlugin)
         mockPlugin.setup(analytics: analytics)
         
-        // Then
         #expect(controller.integrationPluginStores["TestPlugin"] != nil)
         #expect(controller.integrationPluginStores["TestPlugin"]?.isStandardIntegration == true)
     }
     
     @Test("Given IntegrationsController with source config fetched, When integration plugin is added, Then destination should be initialized")
     func testAddIntegrationWithExistingSourceConfig() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
@@ -59,11 +52,9 @@ struct IntegrationsControllerTests {
         controller.isSourceEnabledFetchedAtLeastOnce = true
         analytics.sourceConfigState.state.value = sourceConfig
         
-        // When
         controller.add(integration: mockPlugin)
         mockPlugin.setup(analytics: analytics)
         
-        // Then
         #expect(controller.integrationPluginStores["Google Ads"] != nil)
         // Destination should be automatically initialized since source config exists
         #expect(mockPlugin.createCalled == true)
@@ -71,23 +62,19 @@ struct IntegrationsControllerTests {
     
     @Test("Given IntegrationsController with added integration, When integration is removed, Then plugin should be removed from chain and store")
     func testRemoveIntegrationPlugin() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "TestPlugin")
         controller.add(integration: mockPlugin)
         mockPlugin.setup(analytics: analytics)
         
-        // When
         controller.remove(integration: mockPlugin)
         
-        // Then
         #expect(controller.integrationPluginStores["TestPlugin"] == nil)
     }    // MARK: - Destination Initialization Tests
     
     @Test("Given IntegrationsController and valid source config, When initDestination is called, Then destination should be created successfully")
     func testInitDestinationSuccess() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
@@ -96,17 +83,14 @@ struct IntegrationsControllerTests {
         mockPlugin.setup(analytics: analytics) // Ensure plugin has analytics reference
         let sourceConfig = MockProvider.sourceConfiguration!
         
-        // When
         controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
-        // Then
         #expect(mockPlugin.createCalled == true)
         #expect(controller.integrationPluginStores["Google Ads"]?.isDestinationReady == true)
     }
     
     @Test("Given IntegrationsController and source config without destination, When initDestination is called, Then destination creation should fail gracefully")
     func testInitDestinationMissingDestination() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "NonExistentDestination")
@@ -115,17 +99,14 @@ struct IntegrationsControllerTests {
         mockPlugin.setup(analytics: analytics)
         let sourceConfig = MockProvider.sourceConfiguration!
         
-        // When
         controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
-        // Then
         #expect(mockPlugin.createCalled == false)
         #expect(controller.integrationPluginStores["NonExistentDestination"]?.isDestinationReady == false)
     }
     
     @Test("Given IntegrationsController and disabled destination in source config, When initDestination is called, Then destination should not be created")
     func testInitDestinationDisabledDestination() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "NonExistentDestination") // Use non-existent destination to simulate disabled
@@ -133,17 +114,15 @@ struct IntegrationsControllerTests {
         controller.add(integration: mockPlugin)
         let sourceConfig = MockProvider.sourceConfiguration!
         
-        // When
         controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
-        // Then - Non-existent destination should be treated as disabled
+        // Non-existent destination should be treated as disabled
         #expect(mockPlugin.createCalled == false)
         #expect(controller.integrationPluginStores["NonExistentDestination"]?.isDestinationReady == false)
     }
     
     @Test("Given IntegrationsController and integration that throws error during create, When initDestination is called, Then error should be handled gracefully")
     func testInitDestinationCreateError() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
@@ -153,10 +132,8 @@ struct IntegrationsControllerTests {
         mockPlugin.setup(analytics: analytics) // Ensure plugin has analytics reference
         let sourceConfig = MockProvider.sourceConfiguration!
         
-        // When
         controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
-        // Then
         #expect(mockPlugin.createCalled == true)
         #expect(controller.integrationPluginStores["Google Ads"]?.isDestinationReady == false)
     }
@@ -165,7 +142,6 @@ struct IntegrationsControllerTests {
     
     @Test("Given IntegrationsController with existing destination, When initDestination is called again, Then destination should be updated")
     func testUpdateDestination() throws {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
@@ -177,17 +153,14 @@ struct IntegrationsControllerTests {
         // Create destination first
         try mockPlugin.create(destinationConfig: [:])
         
-        // When
         controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
-        // Then
         #expect(mockPlugin.updateCalled == true)
         #expect(controller.integrationPluginStores["Google Ads"]?.isDestinationReady == true)
     }
     
     @Test("Given IntegrationsController with destination that throws error during update, When initDestination is called, Then error should be handled gracefully")
     func testUpdateDestinationError() throws {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
@@ -200,10 +173,8 @@ struct IntegrationsControllerTests {
         // Create destination first
         try mockPlugin.create(destinationConfig: [:])
         
-        // When
         controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
-        // Then
         #expect(mockPlugin.updateCalled == true)
         #expect(controller.integrationPluginStores["Google Ads"]?.isDestinationReady == false)
     }
@@ -212,7 +183,6 @@ struct IntegrationsControllerTests {
     
     @Test("Given IntegrationsController with ready destinations, When reset is called, Then all ready destinations should be reset")
     func testReset() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin1 = MockStandardIntegrationPlugin(key: "destination1")
@@ -227,10 +197,8 @@ struct IntegrationsControllerTests {
         controller.integrationPluginStores["destination1"]?.isDestinationReady = true
         controller.integrationPluginStores["destination2"]?.isDestinationReady = false
         
-        // When
         controller.reset()
         
-        // Then
         #expect(mockPlugin1.resetCalled == true)
         #expect(mockPlugin2.resetCalled == false) // Not ready, so not reset
     }
@@ -239,7 +207,6 @@ struct IntegrationsControllerTests {
     
     @Test("Given IntegrationsController with ready destinations, When flush is called, Then all ready destinations should be flushed")
     func testFlush() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin1 = MockStandardIntegrationPlugin(key: "destination1")
@@ -254,10 +221,8 @@ struct IntegrationsControllerTests {
         controller.integrationPluginStores["destination1"]?.isDestinationReady = true
         controller.integrationPluginStores["destination2"]?.isDestinationReady = false
         
-        // When
         controller.flush()
         
-        // Then
         #expect(mockPlugin1.flushCalled == true)
         #expect(mockPlugin2.flushCalled == false) // Not ready, so not flushed
     }
@@ -266,7 +231,6 @@ struct IntegrationsControllerTests {
     
     @Test("Given IntegrationsController and integration with callbacks, When destination is successfully created, Then success callbacks should be notified")
     func testNotifyCallbacksSuccess() async {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
@@ -284,10 +248,8 @@ struct IntegrationsControllerTests {
         
         let sourceConfig = MockProvider.sourceConfiguration!
         
-        // When
         controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
-
-        // Then
+        
         #expect(callbackResult != nil)
         if case .success = callbackResult {
             // Success case verified
@@ -299,7 +261,6 @@ struct IntegrationsControllerTests {
     
     @Test("Given IntegrationsController and integration with callbacks, When destination creation fails, Then failure callbacks should be notified")
     func testNotifyCallbacksFailure() async {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
@@ -316,10 +277,8 @@ struct IntegrationsControllerTests {
         
         let sourceConfig = MockProvider.sourceConfiguration!
         
-        // When
         controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
-        // Then
         #expect(callbackResult != nil)
         if case .failure = callbackResult {
             // Failure case verified
@@ -332,11 +291,9 @@ struct IntegrationsControllerTests {
     
     @Test("Given IntegrationsController, When multiple integrations are added concurrently, Then operations should be thread-safe")
     func testThreadSafety() async {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         
-        // When
         await withTaskGroup(of: Void.self) { group in
             for i in 0..<10 {
                 group.addTask {
@@ -346,7 +303,6 @@ struct IntegrationsControllerTests {
             }
         }
         
-        // Then
         #expect(controller.integrationPluginStores.count == 10)
     }
     
@@ -354,7 +310,6 @@ struct IntegrationsControllerTests {
     
     @Test("Given IntegrationsController, When deinit is called, Then resources should be cleaned up")
     func testDeinit() {
-        // Given
         let analytics = MockProvider.clientWithDiskStorage
         var controller: IntegrationsController? = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
@@ -362,19 +317,9 @@ struct IntegrationsControllerTests {
         controller?.add(integration: mockPlugin)
         #expect(controller?.integrationPluginStores.count == 1)
         
-        // When
         controller = nil
         
-        // Then - No way to directly test deinit, but this ensures no retain cycles
+        // No way to directly test deinit, but this ensures no retain cycles
         #expect(controller == nil)
-    }
-}
-
-// MARK: - Helper Extensions
-
-private extension IntegrationsControllerTests {
-    func runAfter(_ delay: TimeInterval, _ block: @escaping () -> Void) async {
-        try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
-        block()
     }
 }
