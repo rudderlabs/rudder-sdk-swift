@@ -48,64 +48,62 @@ class AnalyticsTests {
         // when
         analytics.track(name: eventName, properties: properties, options: options)
         
-        // then
-        await runAfter(0.1) {
-            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
-            #expect(trackEvents.count >= 1)
-            
-            guard let event = trackEvents.first else {
-                Issue.record("Failed to retrieve a track event")
-                return
+        let trackEvents = await mockPlugin.waitForEvents(TrackEvent.self)
+        #expect(trackEvents.count >= 1)
+        
+        guard let event = trackEvents.first else {
+            Issue.record("Failed to retrieve a track event")
+            return
+        }
+        #expect(event.event == eventName)
+        
+        // Validate properties if provided
+        if let properties {
+            let raw = event.properties?.dictionary?.rawDictionary ?? [:]
+            for (key, value) in properties {
+                #expect("\(raw[key] ?? "")" == "\(value)")
             }
-            #expect(event.event == eventName)
-            
-            // Validate properties if provided
-            if let properties {
-                let raw = event.properties?.dictionary?.rawDictionary ?? [:]
-                for (key, value) in properties {
-                    #expect("\(raw[key] ?? "")" == "\(value)")
+        }
+        
+        // Validate options if provided
+        if let options {
+            // Integrations
+            if let integrations = options.integrations, !integrations.isEmpty {
+                let eventIntegrations = event.integrations?.rawDictionary ?? [:]
+                for (key, value) in integrations {
+                    #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
                 }
             }
             
-            // Validate options if provided
-            if let options {
-                // Integrations
-                if let integrations = options.integrations, !integrations.isEmpty {
-                    let eventIntegrations = event.integrations?.rawDictionary ?? [:]
-                    for (key, value) in integrations {
-                        #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+            // Custom Context
+            if let customContext = options.customContext, !customContext.isEmpty {
+                let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
+                if !eventContext.isEmpty {
+                    customContext.forEach { key, value in
+                        #expect(eventContext.keys.contains(key))
+                        #expect("\(eventContext[key] ?? "")" == "\(value)")
                     }
                 }
+            }
+            
+            // External IDs
+            if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
+               let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
                 
-                // Custom Context
-                if let customContext = options.customContext, !customContext.isEmpty {
-                    let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
-                    if !eventContext.isEmpty {
-                        customContext.forEach { key, value in
-                            #expect(eventContext.keys.contains(key))
-                            #expect("\(eventContext[key] ?? "")" == "\(value)")
-                        }
-                    }
-                }
-                
-                // External IDs
-                if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
-                   let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
+                for externalId in optionExternalIds {
+                    let idDict = externalId.dictionary ?? [:]
                     
-                    for externalId in optionExternalIds {
-                        let idDict = externalId.dictionary ?? [:]
-                        
-                        let containsMatch = eventExternalIds.contains { eventDict in
-                            idDict.allSatisfy { key, value in
-                                "\(eventDict[key] ?? "")" == "\(value)"
-                            }
+                    let containsMatch = eventExternalIds.contains { eventDict in
+                        idDict.allSatisfy { key, value in
+                            "\(eventDict[key] ?? "")" == "\(value)"
                         }
-                        
-                        #expect(containsMatch, "Missing externalId \(idDict) in event context")
                     }
+                    
+                    #expect(containsMatch, "Missing externalId \(idDict) in event context")
                 }
             }
         }
+        
     }
     
     // MARK: - Screen Event Tests
@@ -116,63 +114,61 @@ class AnalyticsTests {
         analytics.screen(screenName: name, category: category, properties: properties, options: options)
         
         // then
-        await runAfter(0.1) {
-            let screenEvents = self.mockPlugin.getEventsOfType(ScreenEvent.self)
-            #expect(screenEvents.count >= 1)
-            
-            guard let event = screenEvents.first else {
-                Issue.record("Failed to retrieve a screen event")
-                return
+        let screenEvents = await mockPlugin.waitForEvents(ScreenEvent.self)
+        #expect(screenEvents.count >= 1)
+        
+        guard let event = screenEvents.first else {
+            Issue.record("Failed to retrieve a screen event")
+            return
+        }
+        #expect(event.event == name)
+        
+        if let category {
+            let eventCategory = event.properties?.dictionary?.rawDictionary["category"] as? String
+            #expect(eventCategory == category)
+        }
+        
+        if let properties {
+            let eventProps = event.properties?.dictionary?.rawDictionary ?? [:]
+            for (key, expectedValue) in properties {
+                #expect("\(eventProps[key] ?? "")" == "\(expectedValue)")
             }
-            #expect(event.event == name)
-            
-            if let category {
-                let eventCategory = event.properties?.dictionary?.rawDictionary["category"] as? String
-                #expect(eventCategory == category)
-            }
-            
-            if let properties {
-                let eventProps = event.properties?.dictionary?.rawDictionary ?? [:]
-                for (key, expectedValue) in properties {
-                    #expect("\(eventProps[key] ?? "")" == "\(expectedValue)")
+        }
+        
+        if let options {
+            // Integrations
+            if let integrations = options.integrations, !integrations.isEmpty {
+                let eventIntegrations = event.integrations?.rawDictionary ?? [:]
+                for (key, value) in integrations {
+                    #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
                 }
             }
             
-            if let options {
-                // Integrations
-                if let integrations = options.integrations, !integrations.isEmpty {
-                    let eventIntegrations = event.integrations?.rawDictionary ?? [:]
-                    for (key, value) in integrations {
-                        #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+            // Custom Context
+            if let customContext = options.customContext, !customContext.isEmpty {
+                let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
+                if !eventContext.isEmpty {
+                    customContext.forEach { key, value in
+                        #expect(eventContext.keys.contains(key))
+                        #expect("\(eventContext[key] ?? "")" == "\(value)")
                     }
                 }
+            }
+            
+            // External IDs
+            if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
+               let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
                 
-                // Custom Context
-                if let customContext = options.customContext, !customContext.isEmpty {
-                    let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
-                    if !eventContext.isEmpty {
-                        customContext.forEach { key, value in
-                            #expect(eventContext.keys.contains(key))
-                            #expect("\(eventContext[key] ?? "")" == "\(value)")
-                        }
-                    }
-                }
-                
-                // External IDs
-                if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
-                   let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
+                for externalId in optionExternalIds {
+                    let idDict = externalId.dictionary ?? [:]
                     
-                    for externalId in optionExternalIds {
-                        let idDict = externalId.dictionary ?? [:]
-                        
-                        let containsMatch = eventExternalIds.contains { eventDict in
-                            idDict.allSatisfy { key, value in
-                                "\(eventDict[key] ?? "")" == "\(value)"
-                            }
+                    let containsMatch = eventExternalIds.contains { eventDict in
+                        idDict.allSatisfy { key, value in
+                            "\(eventDict[key] ?? "")" == "\(value)"
                         }
-                        
-                        #expect(containsMatch, "Missing externalId \(idDict) in event context")
                     }
+                    
+                    #expect(containsMatch, "Missing externalId \(idDict) in event context")
                 }
             }
         }
@@ -186,70 +182,65 @@ class AnalyticsTests {
         analytics.identify(userId: userId, traits: traits, options: options)
         
         // then
-        await runAfter(0.1) {
-            
-            // Validate Identify Events stored in plugin
-            let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
-            #expect(identifyEvents.count >= 1)
-            
-            guard let event = identifyEvents.first else {
-                Issue.record("Failed to retrieve a identify event")
-                return
+        let identifyEvents = await mockPlugin.waitForEvents(IdentifyEvent.self)
+        #expect(identifyEvents.count >= 1)
+        
+        guard let event = identifyEvents.first else {
+            Issue.record("Failed to retrieve a identify event")
+            return
+        }
+        
+        // Validate userId
+        if let userId {
+            #expect(self.analytics.userId == userId)
+        }
+        
+        // Validate traits
+        if let traits {
+            let analyticsTraits = self.analytics.traits ?? [:]
+            if !analyticsTraits.isEmpty {
+                for (key, value) in traits {
+                    #expect(analyticsTraits.keys.contains(key))
+                    #expect("\(analyticsTraits[key] ?? "")" == "\(value)")
+                }
+            }
+        }
+        
+        // Validate options if provided
+        if let options {
+            // Integrations
+            if let integrations = options.integrations, !integrations.isEmpty {
+                let eventIntegrations = event.integrations?.rawDictionary ?? [:]
+                for (key, value) in integrations {
+                    #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+                }
             }
             
-            // Validate userId
-            if let userId {
-                #expect(self.analytics.userId == userId)
-            }
-            
-            // Validate traits
-            if let traits {
-                let analyticsTraits = self.analytics.traits ?? [:]
-                if !analyticsTraits.isEmpty {
-                    for (key, value) in traits {
-                        #expect(analyticsTraits.keys.contains(key))
-                        #expect("\(analyticsTraits[key] ?? "")" == "\(value)")
+            // Custom Context
+            if let customContext = options.customContext, !customContext.isEmpty {
+                let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
+                if !eventContext.isEmpty {
+                    customContext.forEach { key, value in
+                        #expect(eventContext.keys.contains(key))
+                        #expect("\(eventContext[key] ?? "")" == "\(value)")
                     }
                 }
             }
             
-            
-            // Validate options if provided
-            if let options {
-                // Integrations
-                if let integrations = options.integrations, !integrations.isEmpty {
-                    let eventIntegrations = event.integrations?.rawDictionary ?? [:]
-                    for (key, value) in integrations {
-                        #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
-                    }
-                }
+            // External IDs
+            if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
+               let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
                 
-                // Custom Context
-                if let customContext = options.customContext, !customContext.isEmpty {
-                    let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
-                    if !eventContext.isEmpty {
-                        customContext.forEach { key, value in
-                            #expect(eventContext.keys.contains(key))
-                            #expect("\(eventContext[key] ?? "")" == "\(value)")
-                        }
-                    }
-                }
-                
-                // External IDs
-                if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
-                   let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
+                for externalId in optionExternalIds {
+                    let idDict = externalId.dictionary ?? [:]
                     
-                    for externalId in optionExternalIds {
-                        let idDict = externalId.dictionary ?? [:]
-                        
-                        let containsMatch = eventExternalIds.contains { eventDict in
-                            idDict.allSatisfy { key, value in
-                                "\(eventDict[key] ?? "")" == "\(value)"
-                            }
+                    let containsMatch = eventExternalIds.contains { eventDict in
+                        idDict.allSatisfy { key, value in
+                            "\(eventDict[key] ?? "")" == "\(value)"
                         }
-                        
-                        #expect(containsMatch, "Missing externalId \(idDict) in event context")
                     }
+                    
+                    #expect(containsMatch, "Missing externalId \(idDict) in event context")
                 }
             }
         }
@@ -260,19 +251,19 @@ class AnalyticsTests {
     func testIdentifyWithDifferentUserIdTriggersReset() async {
         // First identify
         analytics.identify(userId: "user-1", traits: ["first": "true"])
-        await runAfter(0.1) {
-            #expect(self.analytics.userId == "user-1")
-        }
+        
+        await mockPlugin.waitForEvents(IdentifyEvent.self)
+        #expect(self.analytics.userId == "user-1")
         
         // Identify with different user ID (should trigger reset)
         analytics.identify(userId: "user-2", traits: ["second": "true"])
-        await runAfter(0.1) {
-            #expect(self.analytics.userId == "user-2")
-            #expect(self.analytics.traits?["second"] as? String == "true")
-            
-            let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
-            #expect(identifyEvents.count >= 2) // Should have both identify events
-        }
+        await mockPlugin.waitForEvents(IdentifyEvent.self, count: 2)
+        
+        #expect(self.analytics.userId == "user-2")
+        #expect(self.analytics.traits?["second"] as? String == "true")
+        
+        let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
+        #expect(identifyEvents.count >= 2) // Should have both identify events
     }
     
     // MARK: - Group Event Tests
@@ -283,63 +274,61 @@ class AnalyticsTests {
         analytics.group(groupId: groupId, traits: traits, options: options)
         
         // then
-        await runAfter(0.1) {
-            let groupEvents = self.mockPlugin.getEventsOfType(GroupEvent.self)
-            #expect(groupEvents.count >= 1)
-            
-            guard let event = groupEvents.first else {
-                Issue.record("Failed to retrieve a group event")
-                return
-            }
-            #expect(event.groupId == groupId)
-            
-            // Validate traits
-            if let traits {
-                let analyticsTraits = self.analytics.traits ?? [:]
-                if !analyticsTraits.isEmpty {
-                    for (key, value) in traits {
-                        #expect(analyticsTraits.keys.contains(key))
-                        #expect("\(analyticsTraits[key] ?? "")" == "\(value)")
-                    }
+        let groupEvents = await mockPlugin.waitForEvents(GroupEvent.self)
+        #expect(groupEvents.count >= 1)
+        
+        guard let event = groupEvents.first else {
+            Issue.record("Failed to retrieve a group event")
+            return
+        }
+        #expect(event.groupId == groupId)
+        
+        // Validate traits
+        if let traits {
+            let analyticsTraits = self.analytics.traits ?? [:]
+            if !analyticsTraits.isEmpty {
+                for (key, value) in traits {
+                    #expect(analyticsTraits.keys.contains(key))
+                    #expect("\(analyticsTraits[key] ?? "")" == "\(value)")
                 }
             }
+        }
+        
+        // Validate options if provided
+        if let options {
+            // Integrations
+            if let integrations = options.integrations, !integrations.isEmpty {
+                let eventIntegrations = event.integrations?.rawDictionary ?? [:]
+                for (key, value) in integrations {
+                    #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+                }
+            }
             
-            // Validate options if provided
-            if let options {
-                // Integrations
-                if let integrations = options.integrations, !integrations.isEmpty {
-                    let eventIntegrations = event.integrations?.rawDictionary ?? [:]
-                    for (key, value) in integrations {
-                        #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+            // Custom Context
+            if let customContext = options.customContext, !customContext.isEmpty {
+                let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
+                if !eventContext.isEmpty {
+                    customContext.forEach { key, value in
+                        #expect(eventContext.keys.contains(key))
+                        #expect("\(eventContext[key] ?? "")" == "\(value)")
                     }
                 }
+            }
+            
+            // External IDs
+            if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
+               let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
                 
-                // Custom Context
-                if let customContext = options.customContext, !customContext.isEmpty {
-                    let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
-                    if !eventContext.isEmpty {
-                        customContext.forEach { key, value in
-                            #expect(eventContext.keys.contains(key))
-                            #expect("\(eventContext[key] ?? "")" == "\(value)")
-                        }
-                    }
-                }
-                
-                // External IDs
-                if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
-                   let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
+                for externalId in optionExternalIds {
+                    let idDict = externalId.dictionary ?? [:]
                     
-                    for externalId in optionExternalIds {
-                        let idDict = externalId.dictionary ?? [:]
-                        
-                        let containsMatch = eventExternalIds.contains { eventDict in
-                            idDict.allSatisfy { key, value in
-                                "\(eventDict[key] ?? "")" == "\(value)"
-                            }
+                    let containsMatch = eventExternalIds.contains { eventDict in
+                        idDict.allSatisfy { key, value in
+                            "\(eventDict[key] ?? "")" == "\(value)"
                         }
-                        
-                        #expect(containsMatch, "Missing externalId \(idDict) in event context")
                     }
+                    
+                    #expect(containsMatch, "Missing externalId \(idDict) in event context")
                 }
             }
         }
@@ -358,61 +347,59 @@ class AnalyticsTests {
         // when
         analytics.alias(newId: alias, previousId: previousId, options: options)
         
+        // Validate alias events
+        let aliasEvents = await mockPlugin.waitForEvents(AliasEvent.self)
+        #expect(aliasEvents.count >= 1)
+        
         // then
-        await runAfter(0.1) {
-            // Validate current userId
-            #expect(self.analytics.userId == alias)
-            
-            // Validate alias events
-            let aliasEvents = self.mockPlugin.getEventsOfType(AliasEvent.self)
-            #expect(aliasEvents.count >= 1)
-            
-            guard let event = aliasEvents.first else {
-                Issue.record("Failed to retrieve a group event")
-                return
+        // Validate current userId
+        #expect(self.analytics.userId == alias)
+        
+        guard let event = aliasEvents.first else {
+            Issue.record("Failed to retrieve a group event")
+            return
+        }
+        
+        #expect(event.userId == alias)
+        
+        if let previousId {
+            #expect(event.previousId == previousId)
+        }
+        // Validate options if provided
+        if let options {
+            // Integrations
+            if let integrations = options.integrations, !integrations.isEmpty {
+                let eventIntegrations = event.integrations?.rawDictionary ?? [:]
+                for (key, value) in integrations {
+                    #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
+                }
             }
             
-            #expect(event.userId == alias)
-            
-            if let previousId {
-                #expect(event.previousId == previousId)
+            // Custom Context
+            if let customContext = options.customContext, !customContext.isEmpty {
+                let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
+                if !eventContext.isEmpty {
+                    customContext.forEach { key, value in
+                        #expect(eventContext.keys.contains(key))
+                        #expect("\(eventContext[key] ?? "")" == "\(value)")
+                    }
+                }
             }
-            // Validate options if provided
-            if let options {
-                // Integrations
-                if let integrations = options.integrations, !integrations.isEmpty {
-                    let eventIntegrations = event.integrations?.rawDictionary ?? [:]
-                    for (key, value) in integrations {
-                        #expect("\(eventIntegrations[key] ?? "")" == "\(value)")
-                    }
-                }
+            
+            // External IDs
+            if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
+               let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
                 
-                // Custom Context
-                if let customContext = options.customContext, !customContext.isEmpty {
-                    let eventContext = event.context?.rawDictionary["customContext"] as? [String: Any] ?? [:]
-                    if !eventContext.isEmpty {
-                        customContext.forEach { key, value in
-                            #expect(eventContext.keys.contains(key))
-                            #expect("\(eventContext[key] ?? "")" == "\(value)")
-                        }
-                    }
-                }
-                
-                // External IDs
-                if let optionExternalIds = options.externalIds, !optionExternalIds.isEmpty,
-                   let eventExternalIds = event.context?.rawDictionary["externalId"] as? [[String: Any]] {
+                for externalId in optionExternalIds {
+                    let idDict = externalId.dictionary ?? [:]
                     
-                    for externalId in optionExternalIds {
-                        let idDict = externalId.dictionary ?? [:]
-                        
-                        let containsMatch = eventExternalIds.contains { eventDict in
-                            idDict.allSatisfy { key, value in
-                                "\(eventDict[key] ?? "")" == "\(value)"
-                            }
+                    let containsMatch = eventExternalIds.contains { eventDict in
+                        idDict.allSatisfy { key, value in
+                            "\(eventDict[key] ?? "")" == "\(value)"
                         }
-                        
-                        #expect(containsMatch, "Missing externalId \(idDict) in event context")
                     }
+                    
+                    #expect(containsMatch, "Missing externalId \(idDict) in event context")
                 }
             }
         }
@@ -426,21 +413,14 @@ class AnalyticsTests {
         let newId = "new-user-id"
         let previousId = "old-user-id"
         
-        await runAfter(0.1) {
-            self.analytics.alias(newId: newId, previousId: previousId)
-            
-            await runAfter(0.1) {
-                #expect(self.analytics.userId == newId)
-                
-                let aliasEvents = self.mockPlugin.getEventsOfType(AliasEvent.self)
-                #expect(aliasEvents.count >= 1)
-                #expect(aliasEvents.first?.previousId == previousId)
-            }
-        }
+        // Validate alias events
+        await mockPlugin.waitForEvents(IdentifyEvent.self)
         
-        #expect(analytics.userId == newId)
+        self.analytics.alias(newId: newId, previousId: previousId)
         
-        let aliasEvents = mockPlugin.getEventsOfType(AliasEvent.self)
+        let aliasEvents: [AliasEvent] = await mockPlugin.waitForEvents(AliasEvent.self)
+        #expect(self.analytics.userId == newId)
+        
         #expect(aliasEvents.count >= 1)
         #expect(aliasEvents.first?.previousId == previousId)
     }
@@ -509,10 +489,10 @@ class AnalyticsTests {
         analytics.add(plugin: additionalPlugin)
         analytics.track(name: "Test Plugin Event")
         
-        await runAfter(0.1) {
-            #expect(additionalPlugin.setupCalled == true)
-            #expect(additionalPlugin.eventCount >= 1)
-        }
+        await additionalPlugin.waitForEvents()
+        
+        #expect(additionalPlugin.setupCalled == true)
+        #expect(additionalPlugin.eventCount >= 1)
     }
     
     @Test("given Analytics with plugin, when removing plugin, then plugin no longer receives events")
@@ -523,21 +503,19 @@ class AnalyticsTests {
         analytics.add(plugin: removablePlugin)
         analytics.track(name: "Before Remove")
         
-        await runAfter(0.1) {
-            let eventsBeforeRemoval = removablePlugin.eventCount
-            #expect(eventsBeforeRemoval >= 1)
-            
-            // Remove plugin
-            self.analytics.remove(plugin: removablePlugin)
-            removablePlugin.clearEvents()
-            
-            self.analytics.track(name: "After Remove")
-            
-            await runAfter(0.1) {
-                #expect(removablePlugin.eventCount == 0)
-            }
-        }
+        await removablePlugin.waitForEvents()
         
+        let eventsBeforeRemoval = removablePlugin.eventCount
+        #expect(eventsBeforeRemoval >= 1)
+        
+        // Remove plugin
+        self.analytics.remove(plugin: removablePlugin)
+        removablePlugin.clearEvents()
+        
+        self.analytics.track(name: "After Remove")
+        
+        await removablePlugin.waitForEvents(timeout: 0.1)
+        #expect(removablePlugin.eventCount == 0)
     }
     
     // MARK: - Reset Tests
@@ -548,24 +526,24 @@ class AnalyticsTests {
         analytics.identify(userId: "test-user", traits: ["email": "test@example.com"])
         analytics.track(name: "Before Reset Event")
         
+        await mockPlugin.waitForEvents(count: 2)
+        
+        #expect(self.analytics.userId == "test-user")
+        #expect(self.analytics.traits?["email"] as? String == "test@example.com")
+        
+        // Verify data exists in storage
+        let initialKeyValueCount = self.mockStorage.allKeyValuePairs.count
+        let initialEventCount = self.mockStorage.eventCount
+        #expect(initialKeyValueCount > 0)
+        #expect(initialEventCount >= 1)
+
+        // Reset
+        self.analytics.reset()
+        
         await runAfter(0.1) {
-            #expect(self.analytics.userId == "test-user")
-            #expect(self.analytics.traits?["email"] as? String == "test@example.com")
-            
-            // Verify data exists in storage
-            let initialKeyValueCount = self.mockStorage.allKeyValuePairs.count
-            let initialEventCount = self.mockStorage.eventCount
-            #expect(initialKeyValueCount > 0)
-            #expect(initialEventCount >= 1)
-            
-            // Reset
-            self.analytics.reset()
-            
-            await runAfter(0.1) {
-                #expect(self.analytics.userId?.isEmpty ?? true)
-                #expect(self.analytics.traits?.isEmpty ?? true)
-                #expect(self.analytics.anonymousId?.isEmpty == false) // Anonymous ID should be regenerated
-            }
+            #expect(self.analytics.userId?.isEmpty ?? true)
+            #expect(self.analytics.traits?.isEmpty ?? true)
+            #expect(self.analytics.anonymousId?.isEmpty == false) // Anonymous ID should be regenerated
         }
     }
     
@@ -578,13 +556,12 @@ class AnalyticsTests {
         let resetEntries = ResetEntries(anonymousId: false, userId: false, traits: true, session: false)
         let resetOptions = ResetOptions(entries: resetEntries)
         
+        await mockPlugin.waitForEvents()
+        self.analytics.reset(options: resetOptions)
+        
         await runAfter(0.1) {
-            self.analytics.reset(options: resetOptions)
-            
-            await runAfter(0.1) {
-                #expect(self.analytics.userId == "test-user") // Should remain
-                #expect(self.analytics.traits?.isEmpty ?? true) // Should be cleared
-            }
+            #expect(self.analytics.userId == "test-user") // Should remain
+            #expect(self.analytics.traits?.isEmpty ?? true) // Should be cleared
         }
     }
     
@@ -614,16 +591,14 @@ class AnalyticsTests {
         
         analytics.open(url: testURL, options: options)
         
-        await runAfter(0.1) {
-            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
-            let deepLinkEvent = trackEvents.first { $0.event == "Deep Link Opened" }
-            
-            #expect(deepLinkEvent != nil)
-            #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["url"] as? String == testURL.absoluteString)
-            #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["id"] as? String == "123")
-            #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["ref"] as? String == "deeplink")
-            #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["source"] as? String == "test")
-        }
+        let trackEvents = await self.mockPlugin.waitForEvents(TrackEvent.self)
+        let deepLinkEvent = trackEvents.first { $0.event == "Deep Link Opened" }
+        
+        #expect(deepLinkEvent != nil)
+        #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["url"] as? String == testURL.absoluteString)
+        #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["id"] as? String == "123")
+        #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["ref"] as? String == "deeplink")
+        #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["source"] as? String == "test")
     }
     
     @Test("given Analytics, when opening URL without query parameters, then basic deep link event is tracked")
@@ -632,13 +607,11 @@ class AnalyticsTests {
         
         analytics.open(url: testURL)
         
-        await runAfter(0.1) {
-            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
-            let deepLinkEvent = trackEvents.first { $0.event == "Deep Link Opened" }
-            
-            #expect(deepLinkEvent != nil)
-            #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["url"] as? String == testURL.absoluteString)
-        }
+        let trackEvents = await self.mockPlugin.waitForEvents(TrackEvent.self)
+        let deepLinkEvent = trackEvents.first { $0.event == "Deep Link Opened" }
+        
+        #expect(deepLinkEvent != nil)
+        #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["url"] as? String == testURL.absoluteString)
     }
     
     // MARK: - Shutdown Tests
@@ -665,10 +638,9 @@ class AnalyticsTests {
             self.analytics.group(groupId: "Should Not Track")
             self.analytics.alias(newId: "Should Not Track")
             
-            await runAfter(0.1) {
-                // No new events should be processed
-                #expect(self.mockPlugin.eventCount == initialEventCount)
-            }
+            await self.mockPlugin.waitForEvents(timeout: 0.1)
+            // No new events should be processed
+            #expect(self.mockPlugin.eventCount == initialEventCount)
         }
     }
     
@@ -676,20 +648,20 @@ class AnalyticsTests {
     func testUserPropertiesReturnNilAfterShutdown() async {
         // Set up user data first
         analytics.identify(userId: "test-user", traits: ["email": "test@example.com"])
+        await self.mockPlugin.waitForEvents()
+        
+        #expect(self.analytics.userId == "test-user")
+        #expect(self.analytics.anonymousId?.isEmpty == false)
+        
+        // Shutdown
+        self.analytics.shutdown()
+        
         await runAfter(0.1) {
-            #expect(self.analytics.userId == "test-user")
-            #expect(self.analytics.anonymousId?.isEmpty == false)
-            
-            // Shutdown
-            self.analytics.shutdown()
-            
-            await runAfter(0.1) {
-                // Properties should return nil
-                #expect(self.analytics.userId == nil)
-                #expect(self.analytics.anonymousId == nil)
-                #expect(self.analytics.traits == nil)
-                #expect(self.analytics.sessionId == nil)
-            }
+            // Properties should return nil
+            #expect(self.analytics.userId == nil)
+            #expect(self.analytics.anonymousId == nil)
+            #expect(self.analytics.traits == nil)
+            #expect(self.analytics.sessionId == nil)
         }
     }
     
@@ -704,15 +676,13 @@ class AnalyticsTests {
             analytics.track(name: "Concurrent Event \(i)", properties: ["index": i])
         }
         
-        await runAfter(0.1) {
-            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
-            #expect(trackEvents.count >= eventCount)
-            
-            // Verify all events were processed
-            for i in 0..<eventCount {
-                let eventExists = trackEvents.contains { $0.event == "Concurrent Event \(i)" }
-                #expect(eventExists == true)
-            }
+        let trackEvents = await self.mockPlugin.waitForEvents(TrackEvent.self, count: eventCount)
+        #expect(trackEvents.count >= eventCount)
+        
+        // Verify all events were processed
+        for i in 0..<eventCount {
+            let eventExists = trackEvents.contains { $0.event == "Concurrent Event \(i)" }
+            #expect(eventExists == true)
         }
     }
     
@@ -723,14 +693,12 @@ class AnalyticsTests {
             analytics.identify(userId: "user-\(i)", traits: ["batch": i])
         }
         
-        await runAfter(0.1) {
-            // Final user ID should be the last set value
-            let finalUserId = self.analytics.userId
-            #expect(finalUserId?.hasPrefix("user-") == true)
-            
-            let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
-            #expect(identifyEvents.count >= 5)
-        }
+        let identifyEvents = await self.mockPlugin.waitForEvents(IdentifyEvent.self, count: 5)
+        #expect(identifyEvents.count >= 5)
+        
+        // Final user ID should be the last set value
+        let finalUserId = self.analytics.userId
+        #expect(finalUserId?.hasPrefix("user-") == true)
     }
     
     // MARK: - Edge Cases Tests
@@ -739,23 +707,19 @@ class AnalyticsTests {
     func testTrackEventWithEmptyName() async {
         analytics.track(name: "")
         
-        await runAfter(0.1) {
-            let trackEvents = self.mockPlugin.getEventsOfType(TrackEvent.self)
-            #expect(trackEvents.count >= 1)
-            #expect(trackEvents.first?.event == "")
-        }
+        let trackEvents = await self.mockPlugin.waitForEvents(TrackEvent.self)
+        #expect(trackEvents.count >= 1)
+        #expect(trackEvents.first?.event == "")
     }
     
     @Test("given Analytics, when identifying with empty userId, then operation completes")
     func testIdentifyWithEmptyUserId() async {
         analytics.identify(userId: "", traits: ["test": "value"])
         
-        await runAfter(0.1) {
-            #expect(self.analytics.userId == "")
-            
-            let identifyEvents = self.mockPlugin.getEventsOfType(IdentifyEvent.self)
-            #expect(identifyEvents.count >= 1)
-        }
+        let identifyEvents = await self.mockPlugin.waitForEvents(IdentifyEvent.self)
+        #expect(identifyEvents.count >= 1)
+        
+        #expect(self.analytics.userId == "")
     }
     
     @Test("given Analytics, when performing operations with nil optional parameters, then operations complete successfully")
@@ -766,10 +730,8 @@ class AnalyticsTests {
         analytics.identify(userId: nil, traits: nil, options: nil)
         analytics.alias(newId: "test", previousId: nil, options: nil)
         
-        await runAfter(0.1) {
-            // All events should be processed
-            #expect(self.mockPlugin.eventCount >= 5)
-        }
+        await self.mockPlugin.waitForEvents(count: 5)
+        #expect(self.mockPlugin.eventCount >= 5)
     }
     
     // MARK: - Storage Integration Tests
@@ -781,15 +743,14 @@ class AnalyticsTests {
         
         analytics.identify(userId: userId, traits: traits)
         
-        await runAfter(0.1) {
-            // Check if user data is stored in the underlying storage
-            #expect(self.analytics.userId == userId)
-            #expect(self.analytics.traits?["email"] as? String == "persistent@example.com")
-            
-            // Verify data is in mock storage
-            let storedData = self.mockStorage.allKeyValuePairs
-            #expect(!storedData.isEmpty)
-        }
+        await self.mockPlugin.waitForEvents()
+        // Check if user data is stored in the underlying storage
+        #expect(self.analytics.userId == userId)
+        #expect(self.analytics.traits?["email"] as? String == "persistent@example.com")
+        
+        // Verify data is in mock storage
+        let storedData = self.mockStorage.allKeyValuePairs
+        #expect(!storedData.isEmpty)
     }
     
     @Test("given Analytics, when anonymous ID is accessed, then it is consistent across calls")

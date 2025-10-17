@@ -355,6 +355,42 @@ final class MockEventCapturePlugin: Plugin {
     }
 }
 
+extension MockEventCapturePlugin {
+    // Generic version (wait for specific type)
+    @discardableResult
+    func waitForEvents<T: Event>(_ type: T.Type, count expectedCount: Int = 1, timeout: TimeInterval? = nil) async -> [T] {
+        let start = Date()
+        
+        while true {
+            let events = getEventsOfType(type)
+            if events.count >= expectedCount {
+                return events
+            }
+            if let timeout, Date().timeIntervalSince(start) > timeout {
+                return events
+            }
+            await Task.yield()
+        }
+    }
+
+    // Non-generic version (wait for all events)
+    @discardableResult
+    func waitForEvents(count expectedCount: Int = 1, timeout: TimeInterval? = nil) async -> [Event] {
+        let start = Date()
+        
+        while true {
+            let events = capturedEvents
+            if events.count >= expectedCount {
+                return events
+            }
+            if let timeout, Date().timeIntervalSince(start) > timeout {
+                return events
+            }
+            await Task.yield()
+        }
+    }
+}
+
 // MARK: - Test Helpers
 extension SwiftTestMockProvider {
     
