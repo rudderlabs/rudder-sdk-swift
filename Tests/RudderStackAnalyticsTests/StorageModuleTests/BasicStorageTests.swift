@@ -85,14 +85,19 @@ class BasicStorageTests {
     
     @Test("given BasicStorage with stored value, when removing key, then value is deleted")
     func testKeyValueRemove() async {
+        // given...
         let key = "test_remove_key"
         let value = "test_value_to_remove"
-        
         storage.write(value: value, key: key)
+        
+        // confirm value is stored..
         var retrievedValue: String? = storage.read(key: key)
         #expect(retrievedValue == value)
         
+        // when remove the key...
         storage.remove(key: key)
+        
+        // then value will be deleted..
         retrievedValue = storage.read(key: key)
         #expect(retrievedValue == nil)
     }
@@ -202,7 +207,10 @@ class BasicStorageTests {
         var result = await storage.read()
         #expect(result.dataItems.count == 1)
         
-        let batchReference = result.dataItems.first!.reference
+        guard let batchReference = result.dataItems.first?.reference else {
+            Issue.record("Expected at least one data item")
+            return
+        }
         let removed = await storage.remove(batchReference: batchReference)
         
         #expect(removed == true)

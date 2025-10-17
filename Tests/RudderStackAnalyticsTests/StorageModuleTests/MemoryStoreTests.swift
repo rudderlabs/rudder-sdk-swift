@@ -131,7 +131,10 @@ class MemoryStoreTests {
         #expect(itemsBeforeRemoval.count == 2)
         
         // Remove first batch
-        let referenceToRemove = itemsBeforeRemoval.first!.reference
+        guard let referenceToRemove = itemsBeforeRemoval.first?.reference else {
+            Issue.record("Expected at least one batch before removal")
+            return
+        }
         let wasRemoved = await store.remove(reference: referenceToRemove)
         
         #expect(wasRemoved == true)
@@ -225,7 +228,10 @@ class MemoryStoreTests {
         let retrievedItems = await store.retrieve()
         #expect(retrievedItems.count == 1)
         
-        let batchContent = retrievedItems.first!.batch
+        guard let batchContent = retrievedItems.first?.batch else {
+            Issue.record("Expected a batch after rollover")
+            return
+        }
         #expect(batchContent.hasPrefix(DataStoreConstants.fileBatchPrefix) == true)
         #expect(batchContent.hasSuffix(DataStoreConstants.fileBatchSuffix) == true)
         #expect(batchContent.contains("Event 1") == true)
@@ -241,7 +247,10 @@ class MemoryStoreTests {
         await store.rollover()
         
         let retrievedItems = await store.retrieve()
-        let batchContent = retrievedItems.first!.batch
+        guard let batchContent = retrievedItems.first?.batch else {
+            Issue.record("Expected a batch after rollover")
+            return
+        }
         
         #expect(batchContent.hasPrefix(DataStoreConstants.fileBatchPrefix) == true)
         #expect(batchContent.hasSuffix(DataStoreConstants.fileBatchSuffix) == true)

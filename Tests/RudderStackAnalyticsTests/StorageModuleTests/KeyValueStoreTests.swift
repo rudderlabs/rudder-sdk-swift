@@ -13,7 +13,7 @@ import Foundation
 @Suite("KeyValueStore Unit Tests")
 class KeyValueStoreTests {
     
-    private let testWriteKey = "test-keyvalue-store-key-123"
+    private let testWriteKey = "test-keyvalue-store-key-\(String.randomUUIDString)"
     private var store: KeyValueStore
     
     init() {

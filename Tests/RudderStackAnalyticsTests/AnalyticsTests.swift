@@ -696,7 +696,7 @@ class AnalyticsTests {
     // MARK: - Concurrent Operations Tests
     
     @Test("given Analytics, when tracking multiple events concurrently, then all events are processed")
-    func testConcurrentEventTracking() async {
+    func testSequentialEventTracking() async {
         let eventCount = 10
         
         // Track events sequentially to avoid actor isolation issues
@@ -788,7 +788,7 @@ class AnalyticsTests {
             
             // Verify data is in mock storage
             let storedData = self.mockStorage.allKeyValuePairs
-            #expect(storedData.count > 0)
+            #expect(!storedData.isEmpty)
         }
     }
     
@@ -802,7 +802,7 @@ class AnalyticsTests {
         
         // Verify anonymous ID is stored in mock storage
         let storedData = mockStorage.allKeyValuePairs
-        #expect(storedData.count > 0)
+        #expect(!storedData.isEmpty)
     }
 }
 

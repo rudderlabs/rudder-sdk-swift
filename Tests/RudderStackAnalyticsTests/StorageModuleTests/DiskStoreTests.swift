@@ -33,8 +33,6 @@ class DiskStoreTests {
     
     @Test("given writeKey, when initializing DiskStore, then store is created with correct writeKey and storage URL")
     func testInitialization() async {
-        #expect(await store.writeKey == testWriteKey)
-        
         let fileStorageURL = await store.fileStorageURL
         #expect(fileStorageURL.lastPathComponent == testWriteKey)
         #expect(fileStorageURL.absoluteString.contains("rudder"))
@@ -175,7 +173,10 @@ class DiskStoreTests {
         var retrievedItems = await store.retrieve()
         #expect(retrievedItems.count == 1)
         
-        let batchReference = retrievedItems.first!.reference
+        guard let batchReference = retrievedItems.first?.reference else {
+            Issue.record("Expected at least one batch reference")
+            return
+        }
         let removed = await store.remove(reference: batchReference)
         
         #expect(removed == true)

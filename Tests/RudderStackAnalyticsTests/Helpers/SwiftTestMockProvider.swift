@@ -370,9 +370,13 @@ extension SwiftTestMockProvider {
         URLProtocol.unregisterClass(SwiftTestMockURLProtocol.self)
     }
     
-    static func runAfter(seconds: TimeInterval, block: @escaping () -> Void) async {
-        try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
-        block()
+    func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
+        // Suspend the current task for the specified duration
+        let nanoseconds = UInt64(seconds * 1_000_000_000)
+        try? await Task.sleep(nanoseconds: nanoseconds)
+        
+        // Execute the block after the delay
+        await block()
     }
 }
 
