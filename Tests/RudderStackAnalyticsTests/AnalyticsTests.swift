@@ -268,7 +268,7 @@ class AnalyticsTests {
     
     // MARK: - Group Event Tests
     
-    @Test("given Analytics, when tracking group events with variations, then event is captured correctly", arguments: EventTestCaseParameters.trackEvent)
+    @Test("given Analytics, when tracking group events with variations, then event is captured correctly", arguments: EventTestCaseParameters.groupEvent)
     func testGroupEventVariants(_ groupId: String, _ traits: Properties?, _ options: RudderOption?) async {
         // when
         analytics.group(groupId: groupId, traits: traits, options: options)
