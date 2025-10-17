@@ -238,15 +238,15 @@ struct StandardIntegrationPluginTests {
         #expect(chain === pluginStore.pluginChain)
     }
     
-    // MARK: - StandardPlugin Tests
+    // MARK: - StandardIntegration Tests
     
-    @Test("Given a standard integration plugin, When plugin is checked for StandardPlugin conformance, Then plugin should conform to StandardPlugin")
-    func standardPluginConformance() {
+    @Test("Given a standard integration plugin, When plugin is checked for StandardIntegration conformance, Then plugin should conform to StandardIntegration")
+    func StandardIntegrationConformance() {
         let analytics = MockProvider.clientWithDiskStorage
-        let standardPlugin = MockStandardIntegrationPlugin(key: "standard_destination")
-        standardPlugin.setup(analytics: analytics)
+        let StandardIntegration = MockStandardIntegrationPlugin(key: "standard_destination")
+        StandardIntegration.setup(analytics: analytics)
         
-        #expect(standardPlugin.key == "standard_destination")
+        #expect(StandardIntegration.key == "standard_destination")
     }
     
     // MARK: - onDestinationReady Tests
@@ -318,13 +318,13 @@ struct StandardIntegrationPluginTests {
         #expect(pluginStore?.isStandardIntegration == true)
     }
     
-    @Test("Given a standard integration plugin, When plugin is checked for StandardPlugin conformance, Then plugin should conform to StandardPlugin")
-    func customPluginNotStandardPlugin() {
+    @Test("Given a standard integration plugin, When plugin is checked for StandardIntegration conformance, Then plugin should conform to StandardIntegration")
+    func customPluginNotStandardIntegration() {
         let analytics = MockProvider.clientWithDiskStorage
         let customPlugin = MockStandardIntegrationPlugin(key: "standard_destination")
         customPlugin.setup(analytics: analytics)
         
         #expect(customPlugin.key == "standard_destination")
-        #expect(customPlugin is StandardPlugin)
+        #expect(customPlugin is StandardIntegration)
     }
 }

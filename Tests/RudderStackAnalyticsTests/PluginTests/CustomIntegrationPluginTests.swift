@@ -208,14 +208,14 @@ struct CustomIntegrationPluginTests {
     
     // MARK: - Custom Integration Specific Tests
     
-    @Test("Given a custom integration plugin, When plugin is checked for StandardPlugin conformance, Then plugin should NOT conform to StandardPlugin")
-    func customPluginNotStandardPlugin() {
+    @Test("Given a custom integration plugin, When plugin is checked for StandardIntegration conformance, Then plugin should NOT conform to StandardIntegration")
+    func customPluginNotStandardIntegration() {
         let analytics = MockProvider.clientWithDiskStorage
         let customPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         customPlugin.setup(analytics: analytics)
         
         #expect(customPlugin.key == "custom_destination")
-        #expect(!(customPlugin is StandardPlugin)) // Custom integrations don't conform to StandardPlugin
+        #expect(!(customPlugin is StandardIntegration)) // Custom integrations don't conform to StandardIntegration
     }
     
     @Test("Given a custom plugin added to IntegrationsController, When plugin store is created, Then isStandardIntegration should be false")

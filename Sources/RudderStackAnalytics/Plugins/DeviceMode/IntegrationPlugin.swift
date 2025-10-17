@@ -9,7 +9,7 @@ import Foundation
 
 public typealias IntegrationCallback = (Any?, DestinationResult) -> Void
 
-protocol StandardPlugin : AnyObject {}
+protocol StandardIntegration : AnyObject {}
 
 public protocol IntegrationPlugin: EventPlugin, AnyObject {
     

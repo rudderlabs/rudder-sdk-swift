@@ -143,7 +143,7 @@ class IntegrationsController {
             if stores[key] == nil, let analytics {
                 let pluginStore = IntegrationPluginStore(analytics: analytics)
                 
-                pluginStore.isStandardIntegration = integration is StandardPlugin
+                pluginStore.isStandardIntegration = integration is StandardIntegration
                 stores[key] = pluginStore
             }
         }

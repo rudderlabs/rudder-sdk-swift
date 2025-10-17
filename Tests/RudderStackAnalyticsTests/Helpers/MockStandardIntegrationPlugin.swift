@@ -8,7 +8,7 @@
 import Foundation
 @testable import RudderStackAnalytics
 
-class MockStandardIntegrationPlugin: IntegrationPlugin, StandardPlugin {
+class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
     var key: String
