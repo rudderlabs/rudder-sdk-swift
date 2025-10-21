@@ -39,6 +39,10 @@ class SampleCustomIntegrationPlugin: IntegrationPlugin {
         }
     }
     
+    func update(destinationConfig: [String : Any]) throws {
+        destinationSdk?.update()
+    }
+    
     func getDestinationInstance() -> Any? {
         return destinationSdk
     }
@@ -109,10 +113,15 @@ class SampleDestinationSdk {
         LoggerAnalytics.debug("SampleDestinationSdk: reset")
     }
     
+    func update() {
+        LoggerAnalytics.debug("SampleDestinationSdk: update")
+    }
+    
     static func create(apiKey: String) -> SampleDestinationSdk {
         // Create SampleDestinationSdk SDK instance
         // Simulate a delay in creation if needed
         Thread.sleep(forTimeInterval: 1.0)
+        LoggerAnalytics.debug("SampleDestinationSdk: SDK created with API key \(apiKey)")
         return SampleDestinationSdk(key: apiKey)
     }
 }
