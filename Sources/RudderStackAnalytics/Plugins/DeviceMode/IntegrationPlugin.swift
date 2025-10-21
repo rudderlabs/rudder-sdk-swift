@@ -9,8 +9,17 @@ import Foundation
 
 public typealias IntegrationCallback = (Any?, DestinationResult) -> Void
 
+/**
+ StandardIntegration is a protocol that represents a standard integration plugin. All the integrations maintained by RudderStack will conform to this protocol.
+ */
 protocol StandardIntegration : AnyObject {}
 
+/**
+ * Base protocol for all integration plugins.
+ *
+ * An integration plugin is a plugin that is responsible for sending events directly
+ * to a 3rd party destination without sending it to Rudder server first.
+ */
 public protocol IntegrationPlugin: EventPlugin, AnyObject {
     
     /**
@@ -54,17 +63,39 @@ public protocol IntegrationPlugin: EventPlugin, AnyObject {
 }
 
 public extension IntegrationPlugin {
+    
+    /**
+     Default implementation for update.
+     */
     func update(destinationConfig: [String: Any]) throws {}
+    
+    /**
+     Default implementation for flush.
+     */
     func flush() {}
+    
+    /**
+     Default implementation for reset.
+     */
     func reset() {}
 }
 
 public extension IntegrationPlugin {
   
+    /**
+    This method adds a plugin to modify the events before sending to this destination.
+     
+    - Parameter plugin The plugin to be added.
+    */
     func add(plugin: Plugin) {
         self.pluginChain?.add(plugin: plugin)
     }
     
+    /**
+     This method removes a plugin from the destination.
+     
+     - Parameter plugin The plugin to be removed.
+     */
     func remove(plugin: Plugin) {
         self.pluginChain?.remove(plugin: plugin)
     }
