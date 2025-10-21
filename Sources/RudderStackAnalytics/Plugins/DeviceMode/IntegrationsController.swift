@@ -135,8 +135,8 @@ class IntegrationsController {
     }
     
     func add(integration: IntegrationPlugin) {
-        self.defaultPlugins.forEach { integration.add(plugin: $0) }
         self.integrationPluginChain?.add(plugin: integration)
+        self.defaultPlugins.forEach { integration.add(plugin: $0) }
         
         let key = integration.key
         $integrationPluginStores.modify { stores in

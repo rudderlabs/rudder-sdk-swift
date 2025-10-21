@@ -22,9 +22,6 @@ class IntegrationsManagementPlugin: Plugin {
     
     private let queuedEventsChannel: AsyncChannel<Event> = AsyncChannel(bufferingPolicy: .bufferingNewest(MAX_QUEUE_SIZE))
     
-    // TODO: - Create list of defaultPlugins
-    var defaultPlugins: [Plugin] = []
-    
     func setup(analytics: Analytics) {
         self.analytics = analytics
     
