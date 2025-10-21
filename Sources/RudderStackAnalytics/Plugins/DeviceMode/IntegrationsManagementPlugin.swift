@@ -32,6 +32,9 @@ class IntegrationsManagementPlugin: Plugin {
         var configIndex = 0
         self.analytics?.sourceConfigState.state
             .dropFirst()
+            .removeDuplicates { (lhs: SourceConfig, rhs: SourceConfig) -> Bool in
+                lhs.source.updatedAt == rhs.source.updatedAt
+            }
             .receive(on: DispatchQueue.global(qos: .default))
             .sink { [weak self] sourceConfig in
                 guard let self, sourceConfig.source.isSourceEnabled else { return }
