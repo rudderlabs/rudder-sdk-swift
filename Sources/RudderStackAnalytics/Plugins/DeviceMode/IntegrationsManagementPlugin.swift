@@ -32,8 +32,8 @@ class IntegrationsManagementPlugin: Plugin {
         var configIndex = 0
         self.analytics?.sourceConfigState.state
             .dropFirst()
-            .removeDuplicates { (lhs: SourceConfig, rhs: SourceConfig) -> Bool in
-                lhs.source.updatedAt == rhs.source.updatedAt
+            .removeDuplicates { (previous: SourceConfig, current: SourceConfig) -> Bool in
+                previous.source.updatedAt == current.source.updatedAt
             }
             .receive(on: DispatchQueue.global(qos: .default))
             .sink { [weak self] sourceConfig in

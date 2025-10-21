@@ -63,7 +63,7 @@ class AnalyticsManager {
         sampleCustomIntegrationPlugin.onDestinationReady { destination, result in
             switch result {
             case .success:
-                LoggerAnalytics.debug("AnalyticsManager: destination \(sampleCustomIntegrationPlugin?.key ?? "no key") created successfully")
+                LoggerAnalytics.debug("AnalyticsManager: destination \(sampleCustomIntegrationPlugin.key) created successfully")
             case .failure(let error):
                 LoggerAnalytics.debug("AnalyticsManager: destination failed with error : \(error.localizedDescription)")
             default:
