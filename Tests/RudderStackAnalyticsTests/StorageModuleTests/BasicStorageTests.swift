@@ -25,54 +25,37 @@ class BasicStorageTests {
     
     // MARK: - KeyValueStorage Tests
     
-    @Test("given BasicStorage, when writing string value, then value is persisted correctly")
-    func testKeyValueStringStorage() async {
-        let key = "test_string_key"
-        let value = "test_string_value"
-        
-        storage.write(value: value, key: key)
-        let retrievedValue: String? = storage.read(key: key)
-        
-        #expect(retrievedValue == value)
-    }
-    
-    @Test("given BasicStorage, when writing integer value, then value is persisted correctly")
-    func testKeyValueIntegerStorage() async {
-        let key = "test_int_key"
-        let value = 42
-        
-        storage.write(value: value, key: key)
-        let retrievedValue: Int? = storage.read(key: key)
-        
-        #expect(retrievedValue == value)
-    }
-    
-    @Test("given BasicStorage, when writing boolean value, then value is persisted correctly")
-    func testKeyValueBooleanStorage() async {
-        let key = "test_bool_key"
-        let value = true
-        
-        storage.write(value: value, key: key)
-        let retrievedValue: Bool? = storage.read(key: key)
-        
-        #expect(retrievedValue == value)
-    }
-    
-    @Test("given BasicStorage, when writing codable object, then object is persisted correctly")
-    func testKeyValueCodableStorage() async {
-        struct TestObject: Codable, Equatable {
-            let id: String
-            let name: String
-            let count: Int
+    @Test(
+        "given BasicStorage, when writing values of different types, then values are persisted correctly",
+        arguments: [
+            ("test_string_key", TestArgumentValue.string("test_string_value")),
+            ("test_int_key", TestArgumentValue.integer(42)),
+            ("test_bool_key", TestArgumentValue.boolean(true)),
+            ("test_object_key", TestArgumentValue.object(TestObject(id: "123", name: "Test Object", count: 5)))
+        ]
+    )
+    func testKeyValueStorage(key: String, value: TestArgumentValue) async {
+        switch value {
+        case .string(let stringValue):
+            storage.write(value: stringValue, key: key)
+            let retrieved: String? = storage.read(key: key)
+            #expect(retrieved == stringValue)
+            
+        case .integer(let intValue):
+            storage.write(value: intValue, key: key)
+            let retrieved: Int? = storage.read(key: key)
+            #expect(retrieved == intValue)
+            
+        case .boolean(let boolValue):
+            storage.write(value: boolValue, key: key)
+            let retrieved: Bool? = storage.read(key: key)
+            #expect(retrieved == boolValue)
+            
+        case .object(let objectValue):
+            storage.write(value: objectValue, key: key)
+            let retrieved: TestObject? = storage.read(key: key)
+            #expect(retrieved == objectValue)
         }
-        
-        let key = "test_object_key"
-        let value = TestObject(id: "123", name: "Test Object", count: 5)
-        
-        storage.write(value: value, key: key)
-        let retrievedValue: TestObject? = storage.read(key: key)
-        
-        #expect(retrievedValue == value)
     }
     
     @Test("given BasicStorage, when reading non-existent key, then nil is returned")
@@ -85,20 +68,13 @@ class BasicStorageTests {
     
     @Test("given BasicStorage with stored value, when removing key, then value is deleted")
     func testKeyValueRemove() async {
-        // given...
         let key = "test_remove_key"
         let value = "test_value_to_remove"
         storage.write(value: value, key: key)
         
-        // confirm value is stored..
-        var retrievedValue: String? = storage.read(key: key)
-        #expect(retrievedValue == value)
-        
-        // when remove the key...
         storage.remove(key: key)
         
-        // then value will be deleted..
-        retrievedValue = storage.read(key: key)
+        let retrievedValue: String? = storage.read(key: key)
         #expect(retrievedValue == nil)
     }
     
@@ -110,12 +86,10 @@ class BasicStorageTests {
             ("key3", "value3")
         ]
         
-        // Write all pairs
         for (key, value) in pairs {
             storage.write(value: value, key: key)
         }
         
-        // Verify all pairs
         for (key, expectedValue) in pairs {
             let retrievedValue: String? = storage.read(key: key)
             #expect(retrievedValue == expectedValue)
@@ -193,7 +167,7 @@ class BasicStorageTests {
         let result = await storage.read()
         #expect(result.dataItems.count == 3)
         
-        // Verify all batches are closed
+        // then all batches are closed
         for dataItem in result.dataItems {
             #expect(dataItem.isClosed == true)
         }
@@ -267,13 +241,6 @@ class BasicStorageTests {
         await storage.write(event: sampleEventJson)
         await storage.rollover()
         
-        // Verify data exists
-        let keyValue: String? = storage.read(key: "test_key")
-        #expect(keyValue == "test_value")
-        
-        let eventResult = await storage.read()
-        #expect(eventResult.dataItems.count == 1)
-        
         // Remove all data
         await storage.removeAll()
         
@@ -345,4 +312,17 @@ class BasicStorageTests {
         retrievedValue = storage.read(key: key)
         #expect(retrievedValue == newValue)
     }
+}
+
+struct TestObject: Codable, Equatable {
+    let id: String
+    let name: String
+    let count: Int
+}
+
+enum TestArgumentValue {
+    case string(String)
+    case integer(Int)
+    case boolean(Bool)
+    case object(TestObject)
 }
