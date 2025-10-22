@@ -13,7 +13,7 @@ import Foundation
 @Suite("BasicStorage Unit Tests")
 class BasicStorageTests {
     
-    private let testWriteKey = "test-basic-storage-key-123"
+    private let testWriteKey = "test-basic-storage-key-\(String.randomUUIDString)"
     private let sampleEventJson = """
         {"messageId":"test-msg-123","type":"track","event":"Test Event","properties":{"test":true}}
         """
@@ -26,7 +26,7 @@ class BasicStorageTests {
     // MARK: - KeyValueStorage Tests
     
     @Test(
-        "given BasicStorage, when writing values of different types, then values are persisted correctly",
+        "when writing values of different types, then values are persisted correctly",
         arguments: [
             ("test_string_key", TestArgumentValue.string("test_string_value")),
             ("test_int_key", TestArgumentValue.integer(42)),
@@ -58,7 +58,7 @@ class BasicStorageTests {
         }
     }
     
-    @Test("given BasicStorage, when reading non-existent key, then nil is returned")
+    @Test("when reading non-existent key, then nil is returned")
     func testKeyValueReadNonExistentKey() async {
         let nonExistentKey = "non_existent_key"
         let retrievedValue: String? = storage.read(key: nonExistentKey)
@@ -78,7 +78,7 @@ class BasicStorageTests {
         #expect(retrievedValue == nil)
     }
     
-    @Test("given BasicStorage, when writing multiple key-value pairs, then all values are persisted correctly")
+    @Test("when writing multiple key-value pairs, then all values are persisted correctly")
     func testMultipleKeyValueOperations() async {
         let pairs = [
             ("key1", "value1"),
@@ -98,7 +98,7 @@ class BasicStorageTests {
     
     // MARK: - EventStorage Tests
     
-    @Test("given BasicStorage, when writing single event, then event is stored")
+    @Test("when writing single event, then event is stored")
     func testEventStorageSingleEvent() async {
         await storage.write(event: sampleEventJson)
         
@@ -118,7 +118,7 @@ class BasicStorageTests {
         #expect(result.dataItems.first?.batch.contains("Test Event") == true)
     }
     
-    @Test("given BasicStorage, when storing multiple events before rollover, then events are batched together")
+    @Test("when storing multiple events before rollover, then events are batched together")
     func testEventStorageMultipleEvents() async {
         let event1 = """
             {"messageId":"msg-1","type":"track","event":"Event 1"}
@@ -193,7 +193,7 @@ class BasicStorageTests {
         #expect(result.dataItems.isEmpty)
     }
     
-    @Test("given BasicStorage, when removing non-existent batch, then operation returns false")
+    @Test("when removing non-existent batch, then operation returns false")
     func testEventStorageRemoveNonExistentBatch() async {
         let fakeBatchReference = "non-existent-batch-reference"
         let removed = await storage.remove(batchReference: fakeBatchReference)
@@ -201,7 +201,7 @@ class BasicStorageTests {
         #expect(removed == false)
     }
     
-    @Test("given BasicStorage, when calling rollover without events, then no batch is created")
+    @Test("when calling rollover without events, then no batch is created")
     func testEventStorageRolloverWithoutEvents() async {
         await storage.rollover()
         
@@ -211,7 +211,7 @@ class BasicStorageTests {
     
     // MARK: - Combined Storage Operations Tests
     
-    @Test("given BasicStorage, when using both key-value and event storage, then both work independently")
+    @Test("when using both key-value and event storage, then both work independently")
     func testCombinedStorageOperations() async {
         // Store key-value data
         let key = "combined_test_key"
@@ -255,7 +255,7 @@ class BasicStorageTests {
     
     // MARK: - Edge Cases Tests
     
-    @Test("given BasicStorage, when storing empty string as value, then empty string is retrieved")
+    @Test("when storing empty string as value, then empty string is retrieved")
     func testEmptyStringStorage() async {
         let key = "empty_string_key"
         let value = ""
@@ -266,7 +266,7 @@ class BasicStorageTests {
         #expect(retrievedValue == value)
     }
     
-    @Test("given BasicStorage, when storing empty event, then event is handled correctly")
+    @Test("when storing empty event, then event is handled correctly")
     func testEmptyEventStorage() async {
         let emptyEvent = ""
         
@@ -278,7 +278,7 @@ class BasicStorageTests {
         #expect(result.dataItems.first?.batch.contains(DataStoreConstants.fileBatchPrefix) == true)
     }
     
-    @Test("given BasicStorage, when storing events with special characters, then events are preserved correctly")
+    @Test("when storing events with special characters, then events are preserved correctly")
     func testSpecialCharactersInEvents() async {
         let specialEvent = """
             {"messageId":"special-123","type":"track","event":"Test Event","properties":{"emoji":"🚀","unicode":"café","quotes":"say \\"hello\\""}}
@@ -296,7 +296,7 @@ class BasicStorageTests {
         #expect(batchContent.contains("hello") == true)
     }
     
-    @Test("given BasicStorage, when overwriting existing key, then new value replaces old value")
+    @Test("when overwriting existing key, then new value replaces old value")
     func testKeyValueOverwrite() async {
         let key = "overwrite_key"
         let originalValue = "original_value"

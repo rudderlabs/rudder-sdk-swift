@@ -12,7 +12,7 @@ import Testing
 @Suite("MemoryStore Unit Tests")
 class MemoryStoreTests {
     
-    private let testWriteKey = "test-write-key-123"
+    private let testWriteKey = "test-write-key-\(String.randomUUIDString)"
     private let sampleEventJson = """
         {"messageId":"test-msg-123","type":"track","event":"Test Event","properties":{"test":true}}
         """
@@ -21,11 +21,10 @@ class MemoryStoreTests {
     init() {
         store = MemoryStore(writeKey: testWriteKey)
     }
-
     
     // MARK: - Initialization Tests
     
-    @Test("given writeKey, when initializing MemoryStore, then store is created with correct writeKey")
+    @Test("when initializing MemoryStore, then store is created with correct writeKey")
     func testInitialization() async {
         #expect(await store.writeKey == testWriteKey)
         #expect(await store.dataItems.isEmpty)
@@ -33,7 +32,7 @@ class MemoryStoreTests {
     
     // MARK: - Basic Storage Operations
     
-    @Test("given MemoryStore, when storing single event, then event is added to current batch")
+    @Test("when storing single event, then event is added to current batch")
     func testStoreSingleEvent() async {
         await store.retain(value: sampleEventJson)
         
@@ -54,7 +53,7 @@ class MemoryStoreTests {
         #expect(retrievedItems.first?.batch.hasSuffix(DataStoreConstants.fileBatchSuffix) == true)
     }
     
-    @Test("given MemoryStore, when storing multiple events before rollover, then events are batched together")
+    @Test("when storing multiple events before rollover, then events are batched together")
     func testMultipleEventsInBatch() async {
         let event1 = """
             {"messageId":"msg-1","type":"track","event":"Event 1"}
@@ -118,8 +117,6 @@ class MemoryStoreTests {
     
     @Test("given MemoryStore with batches, when removing by reference, then specific batch is removed")
     func testRemoveByReference() async {
-        let store = MemoryStore(writeKey: testWriteKey)
-        
         // Create two batches
         await store.retain(value: sampleEventJson)
         await store.rollover()
@@ -144,7 +141,7 @@ class MemoryStoreTests {
         #expect(itemsAfterRemoval.first?.reference != referenceToRemove)
     }
     
-    @Test("given MemoryStore, when removing non-existent reference, then returns false")
+    @Test("when removing non-existent reference, then returns false")
     func testRemoveNonExistentReference() async {
         let store = MemoryStore(writeKey: testWriteKey)
         
@@ -154,8 +151,6 @@ class MemoryStoreTests {
     
     @Test("given MemoryStore with multiple batches, when calling removeAll, then all batches are cleared")
     func testRemoveAll() async {
-        let store = MemoryStore(writeKey: testWriteKey)
-        
         // Create multiple batches
         await store.retain(value: sampleEventJson)
         await store.rollover()
@@ -179,10 +174,8 @@ class MemoryStoreTests {
     
     // MARK: - Batch Size and Overflow Tests
     
-    @Test("given MemoryStore, when adding events exceeding batch size, then automatic rollover occurs")
+    @Test("when adding events exceeding batch size, then automatic rollover occurs")
     func testBatchSizeLimit() async {
-        let store = MemoryStore(writeKey: testWriteKey)
-        
         // Add normal event first
         await store.retain(value: sampleEventJson)
         
@@ -210,10 +203,8 @@ class MemoryStoreTests {
     
     // MARK: - Batch Format Tests
     
-    @Test("given MemoryStore, when events are batched, then proper JSON batch format is maintained")
+    @Test("when events are batched, then proper JSON batch format is maintained")
     func testBatchJsonFormat() async {
-        let store = MemoryStore(writeKey: testWriteKey)
-        
         let event1 = """
             {"messageId":"msg-1","type":"track","event":"Event 1"}
             """
@@ -239,10 +230,8 @@ class MemoryStoreTests {
         #expect(batchContent.contains("sentAt") == true) // Should include timestamp
     }
     
-    @Test("given MemoryStore, when single event is stored and rolled over, then proper batch format is created")
+    @Test("when single event is stored and rolled over, then proper batch format is created")
     func testSingleEventBatchFormat() async {
-        let store = MemoryStore(writeKey: testWriteKey)
-        
         await store.retain(value: sampleEventJson)
         await store.rollover()
         
@@ -263,10 +252,8 @@ class MemoryStoreTests {
     
     // MARK: - Edge Cases Tests
     
-    @Test("given MemoryStore, when rolling over without events, then no batch is created")
+    @Test("when rolling over without events, then no batch is created")
     func testRolloverWithoutEvents() async {
-        let store = MemoryStore(writeKey: testWriteKey)
-        
         await store.rollover()
         
         let retrievedItems = await store.retrieve()

@@ -31,7 +31,7 @@ class DiskStoreTests {
     
     // MARK: - Initialization Tests
     
-    @Test("given writeKey, when initializing DiskStore, then store is created with correct writeKey and storage URL")
+    @Test("when initializing DiskStore, then store is created with correct writeKey and storage URL")
     func testInitialization() async {
         let fileStorageURL = await store.fileStorageURL
         #expect(fileStorageURL.lastPathComponent == testWriteKey)
@@ -40,7 +40,7 @@ class DiskStoreTests {
     
     // MARK: - Basic Storage Operations
     
-    @Test("given DiskStore, when storing single event, then file is created with event data")
+    @Test("when storing single event, then file is created with event data")
     func testStoreSingleEvent() async {
         await store.retain(value: sampleEventJson)
         
@@ -78,7 +78,7 @@ class DiskStoreTests {
         await store.removeAll()
     }
     
-    @Test("given DiskStore, when storing multiple events before rollover, then events are batched in single file")
+    @Test("when storing multiple events before rollover, then events are batched in single file")
     func testMultipleEventsInSingleBatch() async {
         let event1 = """
             {"messageId":"msg-1","type":"track","event":"Event 1"}
@@ -105,7 +105,7 @@ class DiskStoreTests {
         await store.removeAll()
     }
     
-    @Test("given DiskStore, when single event is stored and rolled over, then proper batch format is created")
+    @Test("when single event is stored and rolled over, then proper batch format is created")
     func testSingleEventBatchFormat() async {
         await store.retain(value: sampleEventJson)
         await store.rollover()
@@ -219,7 +219,7 @@ class DiskStoreTests {
     
     // MARK: - Large Batch Tests
     
-    @Test("given DiskStore, when batch exceeds max size, then new batch is automatically created")
+    @Test("when batch exceeds max size, then new batch is automatically created")
     func testBatchSizeLimit() async {
         // Create a large event that will exceed the batch size limit
         let largeEvent = createLargeEvent(size: Int(DataStoreConstants.maxBatchSize / 2))
@@ -248,7 +248,7 @@ class DiskStoreTests {
     
     // MARK: - Edge Cases Tests
     
-    @Test("given DiskStore, when rolling over without events, then no batch file is created")
+    @Test("when rolling over without events, then no batch file is created")
     func testRolloverWithoutEvents() async {
         await store.rollover()
         
@@ -262,7 +262,7 @@ class DiskStoreTests {
         #expect(finalizedFiles.isEmpty)
     }
     
-    @Test("given DiskStore, when removing non-existent batch, then operation returns false")
+    @Test("when removing non-existent batch, then operation returns false")
     func testRemoveNonExistentBatch() async {
         let fakeReference = "/non/existent/file/path"
         let removed = await store.remove(reference: fakeReference)
@@ -270,7 +270,7 @@ class DiskStoreTests {
         #expect(removed == false)
     }
     
-    @Test("given DiskStore, when storing events with special characters, then events are properly encoded")
+    @Test("when storing events with special characters, then events are properly encoded")
     func testSpecialCharactersInEvents() async {
         let specialEvent = """
             {"messageId":"special-123","type":"track","event":"Test Event","properties":{"emoji":"🚀","unicode":"café","quotes":"say \\"hello\\""}}
@@ -295,7 +295,7 @@ class DiskStoreTests {
     
     // MARK: - Concurrent Access Tests
     
-    @Test("given DiskStore, when multiple events are stored concurrently, then all events are persisted")
+    @Test("when multiple events are stored concurrently, then all events are persisted")
     func testConcurrentEventStorage() async {
         let eventCount = 10
         
@@ -359,7 +359,7 @@ class DiskStoreTests {
         await newStore.removeAll()
     }
     
-    @Test("given DiskStore, when directory doesn't exist, then directory is created automatically")
+    @Test("when directory doesn't exist, then directory is created automatically")
     func testDirectoryCreation() async {
         // Create a store with a unique writeKey to ensure clean directory
         let uniqueWriteKey = "unique-test-key-\(String.randomUUIDString)"

@@ -43,11 +43,11 @@ class AnalyticsTests {
     }
     
     // MARK: - Track Event Tests
-    @Test("given Analytics, when tracking events with variations, then event is captured correctly", arguments: EventTestCaseParameters.trackEvent)
+    @Test("when tracking events with variations, then event is captured correctly", arguments: EventTestCaseParameters.trackEvent)
     func testTrackEventVariants(_ eventName: String, _ properties: Properties?, _ options: RudderOption?) async {
         analytics.track(name: eventName, properties: properties, options: options)
         
-        let trackEvents = await mockPlugin.waitForEvents(TrackEvent.self)
+        let trackEvents = await mockPlugin.waitForEvents(TrackEvent.self, timeout: 0.3)
         #expect(trackEvents.count >= 1)
         
         guard let event = trackEvents.first else {
@@ -65,12 +65,11 @@ class AnalyticsTests {
         if let options {
             #expect(validate(options: options, with: event.options))
         }
-        
     }
     
     // MARK: - Screen Event Tests
     
-    @Test("given Analytics, when tracking screen events with variations, then event is captured correctly", arguments: EventTestCaseParameters.screenEvent)
+    @Test("when tracking screen events with variations, then event is captured correctly", arguments: EventTestCaseParameters.screenEvent)
     func testScreenEventVariants(_ name: String, _ category: String?, _ properties: [String: Any]?, _ options: RudderOption?) async {
         analytics.screen(screenName: name, category: category, properties: properties, options: options)
         
@@ -100,7 +99,7 @@ class AnalyticsTests {
     
     // MARK: - Identify Event Tests
     
-    @Test("given Analytics, when tracking identify events with variations, then event is captured correctly", arguments: EventTestCaseParameters.identifyEvent)
+    @Test("when tracking identify events with variations, then event is captured correctly", arguments: EventTestCaseParameters.identifyEvent)
     func testIdentifyVariants(_ userId: String?, _ traits: Traits?, _ options: RudderOption?) async {
         analytics.identify(userId: userId, traits: traits, options: options)
         
@@ -150,7 +149,7 @@ class AnalyticsTests {
     
     // MARK: - Group Event Tests
     
-    @Test("given Analytics, when tracking group events with variations, then event is captured correctly", arguments: EventTestCaseParameters.groupEvent)
+    @Test("when tracking group events with variations, then event is captured correctly", arguments: EventTestCaseParameters.groupEvent)
     func testGroupEventVariants(_ groupId: String, _ traits: Traits?, _ options: RudderOption?) async {
         analytics.group(groupId: groupId, traits: traits, options: options)
         
@@ -177,7 +176,7 @@ class AnalyticsTests {
     
     // MARK: - Alias Event Tests
     
-    @Test("given Analytics, when aliasing user, then alias event is captured correctly", arguments: EventTestCaseParameters.aliasEvent)
+    @Test("when aliasing user, then alias event is captured correctly", arguments: EventTestCaseParameters.aliasEvent)
     func testAliasEventVariants(_ alias: String, _ previousId: String?, _ options: RudderOption?) async {
         // First identify a user if previousId is provided
         if let previousId {
@@ -210,7 +209,7 @@ class AnalyticsTests {
         }
     }
     
-    @Test("given Analytics, when aliasing user, then alias event is captured correctly")
+    @Test("when aliasing user, then alias event is captured correctly")
     func testAliasEvent() async {
         // First identify a user
         analytics.identify(userId: "old-user-id")
@@ -232,7 +231,7 @@ class AnalyticsTests {
     
     // MARK: - Session Management Tests
     
-    @Test("given Analytics, when starting manual session, then session ID is set correctly")
+    @Test("when starting manual session, then session ID is set correctly")
     func testStartManualSession() async {
         let customSessionId: UInt64 = 1_234_567_890
         
@@ -243,7 +242,7 @@ class AnalyticsTests {
         }
     }
     
-    @Test("given Analytics, when starting session without ID, then session ID is generated")
+    @Test("when starting session without ID, then session ID is generated")
     func testStartSessionWithGeneratedId() async {
         let originalSessionId = analytics.sessionId
         
@@ -255,7 +254,7 @@ class AnalyticsTests {
         }
     }
     
-    @Test("given Analytics, when ending session, then session is properly ended")
+    @Test("when ending session, then session is properly ended")
     func testEndSession() async {
         // Start a session first
         analytics.startSession(sessionId: 9_876_543_210)
@@ -272,7 +271,7 @@ class AnalyticsTests {
         }
     }
     
-    @Test("given Analytics, when starting session with invalid ID, then error is logged and session is not set")
+    @Test("when starting session with invalid ID, then error is logged and session is not set")
     func testStartSessionWithInvalidId() async {
         let invalidSessionId: UInt64 = 123 // Too short
         let originalSessionId = analytics.sessionId
@@ -287,7 +286,7 @@ class AnalyticsTests {
     
     // MARK: - Plugin Management Tests
     
-    @Test("given Analytics, when adding plugin, then plugin receives events")
+    @Test("when adding plugin, then plugin receives events")
     func testAddPlugin() async {
         let additionalPlugin = MockEventCapturePlugin()
         
@@ -352,7 +351,7 @@ class AnalyticsTests {
         }
     }
     
-    @Test("given Analytics, when resetting with specific options, then only specified data is cleared")
+    @Test("when resetting with specific options, then only specified data is cleared")
     func testResetWithOptions() async {
         // Set up user data
         analytics.identify(userId: "test-user", traits: ["email": "test@example.com"])
@@ -372,7 +371,7 @@ class AnalyticsTests {
     
     // MARK: - Flush Tests
     
-    @Test("given Analytics, when calling flush, then flush is propagated to plugins")
+    @Test("when calling flush, then flush is propagated to plugins")
     func testFlush() async {
         // Track some events first
         analytics.track(name: "Test Event")
@@ -389,7 +388,7 @@ class AnalyticsTests {
     
     // MARK: - Deep Link Tests
     
-    @Test("given Analytics, when opening deep link URL, then deep link event is tracked")
+    @Test("when opening deep link URL, then deep link event is tracked")
     func testDeepLinkTracking() async {
         let testURL = URL(string: "myapp://product?id=123&ref=deeplink")!
         let options = ["source": "test"]
@@ -406,7 +405,7 @@ class AnalyticsTests {
         #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["source"] as? String == "test")
     }
     
-    @Test("given Analytics, when opening URL without query parameters, then basic deep link event is tracked")
+    @Test("when opening URL without query parameters, then basic deep link event is tracked")
     func testDeepLinkWithoutParameters() async {
         let testURL = URL(string: "myapp://home")!
         
@@ -421,14 +420,14 @@ class AnalyticsTests {
     
     // MARK: - Shutdown Tests
     
-    @Test("given Analytics, when shutting down, then analytics becomes inactive")
+    @Test("when shutting down, then analytics becomes inactive")
     func testShutdown() async {
         #expect(analytics.isAnalyticsActive == true)
         analytics.shutdown()
         #expect(analytics.isAnalyticsActive == false)
     }
     
-    @Test("given shutdown Analytics, when attempting to track events, then events are not processed")
+    @Test("when Analytics shutdown and attempting to track events, then events are not processed")
     func testEventsNotProcessedAfterShutdown() async {
         analytics.shutdown()
         
@@ -449,7 +448,7 @@ class AnalyticsTests {
         }
     }
     
-    @Test("given shutdown Analytics, when accessing user properties, then nil is returned")
+    @Test("when Analytics shutdown and accessing user properties, then nil is returned")
     func testUserPropertiesReturnNilAfterShutdown() async {
         // Set up user data first
         analytics.identify(userId: "test-user", traits: ["email": "test@example.com"])
@@ -472,7 +471,7 @@ class AnalyticsTests {
     
     // MARK: - Concurrent Operations Tests
     
-    @Test("given Analytics, when tracking multiple events concurrently, then all events are processed")
+    @Test("when tracking multiple events concurrently, then all events are processed")
     func testSequentialEventTracking() async {
         let eventCount = 10
         
@@ -491,7 +490,7 @@ class AnalyticsTests {
         }
     }
     
-    @Test("given Analytics, when performing concurrent user operations, then state remains consistent")
+    @Test("when performing concurrent user operations, then state remains consistent")
     func testSequentialUserOperations() async {
         // Perform identify operations sequentially to avoid actor isolation issues
         for i in 0..<5 {
@@ -508,7 +507,7 @@ class AnalyticsTests {
     
     // MARK: - Edge Cases Tests
     
-    @Test("given Analytics, when tracking event with empty name, then event is still processed")
+    @Test("when tracking event with empty name, then event is still processed")
     func testTrackEventWithEmptyName() async {
         analytics.track(name: "")
         
@@ -517,7 +516,7 @@ class AnalyticsTests {
         #expect(trackEvents.first?.event == "")
     }
     
-    @Test("given Analytics, when identifying with empty userId, then operation completes")
+    @Test("when identifying with empty userId, then operation completes")
     func testIdentifyWithEmptyUserId() async {
         analytics.identify(userId: "", traits: ["test": "value"])
         
@@ -527,7 +526,7 @@ class AnalyticsTests {
         #expect(self.analytics.userId == "")
     }
     
-    @Test("given Analytics, when performing operations with nil optional parameters, then operations complete successfully")
+    @Test("when performing operations with nil optional parameters, then operations complete successfully")
     func testNilOptionalParameters() async {
         analytics.track(name: "Test", properties: nil, options: nil)
         analytics.screen(screenName: "Test", category: nil, properties: nil, options: nil)
@@ -541,7 +540,7 @@ class AnalyticsTests {
     
     // MARK: - Storage Integration Tests
     
-    @Test("given Analytics, when events are tracked, then user identity is persisted to storage")
+    @Test("when events are tracked, then user identity is persisted to storage")
     func testUserIdentityPersistence() async {
         let userId = "persistent-user"
         let traits: Traits = ["email": "persistent@example.com"]
@@ -558,7 +557,7 @@ class AnalyticsTests {
         #expect(!storedData.isEmpty)
     }
     
-    @Test("given Analytics, when anonymous ID is accessed, then it is consistent across calls")
+    @Test("when anonymous ID is accessed, then it is consistent across calls")
     func testAnonymousIdConsistency() async {
         let anonymousId1 = analytics.anonymousId
         let anonymousId2 = analytics.anonymousId

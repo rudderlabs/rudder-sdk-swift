@@ -26,7 +26,7 @@ class KeyValueStoreTests {
     }
     
     @Test(
-        "given KeyValueStore, when storing and reading various types, then all values are persisted correctly",
+        "when storing and reading various types, then all values are persisted correctly",
         arguments: [
             // MARK: Primitive Type Storage Tests
             ("string_key", TestValueWrapper.string("test_string_value")),
@@ -114,7 +114,7 @@ class KeyValueStoreTests {
 
     // MARK: - Nil Value Storage Tests
     
-    @Test("given KeyValueStore, when storing nil value, then nil is handled correctly")
+    @Test("when storing nil value, then nil is handled correctly")
     func testNilValueStorage() async {
         let key = "nil_key"
         let value: String? = nil
@@ -127,7 +127,7 @@ class KeyValueStoreTests {
     
     // MARK: - Read Operations Tests
     
-    @Test("given KeyValueStore, when reading non-existent key, then nil is returned")
+    @Test("when reading non-existent key, then nil is returned")
     func testReadNonExistentKey() async {
         let nonExistentKey = "non_existent_key"
         let retrievedValue: String? = store.read(reference: nonExistentKey)
@@ -135,7 +135,7 @@ class KeyValueStoreTests {
         #expect(retrievedValue == nil)
     }
     
-    @Test("given KeyValueStore, when reading with wrong type, then nil is returned")
+    @Test("when reading with wrong type, then nil is returned")
     func testReadWithWrongType() async {
         let key = "wrong_type_key"
         let stringValue = "test_string"
@@ -166,7 +166,7 @@ class KeyValueStoreTests {
         #expect(retrievedValue == nil)
     }
     
-    @Test("given KeyValueStore, when deleting non-existent key, then no error occurs")
+    @Test("when deleting non-existent key, then no error occurs")
     func testDeleteNonExistentKey() async {
         let nonExistentKey = "non_existent_delete_key"
         
@@ -276,7 +276,7 @@ class KeyValueStoreTests {
     
     // MARK: - Special Characters and Edge Cases Tests
     
-    @Test("given KeyValueStore, when storing values with special character keys, then values are persisted correctly")
+    @Test("when storing values with special character keys, then values are persisted correctly")
     func testSpecialCharacterKeys() async {
         let specialKeys = [
             "key-with-dashes",
@@ -297,7 +297,7 @@ class KeyValueStoreTests {
         }
     }
     
-    @Test("given KeyValueStore, when storing empty string values, then empty strings are handled correctly")
+    @Test("when storing empty string values, then empty strings are handled correctly")
     func testEmptyStringStorage() async {
         let key = "empty_string_key"
         let emptyValue = ""
@@ -309,7 +309,7 @@ class KeyValueStoreTests {
         #expect(retrievedValue != nil) // Empty string is different from nil
     }
     
-    @Test("given KeyValueStore, when storing large string values, then large strings are handled correctly")
+    @Test("when storing large string values, then large strings are handled correctly")
     func testLargeStringStorage() async {
         let key = "large_string_key"
         let largeValue = String(repeating: "A", count: 10000) // 10KB string
@@ -323,7 +323,7 @@ class KeyValueStoreTests {
     
     // MARK: - JSON Encoding/Decoding Edge Cases Tests
     
-    @Test("given KeyValueStore, when storing object with invalid JSON characters, then object is handled correctly")
+    @Test("when storing object with invalid JSON characters, then object is handled correctly")
     func testInvalidJSONCharacters() async {
         struct TestObjectWithSpecialChars: Codable, Equatable {
             let text: String
