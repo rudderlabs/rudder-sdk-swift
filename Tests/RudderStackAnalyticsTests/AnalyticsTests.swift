@@ -390,7 +390,10 @@ class AnalyticsTests {
     
     @Test("when opening deep link URL, then deep link event is tracked")
     func testDeepLinkTracking() async {
-        let testURL = URL(string: "myapp://product?id=123&ref=deeplink")!
+        guard let testURL = URL(string: "myapp://product?id=123&ref=deeplink") else {
+            Issue.record("Invalid deep link URL")
+            return
+        }
         let options = ["source": "test"]
         
         analytics.open(url: testURL, options: options)
@@ -407,8 +410,10 @@ class AnalyticsTests {
     
     @Test("when opening URL without query parameters, then basic deep link event is tracked")
     func testDeepLinkWithoutParameters() async {
-        let testURL = URL(string: "myapp://home")!
-        
+        guard let testURL = URL(string: "myapp://home") else {
+            Issue.record("Invalid deep link URL")
+            return
+        }
         analytics.open(url: testURL)
         
         let trackEvents = await self.mockPlugin.waitForEvents(TrackEvent.self)
