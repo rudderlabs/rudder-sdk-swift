@@ -31,6 +31,7 @@
 		5358C59B2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */; };
 		537846AB2EA1723400520374 /* KeyValueStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846AA2EA1723400520374 /* KeyValueStoreTests.swift */; };
 		537846AD2EAA22A200520374 /* EventQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846AC2EAA22A200520374 /* EventQueueTests.swift */; };
+		537846AF2EAA24CB00520374 /* EventWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846AE2EAA24CB00520374 /* EventWriterTests.swift */; };
 		538F82C72E79583900C7ECEB /* UpdateSourceConfigAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */; };
 		539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */; };
 		539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FE2EA105D600DAC164 /* DiskStoreTests.swift */; };
@@ -200,6 +201,7 @@
 		5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCResetEntriesBuilder.swift; sourceTree = "<group>"; };
 		537846AA2EA1723400520374 /* KeyValueStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueStoreTests.swift; sourceTree = "<group>"; };
 		537846AC2EAA22A200520374 /* EventQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueueTests.swift; sourceTree = "<group>"; };
+		537846AE2EAA24CB00520374 /* EventWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriterTests.swift; sourceTree = "<group>"; };
 		538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSourceConfigAction.swift; sourceTree = "<group>"; };
 		539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryStoreTests.swift; sourceTree = "<group>"; };
 		539000FE2EA105D600DAC164 /* DiskStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskStoreTests.swift; sourceTree = "<group>"; };
@@ -525,6 +527,7 @@
 			isa = PBXGroup;
 			children = (
 				537846AC2EAA22A200520374 /* EventQueueTests.swift */,
+				537846AE2EAA24CB00520374 /* EventWriterTests.swift */,
 			);
 			path = EventProcessingModuleTests;
 			sourceTree = "<group>";
@@ -1140,6 +1143,7 @@
 				53DEA66B2E03D06F00D6C371 /* SessionHandlerTests.swift in Sources */,
 				53DEA66C2E03D06F00D6C371 /* SessionActionTests.swift in Sources */,
 				53DEA66D2E03D06F00D6C371 /* ScreenInfoPluginTests.swift in Sources */,
+				537846AF2EAA24CB00520374 /* EventWriterTests.swift in Sources */,
 				53DEA66E2E03D06F00D6C371 /* LoggerAnalyticsTests.swift in Sources */,
 				53DEA66F2E03D06F00D6C371 /* LocaleInfoPluginTests.swift in Sources */,
 				53DEA6702E03D06F00D6C371 /* AppInfoPluginTests.swift in Sources */,
