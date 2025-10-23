@@ -163,6 +163,6 @@ extension IntegrationPlugin {
     }
     
     private func applyDefaultPlugins() {
-        // TODO: add default plugins here
+        self.add(plugin: EventFilteringPlugin(key: self.key))
     }
 }
