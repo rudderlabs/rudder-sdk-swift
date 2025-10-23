@@ -118,8 +118,6 @@ extension EventFilteringPlugin {
                 }
             }
             .store(in: &cancellables)
-        
-        LoggerAnalytics.debug("EventFilteringPlugin: Configuration listener setup completed for destination: \(destinationKey)")
     }
     
     /**
