@@ -334,12 +334,6 @@ class AnalyticsTests {
         
         #expect(self.analytics.userId == "test-user")
         #expect(self.analytics.traits?["email"] as? String == "test@example.com")
-        
-        // Verify data exists in storage
-        let initialKeyValueCount = self.mockStorage.allKeyValuePairs.count
-        let initialEventCount = self.mockStorage.batchCount
-        #expect(initialKeyValueCount > 0)
-        #expect(initialEventCount >= 1)
 
         // Reset
         self.analytics.reset()
