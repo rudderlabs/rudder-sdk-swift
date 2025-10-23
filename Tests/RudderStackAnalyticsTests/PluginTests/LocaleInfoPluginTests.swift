@@ -13,7 +13,7 @@ class LocaleInfoPluginTests {
     
     var localeInfoPlugin: LocaleInfoPlugin
     
-    init(){
+    init() {
         self.localeInfoPlugin = LocaleInfoPlugin()
     }
     
