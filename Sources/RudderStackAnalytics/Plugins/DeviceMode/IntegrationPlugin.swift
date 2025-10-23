@@ -147,6 +147,8 @@ extension IntegrationPlugin {
     }
     
     public func setup(analytics: Analytics) {
+        self.analytics = analytics
+        
         let key = self.key
         analytics.integrationsController?.$integrationPluginStores.modify { stores in
             if stores[key] == nil {

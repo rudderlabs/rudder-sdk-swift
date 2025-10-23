@@ -39,10 +39,6 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
         self.key = key
     }
     
-    func setup(analytics: Analytics) {
-        self.analytics = analytics
-    }
-    
     func getDestinationInstance() -> Any? {
         getDestinationInstanceCalled = true
         return destinationInstance
