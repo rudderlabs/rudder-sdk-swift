@@ -230,12 +230,13 @@ extension EventFilteringPlugin {
     }
 }
 
-// MARK: - Configuration Update Interface
+// MARK: - Testing Interface
 extension EventFilteringPlugin {
     
     /**
      Updates the plugin configuration with new destination config.
-     This method will be called by the IntegrationsManagementPlugin when configuration changes.
+     This method is primarily intended for testing purposes to simulate configuration changes.
+     In production, configuration updates are handled automatically through the source configuration listener.
      
      - Parameter destinationConfig: The new destination configuration.
      */
