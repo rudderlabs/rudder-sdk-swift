@@ -145,4 +145,22 @@ extension IntegrationPlugin {
     var pluginChain: PluginChain? {
         return self.pluginStore?.pluginChain
     }
+    
+    public func setup(analytics: Analytics) {
+        let key = self.key
+        analytics.integrationsController?.$integrationPluginStores.modify { stores in
+            if stores[key] == nil {
+                let pluginStore = IntegrationPluginStore(analytics: analytics)
+                
+                pluginStore.isStandardIntegration = self is StandardIntegration
+                stores[key] = pluginStore
+            }
+        }
+        
+        self.applyDefaultPlugins()
+    }
+    
+    private func applyDefaultPlugins() {
+        // TODO: add default plugins here
+    }
 }

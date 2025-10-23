@@ -17,9 +17,6 @@ class IntegrationsController {
     @Synchronized
     var integrationPluginStores: [String: IntegrationPluginStore] = [:]
     
-    // TODO: - Create list of defaultPlugins
-    var defaultPlugins: [Plugin] = []
-    
     init(analytics: Analytics) {
         self.analytics = analytics
         self.integrationPluginChain = PluginChain(analytics: analytics)
@@ -136,17 +133,6 @@ class IntegrationsController {
     
     func add(integration: IntegrationPlugin) {
         self.integrationPluginChain?.add(plugin: integration)
-        self.defaultPlugins.forEach { integration.add(plugin: $0) }
-        
-        let key = integration.key
-        $integrationPluginStores.modify { stores in
-            if stores[key] == nil, let analytics {
-                let pluginStore = IntegrationPluginStore(analytics: analytics)
-                
-                pluginStore.isStandardIntegration = integration is StandardIntegration
-                stores[key] = pluginStore
-            }
-        }
         
         // If the source config is already fetched once and enabled, then initialise the destination
         // since it is added after fetching of source config.
@@ -196,7 +182,6 @@ class IntegrationsController {
             stores.removeAll()
         }
         self.integrationPluginChain?.removeAll()
-        self.defaultPlugins.removeAll()
         self.analytics = nil
         self.integrationPluginChain = nil
     }

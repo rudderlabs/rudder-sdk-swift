@@ -25,10 +25,6 @@ class SampleCustomIntegrationPlugin: IntegrationPlugin {
     
     private var destinationSdk: SampleDestinationSdk?
     
-    func setup(analytics: Analytics) {
-        self.analytics = analytics
-    }
-    
     /**
      * For custom integration plugins, the `destinationConfig` is an empty dictionary, so it is not used.
      */
