@@ -337,7 +337,7 @@ class AnalyticsTests {
         
         // Verify data exists in storage
         let initialKeyValueCount = self.mockStorage.allKeyValuePairs.count
-        let initialEventCount = self.mockStorage.eventCount
+        let initialEventCount = self.mockStorage.batchCount
         #expect(initialKeyValueCount > 0)
         #expect(initialEventCount >= 1)
 
@@ -377,11 +377,11 @@ class AnalyticsTests {
         analytics.track(name: "Test Event")
         
         await runAfter(0.1) {
-            #expect(self.mockStorage.eventCount == 1)
+            #expect(self.mockStorage.batchCount == 1)
             
             self.analytics.flush()
             await runAfter(0.3) {
-                #expect(self.mockStorage.eventCount == 0)
+                #expect(self.mockStorage.batchCount == 0)
             }
         }
     }
