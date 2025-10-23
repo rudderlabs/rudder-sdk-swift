@@ -36,8 +36,8 @@ class IntegrationOptionsPlugin: Plugin {
     
     weak var analytics: Analytics?
     
-    init(destinationKey: String) {
-        self.destinationKey = destinationKey
+    init(key: String) {
+        self.destinationKey = key
     }
 
     func setup(analytics: Analytics) {

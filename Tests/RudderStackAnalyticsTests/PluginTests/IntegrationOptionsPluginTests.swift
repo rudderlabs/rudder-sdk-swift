@@ -15,7 +15,7 @@ struct IntegrationOptionsPluginTests {
     
     @Test("Event with all destinations enabled returns event")
     func eventWithAllDestinationsEnabled() {
-        let plugin = IntegrationOptionsPlugin(destinationKey: mockDestinationKey)
+        let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
@@ -31,7 +31,7 @@ struct IntegrationOptionsPluginTests {
     
     @Test("Event with destination disabled returns nil")
     func eventWithDestinationDisabled() {
-        let plugin = IntegrationOptionsPlugin(destinationKey: mockDestinationKey)
+        let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
@@ -46,7 +46,7 @@ struct IntegrationOptionsPluginTests {
     
     @Test("Event with all destinations disabled returns nil")
     func eventWithAllDestinationsDisabled() {
-        let plugin = IntegrationOptionsPlugin(destinationKey: mockDestinationKey)
+        let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
@@ -61,7 +61,7 @@ struct IntegrationOptionsPluginTests {
     
     @Test("Event with all disabled but destination enabled returns event")
     func eventWithAllDisabledButDestinationEnabled() {
-        let plugin = IntegrationOptionsPlugin(destinationKey: mockDestinationKey)
+        let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
@@ -80,7 +80,7 @@ struct IntegrationOptionsPluginTests {
     
     @Test("Plugin for different destination ignores mock destination")
     func pluginForDifferentDestination() {
-        let plugin = IntegrationOptionsPlugin(destinationKey: "SomeOtherDestination")
+        let plugin = IntegrationOptionsPlugin(key: "SomeOtherDestination")
         let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
@@ -99,7 +99,7 @@ struct IntegrationOptionsPluginTests {
     
     @Test("Event with empty integrations returns event")
     func eventWithEmptyIntegrations() {
-        let plugin = IntegrationOptionsPlugin(destinationKey: mockDestinationKey)
+        let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
@@ -115,7 +115,7 @@ struct IntegrationOptionsPluginTests {
     
     @Test("Event with integration field set to string returns event")
     func eventWithIntegrationFieldAsString() {
-        let plugin = IntegrationOptionsPlugin(destinationKey: mockDestinationKey)
+        let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
@@ -131,7 +131,7 @@ struct IntegrationOptionsPluginTests {
     
     @Test("Event with integration field set to complex object returns event")
     func eventWithIntegrationFieldAsComplexObject() {
-        let plugin = IntegrationOptionsPlugin(destinationKey: mockDestinationKey)
+        let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
@@ -149,7 +149,7 @@ struct IntegrationOptionsPluginTests {
     
     @Test("Event with nil integrations returns event")
     func eventWithNilIntegrations() {
-        let plugin = IntegrationOptionsPlugin(destinationKey: mockDestinationKey)
+        let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
