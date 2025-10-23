@@ -5,56 +5,97 @@
 //  Created by Satheesh Kannan on 28/11/24.
 //
 
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class DeviceInfoPluginTests: XCTestCase {
+@Suite("DeviceInfoPlugin Tests")
+class DeviceInfoPluginTests {
     
-    func test_pluginInitialization() {
-        given("An analytics object given..") {
-            let analytics = MockProvider.clientWithDiskStorage
-            let plugin = DeviceInfoPlugin()
-            
-            when("plugin setup is called..") {
-                plugin.setup(analytics: analytics)
-                
-                then("analytics property should be set..") {
-                    XCTAssertNotNil(plugin.analytics)
-                    XCTAssertTrue(plugin.collectDeviceId == analytics.configuration.collectDeviceId)
-                }
-            }
-        }
+    var deviceInfoPlugin: DeviceInfoPlugin
+    
+    init() {
+        self.deviceInfoPlugin = DeviceInfoPlugin()
     }
     
-    func test_intercept_trackEvent() {
-        given("An simple track event to the device info plugin..") {
-            let plugin = DeviceInfoPlugin()
-            let track = TrackEvent(event: "Track")
-            
-            when("intercept is called..") {
-                let interceptedEvent = plugin.intercept(event: track)
-                
-                then("track event should have the device info details..") {
-                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
-                    XCTAssertNotNil(context["device"])
-                }
-            }
+    @Test("when intercepting event, then adds device context information")
+    func testDeviceInfoPlugin_InterceptEvent() {
+        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        deviceInfoPlugin.setup(analytics: analytics)
+        
+        let trackEvent = SwiftTestMockProvider.mockTrackEvent
+        let result = deviceInfoPlugin.intercept(event: trackEvent)
+        
+        #expect(result != nil)
+        #expect(result?.context != nil)
+        guard let context = result?.context?.rawDictionary else {
+            Issue.record("Event context not found")
+            return
         }
+        
+        #expect(context["device"] != nil)
+        guard let deviceInfo = context["device"] as? [String: Any] else {
+            Issue.record("Device info not found")
+            return
+        }
+        
+        #expect(deviceInfo["manufacturer"] as? String == "Apple")
+        #expect(deviceInfo["name"] != nil)
+        #expect(deviceInfo["type"] != nil)
     }
     
-    func test_intercept_groupEvent() {
-        given("An simple group event to the device info plugin..") {
-            let plugin = DeviceInfoPlugin()
-            let group = GroupEvent(groupId: "group_id")
-            
-            when("intercept is called..") {
-                let interceptedEvent = plugin.intercept(event: group)
-                
-                then("group event should have the device info details..") {
-                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
-                    XCTAssertNotNil(context["device"])
-                }
-            }
+    @Test("given Analytics with collectDeviceId enabled, when intercepting event, then includes device id")
+    func testDeviceInfoPlugin_WithDeviceIdCollection() {
+        let config = SwiftTestMockProvider.createMockConfiguration()
+        config.collectDeviceId = true
+        let analytics = Analytics(configuration: config)
+        deviceInfoPlugin.setup(analytics: analytics)
+        
+        let trackEvent = SwiftTestMockProvider.mockTrackEvent
+        let result = deviceInfoPlugin.intercept(event: trackEvent)
+        
+        #expect(result?.context != nil)
+        guard let context = result?.context?.rawDictionary else {
+            Issue.record("Event context not found")
+            return
         }
+        
+        #expect(context["device"] != nil)
+        guard let deviceInfo = context["device"] as? [String: Any] else {
+            Issue.record("Device info not found")
+            return
+        }
+        
+        #expect(deviceInfo["manufacturer"] as? String == "Apple")
+        #expect(deviceInfo["name"] != nil)
+        #expect(deviceInfo["type"] != nil)
+        #expect(deviceInfo["id"] != nil)
+    }
+    
+    @Test("given Analytics with collectDeviceId disabled, when intercepting event, then excludes device id")
+    func testDeviceInfoPlugin_WithoutDeviceIdCollection() {
+        let config = SwiftTestMockProvider.createMockConfiguration()
+        config.collectDeviceId = false
+        let analytics = Analytics(configuration: config)
+        deviceInfoPlugin.setup(analytics: analytics)
+        
+        let trackEvent = SwiftTestMockProvider.mockTrackEvent
+        let result = deviceInfoPlugin.intercept(event: trackEvent)
+        
+        #expect(result?.context != nil)
+        guard let context = result?.context?.rawDictionary else {
+            Issue.record("Event context not found")
+            return
+        }
+        
+        #expect(context["device"] != nil)
+        guard let deviceInfo = context["device"] as? [String: Any] else {
+            Issue.record("Device info not found")
+            return
+        }
+        
+        #expect(deviceInfo["manufacturer"] as? String == "Apple")
+        #expect(deviceInfo["name"] != nil)
+        #expect(deviceInfo["type"] != nil)
+        #expect(deviceInfo["id"] == nil)
     }
 }
