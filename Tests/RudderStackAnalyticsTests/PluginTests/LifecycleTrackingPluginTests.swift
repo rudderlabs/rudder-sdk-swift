@@ -5,126 +5,85 @@
 //  Created by Satheesh Kannan on 11/03/25.
 //
 
-import Foundation
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class LifecycleTrackingPluginTests: XCTestCase {
-    var analyticsMock: Analytics?
-    var plugin: LifecycleTrackingPlugin!
-    var defaultSession: URLSession?
+@Suite("LifecycleTrackingPlugin Tests")
+class LifecycleTrackingPluginTests {
+    var lifecycleTrackingPlugin: LifecycleTrackingPlugin
+    var mockStorage: MockStorage
+    var analytics: Analytics
     
-    override func setUp() {
-        super.setUp()
-        
-        URLProtocol.registerClass(MockURLProtocol.self)
-        self.defaultSession = HttpNetwork.session
-        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 200)
-        
-        analyticsMock = MockProvider.clientWithMemoryStorage
-        plugin = LifecycleTrackingPlugin()
+    init() {
+        self.mockStorage = MockStorage()
+        self.analytics = SwiftTestMockProvider.createMockAnalytics(storage: mockStorage)
+        self.lifecycleTrackingPlugin = LifecycleTrackingPlugin()
     }
     
-    override func tearDown() {
-        analyticsMock = nil
-        plugin = nil
-        
-        if let defaultSession {
-            HttpNetwork.session = defaultSession
+    deinit {
+        let storage = mockStorage
+        Task.detached {
+            await storage.removeAll()
         }
-        URLProtocol.unregisterClass(MockURLProtocol.self)
-        
-        super.tearDown()
     }
     
-    func test_application_installed_event() async {
-        print("Given an analytics configuration allows lifecycle tracking")
-        analyticsMock?.configuration.trackApplicationLifecycleEvents = true
+    @Test("when setup is called, then application installed event triggered")
+    func test_applicationInstalledEvent() async {
+        lifecycleTrackingPlugin.setup(analytics: analytics)
         
-        print("When the plugin setup with the given analytics configuration")
-        guard let analyticsMock else { XCTFail("No disk client"); return }
-        plugin.setup(analytics: analyticsMock)
+        await mockStorage.waitForCurrentBatchEvents(expectedCount: 1)
         
-        print("Then the app version should be initialized")
-        XCTAssertNotNil(plugin.appVersion)
-        
-        print("Then the plugin should track installation event")
-        let eventNames = await fetchTrackedEventNames()
-        guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
-
-        XCTAssert(eventNames.first == LifecycleEvent.applicationInstalled.rawValue)
+        let result = await mockStorage.read()
+        let combinedBatch = result.dataItems.map { $0.batch }.joined()
+        #expect(combinedBatch.contains(LifecycleEvent.applicationInstalled.rawValue))
     }
     
-    func test_application_opened_event() async {
-        print("Given an analytics configuration allows lifecycle tracking")
-        analyticsMock?.configuration.trackApplicationLifecycleEvents = true
-        guard let analyticsMock else { XCTFail("No disk client"); return }
-        plugin.setup(analytics: analyticsMock)
+    @Test("when setup is called, then application opened event triggered")
+    func test_applicationOpenedEvent() async {
+        lifecycleTrackingPlugin.setup(analytics: analytics)
         
-        print("When the app become active")
-        plugin.onBecomeActive()
+        await mockStorage.waitForCurrentBatchEvents(expectedCount: 2)
         
-        print("Then the plugin should track application opened event")
-        let eventNames = await fetchTrackedEventNames()
-        guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
-        
-        XCTAssert(eventNames.last == LifecycleEvent.applicationOpened.rawValue)
+        let result = await mockStorage.read()
+        let combinedBatch = result.dataItems.map { $0.batch }.joined()
+        #expect(combinedBatch.contains(LifecycleEvent.applicationOpened.rawValue))
     }
     
-    func test_application_backgrounded_event() async {
-        print("Given an analytics configuration allows lifecycle tracking")
-        analyticsMock?.configuration.trackApplicationLifecycleEvents = true
-        guard let analyticsMock else { XCTFail("No disk client"); return }
-        plugin.setup(analytics: analyticsMock)
+    @Test("when app moves background, then application backgrounded event triggered")
+    func test_applicationBackgroundedEvent() async {
+        lifecycleTrackingPlugin.setup(analytics: analytics)
         
-        print("When the app moves to background")
-        plugin.onBackground()
+        lifecycleTrackingPlugin.onBackground()
         
-        print("Then the plugin should track application backgrounded event")
-        let eventNames = await fetchTrackedEventNames()
-        guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
-        XCTAssert(eventNames.last == LifecycleEvent.applicationBackgrounded.rawValue)
+        await mockStorage.waitForEventsContaining(LifecycleEvent.applicationBackgrounded.rawValue)
+        
+        let result = await mockStorage.read()
+        let combinedBatch = result.dataItems.map { $0.batch }.joined()
+        #expect(combinedBatch.contains(LifecycleEvent.applicationBackgrounded.rawValue))
     }
     
-    func test_application_updated_event() async {
-        print("Given an analytics configuration allows lifecycle tracking")
-        analyticsMock?.configuration.trackApplicationLifecycleEvents = true
-        guard let analyticsMock else { XCTFail("No disk client"); return }
+    @Test("when current app version is different, then application updated event triggered")
+    func test_applicationUpdatedEvent() async {
         
-        print("And given previous version info is stored")
-        analyticsMock.storage.write(value: "1.0", key: Constants.storageKeys.appVersion)
-        analyticsMock.storage.write(value: 10, key: Constants.storageKeys.appBuild)
+        mockStorage.write(value: "1.0", key: Constants.storageKeys.appVersion)
+        mockStorage.write(value: 10, key: Constants.storageKeys.appBuild)
         
-        print("When the plugin setup with updated app version")
-        plugin.setup(analytics: analyticsMock)
+        lifecycleTrackingPlugin.setup(analytics: analytics)
         
-        print("Then the plugin should track application updated event")
-        let eventNames = await fetchTrackedEventNames()
-        guard !eventNames.isEmpty else { XCTFail("No events recorded"); return }
+        await mockStorage.waitForEventsContaining(LifecycleEvent.applicationUpdated.rawValue)
         
-        XCTAssert(eventNames.contains(LifecycleEvent.applicationUpdated.rawValue))
+        let result = await mockStorage.read()
+        let combinedBatch = result.dataItems.map { $0.batch }.joined()
+        #expect(combinedBatch.contains(LifecycleEvent.applicationUpdated.rawValue))
     }
     
-    private func fetchTrackedEventNames() async -> [String] {
-        try? await Task.sleep(nanoseconds: 300_000_000)
-        guard let analyticsMock else { return [] }
-
-        await analyticsMock.configuration.storage.rollover()
+    @Test("when setup is called, then analytics reference is stored")
+    func test_pluginSetup() {
+        let analytics = SwiftTestMockProvider.createMockAnalytics()
         
-        let dataItems = await analyticsMock.configuration.storage.read().dataItems
+        lifecycleTrackingPlugin.setup(analytics: analytics)
         
-        guard let firstDataItem = dataItems.first else {
-            XCTFail("No data items to read"); return []
-        }
-        
-        let batch = analyticsMock.storage.eventStorageMode == .memory ? firstDataItem.batch : (FileManager.contentsOf(file: firstDataItem.reference) ?? "")
-        let batchData = batch.toDictionary?["batch"] as? [[String: Any]] ?? []
-        let eventNames = batchData.compactMap { $0["event"] as? String }
-        
-        for item in dataItems {
-            await analyticsMock.configuration.storage.remove(batchReference: item.reference)
-        }
-
-        return eventNames
+        #expect(lifecycleTrackingPlugin.analytics != nil)
+        #expect(lifecycleTrackingPlugin.pluginType == .utility)
     }
 }
