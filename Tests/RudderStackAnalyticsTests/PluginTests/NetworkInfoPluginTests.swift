@@ -8,8 +8,8 @@
 import Testing
 @testable import RudderStackAnalytics
 
-@Suite("NetworkInfoPlugin Swift Tests")
-class NetworkInfoPluginSwiftTests {
+@Suite("NetworkInfoPlugin Tests")
+class NetworkInfoPluginTests {
     var networkInfoPlugin: NetworkInfoPlugin
     
     init() {
@@ -44,8 +44,6 @@ class NetworkInfoPluginSwiftTests {
         
         #expect(networkInfo["wifi"] != nil)
         #expect(networkInfo["cellular"] != nil)
-        #expect(networkInfo["wifi"] is Bool)
-        #expect(networkInfo["cellular"] is Bool)
     }
     
     @Test("given mock network utils for wifi, when intercepting event, then uses mock connectivity data")

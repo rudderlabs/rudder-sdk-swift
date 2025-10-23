@@ -10,7 +10,6 @@ import Testing
 
 @Suite("DeviceInfoPlugin Tests")
 class DeviceInfoPluginTests {
-    
     var deviceInfoPlugin: DeviceInfoPlugin
     
     init() {

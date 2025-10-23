@@ -10,7 +10,6 @@ import Testing
 
 @Suite("AppInfoPlugin Tests")
 class AppInfoPluginTests {
-    
     var appInfoPlugin: AppInfoPlugin
     
     init() {

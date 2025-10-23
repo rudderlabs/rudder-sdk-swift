@@ -5,41 +5,54 @@
 //  Created by Satheesh Kannan on 11/12/24.
 //
 
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class OSInfoPluginTests: XCTestCase {
+@Suite("OSInfoPlugin Tests")
+class OSInfoPluginTests {
+    var osInfoPlugin: OSInfoPlugin
     
-    func test_intercept_trackEvent() {
-        given("An simple track event to the os info plugin..") {
-            let plugin = OSInfoPlugin()
-            let track = TrackEvent(event: "Track")
-            
-            when("intercept is called..") {
-                let interceptedEvent = plugin.intercept(event: track)
-                
-                then("track event should have the os info details..") {
-                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
-                    XCTAssertNotNil(context["os"])
-                }
-            }
-        }
+    init() {
+        self.osInfoPlugin = OSInfoPlugin()
     }
     
-    func test_intercept_groupEvent() {
-        given("An simple group event to the os info plugin..") {
-            let plugin = OSInfoPlugin()
-            let group = GroupEvent(groupId: "group_id")
-            
-            when("intercept is called..") {
-                let interceptedEvent = plugin.intercept(event: group)
-                
-                then("group event should have the os info details..") {
-                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
-                    XCTAssertNotNil(context["os"])
-                }
-            }
+    @Test("when intercepting different events, then adds network context information", arguments:[
+        SwiftTestMockProvider.mockTrackEvent as Event,
+        SwiftTestMockProvider.mockScreenEvent as Event,
+        SwiftTestMockProvider.mockIdentifyEvent as Event,
+        SwiftTestMockProvider.mockGroupEvent as Event,
+        SwiftTestMockProvider.mockAliasEvent as Event
+    ])
+    func test_pluginIntercept(_ event: Event) {
+        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        osInfoPlugin.setup(analytics: analytics)
+        
+        let result = osInfoPlugin.intercept(event: event)
+        
+        #expect(result != nil)
+        #expect(result?.context != nil)
+        guard let context = result?.context?.rawDictionary else {
+            Issue.record("Event context not found")
+            return
         }
+        
+        #expect(context["os"] != nil)
+        guard let osInfo = context["os"] as? [String: Any] else {
+            Issue.record("os info not found")
+            return
+        }
+        
+        #expect(osInfo["name"] != nil)
+        #expect(osInfo["version"] != nil)
+    }
+    
+    @Test("when setup is called, then analytics reference is stored")
+    func test_pluginSetup() {
+        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        
+        osInfoPlugin.setup(analytics: analytics)
+        
+        #expect(osInfoPlugin.analytics != nil)
+        #expect(osInfoPlugin.pluginType == .preProcess)
     }
 }
-

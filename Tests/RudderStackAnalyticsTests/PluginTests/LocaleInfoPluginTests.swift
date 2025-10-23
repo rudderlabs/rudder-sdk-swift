@@ -10,7 +10,6 @@ import Testing
 
 @Suite("LocaleInfoPlugin Tests")
 class LocaleInfoPluginTests {
-    
     var localeInfoPlugin: LocaleInfoPlugin
     
     init() {
