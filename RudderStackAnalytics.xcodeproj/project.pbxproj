@@ -32,6 +32,7 @@
 		537846AB2EA1723400520374 /* KeyValueStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846AA2EA1723400520374 /* KeyValueStoreTests.swift */; };
 		537846AD2EAA22A200520374 /* EventQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846AC2EAA22A200520374 /* EventQueueTests.swift */; };
 		537846AF2EAA24CB00520374 /* EventWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846AE2EAA24CB00520374 /* EventWriterTests.swift */; };
+		537846B12EAA2B3E00520374 /* EventUploaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846B02EAA2B3E00520374 /* EventUploaderTests.swift */; };
 		538F82C72E79583900C7ECEB /* UpdateSourceConfigAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */; };
 		539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */; };
 		539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FE2EA105D600DAC164 /* DiskStoreTests.swift */; };
@@ -202,6 +203,7 @@
 		537846AA2EA1723400520374 /* KeyValueStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueStoreTests.swift; sourceTree = "<group>"; };
 		537846AC2EAA22A200520374 /* EventQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueueTests.swift; sourceTree = "<group>"; };
 		537846AE2EAA24CB00520374 /* EventWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriterTests.swift; sourceTree = "<group>"; };
+		537846B02EAA2B3E00520374 /* EventUploaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploaderTests.swift; sourceTree = "<group>"; };
 		538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSourceConfigAction.swift; sourceTree = "<group>"; };
 		539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryStoreTests.swift; sourceTree = "<group>"; };
 		539000FE2EA105D600DAC164 /* DiskStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskStoreTests.swift; sourceTree = "<group>"; };
@@ -528,6 +530,7 @@
 			children = (
 				537846AC2EAA22A200520374 /* EventQueueTests.swift */,
 				537846AE2EAA24CB00520374 /* EventWriterTests.swift */,
+				537846B02EAA2B3E00520374 /* EventUploaderTests.swift */,
 			);
 			path = EventProcessingModuleTests;
 			sourceTree = "<group>";
@@ -1120,6 +1123,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				537846B12EAA2B3E00520374 /* EventUploaderTests.swift in Sources */,
 				53DEA65F2E03D06F00D6C371 /* NetworkInfoPluginTests.swift in Sources */,
 				53DEA6602E03D06F00D6C371 /* ResetUserIdentityActionTests.swift in Sources */,
 				53DEA6612E03D06F00D6C371 /* SessionInfoTests.swift in Sources */,
