@@ -9,7 +9,7 @@ import Testing
 @testable import RudderStackAnalytics
 
 @Suite("LibraryInfoPlugin Tests")
-class LibraryInfoPluginSwiftTests {
+class LibraryInfoPluginTests {
     var libraryInfoPlugin: LibraryInfoPlugin
     
     init() {
@@ -47,7 +47,7 @@ class LibraryInfoPluginSwiftTests {
     }
     
     @Test("when setup is called, then analytics reference is stored")
-    func testLibraryInfoPlugin_Setup() {
+    func test_pluginSetup() {
         let analytics = SwiftTestMockProvider.createMockAnalytics()
         
         libraryInfoPlugin.setup(analytics: analytics)
