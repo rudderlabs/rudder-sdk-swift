@@ -78,7 +78,7 @@ class EventQueueTests {
         #expect(batchContent.contains("event_3"))
     }
 
-    @Test("given empty storage, when tracking events incrementally, then current batch counter accurately reflects event accumulation")
+    @Test("given empty storage, when adding events one by one, then current batch counter accurately reflects event accumulation")
     func testCurrentBatchEventCounter() async {
         guard mockStorage.currentBatchEventCount == 0, mockStorage.totalEventCount == 0 else {
             Issue.record("Storage is not empty")
