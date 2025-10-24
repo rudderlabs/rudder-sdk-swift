@@ -19,6 +19,8 @@ class IntegrationsManagementPlugin: Plugin {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
     private var cancellables = Set<AnyCancellable>()
+    private var processingTask: Task<Void, Never>?
+    private let processingQueue = DispatchQueue(label: "IntegrationsManagement", qos: .default)
     
     private let queuedEventsChannel: AsyncChannel<Event> = AsyncChannel(bufferingPolicy: .bufferingNewest(MAX_QUEUE_SIZE))
     
@@ -32,7 +34,7 @@ class IntegrationsManagementPlugin: Plugin {
             .removeDuplicates { (previous: SourceConfig, current: SourceConfig) -> Bool in
                 previous.source.updatedAt == current.source.updatedAt
             }
-            .receive(on: DispatchQueue.global(qos: .default))
+            .receive(on: processingQueue)
             .sink { [weak self] sourceConfig in
                 guard let self, sourceConfig.source.isSourceEnabled else { return }
                 
@@ -68,14 +70,18 @@ class IntegrationsManagementPlugin: Plugin {
     private func processEvents() {
         LoggerAnalytics.debug("IntegrationsManagementPlugin: Starting to process queued events")
         
-        Task {
-            for await event in queuedEventsChannel.receive() {
-                self.integrationPluginChain?.process(event: event)
+        processingTask = Task { [weak self] in
+            guard let weakSelf = self else { return }
+            for await event in weakSelf.queuedEventsChannel.receive() {
+                if Task.isCancelled { break }
+                
+                weakSelf.integrationPluginChain?.process(event: event)
             }
         }
     }
     
     deinit {
+        processingTask?.cancel()
         self.cancellables.removeAll()
         self.queuedEventsChannel.close()
     }
