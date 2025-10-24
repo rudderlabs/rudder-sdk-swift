@@ -78,6 +78,7 @@ class AnalyticsManager {
 }
 
 // MARK: - Rudder methods
+
 extension AnalyticsManager {
     func identify(userId: String? = nil, traits: Traits? = nil, options: RudderOption? = nil) {
         self.analytics?.identify(userId: userId, traits: traits, options: options)

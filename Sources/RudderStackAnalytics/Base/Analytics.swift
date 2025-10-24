@@ -80,6 +80,7 @@ public class Analytics {
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())
+        self.integrationManager = IntegrationsManagementPlugin()
         self.setup()
     }
 }
@@ -372,6 +373,8 @@ extension Analytics {
         self.pluginChain = PluginChain(analytics: self)
         self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
         self.integrationsController = IntegrationsController(analytics: self)
+        
+        self.pluginChain?.add(plugin: self.integrationManager)
         
         // Add default plugins
         self.pluginChain?.add(plugin: IntegrationsManagementPlugin())
