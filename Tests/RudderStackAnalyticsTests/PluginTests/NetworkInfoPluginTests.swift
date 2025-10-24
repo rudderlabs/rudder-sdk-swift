@@ -75,7 +75,7 @@ class NetworkInfoPluginTests {
     
     @Test("given mock network utils for cellular, when intercepting event, then uses mock connectivity data")
     func test_pluginInterceptWithMockNetworkUtilsCellular() {
-        // Create a mock network monitor that simulates WiFi connection
+        // Create a mock network monitor that simulates cellular connection
         let mockMonitor = MockNetworkMonitor(status: .satisfied, interfaces: [.cellular])
         let mockUtils = NetworkInfoPluginUtils(monitor: mockMonitor)
         networkInfoPlugin.networkInfoUtils = mockUtils

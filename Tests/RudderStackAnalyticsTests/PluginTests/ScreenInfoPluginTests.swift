@@ -16,7 +16,7 @@ class ScreenInfoPluginTests {
         self.screenInfoPlugin = ScreenInfoPlugin()
     }
     
-    @Test("when intercepting different events, then adds network context information", arguments:[
+    @Test("when intercepting different events, then adds screen context information", arguments:[
         SwiftTestMockProvider.mockTrackEvent as Event,
         SwiftTestMockProvider.mockScreenEvent as Event,
         SwiftTestMockProvider.mockIdentifyEvent as Event,

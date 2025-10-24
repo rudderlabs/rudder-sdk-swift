@@ -16,7 +16,7 @@ class LibraryInfoPluginTests {
         self.libraryInfoPlugin = LibraryInfoPlugin()
     }
     
-    @Test("when intercepting different events, then adds device context information", arguments:[
+    @Test("when intercepting different events, then adds library context information", arguments:[
         SwiftTestMockProvider.mockTrackEvent as Event,
         SwiftTestMockProvider.mockScreenEvent as Event,
         SwiftTestMockProvider.mockIdentifyEvent as Event,
