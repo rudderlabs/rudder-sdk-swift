@@ -155,7 +155,7 @@ class IntegrationsController {
                 if integrationPlugin.pluginStore?.isDestinationReady == true {
                     integrationPlugin.reset()
                 } else {
-                    LoggerAnalytics.debug("IntegrationsManagementPlugin: Destination \(integrationPlugin.key) is not ready. Reset discarded.")
+                    LoggerAnalytics.debug("IntegrationsController: Destination \(integrationPlugin.key) is not ready. Reset discarded.")
                 }
             }
         }
@@ -167,7 +167,7 @@ class IntegrationsController {
                 if integrationPlugin.pluginStore?.isDestinationReady == true {
                     integrationPlugin.flush()
                 } else {
-                    LoggerAnalytics.debug("IntegrationsManagementPlugin: Destination \(integrationPlugin.key) is not ready. Flush discarded.")
+                    LoggerAnalytics.debug("IntegrationsController: Destination \(integrationPlugin.key) is not ready. Flush discarded.")
                 }
             }
         }

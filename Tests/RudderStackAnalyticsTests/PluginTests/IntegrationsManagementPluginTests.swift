@@ -92,7 +92,10 @@ struct IntegrationsManagementPluginTests {
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
         analytics.add(plugin: mockPlugin)
         
-        let sourceConfig = MockProvider.sourceConfiguration!
+        guard let sourceConfig = MockProvider.sourceConfiguration else {
+            #expect(Bool(false), "sourceConfiguration is nil")
+            return
+        }
         
         analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
         
