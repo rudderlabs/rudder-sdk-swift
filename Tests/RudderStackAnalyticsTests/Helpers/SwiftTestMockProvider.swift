@@ -138,59 +138,6 @@ final class SwiftTestMockProvider {
     }
 }
 
-// MARK: - MockURLProtocol for Swift Testing
-final class SwiftTestMockURLProtocol: URLProtocol {
-    
-    static var requestHandler: ((URLRequest) throws -> (statusCode: Int, data: Data?, headers: [String: String]?))?
-    
-    override class func canInit(with request: URLRequest) -> Bool {
-        return true
-    }
-    
-    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-        return request
-    }
-    
-    override func startLoading() {
-        guard let handler = SwiftTestMockURLProtocol.requestHandler else {
-            client?.urlProtocol(self, didFailWithError: URLError(.badServerResponse))
-            return
-        }
-        
-        do {
-            let (statusCode, data, headers) = try handler(request)
-            
-            guard let url = request.url else {
-                client?.urlProtocol(self, didFailWithError: URLError(.badURL))
-                return
-            }
-            
-            let response = HTTPURLResponse(
-                url: url,
-                statusCode: statusCode,
-                httpVersion: "HTTP/1.1",
-                headerFields: headers
-            )!
-            
-            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-            
-            if let data = data {
-                client?.urlProtocol(self, didLoad: data)
-            }
-            
-            client?.urlProtocolDidFinishLoading(self)
-            
-        } catch {
-            client?.urlProtocol(self, didFailWithError: error)
-        }
-    }
-    
-    override func stopLoading() {
-        // No-op
-    }
-}
-
-
 // MARK: - Unified Mock Plugin for Swift Testing
 final class MockEventCapturePlugin: Plugin {
     var pluginType: PluginType
@@ -378,15 +325,15 @@ extension MockEventCapturePlugin {
 extension SwiftTestMockProvider {
     
     static func setupMockURLSession() {
-        URLProtocol.registerClass(SwiftTestMockURLProtocol.self)
+        URLProtocol.registerClass(MockURLProtocol.self)
         
         let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [SwiftTestMockURLProtocol.self]
+        config.protocolClasses = [MockURLProtocol.self]
         HttpNetwork.session = URLSession(configuration: config)
     }
     
     static func teardownMockURLSession() {
-        URLProtocol.unregisterClass(SwiftTestMockURLProtocol.self)
+        URLProtocol.unregisterClass(MockURLProtocol.self)
     }
     
     func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
@@ -396,6 +343,46 @@ extension SwiftTestMockProvider {
         
         // Execute the block after the delay
         await block()
+    }
+    
+    static var sourceConfiguration: SourceConfig? {
+        guard let mockJson = SwiftTestMockProvider.readJson(from: "mock_source_config")?.trimmed, let mockJsonData = mockJson.utf8Data else { return nil }
+        do {
+            let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: mockJsonData)
+            return sourceConfig
+        } catch {
+            print("Error parsing JSON: \(error)")
+            return nil
+        }
+    }
+    
+    static var sourceConfigurationDictionary: [String: Any]? {
+        guard let sourceConfig = sourceConfiguration else { return nil }
+        return sourceConfig.dictionary
+    }
+    
+    static func prepareMockSessionConfigSession(with responseCode: Int) -> URLSession {
+        MockURLProtocol.requestHandler = { _ in
+            let json = responseCode == 200 ? (SwiftTestMockProvider.sourceConfigurationDictionary ?? [:]) : ["error": "Server error"]
+            let data = try JSONSerialization.data(withJSONObject: json)
+            return (responseCode, data, ["Content-Type": "application/json"])
+        }
+        
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        return URLSession(configuration: config)
+    }
+    
+    static func prepareMockDataPlaneSession(with responseCode: Int) -> URLSession {
+        MockURLProtocol.requestHandler = { _ in
+            let json = responseCode == 200 ? ["Success": "Ok"] : ["error": "Server error"]
+            let data = try JSONSerialization.data(withJSONObject: json)
+            return (responseCode, data, ["Content-Type": "application/json"])
+        }
+        
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        return URLSession(configuration: config)
     }
 }
 
@@ -442,79 +429,23 @@ class SwiftMockLogger: Logger {
 
 // MARK: - JSON Helper Functions
 extension SwiftTestMockProvider {
-    
-    /// Mock Provider specific errors
-    enum MockError: Error {
-        case missingMockResource(String)
-        case invalidJSONFormat(String)
-    }
-    
-    /// Universal JSON reader for MockResources files - throws error if file not found
-    static func loadMockJSON(_ fileName: String) throws -> [String: Any] {
-        var bundles = [Bundle(for: SwiftTestMockProvider.self), Bundle.main]
+    static func readJson(from file: String) -> String? {
+        var bundles = [
+            Bundle(for: MockProvider.self),
+            Bundle.main,
+        ]
         
         // Try to add Bundle.module if available (Swift Package Manager)
         #if SWIFT_PACKAGE
         bundles.insert(Bundle.module, at: 0)
         #endif
         
-        for bundle in bundles {
-            if let fileUrl = bundle.url(forResource: fileName, withExtension: "json"),
-               let data = try? Data(contentsOf: fileUrl) {
-                guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                    throw MockError.invalidJSONFormat("\(fileName).json")
-                }
-                return json
-            }
-        }
-        
-        throw MockError.missingMockResource("\(fileName).json")
-    }
-    
-    /// Convenience method for Track events
-    static func loadTrackJSON(_ fileName: String) throws -> [String: Any] {
-        return try loadMockJSON(fileName)
-    }
-    
-    /// Convenience method for Identify events  
-    static func loadIdentifyJSON(_ fileName: String) throws -> [String: Any] {
-        return try loadMockJSON(fileName)
-    }
-    
-    /// Convenience method for Screen events
-    static func loadScreenJSON(_ fileName: String) throws -> [String: Any] {
-        return try loadMockJSON(fileName)
-    }
-    
-    /// Convenience method for Group events
-    static func loadGroupJSON(_ fileName: String) throws -> [String: Any] {
-        return try loadMockJSON(fileName)
-    }
-    
-    /// Convenience method for Alias events
-    static func loadAliasJSON(_ fileName: String) throws -> [String: Any] {
-        return try loadMockJSON(fileName)
-    }
-    
-    /// Normalizes dynamic values in event dictionary for comparison
-    static func normalizeDynamicValues(in dictionary: inout [String: Any]) {
-        dictionary["messageId"] = "<message-id>"
-        dictionary["anonymousId"] = "<anonymous-id>"
-        dictionary["originalTimestamp"] = "<original-timestamp>"
-        dictionary["sentAt"] = "{{_RSA_DEF_SENT_AT_TS_}}"
-        
-        // Remove timestamp if present since it's dynamic
-        dictionary.removeValue(forKey: "timestamp")
-    }
-    
-    /// Compares two JSON dictionaries with normalized dynamic values
-    static func compareJSONDictionaries(_ generated: [String: Any], _ expected: [String: Any]) -> Bool {
-        var normalizedGenerated = generated
-        var normalizedExpected = expected
-        
-        normalizeDynamicValues(in: &normalizedGenerated)
-        normalizeDynamicValues(in: &normalizedExpected)
-        
-        return NSDictionary(dictionary: normalizedGenerated).isEqual(to: normalizedExpected)
+         for bundle in bundles {
+             if let fileUrl = bundle.url(forResource: file, withExtension: "json"),
+                let data = try? Data(contentsOf: fileUrl) {
+                 return data.jsonString
+             }
+         }
+         return nil
     }
 }

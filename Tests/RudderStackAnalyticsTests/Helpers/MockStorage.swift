@@ -116,8 +116,119 @@ extension MockStorage {
     /**
      Returns the count of stored events.
      */
-    var eventCount: Int {
-        return mockEventStorage.getEventCount()
+    var batchCount: Int {
+        return mockEventStorage.getBatchCount()
+    }
+    
+    /**
+     Returns the number of events in the current batch (before rollover).
+     This is useful for checking event count without triggering rollover.
+     */
+    var currentBatchEventCount: Int {
+        return mockEventStorage.getCurrentBatchEventCount()
+    }
+    
+    /**
+     Returns the total number of individual events across all batches (current + closed).
+     This provides a count of all events regardless of batch boundaries.
+     */
+    var totalEventCount: Int {
+        return mockEventStorage.getTotalEventCount()
+    }
+}
+
+extension MockStorage {
+    /**
+     Waits for events to be stored with optional predicate filtering.
+     
+     - Parameters:
+       - expectedCount: Minimum number of events expected
+       - timeout: Maximum time to wait in seconds
+       - predicate: Optional predicate to filter events
+     - Returns: True if condition was met within timeout, false otherwise
+     */
+    @discardableResult
+    func waitForEvents(
+        expectedCount: Int = 1,
+        timeout: TimeInterval = 2.0,
+        predicate: ((String) -> Bool)? = nil
+    ) async -> Bool {
+        let start = Date()
+        
+        while Date().timeIntervalSince(start) < timeout {
+            // First check if we have enough events in current batch without rollover
+            if predicate == nil && currentBatchEventCount >= expectedCount {
+                return true
+            }
+            
+            await rollover()
+            let result = await read()
+            
+            let relevantItems = result.dataItems.filter { item in
+                if let predicate = predicate {
+                    return predicate(item.batch)
+                }
+                return true
+            }
+            
+            if relevantItems.count >= expectedCount {
+                return true
+            }
+            
+            await Task.yield()
+        }
+        return false
+    }
+    
+    /**
+     Waits for events containing specific content.
+     
+     - Parameters:
+       - content: Text content to search for in event batches
+       - expectedCount: Minimum number of matching events expected
+       - timeout: Maximum time to wait in seconds
+     - Returns: True if condition was met within timeout, false otherwise
+     */
+    @discardableResult
+    func waitForEventsContaining(
+        _ content: String,
+        expectedCount: Int = 1,
+        timeout: TimeInterval = 2.0
+    ) async -> Bool {
+        return await waitForEvents(
+            expectedCount: expectedCount,
+            timeout: timeout,
+            predicate: { batch in
+                batch.contains(content)
+            }
+        )
+    }
+    
+    /**
+     Waits for a specific number of events in the current batch without rollover.
+     This is useful for testing scenarios where you want to check event accumulation
+     before batch processing occurs.
+     
+     - Parameters:
+       - expectedCount: Expected number of events in current batch
+       - timeout: Maximum time to wait in seconds
+     - Returns: True if condition was met within timeout, false otherwise
+     */
+    @discardableResult
+    func waitForCurrentBatchEvents(
+        expectedCount: Int = 1,
+        timeout: TimeInterval = 2.0
+    ) async -> Bool {
+        let start = Date()
+        
+        while Date().timeIntervalSince(start) < timeout {
+            if currentBatchEventCount >= expectedCount {
+                return true
+            }
+            
+            await Task.yield()
+        }
+        return false
     }
 }
 
@@ -192,6 +303,8 @@ final class MockEventStorage {
     
     private var currentBatch: EventDataItem = EventDataItem()
     private var closedBatches: [EventDataItem] = []
+    private var currentBatchEventCount: Int = 0
+    private var totalEventCount: Int = 0  // Track total events across all batches
     private let queue = DispatchQueue(label: "MockEventStorage.queue", attributes: .concurrent)
     
     // MARK: - EventStorage Protocol Methods
@@ -203,6 +316,8 @@ final class MockEventStorage {
             } else {
                 self.currentBatch.batch += ",\(event)"
             }
+            self.currentBatchEventCount += 1
+            self.totalEventCount += 1
         }
     }
     
@@ -233,6 +348,7 @@ final class MockEventStorage {
             // Check if it's the current batch
             if self.currentBatch.reference == batchReference {
                 self.currentBatch = EventDataItem()
+                self.currentBatchEventCount = 0
                 return true
             }
             
@@ -249,8 +365,9 @@ final class MockEventStorage {
             self.currentBatch.isClosed = true
             self.closedBatches.append(self.currentBatch)
             
-            // Start new batch
+            // Start new batch and reset counter
             self.currentBatch = EventDataItem()
+            self.currentBatchEventCount = 0
         }
     }
     
@@ -258,6 +375,8 @@ final class MockEventStorage {
         queue.async(flags: .barrier) {
             self.currentBatch = EventDataItem()
             self.closedBatches.removeAll()
+            self.currentBatchEventCount = 0
+            self.totalEventCount = 0
         }
     }
     
@@ -273,13 +392,27 @@ final class MockEventStorage {
         }
     }
     
-    func getEventCount() -> Int {
+    func getBatchCount() -> Int {
         return queue.sync {
             var count = self.closedBatches.count
             if !self.currentBatch.batch.isEmpty {
                 count += 1
             }
             return count
+        }
+    }
+    
+    /// Returns the number of events in the current batch (before rollover)
+    func getCurrentBatchEventCount() -> Int {
+        return queue.sync {
+            return self.currentBatchEventCount
+        }
+    }
+    
+    /// Returns the total number of individual events across all batches (current + closed)
+    func getTotalEventCount() -> Int {
+        return queue.sync {
+            return self.totalEventCount
         }
     }
 }
