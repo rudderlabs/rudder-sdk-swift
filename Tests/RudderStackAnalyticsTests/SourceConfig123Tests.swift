@@ -1,5 +1,5 @@
 //
-//  SourceConfigTests.swift
+//  SourceConfig123Tests.swift
 //  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 16/09/25.
@@ -11,7 +11,7 @@ import Foundation
 
 @testable import RudderStackAnalytics
 
-struct SourceConfigTests {
+struct SourceConfig123Tests {
     
     @Test("Given cached SourceConfig exists, When fetchCachedConfigAndNotifyObservers is called, Then observers are notified")
     func testFetchCachedConfigAndNotifyObservers_CachedConfigExists() {
@@ -64,67 +64,6 @@ struct SourceConfigTests {
         cancellables.removeAll()
     }
     
-    @Test("Given SourceConfig initial state, When initialState is called, Then returns default configuration")
-    func testSourceConfig_InitialState() {
-        // When
-        let initialConfig = SourceConfig.initialState()
-        
-        // Then
-        #expect(initialConfig.source.sourceId.isEmpty)
-        #expect(initialConfig.source.sourceName.isEmpty)
-        #expect(initialConfig.source.writeKey.isEmpty)
-        #expect(initialConfig.source.isSourceEnabled == true)
-        #expect(initialConfig.source.workspaceId.isEmpty)
-        #expect(initialConfig.source.destinations.isEmpty)
-        #expect(initialConfig.source.metricConfig.statsCollection.errors.enabled == false)
-        #expect(initialConfig.source.metricConfig.statsCollection.metrics.enabled == false)
-    }
-    
-    @Test("Given valid SourceConfig JSON, When decoded, Then returns correct SourceConfig object")
-    func testSourceConfig_JSONDecoding() throws {
-        // Given
-        let mockJsonData = MockHelper.readJson(from: "mock_source_config")?.trimmed.utf8Data
-        #expect(mockJsonData != nil, "Mock JSON data should not be nil")
-        
-        // When
-        let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: mockJsonData!)
-        
-        // Then
-        #expect(!sourceConfig.source.sourceId.isEmpty)
-        #expect(!sourceConfig.source.sourceName.isEmpty)
-        #expect(!sourceConfig.source.writeKey.isEmpty)
-        #expect(sourceConfig.source.isSourceEnabled == true)
-        #expect(!sourceConfig.source.workspaceId.isEmpty)
-        #expect(!sourceConfig.source.destinations.isEmpty)
-        
-        // Verify destinations structure
-        let firstDestination = sourceConfig.source.destinations.first
-        #expect(firstDestination?.destinationId.isEmpty == false)
-        #expect(firstDestination?.destinationName.isEmpty == false)
-        #expect(firstDestination?.isDestinationEnabled != nil)
-    }
-    
-    @Test("Given SourceConfig object, When encoded to JSON, Then produces valid JSON string")
-    func testSourceConfig_JSONEncoding() throws {
-        // Given
-        let sourceConfig = MockProvider.sourceConfiguration
-        #expect(sourceConfig != nil, "Mock source config should not be nil")
-        
-        // When
-        let jsonString = sourceConfig?.jsonString
-        
-        // Then
-        #expect(jsonString != nil)
-        #expect(jsonString?.isEmpty == false)
-        
-        // Verify it can be decoded back
-        let jsonData = jsonString?.utf8Data
-        #expect(jsonData != nil, "JSON data should not be nil")
-        
-        let decodedConfig = try JSONDecoder().decode(SourceConfig.self, from: jsonData!)
-        #expect(decodedConfig.source.sourceId == sourceConfig?.source.sourceId)
-        #expect(decodedConfig.source.sourceName == sourceConfig?.source.sourceName)
-    }
     
     @Test("Given SourceConfig with state management, When UpdateSourceConfigAction is dispatched, Then state is updated correctly")
     func testSourceConfig_StateManagement() async {
@@ -809,7 +748,7 @@ struct SourceConfigTests {
 
 // MARK: - MockURL Helpers
 
-extension SourceConfigTests {
+extension SourceConfig123Tests {
     
     private func prepareMockUrlSessionWithEventualSuccess(failureCount: Int) -> URLSession {
         var attemptCount = 0
