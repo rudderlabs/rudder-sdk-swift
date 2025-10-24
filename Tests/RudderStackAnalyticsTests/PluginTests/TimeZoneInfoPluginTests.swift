@@ -5,40 +5,47 @@
 //  Created by Satheesh Kannan on 11/12/24.
 //
 
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class TimeZoneInfoPluginTests: XCTestCase {
+@Suite("TimeZoneInfoPlugin Tests")
+class TimeZoneInfoPluginTests {
+    var timeZoneInfoPlugin: TimeZoneInfoPlugin
     
-    func test_intercept_trackEvent() {
-        given("An simple track event to the time zone info plugin..") {
-            let plugin = TimeZoneInfoPlugin()
-            let track = TrackEvent(event: "Track")
-            
-            when("intercept is called..") {
-                let interceptedEvent = plugin.intercept(event: track)
-                
-                then("track event should have the time zone info details..") {
-                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
-                    XCTAssertNotNil(context["timezone"])
-                }
-            }
-        }
+    init() {
+        self.timeZoneInfoPlugin = TimeZoneInfoPlugin()
     }
     
-    func test_intercept_groupEvent() {
-        given("An simple group event to the time zone info plugin..") {
-            let plugin = TimeZoneInfoPlugin()
-            let group = GroupEvent(groupId: "group_id")
-            
-            when("intercept is called..") {
-                let interceptedEvent = plugin.intercept(event: group)
-                
-                then("group event should have the time zone info details..") {
-                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
-                    XCTAssertNotNil(context["timezone"])
-                }
-            }
+    @Test("when intercepting different events, then adds timezone context information", arguments:[
+        SwiftTestMockProvider.mockTrackEvent as Event,
+        SwiftTestMockProvider.mockScreenEvent as Event,
+        SwiftTestMockProvider.mockIdentifyEvent as Event,
+        SwiftTestMockProvider.mockGroupEvent as Event,
+        SwiftTestMockProvider.mockAliasEvent as Event
+    ])
+    func test_pluginIntercept(_ event: Event) {
+        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        timeZoneInfoPlugin.setup(analytics: analytics)
+        
+        let result = timeZoneInfoPlugin.intercept(event: event)
+        
+        #expect(result != nil)
+        #expect(result?.context != nil)
+        guard let context = result?.context?.rawDictionary else {
+            Issue.record("Event context not found")
+            return
         }
+        
+        #expect(context["timezone"] != nil)
+    }
+    
+    @Test("when setup is called, then analytics reference is stored")
+    func test_pluginSetup() {
+        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        
+        timeZoneInfoPlugin.setup(analytics: analytics)
+        
+        #expect(timeZoneInfoPlugin.analytics != nil)
+        #expect(timeZoneInfoPlugin.pluginType == .preProcess)
     }
 }

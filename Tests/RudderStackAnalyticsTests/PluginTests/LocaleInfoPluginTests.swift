@@ -5,40 +5,47 @@
 //  Created by Satheesh Kannan on 11/12/24.
 //
 
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class LocaleInfoPluginTests: XCTestCase {
+@Suite("LocaleInfoPlugin Tests")
+class LocaleInfoPluginTests {
+    var localeInfoPlugin: LocaleInfoPlugin
     
-    func test_intercept_trackEvent() {
-        given("An simple track event to the locale info plugin..") {
-            let plugin = LocaleInfoPlugin()
-            let track = TrackEvent(event: "Track")
-            
-            when("intercept is called..") {
-                let interceptedEvent = plugin.intercept(event: track)
-                
-                then("track event should have the locale info details..") {
-                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
-                    XCTAssertNotNil(context["locale"])
-                }
-            }
-        }
+    init() {
+        self.localeInfoPlugin = LocaleInfoPlugin()
     }
     
-    func test_intercept_groupEvent() {
-        given("An simple group event to the locale info plugin..") {
-            let plugin = LocaleInfoPlugin()
-            let group = GroupEvent(groupId: "group_id")
-            
-            when("intercept is called..") {
-                let interceptedEvent = plugin.intercept(event: group)
-                
-                then("group event should have the locale info details..") {
-                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
-                    XCTAssertNotNil(context["locale"])
-                }
-            }
+    @Test("when intercepting different events, then adds locale context information", arguments:[
+        SwiftTestMockProvider.mockTrackEvent as Event,
+        SwiftTestMockProvider.mockScreenEvent as Event,
+        SwiftTestMockProvider.mockIdentifyEvent as Event,
+        SwiftTestMockProvider.mockGroupEvent as Event,
+        SwiftTestMockProvider.mockAliasEvent as Event
+    ])
+    func test_pluginIntercept(_ event: Event) {
+        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        localeInfoPlugin.setup(analytics: analytics)
+        
+        let result = localeInfoPlugin.intercept(event: event)
+        
+        #expect(result != nil)
+        #expect(result?.context != nil)
+        guard let context = result?.context?.rawDictionary else {
+            Issue.record("Event context not found")
+            return
         }
+        
+        #expect(context["locale"] != nil)
+    }
+    
+    @Test("when setup is called, then analytics reference is stored")
+    func test_pluginSetup() {
+        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        
+        localeInfoPlugin.setup(analytics: analytics)
+        
+        #expect(localeInfoPlugin.analytics != nil)
+        #expect(localeInfoPlugin.pluginType == .preProcess)
     }
 }

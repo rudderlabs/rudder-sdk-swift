@@ -5,42 +5,55 @@
 //  Created by Satheesh Kannan on 11/12/24.
 //
 
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class ScreenInfoPluginTests: XCTestCase {
+@Suite("ScreenInfoPlugin Tests")
+class ScreenInfoPluginTests {
+    var screenInfoPlugin: ScreenInfoPlugin
     
-    func test_intercept_trackEvent() {
-        given("An simple track event to the screen info plugin..") {
-            let plugin = ScreenInfoPlugin()
-            let track = TrackEvent(event: "Track")
-            
-            when("intercept is called..") {
-                let interceptedEvent = plugin.intercept(event: track)
-                
-                then("track event should have the screen info details..") {
-                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
-                    XCTAssertNotNil(context["screen"])
-                }
-            }
-        }
+    init() {
+        self.screenInfoPlugin = ScreenInfoPlugin()
     }
     
-    func test_intercept_groupEvent() {
-        given("An simple group event to the screen info plugin..") {
-            let plugin = ScreenInfoPlugin()
-            let group = GroupEvent(groupId: "group_id")
-            
-            when("intercept is called..") {
-                let interceptedEvent = plugin.intercept(event: group)
-                
-                then("group event should have the screen info details..") {
-                    guard let context = interceptedEvent?.context else { XCTFail("No context found"); return }
-                    XCTAssertNotNil(context["screen"])
-                }
-            }
+    @Test("when intercepting different events, then adds screen context information", arguments:[
+        SwiftTestMockProvider.mockTrackEvent as Event,
+        SwiftTestMockProvider.mockScreenEvent as Event,
+        SwiftTestMockProvider.mockIdentifyEvent as Event,
+        SwiftTestMockProvider.mockGroupEvent as Event,
+        SwiftTestMockProvider.mockAliasEvent as Event
+    ])
+    func test_pluginIntercept(_ event: Event) {
+        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        screenInfoPlugin.setup(analytics: analytics)
+        
+        let result = screenInfoPlugin.intercept(event: event)
+        
+        #expect(result != nil)
+        #expect(result?.context != nil)
+        guard let context = result?.context?.rawDictionary else {
+            Issue.record("Event context not found")
+            return
         }
+        
+        #expect(context["screen"] != nil)
+        guard let screenInfo = context["screen"] as? [String: Any] else {
+            Issue.record("screen info not found")
+            return
+        }
+        
+        #expect(screenInfo["width"] != nil)
+        #expect(screenInfo["height"] != nil)
+        #expect(screenInfo["density"] != nil)
+    }
+    
+    @Test("when setup is called, then analytics reference is stored")
+    func test_pluginSetup() {
+        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        
+        screenInfoPlugin.setup(analytics: analytics)
+        
+        #expect(screenInfoPlugin.analytics != nil)
+        #expect(screenInfoPlugin.pluginType == .preProcess)
     }
 }
-
-
