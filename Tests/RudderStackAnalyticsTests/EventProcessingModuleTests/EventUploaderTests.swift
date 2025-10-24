@@ -48,60 +48,48 @@ class EventUploaderTests {
     
     @Test("given batch with valid anonymousId, when extracting anonymousId, then correct id is returned")
     func testExtractAnonymousIdFromValidBatch() async {
-        // Given
         let batchPayload = """
         {"userId": "12345", "anonymousId": "abc-123", "event": "test"}
         """
-        let expectedAnonymousId = "abc-123"
         
-        // When
+        let expectedAnonymousId = "abc-123"
         let extractedId = eventUploader.extractAnonymousIdFromBatch(batchPayload)
         
-        // Then
         #expect(extractedId == expectedAnonymousId)
     }
     
     @Test("given batch without anonymousId, when extracting, then nil is returned")
     func testExtractAnonymousIdFromBatchWithoutAnonymousId() async {
-        // Given
         let batchPayload = """
         {"userId": "12345", "event": "test"}
         """
         
-        // When
         let extractedId = eventUploader.extractAnonymousIdFromBatch(batchPayload)
         
-        // Then
         #expect(extractedId == nil)
     }
     
     @Test("given invalid JSON batch, when extracting anonymousId, then nil is returned")
     func testExtractAnonymousIdFromInvalidJSON() async {
-        // Given
         let invalidBatchPayload = "invalid json content"
         
-        // When
         let extractedId = eventUploader.extractAnonymousIdFromBatch(invalidBatchPayload)
         
-        // Then
         #expect(extractedId == nil)
     }
     
     @Test("given batch with multiple anonymousId entries, when extracting, then first match is returned")
     func testExtractAnonymousIdFromMultipleEntries() async {
-        // Given
         let batchPayload = """
         [
             {"anonymousId": "first-123", "event": "event1"},
             {"anonymousId": "second-456", "event": "event2"}
         ]
         """
-        let expectedAnonymousId = "first-123"
         
-        // When
+        let expectedAnonymousId = "first-123"
         let extractedId = eventUploader.extractAnonymousIdFromBatch(batchPayload)
         
-        // Then
         #expect(extractedId == expectedAnonymousId)
     }
     
@@ -109,10 +97,8 @@ class EventUploaderTests {
     
     @Test("given EventUploader, when stopping, then uploadChannel is closed")
     func testStopClosesUploadChannel() async {
-        // When
         eventUploader.stop()
         
-        // Then
         #expect(uploadChannel.isClosed)
     }
     
