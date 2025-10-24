@@ -34,6 +34,7 @@
 		537846AF2EAA24CB00520374 /* EventWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846AE2EAA24CB00520374 /* EventWriterTests.swift */; };
 		537846B12EAA2B3E00520374 /* EventUploaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846B02EAA2B3E00520374 /* EventUploaderTests.swift */; };
 		537B96442EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B96432EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift */; };
+		537B96462EAB5D0A00E3ADE7 /* PluginModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */; };
 		538F82C72E79583900C7ECEB /* UpdateSourceConfigAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */; };
 		539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */; };
 		539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FE2EA105D600DAC164 /* DiskStoreTests.swift */; };
@@ -205,6 +206,7 @@
 		537846AE2EAA24CB00520374 /* EventWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriterTests.swift; sourceTree = "<group>"; };
 		537846B02EAA2B3E00520374 /* EventUploaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploaderTests.swift; sourceTree = "<group>"; };
 		537B96432EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderStackDataPlanePluginTests.swift; sourceTree = "<group>"; };
+		537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginModuleTests.swift; sourceTree = "<group>"; };
 		538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSourceConfigAction.swift; sourceTree = "<group>"; };
 		539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryStoreTests.swift; sourceTree = "<group>"; };
 		539000FE2EA105D600DAC164 /* DiskStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskStoreTests.swift; sourceTree = "<group>"; };
@@ -830,6 +832,7 @@
 				53DEA64C2E03D06F00D6C371 /* SessionTrackingPluginTests.swift */,
 				53DEA64D2E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift */,
 				537B96432EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift */,
+				537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */,
 			);
 			path = PluginTests;
 			sourceTree = "<group>";
@@ -1153,6 +1156,7 @@
 				53DEA6702E03D06F00D6C371 /* AppInfoPluginTests.swift in Sources */,
 				537B96442EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift in Sources */,
 				53DEA6712E03D06F00D6C371 /* MockProvider.swift in Sources */,
+				537B96462EAB5D0A00E3ADE7 /* PluginModuleTests.swift in Sources */,
 				53DEA6722E03D06F00D6C371 /* RudderStackAnalyticsTests.swift in Sources */,
 				5393019E2E65562100DAEAD1 /* BackoffPolicyTests.swift in Sources */,
 				53DEA6732E03D06F00D6C371 /* AliasEventTests.swift in Sources */,
