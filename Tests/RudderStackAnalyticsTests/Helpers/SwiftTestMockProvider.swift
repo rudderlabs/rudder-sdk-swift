@@ -449,3 +449,11 @@ extension SwiftTestMockProvider {
          return nil
     }
 }
+
+// MARK: - MockSourceConfigProvider
+
+final class MockSourceConfigProvider: SourceConfigProvider {
+    override func provideBackoffPolicy() -> any BackoffPolicy {
+        return ExponentialBackoffPolicy(minDelayInMillis: 50) // 0.05 secs
+    }
+}
