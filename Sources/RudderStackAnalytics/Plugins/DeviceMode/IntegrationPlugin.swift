@@ -123,7 +123,17 @@ public extension IntegrationPlugin {
             pluginStore.destinationReadyCallbacks.append(callback)
         }
     }
+}
+
+public extension IntegrationPlugin {
     
+    /**
+     Default implementation of `intercept` method for `IntegrationPlugin`.
+     
+     **Caution:** This method is a default implementation provided by the SDK.
+     Clients should not override, reimplement or call this method externally, as it will lead to
+     unexpected behavior or break internal logic.
+     */
     func intercept(event: any Event) -> (any Event)? {
         guard let pluginStore else { return event }
         if pluginStore.isDestinationReady {
@@ -139,18 +149,15 @@ public extension IntegrationPlugin {
         }
         return event
     }
-}
-
-extension IntegrationPlugin {
-    var pluginStore: IntegrationPluginStore? {
-        return self.analytics?.integrationsController?.integrationPluginStores[self.key]
-    }
     
-    var pluginChain: PluginChain? {
-        return self.pluginStore?.pluginChain
-    }
-    
-    public func setup(analytics: Analytics) {
+    /**
+     Default implementation of `setup` method for `IntegrationPlugin`.
+     
+     **Caution:** This method is a default implementation provided by the SDK.
+     Clients should not override, reimplement or call this method externally, as it will lead to
+     unexpected behavior or break internal logic.
+     */
+    func setup(analytics: Analytics) {
         self.analytics = analytics
         
         let key = self.key
@@ -164,6 +171,16 @@ extension IntegrationPlugin {
         }
         
         self.applyDefaultPlugins()
+    }
+}
+
+extension IntegrationPlugin {
+    var pluginStore: IntegrationPluginStore? {
+        return self.analytics?.integrationsController?.integrationPluginStores[self.key]
+    }
+    
+    var pluginChain: PluginChain? {
+        return self.pluginStore?.pluginChain
     }
     
     private func applyDefaultPlugins() {
