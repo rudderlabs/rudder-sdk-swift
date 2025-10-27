@@ -71,9 +71,9 @@ class HttpNetworkTests {
             }
         }
     }
-    
-    
-    @Test("HttpNetwork handles various network errors as networkUnavailable", arguments: [
+
+
+    @Test("when encountering various network errors, then HttpNetwork handles them as networkUnavailable", arguments: [
         URLError.Code.notConnectedToInternet,
         URLError.Code.networkConnectionLost,
         URLError.Code.cannotConnectToHost,
@@ -82,7 +82,7 @@ class HttpNetworkTests {
         URLError.Code.cannotFindHost,
         URLError.Code.dataNotAllowed
     ])
-    func handleVariousNetworkErrors(_ errorCode: URLError.Code) async {
+    func test_networkErrorsInRange(_ errorCode: URLError.Code) async {
         MockURLProtocol.requestHandler = { request in
             throw URLError(errorCode)
         }
