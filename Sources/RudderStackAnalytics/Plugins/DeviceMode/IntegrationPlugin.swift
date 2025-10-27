@@ -7,8 +7,6 @@
 
 import Foundation
 
-public typealias IntegrationCallback = (Any?, DestinationResult) -> Void
-
 /**
  StandardIntegration is a protocol that represents a standard integration plugin. All the integrations maintained by RudderStack will conform to this protocol.
  */
@@ -67,17 +65,23 @@ public extension IntegrationPlugin {
     /**
      Default implementation for update.
      */
-    func update(destinationConfig: [String: Any]) throws {}
+    func update(destinationConfig: [String: Any]) throws {
+        /* Default implementation (no-op) */
+    }
     
     /**
      Default implementation for flush.
      */
-    func flush() {}
+    func flush() {
+        /* Default implementation (no-op) */
+    }
     
     /**
      Default implementation for reset.
      */
-    func reset() {}
+    func reset() {
+        /* Default implementation (no-op) */
+    }
 }
 
 public extension IntegrationPlugin {
@@ -166,3 +170,8 @@ extension IntegrationPlugin {
         // TODO: add default plugins here
     }
 }
+
+/**
+ Alias for representing a callback to report integration ready status.
+ */
+public typealias IntegrationCallback = (Any?, DestinationResult) -> Void
