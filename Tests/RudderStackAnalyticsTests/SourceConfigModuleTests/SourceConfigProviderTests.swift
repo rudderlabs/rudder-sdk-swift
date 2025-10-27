@@ -313,6 +313,22 @@ class SourceConfigProviderTests {
             #expect(configUpdateCount == 1)
         }
     }
+    
+    @Test("when ExponentialBackoffPolicy is called multiple times, then delays increase exponentially")
+    func testExponentialBackoffPolicy_Integration() {
+        guard let policy = provider.provideBackoffPolicy() as? ExponentialBackoffPolicy else {
+            Issue.record("Can't initialize backoff policy")
+            return
+        }
+        
+        let delay1 = policy.nextDelayInMilliseconds()
+        let delay2 = policy.nextDelayInMilliseconds()
+        let delay3 = policy.nextDelayInMilliseconds()
+        
+        #expect(delay1 > 0)
+        #expect(delay2 > delay1) // Should increase
+        #expect(delay3 > delay2) // Should continue increasing
+    }
 }
 
 // MARK: - Helpers

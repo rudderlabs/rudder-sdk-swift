@@ -456,8 +456,8 @@
 				53DEA6582E03D06F00D6C371 /* StateManagementTests */,
 				532904EE2E05BBDE00C8EFE2 /* TestPlans */,
 				539001022EA110E200DAC164 /* StorageModuleTests */,
-				539001052EA11A7400DAC164 /* AnalyticsTests.swift */,
 				537B96492EABF7AE00E3ADE7 /* SourceConfigModuleTests */,
+				539001052EA11A7400DAC164 /* AnalyticsTests.swift */,
 			);
 			path = RudderStackAnalyticsTests;
 			sourceTree = "<group>";
