@@ -11,39 +11,70 @@ import Testing
 @Suite("RudderStackDataPlanePlugin Tests")
 class RudderStackDataPlanePluginTests {
     var plugin: RudderStackDataPlanePlugin
+    var analytics: Analytics
+    var mockStorage: MockStorage
     
     init() {
+        self.mockStorage = MockStorage()
+        
+        let configuration = SwiftTestMockProvider.createMockConfiguration(storage: mockStorage)
+        configuration.flushPolicies = []
+        configuration.trackApplicationLifecycleEvents = false
+        
+        self.analytics = Analytics(configuration: configuration)
+        self.analytics.isAnalyticsActive = true
+        
         self.plugin = RudderStackDataPlanePlugin()
+        plugin.setup(analytics: analytics)
     }
     
-    @Test("when event is processed, then returns the same event", arguments: [
-            (EventType.track, SwiftTestMockProvider.mockTrackEvent as any Event, TrackEvent.self as Any.Type),
-            (EventType.identify, SwiftTestMockProvider.mockIdentifyEvent as any Event, IdentifyEvent.self as Any.Type),
-            (EventType.screen, SwiftTestMockProvider.mockScreenEvent as any Event, ScreenEvent.self as Any.Type),
-            (EventType.group, SwiftTestMockProvider.mockGroupEvent as any Event, GroupEvent.self as Any.Type),
-            (EventType.alias, SwiftTestMockProvider.mockAliasEvent as any Event, AliasEvent.self as Any.Type)
+    deinit {
+        let storage = self.mockStorage
+        Task.detached {
+            await storage.removeAll()
+        }
+    }
+    
+    @Test("when event methods are called, then events are queued for processing", arguments: [
+            (EventType.track, SwiftTestMockProvider.mockTrackEvent as any Event),
+            (EventType.identify, SwiftTestMockProvider.mockIdentifyEvent as any Event),
+            (EventType.screen, SwiftTestMockProvider.mockScreenEvent as any Event),
+            (EventType.group, SwiftTestMockProvider.mockGroupEvent as any Event),
+            (EventType.alias, SwiftTestMockProvider.mockAliasEvent as any Event)
         ])
-    func testRudderStackDataPlanePlugin_ProcessEvent(_ eventType: EventType, _ event: any Event, _ expectedType: Any.Type) {
-        let plugin = RudderStackDataPlanePlugin()
-        let analytics = SwiftTestMockProvider.createMockAnalytics()
-        plugin.setup(analytics: analytics)
-        
-        let result: (any Event)?
+    func testRudderStackDataPlanePlugin_ProcessEvent(_ eventType: EventType, _ event: any Event) async {
         switch eventType {
         case .track:
-            result = plugin.track(payload: event as! TrackEvent)
+            plugin.track(payload: event as! TrackEvent)
         case .identify:
-            result = plugin.identify(payload: event as! IdentifyEvent)
+            plugin.identify(payload: event as! IdentifyEvent)
         case .screen:
-            result = plugin.screen(payload: event as! ScreenEvent)
+            plugin.screen(payload: event as! ScreenEvent)
         case .group:
-            result = plugin.group(payload: event as! GroupEvent)
+            plugin.group(payload: event as! GroupEvent)
         case .alias:
-            result = plugin.alias(payload: event as! AliasEvent)
+            plugin.alias(payload: event as! AliasEvent)
         }
         
-        #expect(result != nil, "Expected non-nil result for \(eventType.rawValue)")
-        #expect(type(of: result!) == expectedType, "Expected result to be \(expectedType)")
+        await mockStorage.waitForEvents()
+        
+        #expect(mockStorage.batchCount > 0, "Events should be processed and stored")
+    }
+    
+    @Test("when calling flush, then batch will be rollovered and events flushed immediately")
+    func testFlushEvents() async {
+        let event = TrackEvent(event: "flush_test_event", properties: ["flush": true])
+        plugin.track(payload: event)
+        
+        await mockStorage.waitForEvents()
+        #expect(mockStorage.totalEventCount == 1, "Events should be processed and stored")
+        
+        plugin.flush()
+        
+        await runAfter(0.1) {
+            let result = await self.mockStorage.read()
+            #expect(result.dataItems.count == 1)
+        }
     }
     
     @Test("when setup is called, then analytics reference is stored")
