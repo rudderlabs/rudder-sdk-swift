@@ -79,9 +79,10 @@ class IntegrationsManagementPlugin: Plugin {
     }
     
     deinit {
-        processingTask?.cancel()
-        self.cancellables.removeAll()
         self.queuedEventsChannel.close()
+        processingTask?.cancel()
+        processingTask = nil
+        self.cancellables.removeAll()
     }
 }
 
