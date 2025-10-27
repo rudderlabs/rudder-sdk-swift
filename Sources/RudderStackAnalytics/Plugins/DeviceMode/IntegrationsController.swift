@@ -11,11 +11,9 @@ class IntegrationsController {
     
     var integrationPluginChain: PluginChain?
     var analytics: Analytics?
-    @Synchronized
-    var isSourceEnabledFetchedAtLeastOnce = false
     
-    @Synchronized
-    var integrationPluginStores: [String: IntegrationPluginStore] = [:]
+    @Synchronized var isSourceEnabledFetchedAtLeastOnce = false
+    @Synchronized var integrationPluginStores: [String: IntegrationPluginStore] = [:]
     
     init(analytics: Analytics) {
         self.analytics = analytics

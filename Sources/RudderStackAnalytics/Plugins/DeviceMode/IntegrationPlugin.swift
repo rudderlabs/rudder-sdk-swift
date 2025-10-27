@@ -12,7 +12,7 @@ public typealias IntegrationCallback = (Any?, DestinationResult) -> Void
 /**
  StandardIntegration is a protocol that represents a standard integration plugin. All the integrations maintained by RudderStack will conform to this protocol.
  */
-protocol StandardIntegration : AnyObject {}
+protocol StandardIntegration: AnyObject {}
 
 /**
  * Base protocol for all integration plugins.
@@ -125,8 +125,8 @@ public extension IntegrationPlugin {
         if pluginStore.isDestinationReady {
             // Apply plugin chain processing
                         
-            let preProcessedEvent = pluginChain?.applyPlugins(pluginType: .preProcess,event: event)
-            let onProcessedEvent = pluginChain?.applyPlugins(pluginType: .onProcess,event: preProcessedEvent)
+            let preProcessedEvent = pluginChain?.applyPlugins(pluginType: .preProcess, event: event)
+            let onProcessedEvent = pluginChain?.applyPlugins(pluginType: .onProcess, event: preProcessedEvent)
             
             // Handle the event after plugin processing
             if let finalEvent = onProcessedEvent {
