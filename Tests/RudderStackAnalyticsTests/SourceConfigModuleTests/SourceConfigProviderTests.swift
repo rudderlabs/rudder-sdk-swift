@@ -76,7 +76,7 @@ class SourceConfigProviderTests {
         #expect(receivedConfigs.count == 2) // Initial + cached
         
         guard let lastConfig = receivedConfigs.last else {
-            Issue.record("Can't read latest source configuraion details")
+            Issue.record("Can't read latest source configuration details")
             return
         }
         

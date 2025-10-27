@@ -138,6 +138,10 @@ extension MockStorage {
 }
 
 extension MockStorage {
+
+    /** Polling interval in nanoseconds for wait methods. */
+    static var pollInterval: UInt64 { 10_000_000 } // 10ms
+    
     /**
      Waits for events to be stored with optional predicate filtering.
      
@@ -175,7 +179,7 @@ extension MockStorage {
                 return true
             }
             
-            await Task.yield()
+            try? await Task.sleep(nanoseconds: Self.pollInterval)
         }
         return false
     }
@@ -225,7 +229,6 @@ extension MockStorage {
             if currentBatchEventCount >= expectedCount {
                 return true
             }
-            
             await Task.yield()
         }
         return false
@@ -251,8 +254,7 @@ extension MockStorage {
             if mockKeyValueStorage.allStoredData[key] != nil {
                 return true
             }
-            
-            await Task.yield()
+            try? await Task.sleep(nanoseconds: Self.pollInterval)
         }
         return false
     }
@@ -279,8 +281,7 @@ extension MockStorage {
             if let value = value, value == expectedValue {
                 return true
             }
-            
-            await Task.yield()
+            try? await Task.sleep(nanoseconds: Self.pollInterval)
         }
         return false
     }
@@ -289,9 +290,9 @@ extension MockStorage {
      Waits for a key-value pair with a predicate condition.
      
      - Parameters:
-     - key: The key to wait for
-     - timeout: Maximum time to wait in seconds
-     - predicate: Predicate to evaluate the stored value
+        - key: The key to wait for
+        - timeout: Maximum time to wait in seconds
+        - predicate: Predicate to evaluate the stored value
      - Returns: True if predicate condition is met within timeout, false otherwise
      */
     @discardableResult
@@ -307,7 +308,6 @@ extension MockStorage {
             if let value = value, predicate(value) {
                 return true
             }
-            
             await Task.yield()
         }
         return false
@@ -333,10 +333,8 @@ extension MockStorage {
             if mockKeyValueStorage.allStoredData[key] == nil {
                 return true
             }
-            
-            await Task.yield()
+            try? await Task.sleep(nanoseconds: Self.pollInterval)
         }
-        
         return false
     }
 }
