@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		53074DB02E7DEC240062703A /* StateManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53074DAF2E7DEC240062703A /* StateManagement.swift */; };
 		53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53074DFA2E8271E90062703A /* DisableSourceConfigAction.swift */; };
+		53078F152EAFE796006F5847 /* HttpNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53078F142EAFE796006F5847 /* HttpNetworkTests.swift */; };
 		530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939CF2E78226E00E22EE1 /* SourceConfig.swift */; };
 		530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D22E78299100E22EE1 /* SourceConfigProvider.swift */; };
 		530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D52E78629C00E22EE1 /* SourceConfigResult.swift */; };
@@ -188,6 +189,7 @@
 /* Begin PBXFileReference section */
 		53074DAF2E7DEC240062703A /* StateManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagement.swift; sourceTree = "<group>"; };
 		53074DFA2E8271E90062703A /* DisableSourceConfigAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableSourceConfigAction.swift; sourceTree = "<group>"; };
+		53078F142EAFE796006F5847 /* HttpNetworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpNetworkTests.swift; sourceTree = "<group>"; };
 		530939CF2E78226E00E22EE1 /* SourceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfig.swift; sourceTree = "<group>"; };
 		530939D22E78299100E22EE1 /* SourceConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigProvider.swift; sourceTree = "<group>"; };
 		530939D52E78629C00E22EE1 /* SourceConfigResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigResult.swift; sourceTree = "<group>"; };
@@ -911,6 +913,7 @@
 			isa = PBXGroup;
 			children = (
 				8CCA98812E8178D0006C3537 /* HttpClientTests.swift */,
+				53078F142EAFE796006F5847 /* HttpNetworkTests.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1193,6 +1196,7 @@
 				53DEA66A2E03D06F00D6C371 /* UserIdentityTests.swift in Sources */,
 				539001042EA119CA00DAC164 /* SwiftTestMockProvider.swift in Sources */,
 				53DEA66B2E03D06F00D6C371 /* SessionHandlerTests.swift in Sources */,
+				53078F152EAFE796006F5847 /* HttpNetworkTests.swift in Sources */,
 				53DEA66C2E03D06F00D6C371 /* SessionActionTests.swift in Sources */,
 				53DEA66D2E03D06F00D6C371 /* ScreenInfoPluginTests.swift in Sources */,
 				537846AF2EAA24CB00520374 /* EventWriterTests.swift in Sources */,
