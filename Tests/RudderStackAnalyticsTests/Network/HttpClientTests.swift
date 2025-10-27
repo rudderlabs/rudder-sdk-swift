@@ -9,13 +9,14 @@ import Foundation
 import Testing
 @testable import RudderStackAnalytics
 
+@Suite("HttpClient Tests")
 struct HttpClientTests {
 
     private let mockAnalytics: Analytics
     private let httpClient: HttpClient
 
     init() {
-        mockAnalytics = MockProvider.clientWithDiskStorage
+        mockAnalytics = SwiftTestMockProvider.createMockAnalytics()
         httpClient = HttpClient(analytics: mockAnalytics)
     }
     
@@ -108,5 +109,91 @@ struct HttpClientTests {
         #expect(queryParameters["v"] == RSVersion, "Version parameter should be present")
         #expect(queryParameters["bv"] != nil, "Build version value should not be nil")
         #expect(queryParameters["writeKey"] == mockAnalytics.configuration.writeKey)
+    }
+    
+    @Test("HttpClient gets configuration data successfully")
+    func getConfigurationDataSuccessfully() async {
+        SwiftTestMockProvider.setupMockURLSession()
+        defer { SwiftTestMockProvider.teardownMockURLSession() }
+        
+        let expectedData = Data("{\"success\": true}".utf8)
+        MockURLProtocol.requestHandler = { request in
+            return (200, expectedData, ["Content-Type": "application/json"])
+        }
+        
+        let result = await httpClient.getConfigurationData()
+        
+        switch result {
+        case .success(let data):
+            #expect(data == expectedData)
+        case .failure:
+            #expect(Bool(false), "Expected success but got failure")
+        }
+    }
+    
+    @Test("HttpClient handles configuration data failure")
+    func handleConfigurationDataFailure() async {
+        SwiftTestMockProvider.setupMockURLSession()
+        defer { SwiftTestMockProvider.teardownMockURLSession() }
+        
+        MockURLProtocol.requestHandler = { request in
+            return (400, nil, nil)
+        }
+        
+        let result = await httpClient.getConfigurationData()
+        
+        switch result {
+        case .success:
+            #expect(Bool(false), "Expected failure but got success")
+        case .failure(let error):
+            switch error {
+            case .invalidWriteKey:
+                break // Expected for 400 status code
+            default:
+                #expect(Bool(false), "Expected invalidWriteKey error")
+            }
+        }
+    }
+    
+    @Test("HttpClient posts batch events successfully")
+    func postBatchEventsSuccessfully() async {
+        SwiftTestMockProvider.setupMockURLSession()
+        defer { SwiftTestMockProvider.teardownMockURLSession() }
+        
+        let eventBatch = "{\"batch\": [\"event1\", \"event2\"]}"
+        let expectedResponseData = "{\"success\": true}".utf8Data
+        
+        MockURLProtocol.requestHandler = { request in
+            return (200, expectedResponseData, ["Content-Type": "application/json"])
+        }
+        
+        let result = await httpClient.postBatchEvents(eventBatch)
+        
+        switch result {
+        case .success(let data):
+            #expect(data == expectedResponseData)
+        case .failure:
+            #expect(Bool(false), "Expected success but got failure")
+        }
+    }
+    
+    @Test("HttpClient handles batch events failure")
+    func handleBatchEventsFailure() async {
+        SwiftTestMockProvider.setupMockURLSession()
+        defer { SwiftTestMockProvider.teardownMockURLSession() }
+        
+        let batchData = "{\"batch\": []}"
+        MockURLProtocol.requestHandler = { request in
+            return (500, nil, nil)
+        }
+        
+        let result = await httpClient.postBatchEvents(batchData)
+        
+        switch result {
+        case .success:
+            #expect(Bool(false), "Expected failure but got success")
+        case .failure(let error):
+            #expect(error is RetryableEventUploadError)
+        }
     }
 }
