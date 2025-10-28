@@ -72,7 +72,7 @@ struct IntegrationsManagementPluginTests {
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
-        for i in 0..<(MAX_QUEUE_SIZE + 100) {
+        for i in 0..<(IntegrationsManagementConstants.maxQueueSize + 100) {
             let event = TrackEvent(event: "Event \(i)")
             _ = plugin.intercept(event: event)
         }

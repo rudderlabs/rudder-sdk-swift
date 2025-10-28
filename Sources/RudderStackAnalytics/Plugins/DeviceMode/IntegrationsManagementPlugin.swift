@@ -69,11 +69,13 @@ class IntegrationsManagementPlugin: Plugin {
         LoggerAnalytics.debug("IntegrationsManagementPlugin: Starting to process queued events")
         
         processingTask = Task { [weak self] in
-            guard let weakSelf = self else { return }
-            for await event in weakSelf.queuedEventsChannel.receive() {
+            guard let channel = self?.queuedEventsChannel else { return }
+
+            for await event in channel.receive() {
                 if Task.isCancelled { break }
                 
-                weakSelf.integrationPluginChain?.process(event: event)
+                guard let self else { break }
+                self.integrationPluginChain?.process(event: event)
             }
         }
     }
