@@ -61,8 +61,8 @@ class HttpNetworkTests {
         case .failure(let error):
             if let httpError = error as? HttpNetworkError {
                 switch httpError {
-                case .requestFailed(let statusCode):
-                    #expect(statusCode == statusCode)
+                case .requestFailed(let errorCode):
+                    #expect(errorCode == statusCode)
                 default:
                     #expect(Bool(false), "Expected requestFailed error")
                 }
