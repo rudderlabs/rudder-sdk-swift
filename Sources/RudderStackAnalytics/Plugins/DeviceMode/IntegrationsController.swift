@@ -96,7 +96,7 @@ private extension IntegrationsController {
             let error = DestinationError.destinationNotFound(integration.key)
             LoggerAnalytics.warn("IntegrationsController: \(error.errorDescription)")
             safelyUpdateOnFailureAndNotify(
-                throwable: error,
+                error: error,
                 integration: integration
             )
             return nil
@@ -106,7 +106,7 @@ private extension IntegrationsController {
             let error = DestinationError.destinationDisabled(integration.key)
             LoggerAnalytics.warn("IntegrationsController: \(error.errorDescription)")
             safelyUpdateOnFailureAndNotify(
-                throwable: error,
+                error: error,
                 integration: integration
             )
             return nil
@@ -136,14 +136,14 @@ private extension IntegrationsController {
         }
     }
     
-    func safelyUpdateOnFailureAndNotify(throwable: Error, integration: IntegrationPlugin) {
+    func safelyUpdateOnFailureAndNotify(error: Error, integration: IntegrationPlugin) {
         safelyUpdateAndApplyBlock(
             destinationConfig: [:],
             integration: integration,
             block: {
                 LoggerAnalytics.debug("IntegrationsController: Destination \(integration.key) updated with empty destinationConfig.")
                 integration.pluginStore?.isDestinationReady = false
-                self.notifyCallbacks(.failure(throwable), for: integration)
+                self.notifyCallbacks(.failure(error), for: integration)
             }
         )
     }
