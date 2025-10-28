@@ -93,20 +93,20 @@ private extension IntegrationsController {
         }
         
         guard let destination = findDestination(sourceConfig: sourceConfig, key: integration.key) else {
-            let errorMessage = "Destination \(integration.key) not found in the source config. No events will be sent to this destination."
-            LoggerAnalytics.warn("IntegrationsController: \(errorMessage)")
+            let error = DestinationError.destinationNotFound(integration.key)
+            LoggerAnalytics.warn("IntegrationsController: \(error.errorDescription)")
             safelyUpdateOnFailureAndNotify(
-                throwable: NSError(domain: "IntegrationsController", code: -1, userInfo: [NSLocalizedDescriptionKey: errorMessage]),
+                throwable: error,
                 integration: integration
             )
             return nil
         }
         
         if !destination.isDestinationEnabled {
-            let errorMessage = "Destination \(integration.key) is disabled in dashboard. No events will be sent to this destination."
-            LoggerAnalytics.warn("IntegrationsController: \(errorMessage)")
+            let error = DestinationError.destinationDisabled(integration.key)
+            LoggerAnalytics.warn("IntegrationsController: \(error.errorDescription)")
             safelyUpdateOnFailureAndNotify(
-                throwable: NSError(domain: "IntegrationsController", code: -1, userInfo: [NSLocalizedDescriptionKey: errorMessage]),
+                throwable: error,
                 integration: integration
             )
             return nil

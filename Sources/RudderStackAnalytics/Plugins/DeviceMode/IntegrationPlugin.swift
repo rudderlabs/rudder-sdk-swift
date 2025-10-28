@@ -116,7 +116,7 @@ public extension IntegrationPlugin {
             if pluginStore.isDestinationReady {
                 callback(destinationInstance, .success)
             } else {
-                callback(nil, .failure(NSError(domain: "IntegrationPlugin", code: -1, userInfo: [NSLocalizedDescriptionKey: "Destination \(key) is absent or disabled in dashboard."])))
+                callback(nil, .failure(DestinationError.destinationNotReady(key)))
             }
         } else {
             // Store callback for later notification when destination becomes ready

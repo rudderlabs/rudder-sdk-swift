@@ -172,6 +172,7 @@
 		85A10BBF2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */; };
 		85A10BC12EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */; };
 		85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */; };
+		85CE839C2EB0859C00249576 /* DestinationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CE839B2EB0859C00249576 /* DestinationError.swift */; };
 		85E7C4EE2E9BB53200520FDB /* IntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */; };
 		85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */; };
 		85E7C4F22E9BB95100520FDB /* IntegrationPluginStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */; };
@@ -356,6 +357,7 @@
 		85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCustomIntegrationPlugin.swift; sourceTree = "<group>"; };
 		85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomIntegrationPluginTests.swift; sourceTree = "<group>"; };
 		85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsController.swift; sourceTree = "<group>"; };
+		85CE839B2EB0859C00249576 /* DestinationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationError.swift; sourceTree = "<group>"; };
 		85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPlugin.swift; sourceTree = "<group>"; };
 		85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsManagementPlugin.swift; sourceTree = "<group>"; };
 		85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginStore.swift; sourceTree = "<group>"; };
@@ -907,6 +909,7 @@
 				85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */,
 				859CEE0F2E9CC58C00519C90 /* DestinationResult.swift */,
 				85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */,
+				85CE839B2EB0859C00249576 /* DestinationError.swift */,
 			);
 			path = DeviceMode;
 			sourceTree = "<group>";
@@ -1156,6 +1159,7 @@
 				53DEA6172E03D05A00D6C371 /* Configuration.swift in Sources */,
 				53DEA6182E03D05A00D6C371 /* Constants.swift in Sources */,
 				53DEA6192E03D05A00D6C371 /* PropertyWrappers.swift in Sources */,
+				85CE839C2EB0859C00249576 /* DestinationError.swift in Sources */,
 				53DEA61A2E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift in Sources */,
 				53DEA61B2E03D05A00D6C371 /* ObjCEvent.swift in Sources */,
 				53DEA61C2E03D05A00D6C371 /* FrequencyFlushPolicy.swift in Sources */,
@@ -1211,7 +1215,6 @@
 				5393019E2E65562100DAEAD1 /* BackoffPolicyTests.swift in Sources */,
 				859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */,
 				53DEA6732E03D06F00D6C371 /* AliasEventTests.swift in Sources */,
-				53DEA6742E03D06F00D6C371 /* StorageModuleTests.swift in Sources */,
 				859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */,
 				53DEA6752E03D06F00D6C371 /* OSInfoPluginTests.swift in Sources */,
 				53DEA6762E03D06F00D6C371 /* SessionTrackingPluginTests.swift in Sources */,
