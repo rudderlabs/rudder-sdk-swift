@@ -60,16 +60,7 @@ class AnalyticsManager {
         
         self.analytics?.add(plugin: sampleCustomIntegrationPlugin)
         
-        sampleCustomIntegrationPlugin.onDestinationReady { destination, result in
-            switch result {
-            case .success:
-                LoggerAnalytics.debug("AnalyticsManager: destination \(sampleCustomIntegrationPlugin.key) created successfully")
-            case .failure(let error):
-                LoggerAnalytics.debug("AnalyticsManager: destination failed with error : \(error.localizedDescription)")
-            default:
-                LoggerAnalytics.debug("AnalyticsManager: this should not run")
-            }
-        }
+        self.setOnDestinationReady(integrationPlugin: sampleCustomIntegrationPlugin)
         
         let customOption = RudderOption(integrations: ["CleverTap": true], customContext: ["plugin_key": "plugin_value"], externalIds: [ExternalId(type: "external_id_type", id: "external_id")])
         
@@ -138,6 +129,19 @@ extension AnalyticsManager {
     
     func openURL(_ url: URL, options: [String: Any]? = nil) {
         self.analytics?.open(url: url, options: options)
+    }
+    
+    func setOnDestinationReady(integrationPlugin: IntegrationPlugin) {
+        integrationPlugin.onDestinationReady { destination, result in
+            switch result {
+            case .success:
+                LoggerAnalytics.debug("AnalyticsManager: destination \(integrationPlugin.key) created successfully")
+            case .failure(let error):
+                LoggerAnalytics.debug("AnalyticsManager: destination failed with error : \(error.localizedDescription)")
+            default:
+                LoggerAnalytics.debug("AnalyticsManager: this should not run")
+            }
+        }
     }
 }
 
