@@ -132,7 +132,7 @@ extension AnalyticsManager {
     }
     
     func setOnDestinationReady(integrationPlugin: IntegrationPlugin) {
-        integrationPlugin.onDestinationReady { destination, result in
+        integrationPlugin.onDestinationReady { _, result in
             switch result {
             case .success:
                 LoggerAnalytics.debug("AnalyticsManager: destination \(integrationPlugin.key) created successfully")

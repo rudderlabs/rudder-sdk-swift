@@ -1,5 +1,5 @@
 //
-//  IntegrationError.swift
+//  DestinationError.swift
 //  RudderStackAnalytics
 //
 //  Created by Vishal Gupta on 28/10/25.
