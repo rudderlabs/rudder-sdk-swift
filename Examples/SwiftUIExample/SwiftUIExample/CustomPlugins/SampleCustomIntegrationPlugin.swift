@@ -74,6 +74,9 @@ class SampleCustomIntegrationPlugin: IntegrationPlugin {
     }
 }
 
+/**
+ This is sample destination which is used inside the `SampleCustomIntegrationPlugin`. Events are forwarded to this destination.
+ */
 class SampleDestinationSdk {
     
     private let key: String
