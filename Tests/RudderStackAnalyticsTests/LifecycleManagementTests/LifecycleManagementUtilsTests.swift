@@ -61,7 +61,7 @@ class LifecycleManagementUtilsTests {
     }
     
     @Test("when invalidating, LifecycleSessionWrapper should clean up components in correct order")
-    func testLifecycleSessionWrapperInvalidate() async throws {
+    func testLifecycleSessionWrapperInvalidate() {
         let lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: mockAnalytics)
         
         #expect(lifecycleSessionWrapper.lifecycleObserver != nil)
@@ -74,7 +74,7 @@ class LifecycleManagementUtilsTests {
     }
     
     @Test("when integrated, lifecycle events should work through wrapper")
-    func testIntegratedLifecycleEventHandling() async throws {
+    func testIntegratedLifecycleEventHandling() {
         let lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: mockAnalytics)
         let mockListener = MockLifecycleEventListener()
         
@@ -87,7 +87,7 @@ class LifecycleManagementUtilsTests {
     }
     
     @Test("when initialized, wrapper components should reference the same Analytics instance")
-    func testWrapperComponentsAnalyticsReference() async throws {
+    func testWrapperComponentsAnalyticsReference() {
         let lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: mockAnalytics)
         
         #expect(lifecycleSessionWrapper.lifecycleObserver?.analytics === mockAnalytics)
