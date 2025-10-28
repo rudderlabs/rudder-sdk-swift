@@ -8,6 +8,9 @@
 import Foundation
 @testable import RudderStackAnalytics
 
+/**
+ This is a sample custom integration plugin used for testing.
+ */
 class MockCustomIntegrationPlugin: IntegrationPlugin {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
