@@ -22,9 +22,11 @@ import WatchKit
 class LifecycleManagementUtilsTests {
     
     var mockAnalytics: Analytics
+    var lifecycleSessionWrapper: LifecycleSessionWrapper
     
     init() {
         mockAnalytics = SwiftTestMockProvider.createMockAnalytics()
+        lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: mockAnalytics)
     }
     
     @Test("when platform-specific notification mapping is checked, then correct mappings are returned")
@@ -51,9 +53,6 @@ class LifecycleManagementUtilsTests {
     
     @Test("when initialized, LifecycleSessionWrapper should set up components correctly")
     func testLifecycleSessionWrapperInitialization() {
-        
-        let lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: mockAnalytics)
-        
         #expect(lifecycleSessionWrapper.lifecycleObserver != nil)
         #expect(lifecycleSessionWrapper.sessionHandler != nil)
         #expect(lifecycleSessionWrapper.lifecycleObserver?.analytics === mockAnalytics)
@@ -62,20 +61,14 @@ class LifecycleManagementUtilsTests {
     
     @Test("when invalidating, LifecycleSessionWrapper should clean up components in correct order")
     func testLifecycleSessionWrapperInvalidate() {
-        let lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: mockAnalytics)
-        
-        #expect(lifecycleSessionWrapper.lifecycleObserver != nil)
-        #expect(lifecycleSessionWrapper.sessionHandler != nil)
-        
         lifecycleSessionWrapper.invalidate()
         
         #expect(lifecycleSessionWrapper.sessionHandler == nil)
         #expect(lifecycleSessionWrapper.lifecycleObserver == nil)
     }
     
-    @Test("when integrated, lifecycle events should work through wrapper")
+    @Test("given lifecycle observer integrated through wrapper, when app triggers foreground and background events, then listener methods should be invoked")
     func testIntegratedLifecycleEventHandling() {
-        let lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: mockAnalytics)
         let mockListener = MockLifecycleEventListener()
         
         lifecycleSessionWrapper.lifecycleObserver?.addObserver(mockListener)
@@ -88,8 +81,6 @@ class LifecycleManagementUtilsTests {
     
     @Test("when initialized, wrapper components should reference the same Analytics instance")
     func testWrapperComponentsAnalyticsReference() {
-        let lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: mockAnalytics)
-        
         #expect(lifecycleSessionWrapper.lifecycleObserver?.analytics === mockAnalytics)
         #expect(lifecycleSessionWrapper.sessionHandler?.analytics === mockAnalytics)
     }
