@@ -8,6 +8,9 @@
 import Foundation
 @testable import RudderStackAnalytics
 
+/**
+ This is a sample custom integration plugin used for testing.
+ */
 class MockCustomIntegrationPlugin: IntegrationPlugin {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
@@ -57,7 +60,7 @@ class MockCustomIntegrationPlugin: IntegrationPlugin {
         destinationInstance = MockDestination(config: ["apiKey": "MyKey"])
     }
     
-    // update is overriden (for testing) but should not be called for custom integration
+    // update is overridden (for testing) but should not be called for custom integration
     func update(destinationConfig: [String: Any]) throws {
         updateCalled = true
         lastDestinationConfig = destinationConfig

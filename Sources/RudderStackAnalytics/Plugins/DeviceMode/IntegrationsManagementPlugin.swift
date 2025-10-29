@@ -8,19 +8,19 @@
 import Foundation
 import Combine
 
-internal let MAX_QUEUE_SIZE = 1000
-internal let FIRST_INDEX = 0
-
+// MARK: - IntegrationsManagementPlugin
 /**
- * This plugin will queue the events till the sourceConfig is fetched and
- * will host all the device mode integration plugins in its PluginChain instance.
+ This plugin is responsible for fetching the source configuration and queuing events until the configuration is retrieved.
+ It also replays the queued events once the source configuration has been successfully fetched.
  */
 class IntegrationsManagementPlugin: Plugin {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
     private var cancellables = Set<AnyCancellable>()
+    private var processingTask: Task<Void, Never>?
+    private let processingQueue = DispatchQueue(label: "IntegrationsManagement", qos: .default)
     
-    private let queuedEventsChannel: AsyncChannel<Event> = AsyncChannel(bufferingPolicy: .bufferingNewest(MAX_QUEUE_SIZE))
+    private let queuedEventsChannel: AsyncChannel<Event> = AsyncChannel(bufferingPolicy: .bufferingNewest(IntegrationsManagementConstants.maxQueueSize))
     
     func setup(analytics: Analytics) {
         self.analytics = analytics
@@ -32,7 +32,7 @@ class IntegrationsManagementPlugin: Plugin {
             .removeDuplicates { (previous: SourceConfig, current: SourceConfig) -> Bool in
                 previous.source.updatedAt == current.source.updatedAt
             }
-            .receive(on: DispatchQueue.global(qos: .default))
+            .receive(on: processingQueue)
             .sink { [weak self] sourceConfig in
                 guard let self, sourceConfig.source.isSourceEnabled else { return }
                 
@@ -43,7 +43,7 @@ class IntegrationsManagementPlugin: Plugin {
                 }
                 
                 // Start processing queued events when SourceConfig is fetched for the first time
-                if configIndex == FIRST_INDEX {
+                if configIndex == IntegrationsManagementConstants.firstIndex {
                     self.setIsSourceEnabledFetchedAtLeastOnce(true)
                     self.processEvents()
                 }
@@ -68,16 +68,23 @@ class IntegrationsManagementPlugin: Plugin {
     private func processEvents() {
         LoggerAnalytics.debug("IntegrationsManagementPlugin: Starting to process queued events")
         
-        Task {
-            for await event in queuedEventsChannel.receive() {
+        processingTask = Task { [weak self] in
+            guard let channel = self?.queuedEventsChannel else { return }
+
+            for await event in channel.receive() {
+                if Task.isCancelled { break }
+                
+                guard let self else { break }
                 self.integrationPluginChain?.process(event: event)
             }
         }
     }
     
     deinit {
-        self.cancellables.removeAll()
         self.queuedEventsChannel.close()
+        processingTask?.cancel()
+        processingTask = nil
+        self.cancellables.removeAll()
     }
 }
 
@@ -97,4 +104,11 @@ extension IntegrationsManagementPlugin {
     func initDestination(sourceConfig: SourceConfig, integration: IntegrationPlugin) {
         self.analytics?.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: integration)
     }
+}
+
+// MARK: - IntegrationsManagementConstants
+
+struct IntegrationsManagementConstants {
+    static let maxQueueSize = 1000
+    static let firstIndex = 0
 }
