@@ -37,15 +37,13 @@ class HttpNetworkTests {
         let result = await performRequest(statusCode: statusCode)
         guard let result else { return }
         
-        switch result {
-        case .success:
+        if case .success = result {
             #expect(Bool(false), "Expected failure but got success")
-        case .failure(let error):
+        } else if case .failure(let error) = result {
             if let httpError = error as? HttpNetworkError {
-                switch httpError {
-                case .requestFailed(let errorCode):
+                if case .requestFailed(let errorCode) = httpError {
                     #expect(errorCode == statusCode)
-                default:
+                } else {
                     #expect(Bool(false), "Expected requestFailed error")
                 }
             } else {
@@ -72,9 +70,9 @@ class HttpNetworkTests {
 
 // MARK: - Helpers
 extension HttpNetworkTests {
-    private func makeRequest() -> URLRequest? {
-        guard let url = URL(string: "https://test.com") else {
-            Issue.record("Can't create URL from string")
+    private func makeRequest(urlString: String = "https://test.com") -> URLRequest? {
+        guard let url = URL(string: urlString) else {
+            Issue.record("Can't create URL from string: \(urlString)")
             return nil
         }
         return URLRequest(url: url)
