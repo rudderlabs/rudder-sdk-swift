@@ -16,11 +16,15 @@ class HttpNetworkTests {
     deinit { SwiftTestMockProvider.teardownMockURLSession() }
     
     @Test("given a request, when it returns success status code in range, then HttpNetwork returns expected data",
-          arguments: [200, 201, 202, 204, 299])
-    func testSuccessStatusCodesInRange(_ statusCode: Int) async {
+          arguments: [(200, "https://success.test.com"),
+                      (201, "https://success.test.com"),
+                      (202, "https://success.test.com"),
+                      (204, "https://success.test.com"),
+                      (299, "https://success.test.com")])
+    func testSuccessStatusCodesInRange(_ statusCode: Int, url: String) async {
         let expectedData = Data("success".utf8)
         let successUrl = "https://success.test.com"
-        let result = await performRequest(statusCode: statusCode, data: expectedData, urlString: successUrl)
+        let result = await performRequest(statusCode: statusCode, data: expectedData, urlString: url)
         
         switch result {
         case .success(let data):
@@ -33,11 +37,17 @@ class HttpNetworkTests {
     }
     
     @Test("given a request, when it returns failure status code, then HttpNetwork handles request failure properly",
-          arguments: [400, 401, 402, 404, 499, 500, 501, 504, 555])
-    func testFailureStatusCodeInRange(_ statusCode: Int) async {
-        let testUrl = "https://test.com"
-        let failureUrl = "https://failure.test.com"
-        let result = await performRequest(statusCode: statusCode, urlString: failureUrl)
+          arguments: [(400, "https://failure.test.com"),
+                      (401, "https://failure.test.com"),
+                      (402, "https://failure.test.com"),
+                      (404, "https://failure.test.com"),
+                      (499, "https://failure.test.com"),
+                      (500, "https://failure.test.com"),
+                      (501, "https://failure.test.com"),
+                      (504, "https://failure.test.com"),
+                      (555, "https://failure.test.com")])
+    func testFailureStatusCodeInRange(_ statusCode: Int, url: String) async {
+        let result = await performRequest(statusCode: statusCode, urlString: url)
         guard let result else { return }
         
         if case .success = result {
@@ -57,17 +67,16 @@ class HttpNetworkTests {
     
     @Test("given a request, when encountering various network errors, then HttpNetwork handles them as networkUnavailable",
           arguments: [
-            URLError.Code.notConnectedToInternet,
-            URLError.Code.networkConnectionLost,
-            URLError.Code.cannotConnectToHost,
-            URLError.Code.timedOut,
-            URLError.Code.dnsLookupFailed,
-            URLError.Code.cannotFindHost,
-            URLError.Code.dataNotAllowed
+            (URLError.Code.notConnectedToInternet, "https://error.test.com"),
+            (URLError.Code.networkConnectionLost, "https://error.test.com"),
+            (URLError.Code.cannotConnectToHost, "https://error.test.com"),
+            (URLError.Code.timedOut, "https://error.test.com"),
+            (URLError.Code.dnsLookupFailed, "https://error.test.com"),
+            (URLError.Code.cannotFindHost, "https://error.test.com"),
+            (URLError.Code.dataNotAllowed, "https://error.test.com")
           ])
-    func testNetworkErrorsInRange(_ errorCode: URLError.Code) async {
-        let errorUrl = "https://error.test.com"
-        let result = await performRequest(error: errorCode, urlString: errorUrl)
+    func testNetworkErrorsInRange(_ errorCode: URLError.Code, url: String) async {
+        let result = await performRequest(error: errorCode, urlString: url)
         expectHttpFailure(result, expectedError: .networkUnavailable, context: "\(errorCode)")
     }
 }
