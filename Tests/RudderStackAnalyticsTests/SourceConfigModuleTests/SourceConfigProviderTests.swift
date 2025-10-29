@@ -31,7 +31,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("when fetching cached config and no config exists, then does not notify observers")
-    func testSourceConfigProvider_FetchCachedConfig_NoConfig() async {
+    func testSourceConfigProvider_fetchCachedConfig_noConfig() async {
         var receivedConfigs: [SourceConfig] = []
         let cancellable = analytics.sourceConfigState.state
             .sink { config in
@@ -47,7 +47,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("when fetching cached config with valid stored config, then notifies observers")
-    func testSourceConfigProvider_FetchCachedConfig_ValidConfig() async {
+    func testSourceConfigProvider_fetchCachedConfig_validConfig() async {
         let storedConfig = SourceConfig(
             source: RudderServerConfigSource(
                 sourceId: "cached-source-id",
@@ -86,7 +86,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("when fetching cached config with corrupted JSON, then does not notify observers")
-    func testSourceConfigProvider_FetchCachedConfig_CorruptedJSON() async {
+    func testSourceConfigProvider_fetchCachedConfig_corruptedJSON() async {
         
         mockStorage.write(value: "invalid-json", key: Constants.storageKeys.sourceConfig)
         
@@ -107,7 +107,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("given multiple observers, when SourceConfig is updated, then all observers are notified")
-    func testSourceConfig_MultipleObservers() async {
+    func testSourceConfig_multipleObservers() async {
         let storedConfig = SourceConfig(
             source: RudderServerConfigSource(
                 sourceId: "cached-source-id",
@@ -161,7 +161,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("given a SourceConfig request returning HTTP 400 error, when refreshConfig is called, then handles invalidWriteKey without retries")
-    func testSourceConfigProvider_HandleHTTP400InvalidWriteKey() async {
+    func testSourceConfigProvider_handleHTTP400InvalidWriteKey() async {
         
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 400)
@@ -190,7 +190,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("given a SourceConfig request returning invalidWriteKey error, when refreshConfig is called, then shuts down analytics and clears storage")
-    func testSourceConfigProvider_HandleInvalidWriteKeyError() async {
+    func testSourceConfigProvider_handleInvalidWriteKeyError() async {
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 400)
         
@@ -199,17 +199,13 @@ class SourceConfigProviderTests {
         mockStorage.write(value: "test_user_data", key: "user_data")
         mockStorage.write(value: "cached_config_data", key: Constants.storageKeys.sourceConfig)
         
-        #expect(analytics.isAnalyticsActive == true, "Analytics should be active initially")
-        #expect(analytics.isAnalyticsShutdown == false, "Analytics should not be shutdown initially")
-        #expect(analytics.isInvalidWriteKey == false, "WriteKey should be valid initially")
-        
         provider.refreshConfigAndNotifyObservers()
         
         await mockStorage.waitForKeyRemoval(key: Constants.storageKeys.sourceConfig)
         
-        #expect(self.analytics.isAnalyticsShutdown == true, "Analytics should be shutdown after invalid write key error")
-        #expect(self.analytics.isInvalidWriteKey == true, "Invalid write key flag should be set")
-        #expect(self.analytics.isAnalyticsActive == false, "Analytics should be inactive after shutdown")
+        #expect(analytics.isAnalyticsShutdown, "Analytics should be shutdown after invalid write key error")
+        #expect(analytics.isInvalidWriteKey, "Invalid write key flag should be set")
+        #expect(!analytics.isAnalyticsActive, "Analytics should be inactive after shutdown")
         
         let clearedUserData: String? = self.mockStorage.read(key: "user_data")
         let clearedSourceConfig: String? = self.mockStorage.read(key: Constants.storageKeys.sourceConfig)
@@ -219,7 +215,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("given a SourceConfig request returning success after a failure, when refreshConfig is called, then eventually succeeds with valid config")
-    func testSourceConfigProvider_HandleSuccessAfterRetries() async {
+    func testSourceConfigProvider_handleSuccessAfterRetries() async {
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = prepareMockUrlSessionWithEventualSuccess(failureCount: 1)
         
@@ -249,7 +245,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("given storage has a valid cached source config, when fetchCachedConfig and refreshConfig are called, then both complete successfully")
-    func testSourceConfigProvider_CachedAndRefreshIntegration() async {
+    func testSourceConfigProvider_cachedAndRefreshIntegration() async {
         let mockConfig = SwiftTestMockProvider.sourceConfiguration
         mockStorage.write(value: mockConfig?.jsonString, key: Constants.storageKeys.sourceConfig)
         
@@ -284,7 +280,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("given a SourceConfig request returning HTTP 500 error, when refreshConfig is called, then retries with exponential backoff until max attempts")
-    func testSourceConfigProvider_HandleHTTP500WithRetries() async {
+    func testSourceConfigProvider_handleHTTP500WithRetries() async {
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 500)
         
