@@ -38,15 +38,6 @@ struct HttpClientTests {
         #expect(headers["AnonymousId"] == newAnonymousId)
     }
     
-    @Test("when preparing events headers, then includes anonymousId header")
-    func testEventsHeadersIncludeAnonymousId() {
-        let testAnonymousId = "test-anonymous-id"
-
-        let headers = HttpClientRequestType.events.headers(mockAnalytics, anonymousIdHeader: testAnonymousId)
-
-        #expect(headers["AnonymousId"] == testAnonymousId)
-    }
-
     @Test("when preparing configuration headers, then does not include anonymousId header")
     func testConfigHeadersExcludeAnonymousId() {
         let testAnonymousId = "test-anonymous-id"
