@@ -19,7 +19,7 @@ class HttpNetworkTests {
           arguments: [200, 201, 202, 204, 299])
     func testSuccessStatusCodesInRange(_ statusCode: Int) async {
         let expectedData = Data("success".utf8)
-        let result = await performRequest(statusCode: statusCode, data: expectedData)
+        let result = await performRequest(statusCode: statusCode, data: expectedData, urlString: _testUrl)
         
         switch result {
         case .success(let data):
@@ -34,7 +34,7 @@ class HttpNetworkTests {
     @Test("given a request, when it returns failure status code, then HttpNetwork handles request failure properly",
           arguments: [400, 401, 402, 404, 499, 500, 501, 504, 555])
     func testFailureStatusCodeInRange(_ statusCode: Int) async {
-        let result = await performRequest(statusCode: statusCode)
+        let result = await performRequest(statusCode: statusCode, urlString: _testUrl)
         guard let result else { return }
         
         if case .success = result {
@@ -63,14 +63,17 @@ class HttpNetworkTests {
             URLError.Code.dataNotAllowed
           ])
     func testNetworkErrorsInRange(_ errorCode: URLError.Code) async {
-        let result = await performRequest(error: errorCode)
+        let result = await performRequest(error: errorCode, urlString: _testUrl)
         expectHttpFailure(result, expectedError: .networkUnavailable, context: "\(errorCode)")
     }
 }
 
 // MARK: - Helpers
 extension HttpNetworkTests {
-    private func makeRequest(urlString: String = "https://test.com") -> URLRequest? {
+    
+    private var _testUrl: String { "https://test.com" }
+    
+    private func makeRequest(urlString: String) -> URLRequest? {
         guard let url = URL(string: urlString) else {
             Issue.record("Can't create URL from string: \(urlString)")
             return nil
@@ -78,7 +81,7 @@ extension HttpNetworkTests {
         return URLRequest(url: url)
     }
     
-    private func performRequest(statusCode: Int? = nil, data: Data? = nil, error: URLError.Code? = nil, urlString: String = "https://test.com") async -> Result<Data, Error>? {
+    private func performRequest(statusCode: Int? = nil, data: Data? = nil, error: URLError.Code? = nil, urlString: String) async -> Result<Data, Error>? {
         if let errorCode = error {
             MockURLProtocol.requestHandler = { _ in throw URLError(errorCode) }
         } else {
