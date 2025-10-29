@@ -56,11 +56,8 @@ class AnalyticsManager {
         //Add external plugin to analytics..
         self.analytics?.add(plugin: AdvertisingIdPlugin())
         self.analytics?.add(plugin: BluetoothInfoPlugin())
-        let sampleCustomIntegrationPlugin = SampleCustomIntegrationPlugin()
         
-        self.analytics?.add(plugin: sampleCustomIntegrationPlugin)
-        
-        self.setOnDestinationReady(integrationPlugin: sampleCustomIntegrationPlugin)
+        self.addCustomIntegrationPlugin()
         
         let customOption = RudderOption(integrations: ["CleverTap": true], customContext: ["plugin_key": "plugin_value"], externalIds: [ExternalId(type: "external_id_type", id: "external_id")])
         
@@ -131,11 +128,15 @@ extension AnalyticsManager {
         self.analytics?.open(url: url, options: options)
     }
     
-    func setOnDestinationReady(integrationPlugin: IntegrationPlugin) {
-        integrationPlugin.onDestinationReady { _, result in
+    func addCustomIntegrationPlugin() {
+        let sampleCustomIntegrationPlugin = SampleCustomIntegrationPlugin()
+        
+        self.analytics?.add(plugin: sampleCustomIntegrationPlugin)
+        
+        sampleCustomIntegrationPlugin.onDestinationReady { _, result in
             switch result {
             case .success:
-                LoggerAnalytics.debug("AnalyticsManager: destination \(integrationPlugin.key) created successfully")
+                LoggerAnalytics.debug("AnalyticsManager: destination \(sampleCustomIntegrationPlugin.key) created successfully")
             case .failure(let error):
                 LoggerAnalytics.debug("AnalyticsManager: destination failed with error : \(error.localizedDescription)")
             default:
