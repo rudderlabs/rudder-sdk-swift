@@ -72,7 +72,7 @@ struct IntegrationsManagementPluginTests {
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
-        for i in 0..<(MAX_QUEUE_SIZE + 100) {
+        for i in 0..<(IntegrationsManagementConstants.maxQueueSize + 100) {
             let event = TrackEvent(event: "Event \(i)")
             _ = plugin.intercept(event: event)
         }
@@ -92,7 +92,10 @@ struct IntegrationsManagementPluginTests {
         let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
         analytics.add(plugin: mockPlugin)
         
-        let sourceConfig = MockProvider.sourceConfiguration!
+        guard let sourceConfig = MockProvider.sourceConfiguration else {
+            #expect(Bool(false), "sourceConfiguration is nil")
+            return
+        }
         
         analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
         

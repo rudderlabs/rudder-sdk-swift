@@ -13,8 +13,7 @@ import Foundation
 class IntegrationPluginStore {
     var analytics: Analytics?
     var pluginChain: PluginChain?
-    @Synchronized
-    var destinationReadyCallbacks: [IntegrationCallback] = []
+    @Synchronized var destinationReadyCallbacks: [IntegrationCallback] = []
     var isStandardIntegration: Bool = true
     var isDestinationReady = false
     

@@ -7,6 +7,9 @@
 
 import Foundation
 
+/**
+ This is a sample destination used inside the mock integration plugins used for testing.
+ */
 class MockDestination {
     let config: [String: Any]
     

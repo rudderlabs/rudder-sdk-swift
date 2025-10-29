@@ -8,6 +8,9 @@
 import Foundation
 @testable import RudderStackAnalytics
 
+/**
+ This is a sample standard integration plugin used for testing.
+ */
 class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?

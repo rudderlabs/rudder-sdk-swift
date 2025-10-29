@@ -36,7 +36,7 @@ class SampleCustomIntegrationPlugin: IntegrationPlugin {
     }
     
     // The update for custom integration will not be called. It is only added as an example.
-    func update(destinationConfig: [String : Any]) throws {
+    func update(destinationConfig: [String: Any]) throws {
         destinationSdk?.update()
     }
     
@@ -74,6 +74,9 @@ class SampleCustomIntegrationPlugin: IntegrationPlugin {
     }
 }
 
+/**
+ This is sample destination which is used inside the `SampleCustomIntegrationPlugin`. Events are forwarded to this destination.
+ */
 class SampleDestinationSdk {
     
     private let key: String
