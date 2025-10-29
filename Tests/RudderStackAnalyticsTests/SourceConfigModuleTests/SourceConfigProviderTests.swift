@@ -106,7 +106,7 @@ class SourceConfigProviderTests {
         #expect(receivedConfigs.first?.source.sourceId.isEmpty == true)
     }
     
-    @Test("Given multiple observers, When SourceConfig is updated, Then all observers are notified")
+    @Test("given multiple observers, when SourceConfig is updated, then all observers are notified")
     func testSourceConfig_MultipleObservers() async {
         let storedConfig = SourceConfig(
             source: RudderServerConfigSource(
@@ -160,7 +160,7 @@ class SourceConfigProviderTests {
         cancellables.removeAll()
     }
     
-    @Test("Given a SourceConfig request returning HTTP 400 error, When refreshConfig is called, Then handles invalidWriteKey without retries")
+    @Test("given a SourceConfig request returning HTTP 400 error, when refreshConfig is called, then handles invalidWriteKey without retries")
     func testSourceConfigProvider_HandleHTTP400InvalidWriteKey() async {
         
         SwiftTestMockProvider.setupMockURLSession()
@@ -189,7 +189,7 @@ class SourceConfigProviderTests {
         #expect(configUpdateCount == 1) // No update due to 400 error
     }
     
-    @Test("Given a SourceConfig request returning invalidWriteKey error, When refreshConfig is called, Then shuts down analytics and clears storage")
+    @Test("given a SourceConfig request returning invalidWriteKey error, when refreshConfig is called, then shuts down analytics and clears storage")
     func testSourceConfigProvider_HandleInvalidWriteKeyError() async {
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 400)
@@ -218,7 +218,7 @@ class SourceConfigProviderTests {
         #expect(clearedSourceConfig == nil, "Source config should be cleared after invalid write key error")
     }
     
-    @Test("Given a SourceConfig request returning success after a failure, When refreshConfig is called, Then eventually succeeds with valid config")
+    @Test("given a SourceConfig request returning success after a failure, when refreshConfig is called, then eventually succeeds with valid config")
     func testSourceConfigProvider_HandleSuccessAfterRetries() async {
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = prepareMockUrlSessionWithEventualSuccess(failureCount: 1)
@@ -248,7 +248,7 @@ class SourceConfigProviderTests {
         #expect(configUpdateCount == 2) // Initial state + successful update
     }
     
-    @Test("Given storage has a valid cached source config, When fetchCachedConfig and refreshConfig are called, Then both complete successfully")
+    @Test("given storage has a valid cached source config, when fetchCachedConfig and refreshConfig are called, then both complete successfully")
     func testSourceConfigProvider_CachedAndRefreshIntegration() async {
         let mockConfig = SwiftTestMockProvider.sourceConfiguration
         mockStorage.write(value: mockConfig?.jsonString, key: Constants.storageKeys.sourceConfig)
@@ -283,7 +283,7 @@ class SourceConfigProviderTests {
         }
     }
     
-    @Test("Given a SourceConfig request returning HTTP 500 error, When refreshConfig is called, Then retries with exponential backoff until max attempts")
+    @Test("given a SourceConfig request returning HTTP 500 error, when refreshConfig is called, then retries with exponential backoff until max attempts")
     func testSourceConfigProvider_HandleHTTP500WithRetries() async {
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 500)
