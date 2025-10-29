@@ -15,8 +15,8 @@ class HttpNetworkTests {
     init() { SwiftTestMockProvider.setupMockURLSession() }
     deinit { SwiftTestMockProvider.teardownMockURLSession() }
     
-    @Test("when request returns success status code in range, then HttpNetwork returns expected data", arguments: [200, 201, 202, 204, 299])
-    func test_successStatusCodesInRange(_ statusCode: Int) async {
+    @Test("given a request, when it returns success status code in range, then HttpNetwork returns expected data", arguments: [200, 201, 202, 204, 299])
+    func testSuccessStatusCodesInRange(_ statusCode: Int) async {
         let expectedData = Data("success".utf8)
         
         MockURLProtocol.requestHandler = { request in
@@ -38,9 +38,9 @@ class HttpNetworkTests {
             #expect(Bool(false), "Expected success for status code \(statusCode)")
         }
     }
-    
-    @Test("when request returning failure status code, then HttpNetwork handles request failure properly", arguments: [400, 401, 402, 404, 499, 500, 501, 504, 555])
-    func test_failureStatusCodeInRange(_ statusCode: Int) async {
+
+    @Test("given a request, when it returns failure status code, then HttpNetwork handles request failure properly", arguments: [400, 401, 402, 404, 499, 500, 501, 504, 555])
+    func testFailureStatusCodeInRange(_ statusCode: Int) async {
         
         MockURLProtocol.requestHandler = { request in
             return (statusCode, nil, nil)
@@ -73,7 +73,7 @@ class HttpNetworkTests {
     }
 
 
-    @Test("when encountering various network errors, then HttpNetwork handles them as networkUnavailable", arguments: [
+    @Test("given a request, when encountering various network errors, then HttpNetwork handles them as networkUnavailable", arguments: [
         URLError.Code.notConnectedToInternet,
         URLError.Code.networkConnectionLost,
         URLError.Code.cannotConnectToHost,
@@ -82,7 +82,7 @@ class HttpNetworkTests {
         URLError.Code.cannotFindHost,
         URLError.Code.dataNotAllowed
     ])
-    func test_networkErrorsInRange(_ errorCode: URLError.Code) async {
+    func testNetworkErrorsInRange(_ errorCode: URLError.Code) async {
         MockURLProtocol.requestHandler = { request in
             throw URLError(errorCode)
         }
