@@ -22,11 +22,11 @@ class SourceConfigProvider: TypeIdentifiable {
     
     private static let maxRetryAttempts = 5
     
-    init(analytics: Analytics) {
+    init(analytics: Analytics, backoffPolicy: BackoffPolicy = ExponentialBackoffPolicy()) {
         self.analytics = analytics
         self.sourceConfigState = analytics.sourceConfigState
         self.httpClient = HttpClient(analytics: analytics)
-        self.backoffPolicy = provideBackoffPolicy()
+        self.backoffPolicy = backoffPolicy
     }
     
     func fetchCachedConfigAndNotifyObservers() {
@@ -51,10 +51,6 @@ class SourceConfigProvider: TypeIdentifiable {
     private func notifyObservers(config: SourceConfig) {
         LoggerAnalytics.debug("Notifying observers with sourceConfig.")
         self.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: config))
-    }
-    
-    func provideBackoffPolicy() -> BackoffPolicy {
-        return ExponentialBackoffPolicy()
     }
     
     deinit {

@@ -138,13 +138,17 @@ extension MockStorage {
 }
 
 extension MockStorage {
+
+    /** Polling interval in nanoseconds for wait methods. */
+    static var pollInterval: UInt64 { 10_000_000 } // 10ms
+    
     /**
      Waits for events to be stored with optional predicate filtering.
      
      - Parameters:
-       - expectedCount: Minimum number of events expected
-       - timeout: Maximum time to wait in seconds
-       - predicate: Optional predicate to filter events
+     - expectedCount: Minimum number of events expected
+     - timeout: Maximum time to wait in seconds
+     - predicate: Optional predicate to filter events
      - Returns: True if condition was met within timeout, false otherwise
      */
     @discardableResult
@@ -175,7 +179,7 @@ extension MockStorage {
                 return true
             }
             
-            await Task.yield()
+            try? await Task.sleep(nanoseconds: Self.pollInterval)
         }
         return false
     }
@@ -184,9 +188,9 @@ extension MockStorage {
      Waits for events containing specific content.
      
      - Parameters:
-       - content: Text content to search for in event batches
-       - expectedCount: Minimum number of matching events expected
-       - timeout: Maximum time to wait in seconds
+     - content: Text content to search for in event batches
+     - expectedCount: Minimum number of matching events expected
+     - timeout: Maximum time to wait in seconds
      - Returns: True if condition was met within timeout, false otherwise
      */
     @discardableResult
@@ -210,8 +214,8 @@ extension MockStorage {
      before batch processing occurs.
      
      - Parameters:
-       - expectedCount: Expected number of events in current batch
-       - timeout: Maximum time to wait in seconds
+     - expectedCount: Expected number of events in current batch
+     - timeout: Maximum time to wait in seconds
      - Returns: True if condition was met within timeout, false otherwise
      */
     @discardableResult
@@ -225,8 +229,111 @@ extension MockStorage {
             if currentBatchEventCount >= expectedCount {
                 return true
             }
-            
             await Task.yield()
+        }
+        return false
+    }
+    
+    /**
+     Waits for a specific key to exist in storage.
+     
+     - Parameters:
+       - key: The key to wait for
+       - timeout: Maximum time to wait in seconds
+     - Returns: True if key exists within timeout, false otherwise
+     */
+    @discardableResult
+    func waitForKeyValue(
+        key: String,
+        timeout: TimeInterval = 2.0
+    ) async -> Bool {
+        let start = Date()
+        
+        while Date().timeIntervalSince(start) < timeout {
+            // Check if key exists in storage directly
+            if mockKeyValueStorage.allStoredData[key] != nil {
+                return true
+            }
+            try? await Task.sleep(nanoseconds: Self.pollInterval)
+        }
+        return false
+    }
+    
+    /**
+     Waits for a specific key-value pair with expected value.
+     
+     - Parameters:
+       - key: The key to wait for
+       - expectedValue: The expected value for the key
+       - timeout: Maximum time to wait in seconds
+     - Returns: True if key-value pair matches within timeout, false otherwise
+     */
+    @discardableResult
+    func waitForKeyValue<T: Codable & Equatable>(
+        key: String,
+        expectedValue: T,
+        timeout: TimeInterval = 2.0
+    ) async -> Bool {
+        let start = Date()
+        
+        while Date().timeIntervalSince(start) < timeout {
+            let value: T? = mockKeyValueStorage.read(key: key)
+            if let value = value, value == expectedValue {
+                return true
+            }
+            try? await Task.sleep(nanoseconds: Self.pollInterval)
+        }
+        return false
+    }
+    
+    /**
+     Waits for a key-value pair with a predicate condition.
+     
+     - Parameters:
+        - key: The key to wait for
+        - timeout: Maximum time to wait in seconds
+        - predicate: Predicate to evaluate the stored value
+     - Returns: True if predicate condition is met within timeout, false otherwise
+     */
+    @discardableResult
+    func waitForKeyValue<T: Codable>(
+        key: String,
+        timeout: TimeInterval = 2.0,
+        predicate: @escaping (T) -> Bool
+    ) async -> Bool {
+        let start = Date()
+        
+        while Date().timeIntervalSince(start) < timeout {
+            let value: T? = mockKeyValueStorage.read(key: key)
+            if let value = value, predicate(value) {
+                return true
+            }
+            await Task.yield()
+        }
+        return false
+    }
+    
+    /**
+     Waits until a given key is removed (i.e., no longer present) from the storage.
+     
+     - Parameters:
+       - key: The key to monitor for removal.
+       - timeout: The maximum duration to wait, in seconds. Default is `2.0`.
+     - Returns: `true` if the key was removed within the timeout period, otherwise `false`.
+     */
+    @discardableResult
+    func waitForKeyRemoval(
+        key: String,
+        timeout: TimeInterval = 2.0
+    ) async -> Bool {
+        let start = Date()
+        
+        while Date().timeIntervalSince(start) < timeout {
+            // Check if key no longer exists in storage
+            if mockKeyValueStorage.allStoredData[key] == nil {
+                return true
+            }
+            try? await Task.sleep(nanoseconds: Self.pollInterval)
         }
         return false
     }
