@@ -42,7 +42,7 @@ class RudderStackDataPlanePluginTests {
             (EventType.group, SwiftTestMockProvider.mockGroupEvent as any Event),
             (EventType.alias, SwiftTestMockProvider.mockAliasEvent as any Event)
         ])
-    func testRudderStackDataPlanePlugin_ProcessEvent(_ eventType: EventType, _ event: any Event) async {
+    func testProcessEvent(_ eventType: EventType, _ event: any Event) async {
         switch eventType {
         case .track:
             plugin.track(payload: event as! TrackEvent)
@@ -79,9 +79,9 @@ class RudderStackDataPlanePluginTests {
     
     @Test("when setup is called, then analytics reference is stored")
     func test_pluginSetup() {
-        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        let localAnalytics = SwiftTestMockProvider.createMockAnalytics()
         
-        plugin.setup(analytics: analytics)
+        plugin.setup(analytics: localAnalytics)
         
         #expect(plugin.analytics != nil)
         #expect(plugin.pluginType == .terminal)
