@@ -20,7 +20,7 @@ struct SessionActionTests {
         (UInt64(1111111111), UInt64.max),
         (UInt64.max, UInt64(5555555555))
     ])
-    func test_updateSessionId(initialId: UInt64, newId: UInt64) {
+    func testUpdateSessionId(initialId: UInt64, newId: UInt64) {
         let initialState = SessionInfo(id: initialId)
         let action = UpdateSessionIdAction(sessionId: newId)
         
@@ -34,7 +34,7 @@ struct SessionActionTests {
     }
     
     @Test("given various session IDs, when updating, then state immutability is preserved")
-    func test_sessionIdImmutability() {
+    func testSessionIdImmutability() {
         let originalState = SessionInfo(id: 1111111111, type: .manual, isStart: true, lastActivityTime: 9876543210)
         let action = UpdateSessionIdAction(sessionId: 2222222222)
         
@@ -55,7 +55,7 @@ struct SessionActionTests {
         (false, false),
         (true, true)
     ])
-    func test_updateSessionStart(initialStart: Bool, newStart: Bool) {
+    func testUpdateSessionStart(initialStart: Bool, newStart: Bool) {
         let initialState = SessionInfo(isStart: initialStart)
         let action = UpdateIsSessionStartAction(isSessionStart: newStart)
         
@@ -69,7 +69,7 @@ struct SessionActionTests {
     }
     
     @Test("given various session start flags, when updating, then state immutability is preserved")
-    func test_sessionStartImmutability() {
+    func testSessionStartImmutability() {
         let originalState = SessionInfo(id: 1234567890, type: .automatic, isStart: false, lastActivityTime: 5555555555)
         let action = UpdateIsSessionStartAction(isSessionStart: true)
         
@@ -90,7 +90,7 @@ struct SessionActionTests {
         (SessionType.automatic, SessionType.automatic),
         (SessionType.manual, SessionType.manual)
     ])
-    func test_updateSessionType(initialType: SessionType, newType: SessionType) {
+    func testUpdateSessionType(initialType: SessionType, newType: SessionType) {
         let initialState = SessionInfo(type: initialType)
         let action = UpdateSessionTypeAction(sessionType: newType)
         
@@ -104,7 +104,7 @@ struct SessionActionTests {
     }
     
     @Test("given various session types, when updating, then state immutability is preserved")
-    func test_sessionTypeImmutability() {
+    func testSessionTypeImmutability() {
         let originalState = SessionInfo(id: 7777777777, type: .manual, isStart: true, lastActivityTime: 1111111111)
         let action = UpdateSessionTypeAction(sessionType: .automatic)
         
@@ -125,7 +125,7 @@ struct SessionActionTests {
         UInt64.max,
         UInt64(Date().timeIntervalSince1970 * 1000)
     ])
-    func test_updateLastActivityTime(newActivityTime: UInt64) {
+    func testUpdateLastActivityTime(newActivityTime: UInt64) {
         let initialState = SessionInfo(lastActivityTime: 9999999999)
         let action = UpdateSessionLastActivityAction(lastActivityTime: newActivityTime)
         
@@ -139,7 +139,7 @@ struct SessionActionTests {
     }
     
     @Test("given various last activity times, when updating, then state immutability is preserved")
-    func test_lastActivityTimeImmutability() {
+    func testLastActivityTimeImmutability() {
         let originalState = SessionInfo(id: 8888888888, type: .automatic, isStart: false, lastActivityTime: 1111111111)
         let action = UpdateSessionLastActivityAction(lastActivityTime: 2222222222)
         
@@ -175,7 +175,7 @@ struct SessionActionTests {
             description: "manual session with edge values"
         )
     ])
-    func test_endSession(testCase: SessionTestCase) {
+    func testEndSession(testCase: SessionTestCase) {
         let initialState = SessionInfo(
             id: testCase.id,
             type: testCase.type,
@@ -193,7 +193,7 @@ struct SessionActionTests {
     }
     
     @Test("given a session state, when ending, then a new state instance is created")
-    func test_endSessionCreatesNewInstance() {
+    func testEndSessionCreatesNewInstance() {
         let originalState = SessionInfo(id: 1234567890, type: .manual, isStart: true, lastActivityTime: 9876543210)
         let action = EndSessionAction()
         

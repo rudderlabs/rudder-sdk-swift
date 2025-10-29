@@ -21,7 +21,7 @@ class SessionInfoTests {
     }
     
     @Test("when storage is empty, then default values are used")
-    func test_initializeState_emptyStorage() {
+    func testInitializeStateWithEmptyStorage() {
         #expect(sessionInfo.id == SessionConstants.defaultSessionId)
         #expect(sessionInfo.isStart == SessionConstants.defaultIsSessionStart)
         #expect(sessionInfo.type == SessionConstants.defaultSessionType)
@@ -32,7 +32,7 @@ class SessionInfoTests {
         ("sessionId", Constants.storageKeys.sessionId, "invalid_number"),
         ("lastActivityTime", Constants.storageKeys.lastActivityTime, "invalid_time")
     ])
-    func test_initializeState_invalidData(fieldName: String, storageKey: String, invalidValue: String) {
+    func testInitializeStateWithInvalidData(fieldName: String, storageKey: String, invalidValue: String) {
         mockStorage.write(value: invalidValue, key: storageKey)
         
         switch fieldName {
@@ -52,7 +52,7 @@ class SessionInfoTests {
         (UInt64(0), "0"),
         (UInt64.max, String(UInt64.max))
     ])
-    func test_storeSessionId(sessionId: UInt64, expectedString: String) {
+    func testStoreSessionId(sessionId: UInt64, expectedString: String) {
         sessionInfo.storeSessionId(id: sessionId, storage: mockStorage)
         
         let storedValue: String? = mockStorage.read(key: Constants.storageKeys.sessionId)
@@ -60,7 +60,7 @@ class SessionInfoTests {
     }
 
     @Test("when storing session start flag, then it is saved correctly", arguments: [true, false])
-    func test_storeIsSessionStart(isSessionStart: Bool) {
+    func testStoreIsSessionStart(isSessionStart: Bool) {
         sessionInfo.storeIsSessionStart(isSessionStart: isSessionStart, storage: mockStorage)
         
         let storedValue: Bool? = mockStorage.read(key: Constants.storageKeys.isSessionStart)
@@ -71,7 +71,7 @@ class SessionInfoTests {
         (SessionType.manual, true),
         (SessionType.automatic, false)
     ])
-    func test_storeSessionType(sessionType: SessionType, expectedBoolValue: Bool) {
+    func testStoreSessionType(sessionType: SessionType, expectedBoolValue: Bool) {
         sessionInfo.storeSessionType(type: sessionType, storage: mockStorage)
         
         let storedValue: Bool? = mockStorage.read(key: Constants.storageKeys.isManualSession)
@@ -83,7 +83,7 @@ class SessionInfoTests {
         UInt64(0),
         UInt64(Date().timeIntervalSince1970 * 1000)
     ])
-    func test_storeSessionActivity(activityTime: UInt64) {
+    func testStoreSessionActivity(activityTime: UInt64) {
         sessionInfo.storeSessionActivity(time: activityTime, storage: mockStorage)
         
         let storedValue: String? = mockStorage.read(key: Constants.storageKeys.lastActivityTime)
@@ -93,7 +93,7 @@ class SessionInfoTests {
 // MARK: - SessionInfo Integration Tests
 
     @Test("when full session lifecycle stored, then data is consistent upon retrieval")
-    func test_fullSessionLifecycle() {
+    func testFullSessionLifecycle() {
         
         let sessionId: UInt64 = 1234567890
         let isSessionStart = true
@@ -114,7 +114,7 @@ class SessionInfoTests {
     }
 
     @Test("when session data overwrite, then it replaces existing values")
-    func test_sessionDataOverwrite() {
+    func testSessionDataOverwrite() {
         sessionInfo.storeSessionId(id: 1111111111, storage: mockStorage)
         sessionInfo.storeSessionType(type: .manual, storage: mockStorage)
         sessionInfo.storeIsSessionStart(isSessionStart: false, storage: mockStorage)
