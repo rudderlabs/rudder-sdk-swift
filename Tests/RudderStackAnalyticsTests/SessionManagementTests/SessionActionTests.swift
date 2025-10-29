@@ -6,82 +6,217 @@
 //
 
 import Foundation
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class SessionActionTests: XCTestCase {
+@Suite("SessionActionTests Tests")
+struct SessionActionTests {
     
-    func test_updateSessionIdAction() {
-        given("A SessionInfo state with an initial sessionId") {
-            
-            let initialSessionId: UInt64 = 12341231234
-            let expectedSessionId: UInt64 = 43214324321
-            
-            let state = createState(initialState: SessionInfo(id: initialSessionId))
-            let action = UpdateSessionIdAction(sessionId: expectedSessionId)
-            
-            when("Dispatching UpdateSessionIdAction") {
-                state.dispatch(action: action)
-                
-                then("The sessionId should update to the new value") {
-                    XCTAssertEqual(state.state.value.id, expectedSessionId)
-                }
-            }
-        }
+    // MARK: - UpdateSessionIdAction Tests
+    
+    @Test("given various session IDs, when updating, then the new ID is set", arguments: [
+        (UInt64(0), UInt64(1234567890)),
+        (UInt64(9999999999), UInt64(0)),
+        (UInt64(1111111111), UInt64.max),
+        (UInt64.max, UInt64(5555555555))
+    ])
+    func test_updateSessionId(initialId: UInt64, newId: UInt64) {
+        let initialState = SessionInfo(id: initialId)
+        let action = UpdateSessionIdAction(sessionId: newId)
+        
+        let updatedState = action.reduce(currentState: initialState)
+        
+        #expect(updatedState.id == newId)
+        // Verify other properties remain unchanged
+        #expect(updatedState.type == initialState.type)
+        #expect(updatedState.isStart == initialState.isStart)
+        #expect(updatedState.lastActivityTime == initialState.lastActivityTime)
     }
     
-    func test_updateIsSessionStartAction() {
-        given("A SessionInfo state with an initial isStart value") {
-            
-            let initialIsSessionStart = false
-            let expectedIsSessionStart = true
-            
-            let state = createState(initialState: SessionInfo(isStart: initialIsSessionStart))
-            let action = UpdateIsSessionStartAction(isSessionStart: expectedIsSessionStart)
-            
-            when("Dispatching UpdateIsSessionStartAction") {
-                state.dispatch(action: action)
-                
-                then("The isStart value should update to the new state") {
-                    XCTAssertEqual(state.state.value.isStart, expectedIsSessionStart)
-                }
-            }
-        }
+    @Test("given various session IDs, when updating, then state immutability is preserved")
+    func test_sessionIdImmutability() {
+        let originalState = SessionInfo(id: 1111111111, type: .manual, isStart: true, lastActivityTime: 9876543210)
+        let action = UpdateSessionIdAction(sessionId: 2222222222)
+        
+        let newState = action.reduce(currentState: originalState)
+        
+        #expect(originalState.id == 1111111111) // Original state unchanged
+        #expect(newState.id == 2222222222) // New state has updated ID
+        #expect(newState.type == originalState.type)
+        #expect(newState.isStart == originalState.isStart)
+        #expect(newState.lastActivityTime == originalState.lastActivityTime)
     }
     
-    func test_updateSessionTypeAction() {
-        given("A SessionInfo state with an initial session type") {
-            
-            let initialSessionType: SessionType = .automatic
-            let expectedSessionType: SessionType = .manual
-            
-            let state = createState(initialState: SessionInfo(type: initialSessionType))
-            let action = UpdateSessionTypeAction(sessionType: expectedSessionType)
-            
-            when("Dispatching UpdateSessionTypeAction") {
-                state.dispatch(action: action)
-                
-                then("The session type should update to the new value") {
-                    XCTAssertEqual(state.state.value.type, expectedSessionType)
-                }
-            }
-        }
+    // MARK: - UpdateIsSessionStartAction Tests
+    
+    @Test("given various session start flags, when updating, then the new flag is set", arguments: [
+        (false, true),
+        (true, false),
+        (false, false),
+        (true, true)
+    ])
+    func test_updateSessionStart(initialStart: Bool, newStart: Bool) {
+        let initialState = SessionInfo(isStart: initialStart)
+        let action = UpdateIsSessionStartAction(isSessionStart: newStart)
+        
+        let updatedState = action.reduce(currentState: initialState)
+        
+        #expect(updatedState.isStart == newStart)
+        // Verify other properties remain unchanged
+        #expect(updatedState.id == initialState.id)
+        #expect(updatedState.type == initialState.type)
+        #expect(updatedState.lastActivityTime == initialState.lastActivityTime)
     }
     
-    func test_endSessionAction() {
-        given("A SessionInfo state with an active session") {
-            let state = createState(initialState: SessionInfo(id: 12342341234, type: .manual, isStart: true))
-            let action = EndSessionAction()
-            
-            when("Dispatching EndSessionAction") {
-                state.dispatch(action: action)
-                
-                then("SessionInfo should reset to default values") {
-                    XCTAssertEqual(state.state.value.id, SessionConstants.defaultSessionId)
-                    XCTAssertEqual(state.state.value.type, SessionConstants.defaultSessionType)
-                    XCTAssertEqual(state.state.value.isStart, SessionConstants.defaultIsSessionStart)
-                }
-            }
-        }
+    @Test("given various session start flags, when updating, then state immutability is preserved")
+    func test_sessionStartImmutability() {
+        let originalState = SessionInfo(id: 1234567890, type: .automatic, isStart: false, lastActivityTime: 5555555555)
+        let action = UpdateIsSessionStartAction(isSessionStart: true)
+        
+        let newState = action.reduce(currentState: originalState)
+        
+        #expect(originalState.isStart == false) // Original state unchanged
+        #expect(newState.isStart == true) // New state has updated flag
+        #expect(newState.id == originalState.id)
+        #expect(newState.type == originalState.type)
+        #expect(newState.lastActivityTime == originalState.lastActivityTime)
     }
+    
+    // MARK: - UpdateSessionTypeAction Tests
+    
+    @Test("given various session types, when updating, then the new type is set", arguments: [
+        (SessionType.automatic, SessionType.manual),
+        (SessionType.manual, SessionType.automatic),
+        (SessionType.automatic, SessionType.automatic),
+        (SessionType.manual, SessionType.manual)
+    ])
+    func test_updateSessionType(initialType: SessionType, newType: SessionType) {
+        let initialState = SessionInfo(type: initialType)
+        let action = UpdateSessionTypeAction(sessionType: newType)
+        
+        let updatedState = action.reduce(currentState: initialState)
+        
+        #expect(updatedState.type == newType)
+        // Verify other properties remain unchanged
+        #expect(updatedState.id == initialState.id)
+        #expect(updatedState.isStart == initialState.isStart)
+        #expect(updatedState.lastActivityTime == initialState.lastActivityTime)
+    }
+    
+    @Test("given various session types, when updating, then state immutability is preserved")
+    func test_sessionTypeImmutability() {
+        let originalState = SessionInfo(id: 7777777777, type: .manual, isStart: true, lastActivityTime: 1111111111)
+        let action = UpdateSessionTypeAction(sessionType: .automatic)
+        
+        let newState = action.reduce(currentState: originalState)
+        
+        #expect(originalState.type == .manual) // Original state unchanged
+        #expect(newState.type == .automatic) // New state has updated type
+        #expect(newState.id == originalState.id)
+        #expect(newState.isStart == originalState.isStart)
+        #expect(newState.lastActivityTime == originalState.lastActivityTime)
+    }
+    
+    // MARK: - UpdateSessionLastActivityAction Tests
+    
+    @Test("given various last activity times, when updating, then the new time is set", arguments: [
+        UInt64(0),
+        UInt64(1234567890),
+        UInt64.max,
+        UInt64(Date().timeIntervalSince1970 * 1000)
+    ])
+    func test_updateLastActivityTime(newActivityTime: UInt64) {
+        let initialState = SessionInfo(lastActivityTime: 9999999999)
+        let action = UpdateSessionLastActivityAction(lastActivityTime: newActivityTime)
+        
+        let updatedState = action.reduce(currentState: initialState)
+        
+        #expect(updatedState.lastActivityTime == newActivityTime)
+        // Verify other properties remain unchanged
+        #expect(updatedState.id == initialState.id)
+        #expect(updatedState.type == initialState.type)
+        #expect(updatedState.isStart == initialState.isStart)
+    }
+    
+    @Test("given various last activity times, when updating, then state immutability is preserved")
+    func test_lastActivityTimeImmutability() {
+        let originalState = SessionInfo(id: 8888888888, type: .automatic, isStart: false, lastActivityTime: 1111111111)
+        let action = UpdateSessionLastActivityAction(lastActivityTime: 2222222222)
+        
+        let newState = action.reduce(currentState: originalState)
+        
+        #expect(originalState.lastActivityTime == 1111111111) // Original state unchanged
+        #expect(newState.lastActivityTime == 2222222222) // New state has updated time
+        #expect(newState.id == originalState.id)
+        #expect(newState.type == originalState.type)
+        #expect(newState.isStart == originalState.isStart)
+    }
+    
+    @Test("given various session states, when ending, then all values reset to defaults", arguments: [
+        SessionTestCase(
+            id: 1234567890,
+            type: .manual,
+            isStart: true,
+            lastActivityTime: 9876543210,
+            description: "active manual session"
+        ),
+        SessionTestCase(
+            id: UInt64.max,
+            type: .automatic,
+            isStart: false,
+            lastActivityTime: 0,
+            description: "automatic session with max ID"
+        ),
+        SessionTestCase(
+            id: 0,
+            type: .manual,
+            isStart: true,
+            lastActivityTime: UInt64.max,
+            description: "manual session with edge values"
+        )
+    ])
+    func test_endSession(testCase: SessionTestCase) {
+        let initialState = SessionInfo(
+            id: testCase.id,
+            type: testCase.type,
+            isStart: testCase.isStart,
+            lastActivityTime: testCase.lastActivityTime
+        )
+        let action = EndSessionAction()
+        
+        let endedState = action.reduce(currentState: initialState)
+        
+        #expect(endedState.id == SessionConstants.defaultSessionId)
+        #expect(endedState.type == SessionConstants.defaultSessionType)
+        #expect(endedState.isStart == SessionConstants.defaultIsSessionStart)
+        #expect(endedState.lastActivityTime == SessionConstants.defaultSessionLastActivityTime)
+    }
+    
+    @Test("given a session state, when ending, then a new state instance is created")
+    func test_endSessionCreatesNewInstance() {
+        let originalState = SessionInfo(id: 1234567890, type: .manual, isStart: true, lastActivityTime: 9876543210)
+        let action = EndSessionAction()
+        
+        let newState = action.reduce(currentState: originalState)
+        
+        #expect(originalState.id == 1234567890)
+        #expect(originalState.type == .manual)
+        #expect(originalState.isStart == true)
+        #expect(originalState.lastActivityTime == 9876543210)
+        
+        #expect(newState.id == SessionConstants.defaultSessionId)
+        #expect(newState.type == SessionConstants.defaultSessionType)
+        #expect(newState.isStart == SessionConstants.defaultIsSessionStart)
+        #expect(newState.lastActivityTime == SessionConstants.defaultSessionLastActivityTime)
+    }
+}
+
+// MARK: - EndSessionAction Tests
+
+struct SessionTestCase {
+    let id: UInt64
+    let type: SessionType
+    let isStart: Bool
+    let lastActivityTime: UInt64
+    let description: String
 }
