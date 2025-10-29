@@ -13,7 +13,7 @@ import Testing
 struct SourceConfigTests {
         
     @Test("when creating SourceConfig initialState, then returns valid default configuration")
-    func testSourceConfig_InitialState() {
+    func test_initialState() {
         let sourceConfig = SourceConfig.initialState()
         
         #expect(sourceConfig.source.sourceId.isEmpty)
@@ -28,7 +28,7 @@ struct SourceConfigTests {
     }
     
     @Test("when encoding SourceConfig to JSON, then produces valid JSON structure")
-    func testSourceConfig_JSONEncoding() throws {
+    func test_jsonEncoding() {
         let destination = Destination(
             destinationId: "dest-123",
             destinationName: "Test Destination",
@@ -79,7 +79,7 @@ struct SourceConfigTests {
     }
     
     @Test("when decoding SourceConfig from JSON, then creates valid SourceConfig object")
-    func testSourceConfig_JSONDecoding() throws {
+    func test_jsonDecoding() throws {
         let jsonString = """
         {
             "source": {
@@ -119,7 +119,7 @@ struct SourceConfigTests {
     }
     
     @Test("when creating MetricsConfig with default values, then has correct default settings")
-    func testMetricsConfig_DefaultValues() {
+    func test_metricsConfigDefaultValues() {
         let metricsConfig = MetricsConfig()
         
         #expect(metricsConfig.statsCollection.errors.enabled == false)
@@ -127,7 +127,7 @@ struct SourceConfigTests {
     }
     
     @Test("when creating Destination with all properties, then all properties are correctly set")
-    func testDestination_AllProperties() {
+    func test_destinationAllProperties() {
         let destinationDefinition = DestinationDefinition(
             name: "amplitude",
             displayName: "Amplitude"
