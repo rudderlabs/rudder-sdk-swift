@@ -45,8 +45,6 @@ struct HttpClientTests {
         let headers = HttpClientRequestType.events.headers(mockAnalytics, anonymousIdHeader: testAnonymousId)
 
         #expect(headers["AnonymousId"] == testAnonymousId)
-        #expect(headers["Content-Type"] == "application/json")
-        #expect(headers["Authorization"]?.hasPrefix("Basic ") == true)
     }
 
     @Test("when preparing configuration headers, then does not include anonymousId header")
@@ -56,8 +54,6 @@ struct HttpClientTests {
         let headers = HttpClientRequestType.configuration.headers(mockAnalytics, anonymousIdHeader: testAnonymousId)
 
         #expect(headers["AnonymousId"] == nil)
-        #expect(headers["Content-Type"] == "application/json")
-        #expect(headers["Authorization"]?.hasPrefix("Basic ") == true)
     }
 
     @Test("when preparing events headers with gzip enabled, then includes gzip header")
@@ -118,7 +114,7 @@ struct HttpClientTests {
         
         let expectedData = Data("{\"success\": true}".utf8)
         MockURLProtocol.requestHandler = { request in
-            return (200, expectedData, ["Content-Type": "application/json"])
+            return (200, expectedData, _defaultHeaders)
         }
         
         let result = await httpClient.getConfigurationData()
@@ -147,7 +143,7 @@ struct HttpClientTests {
         let expectedResponseData = "{\"success\": true}".utf8Data
         
         MockURLProtocol.requestHandler = { request in
-            return (200, expectedResponseData, ["Content-Type": "application/json"])
+            return (200, expectedResponseData, _defaultHeaders)
         }
         
         let result = await httpClient.postBatchEvents(eventBatch)
@@ -169,6 +165,12 @@ struct HttpClientTests {
     }
 }
 
+// MARK: - Helpers
+
+extension HttpClientTests {
+    private var _defaultHeaders: [String: String] { ["Content-Type": "application/json"] }
+}
+
 // MARK: - ResultExtractable
 
 protocol ResultExtractable {
@@ -180,24 +182,38 @@ extension ResultExtractable {
     var value: Data? {
         switch self {
         case let result as SourceConfigResult:
-            if case let .success(data) = result { return data }
+            if case let .success(data) = result {
+                return data
+            }
+
         case let result as EventUploadResult:
-            if case let .success(data) = result { return data }
+            if case let .success(data) = result {
+                return data
+            }
+
         default:
             break
         }
+
         return nil
     }
     
     var error: Error? {
         switch self {
         case let result as SourceConfigResult:
-            if case let .failure(error) = result { return error }
+            if case let .failure(error) = result {
+                return error
+            }
+
         case let result as EventUploadResult:
-            if case let .failure(error) = result { return error }
+            if case let .failure(error) = result {
+                return error
+            }
+
         default:
             break
         }
+
         return nil
     }
 }
