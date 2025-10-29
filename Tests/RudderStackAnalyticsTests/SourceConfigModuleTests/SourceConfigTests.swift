@@ -66,7 +66,7 @@ struct SourceConfigTests {
         #expect(source["id"] as? String == "source-123")
         #expect(source["name"] as? String == "Test Source")
         #expect(source["writeKey"] as? String == "test-write-key")
-        #expect(source["enabled"] as? Bool == true)
+        #expect(source["enabled"] as? Bool ?? false)
         #expect(source["workspaceId"] as? String == "workspace-123")
         #expect(source["updatedAt"] as? String == "2023-10-24T10:00:01Z")
         
@@ -110,11 +110,11 @@ struct SourceConfigTests {
         #expect(sourceConfig.source.sourceId == "source-456")
         #expect(sourceConfig.source.sourceName == "Decoded Source")
         #expect(sourceConfig.source.writeKey == "decoded-write-key")
-        #expect(sourceConfig.source.isSourceEnabled == false)
+        #expect(!sourceConfig.source.isSourceEnabled)
         #expect(sourceConfig.source.workspaceId == "workspace-456")
         #expect(sourceConfig.source.updatedAt == "2023-10-24T11:00:00Z")
-        #expect(sourceConfig.source.metricConfig.statsCollection.errors.enabled == true)
-        #expect(sourceConfig.source.metricConfig.statsCollection.metrics.enabled == true)
+        #expect(sourceConfig.source.metricConfig.statsCollection.errors.enabled)
+        #expect(sourceConfig.source.metricConfig.statsCollection.metrics.enabled)
         #expect(sourceConfig.source.destinations.isEmpty)
     }
     
@@ -122,8 +122,8 @@ struct SourceConfigTests {
     func testMetricsConfigDefaultValues() {
         let metricsConfig = MetricsConfig()
         
-        #expect(metricsConfig.statsCollection.errors.enabled == false)
-        #expect(metricsConfig.statsCollection.metrics.enabled == false)
+        #expect(!metricsConfig.statsCollection.errors.enabled)
+        #expect(!metricsConfig.statsCollection.metrics.enabled)
     }
     
     @Test("when creating Destination with all properties, then all properties are correctly set")
@@ -153,16 +153,16 @@ struct SourceConfigTests {
         
         #expect(destination.destinationId == "dest-789")
         #expect(destination.destinationName == "Amplitude Destination")
-        #expect(destination.isDestinationEnabled == true)
+        #expect(destination.isDestinationEnabled)
         #expect(destination.destinationConfig.count == 3)
         #expect(destination.destinationConfig["apiKey"]?.value as? String == "test-api-key")
-        #expect(destination.destinationConfig["trackUtmProperties"]?.value as? Bool == true)
-        #expect(destination.destinationConfig["batchEvents"]?.value as? Bool == false)
+        #expect(destination.destinationConfig["trackUtmProperties"]?.value as? Bool ?? false)
+        #expect(!(destination.destinationConfig["batchEvents"]?.value as? Bool ?? true))
         #expect(destination.destinationDefinitionId == "def-789")
         #expect(destination.destinationDefinition.name == "amplitude")
         #expect(destination.destinationDefinition.displayName == "Amplitude")
         #expect(destination.updatedAt == "2023-10-24T12:00:00Z")
-        #expect(destination.shouldApplyDeviceModeTransformation == true)
-        #expect(destination.propagateEventsUntransformedOnError == false)
+        #expect(destination.shouldApplyDeviceModeTransformation)
+        #expect(!destination.propagateEventsUntransformedOnError)
     }
 }
