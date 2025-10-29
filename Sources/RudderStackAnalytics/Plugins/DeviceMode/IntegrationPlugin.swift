@@ -114,7 +114,7 @@ public extension IntegrationPlugin {
         
         if let destinationInstance = getDestinationInstance() {
             if pluginStore.isDestinationReady {
-                callback(destinationInstance, .success)
+                callback(destinationInstance, .success(()))
             } else {
                 callback(nil, .failure(DestinationError.destinationNotReady(key)))
             }
@@ -192,3 +192,8 @@ extension IntegrationPlugin {
  Alias for representing a callback to report integration ready status.
  */
 public typealias IntegrationCallback = (Any?, DestinationResult) -> Void
+
+/**
+ Represents the result of a destination initialization operation.
+ */
+public typealias DestinationResult = Result<Void, Error>

@@ -139,8 +139,6 @@ extension AnalyticsManager {
                 LoggerAnalytics.debug("AnalyticsManager: destination \(sampleCustomIntegrationPlugin.key) created successfully")
             case .failure(let error):
                 LoggerAnalytics.debug("AnalyticsManager: destination failed with error : \(error.localizedDescription)")
-            default:
-                LoggerAnalytics.debug("AnalyticsManager: this should not run")
             }
         }
     }

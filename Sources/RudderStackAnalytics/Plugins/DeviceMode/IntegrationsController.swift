@@ -128,7 +128,7 @@ private extension IntegrationsController {
             try integration.create(destinationConfig: destinationConfig)
             LoggerAnalytics.debug("IntegrationsController: Destination \(integration.key) created successfully.")
             integration.pluginStore?.isDestinationReady = true
-            notifyCallbacks(.success, for: integration)
+            notifyCallbacks(.success(()), for: integration)
         } catch {
             LoggerAnalytics.error("IntegrationsController: Error: \(error.localizedDescription) creating destination \(integration.key).")
             integration.pluginStore?.isDestinationReady = false
@@ -155,7 +155,7 @@ private extension IntegrationsController {
             block: {
                 LoggerAnalytics.debug("IntegrationsController: Destination \(integration.key) updated with destinationConfig: \(destinationConfig).")
                 integration.pluginStore?.isDestinationReady = true
-                self.notifyCallbacks(.success, for: integration)
+                self.notifyCallbacks(.success(()), for: integration)
             }
         )
     }
