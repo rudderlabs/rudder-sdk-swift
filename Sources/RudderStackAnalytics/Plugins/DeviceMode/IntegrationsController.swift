@@ -179,7 +179,7 @@ private extension IntegrationsController {
     func notifyCallbacks(_ result: DestinationResult, for integration: IntegrationPlugin) {
         guard let pluginStore = integration.pluginStore else { return }
         let instance = integration.getDestinationInstance()
-        var toRun: [((Any?, DestinationResult) -> Void)] = []
+        var toRun: [IntegrationCallback] = []
         // Atomically read and clear callbacks
         pluginStore.$destinationReadyCallbacks.modify { callbacks in
             toRun = callbacks
