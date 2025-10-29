@@ -303,27 +303,6 @@ private func sanitizeNSNumber(_ number: NSNumber) -> Any {
     }
 }
 
-// MARK: - AnyCodable
-extension AnyCodable {
-    /**
-     * Attempts to extract a boolean value from the wrapped value.
-     *
-     * This method is primarily used by the IntegrationOptionsPlugin to safely
-     * extract boolean flags from integration settings while ignoring non-boolean values.
-     *
-     * - Returns: The boolean value if the wrapped value is a Bool, otherwise nil.
-     *
-     * # Usage
-     * ```swift
-     * let integrations: [String: AnyCodable] = ["Firebase": AnyCodable(true)]
-     * let isEnabled = integrations["Firebase"]?.asBool() // Returns true
-     * ```
-     */
-    func asBool() -> Bool? {
-        return value as? Bool
-    }
-}
-
 // MARK: - Data
 extension Data {
     var jsonString: String? {

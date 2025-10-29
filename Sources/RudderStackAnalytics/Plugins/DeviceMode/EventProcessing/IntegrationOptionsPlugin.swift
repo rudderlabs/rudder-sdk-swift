@@ -51,7 +51,7 @@ class IntegrationOptionsPlugin: Plugin {
         }
         
         // First priority: Check for destination-specific boolean flag
-        if let destinationValue = integrations[destinationKey]?.asBool() {
+        if let destinationValue = integrations[destinationKey]?.value as? Bool {
             return destinationValue ? event : {
                 logDroppedEvent(event)
                 return nil
@@ -59,7 +59,7 @@ class IntegrationOptionsPlugin: Plugin {
         }
         
         // Second priority: Check for "All" destinations boolean flag
-        if let allValue = integrations["All"]?.asBool() {
+        if let allValue = integrations["All"]?.value as? Bool {
             return allValue ? event : {
                 logDroppedEvent(event)
                 return nil
