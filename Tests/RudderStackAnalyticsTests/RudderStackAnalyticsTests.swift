@@ -252,6 +252,33 @@ extension RudderStackAnalyticsTests {
         }
     }
     
+    func test_addIntegrationPlugin_disk() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        let integrationPlugin = MockStandardIntegrationPlugin(key: "test_integration")
+        client.add(plugin: integrationPlugin)
+        
+        // Verify plugin was added to IntegrationsController, not regular plugin chain
+        XCTAssertNotNil(client.integrationsController?.integrationPluginStores["test_integration"])
+        
+        // Verify setup was called
+        XCTAssertNotNil(integrationPlugin.analytics)
+        XCTAssertTrue(integrationPlugin.analytics === client)
+    }
+    
+    func test_addRegularPlugin_shouldGoToPluginChain() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        let regularPlugin = MockPlugin()
+        let integrationPlugin = MockStandardIntegrationPlugin(key: "test_integration")
+        
+        client.add(plugin: regularPlugin)
+        client.add(plugin: integrationPlugin)
+        
+        // Regular plugin should go to plugin chain, integration plugin to controller
+        XCTAssertNotNil(client.integrationsController?.integrationPluginStores["test_integration"])
+    }
+    
     func test_removePlugin_disk() async {
         guard let client = analytics_disk else { return XCTFail("No disk client") }
         
@@ -277,6 +304,56 @@ extension RudderStackAnalyticsTests {
         for item in dataItems {
             await client.configuration.storage.remove(batchReference: item.reference)
         }
+    }
+    
+    func test_removeIntegrationPlugin_disk() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        let integrationPlugin = MockStandardIntegrationPlugin(key: "test_integration")
+        client.add(plugin: integrationPlugin)
+        
+        // Verify plugin was added
+        XCTAssertNotNil(client.integrationsController?.integrationPluginStores["test_integration"])
+        
+        // Remove plugin
+        client.remove(plugin: integrationPlugin)
+        
+        // Verify plugin was removed from IntegrationsController
+        XCTAssertNil(client.integrationsController?.integrationPluginStores["test_integration"])
+    }
+    
+    func test_flushCallsIntegrationsController() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        let integrationPlugin = MockStandardIntegrationPlugin(key: "test_integration")
+        client.add(plugin: integrationPlugin)
+        integrationPlugin.pluginStore?.isDestinationReady = true
+        
+        // Call flush
+        client.flush()
+        
+        // Allow time for async operations
+        try? await Task.sleep(nanoseconds: 100_000_000)
+        
+        // Verify integration plugin was flushed
+        XCTAssertTrue(integrationPlugin.flushCalled)
+    }
+    
+    func test_resetCallsIntegrationsController() async {
+        guard let client = analytics_disk else { return XCTFail("No disk client") }
+        
+        let integrationPlugin = MockStandardIntegrationPlugin(key: "test_integration")
+        client.add(plugin: integrationPlugin)
+        integrationPlugin.pluginStore?.isDestinationReady = true
+        
+        // Call reset
+        client.reset()
+        
+        // Allow time for async operations
+        try? await Task.sleep(nanoseconds: 100_000_000)
+        
+        // Verify integration plugin was reset
+        XCTAssertTrue(integrationPlugin.resetCalled)
     }
 }
 

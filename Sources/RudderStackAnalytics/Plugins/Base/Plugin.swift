@@ -152,15 +152,40 @@ public protocol EventPlugin: Plugin {
 
 public extension EventPlugin {
     
-    func identify(payload: IdentifyEvent) { }
+    /**
+     Default implementation for `identify`.
+     */
+    func identify(payload: IdentifyEvent) {
+        /* Default implementation (no-op) */
+    }
     
-    func track(payload: TrackEvent) { }
+    /**
+     Default implementation for `track`.
+     */
+    func track(payload: TrackEvent) {
+        /* Default implementation (no-op) */
+    }
     
-    func screen(payload: ScreenEvent) { }
+    /**
+     Default implementation for `screen`.
+     */
+    func screen(payload: ScreenEvent) {
+        /* Default implementation (no-op) */
+    }
     
-    func group(payload: GroupEvent) { }
+    /**
+     Default implementation for `group`.
+     */
+    func group(payload: GroupEvent) {
+        /* Default implementation (no-op) */
+    }
     
-    func alias(payload: AliasEvent) { }
+    /**
+     Default implementation for `alias`.
+     */
+    func alias(payload: AliasEvent) {
+        /* Default implementation (no-op) */
+    }
         
     /**
      Intercepts the appropriate method based on the event type.

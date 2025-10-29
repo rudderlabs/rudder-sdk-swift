@@ -8,7 +8,10 @@
 import Foundation
 @testable import RudderStackAnalytics
 
-class MockIntegrationPlugin: IntegrationPlugin {
+/**
+ This is a sample standard integration plugin used for testing.
+ */
+class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
     var key: String
@@ -37,10 +40,6 @@ class MockIntegrationPlugin: IntegrationPlugin {
     
     init(key: String) {
         self.key = key
-    }
-    
-    func setup(analytics: Analytics) {
-        self.analytics = analytics
     }
     
     func getDestinationInstance() -> Any? {
@@ -117,20 +116,6 @@ class MockIntegrationPlugin: IntegrationPlugin {
         groupEventReceived = nil
         aliasEventReceived = nil
     }
-}
-
-// Mock destination class
-class MockDestination {
-    let config: [String: Any]
-    
-    init(config: [String: Any]) {
-        self.config = config
-    }
-}
-
-// Standard plugin implementation for testing
-class MockStandardIntegrationPlugin: MockIntegrationPlugin, StandardPlugin {
-    
 }
 
 // Error types for testing
