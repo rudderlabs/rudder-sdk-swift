@@ -23,7 +23,6 @@ class HttpNetworkTests {
                       (299, "https://success.test.com")])
     func testSuccessStatusCodesInRange(_ statusCode: Int, url: String) async {
         let expectedData = Data("success".utf8)
-        let successUrl = "https://success.test.com"
         let result = await performRequest(statusCode: statusCode, data: expectedData, urlString: url)
         
         switch result {
