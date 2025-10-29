@@ -19,12 +19,12 @@ struct SourceConfigTests {
         #expect(sourceConfig.source.sourceId.isEmpty)
         #expect(sourceConfig.source.sourceName.isEmpty)
         #expect(sourceConfig.source.writeKey.isEmpty)
-        #expect(sourceConfig.source.isSourceEnabled == true)
+        #expect(sourceConfig.source.isSourceEnabled)
         #expect(sourceConfig.source.workspaceId.isEmpty)
         #expect(sourceConfig.source.updatedAt.isEmpty)
         #expect(sourceConfig.source.destinations.isEmpty)
-        #expect(sourceConfig.source.metricConfig.statsCollection.errors.enabled == false)
-        #expect(sourceConfig.source.metricConfig.statsCollection.metrics.enabled == false)
+        #expect(!sourceConfig.source.metricConfig.statsCollection.errors.enabled)
+        #expect(!sourceConfig.source.metricConfig.statsCollection.metrics.enabled)
     }
     
     @Test("when encoding SourceConfig to JSON, then produces valid JSON structure")
@@ -51,7 +51,7 @@ struct SourceConfigTests {
                 writeKey: "test-write-key",
                 isSourceEnabled: true,
                 workspaceId: "workspace-123",
-                updatedAt: "2023-10-24T10:00:00Z",
+                updatedAt: "2023-10-24T10:00:01Z",
                 metricConfig: MetricsConfig(),
                 destinations: [destination]
             )
@@ -68,7 +68,7 @@ struct SourceConfigTests {
         #expect(source["writeKey"] as? String == "test-write-key")
         #expect(source["enabled"] as? Bool == true)
         #expect(source["workspaceId"] as? String == "workspace-123")
-        #expect(source["updatedAt"] as? String == "2023-10-24T10:00:00Z")
+        #expect(source["updatedAt"] as? String == "2023-10-24T10:00:01Z")
         
         guard let destinations = source["destinations"] as? [[String: Any]] else {
             Issue.record("Can't read destinations details")

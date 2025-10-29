@@ -15,12 +15,12 @@ class SourceConfigProviderTests {
     
     var mockStorage: MockStorage
     var analytics: Analytics
-    var provider: SourceConfigProvider
+    var sourceConfigProvider: SourceConfigProvider
     
     init() {
         self.mockStorage = MockStorage()
         self.analytics = SwiftTestMockProvider.createMockAnalytics(storage: mockStorage)
-        self.provider = SourceConfigProvider(analytics: analytics, backoffPolicy: ExponentialBackoffPolicy(minDelayInMillis: 0))
+        self.sourceConfigProvider = SourceConfigProvider(analytics: analytics, backoffPolicy: ExponentialBackoffPolicy(minDelayInMillis: 0))
     }
     
     deinit {
@@ -40,7 +40,7 @@ class SourceConfigProviderTests {
         
         defer { cancellable.cancel() }
         
-        provider.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider.fetchCachedConfigAndNotifyObservers()
         
         #expect(receivedConfigs.count == 1)
         #expect(receivedConfigs.first?.source.sourceId.isEmpty == true)
@@ -59,7 +59,7 @@ class SourceConfigProviderTests {
         
         defer { cancellable.cancel() }
         
-        provider.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider.fetchCachedConfigAndNotifyObservers()
         
         #expect(receivedConfigs.count == 2) // Initial + cached
         
@@ -119,7 +119,7 @@ class SourceConfigProviderTests {
             .sink { config in observer3Configs.append(config) }
             .store(in: &cancellables)
         
-        provider.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider.fetchCachedConfigAndNotifyObservers()
         
         #expect(observer1Configs.count == 2) // Initial + updated
         #expect(observer2Configs.count == 2) // Initial + updated
@@ -159,7 +159,7 @@ class SourceConfigProviderTests {
             }
             .store(in: &cancellables)
         
-        provider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.refreshConfigAndNotifyObservers()
         
         #expect(receivedConfig?.jsonString == initialConfig.jsonString)
         #expect(configUpdateCount == 1) // No update due to 400 error
@@ -175,7 +175,7 @@ class SourceConfigProviderTests {
         mockStorage.write(value: "test_user_data", key: "user_data")
         mockStorage.write(value: "cached_config_data", key: Constants.storageKeys.sourceConfig)
         
-        provider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.refreshConfigAndNotifyObservers()
         
         await mockStorage.waitForKeyRemoval(key: Constants.storageKeys.sourceConfig)
         
@@ -212,7 +212,7 @@ class SourceConfigProviderTests {
             }
             .store(in: &cancellables)
         
-        provider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.refreshConfigAndNotifyObservers()
         
         await mockStorage.waitForKeyValue(key: Constants.storageKeys.sourceConfig, expectedValue: expectedConfig?.jsonString)
         
@@ -242,8 +242,8 @@ class SourceConfigProviderTests {
             }
             .store(in: &cancellables)
         
-        provider.fetchCachedConfigAndNotifyObservers() // Should load from cache
-        provider.refreshConfigAndNotifyObservers() // Should attempt network fetch
+        sourceConfigProvider.fetchCachedConfigAndNotifyObservers() // Should load from cache
+        sourceConfigProvider.refreshConfigAndNotifyObservers() // Should attempt network fetch
         
         await mockStorage.waitForKeyValue(key: Constants.storageKeys.sourceConfig)
         
@@ -278,7 +278,7 @@ class SourceConfigProviderTests {
             .store(in: &cancellables)
                 
         // When
-        provider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.refreshConfigAndNotifyObservers()
         
         await runAfter(0.1) {
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
@@ -323,19 +323,6 @@ extension SourceConfigProviderTests {
                 let data = json.jsonString?.utf8Data
                 return (200, data, _defautltHeaders)
             }
-        }
-        
-        let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [MockURLProtocol.self]
-        return URLSession(configuration: config)
-    }
-    
-    private func prepareMockUrlSessionWithMalformedJSON() -> URLSession {
-        MockURLProtocol.requestHandler = { [self]  _ in
-            // Return malformed JSON
-            let malformedJsonString = "{ invalid json structure }"
-            let data = malformedJsonString.data(using: .utf8)!
-            return (200, data, _defautltHeaders)
         }
         
         let config = URLSessionConfiguration.ephemeral
