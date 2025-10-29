@@ -33,7 +33,7 @@ class LifecycleObserverTests {
         lifecycleObserver?.addObserver(mockListener)
         NotificationCenter.default.post(name: event.notificationName, object: nil)
         
-        #expect(mockListener[keyPath: expectedFlag] == true, "Expected correct callback for \(event)")
+        #expect(mockListener[keyPath: expectedFlag], "Expected correct callback for \(event)")
         
         let allFlags: [KeyPath<MockLifecycleEventListener, Bool>] = [
             \.onBackgroundCalled,
@@ -43,7 +43,7 @@ class LifecycleObserverTests {
         ]
         
         for flag in allFlags where flag != expectedFlag {
-            #expect(mockListener[keyPath: flag] == false, "Expected \(flag) to remain false for \(event)")
+            #expect(!mockListener[keyPath: flag], "Expected \(flag) to remain false for \(event)")
         }
     }
     
@@ -56,8 +56,8 @@ class LifecycleObserverTests {
         lifecycleObserver?.addObserver(mockListener2)
         NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
         
-        #expect(mockListener1.onBackgroundCalled == true)
-        #expect(mockListener2.onBackgroundCalled == true)
+        #expect(mockListener1.onBackgroundCalled)
+        #expect(mockListener2.onBackgroundCalled)
     }
     
     @Test("when sequential lifecycle events are posted, then they should be handled correctly")
@@ -67,9 +67,9 @@ class LifecycleObserverTests {
         NotificationCenter.default.post(name: AppLifecycleEvent.becomeActive.notificationName, object: nil)
         NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
         
-        #expect(mockListener.onForegroundCalled == true)
-        #expect(mockListener.onBecomeActiveCalled == true)
-        #expect(mockListener.onBackgroundCalled == true)
+        #expect(mockListener.onForegroundCalled)
+        #expect(mockListener.onBecomeActiveCalled)
+        #expect(mockListener.onBackgroundCalled)
     }
     
     @Test("when observer removal during event processing is attempted, it should work correctly")
@@ -83,8 +83,8 @@ class LifecycleObserverTests {
         lifecycleObserver?.removeObserver(mockListener1)
         NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
         
-        #expect(mockListener1.onBackgroundCalled == false)
-        #expect(mockListener2.onBackgroundCalled == true)
+        #expect(!mockListener1.onBackgroundCalled)
+        #expect(mockListener2.onBackgroundCalled)
     }
 }
 
