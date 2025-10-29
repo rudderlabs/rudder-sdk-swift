@@ -62,15 +62,6 @@ struct HttpClientTests {
         #expect(headers["Content-Encoding"] == "gzip")
         #expect(headers["AnonymousId"] == testAnonymousId)
     }
-
-    @Test("when preparing events headers without anonymousId, then uses analytics anonymousId")
-    func testEventsHeadersUseDefaultAnonymousId() {
-        let expectedAnonymousId = mockAnalytics.anonymousId ?? ""
-
-        let headers = HttpClientRequestType.events.headers(mockAnalytics, anonymousIdHeader: expectedAnonymousId)
-
-        #expect(headers["AnonymousId"] == expectedAnonymousId)
-    }
     
     @Test("when preparing source config request, then has correct query parameters")
     func testSourceConfigHasQueryParams() {

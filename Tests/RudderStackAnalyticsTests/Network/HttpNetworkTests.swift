@@ -78,14 +78,14 @@ extension HttpNetworkTests {
         return URLRequest(url: url)
     }
     
-    private func performRequest(statusCode: Int? = nil, data: Data? = nil, error: URLError.Code? = nil) async -> Result<Data, Error>? {
+    private func performRequest(statusCode: Int? = nil, data: Data? = nil, error: URLError.Code? = nil, urlString: String = "https://test.com") async -> Result<Data, Error>? {
         if let errorCode = error {
             MockURLProtocol.requestHandler = { _ in throw URLError(errorCode) }
         } else {
             MockURLProtocol.requestHandler = { _ in (statusCode ?? 200, data, nil) }
         }
         
-        guard let request = makeRequest() else { return nil }
+        guard let request = makeRequest(urlString: urlString) else { return nil }
         return await HttpNetwork.perform(request: request)
     }
     
