@@ -21,7 +21,7 @@ struct HttpClientTests {
     }
 
     @Test("when initialized, then anonymousId header uses analytics anonymousId")
-    func testInitializationWithAnalyticsAnonymousId() {
+    func testInitUsesAnalyticsAnonymousId() {
         let expectedAnonymousId = mockAnalytics.anonymousId ?? ""
 
         let headers = HttpClientRequestType.events.headers(mockAnalytics, anonymousIdHeader: expectedAnonymousId)
@@ -39,7 +39,7 @@ struct HttpClientTests {
     }
     
     @Test("when preparing events headers, then includes anonymousId header")
-    func testEventsHeadersIncludesAnonymousIdHeader() {
+    func testEventsHeadersIncludeAnonymousId() {
         let testAnonymousId = "test-anonymous-id"
 
         let headers = HttpClientRequestType.events.headers(mockAnalytics, anonymousIdHeader: testAnonymousId)
@@ -48,7 +48,7 @@ struct HttpClientTests {
     }
 
     @Test("when preparing configuration headers, then does not include anonymousId header")
-    func testConfigurationHeadersDoesNotIncludeAnonymousIdHeader() {
+    func testConfigHeadersExcludeAnonymousId() {
         let testAnonymousId = "test-anonymous-id"
 
         let headers = HttpClientRequestType.configuration.headers(mockAnalytics, anonymousIdHeader: testAnonymousId)
@@ -57,7 +57,7 @@ struct HttpClientTests {
     }
 
     @Test("when preparing events headers with gzip enabled, then includes gzip header")
-    func testEventsHeadersWithGzipEnabledIncludesGzipHeader() {
+    func testEventsHeadersIncludeGzipWhenEnabled() {
         let configuration = Configuration(
             writeKey: "test-write-key",
             dataPlaneUrl: "https://test.com",
@@ -73,7 +73,7 @@ struct HttpClientTests {
     }
 
     @Test("when preparing events headers without anonymousId, then uses analytics anonymousId")
-    func testEventsHeadersWithoutAnonymousIdUsesAnalyticsAnonymousId() {
+    func testEventsHeadersUseDefaultAnonymousId() {
         let expectedAnonymousId = mockAnalytics.anonymousId ?? ""
 
         let headers = HttpClientRequestType.events.headers(mockAnalytics, anonymousIdHeader: expectedAnonymousId)
@@ -82,7 +82,7 @@ struct HttpClientTests {
     }
     
     @Test("when preparing source config request, then has correct query parameters")
-    func testSourceConfigRequestHasQueryParams() {
+    func testSourceConfigHasQueryParams() {
         let queryParams = Constants.defaultConfig.queryParams
         
         #expect(queryParams["p"] != nil, "Platform value should not be nil")
@@ -92,7 +92,7 @@ struct HttpClientTests {
     }
     
     @Test("when preparing request URL for configuration, then adds correct query parameters")
-    func testPrepareRequestUrlAddsQueryParametersForConfigurationRequest() {
+    func testConfigUrlBuildsWithQueryParams() {
         
         guard let url = httpClient.prepareRequestUrl(for: .configuration) else {
             #expect(Bool(false), "SourceConfig request URL should not be null.")
@@ -108,7 +108,7 @@ struct HttpClientTests {
     }
 
     @Test("when HttpClient gets configuration data, then handles success response")
-    func testHttpClientGetsConfigurationDataSuccessfully() async {
+    func testGetConfigDataSuccess() async {
         SwiftTestMockProvider.setupMockURLSession()
         defer { SwiftTestMockProvider.teardownMockURLSession() }
         
@@ -122,7 +122,7 @@ struct HttpClientTests {
     }
     
     @Test("when HttpClient gets configuration data failure, then handles error")
-    func testHttpClientHandlesConfigurationDataFailure() async {
+    func testGetConfigDataFailure() async {
         SwiftTestMockProvider.setupMockURLSession()
         defer { SwiftTestMockProvider.teardownMockURLSession() }
         
@@ -135,7 +135,7 @@ struct HttpClientTests {
     }
     
     @Test("when HttpClient posts batch events, then handles success response")
-    func testHttpClientPostsBatchEventsSuccessfully() async {
+    func testPostBatchEventsSuccess() async {
         SwiftTestMockProvider.setupMockURLSession()
         defer { SwiftTestMockProvider.teardownMockURLSession() }
         
@@ -151,7 +151,7 @@ struct HttpClientTests {
     }
     
     @Test("when HttpClient posts batch events failure, then handles error")
-    func testHttpClientHandlesBatchEventsFailure() async {
+    func testPostBatchEventsFailure() async {
         SwiftTestMockProvider.setupMockURLSession()
         defer { SwiftTestMockProvider.teardownMockURLSession() }
         
