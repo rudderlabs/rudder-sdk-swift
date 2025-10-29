@@ -48,19 +48,7 @@ class SourceConfigProviderTests {
     
     @Test("when fetching cached config with valid stored config, then notifies observers")
     func testSourceConfigProvider_fetchCachedConfig_validConfig() async {
-        let storedConfig = SourceConfig(
-            source: RudderServerConfigSource(
-                sourceId: "cached-source-id",
-                sourceName: "Cached Source",
-                writeKey: "cached-write-key",
-                isSourceEnabled: true,
-                workspaceId: "cached-workspace",
-                updatedAt: "2023-10-24T10:00:00Z",
-                metricConfig: MetricsConfig(),
-                destinations: []
-            )
-        )
-        
+        let storedConfig = _simpleSourceConfig
         mockStorage.write(value: storedConfig.jsonString, key: Constants.storageKeys.sourceConfig)
         
         var receivedConfigs: [SourceConfig] = []
@@ -108,19 +96,7 @@ class SourceConfigProviderTests {
     
     @Test("given multiple observers, when SourceConfig is updated, then all observers are notified")
     func testSourceConfig_multipleObservers() async {
-        let storedConfig = SourceConfig(
-            source: RudderServerConfigSource(
-                sourceId: "cached-source-id",
-                sourceName: "Cached Source",
-                writeKey: "cached-write-key",
-                isSourceEnabled: true,
-                workspaceId: "cached-workspace",
-                updatedAt: "2023-10-24T10:00:00Z",
-                metricConfig: MetricsConfig(),
-                destinations: []
-            )
-        )
-        
+        let storedConfig = _simpleSourceConfig
         mockStorage.write(value: storedConfig.jsonString, key: Constants.storageKeys.sourceConfig)
         
         var observer1Configs: [SourceConfig] = []
@@ -313,21 +289,39 @@ class SourceConfigProviderTests {
 
 // MARK: - Helpers
 extension SourceConfigProviderTests {
+    
+    private var _defautltHeaders: [String: String] { ["Content-Type": "application/json"] }
+    
+    private var _simpleSourceConfig: SourceConfig {
+        return SourceConfig(
+            source: RudderServerConfigSource(
+                sourceId: "cached-source-id",
+                sourceName: "Cached Source",
+                writeKey: "cached-write-key",
+                isSourceEnabled: true,
+                workspaceId: "cached-workspace",
+                updatedAt: "2023-10-24T10:00:00Z",
+                metricConfig: MetricsConfig(),
+                destinations: []
+            )
+        )
+    }
+    
     private func prepareMockUrlSessionWithEventualSuccess(failureCount: Int) -> URLSession {
         var attemptCount = 0
         
-        MockURLProtocol.requestHandler = { _ in
+        MockURLProtocol.requestHandler = { [self] _ in
             attemptCount += 1
             if attemptCount <= failureCount {
                 // Return 500 error for first few attempts
                 let json = ["error": "Server error", "code": 500]
                 let data = json.jsonString?.utf8Data
-                return (500, data, ["Content-Type": "application/json"])
+                return (500, data, _defautltHeaders)
             } else {
                 // Return success after failure count is reached
                 let json = SwiftTestMockProvider.sourceConfigurationDictionary ?? [:]
                 let data = json.jsonString?.utf8Data
-                return (200, data, ["Content-Type": "application/json"])
+                return (200, data, _defautltHeaders)
             }
         }
         
@@ -337,11 +331,11 @@ extension SourceConfigProviderTests {
     }
     
     private func prepareMockUrlSessionWithMalformedJSON() -> URLSession {
-        MockURLProtocol.requestHandler = { _ in
+        MockURLProtocol.requestHandler = { [self]  _ in
             // Return malformed JSON
             let malformedJsonString = "{ invalid json structure }"
             let data = malformedJsonString.data(using: .utf8)!
-            return (200, data, ["Content-Type": "application/json"])
+            return (200, data, _defautltHeaders)
         }
         
         let config = URLSessionConfiguration.ephemeral
