@@ -141,18 +141,24 @@ struct SessionHandlerTests {
         
         sessionHandler.startAutomaticSessionIfNeeded()
         
-        if trackingEnabled {
-            if existingSessionType == .manual || existingSessionType == nil {
-                #expect(sessionHandler.sessionId != originalSessionId)
-                #expect(sessionHandler.sessionType == .automatic)
-            }
-        } else {
-            if existingSessionType == .automatic {
-                #expect(sessionHandler.sessionId == nil)
-            } else if existingSessionType == .manual {
-                #expect(sessionHandler.sessionId == originalSessionId)
-                #expect(sessionHandler.sessionType == .manual)
-            }
+        let newSessionId = sessionHandler.sessionId
+        let newSessionType = sessionHandler.sessionType
+        
+        if trackingEnabled && (existingSessionType == .manual || existingSessionType == nil) {
+            #expect(newSessionId != originalSessionId, "Expected a new session ID when auto-tracking is enabled")
+            #expect(newSessionType == .automatic, "Expected session type to be automatic")
+            return
+        }
+        
+        if !trackingEnabled && existingSessionType == .automatic {
+            #expect(newSessionId == nil, "Expected no session when auto-tracking is disabled with automatic type")
+            return
+        }
+        
+        if !trackingEnabled && existingSessionType == .manual {
+            #expect(newSessionId == originalSessionId, "Expected manual session to remain unchanged")
+            #expect(newSessionType == .manual, "Expected session type to remain manual")
+            return
         }
     }
     
