@@ -13,21 +13,24 @@ struct SessionHandlerTests {
     
     // MARK: - Initialization Tests
     
-    @Test("given a session configuration with automatic tracking enabled, when initializing the session handler, then it should have a session ID and isSessionStart set correctly", arguments: [
-        SessionConfiguration(automaticSessionTracking: true),
-        SessionConfiguration(automaticSessionTracking: false)
-    ])
-    func testSessionHandlerInitialization(configuration: SessionConfiguration) {
+    @Test("given a session configuration with automatic tracking enabled, when initializing, then it should have a session ID and isSessionStart values")
+    func testInitWhenAutomaticSessionTrackingEnabled() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true)
         let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: configuration)
         let sessionHandler = SessionHandler(analytics: analytics)
         
-        if configuration.automaticSessionTracking {
-            #expect(sessionHandler.sessionId != nil)
-            #expect(sessionHandler.isSessionStart != SessionConstants.defaultIsSessionStart)
-        } else {
-            #expect(sessionHandler.sessionId == nil)
-            #expect(sessionHandler.isSessionStart == SessionConstants.defaultIsSessionStart)
-        }
+        #expect(sessionHandler.sessionId != nil)
+        #expect(sessionHandler.isSessionStart != SessionConstants.defaultIsSessionStart)
+    }
+    
+    @Test("given a session configuration with automatic tracking disabled, when initializing, then it should not have a session ID and isSessionStart")
+    func testInitWhenAutomaticSessionTrackingDisabled() {
+        let configuration = SessionConfiguration(automaticSessionTracking: false)
+        let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: configuration)
+        let sessionHandler = SessionHandler(analytics: analytics)
+        
+        #expect(sessionHandler.sessionId == nil)
+        #expect(sessionHandler.isSessionStart == SessionConstants.defaultIsSessionStart)
     }
     
     @Test("given existing session data in storage, when initializing the session handler, then it should load the session data correctly")
@@ -95,68 +98,88 @@ struct SessionHandlerTests {
         #expect(sessionHandler.sessionType == SessionConstants.defaultSessionType)
     }
 
-    @Test("given a session configuration with automatic tracking enabled, when refreshing a session, then it should update the session ID and type correctly", arguments: [true, false])
-    func testRefreshSession(hasActiveSession: Bool) {
+    @Test("given a session configuration with active session, when refreshing a session, then it should update the session ID and type correctly")
+    func testRefreshSessionWithActiveSession() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
         let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: configuration)
         let sessionHandler = SessionHandler(analytics: analytics)
         
-        var originalSessionId: UInt64?
-        
-        if hasActiveSession {
-            originalSessionId = 1234567890
-            sessionHandler.startSession(id: originalSessionId!, type: .manual)
-        }
+        let originalSessionId: UInt64 = 1234567890
+        sessionHandler.startSession(id: originalSessionId, type: .manual)
         
         sessionHandler.refreshSession()
         
-        if hasActiveSession {
-            #expect(sessionHandler.sessionId != originalSessionId, "Session ID should be refreshed")
-            #expect(sessionHandler.sessionId != nil, "Session ID should not be nil after refresh")
-            #expect(sessionHandler.isSessionStart, "Session should be marked as started")
-            #expect(sessionHandler.sessionType == .manual, "Session type should remain manual")
-        } else {
-            #expect(sessionHandler.sessionId == nil, "Session ID should remain nil when no active session exists")
-        }
+        #expect(sessionHandler.sessionId != originalSessionId, "Session ID should be refreshed")
+        #expect(sessionHandler.sessionId != nil, "Session ID should not be nil after refresh")
+        #expect(sessionHandler.isSessionStart, "Session should be marked as started")
+        #expect(sessionHandler.sessionType == .manual, "Session type should remain manual")
+    }
+    
+    @Test("given a session configuration without active session, when refreshing a session, then it should update the session ID and type correctly")
+    func testRefreshSessionWithoutActiveSession() {
+        let configuration = SessionConfiguration(automaticSessionTracking: false)
+        let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: configuration)
+        let sessionHandler = SessionHandler(analytics: analytics)
+        
+        sessionHandler.refreshSession()
+        
+        #expect(sessionHandler.sessionId == nil, "Session ID should remain nil when no active session exists")
     }
     
     // MARK: - Automatic Session Tests
 
-    @Test("given a session configuration with automatic tracking enabled, when starting a session, then it should set the session ID and type correctly", arguments: [
-        (true, nil),
-        (true, SessionType.manual),
-        (false, SessionType.automatic),
-        (false, SessionType.manual)
-    ])
-    func testAutomaticSessionManagement(trackingEnabled: Bool, existingSessionType: SessionType?) {
-        let configuration = SessionConfiguration(automaticSessionTracking: trackingEnabled)
-        let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: configuration)
-        let sessionHandler = SessionHandler(analytics: analytics)
+    @Test("given automatic session tracking enabled with no active session, when starting an automatic session, then it should create a new automatic session")
+    func testStatAutomaticSessionWithNoSessionWhenTrackingEnabled() {
+        let config = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: config)
+        let handler = SessionHandler(analytics: analytics)
         
-        var originalSessionId: UInt64?
-        if let sessionType = existingSessionType {
-            originalSessionId = 1111111111
-            sessionHandler.startSession(id: originalSessionId!, type: sessionType)
-        }
+        handler.startAutomaticSessionIfNeeded()
         
-        sessionHandler.startAutomaticSessionIfNeeded()
+        #expect(handler.sessionId != nil, "Expected a new session ID when auto-tracking is enabled")
+        #expect(handler.sessionType == .automatic, "Expected session type to be automatic")
+    }
+    
+    @Test("given automatic session tracking enabled with an active manual session, when starting an automatic session, then it should switch to automatic session")
+    func testStatAutomaticSessionWithActiveManualSessionWhenTrackingEnabled() {
+        let config = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: config)
+        let handler = SessionHandler(analytics: analytics)
         
-        let newSessionId = sessionHandler.sessionId
-        let newSessionType = sessionHandler.sessionType
+        let originalId: UInt64 = 1111111111
+        handler.startSession(id: originalId, type: .manual)
         
-        if trackingEnabled && (existingSessionType == .manual || existingSessionType == nil) {
-            #expect(newSessionId != originalSessionId, "Expected a new session ID when auto-tracking is enabled")
-            #expect(newSessionType == .automatic, "Expected session type to be automatic")
-        }
+        handler.startAutomaticSessionIfNeeded()
         
-        if !trackingEnabled && existingSessionType == .automatic {
-            #expect(newSessionId == nil, "Expected no session when auto-tracking is disabled with automatic type")
-        }
+        #expect(handler.sessionId != originalId, "Expected a new session ID when auto-tracking is enabled")
+        #expect(handler.sessionType == .automatic, "Expected session type to be automatic")
+    }
+    
+    @Test("given a disabled automatic session tracking tracking with an active automatic session, when starting an automatic session, then it should stop the session")
+    func testStatAutomaticSessionWithActiveAutomaticSessionWhenTrackingDisabled() {
+        let config = SessionConfiguration(automaticSessionTracking: false)
+        let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: config)
+        let handler = SessionHandler(analytics: analytics)
         
-        if !trackingEnabled && existingSessionType == .manual {
-            #expect(newSessionId == originalSessionId, "Expected manual session to remain unchanged")
-            #expect(newSessionType == .manual, "Expected session type to remain manual")
-        }
+        handler.startSession(id: 1111111111, type: .automatic)
+        handler.startAutomaticSessionIfNeeded()
+        
+        #expect(handler.sessionId == nil, "Expected no session when auto-tracking is disabled with automatic type")
+    }
+    
+    @Test("given a disabled automatic session tracking with an active manual session, when starting a session, then it should retain the manual session")
+    func testStatAutomaticSessionWithActiveManualSessionWhenTrackingDisabled() {
+        let config = SessionConfiguration(automaticSessionTracking: false)
+        let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: config)
+        let handler = SessionHandler(analytics: analytics)
+        
+        let originalId: UInt64 = 1111111111
+        handler.startSession(id: originalId, type: .manual)
+        
+        handler.startAutomaticSessionIfNeeded()
+        
+        #expect(handler.sessionId == originalId, "Expected manual session to remain unchanged")
+        #expect(handler.sessionType == .manual, "Expected session type to remain manual")
     }
     
     // MARK: - Timeout and State Management Tests

@@ -28,21 +28,20 @@ class SessionInfoTests {
         #expect(sessionInfo.lastActivityTime == SessionConstants.defaultSessionLastActivityTime)
     }
     
-    @Test("given invalid session data, when initialized, then default values are used", arguments: [
-        ("sessionId", Constants.storageKeys.sessionId, "invalid_number"),
-        ("lastActivityTime", Constants.storageKeys.lastActivityTime, "invalid_time")
-    ])
-    func testInitializeStateWithInvalidData(fieldName: String, storageKey: String, invalidValue: String) {
-        mockStorage.write(value: invalidValue, key: storageKey)
+    @Test("given invalid session id, when initialized, then default values are used")
+    func testInitWithInvalidSessionId() {
+        mockStorage.write(value: "invalid_number", key: Constants.storageKeys.sessionId)
         sessionInfo = SessionInfo.initializeState(mockStorage)
         
-        if fieldName == "sessionId" {
-            #expect(sessionInfo.id == SessionConstants.defaultSessionId)
-        }
+        #expect(sessionInfo.id == SessionConstants.defaultSessionId)
+    }
+    
+    @Test("given invalid session last activity time, when initialized, then default values are used")
+    func testInitWithInvalidLastActivityTime() {
+        mockStorage.write(value: "invalid_time", key: Constants.storageKeys.lastActivityTime)
+        sessionInfo = SessionInfo.initializeState(mockStorage)
         
-        if fieldName == "lastActivityTime" {
-            #expect(sessionInfo.lastActivityTime == SessionConstants.defaultSessionLastActivityTime)
-        }
+        #expect(sessionInfo.lastActivityTime == SessionConstants.defaultSessionLastActivityTime)
     }
 
 // MARK: - SessionInfo Storage Operations Tests
