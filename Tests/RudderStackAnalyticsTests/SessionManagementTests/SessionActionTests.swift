@@ -75,8 +75,8 @@ struct SessionActionTests {
         
         let newState = action.reduce(currentState: originalState)
         
-        #expect(originalState.isStart == false) // Original state unchanged
-        #expect(newState.isStart == true) // New state has updated flag
+        #expect(!originalState.isStart) // Original state unchanged
+        #expect(newState.isStart) // New state has updated flag
         #expect(newState.id == originalState.id)
         #expect(newState.type == originalState.type)
         #expect(newState.lastActivityTime == originalState.lastActivityTime)
@@ -201,7 +201,7 @@ struct SessionActionTests {
         
         #expect(originalState.id == 1234567890)
         #expect(originalState.type == .manual)
-        #expect(originalState.isStart == true)
+        #expect(originalState.isStart)
         #expect(originalState.lastActivityTime == 9876543210)
         
         #expect(newState.id == SessionConstants.defaultSessionId)

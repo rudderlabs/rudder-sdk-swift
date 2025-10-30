@@ -53,9 +53,9 @@ struct SessionHandlerTests {
     // MARK: - Session Management Tests
 
     @Test("given a session configuration with automatic tracking enabled, when starting a session, then it should set the session ID and type correctly", arguments: [
-        SessionHandlerTestCase(sessionId: 1234567890, sessionType: .manual, description: "manual session"),
-        SessionHandlerTestCase(sessionId: 9876543210, sessionType: .automatic, description: "automatic session"),
-        SessionHandlerTestCase(sessionId: UInt64.max, sessionType: .automatic, description: "maximum session ID")
+        SessionHandlerTestCase(sessionId: 1234567890, sessionType: .manual),
+        SessionHandlerTestCase(sessionId: 9876543210, sessionType: .automatic),
+        SessionHandlerTestCase(sessionId: UInt64.max, sessionType: .automatic)
     ])
     func testStartSession(testCase: SessionHandlerTestCase) {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
@@ -96,11 +96,8 @@ struct SessionHandlerTests {
         #expect(sessionHandler.sessionType == SessionConstants.defaultSessionType)
     }
 
-    @Test("given a session configuration with automatic tracking enabled, when refreshing a session, then it should update the session ID and type correctly", arguments: [
-        (true, "with active session"),
-        (false, "without active session")
-    ])
-    func testRefreshSession(hasActiveSession: Bool, description: String) {
+    @Test("given a session configuration with automatic tracking enabled, when refreshing a session, then it should update the session ID and type correctly", arguments: [true, false])
+    func testRefreshSession(hasActiveSession: Bool) {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
         let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: configuration)
         let sessionHandler = SessionHandler(analytics: analytics)
@@ -128,12 +125,12 @@ struct SessionHandlerTests {
     // MARK: - Automatic Session Tests
 
     @Test("given a session configuration with automatic tracking enabled, when starting a session, then it should set the session ID and type correctly", arguments: [
-        (true, nil, "start automatic when tracking enabled"),
-        (true, SessionType.manual, "replace manual with automatic"),
-        (false, SessionType.automatic, "end automatic when tracking disabled"),
-        (false, SessionType.manual, "keep manual when tracking disabled")
+        (true, nil),
+        (true, SessionType.manual),
+        (false, SessionType.automatic),
+        (false, SessionType.manual)
     ])
-    func testAutomaticSessionManagement(trackingEnabled: Bool, existingSessionType: SessionType?, description: String) {
+    func testAutomaticSessionManagement(trackingEnabled: Bool, existingSessionType: SessionType?) {
         let configuration = SessionConfiguration(automaticSessionTracking: trackingEnabled)
         let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: configuration)
         let sessionHandler = SessionHandler(analytics: analytics)
@@ -164,11 +161,11 @@ struct SessionHandlerTests {
     // MARK: - Timeout and State Management Tests
 
     @Test("given a session configuration with automatic tracking enabled, when testing session timeout, then it should correctly identify timeout states", arguments: [
-        (5000, 6000, true, "session timed out"),
-        (10000, 5000, false, "session not timed out"),
-        (5000, 5000, false, "session at timeout boundary")
+        (5000, 6000, true),
+        (10000, 5000, false),
+        (5000, 5000, false)
     ])
-    func testSessionTimeout(timeoutMs: UInt64, timeDifferenceMs: UInt64, expectedTimedOut: Bool, description: String) {
+    func testSessionTimeout(timeoutMs: UInt64, timeDifferenceMs: UInt64, expectedTimedOut: Bool) {
         let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: timeoutMs)
         let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: configuration)
         let sessionHandler = SessionHandler(analytics: analytics)
@@ -223,14 +220,14 @@ struct SessionHandlerTests {
         // Session active
         #expect(sessionHandler.sessionId == 1234567890)
         #expect(sessionHandler.sessionType == .manual)
-        #expect(sessionHandler.isSessionStart == true)
+        #expect(sessionHandler.isSessionStart)
         
         // Update activity
         sessionHandler.updateSessionLastActivityTime()
         
         // Activity updated
         #expect(sessionHandler.lastActivityTime > 0)
-        #expect(sessionHandler.isSessionTimedOut == false)
+        #expect(!sessionHandler.isSessionTimedOut)
         
         // End session
         sessionHandler.endSession()
@@ -254,7 +251,7 @@ struct SessionHandlerTests {
         let sessionHandler2 = SessionHandler(analytics: analytics)
         #expect(sessionHandler2.sessionId == sessionId)
         #expect(sessionHandler2.sessionType == .manual)
-        #expect(sessionHandler2.isSessionStart == true)
+        #expect(sessionHandler2.isSessionStart)
     }
 
     @Test("given a session configuration with automatic tracking enabled, when testing session type transitions, then it should transition between manual and automatic types correctly")
@@ -291,5 +288,4 @@ struct SessionHandlerTests {
 struct SessionHandlerTestCase {
     let sessionId: UInt64
     let sessionType: SessionType
-    let description: String
 }
