@@ -28,7 +28,7 @@ class SessionInfoTests {
         #expect(sessionInfo.lastActivityTime == SessionConstants.defaultSessionLastActivityTime)
     }
     
-    @Test("when initialized with invalid data, then default values are used", arguments: [
+    @Test("given invalid session data, when initialized, then default values are used", arguments: [
         ("sessionId", Constants.storageKeys.sessionId, "invalid_number"),
         ("lastActivityTime", Constants.storageKeys.lastActivityTime, "invalid_time")
     ])
@@ -47,7 +47,7 @@ class SessionInfoTests {
 
 // MARK: - SessionInfo Storage Operations Tests
 
-    @Test("when storing session ID, then it is saved correctly", arguments: [
+    @Test("given a session ID, when storing, then it is saved correctly", arguments: [
         (UInt64(1234567890), "1234567890"),
         (UInt64(0), "0"),
         (UInt64.max, String(UInt64.max))
@@ -59,7 +59,7 @@ class SessionInfoTests {
         #expect(storedValue == expectedString)
     }
 
-    @Test("when storing session start flag, then it is saved correctly", arguments: [true, false])
+    @Test("given a session start flag, when storing, then it is saved correctly", arguments: [true, false])
     func testStoreIsSessionStart(isSessionStart: Bool) {
         sessionInfo.storeIsSessionStart(isSessionStart: isSessionStart, storage: mockStorage)
         
@@ -67,7 +67,7 @@ class SessionInfoTests {
         #expect(storedValue == isSessionStart)
     }
 
-    @Test("when storing session type, then it is saved correctly", arguments: [
+    @Test("given a session type, when storing, then it is saved correctly", arguments: [
         (SessionType.manual, true),
         (SessionType.automatic, false)
     ])
@@ -78,7 +78,7 @@ class SessionInfoTests {
         #expect(storedValue == expectedBoolValue)
     }
 
-    @Test("when storing session activity time, then it is saved correctly", arguments: [
+    @Test("given a session activity time, when storing, then it is saved correctly", arguments: [
         UInt64(9876543210),
         UInt64(0),
         UInt64(Date().timeIntervalSince1970 * 1000)
@@ -92,7 +92,7 @@ class SessionInfoTests {
 
 // MARK: - SessionInfo Integration Tests
 
-    @Test("when full session lifecycle stored, then data is consistent upon retrieval")
+    @Test("given a full session lifecycle stored, when retrieving, then data is consistent upon retrieval")
     func testFullSessionLifecycle() {
         
         let sessionId: UInt64 = 1234567890
@@ -113,7 +113,7 @@ class SessionInfoTests {
         #expect(retrievedSessionInfo.lastActivityTime == activityTime)
     }
 
-    @Test("when session data overwrite, then it replaces existing values")
+    @Test("given proper session data, when overwrite occurs, then it replaces existing values")
     func testSessionDataOverwrite() {
         sessionInfo.storeSessionId(id: 1111111111, storage: mockStorage)
         sessionInfo.storeSessionType(type: .manual, storage: mockStorage)
