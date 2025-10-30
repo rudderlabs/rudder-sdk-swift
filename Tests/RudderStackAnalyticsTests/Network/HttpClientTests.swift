@@ -89,7 +89,7 @@ struct HttpClientTests {
         #expect(queryParameters["writeKey"] == mockAnalytics.configuration.writeKey)
     }
 
-    @Test("when HttpClient gets configuration data, then handles success response")
+    @Test("given successful HTTP response, when requesting configuration data, then configuration data is returned successfully")
     func testGetConfigDataSuccess() async {
         SwiftTestMockProvider.setupMockURLSession()
         defer { SwiftTestMockProvider.teardownMockURLSession() }
@@ -103,7 +103,7 @@ struct HttpClientTests {
         #expect(result.value == expectedData, "Expected success result with matching data")
     }
     
-    @Test("when HttpClient gets configuration data failure, then handles error")
+    @Test("given a failure HTTP response, when requesting configuration data, then the error is handled properly")
     func testGetConfigDataFailure() async {
         SwiftTestMockProvider.setupMockURLSession()
         defer { SwiftTestMockProvider.teardownMockURLSession() }
@@ -116,7 +116,7 @@ struct HttpClientTests {
         #expect((result.error as? SourceConfigError) == .invalidWriteKey, "Expected invalidWriteKey error")
     }
     
-    @Test("when HttpClient posts batch events, then handles success response")
+    @Test("given successful HTTP response, when posting batch events, then handles success response")
     func testPostBatchEventsSuccess() async {
         SwiftTestMockProvider.setupMockURLSession()
         defer { SwiftTestMockProvider.teardownMockURLSession() }
@@ -132,7 +132,7 @@ struct HttpClientTests {
         #expect(result.value == expectedResponseData, "Expected success result with matching data")
     }
     
-    @Test("when HttpClient posts batch events failure, then handles error")
+    @Test("given a failure HTTP response, when posting batch events failure, then the error is handled properly")
     func testPostBatchEventsFailure() async {
         SwiftTestMockProvider.setupMockURLSession()
         defer { SwiftTestMockProvider.teardownMockURLSession() }

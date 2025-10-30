@@ -15,7 +15,7 @@ class HttpNetworkTests {
     init() { SwiftTestMockProvider.setupMockURLSession() }
     deinit { SwiftTestMockProvider.teardownMockURLSession() }
     
-    @Test("given a request, when it returns success status code in range, then HttpNetwork returns expected data",
+    @Test("given a success request, when it returns success status code in range, then HttpNetwork returns expected data",
           arguments: [(200, "https://success.test.com"),
                       (201, "https://success.test.com"),
                       (202, "https://success.test.com"),
@@ -35,7 +35,7 @@ class HttpNetworkTests {
         }
     }
     
-    @Test("given a request, when it returns failure status code, then HttpNetwork handles request failure properly",
+    @Test("given a failure request, when it returns failure status code, then HttpNetwork handles request failure properly",
           arguments: [(400, "https://failure.test.com"),
                       (401, "https://failure.test.com"),
                       (402, "https://failure.test.com"),
@@ -64,7 +64,7 @@ class HttpNetworkTests {
         }
     }
     
-    @Test("given a request, when encountering various network errors, then HttpNetwork handles them as networkUnavailable",
+    @Test("given an error request, when encountering various network errors, then HttpNetwork handles them as networkUnavailable",
           arguments: [
             (URLError.Code.notConnectedToInternet, "https://error.test.com"),
             (URLError.Code.networkConnectionLost, "https://error.test.com"),
