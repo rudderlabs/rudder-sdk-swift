@@ -10,6 +10,7 @@
 		53074DB02E7DEC240062703A /* StateManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53074DAF2E7DEC240062703A /* StateManagement.swift */; };
 		53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53074DFA2E8271E90062703A /* DisableSourceConfigAction.swift */; };
 		53078F152EAFE796006F5847 /* HttpNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53078F142EAFE796006F5847 /* HttpNetworkTests.swift */; };
+		53078F1D2EB10B18006F5847 /* LifecycleManagementUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53078F1C2EB10B18006F5847 /* LifecycleManagementUtilsTests.swift */; };
 		530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939CF2E78226E00E22EE1 /* SourceConfig.swift */; };
 		530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D22E78299100E22EE1 /* SourceConfigProvider.swift */; };
 		530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530939D52E78629C00E22EE1 /* SourceConfigResult.swift */; };
@@ -190,6 +191,7 @@
 		53074DAF2E7DEC240062703A /* StateManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManagement.swift; sourceTree = "<group>"; };
 		53074DFA2E8271E90062703A /* DisableSourceConfigAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableSourceConfigAction.swift; sourceTree = "<group>"; };
 		53078F142EAFE796006F5847 /* HttpNetworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpNetworkTests.swift; sourceTree = "<group>"; };
+		53078F1C2EB10B18006F5847 /* LifecycleManagementUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleManagementUtilsTests.swift; sourceTree = "<group>"; };
 		530939CF2E78226E00E22EE1 /* SourceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfig.swift; sourceTree = "<group>"; };
 		530939D22E78299100E22EE1 /* SourceConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigProvider.swift; sourceTree = "<group>"; };
 		530939D52E78629C00E22EE1 /* SourceConfigResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigResult.swift; sourceTree = "<group>"; };
@@ -776,6 +778,7 @@
 			isa = PBXGroup;
 			children = (
 				53DEA6282E03D06F00D6C371 /* LifecycleObserverTests.swift */,
+				53078F1C2EB10B18006F5847 /* LifecycleManagementUtilsTests.swift */,
 			);
 			path = LifecycleManagementTests;
 			sourceTree = "<group>";
@@ -1184,6 +1187,7 @@
 				53DEA6642E03D06F00D6C371 /* LifecycleTrackingPluginTests.swift in Sources */,
 				53DEA6652E03D06F00D6C371 /* DeviceInfoPluginTests.swift in Sources */,
 				539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */,
+				53078F1D2EB10B18006F5847 /* LifecycleManagementUtilsTests.swift in Sources */,
 				8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */,
 				539001062EA11A7400DAC164 /* AnalyticsTests.swift in Sources */,
 				537846AD2EAA22A200520374 /* EventQueueTests.swift in Sources */,

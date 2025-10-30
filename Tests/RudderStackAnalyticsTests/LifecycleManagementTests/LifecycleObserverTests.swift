@@ -6,98 +6,105 @@
 //
 
 import Foundation
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class LifecycleObserverTests: XCTestCase {
-    private var observer: LifecycleObserver!
-    private var mockListener: LifecycleEventListenerMock!
-
-    override func setUp() {
-        super.setUp()
-        observer = LifecycleObserver(analytics: MockProvider.clientWithMemoryStorage)
-        mockListener = LifecycleEventListenerMock()
+@Suite("LifecycleObserver Tests")
+class LifecycleObserverTests {
+    
+    var mockAnalytics: Analytics
+    var mockListener: MockLifecycleEventListener
+    var lifecycleObserver: LifecycleObserver?
+    
+    init() {
+        mockAnalytics = SwiftTestMockProvider.createMockAnalytics()
+        mockListener = MockLifecycleEventListener()
+        lifecycleObserver = LifecycleObserver(analytics: mockAnalytics)
     }
-
-    override func tearDown() {
-        observer = nil
-        mockListener = nil
-        super.tearDown()
+    
+    @Test("when lifecycle events are posted, then the correct callbacks are triggered", arguments: [
+        (AppLifecycleEvent.background,  \MockLifecycleEventListener.onBackgroundCalled),
+        (AppLifecycleEvent.foreground,  \MockLifecycleEventListener.onForegroundCalled),
+        (AppLifecycleEvent.terminate,   \MockLifecycleEventListener.onTerminateCalled),
+        (AppLifecycleEvent.becomeActive, \MockLifecycleEventListener.onBecomeActiveCalled)
+    ])
+    func testLifecycleEventHandling(_ event: AppLifecycleEvent,
+                                    _ expectedFlag: KeyPath<MockLifecycleEventListener, Bool>) {
+        lifecycleObserver?.addObserver(mockListener)
+        NotificationCenter.default.post(name: event.notificationName, object: nil)
+        
+        #expect(mockListener[keyPath: expectedFlag], "Expected correct callback for \(event)")
+        
+        let allFlags: [KeyPath<MockLifecycleEventListener, Bool>] = [
+            \.onBackgroundCalled,
+            \.onForegroundCalled,
+            \.onTerminateCalled,
+            \.onBecomeActiveCalled
+        ]
+        
+        for flag in allFlags where flag != expectedFlag {
+            #expect(!mockListener[keyPath: flag], "Expected \(flag) to remain false for \(event)")
+        }
     }
-
-    func test_setup_registersNotifications() {
-            given("A LifecycleTrackingPlugin instance is set up") {
-                let notificationCenter = NotificationCenter.default
-
-                when("setup is called") {
-                    observer.addObserver(mockListener)
-                    
-                    then("Observers should be notified after setup") {
-                        AppLifecycleEvent.allCases.forEach { event in
-                            notificationCenter.post(name: event.notificationName, object: nil)
-                        }
-                        XCTAssertTrue(mockListener.onBackgroundCalled && mockListener.onTerminateCalled && mockListener.onForegroundCalled && mockListener.onBecomeActiveCalled)
-                    }
-                }
-            }
-        }
-
-        func test_addObserver_observerIsNotifiedOnEvents() {
-            given("An observer is added to the plugin") {
-                observer.addObserver(mockListener)
-
-                when("registerNotifications is called and a background event occurs") {
-                    observer.registerNotifications()
-                    NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
-
-                    then("Observer should have received background event notification") {
-                        XCTAssertTrue(mockListener.onBackgroundCalled)
-                    }
-                }
-            }
-        }
-
-        func test_removeObserver_observerIsNotNotified() {
-            given("An observer is added and then removed from the plugin") {
-                observer.addObserver(mockListener)
-                observer.removeObserver(mockListener)
-
-                when("A background event occurs") {
-                    NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
-
-                    then("Observer should not be notified after removal") {
-                        XCTAssertFalse(mockListener.onBackgroundCalled)
-                    }
-                }
-            }
-        }
-
-        func test_pluginDeinit_removesNotificationObservers() {
-            given("A plugin instance with registered notifications") {
-                observer.registerNotifications()
-
-                when("The plugin instance is deinitialized") {
-                    observer = nil
-
-                    then("No crashes should occur when posting notifications") {
-                        NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
-                        NotificationCenter.default.post(name: AppLifecycleEvent.terminate.notificationName, object: nil)
-                    }
-                }
-            }
-        }
+    
+    @Test("when multiple observers are registered, then all should receive lifecycle event callbacks")
+    func testMultipleObservers() {
+        let mockListener1 = MockLifecycleEventListener()
+        let mockListener2 = MockLifecycleEventListener()
+        
+        lifecycleObserver?.addObserver(mockListener1)
+        lifecycleObserver?.addObserver(mockListener2)
+        NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
+        
+        #expect(mockListener1.onBackgroundCalled)
+        #expect(mockListener2.onBackgroundCalled)
+    }
+    
+    @Test("when sequential lifecycle events are posted, then they should be handled correctly")
+    func testSequentialEventHandling() {
+        lifecycleObserver?.addObserver(mockListener)
+        NotificationCenter.default.post(name: AppLifecycleEvent.foreground.notificationName, object: nil)
+        NotificationCenter.default.post(name: AppLifecycleEvent.becomeActive.notificationName, object: nil)
+        NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
+        
+        #expect(mockListener.onForegroundCalled)
+        #expect(mockListener.onBecomeActiveCalled)
+        #expect(mockListener.onBackgroundCalled)
+    }
+    
+    @Test("when observer removal during event processing is attempted, it should work correctly")
+    func testObserverRemovalDuringEventProcessing() {
+        let mockListener1 = MockLifecycleEventListener()
+        let mockListener2 = MockLifecycleEventListener()
+        
+        lifecycleObserver?.addObserver(mockListener1)
+        lifecycleObserver?.addObserver(mockListener2)
+        
+        lifecycleObserver?.removeObserver(mockListener1)
+        NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
+        
+        #expect(!mockListener1.onBackgroundCalled)
+        #expect(mockListener2.onBackgroundCalled)
+    }
 }
 
-// MARK: - Mocks
+// MARK: - MockLifecycleEventListener
 
-final class LifecycleEventListenerMock: LifecycleEventListener {
+final class MockLifecycleEventListener: LifecycleEventListener {
     var onBackgroundCalled = false
-    var onTerminateCalled = false
     var onForegroundCalled = false
+    var onTerminateCalled = false
     var onBecomeActiveCalled = false
-
+    
     func onBackground() { onBackgroundCalled = true }
-    func onTerminate() { onTerminateCalled = true }
     func onForeground() { onForegroundCalled = true }
+    func onTerminate() { onTerminateCalled = true }
     func onBecomeActive() { onBecomeActiveCalled = true }
+    
+    func reset() {
+        onBackgroundCalled = false
+        onForegroundCalled = false
+        onTerminateCalled = false
+        onBecomeActiveCalled = false
+    }
 }
