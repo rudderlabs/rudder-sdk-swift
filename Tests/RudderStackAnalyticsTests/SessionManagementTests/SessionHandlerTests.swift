@@ -21,11 +21,10 @@ struct SessionHandlerTests {
         let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: configuration)
         let sessionHandler = SessionHandler(analytics: analytics)
         
-        switch configuration.automaticSessionTracking {
-        case true:
+        if configuration.automaticSessionTracking {
             #expect(sessionHandler.sessionId != nil)
             #expect(sessionHandler.isSessionStart != SessionConstants.defaultIsSessionStart)
-        case false:
+        } else {
             #expect(sessionHandler.sessionId == nil)
             #expect(sessionHandler.isSessionStart == SessionConstants.defaultIsSessionStart)
         }
@@ -111,13 +110,12 @@ struct SessionHandlerTests {
         
         sessionHandler.refreshSession()
         
-        switch hasActiveSession {
-        case true:
+        if hasActiveSession {
             #expect(sessionHandler.sessionId != originalSessionId, "Session ID should be refreshed")
             #expect(sessionHandler.sessionId != nil, "Session ID should not be nil after refresh")
             #expect(sessionHandler.isSessionStart, "Session should be marked as started")
             #expect(sessionHandler.sessionType == .manual, "Session type should remain manual")
-        case false:
+        } else {
             #expect(sessionHandler.sessionId == nil, "Session ID should remain nil when no active session exists")
         }
     }

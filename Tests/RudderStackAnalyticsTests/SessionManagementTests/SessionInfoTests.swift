@@ -36,13 +36,12 @@ class SessionInfoTests {
         mockStorage.write(value: invalidValue, key: storageKey)
         sessionInfo = SessionInfo.initializeState(mockStorage)
         
-        switch fieldName {
-        case "sessionId":
+        if fieldName == "sessionId" {
             #expect(sessionInfo.id == SessionConstants.defaultSessionId)
-        case "lastActivityTime":
+        }
+        
+        if fieldName == "lastActivityTime" {
             #expect(sessionInfo.lastActivityTime == SessionConstants.defaultSessionLastActivityTime)
-        default:
-            break
         }
     }
 
