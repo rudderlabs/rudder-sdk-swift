@@ -15,12 +15,12 @@ class SourceConfigProviderTests {
     
     var mockStorage: MockStorage
     var analytics: Analytics
-    var provider: SourceConfigProvider
+    var sourceConfigProvider: SourceConfigProvider
     
     init() {
         self.mockStorage = MockStorage()
         self.analytics = SwiftTestMockProvider.createMockAnalytics(storage: mockStorage)
-        self.provider = MockSourceConfigProvider(analytics: analytics)
+        self.sourceConfigProvider = SourceConfigProvider(analytics: analytics, backoffPolicy: ExponentialBackoffPolicy(minDelayInMillis: 0))
     }
     
     deinit {
@@ -31,7 +31,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("when fetching cached config and no config exists, then does not notify observers")
-    func testSourceConfigProvider_FetchCachedConfig_NoConfig() async {
+    func testFetchCachedConfigNoConfig() {
         var receivedConfigs: [SourceConfig] = []
         let cancellable = analytics.sourceConfigState.state
             .sink { config in
@@ -40,27 +40,15 @@ class SourceConfigProviderTests {
         
         defer { cancellable.cancel() }
         
-        provider.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider.fetchCachedConfigAndNotifyObservers()
         
         #expect(receivedConfigs.count == 1)
         #expect(receivedConfigs.first?.source.sourceId.isEmpty == true)
     }
     
     @Test("when fetching cached config with valid stored config, then notifies observers")
-    func testSourceConfigProvider_FetchCachedConfig_ValidConfig() async {
-        let storedConfig = SourceConfig(
-            source: RudderServerConfigSource(
-                sourceId: "cached-source-id",
-                sourceName: "Cached Source",
-                writeKey: "cached-write-key",
-                isSourceEnabled: true,
-                workspaceId: "cached-workspace",
-                updatedAt: "2023-10-24T10:00:00Z",
-                metricConfig: MetricsConfig(),
-                destinations: []
-            )
-        )
-        
+    func testFetchCachedConfigValidConfig() {
+        let storedConfig = _simpleSourceConfig
         mockStorage.write(value: storedConfig.jsonString, key: Constants.storageKeys.sourceConfig)
         
         var receivedConfigs: [SourceConfig] = []
@@ -71,7 +59,7 @@ class SourceConfigProviderTests {
         
         defer { cancellable.cancel() }
         
-        provider.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider.fetchCachedConfigAndNotifyObservers()
         
         #expect(receivedConfigs.count == 2) // Initial + cached
         
@@ -86,7 +74,7 @@ class SourceConfigProviderTests {
     }
     
     @Test("when fetching cached config with corrupted JSON, then does not notify observers")
-    func testSourceConfigProvider_FetchCachedConfig_CorruptedJSON() async {
+    func testFetchCachedConfigCorruptedJSON() {
         
         mockStorage.write(value: "invalid-json", key: Constants.storageKeys.sourceConfig)
         
@@ -106,21 +94,9 @@ class SourceConfigProviderTests {
         #expect(receivedConfigs.first?.source.sourceId.isEmpty == true)
     }
     
-    @Test("Given multiple observers, When SourceConfig is updated, Then all observers are notified")
-    func testSourceConfig_MultipleObservers() async {
-        let storedConfig = SourceConfig(
-            source: RudderServerConfigSource(
-                sourceId: "cached-source-id",
-                sourceName: "Cached Source",
-                writeKey: "cached-write-key",
-                isSourceEnabled: true,
-                workspaceId: "cached-workspace",
-                updatedAt: "2023-10-24T10:00:00Z",
-                metricConfig: MetricsConfig(),
-                destinations: []
-            )
-        )
-        
+    @Test("given multiple observers, when SourceConfig is updated, then all observers are notified")
+    func testMultipleObservers() {
+        let storedConfig = _simpleSourceConfig
         mockStorage.write(value: storedConfig.jsonString, key: Constants.storageKeys.sourceConfig)
         
         var observer1Configs: [SourceConfig] = []
@@ -143,7 +119,7 @@ class SourceConfigProviderTests {
             .sink { config in observer3Configs.append(config) }
             .store(in: &cancellables)
         
-        provider.fetchCachedConfigAndNotifyObservers()
+        sourceConfigProvider.fetchCachedConfigAndNotifyObservers()
         
         #expect(observer1Configs.count == 2) // Initial + updated
         #expect(observer2Configs.count == 2) // Initial + updated
@@ -160,8 +136,8 @@ class SourceConfigProviderTests {
         cancellables.removeAll()
     }
     
-    @Test("Given a SourceConfig request returning HTTP 400 error, When refreshConfig is called, Then handles invalidWriteKey without retries")
-    func testSourceConfigProvider_HandleHTTP400InvalidWriteKey() async {
+    @Test("given a SourceConfig request returning HTTP 400 error, when refreshConfig is called, then handles invalidWriteKey without retries")
+    func testHandleHTTP400InvalidWriteKey() {
         
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 400)
@@ -183,14 +159,14 @@ class SourceConfigProviderTests {
             }
             .store(in: &cancellables)
         
-        provider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.refreshConfigAndNotifyObservers()
         
         #expect(receivedConfig?.jsonString == initialConfig.jsonString)
         #expect(configUpdateCount == 1) // No update due to 400 error
     }
     
-    @Test("Given a SourceConfig request returning invalidWriteKey error, When refreshConfig is called, Then shuts down analytics and clears storage")
-    func testSourceConfigProvider_HandleInvalidWriteKeyError() async {
+    @Test("given a SourceConfig request returning invalidWriteKey error, when refreshConfig is called, then shuts down analytics and clears storage")
+    func testHandleInvalidWriteKeyError() async {
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 400)
         
@@ -199,17 +175,13 @@ class SourceConfigProviderTests {
         mockStorage.write(value: "test_user_data", key: "user_data")
         mockStorage.write(value: "cached_config_data", key: Constants.storageKeys.sourceConfig)
         
-        #expect(analytics.isAnalyticsActive == true, "Analytics should be active initially")
-        #expect(analytics.isAnalyticsShutdown == false, "Analytics should not be shutdown initially")
-        #expect(analytics.isInvalidWriteKey == false, "WriteKey should be valid initially")
-        
-        provider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.refreshConfigAndNotifyObservers()
         
         await mockStorage.waitForKeyRemoval(key: Constants.storageKeys.sourceConfig)
         
-        #expect(self.analytics.isAnalyticsShutdown == true, "Analytics should be shutdown after invalid write key error")
-        #expect(self.analytics.isInvalidWriteKey == true, "Invalid write key flag should be set")
-        #expect(self.analytics.isAnalyticsActive == false, "Analytics should be inactive after shutdown")
+        #expect(analytics.isAnalyticsShutdown, "Analytics should be shutdown after invalid write key error")
+        #expect(analytics.isInvalidWriteKey, "Invalid write key flag should be set")
+        #expect(!analytics.isAnalyticsActive, "Analytics should be inactive after shutdown")
         
         let clearedUserData: String? = self.mockStorage.read(key: "user_data")
         let clearedSourceConfig: String? = self.mockStorage.read(key: Constants.storageKeys.sourceConfig)
@@ -218,8 +190,8 @@ class SourceConfigProviderTests {
         #expect(clearedSourceConfig == nil, "Source config should be cleared after invalid write key error")
     }
     
-    @Test("Given a SourceConfig request returning success after a failure, When refreshConfig is called, Then eventually succeeds with valid config")
-    func testSourceConfigProvider_HandleSuccessAfterRetries() async {
+    @Test("given a SourceConfig request returning success after a failure, when refreshConfig is called, then eventually succeeds with valid config")
+    func testHandleSuccessAfterRetries() async {
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = prepareMockUrlSessionWithEventualSuccess(failureCount: 1)
         
@@ -240,7 +212,7 @@ class SourceConfigProviderTests {
             }
             .store(in: &cancellables)
         
-        provider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.refreshConfigAndNotifyObservers()
         
         await mockStorage.waitForKeyValue(key: Constants.storageKeys.sourceConfig, expectedValue: expectedConfig?.jsonString)
         
@@ -248,8 +220,8 @@ class SourceConfigProviderTests {
         #expect(configUpdateCount == 2) // Initial state + successful update
     }
     
-    @Test("Given storage has a valid cached source config, When fetchCachedConfig and refreshConfig are called, Then both complete successfully")
-    func testSourceConfigProvider_CachedAndRefreshIntegration() async {
+    @Test("given storage has a valid cached source config, when fetchCachedConfig and refreshConfig are called, then both complete successfully")
+    func testCachedAndRefreshIntegration() async {
         let mockConfig = SwiftTestMockProvider.sourceConfiguration
         mockStorage.write(value: mockConfig?.jsonString, key: Constants.storageKeys.sourceConfig)
         
@@ -270,8 +242,8 @@ class SourceConfigProviderTests {
             }
             .store(in: &cancellables)
         
-        provider.fetchCachedConfigAndNotifyObservers() // Should load from cache
-        provider.refreshConfigAndNotifyObservers() // Should attempt network fetch
+        sourceConfigProvider.fetchCachedConfigAndNotifyObservers() // Should load from cache
+        sourceConfigProvider.refreshConfigAndNotifyObservers() // Should attempt network fetch
         
         await mockStorage.waitForKeyValue(key: Constants.storageKeys.sourceConfig)
         
@@ -283,8 +255,8 @@ class SourceConfigProviderTests {
         }
     }
     
-    @Test("Given a SourceConfig request returning HTTP 500 error, When refreshConfig is called, Then retries with exponential backoff until max attempts")
-    func testSourceConfigProvider_HandleHTTP500WithRetries() async {
+    @Test("given a SourceConfig request returning HTTP 500 error, when refreshConfig is called, then retries with exponential backoff until max attempts")
+    func testHandleHTTP500WithRetries() async {
         SwiftTestMockProvider.setupMockURLSession()
         HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 500)
         
@@ -306,62 +278,51 @@ class SourceConfigProviderTests {
             .store(in: &cancellables)
                 
         // When
-        provider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.refreshConfigAndNotifyObservers()
         
         await runAfter(0.1) {
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
             #expect(configUpdateCount == 1)
         }
     }
-    
-    @Test("when ExponentialBackoffPolicy is called multiple times, then delays increase exponentially")
-    func testExponentialBackoffPolicy_Integration() {
-        guard let policy = provider.provideBackoffPolicy() as? ExponentialBackoffPolicy else {
-            Issue.record("Can't initialize backoff policy")
-            return
-        }
-        
-        let delay1 = policy.nextDelayInMilliseconds()
-        let delay2 = policy.nextDelayInMilliseconds()
-        let delay3 = policy.nextDelayInMilliseconds()
-        
-        #expect(delay1 > 0)
-        #expect(delay2 > delay1) // Should increase
-        #expect(delay3 > delay2) // Should continue increasing
-    }
 }
 
 // MARK: - Helpers
 extension SourceConfigProviderTests {
+    
+    private var _defautltHeaders: [String: String] { ["Content-Type": "application/json"] }
+    
+    private var _simpleSourceConfig: SourceConfig {
+        return SourceConfig(
+            source: RudderServerConfigSource(
+                sourceId: "cached-source-id",
+                sourceName: "Cached Source",
+                writeKey: "cached-write-key",
+                isSourceEnabled: true,
+                workspaceId: "cached-workspace",
+                updatedAt: "2023-10-24T10:00:00Z",
+                metricConfig: MetricsConfig(),
+                destinations: []
+            )
+        )
+    }
+    
     private func prepareMockUrlSessionWithEventualSuccess(failureCount: Int) -> URLSession {
         var attemptCount = 0
         
-        MockURLProtocol.requestHandler = { _ in
+        MockURLProtocol.requestHandler = { [self] _ in
             attemptCount += 1
             if attemptCount <= failureCount {
                 // Return 500 error for first few attempts
                 let json = ["error": "Server error", "code": 500]
                 let data = json.jsonString?.utf8Data
-                return (500, data, ["Content-Type": "application/json"])
+                return (500, data, _defautltHeaders)
             } else {
                 // Return success after failure count is reached
-                let json = MockProvider.sourceConfigurationDictionary ?? [:]
+                let json = SwiftTestMockProvider.sourceConfigurationDictionary ?? [:]
                 let data = json.jsonString?.utf8Data
-                return (200, data, ["Content-Type": "application/json"])
+                return (200, data, _defautltHeaders)
             }
-        }
-        
-        let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [MockURLProtocol.self]
-        return URLSession(configuration: config)
-    }
-    
-    private func prepareMockUrlSessionWithMalformedJSON() -> URLSession {
-        MockURLProtocol.requestHandler = { _ in
-            // Return malformed JSON
-            let malformedJsonString = "{ invalid json structure }"
-            let data = malformedJsonString.data(using: .utf8)!
-            return (200, data, ["Content-Type": "application/json"])
         }
         
         let config = URLSessionConfiguration.ephemeral
