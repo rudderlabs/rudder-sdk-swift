@@ -109,11 +109,7 @@ struct SessionHandlerTests {
         
         if hasActiveSession {
             originalSessionId = 1234567890
-            if let sessionId = originalSessionId {
-                sessionHandler.startSession(id: sessionId, type: .manual)
-            } else {
-                #expect(Bool(false), "Failed to initialize session ID for active session")
-            }
+            sessionHandler.startSession(id: originalSessionId!, type: .manual)
         }
         
         sessionHandler.refreshSession()
@@ -189,7 +185,7 @@ struct SessionHandlerTests {
         let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: configuration)
         let sessionHandler = SessionHandler(analytics: analytics)
         
-        sessionHandler.updateSessionStart(isSessionStrat: isSessionStart)
+        sessionHandler.updateSessionStart(isSessionStart: isSessionStart)
         
         #expect(sessionHandler.isSessionStart == isSessionStart)
     }

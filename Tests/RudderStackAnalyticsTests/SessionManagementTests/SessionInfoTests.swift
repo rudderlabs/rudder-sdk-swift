@@ -34,6 +34,7 @@ class SessionInfoTests {
     ])
     func testInitializeStateWithInvalidData(fieldName: String, storageKey: String, invalidValue: String) {
         mockStorage.write(value: invalidValue, key: storageKey)
+        sessionInfo = SessionInfo.initializeState(mockStorage)
         
         switch fieldName {
         case "sessionId":
