@@ -13,22 +13,22 @@ import Testing
 struct SourceConfigTests {
         
     @Test("when creating SourceConfig initialState, then returns valid default configuration")
-    func testSourceConfig_InitialState() {
+    func testInitialState() {
         let sourceConfig = SourceConfig.initialState()
         
         #expect(sourceConfig.source.sourceId.isEmpty)
         #expect(sourceConfig.source.sourceName.isEmpty)
         #expect(sourceConfig.source.writeKey.isEmpty)
-        #expect(sourceConfig.source.isSourceEnabled == true)
+        #expect(sourceConfig.source.isSourceEnabled)
         #expect(sourceConfig.source.workspaceId.isEmpty)
         #expect(sourceConfig.source.updatedAt.isEmpty)
         #expect(sourceConfig.source.destinations.isEmpty)
-        #expect(sourceConfig.source.metricConfig.statsCollection.errors.enabled == false)
-        #expect(sourceConfig.source.metricConfig.statsCollection.metrics.enabled == false)
+        #expect(!sourceConfig.source.metricConfig.statsCollection.errors.enabled)
+        #expect(!sourceConfig.source.metricConfig.statsCollection.metrics.enabled)
     }
     
     @Test("when encoding SourceConfig to JSON, then produces valid JSON structure")
-    func testSourceConfig_JSONEncoding() throws {
+    func testJsonEncoding() {
         let destination = Destination(
             destinationId: "dest-123",
             destinationName: "Test Destination",
@@ -51,7 +51,7 @@ struct SourceConfigTests {
                 writeKey: "test-write-key",
                 isSourceEnabled: true,
                 workspaceId: "workspace-123",
-                updatedAt: "2023-10-24T10:00:00Z",
+                updatedAt: "2023-10-24T10:00:01Z",
                 metricConfig: MetricsConfig(),
                 destinations: [destination]
             )
@@ -66,9 +66,9 @@ struct SourceConfigTests {
         #expect(source["id"] as? String == "source-123")
         #expect(source["name"] as? String == "Test Source")
         #expect(source["writeKey"] as? String == "test-write-key")
-        #expect(source["enabled"] as? Bool == true)
+        #expect(source["enabled"] as? Bool ?? false)
         #expect(source["workspaceId"] as? String == "workspace-123")
-        #expect(source["updatedAt"] as? String == "2023-10-24T10:00:00Z")
+        #expect(source["updatedAt"] as? String == "2023-10-24T10:00:01Z")
         
         guard let destinations = source["destinations"] as? [[String: Any]] else {
             Issue.record("Can't read destinations details")
@@ -79,7 +79,7 @@ struct SourceConfigTests {
     }
     
     @Test("when decoding SourceConfig from JSON, then creates valid SourceConfig object")
-    func testSourceConfig_JSONDecoding() throws {
+    func testJsonDecoding() throws {
         let jsonString = """
         {
             "source": {
@@ -110,24 +110,24 @@ struct SourceConfigTests {
         #expect(sourceConfig.source.sourceId == "source-456")
         #expect(sourceConfig.source.sourceName == "Decoded Source")
         #expect(sourceConfig.source.writeKey == "decoded-write-key")
-        #expect(sourceConfig.source.isSourceEnabled == false)
+        #expect(!sourceConfig.source.isSourceEnabled)
         #expect(sourceConfig.source.workspaceId == "workspace-456")
         #expect(sourceConfig.source.updatedAt == "2023-10-24T11:00:00Z")
-        #expect(sourceConfig.source.metricConfig.statsCollection.errors.enabled == true)
-        #expect(sourceConfig.source.metricConfig.statsCollection.metrics.enabled == true)
+        #expect(sourceConfig.source.metricConfig.statsCollection.errors.enabled)
+        #expect(sourceConfig.source.metricConfig.statsCollection.metrics.enabled)
         #expect(sourceConfig.source.destinations.isEmpty)
     }
     
     @Test("when creating MetricsConfig with default values, then has correct default settings")
-    func testMetricsConfig_DefaultValues() {
+    func testMetricsConfigDefaultValues() {
         let metricsConfig = MetricsConfig()
         
-        #expect(metricsConfig.statsCollection.errors.enabled == false)
-        #expect(metricsConfig.statsCollection.metrics.enabled == false)
+        #expect(!metricsConfig.statsCollection.errors.enabled)
+        #expect(!metricsConfig.statsCollection.metrics.enabled)
     }
     
     @Test("when creating Destination with all properties, then all properties are correctly set")
-    func testDestination_AllProperties() {
+    func testDestinationAllProperties() {
         let destinationDefinition = DestinationDefinition(
             name: "amplitude",
             displayName: "Amplitude"
@@ -153,16 +153,16 @@ struct SourceConfigTests {
         
         #expect(destination.destinationId == "dest-789")
         #expect(destination.destinationName == "Amplitude Destination")
-        #expect(destination.isDestinationEnabled == true)
+        #expect(destination.isDestinationEnabled)
         #expect(destination.destinationConfig.count == 3)
         #expect(destination.destinationConfig["apiKey"]?.value as? String == "test-api-key")
-        #expect(destination.destinationConfig["trackUtmProperties"]?.value as? Bool == true)
-        #expect(destination.destinationConfig["batchEvents"]?.value as? Bool == false)
+        #expect(destination.destinationConfig["trackUtmProperties"]?.value as? Bool ?? false)
+        #expect(!(destination.destinationConfig["batchEvents"]?.value as? Bool ?? true))
         #expect(destination.destinationDefinitionId == "def-789")
         #expect(destination.destinationDefinition.name == "amplitude")
         #expect(destination.destinationDefinition.displayName == "Amplitude")
         #expect(destination.updatedAt == "2023-10-24T12:00:00Z")
-        #expect(destination.shouldApplyDeviceModeTransformation == true)
-        #expect(destination.propagateEventsUntransformedOnError == false)
+        #expect(destination.shouldApplyDeviceModeTransformation)
+        #expect(!destination.propagateEventsUntransformedOnError)
     }
 }

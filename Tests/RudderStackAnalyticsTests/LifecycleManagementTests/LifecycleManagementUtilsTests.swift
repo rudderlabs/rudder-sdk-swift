@@ -75,8 +75,8 @@ class LifecycleManagementUtilsTests {
         NotificationCenter.default.post(name: AppLifecycleEvent.foreground.notificationName, object: nil)
         NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
         
-        #expect(mockListener.onForegroundCalled == true)
-        #expect(mockListener.onBackgroundCalled == true)
+        #expect(mockListener.onForegroundCalled)
+        #expect(mockListener.onBackgroundCalled)
     }
     
     @Test("when initialized, wrapper components should reference the same Analytics instance")

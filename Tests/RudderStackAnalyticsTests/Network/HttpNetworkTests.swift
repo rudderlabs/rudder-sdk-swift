@@ -15,55 +15,47 @@ class HttpNetworkTests {
     init() { SwiftTestMockProvider.setupMockURLSession() }
     deinit { SwiftTestMockProvider.teardownMockURLSession() }
     
-    @Test("when request returns success status code in range, then HttpNetwork returns expected data", arguments: [200, 201, 202, 204, 299])
-    func test_successStatusCodesInRange(_ statusCode: Int) async {
+    @Test("given a request, when it returns success status code in range, then HttpNetwork returns expected data",
+          arguments: [(200, "https://success.test.com"),
+                      (201, "https://success.test.com"),
+                      (202, "https://success.test.com"),
+                      (204, "https://success.test.com"),
+                      (299, "https://success.test.com")])
+    func testSuccessStatusCodesInRange(_ statusCode: Int, url: String) async {
         let expectedData = Data("success".utf8)
-        
-        MockURLProtocol.requestHandler = { request in
-            return (statusCode, expectedData, nil)
-        }
-        
-        guard let url = URL(string: "https://test.com") else {
-            Issue.record("Can't create URL from string")
-            return
-        }
-        
-        let request = URLRequest(url: url)
-        let result = await HttpNetwork.perform(request: request)
+        let result = await performRequest(statusCode: statusCode, data: expectedData, urlString: url)
         
         switch result {
         case .success(let data):
             #expect(data == expectedData)
         case .failure:
             #expect(Bool(false), "Expected success for status code \(statusCode)")
+        case .none:
+            #expect(Bool(false), "No result returned")
         }
     }
     
-    @Test("when request returning failure status code, then HttpNetwork handles request failure properly", arguments: [400, 401, 402, 404, 499, 500, 501, 504, 555])
-    func test_failureStatusCodeInRange(_ statusCode: Int) async {
+    @Test("given a request, when it returns failure status code, then HttpNetwork handles request failure properly",
+          arguments: [(400, "https://failure.test.com"),
+                      (401, "https://failure.test.com"),
+                      (402, "https://failure.test.com"),
+                      (404, "https://failure.test.com"),
+                      (499, "https://failure.test.com"),
+                      (500, "https://failure.test.com"),
+                      (501, "https://failure.test.com"),
+                      (504, "https://failure.test.com"),
+                      (555, "https://failure.test.com")])
+    func testFailureStatusCodeInRange(_ statusCode: Int, url: String) async {
+        let result = await performRequest(statusCode: statusCode, urlString: url)
+        guard let result else { return }
         
-        MockURLProtocol.requestHandler = { request in
-            return (statusCode, nil, nil)
-        }
-        
-        guard let url = URL(string: "https://test.com") else {
-            Issue.record("Can't create URL from string")
-            return
-        }
-        
-        let request = URLRequest(url: url)
-        let result = await HttpNetwork.perform(request: request)
-        
-        // Then
-        switch result {
-        case .success:
+        if case .success = result {
             #expect(Bool(false), "Expected failure but got success")
-        case .failure(let error):
+        } else if case .failure(let error) = result {
             if let httpError = error as? HttpNetworkError {
-                switch httpError {
-                case .requestFailed(let errorCode):
+                if case .requestFailed(let errorCode) = httpError {
                     #expect(errorCode == statusCode)
-                default:
+                } else {
                     #expect(Bool(false), "Expected requestFailed error")
                 }
             } else {
@@ -71,44 +63,59 @@ class HttpNetworkTests {
             }
         }
     }
+    
+    @Test("given a request, when encountering various network errors, then HttpNetwork handles them as networkUnavailable",
+          arguments: [
+            (URLError.Code.notConnectedToInternet, "https://error.test.com"),
+            (URLError.Code.networkConnectionLost, "https://error.test.com"),
+            (URLError.Code.cannotConnectToHost, "https://error.test.com"),
+            (URLError.Code.timedOut, "https://error.test.com"),
+            (URLError.Code.dnsLookupFailed, "https://error.test.com"),
+            (URLError.Code.cannotFindHost, "https://error.test.com"),
+            (URLError.Code.dataNotAllowed, "https://error.test.com")
+          ])
+    func testNetworkErrorsInRange(_ errorCode: URLError.Code, url: String) async {
+        let result = await performRequest(error: errorCode, urlString: url)
+        expectHttpFailure(result, expectedError: .networkUnavailable, context: "\(errorCode)")
+    }
+}
 
-
-    @Test("when encountering various network errors, then HttpNetwork handles them as networkUnavailable", arguments: [
-        URLError.Code.notConnectedToInternet,
-        URLError.Code.networkConnectionLost,
-        URLError.Code.cannotConnectToHost,
-        URLError.Code.timedOut,
-        URLError.Code.dnsLookupFailed,
-        URLError.Code.cannotFindHost,
-        URLError.Code.dataNotAllowed
-    ])
-    func test_networkErrorsInRange(_ errorCode: URLError.Code) async {
-        MockURLProtocol.requestHandler = { request in
-            throw URLError(errorCode)
+// MARK: - Helpers
+extension HttpNetworkTests {
+    private func makeRequest(urlString: String) -> URLRequest? {
+        guard let url = URL(string: urlString) else {
+            Issue.record("Can't create URL from string: \(urlString)")
+            return nil
+        }
+        return URLRequest(url: url)
+    }
+    
+    private func performRequest(statusCode: Int? = nil, data: Data? = nil, error: URLError.Code? = nil, urlString: String) async -> Result<Data, Error>? {
+        if let errorCode = error {
+            MockURLProtocol.requestHandler = { _ in throw URLError(errorCode) }
+        } else {
+            MockURLProtocol.requestHandler = { _ in (statusCode ?? 200, data, nil) }
         }
         
-        guard let url = URL(string: "https://test.com") else {
-            Issue.record("Can't create URL from string")
+        guard let request = makeRequest(urlString: urlString) else { return nil }
+        return await HttpNetwork.perform(request: request)
+    }
+    
+    private func expectHttpFailure(_ result: Result<Data, Error>?, expectedError: HttpNetworkError, context: String) {
+        guard let result else {
+            #expect(Bool(false), "No result returned (\(context))")
             return
         }
-
-        let request = URLRequest(url: url)
-        let result = await HttpNetwork.perform(request: request)
         
         switch result {
         case .success:
-            #expect(Bool(false), "Expected failure but got success for \(errorCode)")
+            #expect(Bool(false), "Expected failure but got success (\(context))")
         case .failure(let error):
-            if let httpError = error as? HttpNetworkError {
-                switch httpError {
-                case .networkUnavailable:
-                    break // ✅ Expected
-                default:
-                    #expect(Bool(false), "Expected networkUnavailable error for \(errorCode)")
-                }
-            } else {
-                #expect(Bool(false), "Expected HttpNetworkError for \(errorCode)")
+            guard let httpError = error as? HttpNetworkError else {
+                #expect(Bool(false), "Expected HttpNetworkError (\(context))")
+                return
             }
+            #expect(httpError == expectedError, "Expected \(expectedError) but got \(httpError)")
         }
     }
 }
