@@ -334,6 +334,8 @@ extension SwiftTestMockProvider {
     
     static func teardownMockURLSession() {
         URLProtocol.unregisterClass(MockURLProtocol.self)
+        let config = URLSessionConfiguration.ephemeral
+        HttpNetwork.session = URLSession(configuration: config)
     }
     
     func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {

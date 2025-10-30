@@ -20,7 +20,7 @@ enum SourceConfigResult {
 /**
  Represents errors that can occur during the source configuration fetch operation.
  */
-enum SourceConfigError: Error {
+enum SourceConfigError: Error, Equatable {
     case invalidWriteKey
     case networkUnavailable
     case invalidResponse
