@@ -29,7 +29,7 @@ final class SessionTrackingPlugin: Plugin {
         
         if sessionHandler.isSessionStart {
             info["sessionStart"] = true
-            sessionHandler.updateSessionStart(isSessionStrat: false)
+            sessionHandler.updateSessionStart(isSessionStart: false)
         }
         
         if sessionHandler.sessionType == .automatic {
