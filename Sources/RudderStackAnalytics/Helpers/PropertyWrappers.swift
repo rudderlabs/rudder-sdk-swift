@@ -39,6 +39,9 @@ final class Synchronized<T> {
         }
     }
 
+    // Projected value allows access via $property
+    var projectedValue: Synchronized<T> { self }
+
     // New modify method to perform compound operations atomically
     func modify(_ block: (inout T) -> Void) {
         pthread_rwlock_wrlock(&lock)

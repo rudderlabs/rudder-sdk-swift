@@ -90,8 +90,8 @@ extension PluginChain {
     func find(key: String) -> IntegrationPlugin? {
         if let mediator = pluginList[.terminal] {
             return mediator.pluginList.first { plugin in
-                guard let plugin = plugin as? IntegrationPlugin else { return false }
-                return plugin.key == key
+                guard let integrationPlugin = plugin as? IntegrationPlugin else { return false }
+                return integrationPlugin.key == key
             } as? IntegrationPlugin
         }
         return nil

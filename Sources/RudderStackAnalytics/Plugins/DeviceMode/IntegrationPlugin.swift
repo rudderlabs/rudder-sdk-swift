@@ -7,10 +7,17 @@
 
 import Foundation
 
-public typealias IntegrationCallback = (Any?, DestinationResult) -> Void
+/**
+ StandardIntegration is a protocol that represents a standard integration plugin. All the integrations maintained by RudderStack will conform to this protocol.
+ */
+protocol StandardIntegration: AnyObject {}
 
-protocol StandardPlugin : AnyObject {}
-
+/**
+ * Base protocol for all integration plugins.
+ *
+ * An integration plugin is a plugin that is responsible for sending events directly
+ * to a 3rd party destination without sending it to Rudder server first.
+ */
 public protocol IntegrationPlugin: EventPlugin, AnyObject {
     
     /**
@@ -54,17 +61,45 @@ public protocol IntegrationPlugin: EventPlugin, AnyObject {
 }
 
 public extension IntegrationPlugin {
-    func update(destinationConfig: [String: Any]) throws {}
-    func flush() {}
-    func reset() {}
+    
+    /**
+     Default implementation for update.
+     */
+    func update(destinationConfig: [String: Any]) throws {
+        /* Default implementation (no-op) */
+    }
+    
+    /**
+     Default implementation for flush.
+     */
+    func flush() {
+        /* Default implementation (no-op) */
+    }
+    
+    /**
+     Default implementation for reset.
+     */
+    func reset() {
+        /* Default implementation (no-op) */
+    }
 }
 
 public extension IntegrationPlugin {
   
+    /**
+    This method adds a plugin to modify the events before sending to this destination.
+     
+    - Parameter plugin The plugin to be added.
+    */
     func add(plugin: Plugin) {
         self.pluginChain?.add(plugin: plugin)
     }
     
+    /**
+     This method removes a plugin from the destination.
+     
+     - Parameter plugin The plugin to be removed.
+     */
     func remove(plugin: Plugin) {
         self.pluginChain?.remove(plugin: plugin)
     }
@@ -79,23 +114,33 @@ public extension IntegrationPlugin {
         
         if let destinationInstance = getDestinationInstance() {
             if pluginStore.isDestinationReady {
-                callback(destinationInstance, .success)
+                callback(destinationInstance, .success(()))
             } else {
-                callback(nil, .failure(NSError(domain: "IntegrationPlugin", code: -1, userInfo: [NSLocalizedDescriptionKey: "Destination \(key) is absent or disabled in dashboard."])))
+                callback(nil, .failure(DestinationError.destinationNotReady(key)))
             }
         } else {
             // Store callback for later notification when destination becomes ready
             pluginStore.destinationReadyCallbacks.append(callback)
         }
     }
+}
+
+public extension IntegrationPlugin {
     
+    /**
+     Default implementation of `intercept` method for `IntegrationPlugin`.
+     
+     **Caution:** This method is a default implementation provided by the SDK.
+     Clients should not override, reimplement or call this method externally, as it will lead to
+     unexpected behavior or break internal logic.
+     */
     func intercept(event: any Event) -> (any Event)? {
         guard let pluginStore else { return event }
         if pluginStore.isDestinationReady {
             // Apply plugin chain processing
                         
-            let preProcessedEvent = pluginChain?.applyPlugins(pluginType: .preProcess,event: event)
-            let onProcessedEvent = pluginChain?.applyPlugins(pluginType: .onProcess,event: preProcessedEvent)
+            let preProcessedEvent = pluginChain?.applyPlugins(pluginType: .preProcess, event: event)
+            let onProcessedEvent = pluginChain?.applyPlugins(pluginType: .onProcess, event: preProcessedEvent)
             
             // Handle the event after plugin processing
             if let finalEvent = onProcessedEvent {
@@ -104,14 +149,52 @@ public extension IntegrationPlugin {
         }
         return event
     }
+    
+    /**
+     Default implementation of `setup` method for `IntegrationPlugin`.
+     
+     **Caution:** This method is a default implementation provided by the SDK.
+     Clients should not override, reimplement or call this method externally, as it will lead to
+     unexpected behavior or break internal logic.
+     */
+    func setup(analytics: Analytics) {
+        self.analytics = analytics
+        
+        let key = self.key
+        analytics.integrationsController?.$integrationPluginStores.modify { stores in
+            if stores[key] == nil {
+                let pluginStore = IntegrationPluginStore(analytics: analytics)
+                
+                pluginStore.isStandardIntegration = self is StandardIntegration
+                stores[key] = pluginStore
+            }
+        }
+        
+        self.applyDefaultPlugins()
+    }
 }
 
 extension IntegrationPlugin {
     var pluginStore: IntegrationPluginStore? {
-        return self.analytics?.integrationManager.integrationPluginStores[self.key]
+        return self.analytics?.integrationsController?.integrationPluginStores[self.key]
     }
     
     var pluginChain: PluginChain? {
         return self.pluginStore?.pluginChain
     }
+    
+    private func applyDefaultPlugins() {
+        self.add(plugin: EventFilteringPlugin(key: self.key))
+        self.add(plugin: IntegrationOptionsPlugin(key: self.key))
+    }
 }
+
+/**
+ Alias for representing a callback to report integration ready status.
+ */
+public typealias IntegrationCallback = (Any?, DestinationResult) -> Void
+
+/**
+ Represents the result of a destination initialization operation.
+ */
+public typealias DestinationResult = Result<Void, Error>

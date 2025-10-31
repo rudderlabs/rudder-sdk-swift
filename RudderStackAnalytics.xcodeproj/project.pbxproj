@@ -167,13 +167,23 @@
 		53DEA68F2E03D06F00D6C371 /* group_with_all_values.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA62D2E03D06F00D6C371 /* group_with_all_values.json */; };
 		53DEA6902E03D06F00D6C371 /* screen_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA6392E03D06F00D6C371 /* screen_with_default_arguments.json */; };
 		53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E112D92E7C4B9E005FEF67 /* Connectivity.swift */; };
-		859CEE102E9CC58C00519C90 /* DestinationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE0F2E9CC58C00519C90 /* DestinationResult.swift */; };
-		859CEE122E9CDDE900519C90 /* MockIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE112E9CDDE900519C90 /* MockIntegrationPlugin.swift */; };
+		859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */; };
 		859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */; };
-		859CEE162E9CDE9B00519C90 /* IntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE152E9CDE9B00519C90 /* IntegrationPluginTests.swift */; };
+		859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */; };
+		85A10BB92EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */; };
+		85A10BBB2EA0B21500E47E01 /* IntegrationsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBA2EA0B21500E47E01 /* IntegrationsControllerTests.swift */; };
+		85A10BBD2EA0B76C00E47E01 /* MockDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBC2EA0B76C00E47E01 /* MockDestination.swift */; };
+		85A10BBF2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */; };
+		85A10BC12EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */; };
+		85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */; };
+		85CE839C2EB0859C00249576 /* DestinationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CE839B2EB0859C00249576 /* DestinationError.swift */; };
 		85E7C4EE2E9BB53200520FDB /* IntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */; };
 		85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */; };
 		85E7C4F22E9BB95100520FDB /* IntegrationPluginStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */; };
+		85F2AC022EA78EF200BE93AF /* EventFilteringPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F2AC012EA78EF200BE93AF /* EventFilteringPlugin.swift */; };
+		85F2AC072EA7940200BE93AF /* EventFilteringPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F2AC062EA7940200BE93AF /* EventFilteringPluginTests.swift */; };
+		85F2AC102EAA300800BE93AF /* IntegrationOptionsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */; };
+		85F2AC122EAA302100BE93AF /* IntegrationOptionsPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */; };
 		8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCA98812E8178D0006C3537 /* HttpClientTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -349,13 +359,23 @@
 		53DEA65B2E03D06F00D6C371 /* FlushPolicyModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushPolicyModuleTests.swift; sourceTree = "<group>"; };
 		53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerAnalyticsTests.swift; sourceTree = "<group>"; };
 		53E112D92E7C4B9E005FEF67 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
-		859CEE0F2E9CC58C00519C90 /* DestinationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationResult.swift; sourceTree = "<group>"; };
-		859CEE112E9CDDE900519C90 /* MockIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockIntegrationPlugin.swift; sourceTree = "<group>"; };
+		859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStandardIntegrationPlugin.swift; sourceTree = "<group>"; };
 		859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginStoreTests.swift; sourceTree = "<group>"; };
-		859CEE152E9CDE9B00519C90 /* IntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginTests.swift; sourceTree = "<group>"; };
+		859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardIntegrationPluginTests.swift; sourceTree = "<group>"; };
+		85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsManagementPluginTests.swift; sourceTree = "<group>"; };
+		85A10BBA2EA0B21500E47E01 /* IntegrationsControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsControllerTests.swift; sourceTree = "<group>"; };
+		85A10BBC2EA0B76C00E47E01 /* MockDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDestination.swift; sourceTree = "<group>"; };
+		85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCustomIntegrationPlugin.swift; sourceTree = "<group>"; };
+		85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomIntegrationPluginTests.swift; sourceTree = "<group>"; };
+		85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsController.swift; sourceTree = "<group>"; };
+		85CE839B2EB0859C00249576 /* DestinationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationError.swift; sourceTree = "<group>"; };
 		85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPlugin.swift; sourceTree = "<group>"; };
 		85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsManagementPlugin.swift; sourceTree = "<group>"; };
 		85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginStore.swift; sourceTree = "<group>"; };
+		85F2AC012EA78EF200BE93AF /* EventFilteringPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFilteringPlugin.swift; sourceTree = "<group>"; };
+		85F2AC062EA7940200BE93AF /* EventFilteringPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFilteringPluginTests.swift; sourceTree = "<group>"; };
+		85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationOptionsPlugin.swift; sourceTree = "<group>"; };
+		85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationOptionsPluginTests.swift; sourceTree = "<group>"; };
 		8CCA98812E8178D0006C3537 /* HttpClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -550,7 +570,9 @@
 				539001032EA119CA00DAC164 /* SwiftTestMockProvider.swift */,
 				539D87342E5888C7009FC144 /* MockURLProtocol.swift */,
 				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
-				859CEE112E9CDDE900519C90 /* MockIntegrationPlugin.swift */,
+				859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */,
+				85A10BBC2EA0B76C00E47E01 /* MockDestination.swift */,
+				85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */,
 				53A83F9B2E9F750400DDA0CC /* MockStorage.swift */,
 			);
 			path = Helpers;
@@ -866,7 +888,12 @@
 				537B96432EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift */,
 				537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */,
 				859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */,
-				859CEE152E9CDE9B00519C90 /* IntegrationPluginTests.swift */,
+				859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */,
+				85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */,
+				85A10BBA2EA0B21500E47E01 /* IntegrationsControllerTests.swift */,
+				85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */,
+				85F2AC062EA7940200BE93AF /* EventFilteringPluginTests.swift */,
+				85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */,
 			);
 			path = PluginTests;
 			sourceTree = "<group>";
@@ -904,12 +931,23 @@
 		85E7C4EC2E9BB51D00520FDB /* DeviceMode */ = {
 			isa = PBXGroup;
 			children = (
+				85F2AC0E2EAA2FE200BE93AF /* EventProcessing */,
 				85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */,
 				85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */,
 				85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */,
-				859CEE0F2E9CC58C00519C90 /* DestinationResult.swift */,
+				85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */,
+				85CE839B2EB0859C00249576 /* DestinationError.swift */,
 			);
 			path = DeviceMode;
+			sourceTree = "<group>";
+		};
+		85F2AC0E2EAA2FE200BE93AF /* EventProcessing */ = {
+			isa = PBXGroup;
+			children = (
+				85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */,
+				85F2AC012EA78EF200BE93AF /* EventFilteringPlugin.swift */,
+			);
+			path = EventProcessing;
 			sourceTree = "<group>";
 		};
 		8CCA98802E817881006C3537 /* Network */ = {
@@ -1095,7 +1133,6 @@
 				85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */,
 				53DEA5EB2E03D05A00D6C371 /* RudderOption.swift in Sources */,
 				538F82C72E79583900C7ECEB /* UpdateSourceConfigAction.swift in Sources */,
-				859CEE102E9CC58C00519C90 /* DestinationResult.swift in Sources */,
 				53DEA5EC2E03D05A00D6C371 /* HttpNetwork.swift in Sources */,
 				53DEA5ED2E03D05A00D6C371 /* ObjCAnalytics.swift in Sources */,
 				53DEA5EE2E03D05A00D6C371 /* SessionActions.swift in Sources */,
@@ -1110,7 +1147,9 @@
 				53DEA5F52E03D05A00D6C371 /* FlushPolicy.swift in Sources */,
 				53DEA5F62E03D05A00D6C371 /* Storage.swift in Sources */,
 				53DEA5F72E03D05A00D6C371 /* AppInfoPlugin.swift in Sources */,
+				85F2AC022EA78EF200BE93AF /* EventFilteringPlugin.swift in Sources */,
 				53DEA5F82E03D05A00D6C371 /* ObjCFlushPolicy.swift in Sources */,
+				85F2AC102EAA300800BE93AF /* IntegrationOptionsPlugin.swift in Sources */,
 				53DEA5F92E03D05A00D6C371 /* MemoryStore.swift in Sources */,
 				53DEA5FA2E03D05A00D6C371 /* DiskStore.swift in Sources */,
 				53DEA5FB2E03D05A00D6C371 /* ObjCSessionConfiguration.swift in Sources */,
@@ -1132,6 +1171,7 @@
 				539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */,
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
+				85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */,
 				53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */,
 				5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */,
 				53DEA6092E03D05A00D6C371 /* HttpClient.swift in Sources */,
@@ -1157,6 +1197,7 @@
 				53DEA6172E03D05A00D6C371 /* Configuration.swift in Sources */,
 				53DEA6182E03D05A00D6C371 /* Constants.swift in Sources */,
 				53DEA6192E03D05A00D6C371 /* PropertyWrappers.swift in Sources */,
+				85CE839C2EB0859C00249576 /* DestinationError.swift in Sources */,
 				53DEA61A2E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift in Sources */,
 				53DEA61B2E03D05A00D6C371 /* ObjCEvent.swift in Sources */,
 				53DEA61C2E03D05A00D6C371 /* FrequencyFlushPolicy.swift in Sources */,
@@ -1177,12 +1218,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				537846B12EAA2B3E00520374 /* EventUploaderTests.swift in Sources */,
+				85F2AC122EAA302100BE93AF /* IntegrationOptionsPluginTests.swift in Sources */,
 				53DEA65F2E03D06F00D6C371 /* NetworkInfoPluginTests.swift in Sources */,
 				53DEA6602E03D06F00D6C371 /* ResetUserIdentityActionTests.swift in Sources */,
+				85A10BBB2EA0B21500E47E01 /* IntegrationsControllerTests.swift in Sources */,
 				53DEA6612E03D06F00D6C371 /* SessionInfoTests.swift in Sources */,
 				53DEA6622E03D06F00D6C371 /* LifecycleObserverTests.swift in Sources */,
 				53AC39722E1533F300B8E16C /* RudderOptionTests.swift in Sources */,
 				537B964B2EAC04EF00E3ADE7 /* SourceConfigProviderTests.swift in Sources */,
+				85A10BBD2EA0B76C00E47E01 /* MockDestination.swift in Sources */,
 				53DEA6632E03D06F00D6C371 /* UserIdTraitsActionTests.swift in Sources */,
 				53DEA6642E03D06F00D6C371 /* LifecycleTrackingPluginTests.swift in Sources */,
 				53DEA6652E03D06F00D6C371 /* DeviceInfoPluginTests.swift in Sources */,
@@ -1192,9 +1236,10 @@
 				539001062EA11A7400DAC164 /* AnalyticsTests.swift in Sources */,
 				537846AD2EAA22A200520374 /* EventQueueTests.swift in Sources */,
 				53DEA6662E03D06F00D6C371 /* GroupEventTests.swift in Sources */,
+				85A10BBF2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift in Sources */,
 				539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */,
 				53DEA6672E03D06F00D6C371 /* UserIdActionTests.swift in Sources */,
-				859CEE122E9CDDE900519C90 /* MockIntegrationPlugin.swift in Sources */,
+				859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */,
 				53DEA6682E03D06F00D6C371 /* FlushPolicyModuleTests.swift in Sources */,
 				53DEA6692E03D06F00D6C371 /* IdentifyEventTests.swift in Sources */,
 				53DEA66A2E03D06F00D6C371 /* UserIdentityTests.swift in Sources */,
@@ -1214,20 +1259,24 @@
 				5393019E2E65562100DAEAD1 /* BackoffPolicyTests.swift in Sources */,
 				537B96482EABF7A100E3ADE7 /* SourceConfigTests.swift in Sources */,
 				859CEE162E9CDE9B00519C90 /* IntegrationPluginTests.swift in Sources */,
+				859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */,
 				53DEA6732E03D06F00D6C371 /* AliasEventTests.swift in Sources */,
 				859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */,
+				85F2AC072EA7940200BE93AF /* EventFilteringPluginTests.swift in Sources */,
 				53DEA6752E03D06F00D6C371 /* OSInfoPluginTests.swift in Sources */,
 				53DEA6762E03D06F00D6C371 /* SessionTrackingPluginTests.swift in Sources */,
 				53DEA6772E03D06F00D6C371 /* LibraryInfoPluginTests.swift in Sources */,
 				537846AB2EA1723400520374 /* KeyValueStoreTests.swift in Sources */,
 				53DEA6792E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift in Sources */,
 				539D87352E5888C7009FC144 /* MockURLProtocol.swift in Sources */,
+				85A10BC12EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift in Sources */,
 				539001012EA110C300DAC164 /* BasicStorageTests.swift in Sources */,
 				53DEA67A2E03D06F00D6C371 /* ScreenEventTests.swift in Sources */,
 				53A83F9C2E9F750400DDA0CC /* MockStorage.swift in Sources */,
 				53DEA67B2E03D06F00D6C371 /* TrackEventTests.swift in Sources */,
 				53DEA67C2E03D06F00D6C371 /* MessageModuleTests.swift in Sources */,
 				53DEA67D2E03D06F00D6C371 /* StateManagementTests.swift in Sources */,
+				85A10BB92EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
