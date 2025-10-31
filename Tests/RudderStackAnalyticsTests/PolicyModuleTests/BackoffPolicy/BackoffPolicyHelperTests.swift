@@ -10,7 +10,7 @@ import Testing
 @testable import RudderStackAnalytics
 
 @Suite("BackoffPolicyHelper Tests")
-class BackoffPolicyHelperTests {
+struct BackoffPolicyHelperTests {
     
     @Test("given various millisecond values, when formatting, then returns correctly formatted strings")
     func testFormatMilliseconds() {

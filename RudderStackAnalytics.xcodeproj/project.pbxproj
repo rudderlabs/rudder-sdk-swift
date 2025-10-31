@@ -172,6 +172,7 @@
 		53E777602EB4D4D200564D61 /* FlushPolicyFacadeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E7775F2EB4D4D200564D61 /* FlushPolicyFacadeTests.swift */; };
 		53E777622EB502A700564D61 /* BackoffPolicyHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */; };
 		53E777652EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777642EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift */; };
+		53E777672EB5134C00564D61 /* BackoffPolicyHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777662EB5134C00564D61 /* BackoffPolicyHandlerTests.swift */; };
 		859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */; };
 		859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */; };
 		85A10BB92EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */; };
@@ -368,6 +369,7 @@
 		53E7775F2EB4D4D200564D61 /* FlushPolicyFacadeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushPolicyFacadeTests.swift; sourceTree = "<group>"; };
 		53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHelperTests.swift; sourceTree = "<group>"; };
 		53E777642EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponentialBackoffPolicyTests.swift; sourceTree = "<group>"; };
+		53E777662EB5134C00564D61 /* BackoffPolicyHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHandlerTests.swift; sourceTree = "<group>"; };
 		859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStandardIntegrationPlugin.swift; sourceTree = "<group>"; };
 		859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginStoreTests.swift; sourceTree = "<group>"; };
 		859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardIntegrationPluginTests.swift; sourceTree = "<group>"; };
@@ -962,6 +964,7 @@
 			children = (
 				53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */,
 				53E777642EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift */,
+				53E777662EB5134C00564D61 /* BackoffPolicyHandlerTests.swift */,
 			);
 			path = BackoffPolicy;
 			sourceTree = "<group>";
@@ -1294,6 +1297,7 @@
 				53DEA6702E03D06F00D6C371 /* AppInfoPluginTests.swift in Sources */,
 				537B96442EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift in Sources */,
 				53DEA6712E03D06F00D6C371 /* MockProvider.swift in Sources */,
+				53E777672EB5134C00564D61 /* BackoffPolicyHandlerTests.swift in Sources */,
 				537B96462EAB5D0A00E3ADE7 /* PluginModuleTests.swift in Sources */,
 				53DEA6722E03D06F00D6C371 /* RudderStackAnalyticsTests.swift in Sources */,
 				5393019E2E65562100DAEAD1 /* BackoffPolicyTests.swift in Sources */,

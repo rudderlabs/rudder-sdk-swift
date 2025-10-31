@@ -138,20 +138,3 @@ final class BackoffPolicyTests: XCTestCase {
     }
 }
 
-// MARK: - Mock Classes for Testing
-
-final class MockBackoffPolicy: BackoffPolicy {
-    var nextDelayInMillisecondsCalled = false
-    var resetBackoffCalled = false
-    var delayToReturn = 3000 // Default 3 seconds in milliseconds
-    
-    func nextDelayInMilliseconds() -> Int {
-        nextDelayInMillisecondsCalled = true
-        return delayToReturn
-    }
-    
-    func resetBackoff() {
-        resetBackoffCalled = true
-    }
-}
-
