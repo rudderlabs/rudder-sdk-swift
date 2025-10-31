@@ -17,7 +17,7 @@ struct StartupFlushPolicyTests {
     func testFirstCallReturnsTrue() {
         let policy = StartupFlushPolicy()
         
-        #expect(policy.shouldFlush() == true)
+        #expect(policy.shouldFlush())
     }
     
     @Test("given startup policy after first shouldflush, when shouldflush is called multiple times, then always returns false")
@@ -26,7 +26,7 @@ struct StartupFlushPolicyTests {
         _ = policy.shouldFlush() // First call
         
         for callNumber in 1...5 {
-            #expect(policy.shouldFlush() == false, "Call \(callNumber + 1) should return false")
+            #expect(!policy.shouldFlush(), "Call \(callNumber + 1) should return false")
         }
     }
     
@@ -37,10 +37,10 @@ struct StartupFlushPolicyTests {
         let policy1 = StartupFlushPolicy()
         let policy2 = StartupFlushPolicy()
         
-        #expect(policy1.shouldFlush() == true, "Policy1 first call should return true")
-        #expect(policy2.shouldFlush() == true, "Policy2 first call should return true")
-        #expect(policy1.shouldFlush() == false, "Policy1 second call should return false")
-        #expect(policy2.shouldFlush() == false, "Policy2 second call should return false")
+        #expect(policy1.shouldFlush(), "Policy1 first call should return true")
+        #expect(policy2.shouldFlush(), "Policy2 first call should return true")
+        #expect(!policy1.shouldFlush(), "Policy1 second call should return false")
+        #expect(!policy2.shouldFlush(), "Policy2 second call should return false")
     }
     
     // MARK: - Real-World Usage Tests
@@ -51,12 +51,12 @@ struct StartupFlushPolicyTests {
         
         let shouldFlushAtStartup = policy.shouldFlush()
         
-        #expect(shouldFlushAtStartup == true, "Should flush during application startup")
+        #expect(shouldFlushAtStartup, "Should flush during application startup")
         
         let shouldFlushDuringRuntime1 = policy.shouldFlush()
         let shouldFlushDuringRuntime2 = policy.shouldFlush()
         
-        #expect(shouldFlushDuringRuntime1 == false, "Should not flush during runtime check 1")
-        #expect(shouldFlushDuringRuntime2 == false, "Should not flush during runtime check 2")
+        #expect(!shouldFlushDuringRuntime1, "Should not flush during runtime check 1")
+        #expect(!shouldFlushDuringRuntime2, "Should not flush during runtime check 2")
     }
 }
