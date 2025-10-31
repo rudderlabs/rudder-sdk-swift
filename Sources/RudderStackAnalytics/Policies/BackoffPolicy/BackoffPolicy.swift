@@ -89,6 +89,8 @@ struct BackoffPolicyHelper {
             parts.append("\(milliseconds)ms")
         }
         
+        if parts.isEmpty { return "0ms" }
+        
         return parts.joined(separator: " ")
     }
 }
