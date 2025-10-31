@@ -60,7 +60,7 @@ struct FrequencyFlushPolicyTests {
         
         waitForFlushInterval(flushInterval)
         
-        #expect(!analytics.isFlushed, "Expected analytics.flush() should not to be triggered by scheduled timer")
+        #expect(!analytics.isFlushed, "Expected analytics.flush() should not be triggered by scheduled timer")
     }
     
     @Test("when schedule flush is called multiple times, then handles redundant scheduling safely")

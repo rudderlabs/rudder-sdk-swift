@@ -13,14 +13,14 @@ struct StartupFlushPolicyTests {
     
     // MARK: - Basic Behavior Tests
     
-    @Test("given new startup policy, when shouldflush is called first time, then returns true")
+    @Test("given new startup policy, when shouldFlush is called first time, then returns true")
     func testFirstCallReturnsTrue() {
         let policy = StartupFlushPolicy()
         
         #expect(policy.shouldFlush())
     }
     
-    @Test("given startup policy after first shouldflush, when shouldflush is called multiple times, then always returns false")
+    @Test("given startup policy after first shouldFlush, when shouldFlush is called multiple times, then always returns false")
     func testSubsequentCallsAlwaysReturnFalse() {
         let policy = StartupFlushPolicy()
         _ = policy.shouldFlush() // First call

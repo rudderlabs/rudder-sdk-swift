@@ -23,7 +23,7 @@ struct CountFlushPolicyTests {
     
     // MARK: - Invalid Value Handling Tests
     
-    @Test("given invalid flushat value, when policy is initialized, then falls back to default value", arguments: [
+    @Test("given invalid flushAt value, when policy is initialized, then falls back to default value", arguments: [
         Constants.flushEventCount.min - 1,
         Constants.flushEventCount.default,
         Constants.flushEventCount.max + 1,
@@ -38,7 +38,7 @@ struct CountFlushPolicyTests {
     
     // MARK: - Event Count and Flush Logic Tests
     
-    @Test("given policy with threshold, when event count is below threshold, then shouldflush returns false")
+    @Test("given policy with threshold, when event count is below threshold, then shouldFlush returns false")
     func testShouldNotFlushBelowThreshold() {
         let flushAt = 5
         let policy = CountFlushPolicy(flushAt: flushAt)
@@ -50,7 +50,7 @@ struct CountFlushPolicyTests {
         #expect(!policy.shouldFlush())
     }
     
-    @Test("given policy with threshold, when event count equals threshold, then shouldflush returns true")
+    @Test("given policy with threshold, when event count equals threshold, then shouldFlush returns true")
     func testShouldFlushAtExactThreshold() {
         let flushAt = 5
         let policy = CountFlushPolicy(flushAt: flushAt)
@@ -62,7 +62,7 @@ struct CountFlushPolicyTests {
         #expect(policy.shouldFlush())
     }
     
-    @Test("given policy with threshold, when event count exceeds threshold, then shouldflush returns true")
+    @Test("given policy with threshold, when event count exceeds threshold, then shouldFlush returns true")
     func testShouldFlushAboveThreshold() {
         let flushAt = 5
         let policy = CountFlushPolicy(flushAt: flushAt)
@@ -76,7 +76,7 @@ struct CountFlushPolicyTests {
     
     // MARK: - Reset Functionality Tests
     
-    @Test("given policy at threshold, when reset is called, then shouldflush returns false")
+    @Test("given policy at threshold, when reset is called, then shouldFlush returns false")
     func testResetClearsEventCount() {
         let flushAt = 5
         let policy = CountFlushPolicy(flushAt: flushAt)
@@ -125,7 +125,7 @@ struct CountFlushPolicyTests {
     }
     
     
-    @Test("given different valid flushat values, when policies are tested, then all work correctly", arguments: [
+    @Test("given different valid flushAt values, when policies are tested, then all work correctly", arguments: [
         Constants.flushEventCount.min,
         Constants.flushEventCount.min + 5,
         Constants.flushEventCount.default,
@@ -144,7 +144,7 @@ struct CountFlushPolicyTests {
         #expect(policy.shouldFlush(), "Should flush at threshold for flushAt: \(flushAt)")
     }
     
-    @Test("given policy with operations, when various operations are performed, then flushat property remains immutable")
+    @Test("given policy with operations, when various operations are performed, then flushAt property remains immutable")
     func testFlushAtPropertyRemainsImmutableAfterOperations() {
         let originalFlushAt = 15
         let policy = CountFlushPolicy(flushAt: originalFlushAt)
