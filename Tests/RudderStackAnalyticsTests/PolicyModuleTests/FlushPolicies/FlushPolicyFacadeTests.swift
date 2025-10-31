@@ -37,7 +37,7 @@ struct FlushPolicyFacadeTests {
         #expect(facade.activePolicies.count == 3)
     }
         
-    @Test("given facade with startup policy, when shouldflush is called first time, then returns true")
+    @Test("given facade with startup policy, when shouldFlush is called first time, then returns true")
     func testShouldFlushWithStartupPolicyFirstCall() {
         let startupPolicy = StartupFlushPolicy()
         let configuration = SwiftTestMockProvider.createMockConfiguration()
@@ -49,7 +49,7 @@ struct FlushPolicyFacadeTests {
         #expect(facade.shouldFlush())
     }
     
-    @Test("given facade with count policy at threshold, when shouldflush is called, then returns true")
+    @Test("given facade with count policy at threshold, when shouldFlush is called, then returns true")
     func testShouldFlushWithCountPolicyAtThreshold() {
         let countPolicy = CountFlushPolicy(flushAt: 3)
         let configuration = SwiftTestMockProvider.createMockConfiguration()
@@ -65,7 +65,7 @@ struct FlushPolicyFacadeTests {
         #expect(facade.shouldFlush())
     }
     
-    @Test("given facade with frequency policy only, when shouldflush is called immediately, then returns false")
+    @Test("given facade with frequency policy only, when shouldFlush is called immediately, then returns false")
     func testShouldFlushWithFrequencyPolicyOnly() {
         let frequencyPolicy = FrequencyFlushPolicy(flushIntervalInMillis: 2000)
         let configuration = SwiftTestMockProvider.createMockConfiguration()
@@ -78,7 +78,7 @@ struct FlushPolicyFacadeTests {
         facade.cancelSchedule()
     }
         
-    @Test("given facade with count policy, when updatecount and resetcount are called, then manages count correctly")
+    @Test("given facade with count policy, when updateCount and resetCount are called, then manages count correctly")
     func testCountManagement() {
         let countPolicy = CountFlushPolicy(flushAt: 3)
         let configuration = SwiftTestMockProvider.createMockConfiguration()
