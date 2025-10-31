@@ -23,44 +23,17 @@ struct CountFlushPolicyTests {
     
     // MARK: - Invalid Value Handling Tests
     
-    @Test("given below minimum flushat value, when policy is initialized, then falls back to default value")
-    func testBelowMinimumValueFallsBackToDefault() {
-        let belowMin = Constants.flushEventCount.min - 1
-        let expectedDefault = Constants.flushEventCount.default
+    @Test("given invalid flushat value, when policy is initialized, then falls back to default value", arguments: [
+        Constants.flushEventCount.min - 1,
+        Constants.flushEventCount.default,
+        Constants.flushEventCount.max + 1,
+        0,
+        -10
+    ])
+    func testInvalidFlushAtValuesFallBackToDefault(_ flushAt: Int) {
+        let policy = CountFlushPolicy(flushAt: flushAt)
         
-        let policy = CountFlushPolicy(flushAt: belowMin)
-        
-        #expect(policy.flushAt == expectedDefault)
-    }
-    
-    @Test("given above maximum flushat value, when policy is initialized, then falls back to default value")
-    func testAboveMaximumValueFallsBackToDefault() {
-        let aboveMax = Constants.flushEventCount.max + 1
-        let expectedDefault = Constants.flushEventCount.default
-        
-        let policy = CountFlushPolicy(flushAt: aboveMax)
-        
-        #expect(policy.flushAt == expectedDefault)
-    }
-    
-    @Test("given zero flushat value, when policy is initialized, then falls back to default value")
-    func testZeroValueFallsBackToDefault() {
-        let zeroValue = 0
-        let expectedDefault = Constants.flushEventCount.default
-        
-        let policy = CountFlushPolicy(flushAt: zeroValue)
-        
-        #expect(policy.flushAt == expectedDefault)
-    }
-    
-    @Test("given negative flushat value, when policy is initialized, then falls back to default value")
-    func testNegativeValueFallsBackToDefault() {
-        let negativeValue = -10
-        let expectedDefault = Constants.flushEventCount.default
-        
-        let policy = CountFlushPolicy(flushAt: negativeValue)
-        
-        #expect(policy.flushAt == expectedDefault)
+        #expect(policy.flushAt == Constants.flushEventCount.default)
     }
     
     // MARK: - Event Count and Flush Logic Tests

@@ -168,6 +168,7 @@
 		53DEA6902E03D06F00D6C371 /* screen_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA6392E03D06F00D6C371 /* screen_with_default_arguments.json */; };
 		53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E112D92E7C4B9E005FEF67 /* Connectivity.swift */; };
 		53E777582EB4C2BD00564D61 /* CountFlushPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777572EB4C2BD00564D61 /* CountFlushPolicyTests.swift */; };
+		53E7775C2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E7775B2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift */; };
 		859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */; };
 		859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */; };
 		859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */; };
@@ -361,6 +362,7 @@
 		53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerAnalyticsTests.swift; sourceTree = "<group>"; };
 		53E112D92E7C4B9E005FEF67 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
 		53E777572EB4C2BD00564D61 /* CountFlushPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountFlushPolicyTests.swift; sourceTree = "<group>"; };
+		53E7775B2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyFlushPolicyTests.swift; sourceTree = "<group>"; };
 		859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStandardIntegrationPlugin.swift; sourceTree = "<group>"; };
 		859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginStoreTests.swift; sourceTree = "<group>"; };
 		859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardIntegrationPluginTests.swift; sourceTree = "<group>"; };
@@ -469,7 +471,6 @@
 			children = (
 				53DEA6592E03D06F00D6C371 /* RudderStackAnalyticsTests.swift */,
 				53DEA65B2E03D06F00D6C371 /* FlushPolicyModuleTests.swift */,
-				53E777572EB4C2BD00564D61 /* CountFlushPolicyTests.swift */,
 				5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */,
 				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
 				539D87392E588951009FC144 /* EventProcessingModuleTests */,
@@ -479,6 +480,7 @@
 				53DEA6432E03D06F00D6C371 /* MockResources */,
 				8CCA98802E817881006C3537 /* Network */,
 				53DEA64E2E03D06F00D6C371 /* PluginTests */,
+				53E7775A2EB4C7C500564D61 /* PolicyModuleTests */,
 				53DEA6522E03D06F00D6C371 /* SessionManagementTests */,
 				53DEA6582E03D06F00D6C371 /* StateManagementTests */,
 				532904EE2E05BBDE00C8EFE2 /* TestPlans */,
@@ -931,6 +933,23 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		53E777592EB4C7B600564D61 /* FlushPolicies */ = {
+			isa = PBXGroup;
+			children = (
+				53E777572EB4C2BD00564D61 /* CountFlushPolicyTests.swift */,
+				53E7775B2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift */,
+			);
+			path = FlushPolicies;
+			sourceTree = "<group>";
+		};
+		53E7775A2EB4C7C500564D61 /* PolicyModuleTests */ = {
+			isa = PBXGroup;
+			children = (
+				53E777592EB4C7B600564D61 /* FlushPolicies */,
+			);
+			path = PolicyModuleTests;
+			sourceTree = "<group>";
+		};
 		85E7C4EC2E9BB51D00520FDB /* DeviceMode */ = {
 			isa = PBXGroup;
 			children = (
@@ -1235,6 +1254,7 @@
 				53DEA6652E03D06F00D6C371 /* DeviceInfoPluginTests.swift in Sources */,
 				539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */,
 				53078F1D2EB10B18006F5847 /* LifecycleManagementUtilsTests.swift in Sources */,
+				53E7775C2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift in Sources */,
 				8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */,
 				539001062EA11A7400DAC164 /* AnalyticsTests.swift in Sources */,
 				537846AD2EAA22A200520374 /* EventQueueTests.swift in Sources */,
