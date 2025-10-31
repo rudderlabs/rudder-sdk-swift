@@ -171,9 +171,9 @@
 		53E7775E2EB4D21000564D61 /* StartupFlushPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E7775D2EB4D21000564D61 /* StartupFlushPolicyTests.swift */; };
 		53E777602EB4D4D200564D61 /* FlushPolicyFacadeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E7775F2EB4D4D200564D61 /* FlushPolicyFacadeTests.swift */; };
 		53E777622EB502A700564D61 /* BackoffPolicyHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */; };
+		53E777652EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777642EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift */; };
 		859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */; };
 		859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */; };
-		859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */; };
 		85A10BB92EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */; };
 		85A10BBB2EA0B21500E47E01 /* IntegrationsControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBA2EA0B21500E47E01 /* IntegrationsControllerTests.swift */; };
 		85A10BBD2EA0B76C00E47E01 /* MockDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBC2EA0B76C00E47E01 /* MockDestination.swift */; };
@@ -367,6 +367,7 @@
 		53E7775D2EB4D21000564D61 /* StartupFlushPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupFlushPolicyTests.swift; sourceTree = "<group>"; };
 		53E7775F2EB4D4D200564D61 /* FlushPolicyFacadeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlushPolicyFacadeTests.swift; sourceTree = "<group>"; };
 		53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHelperTests.swift; sourceTree = "<group>"; };
+		53E777642EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponentialBackoffPolicyTests.swift; sourceTree = "<group>"; };
 		859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStandardIntegrationPlugin.swift; sourceTree = "<group>"; };
 		859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginStoreTests.swift; sourceTree = "<group>"; };
 		859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardIntegrationPluginTests.swift; sourceTree = "<group>"; };
@@ -951,9 +952,18 @@
 			isa = PBXGroup;
 			children = (
 				53E777592EB4C7B600564D61 /* FlushPolicies */,
-				53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */,
+				53E777632EB511F100564D61 /* BackoffPolicy */,
 			);
 			path = PolicyModuleTests;
+			sourceTree = "<group>";
+		};
+		53E777632EB511F100564D61 /* BackoffPolicy */ = {
+			isa = PBXGroup;
+			children = (
+				53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */,
+				53E777642EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift */,
+			);
+			path = BackoffPolicy;
 			sourceTree = "<group>";
 		};
 		85E7C4EC2E9BB51D00520FDB /* DeviceMode */ = {
@@ -1289,8 +1299,6 @@
 				5393019E2E65562100DAEAD1 /* BackoffPolicyTests.swift in Sources */,
 				537B96482EABF7A100E3ADE7 /* SourceConfigTests.swift in Sources */,
 				53E777582EB4C2BD00564D61 /* CountFlushPolicyTests.swift in Sources */,
-				859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */,
-				859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */,
 				53DEA6732E03D06F00D6C371 /* AliasEventTests.swift in Sources */,
 				859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */,
 				53E777602EB4D4D200564D61 /* FlushPolicyFacadeTests.swift in Sources */,
@@ -1303,6 +1311,7 @@
 				539D87352E5888C7009FC144 /* MockURLProtocol.swift in Sources */,
 				85A10BC12EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift in Sources */,
 				539001012EA110C300DAC164 /* BasicStorageTests.swift in Sources */,
+				53E777652EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift in Sources */,
 				53DEA67A2E03D06F00D6C371 /* ScreenEventTests.swift in Sources */,
 				53A83F9C2E9F750400DDA0CC /* MockStorage.swift in Sources */,
 				53DEA67B2E03D06F00D6C371 /* TrackEventTests.swift in Sources */,
