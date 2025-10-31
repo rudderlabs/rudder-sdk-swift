@@ -456,10 +456,10 @@ extension SwiftTestMockProvider {
 class MockAnalytics: Analytics {
     var isFlushed: Bool = false
     
-    var dataPlaneUrl = "https://www.datap_lane.com"
-    var writeKey = "_sample_write_key_"
-    
     init() {
+        let dataPlaneUrl = "https://www.datap_lane.com"
+        let writeKey = "_sample_write_key_"
+        
         let config = Configuration(writeKey: writeKey, dataPlaneUrl: dataPlaneUrl)
         super.init(configuration: config)
     }
