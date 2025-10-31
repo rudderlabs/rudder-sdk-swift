@@ -457,10 +457,7 @@ class MockAnalytics: Analytics {
     var isFlushed: Bool = false
     
     init() {
-        let dataPlaneUrl = "https://www.datap_lane.com"
-        let writeKey = "_sample_write_key_"
-        
-        let config = Configuration(writeKey: writeKey, dataPlaneUrl: dataPlaneUrl)
+        let config = Configuration(writeKey: "_sample_write_key_", dataPlaneUrl: "_sample_data_plane_url_")
         super.init(configuration: config)
     }
     
