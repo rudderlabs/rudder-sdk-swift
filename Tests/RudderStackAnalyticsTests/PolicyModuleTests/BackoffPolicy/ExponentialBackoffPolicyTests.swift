@@ -110,4 +110,10 @@ class ExponentialBackoffPolicyTests {
         #expect(secondResetDelay >= ExponentialBackoffConstants.minDelayInMillis, "Second reset minimum")
         #expect(secondResetDelay < ExponentialBackoffConstants.minDelayInMillis * 2, "Second reset maximum")
     }
+    
+    @Test("given exponential backoff constants, when accessing values, then returns expected constants")
+    func testConstants() {
+        #expect(ExponentialBackoffConstants.defaultBase == 2.0, "Default base should be 2.0")
+        #expect(ExponentialBackoffConstants.minDelayInMillis == 3000, "Min delay should be 3000ms (3 seconds)")
+    }
 }

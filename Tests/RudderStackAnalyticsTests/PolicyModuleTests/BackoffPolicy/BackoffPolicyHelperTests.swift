@@ -53,4 +53,10 @@ struct BackoffPolicyHelperTests {
         #expect(elapsed >= 0.1, "Should sleep at least 100ms")
         #expect(elapsed < 0.15, "Should not exceed by much")
     }
+    
+    @Test("given backoff policy constants, when accessing values, then returns expected constants")
+    func testConstants() {
+        #expect(BackoffPolicyConstants.maxAttempts == 5, "Max attempts should be 5")
+        #expect(BackoffPolicyConstants.coolOffPeriodInMilliseconds == 1800000, "Cool-off should be 30 minutes in milliseconds")
+    }
 }
