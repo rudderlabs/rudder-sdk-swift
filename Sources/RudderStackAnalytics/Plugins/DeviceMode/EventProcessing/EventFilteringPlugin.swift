@@ -9,8 +9,10 @@ import Foundation
 import Combine
 
 // MARK: - Constants
-private let whiteListEventsKey = "whitelistedEvents"
-private let blackListEventsKey = "blacklistedEvents"
+// Use inclusive names for identifiers while preserving remote/config string keys.
+private let allowListEventsKey = "whitelistedEvents"
+private let denyListEventsKey = "blacklistedEvents"
+private let disableFilteringKey = "disable"
 private let eventFilteringOptionKey = "eventFilteringOption"
 
 // MARK: - EventFilteringPlugin
@@ -19,8 +21,8 @@ private let eventFilteringOptionKey = "eventFilteringOption"
  
  This plugin filters the events based on the event filtering option provided in the destination config.
  The plugin supports two types of event filtering options based on the dashboard configuration:
- 1. Whitelist events: Only the events present in the whitelist will be allowed.
- 2. Blacklist events: All the events except the ones present in the blacklist will be allowed.
+ 1. Allow list events: Only the events present in the allow list will be allowed.
+ 2. Deny list events: All the events except the ones present in the deny list will be allowed.
  */
 final class EventFilteringPlugin: Plugin {
     
@@ -79,9 +81,9 @@ extension EventFilteringPlugin {
      */
     private func shouldDropEvent(eventName: String) -> Bool {
         switch filteringOption {
-        case whiteListEventsKey:
+        case allowListEventsKey:
             return !filteringList.contains(eventName)
-        case blackListEventsKey:
+        case denyListEventsKey:
             return filteringList.contains(eventName)
         default:
             return false
@@ -163,10 +165,12 @@ extension EventFilteringPlugin {
     private func hasValidFilteringArray(filteringOption: String, destinationConfig: [String: Any]) -> Bool {
         let listKey: String
         switch filteringOption {
-        case whiteListEventsKey:
-            listKey = whiteListEventsKey
-        case blackListEventsKey:
-            listKey = blackListEventsKey
+        case allowListEventsKey:
+            listKey = allowListEventsKey
+        case denyListEventsKey:
+            listKey = denyListEventsKey
+        case disableFilteringKey:
+            return true
         default:
             return false
         }
@@ -185,10 +189,10 @@ extension EventFilteringPlugin {
     private func getEventFilteringList(eventFilteringOption: String, destinationConfig: [String: Any]) -> [String] {
         let listKey: String
         switch eventFilteringOption {
-        case whiteListEventsKey:
-            listKey = whiteListEventsKey
-        case blackListEventsKey:
-            listKey = blackListEventsKey
+        case allowListEventsKey:
+            listKey = allowListEventsKey
+        case denyListEventsKey:
+            listKey = denyListEventsKey
         default:
             return []
         }
