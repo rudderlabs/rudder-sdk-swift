@@ -9,6 +9,7 @@ import Foundation
 
 /**
  StandardIntegration is a protocol that represents a standard integration plugin. All the integrations maintained by RudderStack will conform to this protocol.
+ **Caution:** This protocol is considered internal and may change without notice. It is intended solely for use within RudderStack-maintained repositories and should not be referenced by external clients.
  */
 public protocol StandardIntegration: AnyObject {}
 
