@@ -171,6 +171,8 @@
 		85A10BBF2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */; };
 		85A10BC12EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */; };
 		85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */; };
+		85C5EC712EC23F4200F0569B /* ECommerceEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */; };
+		85C5EC732EC2401200F0569B /* ECommerceParamNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */; };
 		85CE839C2EB0859C00249576 /* DestinationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CE839B2EB0859C00249576 /* DestinationError.swift */; };
 		85E7C4EE2E9BB53200520FDB /* IntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */; };
 		85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */; };
@@ -359,6 +361,8 @@
 		85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCustomIntegrationPlugin.swift; sourceTree = "<group>"; };
 		85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomIntegrationPluginTests.swift; sourceTree = "<group>"; };
 		85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsController.swift; sourceTree = "<group>"; };
+		85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECommerceEvents.swift; sourceTree = "<group>"; };
+		85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECommerceParamNames.swift; sourceTree = "<group>"; };
 		85CE839B2EB0859C00249576 /* DestinationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationError.swift; sourceTree = "<group>"; };
 		85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPlugin.swift; sourceTree = "<group>"; };
 		85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsManagementPlugin.swift; sourceTree = "<group>"; };
@@ -613,6 +617,8 @@
 				53DEA59F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift */,
 				53DEA5A02E03D05A00D6C371 /* PropertyWrappers.swift */,
 				53E112D92E7C4B9E005FEF67 /* Connectivity.swift */,
+				85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */,
+				85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1152,6 +1158,7 @@
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
 				85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */,
+				85C5EC712EC23F4200F0569B /* ECommerceEvents.swift in Sources */,
 				53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */,
 				5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */,
 				53DEA6092E03D05A00D6C371 /* HttpClient.swift in Sources */,
@@ -1168,6 +1175,7 @@
 				5328B8772E3B7E4D0051A202 /* ObjCUserIdentity.swift in Sources */,
 				53DEA6112E03D05A00D6C371 /* LifecycleManagementUtils.swift in Sources */,
 				53DEA6122E03D05A00D6C371 /* SwiftLogger.swift in Sources */,
+				85C5EC732EC2401200F0569B /* ECommerceParamNames.swift in Sources */,
 				53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */,
 				5328B8792E3B817B0051A202 /* ObjCTrackEvent.swift in Sources */,
 				53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */,
