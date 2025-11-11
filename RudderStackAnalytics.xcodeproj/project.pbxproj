@@ -610,6 +610,7 @@
 		53DEA5A12E03D05A00D6C371 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				85B4CD3E2EC2F2240061CEC1 /* ECommerce */,
 				53DEA59B2E03D05A00D6C371 /* AsyncChannel.swift */,
 				53DEA59C2E03D05A00D6C371 /* CodableTypes.swift */,
 				53DEA59D2E03D05A00D6C371 /* Constants.swift */,
@@ -617,8 +618,6 @@
 				53DEA59F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift */,
 				53DEA5A02E03D05A00D6C371 /* PropertyWrappers.swift */,
 				53E112D92E7C4B9E005FEF67 /* Connectivity.swift */,
-				85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */,
-				85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -913,6 +912,15 @@
 				5319B8B62E0B0B2B00D3BD66 /* RudderStackAnalyticsTests */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		85B4CD3E2EC2F2240061CEC1 /* ECommerce */ = {
+			isa = PBXGroup;
+			children = (
+				85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */,
+				85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */,
+			);
+			path = ECommerce;
 			sourceTree = "<group>";
 		};
 		85E7C4EC2E9BB51D00520FDB /* DeviceMode */ = {
