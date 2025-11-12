@@ -16,24 +16,16 @@ struct UpdateSourceConfigActionTests {
     
     @Test("given current source config, when updating with new config, then state is completely replaced")
     func testUpdateSourceConfigActionReplacesCurrentState() {
-        let currentConfig = createCustomSourceConfig(
-            sourceId: "current-id",
-            sourceName: "Current Source",
-            isEnabled: false
-        )
+        let currentConfig = createCustomSourceConfig(sourceId: "current-id", sourceName: "Current Source", isEnabled: false)
         
-        let newConfig = createCustomSourceConfig(
-            sourceId: "new-id",
-            sourceName: "New Source",
-            isEnabled: true
-        )
+        let newConfig = createCustomSourceConfig(sourceId: "new-id", sourceName: "New Source", isEnabled: true)
         
         let action = UpdateSourceConfigAction(updatedSourceConfig: newConfig)
         let result = action.reduce(currentState: currentConfig)
         
         #expect(result.source.sourceId == "new-id")
         #expect(result.source.sourceName == "New Source")
-        #expect(result.source.isSourceEnabled == true)
+        #expect(result.source.isSourceEnabled)
     }
     
     @Test("given source config with destinations, when updating, then destinations are preserved")
@@ -63,7 +55,7 @@ struct UpdateSourceConfigActionTests {
         
         let currentState = stateInstance.state.value
         #expect(currentState.source.sourceId == "updated")
-        #expect(currentState.source.isSourceEnabled == true)
+        #expect(currentState.source.isSourceEnabled)
     }
     
     // MARK: - Immutability Tests
@@ -113,8 +105,8 @@ extension UpdateSourceConfigActionTests {
     }
     
     private func createCustomDestination(
-        id: String = "dest-1",
-        name: String = "Test Destination",
+        id: String,
+        name: String,
         enabled: Bool = true
     ) -> Destination {
         let baseMock = SwiftTestMockProvider.mockSourceConfig.source.destinations.first!

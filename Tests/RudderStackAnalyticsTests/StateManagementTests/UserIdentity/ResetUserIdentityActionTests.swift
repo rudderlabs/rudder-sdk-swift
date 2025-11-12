@@ -17,21 +17,13 @@ struct ResetUserIdentityActionTests {
     
     @Test("given user identity with all data, when resetting all entries, then all values are reset")
     func testResetActionResetsAllUserIdentityData() {
-        let originalAnonymousId = "test-anonymous-id"
-        let originalUserId = "test-user-id"
-        let originalTraits = ["name": "John Doe", "email": "john@example.com"]
-        
-        let state = createState(initialState: createTestUserIdentity(
-            anonymousId: originalAnonymousId,
-            userId: originalUserId,
-            traits: originalTraits
-        ))
+        let state = createState(initialState: createTestUserIdentity(anonymousId: testAnonymousId, userId: testUserId, traits: testTraits))
         
         let action = ResetUserIdentityAction(entries: ResetEntries())
         state.dispatch(action: action)
         
         let result = state.state.value
-        #expect(result.anonymousId != originalAnonymousId, "Anonymous ID should be regenerated")
+        #expect(result.anonymousId != testAnonymousId, "Anonymous ID should be regenerated")
         #expect(result.anonymousId.isValidUUID, "New anonymous ID should be a valid UUID")
         #expect(result.userId.isEmpty, "User ID should be reset to empty")
         #expect(result.traits.isEmpty, "Traits should be reset to empty")
@@ -41,126 +33,76 @@ struct ResetUserIdentityActionTests {
     
     @Test("given user identity, when preserving anonymous ID only, then anonymous ID remains unchanged")
     func testResetActionPreservesAnonymousIdOnly() {
-        let originalAnonymousId = "test-anonymous-id"
-        let originalUserId = "test-user-id"
-        let originalTraits = ["name": "John Doe"]
-        
-        let state = createState(initialState: createTestUserIdentity(
-            anonymousId: originalAnonymousId,
-            userId: originalUserId,
-            traits: originalTraits
-        ))
+        let state = createState(initialState: createTestUserIdentity(anonymousId: testAnonymousId, userId: testUserId, traits: testTraits))
         
         let action = ResetUserIdentityAction(entries: ResetEntries(anonymousId: false))
         state.dispatch(action: action)
         
         let result = state.state.value
-        #expect(result.anonymousId == originalAnonymousId, "Anonymous ID should be preserved")
+        #expect(result.anonymousId == testAnonymousId, "Anonymous ID should be preserved")
         #expect(result.userId.isEmpty, "User ID should be reset")
         #expect(result.traits.isEmpty, "Traits should be reset")
     }
     
     @Test("given user identity, when preserving user ID only, then user ID remains unchanged")
     func testResetActionPreservesUserIdOnly() {
-        let originalAnonymousId = "test-anonymous-id"
-        let originalUserId = "test-user-id"
-        let originalTraits = ["name": "John Doe"]
-        
-        let state = createState(initialState: createTestUserIdentity(
-            anonymousId: originalAnonymousId,
-            userId: originalUserId,
-            traits: originalTraits
-        ))
+        let state = createState(initialState: createTestUserIdentity(anonymousId: testAnonymousId, userId: testUserId, traits: testTraits))
         
         let action = ResetUserIdentityAction(entries: ResetEntries(userId: false))
         state.dispatch(action: action)
         
         let result = state.state.value
-        #expect(result.anonymousId != originalAnonymousId, "Anonymous ID should be regenerated")
-        #expect(result.userId == originalUserId, "User ID should be preserved")
+        #expect(result.anonymousId != testAnonymousId, "Anonymous ID should be regenerated")
+        #expect(result.userId == testUserId, "User ID should be preserved")
         #expect(result.traits.isEmpty, "Traits should be reset")
     }
     
     @Test("given user identity, when preserving traits only, then traits remain unchanged")
     func testResetActionPreservesTraitsOnly() {
-        let originalAnonymousId = "test-anonymous-id"
-        let originalUserId = "test-user-id"
-        let originalTraits = ["name": "John Doe", "email": "john@example.com"]
-        
-        let state = createState(initialState: createTestUserIdentity(
-            anonymousId: originalAnonymousId,
-            userId: originalUserId,
-            traits: originalTraits
-        ))
+        let state = createState(initialState: createTestUserIdentity(anonymousId: testAnonymousId, userId: testUserId, traits: testTraits))
         
         let action = ResetUserIdentityAction(entries: ResetEntries(traits: false))
         state.dispatch(action: action)
         
         let result = state.state.value
-        #expect(result.anonymousId != originalAnonymousId, "Anonymous ID should be regenerated")
+        #expect(result.anonymousId != testAnonymousId, "Anonymous ID should be regenerated")
         #expect(result.userId.isEmpty, "User ID should be reset")
-        #expect(areTraitsEqual(result.traits, originalTraits), "Traits should be preserved")
+        #expect(areTraitsEqual(result.traits, testTraits), "Traits should be preserved")
     }
     
     // MARK: - Multiple Preservation Tests
     
     @Test("given user identity, when preserving anonymous ID and user ID, then both are preserved")
     func testResetActionPreservesAnonymousIdAndUserId() {
-        let originalAnonymousId = "test-anonymous-id"
-        let originalUserId = "test-user-id"
-        let originalTraits = ["name": "John Doe"]
+        let state = createState(initialState: createTestUserIdentity(anonymousId: testAnonymousId, userId: testUserId, traits: testTraits))
         
-        let state = createState(initialState: createTestUserIdentity(
-            anonymousId: originalAnonymousId,
-            userId: originalUserId,
-            traits: originalTraits
-        ))
-        
-        let action = ResetUserIdentityAction(entries: ResetEntries(
-            anonymousId: false,
-            userId: false,
-            traits: true,
-            session: true
-        ))
+        let action = ResetUserIdentityAction(entries: ResetEntries(anonymousId: false, userId: false, traits: true, session: true))
         state.dispatch(action: action)
         
         let result = state.state.value
-        #expect(result.anonymousId == originalAnonymousId, "Anonymous ID should be preserved")
-        #expect(result.userId == originalUserId, "User ID should be preserved")
+        #expect(result.anonymousId == testAnonymousId, "Anonymous ID should be preserved")
+        #expect(result.userId == testUserId, "User ID should be preserved")
         #expect(result.traits.isEmpty, "Traits should be reset")
     }
     
     @Test("given user identity, when preserving user ID and traits, then both are preserved")
     func testResetActionPreservesUserIdAndTraits() {
-        let originalAnonymousId = "test-anonymous-id"
-        let originalUserId = "test-user-id"
-        let originalTraits = ["name": "John Doe", "company": "Example Inc"]
+        let state = createState(initialState: createTestUserIdentity(anonymousId: testAnonymousId, userId: testUserId, traits: testTraits))
         
-        let state = createState(initialState: createTestUserIdentity(
-            anonymousId: originalAnonymousId,
-            userId: originalUserId,
-            traits: originalTraits
-        ))
-        
-        let action = ResetUserIdentityAction(entries: ResetEntries(
-            anonymousId: true,
-            userId: false,
-            traits: false,
-            session: true
-        ))
+        let action = ResetUserIdentityAction(entries: ResetEntries(anonymousId: true, userId: false, traits: false, session: true))
         state.dispatch(action: action)
         
         let result = state.state.value
-        #expect(result.anonymousId != originalAnonymousId, "Anonymous ID should be regenerated")
-        #expect(result.userId == originalUserId, "User ID should be preserved")
-        #expect(areTraitsEqual(result.traits, originalTraits), "Traits should be preserved")
+        #expect(result.anonymousId != testAnonymousId, "Anonymous ID should be regenerated")
+        #expect(result.userId == testUserId, "User ID should be preserved")
+        #expect(areTraitsEqual(result.traits, testTraits), "Traits should be preserved")
     }
     
     // MARK: - State Management Integration Tests
     
     @Test("given subscribed state, when resetting identity, then subscribers receive updates")
     func testResetActionNotifiesSubscribers() {
-        let initialIdentity = createTestUserIdentity()
+        let initialIdentity = createTestUserIdentity(anonymousId: testAnonymousId, userId: testUserId, traits: testTraits)
         let state = createState(initialState: initialIdentity)
         
         var receivedIdentities: [UserIdentity] = []
@@ -183,7 +125,7 @@ struct ResetUserIdentityActionTests {
     
     @Test("given original identity, when applying reset action, then original identity remains unchanged")
     func testResetActionMaintainsImmutability() {
-        let originalIdentity = createTestUserIdentity()
+        let originalIdentity = createTestUserIdentity(anonymousId: testAnonymousId, userId: testUserId, traits: testTraits)
         let originalAnonymousId = originalIdentity.anonymousId
         let originalUserId = originalIdentity.userId
         let originalTraits = originalIdentity.traits
@@ -201,11 +143,7 @@ struct ResetUserIdentityActionTests {
 
 extension ResetUserIdentityActionTests {
     
-    private func createTestUserIdentity(
-        anonymousId: String = "test-anonymous-id",
-        userId: String = "test-user-id",
-        traits: [String: Any] = ["name": "John Doe", "email": "john@example.com"]
-    ) -> UserIdentity {
+    private func createTestUserIdentity(anonymousId: String, userId: String, traits: [String: Any]) -> UserIdentity {
         return UserIdentity(anonymousId: anonymousId, userId: userId, traits: traits)
     }
     
@@ -227,6 +165,10 @@ extension ResetUserIdentityActionTests {
         }
         return true
     }
+    
+    var testAnonymousId: String { "test-anonymous-id" }
+    var testUserId: String { "test-user-id" }
+    var testTraits: [String: Any] { ["name": "John Doe", "email": "john@example.com"] }
 }
 
 // MARK: - Helper Extensions

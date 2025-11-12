@@ -210,7 +210,7 @@ struct StateManagementTests {
         
         let finalState = stateInstance.state.value
         #expect(finalState.counter == 1)
-        #expect(finalState.isEnabled == true)
+        #expect(finalState.isEnabled)
         #expect(finalState.items == ["new_item"])
     }
     
@@ -236,7 +236,6 @@ struct StateManagementTests {
         actions.forEach { stateInstance.dispatch(action: $0) }
         
         #expect(stateInstance.state.value.count == 3)
-        #expect(stateInstance.state.value.count >= 0) // Invariant maintained
     }
     
     @Test("given different state types, when applying matching actions, then type safety is enforced")
@@ -276,6 +275,11 @@ struct StateManagementTests {
         var receivedValues: [Int] = []
         var cancellables: Set<AnyCancellable>? = Set<AnyCancellable>()
         
+        defer {
+            cancellables?.removeAll()
+            cancellables = nil
+        }
+        
         stateInstance.state.sink { value in
             receivedValues.append(value)
         }.store(in: &cancellables!)
@@ -285,9 +289,7 @@ struct StateManagementTests {
         
         #expect(receivedValues == [0, 1])
         
-        cancellables = nil
         stateInstance.dispatch(action: action)
-        
         #expect(receivedValues == [0, 1]) // Should not have changed
         #expect(stateInstance.state.value == 2) // But state should still be updated
     }
