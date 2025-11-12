@@ -151,19 +151,24 @@ extension ResetUserIdentityActionTests {
         guard lhs.count == rhs.count else { return false }
         
         for (key, lhsValue) in lhs {
-            guard let rhsValue = rhs[key] else { return false }
-            
-            // Compare based on type
-            switch (lhsValue, rhsValue) {
-            case (let l as String, let r as String): if l != r { return false }
-            case (let l as Int, let r as Int): if l != r { return false }
-            case (let l as Double, let r as Double): if l != r { return false }
-            case (let l as Bool, let r as Bool): if l != r { return false }
-            case (let l as [String: Any], let r as [String: Any]): if !areTraitsEqual(l, r) { return false }
-            default: return false // Unsupported type or type mismatch
+            guard let rhsValue = rhs[key],
+                  areValuesEqual(lhsValue, rhsValue) else {
+                return false
             }
         }
+        
         return true
+    }
+
+    private func areValuesEqual(_ lhs: Any, _ rhs: Any) -> Bool {
+        switch (lhs, rhs) {
+        case (let l as String, let r as String): return l == r
+        case (let l as Int, let r as Int): return l == r
+        case (let l as Double, let r as Double): return l == r
+        case (let l as Bool, let r as Bool): return l == r
+        case (let l as [String: Any], let r as [String: Any]): return areTraitsEqual(l, r)
+        default: return false
+        }
     }
     
     var testAnonymousId: String { "test-anonymous-id" }
