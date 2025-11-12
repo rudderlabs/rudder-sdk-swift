@@ -451,3 +451,17 @@ extension SwiftTestMockProvider {
          return nil
     }
 }
+
+// MARK: - MockAnalytics
+class MockAnalytics: Analytics {
+    var isFlushed: Bool = false
+    
+    init() {
+        let config = Configuration(writeKey: "_sample_write_key_", dataPlaneUrl: "_sample_data_plane_url_")
+        super.init(configuration: config)
+    }
+    
+    override func flush() {
+        self.isFlushed = true
+    }
+}
