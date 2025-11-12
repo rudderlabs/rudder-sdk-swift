@@ -5,79 +5,89 @@
 //  Created by Satheesh Kannan on 18/11/24.
 //
 
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class TrackEventTests: XCTestCase {
+@Suite("TrackEvent Tests")
+struct TrackEventTests {
     
-    func test_defaultTrackEvent() {
-        given("A track event with default values..") {
-            var event: Event = TrackEvent(event: MockProvider.SampleEventName.track)
-            event = event.updateEventData()
-            MockHelper.resetDynamicValues(&event)
-            
-            when("Serialize the event..") {
-                guard let json = event.jsonString?.trimmed else { XCTFail("Failed to serialize the event."); return }
-                
-                then("matches the expected JSON") {
-                    guard let expected = MockHelper.readJson(from: "track_with_default_arguments")?.trimmed else { XCTFail("Failed to read the expected JSON."); return }
-                    XCTAssertEqual(json, expected)
-                }
-            }
+    @Test("given a track event with default values, when serialized, then matches expected JSON")
+    func defaultTrackEvent() {
+        var event: Event = TrackEvent(event: MockProvider.SampleEventName.track)
+        event = event.updateEventData()
+        MockHelper.resetDynamicValues(&event)
+        
+        guard let json = event.jsonString?.trimmed else { 
+            Issue.record("Failed to serialize the event.")
+            return 
         }
+        
+        guard let expected = SwiftTestMockProvider.readJson(from: "track_with_default_arguments")?.trimmed else {
+            Issue.record("Failed to read the expected JSON.")
+            return 
+        }
+        
+        #expect(json == expected)
     }
     
-    func test_trackEvent_properties() {
-        given("A track event with properties..") {
-            var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties)
-            event = event.updateEventData()
-            MockHelper.resetDynamicValues(&event)
-            
-            when("Serialize the event..") {
-                guard let json = event.jsonString?.trimmed else { XCTFail("Failed to serialize the event."); return }
-                
-                then("matches the expected JSON") {
-                    guard let expected = MockHelper.readJson(from: "track_with_properties")?.trimmed else { XCTFail("Failed to read the expected JSON."); return }
-                    XCTAssertEqual(json, expected)
-                }
-            }
+    @Test("given a track event with properties, when serialized, then matches expected JSON")
+    func trackEventProperties() {
+        var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties)
+        event = event.updateEventData()
+        MockHelper.resetDynamicValues(&event)
+        
+        guard let json = event.jsonString?.trimmed else { 
+            Issue.record("Failed to serialize the event.")
+            return 
         }
+        
+        guard let expected = SwiftTestMockProvider.readJson(from: "track_with_properties")?.trimmed else {
+            Issue.record("Failed to read the expected JSON.")
+            return 
+        }
+        
+        #expect(json == expected)
     }
     
-    func test_trackEvent_options() {
-        given("A track event with options...") {
-            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
-            
-            var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, options: option)
-            event = event.updateEventData()
-            MockHelper.resetDynamicValues(&event)
-            
-            when("Serialize the event..") {
-                guard let json = event.jsonString?.trimmed else { XCTFail("Failed to serialize the event."); return }
-                
-                then("matches the expected JSON") {
-                    guard let expected = MockHelper.readJson(from: "track_with_options")?.trimmed else { XCTFail("Failed to read the expected JSON."); return }
-                    XCTAssertEqual(json, expected)
-                }
-            }
+    @Test("given a track event with options, when serialized, then matches expected JSON")
+    func trackEventOptions() {
+        let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
+        
+        var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, options: option)
+        event = event.updateEventData()
+        MockHelper.resetDynamicValues(&event)
+        
+        guard let json = event.jsonString?.trimmed else { 
+            Issue.record("Failed to serialize the event.")
+            return 
         }
+        
+        guard let expected = SwiftTestMockProvider.readJson(from: "track_with_options")?.trimmed else {
+            Issue.record("Failed to read the expected JSON.")
+            return 
+        }
+        
+        #expect(json == expected)
     }
     
-    func test_trackEvent_properties_options() {
-        given("A track event with properties & options...") {
-            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
-            
-            var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties, options: option)
-            event = event.updateEventData()
-            MockHelper.resetDynamicValues(&event)
-            
-            when("Serialize the event..") {
-                guard let json = event.jsonString?.trimmed else { XCTFail("Failed to serialize the event."); return }
-                then("matches the expected JSON") {
-                    guard let expected = MockHelper.readJson(from: "track_with_properties_options")?.trimmed else { XCTFail("Failed to read the expected JSON."); return }
-                    XCTAssertEqual(json, expected)
-                }
-            }
+    @Test("given a track event with properties and options, when serialized, then matches expected JSON")
+    func trackEventPropertiesOptions() {
+        let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
+        
+        var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties, options: option)
+        event = event.updateEventData()
+        MockHelper.resetDynamicValues(&event)
+        
+        guard let json = event.jsonString?.trimmed else { 
+            Issue.record("Failed to serialize the event.")
+            return 
         }
+        
+        guard let expected = SwiftTestMockProvider.readJson(from: "track_with_properties_options")?.trimmed else {
+            Issue.record("Failed to read the expected JSON.")
+            return 
+        }
+        
+        #expect(json == expected)
     }
 }
