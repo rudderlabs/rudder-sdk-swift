@@ -12,7 +12,7 @@ import Testing
 struct GroupEventTests {
     
     @Test("given a group event with default values, when serialized, then matches expected JSON")
-    func defaultGroupEvent() {
+    func testDefaultGroupEvent() {
         var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group)
         event = event.updateEventData()
         MockHelper.resetDynamicValues(&event)
@@ -31,7 +31,7 @@ struct GroupEventTests {
     }
     
     @Test("given a group event with traits, when serialized, then matches expected JSON")
-    func groupEventTraits() {
+    func testGroupEventTraits() {
         var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties)
         event = event.updateEventData()
         MockHelper.resetDynamicValues(&event)
@@ -50,7 +50,7 @@ struct GroupEventTests {
     }
     
     @Test("given a group event with options, when serialized, then matches expected JSON")
-    func groupEventOptions() {
+    func testGroupEventOptions() {
         let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
         
         var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group, options: option)
@@ -71,7 +71,7 @@ struct GroupEventTests {
     }
     
     @Test("given a group event with traits and options, when serialized, then matches expected JSON")
-    func groupEventTraitsOptions() {
+    func testGroupEventTraitsOptions() {
         let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
         
         var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties, options: option)

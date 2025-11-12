@@ -19,7 +19,7 @@ struct LoggerAnalyticsTests {
     }
     
     @Test("given a mock logger with info level, when calling each log method, then only info/warn/error messages are logged")
-    func loggerLogsAtCorrectLevels() {
+    func testLoggerLogsAtCorrectLevels() {
         LoggerAnalytics.setLogger(mockLogger)
         LoggerAnalytics.logLevel = .info
         
@@ -38,7 +38,7 @@ struct LoggerAnalyticsTests {
     }
     
     @Test("given a mock logger with error level, when logging error with and without error object, then both errors are logged with correct messages")
-    func errorLoggingWithAndWithoutErrorObject() {
+    func testErrorLoggingWithAndWithoutErrorObject() {
         LoggerAnalytics.setLogger(mockLogger)
         LoggerAnalytics.logLevel = .error
         

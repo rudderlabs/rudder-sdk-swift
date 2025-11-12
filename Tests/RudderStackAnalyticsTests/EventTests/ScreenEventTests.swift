@@ -12,7 +12,7 @@ import Testing
 struct ScreenEventTests {
     
     @Test("given a screen event with default values, when serialized, then matches expected JSON")
-    func defaultScreenEvent() {
+    func testDefaultScreenEvent() {
         var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen)
         event = event.updateEventData()
         MockHelper.resetDynamicValues(&event)
@@ -31,7 +31,7 @@ struct ScreenEventTests {
     }
     
     @Test("given a screen event with category, when serialized, then matches expected JSON")
-    func screenEventCategory() {
+    func testScreenEventCategory() {
         var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main")
         event = event.updateEventData()
         MockHelper.resetDynamicValues(&event)
@@ -50,7 +50,7 @@ struct ScreenEventTests {
     }
     
     @Test("given a screen event with properties, when serialized, then matches expected JSON")
-    func screenEventProperties() {
+    func testScreenEventProperties() {
         var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, properties: MockProvider.sampleEventproperties)
         event = event.updateEventData()
         MockHelper.resetDynamicValues(&event)
@@ -69,7 +69,7 @@ struct ScreenEventTests {
     }
     
     @Test("given a screen event with options, when serialized, then matches expected JSON")
-    func screenEventOptions() {
+    func testScreenEventOptions() {
         let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
         
         var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, options: option)
@@ -90,7 +90,7 @@ struct ScreenEventTests {
     }
     
     @Test("given a screen event with category, properties and options, when serialized, then matches expected JSON")
-    func screenEventCategoryPropertiesOptions() {
+    func testScreenEventCategoryPropertiesOptions() {
         let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
         
         var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main", properties: MockProvider.sampleEventproperties, options: option)

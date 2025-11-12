@@ -12,7 +12,7 @@ import Testing
 struct IdentifyEventTests {
     
     @Test("given an identify event with default values, when serialized, then matches expected JSON")
-    func defaultIdentifyEvent() {
+    func testDefaultIdentifyEvent() {
         var event: Event = IdentifyEvent(userIdentity: UserIdentity(userId: "Test_User_Id"))
         event = event.updateEventData()
         MockHelper.resetDynamicValues(&event)
@@ -31,7 +31,7 @@ struct IdentifyEventTests {
     }
 
      @Test("given an identify event with traits, when serialized, then matches expected JSON")
-     func identifyEventTraits() {
+     func testIdentifyEventTraits() {
          var event: Event = IdentifyEvent(userIdentity: UserIdentity(userId: "Test_User_Id", traits: MockProvider.sampleEventproperties))
          event = event.updateEventData()
          MockHelper.resetDynamicValues(&event)
@@ -50,7 +50,7 @@ struct IdentifyEventTests {
      }
      
      @Test("given an identify event with options, when serialized, then matches expected JSON")
-     func identifyEventOptions() {
+     func testIdentifyEventOptions() {
          let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
          
          var event: Event = IdentifyEvent(options: option, userIdentity: UserIdentity(userId: "Test_User_Id"))
@@ -71,7 +71,7 @@ struct IdentifyEventTests {
      }
      
      @Test("given an identify event with traits and options, when serialized, then matches expected JSON")
-     func identifyEventTraitsOptions() {
+     func testIdentifyEventTraitsOptions() {
          let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
          
          var event: Event = IdentifyEvent(options: option, userIdentity: UserIdentity(userId: "Test_User_Id", traits: MockProvider.sampleEventproperties))

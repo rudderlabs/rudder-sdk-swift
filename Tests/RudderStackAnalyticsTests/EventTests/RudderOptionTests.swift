@@ -14,7 +14,7 @@ struct RudderOptionTests {
     // MARK: - RudderOption Initialization Tests
     
     @Test("given a RudderOption with default initialization, when checked, then contains expected default values")
-    func rudderOptionDefaultInitialization() {
+    func testRudderOptionDefaultInitialization() {
         let option = RudderOption()
         
         #expect(option.integrations != nil)
@@ -24,7 +24,7 @@ struct RudderOptionTests {
     }
     
     @Test("given a RudderOption with custom integrations, when checked, then contains both default and custom values")
-    func rudderOptionInitializationWithIntegrations() {
+    func testRudderOptionInitializationWithIntegrations() {
         let customIntegrations = ["Amplitude": true, "Firebase": false]
         let option = RudderOption(integrations: customIntegrations)
         
@@ -37,7 +37,7 @@ struct RudderOptionTests {
     }
     
     @Test("given a RudderOption with custom context, when checked, then contains provided custom context values")
-    func rudderOptionInitializationWithCustomContext() {
+    func testRudderOptionInitializationWithCustomContext() {
         let customContext = ["userId": "test_user", "sessionId": "session_123"]
         let option = RudderOption(customContext: customContext)
         
@@ -50,7 +50,7 @@ struct RudderOptionTests {
     }
     
     @Test("given a RudderOption with external IDs, when checked, then contains provided external ID values")
-    func rudderOptionInitializationWithExternalIds() {
+    func testRudderOptionInitializationWithExternalIds() {
         let externalIds = [
             ExternalId(type: "google", id: "google_user_123"),
             ExternalId(type: "facebook", id: "fb_user_456")
@@ -69,7 +69,7 @@ struct RudderOptionTests {
     }
     
     @Test("given a RudderOption with all parameters, when checked, then contains all provided values")
-    func rudderOptionFullInitialization() {
+    func testRudderOptionFullInitialization() {
         let customIntegrations = ["Amplitude": true, "Braze": false]
         let customContext: [String: Any] = ["experiment": "test_group", "feature_flag": true]
         let externalIds = [ExternalId(type: "internal", id: "internal_123")]
@@ -94,7 +94,7 @@ struct RudderOptionTests {
     }
     
     @Test("given a RudderOption with explicit nil parameters, when checked, then contains default integrations and nil values")
-    func rudderOptionNilParameterHandling() {
+    func testRudderOptionNilParameterHandling() {
         let option = RudderOption(
             integrations: nil,
             customContext: nil,
@@ -108,7 +108,7 @@ struct RudderOptionTests {
     }
     
     @Test("given a RudderOption with empty parameters, when checked, then contains only default integrations and empty collections")
-    func rudderOptionEmptyParameterHandling() {
+    func testRudderOptionEmptyParameterHandling() {
         let option = RudderOption(
             integrations: [:],
             customContext: [:],
@@ -125,7 +125,7 @@ struct RudderOptionTests {
     }
     
     @Test("given a RudderOption that overrides default 'All' integration, when checked, then custom 'All' value overrides default")
-    func rudderOptionOverrideDefaultIntegration() {
+    func testRudderOptionOverrideDefaultIntegration() {
         let customIntegrations = ["All": false, "Amplitude": true, "Firebase": true]
         let option = RudderOption(integrations: customIntegrations)
         

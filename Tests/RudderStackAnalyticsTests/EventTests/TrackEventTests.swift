@@ -12,7 +12,7 @@ import Testing
 struct TrackEventTests {
     
     @Test("given a track event with default values, when serialized, then matches expected JSON")
-    func defaultTrackEvent() {
+    func testDefaultTrackEvent() {
         var event: Event = TrackEvent(event: MockProvider.SampleEventName.track)
         event = event.updateEventData()
         MockHelper.resetDynamicValues(&event)
@@ -31,7 +31,7 @@ struct TrackEventTests {
     }
     
     @Test("given a track event with properties, when serialized, then matches expected JSON")
-    func trackEventProperties() {
+    func testTrackEventProperties() {
         var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties)
         event = event.updateEventData()
         MockHelper.resetDynamicValues(&event)
@@ -50,7 +50,7 @@ struct TrackEventTests {
     }
     
     @Test("given a track event with options, when serialized, then matches expected JSON")
-    func trackEventOptions() {
+    func testTrackEventOptions() {
         let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties])
         
         var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, options: option)
@@ -71,7 +71,7 @@ struct TrackEventTests {
     }
     
     @Test("given a track event with properties and options, when serialized, then matches expected JSON")
-    func trackEventPropertiesOptions() {
+    func testTrackEventPropertiesOptions() {
         let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
         
         var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, properties: MockProvider.sampleEventproperties, options: option)

@@ -13,7 +13,7 @@ struct MessageModuleTests {
     
     // MARK: - Track
     @Test("given parameters to create a track event, when created, then verifies event properties")
-    func trackEvent() {
+    func testTrackEvent() {
         let event = "Sample Event"
         
         var track = TrackEvent(event: event)
@@ -32,7 +32,7 @@ struct MessageModuleTests {
     }
     
     @Test("given parameters to create a track event with properties, when created, then verifies event with properties")
-    func trackEventProperties() {
+    func testTrackEventProperties() {
         let event = "Sample Event"
         let properties: [String: String] = ["property": "value"]
         
@@ -52,7 +52,7 @@ struct MessageModuleTests {
     }
     
     @Test("given parameters to create a track event with options, when created, then verifies event with options")
-    func trackEventOptions() {
+    func testTrackEventOptions() {
         let event = "Sample Event"
         let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
         
@@ -74,7 +74,7 @@ struct MessageModuleTests {
     }
     
     @Test("given parameters to create a track event with properties and options, when created, then verifies event with all data")
-    func trackEventPropertiesOptions() {
+    func testTrackEventPropertiesOptions() {
         let event = "Sample Event"
         let properties: [String: String] = ["property": "value"]
         let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
@@ -97,7 +97,7 @@ struct MessageModuleTests {
     }
     
     @Test("given fully loaded custom context option for track event, when created, then verifies custom context")
-    func trackEventCustomContext() {
+    func testTrackEventCustomContext() {
         let event = "Sample Event"
         let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
         
@@ -119,7 +119,7 @@ struct MessageModuleTests {
     
     // MARK: - Screen
     @Test("given parameters to create a screen event, when created, then verifies screen event properties")
-    func screenEvent() {
+    func testScreenEvent() {
         let name = "Sample Screen Event"
         
         var screen = ScreenEvent(screenName: name)
@@ -138,7 +138,7 @@ struct MessageModuleTests {
     }
     
     @Test("given parameters to create a screen event with properties, when created, then verifies screen event with properties")
-    func screenEventProperties() {
+    func testScreenEventProperties() {
         let name = "Sample Screen Event"
         let properties: [String: String] = ["property": "value"]
         
@@ -158,7 +158,7 @@ struct MessageModuleTests {
     }
     
     @Test("given parameters to create a screen event with options, when created, then verifies screen event with options")
-    func screenEventOptions() {
+    func testScreenEventOptions() {
         let name = "Sample Screen Event"
         let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
         
@@ -180,7 +180,7 @@ struct MessageModuleTests {
     }
     
     @Test("given parameters to create a screen event with properties and options, when created, then verifies screen event with all data")
-    func screenEventPropertiesOptions() {
+    func testScreenEventPropertiesOptions() {
         let name = "Sample Screen Event"
         let properties: [String: String] = ["property": "value"]
         let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
@@ -203,7 +203,7 @@ struct MessageModuleTests {
     }
     
     @Test("given fully loaded custom context option for screen event, when created, then verifies custom context")
-    func screenEventCustomContext() {
+    func testScreenEventCustomContext() {
         let name = "Sample Screen Event"
         let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
         
@@ -225,7 +225,7 @@ struct MessageModuleTests {
     
     // MARK: - Group
     @Test("given parameters to create a group event, when created, then verifies group event properties")
-    func groupEvent() {
+    func testGroupEvent() {
         let groupId = "Sample_Group_Id"
         
         var group = GroupEvent(groupId: groupId)
@@ -244,7 +244,7 @@ struct MessageModuleTests {
     }
     
     @Test("given parameters to create a group event with traits, when created, then verifies group event with traits")
-    func groupEventTraits() {
+    func testGroupEventTraits() {
         let groupId = "Sample_Group_Id"
         let traits = ["property": "value"]
         
@@ -265,7 +265,7 @@ struct MessageModuleTests {
     }
     
     @Test("given parameters to create a group event with options, when created, then verifies group event with options")
-    func groupEventOptions() {
+    func testGroupEventOptions() {
         let groupId = "Sample_Group_Id"
         let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
         
@@ -287,7 +287,7 @@ struct MessageModuleTests {
     }
     
     @Test("given parameters to create a group event with traits and options, when created, then verifies group event with all data")
-    func groupEventPropertiesOptions() {
+    func testGroupEventPropertiesOptions() {
         let groupId = "Sample_Group_Id"
         let traits = ["property": "value"]
         let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
@@ -311,7 +311,7 @@ struct MessageModuleTests {
     }
     
     @Test("given fully loaded custom context option for group event, when created, then verifies custom context")
-    func groupEventCustomContext() {
+    func testGroupEventCustomContext() {
         let groupId = "Sample_Group_Id"
         let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
         
