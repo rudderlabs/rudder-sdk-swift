@@ -28,32 +28,27 @@ struct UserIdentityTests {
     @Test("given storage with user identity data, when initializing, then stored values are used")
     func testInitializeStateWithStoredData() {
         let storage = MockKeyValueStorage()
-        let expectedAnonymousId = "test-anonymous-id"
-        let expectedUserId = "test-user-id"
-        let expectedTraits = ["name": "John Doe", "email": "test@example.com"]
         
-        storage.write(value: expectedAnonymousId, key: Constants.storageKeys.anonymousId)
-        storage.write(value: expectedUserId, key: Constants.storageKeys.userId)
-        storage.write(value: expectedTraits.jsonString, key: Constants.storageKeys.traits)
+        storage.write(value: testAnonymousId, key: Constants.storageKeys.anonymousId)
+        storage.write(value: testUserId, key: Constants.storageKeys.userId)
+        storage.write(value: testTraits.jsonString, key: Constants.storageKeys.traits)
         
         let userIdentity = UserIdentity.initializeState(storage)
         
-        #expect(userIdentity.anonymousId == expectedAnonymousId, "Anonymous ID should match stored value")
-        #expect(userIdentity.userId == expectedUserId, "User ID should match stored value")
-        #expect(userIdentity.traits.count == expectedTraits.count, "Traits should match stored values")
+        #expect(userIdentity.anonymousId == testAnonymousId, "Anonymous ID should match stored value")
+        #expect(userIdentity.userId == testUserId, "User ID should match stored value")
+        #expect(userIdentity.traits.count == testTraits.count, "Traits should match stored values")
     }
     
     @Test("given partial storage data, when initializing, then stored values are used with defaults for missing")
     func testInitializeStateWithPartialStoredData() {
         let storage = MockKeyValueStorage()
-        let expectedUserId = "stored-user-id"
-        
-        storage.write(value: expectedUserId, key: Constants.storageKeys.userId)
+        storage.write(value: testUserId, key: Constants.storageKeys.userId)
         
         let userIdentity = UserIdentity.initializeState(storage)
         
         #expect(!userIdentity.anonymousId.isEmpty, "Anonymous ID should be generated even if not stored")
-        #expect(userIdentity.userId == expectedUserId, "User ID should match stored value")
+        #expect(userIdentity.userId == testUserId, "User ID should match stored value")
         #expect(userIdentity.traits.isEmpty, "Traits should be empty when not stored")
     }
     
@@ -61,24 +56,18 @@ struct UserIdentityTests {
     
     @Test("given user identity parameters, when creating user identity, then all properties are set correctly")
     func testUserIdentityCreation() {
-        let anonymousId = "test-anonymous-id"
-        let userId = "test-user-id"
-        let traits = ["name": "Jane Doe", "age": 25] as [String: Any]
+        let userIdentity = UserIdentity(anonymousId: testAnonymousId, userId: testUserId, traits: testTraits)
         
-        let userIdentity = UserIdentity(anonymousId: anonymousId, userId: userId, traits: traits)
-        
-        #expect(userIdentity.anonymousId == anonymousId, "Anonymous ID should be set")
-        #expect(userIdentity.userId == userId, "User ID should be set")
-        #expect(userIdentity.traits.count == traits.count, "Traits should be set")
+        #expect(userIdentity.anonymousId == testAnonymousId, "Anonymous ID should be set")
+        #expect(userIdentity.userId == testUserId, "User ID should be set")
+        #expect(userIdentity.traits.count == testTraits.count, "Traits should be set")
     }
     
     @Test("given minimal parameters, when creating user identity, then optional properties use defaults")
     func testUserIdentityCreationWithDefaults() {
-        let anonymousId = "test-anonymous-id"
+        let userIdentity = UserIdentity(anonymousId: testAnonymousId)
         
-        let userIdentity = UserIdentity(anonymousId: anonymousId)
-        
-        #expect(userIdentity.anonymousId == anonymousId, "Anonymous ID should be set")
+        #expect(userIdentity.anonymousId == testAnonymousId, "Anonymous ID should be set")
         #expect(userIdentity.userId.isEmpty, "User ID should default to empty")
         #expect(userIdentity.traits.isEmpty, "Traits should default to empty")
     }
@@ -99,4 +88,8 @@ struct UserIdentityTests {
         #expect(userIdentity.anonymousId == validAnonymousId, "Valid anonymous ID should be preserved")
         #expect(userIdentity.traits.isEmpty, "Corrupted traits should default to empty")
     }
+    
+    var testAnonymousId: String { "test-anonymous-id" }
+    var testUserId: String { "test-user-id" }
+    var testTraits: [String: Any] { ["name": "John Doe", "email": "john@example.com"] }
 }

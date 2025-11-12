@@ -79,4 +79,3 @@ struct UserIdActionTests {
         #expect(originalIdentity.userId == originalUserId, "Original identity should not be modified")
     }
 }
-

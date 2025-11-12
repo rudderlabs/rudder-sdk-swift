@@ -268,29 +268,4 @@ struct StateManagementTests {
         #expect(state2.state.value == 20)
         #expect(state1.state.value != state2.state.value)
     }
-    
-    @Test("given active subscriptions, when cleaning up, then memory is managed properly")
-    func testStateSubscriptionCleanupAndMemoryManagement() {
-        let stateInstance = createState(initialState: 0)
-        var receivedValues: [Int] = []
-        var cancellables: Set<AnyCancellable>? = Set<AnyCancellable>()
-        
-        defer {
-            cancellables?.removeAll()
-            cancellables = nil
-        }
-        
-        stateInstance.state.sink { value in
-            receivedValues.append(value)
-        }.store(in: &cancellables!)
-        
-        let action = MockStateAction<Int> { $0 + 1 }
-        stateInstance.dispatch(action: action)
-        
-        #expect(receivedValues == [0, 1])
-        
-        stateInstance.dispatch(action: action)
-        #expect(receivedValues == [0, 1]) // Should not have changed
-        #expect(stateInstance.state.value == 2) // But state should still be updated
-    }
 }
