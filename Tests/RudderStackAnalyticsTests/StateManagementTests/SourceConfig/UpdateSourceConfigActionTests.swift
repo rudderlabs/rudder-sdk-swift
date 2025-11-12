@@ -12,6 +12,8 @@ import Combine
 @Suite("UpdateSourceConfigAction Tests")
 struct UpdateSourceConfigActionTests {
     
+    // MARK: - Basic Functionality Tests
+    
     @Test("given current source config, when updating with new config, then state is completely replaced")
     func testUpdateSourceConfigActionReplacesCurrentState() {
         let currentConfig = createCustomSourceConfig(
