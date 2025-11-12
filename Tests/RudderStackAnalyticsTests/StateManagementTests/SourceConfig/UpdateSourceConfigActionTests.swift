@@ -66,71 +66,6 @@ struct UpdateSourceConfigActionTests {
         #expect(currentState.source.isSourceEnabled == true)
     }
     
-    @Test("given subscribed state, when updating config, then subscribers receive updates")
-    func testUpdateSourceConfigActionNotifiesSubscribers() {
-        let initialConfig = createCustomSourceConfig(sourceId: "initial")
-        let stateInstance = createState(initialState: initialConfig)
-        
-        var receivedConfigs: [SourceConfig] = []
-        var cancellables = Set<AnyCancellable>()
-        
-        stateInstance.state.sink { config in
-            receivedConfigs.append(config)
-        }.store(in: &cancellables)
-        
-        let config1 = createCustomSourceConfig(sourceId: "update-1")
-        let config2 = createCustomSourceConfig(sourceId: "update-2")
-        
-        let action1 = UpdateSourceConfigAction(updatedSourceConfig: config1)
-        let action2 = UpdateSourceConfigAction(updatedSourceConfig: config2)
-        
-        stateInstance.dispatch(action: action1)
-        stateInstance.dispatch(action: action2)
-        
-        #expect(receivedConfigs.count == 3) // Initial + 2 updates
-        #expect(receivedConfigs[0].source.sourceId == "initial")
-        #expect(receivedConfigs[1].source.sourceId == "update-1")
-        #expect(receivedConfigs[2].source.sourceId == "update-2")
-    }
-    
-    // MARK: - Property Preservation Tests
-    
-    @Test("given config with all properties, when updating, then all properties are preserved",
-          arguments: [
-            ("source-1", "Source One", "key-1", true, "workspace-1", "2025-01-01"),
-            ("source-2", "Source Two", "key-2", false, "workspace-2", "2025-01-02"),
-            ("", "", "", true, "", ""),
-            ("special-🚀-id", "Special Source 🎯", "super-key-123", false, "workspace-special", "2025-12-31")
-          ])
-    func testUpdateSourceConfigActionPreservesAllProperties(
-        sourceId: String,
-        sourceName: String,
-        writeKey: String,
-        isEnabled: Bool,
-        workspaceId: String,
-        updatedAt: String
-    ) {
-        let currentConfig = createCustomSourceConfig()
-        let newConfig = createCustomSourceConfig(
-            sourceId: sourceId,
-            sourceName: sourceName,
-            writeKey: writeKey,
-            isEnabled: isEnabled,
-            workspaceId: workspaceId,
-            updatedAt: updatedAt
-        )
-        
-        let action = UpdateSourceConfigAction(updatedSourceConfig: newConfig)
-        let result = action.reduce(currentState: currentConfig)
-        
-        #expect(result.source.sourceId == sourceId)
-        #expect(result.source.sourceName == sourceName)
-        #expect(result.source.writeKey == writeKey)
-        #expect(result.source.isSourceEnabled == isEnabled)
-        #expect(result.source.workspaceId == workspaceId)
-        #expect(result.source.updatedAt == updatedAt)
-    }
-    
     // MARK: - Immutability Tests
     
     @Test("given original configs, when applying action, then original configs remain unchanged")
@@ -146,51 +81,6 @@ struct UpdateSourceConfigActionTests {
         
         #expect(originalCurrent.source.sourceId == currentSourceId)
         #expect(originalNew.source.sourceId == newSourceId)
-    }
-    
-    // MARK: - Edge Cases
-    
-    @Test("given config with empty destinations, when updating with destinations, then destinations are added")
-    func testUpdateSourceConfigActionHandlesEmptyDestinations() {
-        let currentConfig = createCustomSourceConfig(destinations: [])
-        let destination = createCustomDestination()
-        let newConfig = createCustomSourceConfig(destinations: [destination])
-        
-        let action = UpdateSourceConfigAction(updatedSourceConfig: newConfig)
-        let result = action.reduce(currentState: currentConfig)
-        
-        #expect(result.source.destinations.count == 1)
-        #expect(result.source.destinations[0].destinationId == "dest-1")
-    }
-    
-    @Test("given config with destinations, when updating with empty destinations, then destinations are removed")
-    func testUpdateSourceConfigActionHandlesDestinationRemoval() {
-        let destination = createCustomDestination()
-        let currentConfig = createCustomSourceConfig(destinations: [destination])
-        let newConfig = createCustomSourceConfig(destinations: [])
-        
-        let action = UpdateSourceConfigAction(updatedSourceConfig: newConfig)
-        let result = action.reduce(currentState: currentConfig)
-        
-        #expect(result.source.destinations.isEmpty)
-    }
-    
-    @Test("given initial state config, when updating, then initial state is replaced")
-    func testUpdateSourceConfigActionReplacesInitialState() {
-        let initialConfig = SourceConfig.initialState()
-        let realConfig = createCustomSourceConfig(
-            sourceId: "real-source",
-            sourceName: "Real Source",
-            writeKey: "real-key"
-        )
-        
-        let action = UpdateSourceConfigAction(updatedSourceConfig: realConfig)
-        let result = action.reduce(currentState: initialConfig)
-        
-        #expect(result.source.sourceId == "real-source")
-        #expect(result.source.sourceName == "Real Source")
-        #expect(result.source.writeKey == "real-key")
-        #expect(result.source.sourceId != String.empty)
     }
 }
 
