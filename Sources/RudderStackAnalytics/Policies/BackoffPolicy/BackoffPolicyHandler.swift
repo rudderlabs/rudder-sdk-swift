@@ -17,9 +17,9 @@ final actor BackoffPolicyHandler {
     private var currentAttempt: Int
     private var policy: BackoffPolicy
     
-    init(policy: BackoffPolicy = ExponentialBackoffPolicy()) {
+    init(policy: BackoffPolicy = ExponentialBackoffPolicy(), coolOffPeriodMillis: Int = BackoffPolicyConstants.coolOffPeriodInMilliseconds) {
         self.maxAttempts = BackoffPolicyConstants.maxAttempts
-        self.coolOffPeriodMillis = BackoffPolicyConstants.coolOffPeriodInMilliseconds
+        self.coolOffPeriodMillis = coolOffPeriodMillis
         self.policy = policy
         self.currentAttempt = 0
     }
