@@ -475,6 +475,7 @@
 			isa = PBXGroup;
 			children = (
 				53DEA6592E03D06F00D6C371 /* RudderStackAnalyticsTests.swift */,
+				5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */,
 				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
 				539D87392E588951009FC144 /* EventProcessingModuleTests */,
 				539D87362E5888DE009FC144 /* Helpers */,
@@ -1299,6 +1300,8 @@
 				53DEA6722E03D06F00D6C371 /* RudderStackAnalyticsTests.swift in Sources */,
 				537B96482EABF7A100E3ADE7 /* SourceConfigTests.swift in Sources */,
 				53E777582EB4C2BD00564D61 /* CountFlushPolicyTests.swift in Sources */,
+				859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */,
+				859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */,
 				53DEA6732E03D06F00D6C371 /* AliasEventTests.swift in Sources */,
 				859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */,
 				53E777602EB4D4D200564D61 /* FlushPolicyFacadeTests.swift in Sources */,
