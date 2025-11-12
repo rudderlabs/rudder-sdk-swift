@@ -17,29 +17,27 @@ struct DisableSourceConfigActionTests {
     @Test("given enabled source config, when disabling, then isSourceEnabled becomes false")
     func testDisableSourceConfigActionSetsEnabledToFalse() {
         let enabledConfig = createCustomSourceConfig(isEnabled: true)
-        #expect(enabledConfig.source.isSourceEnabled == true)
         
         let action = DisableSourceConfigAction()
         let result = action.reduce(currentState: enabledConfig)
         
-        #expect(result.source.isSourceEnabled == false)
+        #expect(!result.source.isSourceEnabled)
     }
     
     @Test("given already disabled source config, when disabling, then remains disabled")
     func testDisableSourceConfigActionWorksOnAlreadyDisabledSource() {
         let disabledConfig = createCustomSourceConfig(isEnabled: false)
-        #expect(disabledConfig.source.isSourceEnabled == false)
         
         let action = DisableSourceConfigAction()
         let result = action.reduce(currentState: disabledConfig)
         
-        #expect(result.source.isSourceEnabled == false)
+        #expect(!result.source.isSourceEnabled)
         #expect(result.source.sourceId == disabledConfig.source.sourceId)
     }
     
     @Test("given source config with destinations, when disabling, then all other properties are preserved")
     func testDisableSourceConfigActionPreservesAllOtherProperties() {
-        let destinations = [createCustomDestination(id: "dest-1", name: "Test Destination")]
+        let destinations = [createCustomDestination(id: customDestinationId, name: "Test Destination")]
         
         let originalConfig = createCustomSourceConfig(
             sourceId: "test-source-id",
@@ -57,11 +55,11 @@ struct DisableSourceConfigActionTests {
         #expect(result.source.sourceId == "test-source-id")
         #expect(result.source.sourceName == "Test Source Name")
         #expect(result.source.writeKey == "test-write-key")
-        #expect(result.source.isSourceEnabled == false) // Only this should change
+        #expect(!result.source.isSourceEnabled)
         #expect(result.source.workspaceId == "test-workspace-id")
         #expect(result.source.updatedAt == "2025-01-01T00:00:00.000Z")
         #expect(result.source.destinations.count == 1)
-        #expect(result.source.destinations.first?.destinationId == "dest-1")
+        #expect(result.source.destinations.first?.destinationId == customDestinationId)
     }
     
     // MARK: - State Management Integration Tests
@@ -75,7 +73,7 @@ struct DisableSourceConfigActionTests {
         stateInstance.dispatch(action: action)
         
         let currentState = stateInstance.state.value
-        #expect(currentState.source.isSourceEnabled == false)
+        #expect(!currentState.source.isSourceEnabled)
         #expect(currentState.source.sourceId == enabledConfig.source.sourceId)
     }
     
@@ -142,4 +140,6 @@ extension DisableSourceConfigActionTests {
             propagateEventsUntransformedOnError: baseMock.propagateEventsUntransformedOnError
         )
     }
+    
+    private var customDestinationId: String { "dest-1" }
 }
