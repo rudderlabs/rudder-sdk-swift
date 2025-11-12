@@ -38,6 +38,7 @@
 		537B96462EAB5D0A00E3ADE7 /* PluginModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */; };
 		537B96482EABF7A100E3ADE7 /* SourceConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B96472EABF7A100E3ADE7 /* SourceConfigTests.swift */; };
 		537B964B2EAC04EF00E3ADE7 /* SourceConfigProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537B964A2EAC04EF00E3ADE7 /* SourceConfigProviderTests.swift */; };
+		538180B02EC478120019EE05 /* UpdateSourceConfigActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538180AF2EC478120019EE05 /* UpdateSourceConfigActionTests.swift */; };
 		538F82C72E79583900C7ECEB /* UpdateSourceConfigAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */; };
 		539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */; };
 		539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FE2EA105D600DAC164 /* DiskStoreTests.swift */; };
@@ -234,6 +235,7 @@
 		537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginModuleTests.swift; sourceTree = "<group>"; };
 		537B96472EABF7A100E3ADE7 /* SourceConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigTests.swift; sourceTree = "<group>"; };
 		537B964A2EAC04EF00E3ADE7 /* SourceConfigProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigProviderTests.swift; sourceTree = "<group>"; };
+		538180AF2EC478120019EE05 /* UpdateSourceConfigActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSourceConfigActionTests.swift; sourceTree = "<group>"; };
 		538F82C62E79583900C7ECEB /* UpdateSourceConfigAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateSourceConfigAction.swift; sourceTree = "<group>"; };
 		539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryStoreTests.swift; sourceTree = "<group>"; };
 		539000FE2EA105D600DAC164 /* DiskStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskStoreTests.swift; sourceTree = "<group>"; };
@@ -475,7 +477,6 @@
 			isa = PBXGroup;
 			children = (
 				53DEA6592E03D06F00D6C371 /* RudderStackAnalyticsTests.swift */,
-				5393019D2E65562100DAEAD1 /* BackoffPolicyTests.swift */,
 				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
 				539D87392E588951009FC144 /* EventProcessingModuleTests */,
 				539D87362E5888DE009FC144 /* Helpers */,
@@ -539,6 +540,14 @@
 				537B964A2EAC04EF00E3ADE7 /* SourceConfigProviderTests.swift */,
 			);
 			path = SourceConfigModuleTests;
+			sourceTree = "<group>";
+		};
+		538180B12EC478240019EE05 /* SourceConfig */ = {
+			isa = PBXGroup;
+			children = (
+				538180AF2EC478120019EE05 /* UpdateSourceConfigActionTests.swift */,
+			);
+			path = SourceConfig;
 			sourceTree = "<group>";
 		};
 		538F82C82E79584000C7ECEB /* SourceConfig */ = {
@@ -925,6 +934,7 @@
 				53DEA6552E03D06F00D6C371 /* UserIdActionTests.swift */,
 				53DEA6562E03D06F00D6C371 /* UserIdentityTests.swift */,
 				53DEA6572E03D06F00D6C371 /* UserIdTraitsActionTests.swift */,
+				538180B12EC478240019EE05 /* SourceConfig */,
 			);
 			path = StateManagementTests;
 			sourceTree = "<group>";
@@ -1289,6 +1299,7 @@
 				53078F152EAFE796006F5847 /* HttpNetworkTests.swift in Sources */,
 				53DEA66C2E03D06F00D6C371 /* SessionActionTests.swift in Sources */,
 				53DEA66D2E03D06F00D6C371 /* ScreenInfoPluginTests.swift in Sources */,
+				538180B02EC478120019EE05 /* UpdateSourceConfigActionTests.swift in Sources */,
 				537846AF2EAA24CB00520374 /* EventWriterTests.swift in Sources */,
 				53DEA66E2E03D06F00D6C371 /* LoggerAnalyticsTests.swift in Sources */,
 				53DEA66F2E03D06F00D6C371 /* LocaleInfoPluginTests.swift in Sources */,
@@ -1300,8 +1311,6 @@
 				53DEA6722E03D06F00D6C371 /* RudderStackAnalyticsTests.swift in Sources */,
 				537B96482EABF7A100E3ADE7 /* SourceConfigTests.swift in Sources */,
 				53E777582EB4C2BD00564D61 /* CountFlushPolicyTests.swift in Sources */,
-				859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */,
-				859CEE162E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift in Sources */,
 				53DEA6732E03D06F00D6C371 /* AliasEventTests.swift in Sources */,
 				859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */,
 				53E777602EB4D4D200564D61 /* FlushPolicyFacadeTests.swift in Sources */,
