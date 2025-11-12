@@ -553,6 +553,17 @@
 			path = SourceConfig;
 			sourceTree = "<group>";
 		};
+		538180B42EC496680019EE05 /* UserIdentity */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA6532E03D06F00D6C371 /* ResetUserIdentityActionTests.swift */,
+				53DEA6552E03D06F00D6C371 /* UserIdActionTests.swift */,
+				53DEA6562E03D06F00D6C371 /* UserIdentityTests.swift */,
+				53DEA6572E03D06F00D6C371 /* UserIdTraitsActionTests.swift */,
+			);
+			path = UserIdentity;
+			sourceTree = "<group>";
+		};
 		538F82C82E79584000C7ECEB /* SourceConfig */ = {
 			isa = PBXGroup;
 			children = (
@@ -932,11 +943,8 @@
 		53DEA6582E03D06F00D6C371 /* StateManagementTests */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA6532E03D06F00D6C371 /* ResetUserIdentityActionTests.swift */,
 				53DEA6542E03D06F00D6C371 /* StateManagementTests.swift */,
-				53DEA6552E03D06F00D6C371 /* UserIdActionTests.swift */,
-				53DEA6562E03D06F00D6C371 /* UserIdentityTests.swift */,
-				53DEA6572E03D06F00D6C371 /* UserIdTraitsActionTests.swift */,
+				538180B42EC496680019EE05 /* UserIdentity */,
 				538180B12EC478240019EE05 /* SourceConfig */,
 			);
 			path = StateManagementTests;
