@@ -23,7 +23,7 @@ struct ResetUserIdentityActionTests {
         state.dispatch(action: action)
         
         let result = state.state.value
-        #expect(result.anonymousId != testAnonymousId, "Anonymous ID should be regenerated")
+        #expect(result.anonymousId != testAnonymousId, "\(anonymousIdRegeneratedMessage)")
         #expect(result.anonymousId.isValidUUID, "New anonymous ID should be a valid UUID")
         #expect(result.userId.isEmpty, "User ID should be reset to empty")
         #expect(result.traits.isEmpty, "Traits should be reset to empty")
@@ -41,7 +41,7 @@ struct ResetUserIdentityActionTests {
         let result = state.state.value
         #expect(result.anonymousId == testAnonymousId, "Anonymous ID should be preserved")
         #expect(result.userId.isEmpty, "User ID should be reset")
-        #expect(result.traits.isEmpty, "Traits should be reset")
+        #expect(result.traits.isEmpty, "\(traitsResetMessage)")
     }
     
     @Test("given user identity, when preserving user ID only, then user ID remains unchanged")
@@ -52,9 +52,9 @@ struct ResetUserIdentityActionTests {
         state.dispatch(action: action)
         
         let result = state.state.value
-        #expect(result.anonymousId != testAnonymousId, "Anonymous ID should be regenerated")
-        #expect(result.userId == testUserId, "User ID should be preserved")
-        #expect(result.traits.isEmpty, "Traits should be reset")
+        #expect(result.anonymousId != testAnonymousId, "\(anonymousIdRegeneratedMessage)")
+        #expect(result.userId == testUserId, "\(userIdPreservedMessage)")
+        #expect(result.traits.isEmpty, "\(traitsResetMessage)")
     }
     
     @Test("given user identity, when preserving traits only, then traits remain unchanged")
@@ -65,7 +65,7 @@ struct ResetUserIdentityActionTests {
         state.dispatch(action: action)
         
         let result = state.state.value
-        #expect(result.anonymousId != testAnonymousId, "Anonymous ID should be regenerated")
+        #expect(result.anonymousId != testAnonymousId, "\(anonymousIdRegeneratedMessage)")
         #expect(result.userId.isEmpty, "User ID should be reset")
         #expect(areTraitsEqual(result.traits, testTraits), "Traits should be preserved")
     }
@@ -81,8 +81,8 @@ struct ResetUserIdentityActionTests {
         
         let result = state.state.value
         #expect(result.anonymousId == testAnonymousId, "Anonymous ID should be preserved")
-        #expect(result.userId == testUserId, "User ID should be preserved")
-        #expect(result.traits.isEmpty, "Traits should be reset")
+        #expect(result.userId == testUserId, "\(userIdPreservedMessage)")
+        #expect(result.traits.isEmpty, "\(traitsResetMessage)")
     }
     
     @Test("given user identity, when preserving user ID and traits, then both are preserved")
@@ -93,8 +93,8 @@ struct ResetUserIdentityActionTests {
         state.dispatch(action: action)
         
         let result = state.state.value
-        #expect(result.anonymousId != testAnonymousId, "Anonymous ID should be regenerated")
-        #expect(result.userId == testUserId, "User ID should be preserved")
+        #expect(result.anonymousId != testAnonymousId, "\(anonymousIdRegeneratedMessage)")
+        #expect(result.userId == testUserId, "\(userIdPreservedMessage)")
         #expect(areTraitsEqual(result.traits, testTraits), "Traits should be preserved")
     }
     
@@ -171,9 +171,14 @@ extension ResetUserIdentityActionTests {
         }
     }
     
-    var testAnonymousId: String { "test-anonymous-id" }
-    var testUserId: String { "test-user-id" }
-    var testTraits: [String: Any] { ["name": "John Doe", "email": "john@example.com"] }
+    private var testAnonymousId: String { "test-anonymous-id" }
+    private var testUserId: String { "test-user-id" }
+    private var testTraits: [String: Any] { ["name": "John Doe", "email": "john@example.com"] }
+    
+    // Test assertion messages
+    private var anonymousIdRegeneratedMessage: String { "Anonymous ID should be regenerated" }
+    private var traitsResetMessage: String { "Traits should be reset" }
+    private var userIdPreservedMessage: String { "User ID should be preserved" }
 }
 
 // MARK: - Helper Extensions
