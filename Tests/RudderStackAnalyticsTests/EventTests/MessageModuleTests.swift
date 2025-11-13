@@ -261,7 +261,7 @@ struct MessageModuleTests {
         #expect(!(group.sentAt?.isEmpty ?? true))
         #expect(group.integrations != nil)
         #expect(group.traits != nil)
-        #expect((group.traits?.dictionary?.count == traits.count))
+        #expect(group.traits?.dictionary?.count == traits.count)
     }
     
     @Test("given parameters to create a group event with options, when created, then verifies group event with options")
@@ -307,7 +307,7 @@ struct MessageModuleTests {
         #expect(!(group.sentAt?.isEmpty ?? true))
         #expect(!(group.context?.isEmpty ?? true))
         #expect(group.traits != nil)
-        #expect((group.traits?.dictionary?.count == traits.count))
+        #expect(group.traits?.dictionary?.count == traits.count)
     }
     
     @Test("given fully loaded custom context option for group event, when created, then verifies custom context")

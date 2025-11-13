@@ -18,7 +18,7 @@ struct RudderOptionTests {
         let option = RudderOption()
         
         #expect(option.integrations != nil)
-        #expect(option.integrations?["All"] as? Bool == true)
+        #expect(option.integrations?["All"] as? Bool ?? false)
         #expect(option.customContext == nil)
         #expect(option.externalIds == nil)
     }
@@ -29,9 +29,9 @@ struct RudderOptionTests {
         let option = RudderOption(integrations: customIntegrations)
         
         #expect(option.integrations != nil)
-        #expect(option.integrations?["All"] as? Bool == true)
-        #expect(option.integrations?["Amplitude"] as? Bool == true)
-        #expect(option.integrations?["Firebase"] as? Bool == false)
+        #expect(option.integrations?["All"] as? Bool ?? false)
+        #expect(option.integrations?["Amplitude"] as? Bool ?? false)
+        #expect(!(option.integrations?["Firebase"] as? Bool ?? true))
         #expect(option.customContext == nil)
         #expect(option.externalIds == nil)
     }
@@ -42,7 +42,7 @@ struct RudderOptionTests {
         let option = RudderOption(customContext: customContext)
         
         #expect(option.integrations != nil)
-        #expect(option.integrations?["All"] as? Bool == true)
+        #expect(option.integrations?["All"] as? Bool ?? false)
         #expect(option.customContext != nil)
         #expect(option.customContext?["userId"] as? String == "test_user")
         #expect(option.customContext?["sessionId"] as? String == "session_123")
@@ -58,7 +58,7 @@ struct RudderOptionTests {
         let option = RudderOption(externalIds: externalIds)
         
         #expect(option.integrations != nil)
-        #expect(option.integrations?["All"] as? Bool == true)
+        #expect(option.integrations?["All"] as? Bool ?? false)
         #expect(option.customContext == nil)
         #expect(option.externalIds != nil)
         #expect(option.externalIds?.count == 2)
@@ -81,12 +81,12 @@ struct RudderOptionTests {
         )
         
         #expect(option.integrations != nil)
-        #expect(option.integrations?["All"] as? Bool == true)
-        #expect(option.integrations?["Amplitude"] as? Bool == true)
-        #expect(option.integrations?["Braze"] as? Bool == false)
+        #expect(option.integrations?["All"] as? Bool ?? false)
+        #expect(option.integrations?["Amplitude"] as? Bool ?? false)
+        #expect(!(option.integrations?["Braze"] as? Bool ?? true))
         #expect(option.customContext != nil)
         #expect(option.customContext?["experiment"] as? String == "test_group")
-        #expect(option.customContext?["feature_flag"] as? Bool == true)
+        #expect(option.customContext?["feature_flag"] as? Bool ?? false)
         #expect(option.externalIds != nil)
         #expect(option.externalIds?.count == 1)
         #expect(option.externalIds?[0].type == "internal")
@@ -102,7 +102,7 @@ struct RudderOptionTests {
         )
         
         #expect(option.integrations != nil)
-        #expect(option.integrations?["All"] as? Bool == true)
+        #expect(option.integrations?["All"] as? Bool ?? false)
         #expect(option.customContext == nil)
         #expect(option.externalIds == nil)
     }
@@ -117,7 +117,7 @@ struct RudderOptionTests {
         
         #expect(option.integrations != nil)
         #expect(option.integrations?.count == 1)
-        #expect(option.integrations?["All"] as? Bool == true)
+        #expect(option.integrations?["All"] as? Bool ?? false)
         #expect(option.customContext != nil)
         #expect(option.customContext?.count == 0)
         #expect(option.externalIds != nil)
@@ -130,9 +130,9 @@ struct RudderOptionTests {
         let option = RudderOption(integrations: customIntegrations)
         
         #expect(option.integrations != nil)
-        #expect(option.integrations?["All"] as? Bool == false)
-        #expect(option.integrations?["Amplitude"] as? Bool == true)
-        #expect(option.integrations?["Firebase"] as? Bool == true)
+        #expect(!(option.integrations?["All"] as? Bool ?? true))
+        #expect(option.integrations?["Amplitude"] as? Bool ?? false)
+        #expect(option.integrations?["Firebase"] as? Bool ?? false)
         #expect(option.integrations?.count == 3)
         #expect(option.customContext == nil)
         #expect(option.externalIds == nil)
