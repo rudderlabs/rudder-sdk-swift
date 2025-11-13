@@ -18,13 +18,13 @@ struct TrackEventTests {
         MockHelper.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
-            Issue.record("Failed to serialize the event.")
-            return 
+            Issue.record("\(errorMessageFailedToSerialize)")
+            return
         }
         
         guard let expected = SwiftTestMockProvider.readJson(from: "track_with_default_arguments")?.trimmed else {
-            Issue.record("Failed to read the expected JSON.")
-            return 
+            Issue.record("\(errorMessageFailedToRead)")
+            return
         }
         
         #expect(json == expected)
@@ -37,13 +37,13 @@ struct TrackEventTests {
         MockHelper.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
-            Issue.record("Failed to serialize the event.")
-            return 
+            Issue.record("\(errorMessageFailedToSerialize)")
+            return
         }
         
         guard let expected = SwiftTestMockProvider.readJson(from: "track_with_properties")?.trimmed else {
-            Issue.record("Failed to read the expected JSON.")
-            return 
+            Issue.record("\(errorMessageFailedToRead)")
+            return
         }
         
         #expect(json == expected)
@@ -58,13 +58,13 @@ struct TrackEventTests {
         MockHelper.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
-            Issue.record("Failed to serialize the event.")
-            return 
+            Issue.record("\(errorMessageFailedToSerialize)")
+            return
         }
         
         guard let expected = SwiftTestMockProvider.readJson(from: "track_with_options")?.trimmed else {
-            Issue.record("Failed to read the expected JSON.")
-            return 
+            Issue.record("\(errorMessageFailedToRead)")
+            return
         }
         
         #expect(json == expected)
@@ -79,15 +79,22 @@ struct TrackEventTests {
         MockHelper.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
-            Issue.record("Failed to serialize the event.")
-            return 
+            Issue.record("\(errorMessageFailedToSerialize)")
+            return
         }
         
         guard let expected = SwiftTestMockProvider.readJson(from: "track_with_properties_options")?.trimmed else {
-            Issue.record("Failed to read the expected JSON.")
-            return 
+            Issue.record("\(errorMessageFailedToRead)")
+            return
         }
         
         #expect(json == expected)
     }
+}
+
+
+// MARK: - Error Messages
+extension TrackEventTests{
+    private var errorMessageFailedToSerialize: String { "Failed to serialize the event." }
+    private var errorMessageFailedToRead: String { "Failed to read the expected JSON." }
 }

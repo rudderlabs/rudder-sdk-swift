@@ -18,13 +18,13 @@ struct GroupEventTests {
         MockHelper.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
-            Issue.record("Failed to serialize the event.")
-            return 
+            Issue.record("\(errorMessageFailedToSerialize)")
+            return
         }
         
         guard let expected = SwiftTestMockProvider.readJson(from: "group_with_default_arguments")?.trimmed else { 
-            Issue.record("Failed to read the expected JSON.")
-            return 
+            Issue.record("\(errorMessageFailedToRead)")
+            return
         }
         
         #expect(json == expected)
@@ -37,13 +37,13 @@ struct GroupEventTests {
         MockHelper.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
-            Issue.record("Failed to serialize the event.")
-            return 
+            Issue.record("\(errorMessageFailedToSerialize)")
+            return
         }
         
         guard let expected = SwiftTestMockProvider.readJson(from: "group_with_traits")?.trimmed else { 
-            Issue.record("Failed to read the expected JSON.")
-            return 
+            Issue.record("\(errorMessageFailedToRead)")
+            return
         }
         
         #expect(json == expected)
@@ -58,13 +58,13 @@ struct GroupEventTests {
         MockHelper.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
-            Issue.record("Failed to serialize the event.")
-            return 
+            Issue.record("\(errorMessageFailedToSerialize)")
+            return
         }
         
         guard let expected = SwiftTestMockProvider.readJson(from: "group_with_options")?.trimmed else { 
-            Issue.record("Failed to read the expected JSON.")
-            return 
+            Issue.record("\(errorMessageFailedToRead)")
+            return
         }
         
         #expect(json == expected)
@@ -79,15 +79,21 @@ struct GroupEventTests {
         MockHelper.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
-            Issue.record("Failed to serialize the event.")
-            return 
+            Issue.record("\(errorMessageFailedToSerialize)")
+            return
         }
         
         guard let expected = SwiftTestMockProvider.readJson(from: "group_with_all_values")?.trimmed else { 
-            Issue.record("Failed to read the expected JSON.")
-            return 
+            Issue.record("\(errorMessageFailedToRead)")
+            return
         }
         
         #expect(json == expected)
     }
+}
+
+// MARK: - Error Messages
+extension GroupEventTests{
+    private var errorMessageFailedToSerialize: String { "Failed to serialize the event." }
+    private var errorMessageFailedToRead: String { "Failed to read the expected JSON." }
 }
