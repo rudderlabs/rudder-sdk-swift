@@ -11,324 +11,252 @@ import Testing
 @Suite("MessageModule Tests")
 struct MessageModuleTests {
     
-    // MARK: - Track
+    // MARK: - Track Event Tests
     @Test("given parameters to create a track event, when created, then verifies event properties")
     func testTrackEvent() {
-        let event = "Sample Event"
-        
-        var track = TrackEvent(event: event)
-        if let updatedTrack = track.updateEventData() as? TrackEvent {
-            track = updatedTrack
-        }
-        
-        #expect(track.event == event)
-        #expect(track.type == .track)
-        #expect(!track.messageId.isEmpty)
-        #expect(!track.originalTimestamp.isEmpty)
-        #expect(track.channel == Constants.payload.channel)
-        #expect(track.integrations != nil)
-        #expect(!(track.sentAt?.isEmpty ?? true))
-        #expect(track.properties == nil)
+        testTrackEvent(name: "Sample Event")
     }
     
     @Test("given parameters to create a track event with properties, when created, then verifies event with properties")
     func testTrackEventProperties() {
-        let event = "Sample Event"
-        let properties: [String: String] = ["property": "value"]
-        
-        var track = TrackEvent(event: event, properties: properties)
-        if let updatedTrack = track.updateEventData() as? TrackEvent {
-            track = updatedTrack
-        }
-        
-        #expect(track.event == event)
-        #expect(track.type == .track)
-        #expect(!track.messageId.isEmpty)
-        #expect(!track.originalTimestamp.isEmpty)
-        #expect(track.channel == Constants.payload.channel)
-        #expect(!(track.sentAt?.isEmpty ?? true))
-        #expect(track.integrations != nil)
-        #expect(track.properties != nil)
+        testTrackEvent(name: "Sample Event", properties: ["property": "value"])
     }
     
     @Test("given parameters to create a track event with options, when created, then verifies event with options")
     func testTrackEventOptions() {
-        let event = "Sample Event"
-        let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-        
-        var track = TrackEvent(event: event, options: options)
-        if let updatedTrack = track.updateEventData() as? TrackEvent {
-            track = updatedTrack
-        }
-        
-        #expect(track.event == event)
-        #expect(track.type == .track)
-        #expect(!track.messageId.isEmpty)
-        #expect(!track.originalTimestamp.isEmpty)
-        #expect(track.channel == Constants.payload.channel)
-        #expect(track.integrations != nil)
-        #expect(!(track.integrations?.isEmpty ?? true))
-        #expect(!(track.sentAt?.isEmpty ?? true))
-        #expect(!(track.context?.isEmpty ?? true))
-        #expect(track.properties == nil)
+        testTrackEvent(name: "Sample Event", options: sampleOptions)
     }
     
     @Test("given parameters to create a track event with properties and options, when created, then verifies event with all data")
     func testTrackEventPropertiesOptions() {
-        let event = "Sample Event"
-        let properties: [String: String] = ["property": "value"]
-        let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-        
-        var track = TrackEvent(event: event, properties: properties, options: options)
-        if let updatedTrack = track.updateEventData() as? TrackEvent {
-            track = updatedTrack
-        }
-        
-        #expect(track.event == event)
-        #expect(track.type == .track)
-        #expect(!track.messageId.isEmpty)
-        #expect(!track.originalTimestamp.isEmpty)
-        #expect(track.channel == Constants.payload.channel)
-        #expect(track.integrations != nil)
-        #expect(!(track.integrations?.isEmpty ?? true))
-        #expect(!(track.sentAt?.isEmpty ?? true))
-        #expect(!(track.context?.isEmpty ?? true))
-        #expect(track.properties != nil)
+        testTrackEvent(name: "Sample Event", properties: ["property": "value"], options: sampleOptions)
     }
     
     @Test("given fully loaded custom context option for track event, when created, then verifies custom context")
     func testTrackEventCustomContext() {
-        let event = "Sample Event"
-        let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
-        
-        var track = TrackEvent(event: event, options: option)
-        if let updatedTrack = track.updateEventData() as? TrackEvent {
-            track = updatedTrack
-        }
-        
-        #expect(track.event == event)
-        #expect(track.type == .track)
-        #expect(!track.messageId.isEmpty)
-        #expect(!track.originalTimestamp.isEmpty)
-        #expect(track.channel == Constants.payload.channel)
-        #expect(track.integrations != nil)
-        #expect(!(track.integrations?.isEmpty ?? true))
-        #expect(!(track.sentAt?.isEmpty ?? true))
-        #expect(!(track.context?.isEmpty ?? true))
+        testTrackEvent(name: "Sample Event", options: complexOptions)
     }
     
-    // MARK: - Screen
+    // MARK: - Screen Event Tests
     @Test("given parameters to create a screen event, when created, then verifies screen event properties")
     func testScreenEvent() {
-        let name = "Sample Screen Event"
-        
-        var screen = ScreenEvent(screenName: name)
-        if let updatedScreen = screen.updateEventData() as? ScreenEvent {
-            screen = updatedScreen
-        }
-        
-        #expect(screen.event == name)
-        #expect(screen.type == .screen)
-        #expect(!screen.messageId.isEmpty)
-        #expect(!screen.originalTimestamp.isEmpty)
-        #expect(screen.channel == Constants.payload.channel)
-        #expect(screen.integrations != nil)
-        #expect(!(screen.sentAt?.isEmpty ?? true))
-        #expect(screen.properties != nil)
+        testScreenEvent(name: "Sample Screen Event")
     }
     
     @Test("given parameters to create a screen event with properties, when created, then verifies screen event with properties")
     func testScreenEventProperties() {
-        let name = "Sample Screen Event"
-        let properties: [String: String] = ["property": "value"]
-        
-        var screen = ScreenEvent(screenName: name, properties: properties)
-        if let updatedScreen = screen.updateEventData() as? ScreenEvent {
-            screen = updatedScreen
-        }
-        
-        #expect(screen.event == name)
-        #expect(screen.type == .screen)
-        #expect(!screen.messageId.isEmpty)
-        #expect(!screen.originalTimestamp.isEmpty)
-        #expect(screen.channel == Constants.payload.channel)
-        #expect(!(screen.sentAt?.isEmpty ?? true))
-        #expect(screen.integrations != nil)
-        #expect(screen.properties != nil)
+        testScreenEvent(name: "Sample Screen Event", properties: ["property": "value"])
     }
     
     @Test("given parameters to create a screen event with options, when created, then verifies screen event with options")
     func testScreenEventOptions() {
-        let name = "Sample Screen Event"
-        let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-        
-        var screen = ScreenEvent(screenName: name, options: options)
-        if let updatedScreen = screen.updateEventData() as? ScreenEvent {
-            screen = updatedScreen
-        }
-        
-        #expect(screen.event == name)
-        #expect(screen.type == .screen)
-        #expect(!screen.messageId.isEmpty)
-        #expect(!screen.originalTimestamp.isEmpty)
-        #expect(screen.channel == Constants.payload.channel)
-        #expect(screen.integrations != nil)
-        #expect(!(screen.integrations?.isEmpty ?? true))
-        #expect(!(screen.sentAt?.isEmpty ?? true))
-        #expect(!(screen.context?.isEmpty ?? true))
-        #expect(screen.properties != nil)
+        testScreenEvent(name: "Sample Screen Event", options: sampleOptions)
     }
     
     @Test("given parameters to create a screen event with properties and options, when created, then verifies screen event with all data")
     func testScreenEventPropertiesOptions() {
-        let name = "Sample Screen Event"
-        let properties: [String: String] = ["property": "value"]
-        let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-        
-        var screen = ScreenEvent(screenName: name, properties: properties, options: options)
-        if let updatedScreen = screen.updateEventData() as? ScreenEvent {
-            screen = updatedScreen
-        }
-        
-        #expect(screen.event == name)
-        #expect(screen.type == .screen)
-        #expect(!screen.messageId.isEmpty)
-        #expect(!screen.originalTimestamp.isEmpty)
-        #expect(screen.channel == Constants.payload.channel)
-        #expect(screen.integrations != nil)
-        #expect(!(screen.integrations?.isEmpty ?? true))
-        #expect(!(screen.sentAt?.isEmpty ?? true))
-        #expect(!(screen.context?.isEmpty ?? true))
-        #expect(screen.properties != nil)
+        testScreenEvent(name: "Sample Screen Event", properties: ["property": "value"], options: sampleOptions)
     }
     
     @Test("given fully loaded custom context option for screen event, when created, then verifies custom context")
     func testScreenEventCustomContext() {
-        let name = "Sample Screen Event"
-        let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
-        
-        var screen = ScreenEvent(screenName: name, options: option)
-        if let updatedScreen = screen.updateEventData() as? ScreenEvent {
-            screen = updatedScreen
-        }
-        
-        #expect(screen.event == name)
-        #expect(screen.type == .screen)
-        #expect(!screen.messageId.isEmpty)
-        #expect(!screen.originalTimestamp.isEmpty)
-        #expect(screen.channel == Constants.payload.channel)
-        #expect(screen.integrations != nil)
-        #expect(!(screen.integrations?.isEmpty ?? true))
-        #expect(!(screen.sentAt?.isEmpty ?? true))
-        #expect(!(screen.context?.isEmpty ?? true))
+        testScreenEvent(name: "Sample Screen Event", options: complexOptions)
     }
     
-    // MARK: - Group
+    // MARK: - Group Event Tests
+    
     @Test("given parameters to create a group event, when created, then verifies group event properties")
     func testGroupEvent() {
-        let groupId = "Sample_Group_Id"
-        
-        var group = GroupEvent(groupId: groupId)
-        if let updatedGroup = group.updateEventData() as? GroupEvent {
-            group = updatedGroup
-        }
-        
-        #expect(group.groupId == groupId)
-        #expect(group.type == .group)
-        #expect(!group.messageId.isEmpty)
-        #expect(!group.originalTimestamp.isEmpty)
-        #expect(group.channel == Constants.payload.channel)
-        #expect(group.integrations != nil)
-        #expect(!(group.sentAt?.isEmpty ?? true))
-        #expect(group.traits == nil)
+        testGroupEvent(groupId: "Sample_Group_Id")
     }
     
     @Test("given parameters to create a group event with traits, when created, then verifies group event with traits")
     func testGroupEventTraits() {
-        let groupId = "Sample_Group_Id"
-        let traits = ["property": "value"]
-        
-        var group = GroupEvent(groupId: groupId, traits: traits)
-        if let updatedGroup = group.updateEventData() as? GroupEvent {
-            group = updatedGroup
-        }
-        
-        #expect(group.groupId == groupId)
-        #expect(group.type == .group)
-        #expect(!group.messageId.isEmpty)
-        #expect(!group.originalTimestamp.isEmpty)
-        #expect(group.channel == Constants.payload.channel)
-        #expect(!(group.sentAt?.isEmpty ?? true))
-        #expect(group.integrations != nil)
-        #expect(group.traits != nil)
-        #expect(group.traits?.dictionary?.count == traits.count)
+        testGroupEvent(groupId: "Sample_Group_Id", traits: ["property": "value"])
     }
     
     @Test("given parameters to create a group event with options, when created, then verifies group event with options")
     func testGroupEventOptions() {
-        let groupId = "Sample_Group_Id"
-        let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-        
-        var group = GroupEvent(groupId: groupId, options: options)
-        if let updatedGroup = group.updateEventData() as? GroupEvent {
-            group = updatedGroup
-        }
-        
-        #expect(group.groupId == groupId)
-        #expect(group.type == .group)
-        #expect(!group.messageId.isEmpty)
-        #expect(!group.originalTimestamp.isEmpty)
-        #expect(group.channel == Constants.payload.channel)
-        #expect(group.integrations != nil)
-        #expect(!(group.integrations?.isEmpty ?? true))
-        #expect(!(group.sentAt?.isEmpty ?? true))
-        #expect(!(group.context?.isEmpty ?? true))
-        #expect(group.traits == nil)
+        testGroupEvent(groupId: "Sample_Group_Id", options: sampleOptions)
     }
     
     @Test("given parameters to create a group event with traits and options, when created, then verifies group event with all data")
     func testGroupEventPropertiesOptions() {
-        let groupId = "Sample_Group_Id"
-        let traits = ["property": "value"]
-        let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-        
-        var group = GroupEvent(groupId: groupId, traits: traits, options: options)
-        if let updatedGroup = group.updateEventData() as? GroupEvent {
-            group = updatedGroup
-        }
-        
-        #expect(group.groupId == groupId)
-        #expect(group.type == .group)
-        #expect(!group.messageId.isEmpty)
-        #expect(!group.originalTimestamp.isEmpty)
-        #expect(group.channel == Constants.payload.channel)
-        #expect(group.integrations != nil)
-        #expect(!(group.integrations?.isEmpty ?? true))
-        #expect(!(group.sentAt?.isEmpty ?? true))
-        #expect(!(group.context?.isEmpty ?? true))
-        #expect(group.traits != nil)
-        #expect(group.traits?.dictionary?.count == traits.count)
+        testGroupEvent(groupId: "Sample_Group_Id", traits: ["property": "value"], options: sampleOptions)
     }
     
     @Test("given fully loaded custom context option for group event, when created, then verifies custom context")
     func testGroupEventCustomContext() {
-        let groupId = "Sample_Group_Id"
-        let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
-        
-        var group = GroupEvent(groupId: groupId, options: option)
-        if let updatedGroup = group.updateEventData() as? GroupEvent {
-            group = updatedGroup
+        testGroupEvent(groupId: "Sample_Group_Id", options: complexOptions)
+    }
+    
+    // MARK: - Identify Event Tests
+    
+    @Test("given a simple identify event, when created, then verifies identify event parameters")
+    func testSimpleIdentifyEvent() {
+        testIdentifyEvent()
+    }
+    
+    @Test("given parameters to create identify event with options, when created, then verifies identify event parameters")
+    func testIdentifyEventOption() {
+        testIdentifyEvent(options: complexOptions)
+    }
+    
+    // MARK: - Alias Event Tests
+    
+    @Test("given a simple alias event, when created, then verifies alias event parameters")
+    func testSimpleAliasEvent() {
+        testAliasEvent()
+    }
+    
+    @Test("given parameters to create a alias event with options, when created, then verifies alias event parameters")
+    func testAliasEventOptions() {
+        testAliasEvent(options: complexOptions)
+    }
+    
+    @Test("given parameters to create a alias event with previous id, when created, then verifies alias event parameters")
+    func testAliasEventPreviousId() {
+        testAliasEvent(previousId: "my_previous_id")
+    }
+    
+    @Test("given parameters to create a alias event with previous id and options, when created, then verifies alias event parameters")
+    func testAliasEventPreviousIdOptions() {
+        testAliasEvent(previousId: "my_previous_id", options: complexOptions)
+    }
+}
+
+// MARK: - Helper Methods
+
+extension MessageModuleTests {
+    
+    /// Generic helper to create and validate any event
+    @discardableResult
+    private func createAndValidateEvent<T: Event>(
+        _ event: T,
+        expectedType: EventType,
+        hasOptions: Bool = false,
+        customValidation: ((T) -> Void)? = nil
+    ) -> T {
+        var updatedEvent = event
+        if let updated = event.updateEventData() as? T {
+            updatedEvent = updated
         }
         
-        #expect(group.groupId == groupId)
-        #expect(group.type == .group)
-        #expect(!group.messageId.isEmpty)
-        #expect(!group.originalTimestamp.isEmpty)
-        #expect(group.channel == Constants.payload.channel)
-        #expect(group.integrations != nil)
-        #expect(!(group.integrations?.isEmpty ?? true))
-        #expect(!(group.sentAt?.isEmpty ?? true))
-        #expect(!(group.context?.isEmpty ?? true))
-        #expect(group.traits == nil)
+        validateCommonEventProperties(updatedEvent, expectedType: expectedType)
+        if hasOptions {
+            validateEventWithOptions(updatedEvent)
+        }
+        customValidation?(updatedEvent)
+        
+        return updatedEvent
+    }
+    
+    // MARK: - Specific Event Helpers
+    
+    /// Helper to test track events with various configurations
+    private func testTrackEvent(name: String, properties: [String: Any]? = nil, options: RudderOption? = nil) {
+        createAndValidateEvent(
+            TrackEvent(event: name, properties: properties, options: options),
+            expectedType: .track,
+            hasOptions: options != nil
+        ) { event in
+            #expect(event.event == name)
+            if properties != nil {
+                #expect(event.properties != nil)
+            } else {
+                #expect(event.properties == nil)
+            }
+        }
+    }
+    
+    /// Helper to test screen events with various configurations
+    private func testScreenEvent(name: String, properties: [String: Any]? = nil, options: RudderOption? = nil) {
+        createAndValidateEvent(
+            ScreenEvent(screenName: name, properties: properties, options: options),
+            expectedType: .screen,
+            hasOptions: options != nil
+        ) { event in
+            #expect(event.event == name)
+            #expect(event.properties != nil) // Screen events always have properties
+        }
+    }
+    
+    /// Helper to test group events with various configurations
+    private func testGroupEvent(groupId: String, traits: [String: Any]? = nil, options: RudderOption? = nil) {
+        createAndValidateEvent(
+            GroupEvent(groupId: groupId, traits: traits, options: options),
+            expectedType: .group,
+            hasOptions: options != nil
+        ) { event in
+            #expect(event.groupId == groupId)
+            if let traits {
+                #expect(event.traits != nil)
+                #expect(event.traits?.dictionary?.count == traits.count)
+            } else {
+                #expect(event.traits == nil)
+            }
+        }
+    }
+    
+    /// Helper to test identify events with various configurations
+    private func testIdentifyEvent(options: RudderOption? = nil) {
+        createAndValidateEvent(
+            IdentifyEvent(options: options),
+            expectedType: .identify,
+            hasOptions: options != nil
+        ) { event in
+            #expect(event.options != nil)
+        }
+    }
+    
+    /// Helper to test alias events with various configurations
+    private func testAliasEvent(previousId: String = .empty, options: RudderOption? = nil) {
+        createAndValidateEvent(
+            AliasEvent(previousId: previousId, options: options),
+            expectedType: .alias,
+            hasOptions: options != nil
+        ) { event in
+            previousId.isEmpty ? #expect(event.previousId.isEmpty) : #expect(!event.previousId.isEmpty)
+            #expect(event.options != nil)
+        }
+    }
+    
+    /// Creates a sample options object
+    private var sampleOptions: RudderOption {
+        RudderOption(
+            integrations: ["SampleIntegration": false],
+            customContext: ["customContext": ["userContext": "content"]]
+        )
+    }
+    
+    /// Creates a complex options object for custom context testing
+    private var complexOptions: RudderOption {
+        RudderOption(
+            integrations: ["SDK": true, "Facebook": false],
+            customContext: [
+                "Key_1": ["Key1": "Value1"],
+                "Key_2": ["value1", "value2"],
+                "Key_3": "Value3",
+                "Key_4": 1234,
+                "Key_5": 5678.9,
+                "Key_6": true
+            ]
+        )
+    }
+    
+    /// Common validation for all event types
+    private func validateCommonEventProperties<T: Event>(_ event: T, expectedType: EventType) {
+        #expect(event.type == expectedType)
+        #expect(!event.messageId.isEmpty)
+        #expect(!event.originalTimestamp.isEmpty)
+        #expect(event.channel == Constants.payload.channel)
+        #expect(event.integrations != nil)
+        #expect(!(event.sentAt?.isEmpty ?? true))
+    }
+    
+    /// Validates context and integrations for events with options
+    private func validateEventWithOptions<T: Event>(_ event: T) {
+        #expect(!(event.integrations?.isEmpty ?? true))
+        #expect(!(event.context?.isEmpty ?? true))
     }
 }
