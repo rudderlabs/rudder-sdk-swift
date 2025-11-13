@@ -137,7 +137,6 @@
 		53DEA66F2E03D06F00D6C371 /* LocaleInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA6482E03D06F00D6C371 /* LocaleInfoPluginTests.swift */; };
 		53DEA6702E03D06F00D6C371 /* AppInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA6442E03D06F00D6C371 /* AppInfoPluginTests.swift */; };
 		53DEA6712E03D06F00D6C371 /* MockProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA6422E03D06F00D6C371 /* MockProvider.swift */; };
-		53DEA6722E03D06F00D6C371 /* RudderStackAnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA6592E03D06F00D6C371 /* RudderStackAnalyticsTests.swift */; };
 		53DEA6732E03D06F00D6C371 /* AliasEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA6212E03D06F00D6C371 /* AliasEventTests.swift */; };
 		53DEA6752E03D06F00D6C371 /* OSInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA64A2E03D06F00D6C371 /* OSInfoPluginTests.swift */; };
 		53DEA6762E03D06F00D6C371 /* SessionTrackingPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA64C2E03D06F00D6C371 /* SessionTrackingPluginTests.swift */; };
@@ -362,7 +361,6 @@
 		53DEA6552E03D06F00D6C371 /* UserIdActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdActionTests.swift; sourceTree = "<group>"; };
 		53DEA6562E03D06F00D6C371 /* UserIdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdentityTests.swift; sourceTree = "<group>"; };
 		53DEA6572E03D06F00D6C371 /* UserIdTraitsActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdTraitsActionTests.swift; sourceTree = "<group>"; };
-		53DEA6592E03D06F00D6C371 /* RudderStackAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderStackAnalyticsTests.swift; sourceTree = "<group>"; };
 		53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerAnalyticsTests.swift; sourceTree = "<group>"; };
 		53E112D92E7C4B9E005FEF67 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
 		53E777572EB4C2BD00564D61 /* CountFlushPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountFlushPolicyTests.swift; sourceTree = "<group>"; };
@@ -478,22 +476,19 @@
 		5319B8B62E0B0B2B00D3BD66 /* RudderStackAnalyticsTests */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA6592E03D06F00D6C371 /* RudderStackAnalyticsTests.swift */,
-				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
-				539D87392E588951009FC144 /* EventProcessingModuleTests */,
+				538180BB2EC60A000019EE05 /* Base */,
+				538180BC2EC60A230019EE05 /* EventsModule */,
 				539D87362E5888DE009FC144 /* Helpers */,
-				53DEA6272E03D06F00D6C371 /* EventTests */,
-				53DEA6292E03D06F00D6C371 /* LifecycleManagementTests */,
+				53DEA6292E03D06F00D6C371 /* LifecycleManagement */,
 				53DEA6432E03D06F00D6C371 /* MockResources */,
 				8CCA98802E817881006C3537 /* Network */,
-				53DEA64E2E03D06F00D6C371 /* PluginTests */,
-				53E7775A2EB4C7C500564D61 /* PolicyModuleTests */,
-				53DEA6522E03D06F00D6C371 /* SessionManagementTests */,
-				53DEA6582E03D06F00D6C371 /* StateManagementTests */,
+				53DEA64E2E03D06F00D6C371 /* Plugins */,
+				53E7775A2EB4C7C500564D61 /* Policies */,
+				53DEA6522E03D06F00D6C371 /* SessionManagement */,
+				53DEA6582E03D06F00D6C371 /* StateManagement */,
 				532904EE2E05BBDE00C8EFE2 /* TestPlans */,
-				539001022EA110E200DAC164 /* StorageModuleTests */,
-				537B96492EABF7AE00E3ADE7 /* SourceConfigModuleTests */,
-				539001052EA11A7400DAC164 /* AnalyticsTests.swift */,
+				539001022EA110E200DAC164 /* Storage */,
+				537B96492EABF7AE00E3ADE7 /* SourceConfig */,
 			);
 			path = RudderStackAnalyticsTests;
 			sourceTree = "<group>";
@@ -535,13 +530,13 @@
 			path = Reset;
 			sourceTree = "<group>";
 		};
-		537B96492EABF7AE00E3ADE7 /* SourceConfigModuleTests */ = {
+		537B96492EABF7AE00E3ADE7 /* SourceConfig */ = {
 			isa = PBXGroup;
 			children = (
 				537B96472EABF7A100E3ADE7 /* SourceConfigTests.swift */,
 				537B964A2EAC04EF00E3ADE7 /* SourceConfigProviderTests.swift */,
 			);
-			path = SourceConfigModuleTests;
+			path = SourceConfig;
 			sourceTree = "<group>";
 		};
 		538180B12EC478240019EE05 /* SourceConfig */ = {
@@ -564,6 +559,57 @@
 			path = UserIdentity;
 			sourceTree = "<group>";
 		};
+		538180BB2EC60A000019EE05 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
+				539001052EA11A7400DAC164 /* AnalyticsTests.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		538180BC2EC60A230019EE05 /* EventsModule */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA6272E03D06F00D6C371 /* Events */,
+				539D87392E588951009FC144 /* EventProcessing */,
+			);
+			path = EventsModule;
+			sourceTree = "<group>";
+		};
+		538180BD2EC60AB80019EE05 /* Basic */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA6442E03D06F00D6C371 /* AppInfoPluginTests.swift */,
+				53DEA6452E03D06F00D6C371 /* DeviceInfoPluginTests.swift */,
+				53DEA6462E03D06F00D6C371 /* LibraryInfoPluginTests.swift */,
+				53DEA6472E03D06F00D6C371 /* LifecycleTrackingPluginTests.swift */,
+				53DEA6482E03D06F00D6C371 /* LocaleInfoPluginTests.swift */,
+				53DEA6492E03D06F00D6C371 /* NetworkInfoPluginTests.swift */,
+				53DEA64A2E03D06F00D6C371 /* OSInfoPluginTests.swift */,
+				53DEA64B2E03D06F00D6C371 /* ScreenInfoPluginTests.swift */,
+				53DEA64C2E03D06F00D6C371 /* SessionTrackingPluginTests.swift */,
+				53DEA64D2E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift */,
+				537B96432EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift */,
+				537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */,
+			);
+			path = Basic;
+			sourceTree = "<group>";
+		};
+		538180BE2EC60ACD0019EE05 /* DeviceMode */ = {
+			isa = PBXGroup;
+			children = (
+				859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */,
+				859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */,
+				85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */,
+				85A10BBA2EA0B21500E47E01 /* IntegrationsControllerTests.swift */,
+				85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */,
+				85F2AC062EA7940200BE93AF /* EventFilteringPluginTests.swift */,
+				85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */,
+			);
+			path = DeviceMode;
+			sourceTree = "<group>";
+		};
 		538F82C82E79584000C7ECEB /* SourceConfig */ = {
 			isa = PBXGroup;
 			children = (
@@ -573,7 +619,7 @@
 			path = SourceConfig;
 			sourceTree = "<group>";
 		};
-		539001022EA110E200DAC164 /* StorageModuleTests */ = {
+		539001022EA110E200DAC164 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
 				539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */,
@@ -581,7 +627,7 @@
 				539001002EA110C300DAC164 /* BasicStorageTests.swift */,
 				537846AA2EA1723400520374 /* KeyValueStoreTests.swift */,
 			);
-			path = StorageModuleTests;
+			path = Storage;
 			sourceTree = "<group>";
 		};
 		539D86F32E5439AA009FC144 /* EventQueue */ = {
@@ -610,14 +656,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		539D87392E588951009FC144 /* EventProcessingModuleTests */ = {
+		539D87392E588951009FC144 /* EventProcessing */ = {
 			isa = PBXGroup;
 			children = (
 				537846AC2EAA22A200520374 /* EventQueueTests.swift */,
 				537846AE2EAA24CB00520374 /* EventWriterTests.swift */,
 				537846B02EAA2B3E00520374 /* EventUploaderTests.swift */,
 			);
-			path = EventProcessingModuleTests;
+			path = EventProcessing;
 			sourceTree = "<group>";
 		};
 		53AC39B52E16FA7D00B8E16C /* Resources */ = {
@@ -814,7 +860,7 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		53DEA6272E03D06F00D6C371 /* EventTests */ = {
+		53DEA6272E03D06F00D6C371 /* Events */ = {
 			isa = PBXGroup;
 			children = (
 				53DEA6212E03D06F00D6C371 /* AliasEventTests.swift */,
@@ -825,16 +871,16 @@
 				53AC39712E1533F300B8E16C /* RudderOptionTests.swift */,
 				53DEA6262E03D06F00D6C371 /* TrackEventTests.swift */,
 			);
-			path = EventTests;
+			path = Events;
 			sourceTree = "<group>";
 		};
-		53DEA6292E03D06F00D6C371 /* LifecycleManagementTests */ = {
+		53DEA6292E03D06F00D6C371 /* LifecycleManagement */ = {
 			isa = PBXGroup;
 			children = (
 				53DEA6282E03D06F00D6C371 /* LifecycleObserverTests.swift */,
 				53078F1C2EB10B18006F5847 /* LifecycleManagementUtilsTests.swift */,
 			);
-			path = LifecycleManagementTests;
+			path = LifecycleManagement;
 			sourceTree = "<group>";
 		};
 		53DEA62C2E03D06F00D6C371 /* Alias */ = {
@@ -904,50 +950,33 @@
 			path = MockResources;
 			sourceTree = "<group>";
 		};
-		53DEA64E2E03D06F00D6C371 /* PluginTests */ = {
+		53DEA64E2E03D06F00D6C371 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA6442E03D06F00D6C371 /* AppInfoPluginTests.swift */,
-				53DEA6452E03D06F00D6C371 /* DeviceInfoPluginTests.swift */,
-				53DEA6462E03D06F00D6C371 /* LibraryInfoPluginTests.swift */,
-				53DEA6472E03D06F00D6C371 /* LifecycleTrackingPluginTests.swift */,
-				53DEA6482E03D06F00D6C371 /* LocaleInfoPluginTests.swift */,
-				53DEA6492E03D06F00D6C371 /* NetworkInfoPluginTests.swift */,
-				53DEA64A2E03D06F00D6C371 /* OSInfoPluginTests.swift */,
-				53DEA64B2E03D06F00D6C371 /* ScreenInfoPluginTests.swift */,
-				53DEA64C2E03D06F00D6C371 /* SessionTrackingPluginTests.swift */,
-				53DEA64D2E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift */,
-				537B96432EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift */,
-				537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */,
-				859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */,
-				859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */,
-				85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */,
-				85A10BBA2EA0B21500E47E01 /* IntegrationsControllerTests.swift */,
-				85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */,
-				85F2AC062EA7940200BE93AF /* EventFilteringPluginTests.swift */,
-				85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */,
+				538180BD2EC60AB80019EE05 /* Basic */,
+				538180BE2EC60ACD0019EE05 /* DeviceMode */,
 			);
-			path = PluginTests;
+			path = Plugins;
 			sourceTree = "<group>";
 		};
-		53DEA6522E03D06F00D6C371 /* SessionManagementTests */ = {
+		53DEA6522E03D06F00D6C371 /* SessionManagement */ = {
 			isa = PBXGroup;
 			children = (
 				53DEA64F2E03D06F00D6C371 /* SessionActionTests.swift */,
 				53DEA6502E03D06F00D6C371 /* SessionHandlerTests.swift */,
 				53DEA6512E03D06F00D6C371 /* SessionInfoTests.swift */,
 			);
-			path = SessionManagementTests;
+			path = SessionManagement;
 			sourceTree = "<group>";
 		};
-		53DEA6582E03D06F00D6C371 /* StateManagementTests */ = {
+		53DEA6582E03D06F00D6C371 /* StateManagement */ = {
 			isa = PBXGroup;
 			children = (
 				53DEA6542E03D06F00D6C371 /* StateManagementTests.swift */,
 				538180B42EC496680019EE05 /* UserIdentity */,
 				538180B12EC478240019EE05 /* SourceConfig */,
 			);
-			path = StateManagementTests;
+			path = StateManagement;
 			sourceTree = "<group>";
 		};
 		53DEA65E2E03D06F00D6C371 /* Tests */ = {
@@ -958,7 +987,7 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		53E777592EB4C7B600564D61 /* FlushPolicies */ = {
+		53E777592EB4C7B600564D61 /* FlushPolicy */ = {
 			isa = PBXGroup;
 			children = (
 				53E777572EB4C2BD00564D61 /* CountFlushPolicyTests.swift */,
@@ -966,16 +995,16 @@
 				53E7775D2EB4D21000564D61 /* StartupFlushPolicyTests.swift */,
 				53E7775F2EB4D4D200564D61 /* FlushPolicyFacadeTests.swift */,
 			);
-			path = FlushPolicies;
+			path = FlushPolicy;
 			sourceTree = "<group>";
 		};
-		53E7775A2EB4C7C500564D61 /* PolicyModuleTests */ = {
+		53E7775A2EB4C7C500564D61 /* Policies */ = {
 			isa = PBXGroup;
 			children = (
-				53E777592EB4C7B600564D61 /* FlushPolicies */,
+				53E777592EB4C7B600564D61 /* FlushPolicy */,
 				53E777632EB511F100564D61 /* BackoffPolicy */,
 			);
-			path = PolicyModuleTests;
+			path = Policies;
 			sourceTree = "<group>";
 		};
 		53E777632EB511F100564D61 /* BackoffPolicy */ = {
@@ -1320,7 +1349,6 @@
 				53DEA6712E03D06F00D6C371 /* MockProvider.swift in Sources */,
 				53E777672EB5134C00564D61 /* BackoffPolicyHandlerTests.swift in Sources */,
 				537B96462EAB5D0A00E3ADE7 /* PluginModuleTests.swift in Sources */,
-				53DEA6722E03D06F00D6C371 /* RudderStackAnalyticsTests.swift in Sources */,
 				537B96482EABF7A100E3ADE7 /* SourceConfigTests.swift in Sources */,
 				53E777582EB4C2BD00564D61 /* CountFlushPolicyTests.swift in Sources */,
 				53DEA6732E03D06F00D6C371 /* AliasEventTests.swift in Sources */,
