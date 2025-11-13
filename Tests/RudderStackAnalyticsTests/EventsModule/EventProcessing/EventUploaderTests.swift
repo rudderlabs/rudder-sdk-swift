@@ -19,7 +19,7 @@ class EventUploaderTests {
     
     init() {
         mockStorage = MockStorage()
-        let config = SwiftTestMockProvider.createMockConfiguration(storage: mockStorage)
+        let config = MockProvider.createMockConfiguration(storage: mockStorage)
         config.trackApplicationLifecycleEvents = false
         config.sessionConfiguration.automaticSessionTracking = false
         config.flushPolicies = []
@@ -36,7 +36,7 @@ class EventUploaderTests {
     }
     
     deinit {
-        SwiftTestMockProvider.teardownMockURLSession()
+        MockProvider.teardownMockURLSession()
         eventUploader.stop()
         let storage = mockStorage
         Task.detached {
@@ -104,7 +104,7 @@ class EventUploaderTests {
     
     @Test("given EventUploader with non-retryable error 400, when upload batch, then does not retry and removes batch")
     func testUploadBatch_withNonRetryableError400_doesNotRetryAndRemovesBatch() async throws {
-        guard let mockEventJson = SwiftTestMockProvider.mockTrackEvent.jsonString else {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("Can't prepare mock event json")
             return
         }
@@ -117,7 +117,7 @@ class EventUploaderTests {
         }
         
         // Configure mock to return 400 error (non-retryable)
-        SwiftTestMockProvider.setupMockURLSession()
+        MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
             return (statusCode: 400, data: nil, headers: nil)
         }
@@ -129,7 +129,7 @@ class EventUploaderTests {
     
     @Test("given EventUploader with retryable error 502, when upload batch, then retries with backoff")
     func testUploadBatch_withRetryableError502_retriesWithBackoff() async throws {
-        guard let mockEventJson = SwiftTestMockProvider.mockTrackEvent.jsonString else {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("Can't prepare mock event json")
             return
         }
@@ -143,7 +143,7 @@ class EventUploaderTests {
         
         var callCount = 0
         // Configure mock to return 502 error
-        SwiftTestMockProvider.setupMockURLSession()
+        MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
             callCount += 1
             
@@ -163,7 +163,7 @@ class EventUploaderTests {
     
     @Test("given EventUploader with network unavailable error, when upload batch, then retries")
     func testUploadBatch_withNetworkUnavailableError_retries() async throws {
-        guard let mockEventJson = SwiftTestMockProvider.mockTrackEvent.jsonString else {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("Can't prepare mock event json")
             return
         }
@@ -178,7 +178,7 @@ class EventUploaderTests {
         var callCount = 0
         
         // Configure mock to simulate network unavailable
-        SwiftTestMockProvider.setupMockURLSession()
+        MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
             callCount += 1
             if callCount == 1 {
@@ -196,7 +196,7 @@ class EventUploaderTests {
     
     @Test("given EventUploader with timeout error, when upload batch, then retries as retryable error")
     func testUploadBatch_withTimeoutError_retriesAsRetryableError() async throws {
-        guard let mockEventJson = SwiftTestMockProvider.mockTrackEvent.jsonString else {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("Can't prepare mock event json")
             return
         }
@@ -211,7 +211,7 @@ class EventUploaderTests {
         var callCount = 0
         
         // Configure mock to simulate timeout
-        SwiftTestMockProvider.setupMockURLSession()
+        MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
             callCount += 1
             if callCount == 1 {
@@ -229,7 +229,7 @@ class EventUploaderTests {
     
     @Test("given EventUploader with non-retryable error 401, when upload batch, then stops uploader")
     func testUploadBatch_withNonRetryableError401_stopsUploader() async throws {
-        guard let mockEventJson = SwiftTestMockProvider.mockTrackEvent.jsonString else {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("Can't prepare mock event json")
             return
         }
@@ -244,7 +244,7 @@ class EventUploaderTests {
         var callCount = 0
         
         // Configure mock to return 401 error (invalid write key)
-        SwiftTestMockProvider.setupMockURLSession()
+        MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
             callCount += 1
             return (statusCode: 401, data: nil, headers: nil)
@@ -259,7 +259,7 @@ class EventUploaderTests {
     
     @Test("given EventUploader with non-retryable error 404, when upload batch, then stops uploader")
     func testUploadBatch_withNonRetryableError404_stopsUploader() async throws {
-        guard let mockEventJson = SwiftTestMockProvider.mockTrackEvent.jsonString else {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("Can't prepare mock event json")
             return
         }
@@ -274,7 +274,7 @@ class EventUploaderTests {
         var callCount = 0
         
         // Configure mock to return 404 error (source not found)
-        SwiftTestMockProvider.setupMockURLSession()
+        MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
             callCount += 1
             return (statusCode: 404, data: nil, headers: nil)
@@ -289,7 +289,7 @@ class EventUploaderTests {
     
     @Test("given EventUploader with non-retryable error 413, when upload batch, then does not retry")
     func testUploadBatch_withNonRetryableError413_doesNotRetry() async throws {
-        guard let mockEventJson = SwiftTestMockProvider.mockTrackEvent.jsonString else {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("Can't prepare mock event json")
             return
         }
@@ -304,7 +304,7 @@ class EventUploaderTests {
         var callCount = 0
         
         // Configure mock to return 413 error (payload too large)
-        SwiftTestMockProvider.setupMockURLSession()
+        MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
             callCount += 1
             return (statusCode: 413, data: nil, headers: nil)
@@ -318,7 +318,7 @@ class EventUploaderTests {
     
     @Test("given EventUploader with successful response, when upload batch, then completes without retry")
     func testUploadBatch_withSuccessfulResponse_completesWithoutRetry() async throws {
-        guard let mockEventJson = SwiftTestMockProvider.mockTrackEvent.jsonString else {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("Can't prepare mock event json")
             return
         }
@@ -333,7 +333,7 @@ class EventUploaderTests {
         var callCount = 0
         
         // Configure mock to return success
-        SwiftTestMockProvider.setupMockURLSession()
+        MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
             callCount += 1
             let successResponse = """

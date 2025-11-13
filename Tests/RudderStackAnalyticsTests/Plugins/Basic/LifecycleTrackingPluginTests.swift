@@ -16,7 +16,7 @@ class LifecycleTrackingPluginTests {
     
     init() {
         self.mockStorage = MockStorage()
-        self.analytics = SwiftTestMockProvider.createMockAnalytics(storage: mockStorage)
+        self.analytics = MockProvider.createMockAnalytics(storage: mockStorage)
         self.lifecycleTrackingPlugin = LifecycleTrackingPlugin()
     }
     
@@ -79,7 +79,7 @@ class LifecycleTrackingPluginTests {
     
     @Test("when setup is called, then analytics reference is stored")
     func test_pluginSetup() {
-        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        let analytics = MockProvider.createMockAnalytics()
         
         lifecycleTrackingPlugin.setup(analytics: analytics)
         

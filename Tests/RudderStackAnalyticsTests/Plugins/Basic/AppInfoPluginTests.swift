@@ -17,11 +17,11 @@ class AppInfoPluginTests {
     }
     
     @Test("when intercepting different events, then adds app context information", arguments:[
-        SwiftTestMockProvider.mockTrackEvent as Event,
-        SwiftTestMockProvider.mockScreenEvent as Event,
-        SwiftTestMockProvider.mockIdentifyEvent as Event,
-        SwiftTestMockProvider.mockGroupEvent as Event,
-        SwiftTestMockProvider.mockAliasEvent as Event
+        MockProvider.mockTrackEvent as Event,
+        MockProvider.mockScreenEvent as Event,
+        MockProvider.mockIdentifyEvent as Event,
+        MockProvider.mockGroupEvent as Event,
+        MockProvider.mockAliasEvent as Event
     ])
     func test_pluginIntercept(_ event: Event) {
         let result = appInfoPlugin.intercept(event: event)
@@ -38,7 +38,7 @@ class AppInfoPluginTests {
     
     @Test("when setup is called, then analytics reference is stored")
     func test_pluginSetup() {
-        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        let analytics = MockProvider.createMockAnalytics()
         
         appInfoPlugin.setup(analytics: analytics)
         

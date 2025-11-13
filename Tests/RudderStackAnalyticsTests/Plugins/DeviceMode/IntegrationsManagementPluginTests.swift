@@ -12,6 +12,15 @@ import Foundation
 
 struct IntegrationsManagementPluginTests {
     
+    var analytics: Analytics
+    
+    init() {
+        let mockConfiguration = MockProvider.createMockConfiguration()
+        mockConfiguration.flushPolicies = []
+        
+        self.analytics = Analytics(configuration: mockConfiguration)
+    }
+    
     // MARK: - Initialization Tests
     
     @Test("Given IntegrationsManagementPlugin, When initialized, Then plugin should have correct type and properties")
@@ -24,7 +33,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin, When setup is called, Then analytics should be set")
     func testSetup() async {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         
         analytics.add(plugin: plugin)
@@ -36,7 +44,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin without source config, When events are intercepted, Then events should be queued")
     func testEventQueuing() {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
@@ -50,7 +57,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin, When multiple events are intercepted, Then all events should be queued")
     func testMultipleEventQueuing() {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
@@ -68,7 +74,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin with max queue size, When more events than limit are queued, Then plugin should handle gracefully without crashing")
     func testQueueSizeLimit() {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
@@ -84,7 +89,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin, When source config is updated, Then integration destinations should be initialized")
     func testSourceConfigUpdate() async {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
@@ -107,7 +111,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin, When source config is disabled, Then integration initialization should be skipped")
     func testSourceConfigDisabled() async {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
@@ -127,7 +130,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin with queued events, When source config is fetched, Then queued events should be processed")
     func testEventProcessingAfterSourceConfig() async {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
@@ -158,7 +160,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin, When accessing integrationPluginStores, Then should delegate to IntegrationsController")
     func testIntegrationPluginStoresAccess() {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
@@ -174,7 +175,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin, When accessing integrationPluginChain, Then should delegate to IntegrationsController")
     func testIntegrationPluginChainAccess() {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
@@ -186,7 +186,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin, When setIsSourceEnabledFetchedAtLeastOnce is called, Then should delegate to IntegrationsController")
     func testSetIsSourceEnabledFetchedAtLeastOnce() {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
@@ -199,7 +198,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin, When initDestination is called, Then should delegate to IntegrationsController")
     func testInitDestinationDelegation() {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
@@ -217,7 +215,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin, When deinit is called, Then resources should be cleaned up")
     func testDeinit() {
-        let analytics = MockProvider.clientWithDiskStorage
         var plugin: IntegrationsManagementPlugin? = IntegrationsManagementPlugin()
         plugin?.setup(analytics: analytics)
         
@@ -230,7 +227,6 @@ struct IntegrationsManagementPluginTests {
     
     @Test("Given IntegrationsManagementPlugin, When event queuing fails, Then should handle gracefully")
     func testEventQueuingErrorHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         

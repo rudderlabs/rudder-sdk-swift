@@ -44,7 +44,6 @@
 		539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */; };
 		539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539000FE2EA105D600DAC164 /* DiskStoreTests.swift */; };
 		539001012EA110C300DAC164 /* BasicStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539001002EA110C300DAC164 /* BasicStorageTests.swift */; };
-		539001042EA119CA00DAC164 /* SwiftTestMockProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539001032EA119CA00DAC164 /* SwiftTestMockProvider.swift */; };
 		539001062EA11A7400DAC164 /* AnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539001052EA11A7400DAC164 /* AnalyticsTests.swift */; };
 		539301D92E6F10A300DAEAD1 /* ResetOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301D82E6F10A300DAEAD1 /* ResetOptions.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
@@ -241,7 +240,6 @@
 		539000FC2EA0FA2000DAC164 /* MemoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryStoreTests.swift; sourceTree = "<group>"; };
 		539000FE2EA105D600DAC164 /* DiskStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskStoreTests.swift; sourceTree = "<group>"; };
 		539001002EA110C300DAC164 /* BasicStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicStorageTests.swift; sourceTree = "<group>"; };
-		539001032EA119CA00DAC164 /* SwiftTestMockProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftTestMockProvider.swift; sourceTree = "<group>"; };
 		539001052EA11A7400DAC164 /* AnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsTests.swift; sourceTree = "<group>"; };
 		539301D82E6F10A300DAEAD1 /* ResetOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetOptions.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
@@ -645,7 +643,6 @@
 		539D87362E5888DE009FC144 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				539001032EA119CA00DAC164 /* SwiftTestMockProvider.swift */,
 				539D87342E5888C7009FC144 /* MockURLProtocol.swift */,
 				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
 				859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */,
@@ -1334,7 +1331,6 @@
 				859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */,
 				53DEA6692E03D06F00D6C371 /* IdentifyEventTests.swift in Sources */,
 				53DEA66A2E03D06F00D6C371 /* UserIdentityTests.swift in Sources */,
-				539001042EA119CA00DAC164 /* SwiftTestMockProvider.swift in Sources */,
 				53DEA66B2E03D06F00D6C371 /* SessionHandlerTests.swift in Sources */,
 				53078F152EAFE796006F5847 /* HttpNetworkTests.swift in Sources */,
 				53DEA66C2E03D06F00D6C371 /* SessionActionTests.swift in Sources */,

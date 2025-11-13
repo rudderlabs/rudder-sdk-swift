@@ -17,14 +17,14 @@ class NetworkInfoPluginTests {
     }
     
     @Test("when intercepting different events, then adds network context information", arguments:[
-        SwiftTestMockProvider.mockTrackEvent as Event,
-        SwiftTestMockProvider.mockScreenEvent as Event,
-        SwiftTestMockProvider.mockIdentifyEvent as Event,
-        SwiftTestMockProvider.mockGroupEvent as Event,
-        SwiftTestMockProvider.mockAliasEvent as Event
+        MockProvider.mockTrackEvent as Event,
+        MockProvider.mockScreenEvent as Event,
+        MockProvider.mockIdentifyEvent as Event,
+        MockProvider.mockGroupEvent as Event,
+        MockProvider.mockAliasEvent as Event
     ])
     func test_pluginIntercept(_ event: Event) {
-        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        let analytics = MockProvider.createMockAnalytics()
         networkInfoPlugin.setup(analytics: analytics)
         
         let result = networkInfoPlugin.intercept(event: event)
@@ -53,7 +53,7 @@ class NetworkInfoPluginTests {
         let mockUtils = NetworkInfoPluginUtils(monitor: mockMonitor)
         networkInfoPlugin.networkInfoUtils = mockUtils
         
-        let trackEvent = SwiftTestMockProvider.mockTrackEvent
+        let trackEvent = MockProvider.mockTrackEvent
         let result = networkInfoPlugin.intercept(event: trackEvent)
         
         #expect(result != nil)
@@ -80,7 +80,7 @@ class NetworkInfoPluginTests {
         let mockUtils = NetworkInfoPluginUtils(monitor: mockMonitor)
         networkInfoPlugin.networkInfoUtils = mockUtils
         
-        let trackEvent = SwiftTestMockProvider.mockTrackEvent
+        let trackEvent = MockProvider.mockTrackEvent
         let result = networkInfoPlugin.intercept(event: trackEvent)
         
         #expect(result != nil)
@@ -107,7 +107,7 @@ class NetworkInfoPluginTests {
     
     @Test("when setup is called, then analytics reference is stored")
     func test_pluginSetup() {
-        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        let analytics = MockProvider.createMockAnalytics()
         
         networkInfoPlugin.setup(analytics: analytics)
         

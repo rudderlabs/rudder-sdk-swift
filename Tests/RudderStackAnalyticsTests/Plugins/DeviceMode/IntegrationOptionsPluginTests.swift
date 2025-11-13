@@ -13,10 +13,18 @@ private let mockDestinationKey = "MockDestination"
 
 struct IntegrationOptionsPluginTests {
     
+    var analytics: Analytics
+    
+    init() {
+        let mockConfiguration = MockProvider.createMockConfiguration()
+        mockConfiguration.flushPolicies = []
+        
+        self.analytics = Analytics(configuration: mockConfiguration)
+    }
+    
     @Test("Event with all destinations enabled returns event")
     func eventWithAllDestinationsEnabled() {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
-        let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
         let event = TrackEvent(event: "event-name", properties: [:])
@@ -32,7 +40,6 @@ struct IntegrationOptionsPluginTests {
     @Test("Event with destination disabled returns nil")
     func eventWithDestinationDisabled() {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
-        let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
         let event = TrackEvent(event: "event-name", properties: [:])
@@ -47,7 +54,6 @@ struct IntegrationOptionsPluginTests {
     @Test("Event with all destinations disabled returns nil")
     func eventWithAllDestinationsDisabled() {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
-        let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
         let event = TrackEvent(event: "event-name", properties: [:])
@@ -62,7 +68,6 @@ struct IntegrationOptionsPluginTests {
     @Test("Event with all disabled but destination enabled returns event")
     func eventWithAllDisabledButDestinationEnabled() {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
-        let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
         let event = TrackEvent(event: "event-name", properties: [:])
@@ -81,7 +86,6 @@ struct IntegrationOptionsPluginTests {
     @Test("Plugin for different destination ignores mock destination")
     func pluginForDifferentDestination() {
         let plugin = IntegrationOptionsPlugin(key: "SomeOtherDestination")
-        let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
         let event = TrackEvent(event: "event-name", properties: [:])
@@ -100,7 +104,6 @@ struct IntegrationOptionsPluginTests {
     @Test("Event with empty integrations returns event")
     func eventWithEmptyIntegrations() {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
-        let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
         let event = TrackEvent(event: "event-name", properties: [:])
@@ -116,7 +119,6 @@ struct IntegrationOptionsPluginTests {
     @Test("Event with integration field set to string returns event")
     func eventWithIntegrationFieldAsString() {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
-        let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
         let event = TrackEvent(event: "event-name", properties: [:])
@@ -132,7 +134,6 @@ struct IntegrationOptionsPluginTests {
     @Test("Event with integration field set to complex object returns event")
     func eventWithIntegrationFieldAsComplexObject() {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
-        let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
         let event = TrackEvent(event: "event-name", properties: [:])
@@ -150,7 +151,6 @@ struct IntegrationOptionsPluginTests {
     @Test("Event with nil integrations returns event")
     func eventWithNilIntegrations() {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
-        let analytics = MockProvider.clientWithMemoryStorage
         plugin.setup(analytics: analytics)
         
         let event = TrackEvent(event: "event-name", properties: [:])

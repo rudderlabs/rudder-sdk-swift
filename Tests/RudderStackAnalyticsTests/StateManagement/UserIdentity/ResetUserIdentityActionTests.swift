@@ -139,7 +139,7 @@ struct ResetUserIdentityActionTests {
     }
 }
 
-// MARK: - Test Data Helpers using SwiftTestMockProvider
+// MARK: - Test Data Helpers using MockProvider
 
 extension ResetUserIdentityActionTests {
     

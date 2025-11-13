@@ -5,7 +5,8 @@
 //  Created by Satheesh Kannan on 18/09/24.
 //
 
-import XCTest
+import Testing
+import Foundation
 import Network
 @testable import RudderStackAnalytics
 
@@ -13,73 +14,349 @@ import Network
 final class MockProvider {
     private init() {}
     
-    static var _mockWriteKey: String {
-        return UUID().uuidString
-    }
-    static let keyValueStore: KeyValueStore = KeyValueStore(writeKey: _mockWriteKey)
-    
-    static var clientWithDiskStorage: Analytics {
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", flushPolicies: [])
-        return Analytics(configuration: configuration)
+    static var mockWriteKey: String {
+        return "test-write-key-\(UUID().uuidString)"
     }
     
-    static var clientWithMemoryStorage: Analytics {
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", flushPolicies: [])
-        return Analytics(configuration: configuration)
+    static var mockDataPlaneUrl: String {
+        return "https://test.dataplane.com"
     }
     
-    static func clientWithSessionConfig(config: SessionConfiguration) -> Analytics{
-        let configuration = Configuration(writeKey: _mockWriteKey, dataPlaneUrl: "https://run.mocky.io/v3/b2b6be48-2c87-4ef8-b3a1-22e921f5eae6", flushPolicies: [], sessionConfiguration: config)
-        return Analytics(configuration: configuration)
+    static func createMockAnalytics(
+        storage: Storage = MockStorage(),
+        sessionConfig: SessionConfiguration? = nil
+    ) -> Analytics {
+        let config = createMockConfiguration(storage: storage)
+        
+        if let sessionConfig = sessionConfig {
+            config.sessionConfiguration = sessionConfig
+        }
+        
+        return Analytics(configuration: config)
+    }
+    
+    static func createMockConfiguration(
+        writeKey: String? = nil,
+        dataPlaneUrl: String? = nil,
+        storage: Storage = MockStorage()
+    ) -> Configuration {
+        let config = Configuration(
+            writeKey: writeKey ?? mockWriteKey,
+            dataPlaneUrl: dataPlaneUrl ?? mockDataPlaneUrl
+        )
+        config.storageMode = storage.eventStorageMode
+        config.storage = storage
+        return config
+    }
+    
+    // MARK: - Mock Events
+    static var mockTrackEvent: TrackEvent {
+        return TrackEvent(
+            event: "Test Track Event",
+            properties: [
+                "property1": "value1",
+                "property2": 123,
+                "property3": true
+            ],
+            options: RudderOption()
+        )
+    }
+    
+    static var mockScreenEvent: ScreenEvent {
+        return ScreenEvent(
+            screenName: "Test Screen",
+            category: "Test Category",
+            properties: ["screen_property": "test_value"],
+            options: RudderOption()
+        )
+    }
+    
+    static var mockIdentifyEvent: IdentifyEvent {
+        return IdentifyEvent(options: RudderOption())
+    }
+    
+    static var mockGroupEvent: GroupEvent {
+        return GroupEvent(
+            groupId: "test-group-123",
+            traits: ["company": "Test Company"],
+            options: RudderOption()
+        )
+    }
+    
+    static var mockAliasEvent: AliasEvent {
+        return AliasEvent(
+            previousId: "old-user-id",
+            options: RudderOption()
+        )
+    }
+    
+    // MARK: - Mock Session Configuration
+    static var mockSessionConfiguration: SessionConfiguration {
+        let config = SessionConfiguration()
+        config.automaticSessionTracking = true
+        config.sessionTimeoutInMillis = 300000 // 5 minutes
+        return config
+    }
+    
+    static var mockManualSessionConfiguration: SessionConfiguration {
+        let config = SessionConfiguration()
+        config.automaticSessionTracking = false
+        config.sessionTimeoutInMillis = 600000 // 10 minutes
+        return config
+    }
+    
+    // MARK: - Mock Source Config
+    static var mockSourceConfig: SourceConfig {
+        let destinations = [
+            Destination(
+                destinationId: "test-dest-id-1",
+                destinationName: "Test Destination 1",
+                isDestinationEnabled: true,
+                destinationConfig: [:],
+                destinationDefinitionId: "test-dest-def-id-1",
+                destinationDefinition: DestinationDefinition(
+                    name: "Test Destination Definition",
+                    displayName: "Test Destination Display"
+                ),
+                updatedAt: "2024-10-15T10:00:00Z",
+                shouldApplyDeviceModeTransformation: true,
+                propagateEventsUntransformedOnError: false
+            )
+        ]
+        
+        return SourceConfig(
+            source: RudderServerConfigSource(
+                sourceId: "test-source-id",
+                sourceName: "Test Source",
+                writeKey: mockWriteKey,
+                isSourceEnabled: true,
+                workspaceId: "test-workspace-id",
+                updatedAt: "2024-10-15T10:00:00Z",
+                metricConfig: MetricsConfig(),
+                destinations: destinations
+            )
+        )
+    }
+
+    // MARK: - Mock User Identity
+    static var mockUserIdentity: UserIdentity {
+        return UserIdentity(
+            anonymousId: "test-anon-456", userId: "test-user-123"
+        )
     }
 }
 
-// MARK: - MockProvider(Extension)
-extension MockProvider {
+// MARK: - Unified Mock Plugin for Swift Testing
+final class MockEventCapturePlugin: Plugin {
+    var pluginType: PluginType
+    weak var analytics: Analytics?
     
-    static let simpleTrackEvent: TrackEvent = {
-        let event = TrackEvent(event: "Track_Event", properties: ["Property_1": "Value1"], options: RudderOption(customContext: ["custom_context": ["context_key": "context_value"]]))
+    // Tracking properties
+    private(set) var setupCalled = false
+    private(set) var executeCalled = false
+    private(set) var shutdownCalled = false
+    private(set) var capturedEvents: [Event] = []
+    private let eventLock = NSLock()
+    
+    // Configuration properties for advanced testing
+    var shouldFilterEvent = false
+    var shouldModifyEvent = false
+    var eventModifications: [String: Any] = [:]
+    
+    // MARK: - Initialization
+    
+    init(type: PluginType = .terminal, enableFiltering: Bool = false, enableModification: Bool = false) {
+        self.pluginType = type
+        self.shouldFilterEvent = enableFiltering
+        self.shouldModifyEvent = enableModification
+    }
+    
+    // MARK: - Plugin Protocol Methods
+    
+    func setup(analytics: Analytics) {
+        self.analytics = analytics
+        setupCalled = true
+    }
+    
+    func intercept(event: any Event) -> (any Event)? {
+        executeCalled = true
+        
+        // Always capture the event (before any filtering/modification)
+        eventLock.lock()
+        capturedEvents.append(event)
+        eventLock.unlock()
+        
+        // Handle filtering
+        if shouldFilterEvent {
+            return nil
+        }
+        
+        // Handle event modification
+        if shouldModifyEvent {
+            var modifiedEvent = event
+            
+            // Apply modifications based on event type
+            if var trackEvent = modifiedEvent as? TrackEvent {
+                var properties = trackEvent.properties?.dictionary?.rawDictionary ?? [:]
+                for (key, value) in eventModifications {
+                    properties[key] = value
+                }
+                trackEvent.properties = CodableCollection(dictionary: properties)
+                modifiedEvent = trackEvent
+            } else if var screenEvent = modifiedEvent as? ScreenEvent {
+                var properties = screenEvent.properties?.dictionary?.rawDictionary ?? [:]
+                for (key, value) in eventModifications {
+                    properties[key] = value
+                }
+                screenEvent.properties = CodableCollection(dictionary: properties)
+                modifiedEvent = screenEvent
+            } else if var identifyEvent = modifiedEvent as? IdentifyEvent {
+                var traits = identifyEvent.traits?.dictionary?.rawDictionary ?? [:]
+                for (key, value) in eventModifications {
+                    traits[key] = value
+                }
+                identifyEvent.traits = CodableCollection(dictionary: traits)
+                modifiedEvent = identifyEvent
+            } else if var groupEvent = modifiedEvent as? GroupEvent {
+                var traits = groupEvent.traits?.dictionary?.rawDictionary ?? [:]
+                for (key, value) in eventModifications {
+                    traits[key] = value
+                }
+                groupEvent.traits = CodableCollection(dictionary: traits)
+                modifiedEvent = groupEvent
+            }
+            
+            return modifiedEvent
+        }
+        
         return event
-    }()
-    
-    struct SampleEventName {
-        private init() {}
-        static let track = "Sample_Track_Event"
-        static let screen = "Sample_Screen_Event"
-        static let group = "Sample_Group_Event"
     }
     
-    static let sampleEventproperties: [String: Any] = [
-        "key-1": "String value",
-        "key-2": 123,
-        "key-3": true,
-        "key-4": 123.456,
-        "key-5": [
-            "key-6": "String value",
-            "key-7": 123,
-            "key-8": true,
-            "key-9": 123.456
-        ],
-        "key-10": [
-            "String value",
-            123,
-            true,
-            123.456
-        ],
-        "key-11": [:]
-    ]
+    func shutdown() {
+        shutdownCalled = true
+    }
     
-    static let sampleEventIntegrations: [String: Bool] = [
-        "Amplitude": true,
-        "Firebase": true,
-        "Braze": false
-    ]
+    // MARK: - Event Access Methods
+    
+    var lastProcessedEvent: Event? {
+        eventLock.lock()
+        defer { eventLock.unlock() }
+        return capturedEvents.last
+    }
+    
+    var receivedEvents: [Event] {
+        eventLock.lock()
+        defer { eventLock.unlock() }
+        return capturedEvents
+    }
+    
+    func getEventsOfType<T: Event>(_ type: T.Type) -> [T] {
+        eventLock.lock()
+        defer { eventLock.unlock() }
+        return capturedEvents.compactMap { $0 as? T }
+    }
+    
+    func clearEvents() {
+        eventLock.lock()
+        capturedEvents.removeAll()
+        eventLock.unlock()
+    }
+    
+    var eventCount: Int {
+        eventLock.lock()
+        defer { eventLock.unlock() }
+        return capturedEvents.count
+    }
+    
+    // MARK: - Configuration Methods
+    
+    func enableFiltering() {
+        shouldFilterEvent = true
+    }
+    
+    func disableFiltering() {
+        shouldFilterEvent = false
+    }
+    
+    func enableModification(with modifications: [String: Any] = [:]) {
+        shouldModifyEvent = true
+        eventModifications = modifications
+    }
+    
+    func disableModification() {
+        shouldModifyEvent = false
+        eventModifications = [:]
+    }
+    
+    func setEventModifications(_ modifications: [String: Any]) {
+        eventModifications = modifications
+    }
 }
 
+extension MockEventCapturePlugin {
+    // Generic version (wait for specific type)
+    @discardableResult
+    func waitForEvents<T: Event>(_ type: T.Type, count expectedCount: Int = 1, timeout: TimeInterval? = nil) async -> [T] {
+        let start = Date()
+        
+        while true {
+            let events = getEventsOfType(type)
+            if events.count >= expectedCount {
+                return events
+            }
+            if let timeout, Date().timeIntervalSince(start) > timeout {
+                return events
+            }
+            await Task.yield()
+        }
+    }
+
+    // Non-generic version (wait for all events)
+    @discardableResult
+    func waitForEvents(count expectedCount: Int = 1, timeout: TimeInterval? = nil) async -> [Event] {
+        let start = Date()
+        
+        while true {
+            let events = receivedEvents
+            if events.count >= expectedCount {
+                return events
+            }
+            if let timeout, Date().timeIntervalSince(start) > timeout {
+                return events
+            }
+            await Task.yield()
+        }
+    }
+}
+
+// MARK: - Test Helpers
 extension MockProvider {
+    
+    static func setupMockURLSession() {
+        URLProtocol.registerClass(MockURLProtocol.self)
+        
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        HttpNetwork.session = URLSession(configuration: config)
+    }
+    
+    static func teardownMockURLSession() {
+        URLProtocol.unregisterClass(MockURLProtocol.self)
+        let config = URLSessionConfiguration.ephemeral
+        HttpNetwork.session = URLSession(configuration: config)
+    }
+    
+    func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
+        // Suspend the current task for the specified duration
+        let nanoseconds = UInt64(seconds * 1_000_000_000)
+        try? await Task.sleep(nanoseconds: nanoseconds)
+        
+        // Execute the block after the delay
+        await block()
+    }
     
     static var sourceConfiguration: SourceConfig? {
-        guard let mockJson = MockHelper.readJson(from: "mock_source_config")?.trimmed, let mockJsonData = mockJson.utf8Data else { return nil }
+        guard let mockJson = MockProvider.readJson(from: "mock_source_config")?.trimmed, let mockJsonData = mockJson.utf8Data else { return nil }
         do {
             let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: mockJsonData)
             return sourceConfig
@@ -119,18 +396,49 @@ extension MockProvider {
     }
 }
 
-// MARK: - MockHelper
-struct MockHelper {
-    private init() {}
+// MARK: - MockLogger for capturing log output
+class SwiftMockLogger: Logger {
+    var logs: [(level: String, message: String)] = []
     
-    static func seconds(from millis: Double) -> Double {
-        return Double(millis) / 1000
+    func verbose(log: String) {
+        logs.append(("VERBOSE", log))
     }
     
-    static func milliseconds(from seconds: Double) -> Double {
-        return Double(seconds * 1000)
+    func debug(log: String) {
+        logs.append(("DEBUG", log))
     }
     
+    func info(log: String) {
+        logs.append(("INFO", log))
+    }
+    
+    func warn(log: String) {
+        logs.append(("WARN", log))
+    }
+    
+    func error(log: String, error: Error?) {
+        if let error {
+            logs.append(("ERROR", "\(log) - \(error.localizedDescription)"))
+        } else {
+            logs.append(("ERROR", log))
+        }
+    }
+    
+    func clearLogs() {
+        logs.removeAll()
+    }
+    
+    func hasLog(level: String, containing message: String) -> Bool {
+        return logs.contains { $0.level == level && $0.message.contains(message) }
+    }
+    
+    func logCount(for level: String) -> Int {
+        return logs.filter { $0.level == level }.count
+    }
+}
+
+// MARK: - JSON Helper Functions
+extension MockProvider {
     static func readJson(from file: String) -> String? {
         var bundles = [
             Bundle(for: MockProvider.self),
@@ -158,53 +466,17 @@ struct MockHelper {
     }
 }
 
-// MARK: - Given_When_Then
-
-func given(_ description: String = "", closure: () -> Void) {
-    if !description.isEmpty { print("Given \(description)") }
-    closure()
-}
-
-func when(_ description: String = "", closure: () -> Void) {
-    if !description.isEmpty { print("When \(description)") }
-    closure()
-}
-
-func then(_ description: String = "", closure: () -> Void) {
-    if !description.isEmpty { print("Then \(description)") }
-    closure()
-}
-
-func given(_ description: String = "", closure: () async throws -> Void) async rethrows {
-    if !description.isEmpty { print("Given \(description)") }
-    try await closure()
-}
-
-func when(_ description: String = "", closure: () async throws -> Void) async rethrows {
-    if !description.isEmpty { print("When \(description)") }
-    try await closure()
-}
-
-func then(_ description: String = "", closure: () async throws -> Void) async rethrows {
-    if !description.isEmpty { print("Then \(description)") }
-    try await closure()
-}
-
-// MARK: - Run After
-
-func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
-    // Suspend the current task for the specified duration
-    let nanoseconds = UInt64(seconds * 1_000_000_000)
-    try? await Task.sleep(nanoseconds: nanoseconds)
+// MARK: - MockAnalytics
+class MockAnalytics: Analytics {
+    var isFlushed: Bool = false
     
-    // Execute the block after the delay
-    await block()
-}
-
-// MARK: - String(Extension)
-extension String {
-    var trimmed: String {
-        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+    init() {
+        let config = Configuration(writeKey: "_sample_write_key_", dataPlaneUrl: "_sample_data_plane_url_")
+        super.init(configuration: config)
+    }
+    
+    override func flush() {
+        self.isFlushed = true
     }
 }
 
@@ -231,11 +503,56 @@ class MockNetworkMonitor: NetworkMonitorProtocol {
     }
 }
 
-// MARK: - MockStateAction
-struct MockStateAction<T>: StateAction {
-    let mockReduce: (T) -> T
-    
-    func reduce(currentState: T) -> T {
-        return mockReduce(currentState)
+// MARK: - String(Extension)
+extension String {
+    var trimmed: String {
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
+}
+
+// MARK: - Run After
+
+func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
+    // Suspend the current task for the specified duration
+    let nanoseconds = UInt64(seconds * 1_000_000_000)
+    try? await Task.sleep(nanoseconds: nanoseconds)
+    
+    // Execute the block after the delay
+    await block()
+}
+
+// MARK: - MockProvider(Extension)
+extension MockProvider {
+    struct SampleEventName {
+        private init() {}
+        static let track = "Sample_Track_Event"
+        static let screen = "Sample_Screen_Event"
+        static let group = "Sample_Group_Event"
+    }
+    
+    static let sampleEventproperties: [String: Any] = [
+        "key-1": "String value",
+        "key-2": 123,
+        "key-3": true,
+        "key-4": 123.456,
+        "key-5": [
+            "key-6": "String value",
+            "key-7": 123,
+            "key-8": true,
+            "key-9": 123.456
+        ],
+        "key-10": [
+            "String value",
+            123,
+            true,
+            123.456
+        ],
+        "key-11": [:]
+    ]
+    
+    static let sampleEventIntegrations: [String: Bool] = [
+        "Amplitude": true,
+        "Firebase": true,
+        "Braze": false
+    ]
 }

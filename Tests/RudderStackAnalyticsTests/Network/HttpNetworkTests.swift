@@ -12,8 +12,8 @@ import Testing
 @Suite("HttpNetwork Tests")
 class HttpNetworkTests {
     
-    init() { SwiftTestMockProvider.setupMockURLSession() }
-    deinit { SwiftTestMockProvider.teardownMockURLSession() }
+    init() { MockProvider.setupMockURLSession() }
+    deinit { MockProvider.teardownMockURLSession() }
     
     @Test("given a success request, when it returns success status code in range, then HttpNetwork returns expected data",
           arguments: [(200, "https://success.test.com"),

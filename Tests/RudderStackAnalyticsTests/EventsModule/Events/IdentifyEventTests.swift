@@ -15,14 +15,14 @@ struct IdentifyEventTests {
     func testDefaultIdentifyEvent() {
         var event: Event = IdentifyEvent(userIdentity: UserIdentity(userId: "Test_User_Id"))
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
         
-        guard let expected = SwiftTestMockProvider.readJson(from: "identify_with_default_arguments")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "identify_with_default_arguments")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }
@@ -34,14 +34,14 @@ struct IdentifyEventTests {
      func testIdentifyEventTraits() {
          var event: Event = IdentifyEvent(userIdentity: UserIdentity(userId: "Test_User_Id", traits: MockProvider.sampleEventproperties))
          event = event.updateEventData()
-         MockHelper.resetDynamicValues(&event)
+         MockProvider.resetDynamicValues(&event)
          
          guard let json = event.jsonString?.trimmed else { 
              Issue.record("\(errorMessageFailedToSerialize)")
              return
          }
          
-         guard let expected = SwiftTestMockProvider.readJson(from: "identify_with_traits")?.trimmed else { 
+         guard let expected = MockProvider.readJson(from: "identify_with_traits")?.trimmed else { 
              Issue.record("\(errorMessageFailedToRead)")
              return
          }
@@ -55,14 +55,14 @@ struct IdentifyEventTests {
          
          var event: Event = IdentifyEvent(options: option, userIdentity: UserIdentity(userId: "Test_User_Id"))
          event = event.updateEventData()
-         MockHelper.resetDynamicValues(&event)
+         MockProvider.resetDynamicValues(&event)
          
          guard let json = event.jsonString?.trimmed else { 
              Issue.record("\(errorMessageFailedToSerialize)")
              return
          }
          
-         guard let expected = SwiftTestMockProvider.readJson(from: "identify_with_options")?.trimmed else { 
+         guard let expected = MockProvider.readJson(from: "identify_with_options")?.trimmed else { 
              Issue.record("\(errorMessageFailedToRead)")
              return
          }
@@ -76,14 +76,14 @@ struct IdentifyEventTests {
          
          var event: Event = IdentifyEvent(options: option, userIdentity: UserIdentity(userId: "Test_User_Id", traits: MockProvider.sampleEventproperties))
          event = event.updateEventData()
-         MockHelper.resetDynamicValues(&event)
+         MockProvider.resetDynamicValues(&event)
          
          guard let json = event.jsonString?.trimmed else { 
              Issue.record("\(errorMessageFailedToSerialize)")
              return
          }
          
-         guard let expected = SwiftTestMockProvider.readJson(from: "identify_with_all_values")?.trimmed else { 
+         guard let expected = MockProvider.readJson(from: "identify_with_all_values")?.trimmed else { 
              Issue.record("\(errorMessageFailedToRead)")
              return
          }

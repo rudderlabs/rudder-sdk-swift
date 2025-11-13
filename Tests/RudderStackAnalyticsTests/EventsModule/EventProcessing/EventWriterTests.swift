@@ -20,7 +20,7 @@ class EventWriterTests {
     
     init() {
         mockStorage = MockStorage()
-        let config = SwiftTestMockProvider.createMockConfiguration(storage: mockStorage)
+        let config = MockProvider.createMockConfiguration(storage: mockStorage)
         config.trackApplicationLifecycleEvents = false
         config.sessionConfiguration.automaticSessionTracking = false
         config.flushPolicies = []

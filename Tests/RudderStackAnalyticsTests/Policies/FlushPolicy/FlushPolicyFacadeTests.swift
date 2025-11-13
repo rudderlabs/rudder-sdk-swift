@@ -13,7 +13,7 @@ struct FlushPolicyFacadeTests {
         
     @Test("given analytics instance, when facade is created, then initializes correctly")
     func testFacadeInitialization() {
-        let configuration = SwiftTestMockProvider.createMockConfiguration()
+        let configuration = MockProvider.createMockConfiguration()
         configuration.flushPolicies = []
         let analytics = Analytics(configuration: configuration)
         
@@ -28,7 +28,7 @@ struct FlushPolicyFacadeTests {
         let countPolicy = CountFlushPolicy(flushAt: 5)
         let frequencyPolicy = FrequencyFlushPolicy(flushIntervalInMillis: 2000)
         
-        let configuration = SwiftTestMockProvider.createMockConfiguration()
+        let configuration = MockProvider.createMockConfiguration()
         configuration.flushPolicies = [startupPolicy, countPolicy, frequencyPolicy]
         let analytics = Analytics(configuration: configuration)
         
@@ -40,7 +40,7 @@ struct FlushPolicyFacadeTests {
     @Test("given facade with startup policy, when shouldFlush is called first time, then returns true")
     func testShouldFlushWithStartupPolicyFirstCall() {
         let startupPolicy = StartupFlushPolicy()
-        let configuration = SwiftTestMockProvider.createMockConfiguration()
+        let configuration = MockProvider.createMockConfiguration()
         configuration.flushPolicies = [startupPolicy]
         let analytics = Analytics(configuration: configuration)
         
@@ -52,7 +52,7 @@ struct FlushPolicyFacadeTests {
     @Test("given facade with count policy at threshold, when shouldFlush is called, then returns true")
     func testShouldFlushWithCountPolicyAtThreshold() {
         let countPolicy = CountFlushPolicy(flushAt: 3)
-        let configuration = SwiftTestMockProvider.createMockConfiguration()
+        let configuration = MockProvider.createMockConfiguration()
         configuration.flushPolicies = [countPolicy]
         let analytics = Analytics(configuration: configuration)
         
@@ -68,7 +68,7 @@ struct FlushPolicyFacadeTests {
     @Test("given facade with frequency policy only, when shouldFlush is called immediately, then returns false")
     func testShouldFlushWithFrequencyPolicyOnly() {
         let frequencyPolicy = FrequencyFlushPolicy(flushIntervalInMillis: 2000)
-        let configuration = SwiftTestMockProvider.createMockConfiguration()
+        let configuration = MockProvider.createMockConfiguration()
         configuration.flushPolicies = [frequencyPolicy]
         let analytics = Analytics(configuration: configuration)
         
@@ -81,7 +81,7 @@ struct FlushPolicyFacadeTests {
     @Test("given facade with count policy, when updateCount and resetCount are called, then manages count correctly")
     func testCountManagement() {
         let countPolicy = CountFlushPolicy(flushAt: 3)
-        let configuration = SwiftTestMockProvider.createMockConfiguration()
+        let configuration = MockProvider.createMockConfiguration()
         configuration.flushPolicies = [countPolicy]
         let analytics = Analytics(configuration: configuration)
         
@@ -103,7 +103,7 @@ struct FlushPolicyFacadeTests {
         let countPolicy = CountFlushPolicy(flushAt: 2)
         let frequencyPolicy = FrequencyFlushPolicy(flushIntervalInMillis: 2000)
         
-        let configuration = SwiftTestMockProvider.createMockConfiguration()
+        let configuration = MockProvider.createMockConfiguration()
         configuration.flushPolicies = [startupPolicy, countPolicy, frequencyPolicy]
         let analytics = Analytics(configuration: configuration)
         

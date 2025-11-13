@@ -24,9 +24,9 @@ class AnalyticsTests {
         mockStorage = MockStorage()
         
         // Create analytics with mock configuration using our mock storage
-        let config = SwiftTestMockProvider.createMockConfiguration(
-            writeKey: SwiftTestMockProvider.mockWriteKey,
-            dataPlaneUrl: SwiftTestMockProvider.mockDataPlaneUrl,
+        let config = MockProvider.createMockConfiguration(
+            writeKey: MockProvider.mockWriteKey,
+            dataPlaneUrl: MockProvider.mockDataPlaneUrl,
             storage: mockStorage
         )
         

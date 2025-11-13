@@ -25,7 +25,7 @@ class LifecycleManagementUtilsTests {
     var lifecycleSessionWrapper: LifecycleSessionWrapper
     
     init() {
-        mockAnalytics = SwiftTestMockProvider.createMockAnalytics()
+        mockAnalytics = MockProvider.createMockAnalytics()
         lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: mockAnalytics)
     }
     
