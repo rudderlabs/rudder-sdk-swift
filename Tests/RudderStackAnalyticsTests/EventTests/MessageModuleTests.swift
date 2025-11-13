@@ -14,80 +14,79 @@ struct MessageModuleTests {
     // MARK: - Track Event Tests
     @Test("given parameters to create a track event, when created, then verifies event properties")
     func testTrackEvent() {
-        testTrackEvent(name: "Sample Event")
+        testTrackEvent(name: sampleTrackEvent)
     }
     
     @Test("given parameters to create a track event with properties, when created, then verifies event with properties")
     func testTrackEventProperties() {
-        testTrackEvent(name: "Sample Event", properties: ["property": "value"])
+        testTrackEvent(name: sampleTrackEvent, properties: ["property": "value"])
     }
     
     @Test("given parameters to create a track event with options, when created, then verifies event with options")
     func testTrackEventOptions() {
-        testTrackEvent(name: "Sample Event", options: sampleOptions)
+        testTrackEvent(name: sampleTrackEvent, options: sampleOptions)
     }
     
     @Test("given parameters to create a track event with properties and options, when created, then verifies event with all data")
     func testTrackEventPropertiesOptions() {
-        testTrackEvent(name: "Sample Event", properties: ["property": "value"], options: sampleOptions)
+        testTrackEvent(name: sampleTrackEvent, properties: ["property": "value"], options: sampleOptions)
     }
     
     @Test("given fully loaded custom context option for track event, when created, then verifies custom context")
     func testTrackEventCustomContext() {
-        testTrackEvent(name: "Sample Event", options: complexOptions)
+        testTrackEvent(name: sampleTrackEvent, options: complexOptions)
     }
     
     // MARK: - Screen Event Tests
     @Test("given parameters to create a screen event, when created, then verifies screen event properties")
     func testScreenEvent() {
-        testScreenEvent(name: "Sample Screen Event")
+        testScreenEvent(name: sampleScreenEvent)
     }
     
     @Test("given parameters to create a screen event with properties, when created, then verifies screen event with properties")
     func testScreenEventProperties() {
-        testScreenEvent(name: "Sample Screen Event", properties: ["property": "value"])
+        testScreenEvent(name: sampleScreenEvent, properties: ["property": "value"])
     }
     
     @Test("given parameters to create a screen event with options, when created, then verifies screen event with options")
     func testScreenEventOptions() {
-        testScreenEvent(name: "Sample Screen Event", options: sampleOptions)
+        testScreenEvent(name: sampleScreenEvent, options: sampleOptions)
     }
     
     @Test("given parameters to create a screen event with properties and options, when created, then verifies screen event with all data")
     func testScreenEventPropertiesOptions() {
-        testScreenEvent(name: "Sample Screen Event", properties: ["property": "value"], options: sampleOptions)
+        testScreenEvent(name: sampleScreenEvent, properties: ["property": "value"], options: sampleOptions)
     }
     
     @Test("given fully loaded custom context option for screen event, when created, then verifies custom context")
     func testScreenEventCustomContext() {
-        testScreenEvent(name: "Sample Screen Event", options: complexOptions)
+        testScreenEvent(name: sampleScreenEvent, options: complexOptions)
     }
     
     // MARK: - Group Event Tests
-    
     @Test("given parameters to create a group event, when created, then verifies group event properties")
     func testGroupEvent() {
-        testGroupEvent(groupId: "Sample_Group_Id")
+        testGroupEvent(groupId: sampleGroupId)
     }
     
     @Test("given parameters to create a group event with traits, when created, then verifies group event with traits")
     func testGroupEventTraits() {
-        testGroupEvent(groupId: "Sample_Group_Id", traits: ["property": "value"])
+        testGroupEvent(groupId: sampleGroupId, traits: ["property": "value"])
     }
     
     @Test("given parameters to create a group event with options, when created, then verifies group event with options")
     func testGroupEventOptions() {
-        testGroupEvent(groupId: "Sample_Group_Id", options: sampleOptions)
+        testGroupEvent(groupId: sampleGroupId, options: sampleOptions)
     }
     
     @Test("given parameters to create a group event with traits and options, when created, then verifies group event with all data")
     func testGroupEventPropertiesOptions() {
-        testGroupEvent(groupId: "Sample_Group_Id", traits: ["property": "value"], options: sampleOptions)
+        testGroupEvent(groupId: sampleGroupId, traits: ["property": "value"], options: sampleOptions)
     }
     
     @Test("given fully loaded custom context option for group event, when created, then verifies custom context")
     func testGroupEventCustomContext() {
-        testGroupEvent(groupId: "Sample_Group_Id", options: complexOptions)
+        testGroupEvent(groupId: sampleGroupId, options: complexOptions)
     }
     
     // MARK: - Identify Event Tests
@@ -259,4 +258,8 @@ extension MessageModuleTests {
         #expect(!(event.integrations?.isEmpty ?? true))
         #expect(!(event.context?.isEmpty ?? true))
     }
+    
+    private var sampleTrackEvent: String { "Sample Event" }
+    private var sampleScreenEvent: String { "Sample Screen Event" }
+    private var sampleGroupId: String { "Sample_Group_Id" }
 }
