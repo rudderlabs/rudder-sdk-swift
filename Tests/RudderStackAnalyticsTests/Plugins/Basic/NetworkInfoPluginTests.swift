@@ -6,6 +6,7 @@
 //
 
 import Testing
+import Network
 @testable import RudderStackAnalytics
 
 @Suite("NetworkInfoPlugin Tests")
@@ -113,5 +114,28 @@ class NetworkInfoPluginTests {
         
         #expect(networkInfoPlugin.analytics != nil)
         #expect(networkInfoPlugin.pluginType == .preProcess)
+    }
+}
+
+// MARK: - MockNetworkMonitor
+class MockNetworkMonitor: NetworkMonitorProtocol {
+    var status: NWPath.Status
+    var interfaces: [NWInterface.InterfaceType]
+    
+    init(status: NWPath.Status, interfaces: [NWInterface.InterfaceType]) {
+        self.status = status
+        self.interfaces = interfaces
+    }
+    
+    func usesInterfaceType(_ type: NWInterface.InterfaceType) -> Bool {
+        return interfaces.contains(type)
+    }
+    
+    func start(queue: DispatchQueue) {
+        // Simulate path update
+    }
+    
+    func cancel() {
+        // Simulate cancel behavior
     }
 }

@@ -10,7 +10,6 @@ import Testing
 @testable import RudderStackAnalytics
 
 @Suite("EventWriter Tests")
-@MainActor
 class EventWriterTests {
     var analytics: Analytics
     var mockStorage: MockStorage

@@ -176,3 +176,17 @@ extension FrequencyFlushPolicyTests {
         RunLoop.current.run(until: Date().addingTimeInterval(waitDuration))
     }
 }
+
+// MARK: - MockAnalytics
+class MockAnalytics: Analytics {
+    var isFlushed: Bool = false
+    
+    init() {
+        let config = MockProvider.createMockConfiguration()
+        super.init(configuration: config)
+    }
+    
+    override func flush() {
+        self.isFlushed = true
+    }
+}

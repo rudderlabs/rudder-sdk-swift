@@ -12,7 +12,6 @@ import Testing
 // MARK: - Analytics Unit Tests
 
 @Suite("Analytics Unit Tests")
-@MainActor
 class AnalyticsTests {
     
     var analytics: Analytics

@@ -10,7 +10,6 @@ import Testing
 @testable import RudderStackAnalytics
 
 @Suite("EventUploader Tests")
-@MainActor
 class EventUploaderTests {
     var analytics: Analytics
     var mockStorage: MockStorage
