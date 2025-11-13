@@ -9,6 +9,7 @@ import Foundation
 import Testing
 @testable import RudderStackAnalytics
 
+#if !os(watchOS) // URLProtocol-based mocks don’t work on watchOS..
 @Suite("HttpNetwork Tests")
 class HttpNetworkTests {
     
@@ -119,3 +120,4 @@ extension HttpNetworkTests {
         }
     }
 }
+#endif

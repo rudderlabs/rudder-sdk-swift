@@ -89,6 +89,7 @@ struct HttpClientTests {
         #expect(queryParameters["writeKey"] == mockAnalytics.configuration.writeKey)
     }
 
+#if !os(watchOS) // URLProtocol-based mocks don’t work on watchOS..
     @Test("given successful HTTP response, when requesting configuration data, then configuration data is returned successfully")
     func testGetConfigDataSuccess() async {
         MockProvider.setupMockURLSession()
@@ -145,6 +146,7 @@ struct HttpClientTests {
         let result = await httpClient.postBatchEvents(batchData)
         #expect(result.error is RetryableEventUploadError, "Expected retryable event upload error")
     }
+#endif
 }
 
 // MARK: - Helpers

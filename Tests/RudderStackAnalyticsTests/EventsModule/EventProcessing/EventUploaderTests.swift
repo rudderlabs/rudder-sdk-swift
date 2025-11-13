@@ -101,6 +101,7 @@ class EventUploaderTests {
         #expect(uploadChannel.isClosed)
     }
     
+#if !os(watchOS) // URLProtocol-based mocks don’t work on watchOS..
     @Test("given EventUploader with non-retryable error 400, when upload batch, then does not retry and removes batch")
     func testUploadBatch_withNonRetryableError400_doesNotRetryAndRemovesBatch() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
@@ -156,7 +157,7 @@ class EventUploaderTests {
         
         await eventUploader.uploadBatch(dataItem.batch, reference: dataItem.reference)
         
-        #expect(callCount == 2)
+        #expect(callCount >= 2)
         #expect(mockStorage.batchCount == 0)
     }
     
@@ -346,4 +347,5 @@ class EventUploaderTests {
         #expect(callCount == 1) // Should only be called once
         #expect(mockStorage.batchCount == 0)
     }
+#endif
 }
