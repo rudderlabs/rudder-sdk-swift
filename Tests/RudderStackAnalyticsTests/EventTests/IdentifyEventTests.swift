@@ -93,7 +93,7 @@ struct IdentifyEventTests {
 }
 
 // MARK: - Error Messages
-extension IdentifyEventTests{
+extension IdentifyEventTests {
     private var errorMessageFailedToSerialize: String { "Failed to serialize the event." }
     private var errorMessageFailedToRead: String { "Failed to read the expected JSON." }
 }

@@ -112,7 +112,7 @@ struct ScreenEventTests {
 }
 
 // MARK: - Error Messages
-extension ScreenEventTests{
+extension ScreenEventTests {
     private var errorMessageFailedToSerialize: String { "Failed to serialize the event." }
     private var errorMessageFailedToRead: String { "Failed to read the expected JSON." }
 }

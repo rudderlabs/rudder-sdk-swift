@@ -53,7 +53,7 @@ struct AliasEventTests {
 }
 
 // MARK: - Error Messages
-extension AliasEventTests{
+extension AliasEventTests {
     private var errorMessageFailedToSerialize: String { "Failed to serialize the event." }
     private var errorMessageFailedToRead: String { "Failed to read the expected JSON." }
 }

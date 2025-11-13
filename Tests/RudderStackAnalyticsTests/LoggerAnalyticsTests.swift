@@ -10,12 +10,16 @@ import Foundation
 @testable import RudderStackAnalytics
 
 @Suite("LoggerAnalytics Tests")
-struct LoggerAnalyticsTests {
+class LoggerAnalyticsTests {
     
     var mockLogger: SwiftMockLogger
     
     init() {
         mockLogger = SwiftMockLogger()
+    }
+    
+    deinit {
+        mockLogger.clearLogs()
     }
     
     @Test("given a mock logger with info level, when calling each log method, then only info/warn/error messages are logged")

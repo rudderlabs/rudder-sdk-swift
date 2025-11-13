@@ -93,7 +93,7 @@ struct GroupEventTests {
 }
 
 // MARK: - Error Messages
-extension GroupEventTests{
+extension GroupEventTests {
     private var errorMessageFailedToSerialize: String { "Failed to serialize the event." }
     private var errorMessageFailedToRead: String { "Failed to read the expected JSON." }
 }

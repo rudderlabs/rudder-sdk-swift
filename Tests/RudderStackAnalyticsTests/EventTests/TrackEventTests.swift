@@ -94,7 +94,7 @@ struct TrackEventTests {
 
 
 // MARK: - Error Messages
-extension TrackEventTests{
+extension TrackEventTests {
     private var errorMessageFailedToSerialize: String { "Failed to serialize the event." }
     private var errorMessageFailedToRead: String { "Failed to read the expected JSON." }
 }
