@@ -16,7 +16,7 @@ class SessionInfoTests {
     var sessionInfo: SessionInfo
     
     init() {
-        mockStorage = MockKeyValueStorageImpl()
+        mockStorage = MockKeyValueStorage()
         sessionInfo = SessionInfo.initializeState(mockStorage)
     }
     

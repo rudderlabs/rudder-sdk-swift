@@ -27,7 +27,7 @@ final class MockStorage: Storage {
     
     // MARK: - Properties
     
-    private let mockKeyValueStorage: MockKeyValueStorageImpl
+    private let mockKeyValueStorage: MockKeyValueStorage
     private let mockEventStorage: MockEventStorage
     
     let eventStorageMode: StorageMode
@@ -41,7 +41,7 @@ final class MockStorage: Storage {
      */
     init(storageMode: StorageMode = .memory) {
         self.eventStorageMode = storageMode
-        self.mockKeyValueStorage = MockKeyValueStorageImpl()
+        self.mockKeyValueStorage = MockKeyValueStorage()
         self.mockEventStorage = MockEventStorage()
     }
     
@@ -339,9 +339,9 @@ extension MockStorage {
     }
 }
 
-// MARK: - MockKeyValueStorageImpl
+// MARK: - MockKeyValueStorage
 
-class MockKeyValueStorageImpl: KeyValueStorage {
+class MockKeyValueStorage: KeyValueStorage {
     
     private var storage: [String: Any] = [:]
     private let queue = DispatchQueue(label: "MockKeyValueStorage", attributes: .concurrent)
