@@ -297,16 +297,3 @@ class MockKeyValueStorage: KeyValueStorage {
     }
 }
 
-// MARK: - Mock Plugin
-class MockPlugin: Plugin {
-    var pluginType: PluginType = .preProcess
-    var analytics: Analytics?
-    
-    func intercept(event: Event) -> Event? {
-        if var trackEvent = event as? TrackEvent {
-            trackEvent.event = "New Event Name"
-            return trackEvent
-        }
-        return event
-    }
-}
