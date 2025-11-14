@@ -33,12 +33,12 @@ class LoggerAnalyticsTests {
         LoggerAnalytics.warn("This is warn")
         LoggerAnalytics.error("This is error")
         
-        let loggedLevels = mockLogger.logs.map { $0.level }
-        #expect(!loggedLevels.contains("VERBOSE"))
-        #expect(!loggedLevels.contains("DEBUG"))
-        #expect(loggedLevels.contains("INFO"))
-        #expect(loggedLevels.contains("WARN"))
-        #expect(loggedLevels.contains("ERROR"))
+        let loggedLabels = mockLogger.logs.map { $0.level }
+        #expect(!loggedLabels.contains("VERBOSE"))
+        #expect(!loggedLabels.contains("DEBUG"))
+        #expect(loggedLabels.contains("INFO"))
+        #expect(loggedLabels.contains("WARN"))
+        #expect(loggedLabels.contains("ERROR"))
     }
     
     @Test("given a mock logger with error level, when logging error with and without error object, then both errors are logged with correct messages")
