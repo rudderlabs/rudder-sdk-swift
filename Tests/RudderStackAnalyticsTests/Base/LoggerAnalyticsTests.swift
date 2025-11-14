@@ -46,12 +46,15 @@ class LoggerAnalyticsTests {
         LoggerAnalytics.setLogger(mockLogger)
         LoggerAnalytics.logLevel = .error
         
+        let error = NSError(domain: "Test", code: 1)
+        
         LoggerAnalytics.error("Only log")
-        LoggerAnalytics.error("With error", cause: NSError(domain: "Test", code: 1))
+        LoggerAnalytics.error("With error", cause: error)
         
         #expect(mockLogger.logs.count == 2)
         #expect(mockLogger.logs[0].message.contains("Only log"))
         #expect(mockLogger.logs[1].message.contains("With error"))
+        #expect(mockLogger.logs[1].message.contains(error.localizedDescription))
     }
     
     @Test("given a mock logger with none level, when calling all log methods, then no logs are captured")
