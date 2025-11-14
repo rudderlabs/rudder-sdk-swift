@@ -11,12 +11,16 @@ import Foundation
 
 @Suite("SetUserIdAndTraitsAction Tests")
 struct UserIdTraitsActionTests {
+    var storage: MockKeyValueStorage
+    
+    init() {
+        storage = MockKeyValueStorage()
+    }
     
     // MARK: - Basic Functionality Tests
     
     @Test("given user identity with initial values, when setting new user ID and traits, then both are updated")
     func testSetUserIdAndTraitsActionUpdatesUserIdAndTraits() {
-        let storage = MockKeyValueStorage()
         let initialUserId = "initial_test_user_id"
         let initialTraits = ["initial_traits_key": "initial_traits_value"]
         
@@ -34,7 +38,6 @@ struct UserIdTraitsActionTests {
     
     @Test("given user identity with existing traits, when setting same user ID with new traits, then traits are merged")
     func testSetUserIdAndTraitsActionMergesTraits() {
-        let storage = MockKeyValueStorage()
         let firstUserId = "first_test_user_id"
         let firstTraits = ["first_traits_key": "first_traits_value"]
         let secondTraits = ["traits_key": "traits_value", "traits_key2": "test@example.com"]
@@ -51,7 +54,6 @@ struct UserIdTraitsActionTests {
     
     @Test("given user identity, when setting empty user ID and empty traits, then values are updated to empty")
     func testSetUserIdAndTraitsActionHandlesEmptyValues() {
-        let storage = MockKeyValueStorage()
         let initialUserId = "existing_user_id"
         let initialTraits = ["existing_key": "existing_value"]
         
@@ -66,7 +68,6 @@ struct UserIdTraitsActionTests {
     
     @Test("given user identity with anonymous ID, when setting user ID and traits, then anonymous ID is preserved")
     func testSetUserIdAndTraitsActionPreservesAnonymousId() {
-        let storage = MockKeyValueStorage()
         let originalAnonymousId = "original_anonymous_id"
         let originalIdentity = UserIdentity(
             anonymousId: originalAnonymousId,
@@ -91,7 +92,6 @@ struct UserIdTraitsActionTests {
     
     @Test("given state instance, when dispatching set user ID and traits action, then state management integration works")
     func testSetUserIdAndTraitsActionWithStateManagement() {
-        let storage = MockKeyValueStorage()
         let initialIdentity = UserIdentity(userId: "initial_id", traits: ["initial": "value"])
         let state = createState(initialState: initialIdentity)
         
@@ -109,7 +109,6 @@ struct UserIdTraitsActionTests {
     
     @Test("given original identity, when applying set user ID and traits action, then original identity remains unchanged")
     func testSetUserIdAndTraitsActionMaintainsImmutability() {
-        let storage = MockKeyValueStorage()
         let originalUserId = "original_id"
         let originalTraits = ["original": "traits"]
         let originalIdentity = UserIdentity(userId: originalUserId, traits: originalTraits)

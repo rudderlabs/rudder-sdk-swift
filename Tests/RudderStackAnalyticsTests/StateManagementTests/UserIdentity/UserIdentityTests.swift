@@ -12,6 +12,10 @@ import Testing
 @Suite("UserIdentity Tests")
 struct UserIdentityTests {
     
+    let testAnonymousId = "test-anonymous-id"
+    let testUserId = "test-user-id"
+    let testTraits = ["name": "John Doe", "email": "john@example.com"]
+    
     // MARK: - Initialization Tests
     
     @Test("given empty storage, when initializing user identity, then default values are used")
@@ -88,8 +92,4 @@ struct UserIdentityTests {
         #expect(userIdentity.anonymousId == validAnonymousId, "Valid anonymous ID should be preserved")
         #expect(userIdentity.traits.isEmpty, "Corrupted traits should default to empty")
     }
-    
-    var testAnonymousId: String { "test-anonymous-id" }
-    var testUserId: String { "test-user-id" }
-    var testTraits: [String: Any] { ["name": "John Doe", "email": "john@example.com"] }
 }
