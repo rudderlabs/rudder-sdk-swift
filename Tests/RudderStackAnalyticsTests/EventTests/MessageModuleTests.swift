@@ -5,422 +5,261 @@
 //  Created by Satheesh Kannan on 13/11/24.
 //
 
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class MessageModuleTests: XCTestCase {
+@Suite("MessageModule Tests")
+struct MessageModuleTests {
     
-    // MARK: - Track
-    func test_track_event() {
-        given("Parameters to create a track event") {
-            let event = "Sample Event"
-            
-            when("Create a track event") {
-                var track = TrackEvent(event: event)
-                if let updatedTrack = track.updateEventData() as? TrackEvent {
-                    track = updatedTrack
-                }
-                
-                then("Verify the track event") {
-                    XCTAssertEqual(track.event, event)
-                    XCTAssertEqual(track.type, .track)
-                    XCTAssertFalse(track.messageId.isEmpty)
-                    XCTAssertFalse(track.originalTimestamp.isEmpty)
-                    XCTAssertEqual(track.channel, Constants.payload.channel)
-                    XCTAssertNotNil(track.integrations)
-                    XCTAssertFalse(track.sentAt?.isEmpty ?? true)
-                    XCTAssertNil(track.properties)
-                }
+    // MARK: - Track Event Tests
+    @Test("given parameters to create a track event, when created, then verifies event properties")
+    func testTrackEvent() {
+        testTrackEvent(name: sampleTrackEvent)
+    }
+    
+    @Test("given parameters to create a track event with properties, when created, then verifies event with properties")
+    func testTrackEventProperties() {
+        testTrackEvent(name: sampleTrackEvent, properties: ["property": "value"])
+    }
+    
+    @Test("given parameters to create a track event with options, when created, then verifies event with options")
+    func testTrackEventOptions() {
+        testTrackEvent(name: sampleTrackEvent, options: sampleOptions)
+    }
+    
+    @Test("given parameters to create a track event with properties and options, when created, then verifies event with all data")
+    func testTrackEventPropertiesOptions() {
+        testTrackEvent(name: sampleTrackEvent, properties: ["property": "value"], options: sampleOptions)
+    }
+    
+    @Test("given fully loaded custom context option for track event, when created, then verifies custom context")
+    func testTrackEventCustomContext() {
+        testTrackEvent(name: sampleTrackEvent, options: complexOptions)
+    }
+    
+    // MARK: - Screen Event Tests
+    @Test("given parameters to create a screen event, when created, then verifies screen event properties")
+    func testScreenEvent() {
+        testScreenEvent(name: sampleScreenEvent)
+    }
+    
+    @Test("given parameters to create a screen event with properties, when created, then verifies screen event with properties")
+    func testScreenEventProperties() {
+        testScreenEvent(name: sampleScreenEvent, properties: ["property": "value"])
+    }
+    
+    @Test("given parameters to create a screen event with options, when created, then verifies screen event with options")
+    func testScreenEventOptions() {
+        testScreenEvent(name: sampleScreenEvent, options: sampleOptions)
+    }
+    
+    @Test("given parameters to create a screen event with properties and options, when created, then verifies screen event with all data")
+    func testScreenEventPropertiesOptions() {
+        testScreenEvent(name: sampleScreenEvent, properties: ["property": "value"], options: sampleOptions)
+    }
+    
+    @Test("given fully loaded custom context option for screen event, when created, then verifies custom context")
+    func testScreenEventCustomContext() {
+        testScreenEvent(name: sampleScreenEvent, options: complexOptions)
+    }
+    
+    // MARK: - Group Event Tests
+    @Test("given parameters to create a group event, when created, then verifies group event properties")
+    func testGroupEvent() {
+        testGroupEvent(groupId: sampleGroupId)
+    }
+    
+    @Test("given parameters to create a group event with traits, when created, then verifies group event with traits")
+    func testGroupEventTraits() {
+        testGroupEvent(groupId: sampleGroupId, traits: ["property": "value"])
+    }
+    
+    @Test("given parameters to create a group event with options, when created, then verifies group event with options")
+    func testGroupEventOptions() {
+        testGroupEvent(groupId: sampleGroupId, options: sampleOptions)
+    }
+    
+    @Test("given parameters to create a group event with traits and options, when created, then verifies group event with all data")
+    func testGroupEventPropertiesOptions() {
+        testGroupEvent(groupId: sampleGroupId, traits: ["property": "value"], options: sampleOptions)
+    }
+    
+    @Test("given fully loaded custom context option for group event, when created, then verifies custom context")
+    func testGroupEventCustomContext() {
+        testGroupEvent(groupId: sampleGroupId, options: complexOptions)
+    }
+    
+    // MARK: - Identify Event Tests
+    
+    @Test("given a simple identify event, when created, then verifies identify event parameters")
+    func testSimpleIdentifyEvent() {
+        testIdentifyEvent()
+    }
+    
+    @Test("given parameters to create identify event with options, when created, then verifies identify event parameters")
+    func testIdentifyEventOption() {
+        testIdentifyEvent(options: complexOptions)
+    }
+    
+    // MARK: - Alias Event Tests
+    
+    @Test("given a simple alias event, when created, then verifies alias event parameters")
+    func testSimpleAliasEvent() {
+        testAliasEvent()
+    }
+    
+    @Test("given parameters to create a alias event with options, when created, then verifies alias event parameters")
+    func testAliasEventOptions() {
+        testAliasEvent(options: complexOptions)
+    }
+    
+    @Test("given parameters to create a alias event with previous id, when created, then verifies alias event parameters")
+    func testAliasEventPreviousId() {
+        testAliasEvent(previousId: "my_previous_id")
+    }
+    
+    @Test("given parameters to create a alias event with previous id and options, when created, then verifies alias event parameters")
+    func testAliasEventPreviousIdOptions() {
+        testAliasEvent(previousId: "my_previous_id", options: complexOptions)
+    }
+}
+
+// MARK: - Helper Methods
+
+extension MessageModuleTests {
+    
+    /// Generic helper to create and validate any event
+    @discardableResult
+    private func createAndValidateEvent<T: Event>(
+        _ event: T,
+        expectedType: EventType,
+        hasOptions: Bool = false,
+        customValidation: ((T) -> Void)? = nil
+    ) -> T {
+        var updatedEvent = event
+        if let updated = event.updateEventData() as? T {
+            updatedEvent = updated
+        }
+        
+        validateCommonEventProperties(updatedEvent, expectedType: expectedType)
+        if hasOptions {
+            validateEventWithOptions(updatedEvent)
+        }
+        customValidation?(updatedEvent)
+        
+        return updatedEvent
+    }
+    
+    // MARK: - Specific Event Helpers
+    
+    /// Helper to test track events with various configurations
+    private func testTrackEvent(name: String, properties: [String: Any]? = nil, options: RudderOption? = nil) {
+        createAndValidateEvent(
+            TrackEvent(event: name, properties: properties, options: options),
+            expectedType: .track,
+            hasOptions: options != nil
+        ) { event in
+            #expect(event.event == name)
+            if properties != nil {
+                #expect(event.properties != nil)
+            } else {
+                #expect(event.properties == nil)
             }
         }
     }
     
-    func test_track_event_properties() {
-        given("Parameters to create a track event") {
-            let event = "Sample Event"
-            let properties: [String: String] = ["property": "value"]
-            
-            when("Create a track event") {
-                var track = TrackEvent(event: event, properties: properties)
-                if let updatedTrack = track.updateEventData() as? TrackEvent {
-                    track = updatedTrack
-                }
-                
-                then("Verify the track event") {
-                    XCTAssertEqual(track.event, event)
-                    
-                    XCTAssertEqual(track.type, .track)
-                    XCTAssertFalse(track.messageId.isEmpty)
-                    XCTAssertFalse(track.originalTimestamp.isEmpty)
-                    
-                    XCTAssertEqual(track.channel, Constants.payload.channel)
-                    XCTAssertFalse(track.sentAt?.isEmpty ?? true)
-                    
-                    XCTAssertNotNil(track.integrations)
-                    XCTAssertNotNil(track.properties)
-                }
-                
+    /// Helper to test screen events with various configurations
+    private func testScreenEvent(name: String, properties: [String: Any]? = nil, options: RudderOption? = nil) {
+        createAndValidateEvent(
+            ScreenEvent(screenName: name, properties: properties, options: options),
+            expectedType: .screen,
+            hasOptions: options != nil
+        ) { event in
+            #expect(event.event == name)
+            #expect(event.properties != nil) // Screen events always have properties
+        }
+    }
+    
+    /// Helper to test group events with various configurations
+    private func testGroupEvent(groupId: String, traits: [String: Any]? = nil, options: RudderOption? = nil) {
+        createAndValidateEvent(
+            GroupEvent(groupId: groupId, traits: traits, options: options),
+            expectedType: .group,
+            hasOptions: options != nil
+        ) { event in
+            #expect(event.groupId == groupId)
+            if let traits {
+                #expect(event.traits != nil)
+                #expect(event.traits?.dictionary?.count == traits.count)
+            } else {
+                #expect(event.traits == nil)
             }
         }
     }
     
-    func test_track_event_options() {
-        given("Parameters to create a track event") {
-            let event = "Sample Event"
-            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-            
-            when("Create a track event") {
-                var track = TrackEvent(event: event, options: options)
-                if let updatedTrack = track.updateEventData() as? TrackEvent {
-                    track = updatedTrack
-                }
-                
-                then("Verify the track event") {
-                    XCTAssertEqual(track.event, event)
-                    XCTAssertEqual(track.type, .track)
-                    XCTAssertFalse(track.messageId.isEmpty)
-                    XCTAssertFalse(track.originalTimestamp.isEmpty)
-                    XCTAssertEqual(track.channel, Constants.payload.channel)
-                    XCTAssertNotNil(track.integrations)
-                    XCTAssertFalse(track.integrations?.isEmpty ?? true)
-                    XCTAssertFalse(track.sentAt?.isEmpty ?? true)
-                    XCTAssertFalse(track.context?.isEmpty ?? true)
-                    XCTAssertNil(track.properties)
-                }
-                
-            }
+    /// Helper to test identify events with various configurations
+    private func testIdentifyEvent(options: RudderOption? = nil) {
+        createAndValidateEvent(
+            IdentifyEvent(options: options),
+            expectedType: .identify,
+            hasOptions: options != nil
+        ) { event in
+            #expect(event.options != nil)
         }
     }
     
-    func test_track_event_properties_options() {
-        given("Parameters to create a track event") {
-            let event = "Sample Event"
-            let properties: [String: String] = ["property": "value"]
-            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-            
-            when("Create a track event") {
-                var track = TrackEvent(event: event, properties: properties, options: options)
-                if let updatedTrack = track.updateEventData() as? TrackEvent {
-                    track = updatedTrack
-                }
-                
-                then("Verify the track event") {
-                    XCTAssertEqual(track.event, event)
-                    XCTAssertEqual(track.type, .track)
-                    XCTAssertFalse(track.messageId.isEmpty)
-                    XCTAssertFalse(track.originalTimestamp.isEmpty)
-                    XCTAssertEqual(track.channel, Constants.payload.channel)
-                    XCTAssertNotNil(track.integrations)
-                    XCTAssertFalse(track.integrations?.isEmpty ?? true)
-                    XCTAssertFalse(track.sentAt?.isEmpty ?? true)
-                    XCTAssertFalse(track.context?.isEmpty ?? true)
-                    XCTAssertNotNil(track.properties)
-                }
-                
-            }
+    /// Helper to test alias events with various configurations
+    private func testAliasEvent(previousId: String = .empty, options: RudderOption? = nil) {
+        createAndValidateEvent(
+            AliasEvent(previousId: previousId, options: options),
+            expectedType: .alias,
+            hasOptions: options != nil
+        ) { event in
+            previousId.isEmpty ? #expect(event.previousId.isEmpty) : #expect(!event.previousId.isEmpty)
+            #expect(event.options != nil)
         }
     }
     
-    func test_track_event_custom_context() {
-        given("Fully loaded custom context option") {
-            let event = "Sample Event"
-            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
-            
-            when("Create a track event") {
-                var track = TrackEvent(event: event, options: option)
-                if let updatedTrack = track.updateEventData() as? TrackEvent {
-                    track = updatedTrack
-                }
-                
-                then("Verify the track event") {
-                    XCTAssertEqual(track.event, event)
-                    XCTAssertEqual(track.type, .track)
-                    XCTAssertFalse(track.messageId.isEmpty)
-                    XCTAssertFalse(track.originalTimestamp.isEmpty)
-                    XCTAssertEqual(track.channel, Constants.payload.channel)
-                    XCTAssertNotNil(track.integrations)
-                    XCTAssertFalse(track.integrations?.isEmpty ?? true)
-                    XCTAssertFalse(track.sentAt?.isEmpty ?? true)
-                    XCTAssertFalse(track.context?.isEmpty ?? true)
-                }
-            }
-        }
+    /// Creates a sample options object
+    private var sampleOptions: RudderOption {
+        RudderOption(
+            integrations: ["SampleIntegration": false],
+            customContext: ["customContext": ["userContext": "content"]]
+        )
     }
     
-    // MARK: - Screen
-    func test_screen_event() {
-        given("Parameters to create a screen event") {
-            let name = "Sample Screen Event"
-            
-            when("Create a screen event") {
-                var screen = ScreenEvent(screenName: name)
-                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
-                    screen = updatedScreen
-                }
-                
-                then("Verify the screen event") {
-                    XCTAssertEqual(screen.event, name)
-                    XCTAssertEqual(screen.type, .screen)
-                    XCTAssertFalse(screen.messageId.isEmpty)
-                    XCTAssertFalse(screen.originalTimestamp.isEmpty)
-                    XCTAssertEqual(screen.channel, Constants.payload.channel)
-                    XCTAssertNotNil(screen.integrations)
-                    XCTAssertFalse(screen.sentAt?.isEmpty ?? true)
-                    XCTAssertNotNil(screen.properties)
-                }
-            }
-        }
+    /// Creates a complex options object for custom context testing
+    private var complexOptions: RudderOption {
+        RudderOption(
+            integrations: ["SDK": true, "Facebook": false],
+            customContext: [
+                "Key_1": ["Key1": "Value1"],
+                "Key_2": ["value1", "value2"],
+                "Key_3": "Value3",
+                "Key_4": 1234,
+                "Key_5": 5678.9,
+                "Key_6": true
+            ]
+        )
     }
     
-    func test_screen_event_properties() {
-        given("Parameters to create a screen event") {
-            let name = "Sample Screen Event"
-            let properties: [String: String] = ["property": "value"]
-            
-            when("Create a screen event") {
-                var screen = ScreenEvent(screenName: name, properties: properties)
-                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
-                    screen = updatedScreen
-                }
-                
-                then("Verify the screen event") {
-                    XCTAssertEqual(screen.event, name)
-                    
-                    XCTAssertEqual(screen.type, .screen)
-                    XCTAssertFalse(screen.messageId.isEmpty)
-                    XCTAssertFalse(screen.originalTimestamp.isEmpty)
-                    
-                    XCTAssertEqual(screen.channel, Constants.payload.channel)
-                    XCTAssertFalse(screen.sentAt?.isEmpty ?? true)
-                    
-                    XCTAssertNotNil(screen.integrations)
-                    XCTAssertNotNil(screen.properties)
-                }
-                
-            }
-        }
+    /// Common validation for all event types
+    private func validateCommonEventProperties<T: Event>(_ event: T, expectedType: EventType) {
+        #expect(event.type == expectedType)
+        #expect(!event.messageId.isEmpty)
+        #expect(!event.originalTimestamp.isEmpty)
+        #expect(event.channel == Constants.payload.channel)
+        #expect(event.integrations != nil)
+        #expect(!(event.sentAt?.isEmpty ?? true))
     }
     
-    func test_screen_event_options() {
-        given("Parameters to create a screen event") {
-            let name = "Sample Screen Event"
-            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-            
-            when("Create a screen event") {
-                var screen = ScreenEvent(screenName: name, options: options)
-                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
-                    screen = updatedScreen
-                }
-                
-                then("Verify the screen event") {
-                    XCTAssertEqual(screen.event, name)
-                    XCTAssertEqual(screen.type, .screen)
-                    XCTAssertFalse(screen.messageId.isEmpty)
-                    XCTAssertFalse(screen.originalTimestamp.isEmpty)
-                    XCTAssertEqual(screen.channel, Constants.payload.channel)
-                    XCTAssertNotNil(screen.integrations)
-                    XCTAssertFalse(screen.integrations?.isEmpty ?? true)
-                    XCTAssertFalse(screen.sentAt?.isEmpty ?? true)
-                    XCTAssertFalse(screen.context?.isEmpty ?? true)
-                    XCTAssertNotNil(screen.properties)
-                }
-                
-            }
-        }
+    /// Validates context and integrations for events with options
+    private func validateEventWithOptions<T: Event>(_ event: T) {
+        #expect(!(event.integrations?.isEmpty ?? true))
+        #expect(!(event.context?.isEmpty ?? true))
     }
     
-    func test_screen_event_properties_options() {
-        given("Parameters to create a screen event") {
-            let name = "Sample Screen Event"
-            let properties: [String: String] = ["property": "value"]
-            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-            
-            when("Create a screen event") {
-                var screen = ScreenEvent(screenName: name, properties: properties, options: options)
-                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
-                    screen = updatedScreen
-                }
-                
-                then("Verify the screen event") {
-                    XCTAssertEqual(screen.event, name)
-                    XCTAssertEqual(screen.type, .screen)
-                    XCTAssertFalse(screen.messageId.isEmpty)
-                    XCTAssertFalse(screen.originalTimestamp.isEmpty)
-                    XCTAssertEqual(screen.channel, Constants.payload.channel)
-                    XCTAssertNotNil(screen.integrations)
-                    XCTAssertFalse(screen.integrations?.isEmpty ?? true)
-                    XCTAssertFalse(screen.sentAt?.isEmpty ?? true)
-                    XCTAssertFalse(screen.context?.isEmpty ?? true)
-                    XCTAssertNotNil(screen.properties)
-                }
-                
-            }
-        }
-    }
-    
-    func test_screen_event_custom_context() {
-        given("Fully loaded custom context option") {
-            let name = "Sample Screen Event"
-            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
-            
-            when("Create a screen event") {
-                var screen = ScreenEvent(screenName: name, options: option)
-                if let updatedScreen = screen.updateEventData() as? ScreenEvent {
-                    screen = updatedScreen
-                }
-                
-                then("Verify the screen event") {
-                    XCTAssertEqual(screen.event, name)
-                    XCTAssertEqual(screen.type, .screen)
-                    XCTAssertFalse(screen.messageId.isEmpty)
-                    XCTAssertFalse(screen.originalTimestamp.isEmpty)
-                    XCTAssertEqual(screen.channel, Constants.payload.channel)
-                    XCTAssertNotNil(screen.integrations)
-                    XCTAssertFalse(screen.integrations?.isEmpty ?? true)
-                    XCTAssertFalse(screen.sentAt?.isEmpty ?? true)
-                    XCTAssertFalse(screen.context?.isEmpty ?? true)
-                }
-            }
-        }
-    }
-    
-    // MARK: - Group
-    func test_group_event() {
-        given("Parameters to create a group event") {
-            let groupId = "Sample_Group_Id"
-            
-            when("Create a group event") {
-                var group = GroupEvent(groupId: groupId)
-                if let updatedGroup = group.updateEventData() as? GroupEvent {
-                    group = updatedGroup
-                }
-                
-                then("Verify the group event") {
-                    XCTAssertEqual(group.groupId, groupId)
-                    XCTAssertEqual(group.type, .group)
-                    XCTAssertFalse(group.messageId.isEmpty)
-                    XCTAssertFalse(group.originalTimestamp.isEmpty)
-                    XCTAssertEqual(group.channel, Constants.payload.channel)
-                    XCTAssertNotNil(group.integrations)
-                    XCTAssertFalse(group.sentAt?.isEmpty ?? true)
-                    XCTAssertNil(group.traits)
-                }
-            }
-        }
-    }
-    
-    func test_group_event_traits() {
-        given("Parameters to create a group event") {
-            let groupId = "Sample_Group_Id"
-            let traits = ["property": "value"]
-            
-            when("Create a group event") {
-                var group = GroupEvent(groupId: groupId, traits: traits)
-                if let updatedGroup = group.updateEventData() as? GroupEvent {
-                    group = updatedGroup
-                }
-                
-                then("Verify the group event") {
-                    XCTAssertEqual(group.groupId, groupId)
-                    
-                    XCTAssertEqual(group.type, .group)
-                    XCTAssertFalse(group.messageId.isEmpty)
-                    XCTAssertFalse(group.originalTimestamp.isEmpty)
-                    
-                    XCTAssertEqual(group.channel, Constants.payload.channel)
-                    XCTAssertFalse(group.sentAt?.isEmpty ?? true)
-                    
-                    XCTAssertNotNil(group.integrations)
-                    XCTAssertNotNil(group.traits)
-                    XCTAssertTrue((group.traits?.dictionary?.count == traits.count))
-                }
-                
-            }
-        }
-    }
-    
-    func test_group_event_options() {
-        given("Parameters to create a group event") {
-            let groupId = "Sample_Group_Id"
-            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-            
-            when("Create a group event") {
-                var group = GroupEvent(groupId: groupId, options: options)
-                if let updatedGroup = group.updateEventData() as? GroupEvent {
-                    group = updatedGroup
-                }
-                
-                then("Verify the group event") {
-                    XCTAssertEqual(group.groupId, groupId)
-                    XCTAssertEqual(group.type, .group)
-                    XCTAssertFalse(group.messageId.isEmpty)
-                    XCTAssertFalse(group.originalTimestamp.isEmpty)
-                    XCTAssertEqual(group.channel, Constants.payload.channel)
-                    XCTAssertNotNil(group.integrations)
-                    XCTAssertFalse(group.integrations?.isEmpty ?? true)
-                    XCTAssertFalse(group.sentAt?.isEmpty ?? true)
-                    XCTAssertFalse(group.context?.isEmpty ?? true)
-                    XCTAssertNil(group.traits)
-                }
-                
-            }
-        }
-    }
-    
-    func test_group_event_properties_options() {
-        given("Parameters to create a group event") {
-            let groupId = "Sample_Group_Id"
-            let traits = ["property": "value"]
-            let options = RudderOption(integrations: ["SampleIntegration": false], customContext: ["customContext": ["userContext": "content"]])
-            
-            when("Create a group event") {
-                var group = GroupEvent(groupId: groupId, traits: traits, options: options)
-                if let updatedGroup = group.updateEventData() as? GroupEvent {
-                    group = updatedGroup
-                }
-                
-                then("Verify the group event") {
-                    XCTAssertEqual(group.groupId, groupId)
-                    XCTAssertEqual(group.type, .group)
-                    XCTAssertFalse(group.messageId.isEmpty)
-                    XCTAssertFalse(group.originalTimestamp.isEmpty)
-                    XCTAssertEqual(group.channel, Constants.payload.channel)
-                    XCTAssertNotNil(group.integrations)
-                    XCTAssertFalse(group.integrations?.isEmpty ?? true)
-                    XCTAssertFalse(group.sentAt?.isEmpty ?? true)
-                    XCTAssertFalse(group.context?.isEmpty ?? true)
-                    XCTAssertNotNil(group.traits)
-                    XCTAssertTrue((group.traits?.dictionary?.count == traits.count))
-                }
-                
-            }
-        }
-    }
-    
-    func test_group_event_custom_context() {
-        given("Fully loaded custom context option") {
-            let groupId = "Sample_Group_Id"
-            let option = RudderOption(integrations: ["SDK": true, "Facebook" : false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true])
-            
-            when("Create a group event") {
-                var group = GroupEvent(groupId: groupId, options: option)
-                if let updatedGroup = group.updateEventData() as? GroupEvent {
-                    group = updatedGroup
-                }
-                
-                then("Verify the group event") {
-                    XCTAssertEqual(group.groupId, groupId)
-                    XCTAssertEqual(group.type, .group)
-                    XCTAssertFalse(group.messageId.isEmpty)
-                    XCTAssertFalse(group.originalTimestamp.isEmpty)
-                    XCTAssertEqual(group.channel, Constants.payload.channel)
-                    XCTAssertNotNil(group.integrations)
-                    XCTAssertFalse(group.integrations?.isEmpty ?? true)
-                    XCTAssertFalse(group.sentAt?.isEmpty ?? true)
-                    XCTAssertFalse(group.context?.isEmpty ?? true)
-                    XCTAssertNil(group.traits)
-                }
-            }
-        }
-    }
+    private var sampleTrackEvent: String { "Sample Event" }
+    private var sampleScreenEvent: String { "Sample Screen Event" }
+    private var sampleGroupId: String { "Sample_Group_Id" }
 }

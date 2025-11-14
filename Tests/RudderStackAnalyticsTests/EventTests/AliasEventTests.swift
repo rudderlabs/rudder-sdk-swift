@@ -5,44 +5,55 @@
 //  Created by Satheesh Kannan on 01/02/25.
 //
 
-import XCTest
+import Testing
 @testable import RudderStackAnalytics
 
-final class AliasEventTests: XCTestCase {
+@Suite("AliasEvent Tests")
+struct AliasEventTests {
     
-    func test_defaultAliasEvent() {
-        given("A alias event with test userId provided without any options..") {
-            var event: Event = AliasEvent(previousId: "test_previous_id", userIdentity: UserIdentity(userId: "test_user_id"))
-            event = event.updateEventData()
-            MockHelper.resetDynamicValues(&event)
-            
-            when("Serialize the event..") {
-                guard let json = event.jsonString?.trimmed else { XCTFail("Failed to serialize the event."); return }
-                
-                then("matches the expected JSON") {
-                    guard let expected = MockHelper.readJson(from: "alias_with_default_arguments")?.trimmed else { XCTFail("Failed to read the expected JSON."); return }
-                    XCTAssertEqual(json, expected)
-                }
-            }
+    @Test("given an alias event with default values, when serialized, then matches expected JSON")
+    func testDefaultAliasEvent() {
+        var event: Event = AliasEvent(previousId: "test_previous_id", userIdentity: UserIdentity(userId: "test_user_id"))
+        event = event.updateEventData()
+        MockHelper.resetDynamicValues(&event)
+        
+        guard let json = event.jsonString?.trimmed else { 
+            Issue.record("\(errorMessageFailedToSerialize)")
+            return
         }
+        
+        guard let expected = SwiftTestMockProvider.readJson(from: "alias_with_default_arguments")?.trimmed else { 
+            Issue.record("\(errorMessageFailedToRead)")
+            return
+        }
+        
+        #expect(json == expected)
     }
     
-    func test_aliasEvent_options() {
-        given("A alias event with test userId provided with any options..") {
-            let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
-            
-            var event: Event = AliasEvent(previousId: "test_previous_id", options: option, userIdentity: UserIdentity(userId: "test_user_id"))
-            event = event.updateEventData()
-            MockHelper.resetDynamicValues(&event)
-            
-            when("Serialize the event..") {
-                guard let json = event.jsonString?.trimmed else { XCTFail("Failed to serialize the event."); return }
-                
-                then("matches the expected JSON") {
-                    guard let expected = MockHelper.readJson(from: "alias_with_options")?.trimmed else { XCTFail("Failed to read the expected JSON."); return }
-                    XCTAssertEqual(json, expected)
-                }
-            }
+    @Test("given an alias event with options, when serialized, then matches expected JSON")
+    func testAliasEventOptions() {
+        let option = RudderOption(integrations: MockProvider.sampleEventIntegrations, customContext: ["customContext": MockProvider.sampleEventproperties], externalIds: [ExternalId(type: "sample_Type", id: "sample_Id")])
+        
+        var event: Event = AliasEvent(previousId: "test_previous_id", options: option, userIdentity: UserIdentity(userId: "test_user_id"))
+        event = event.updateEventData()
+        MockHelper.resetDynamicValues(&event)
+        
+        guard let json = event.jsonString?.trimmed else { 
+            Issue.record("\(errorMessageFailedToSerialize)")
+            return
         }
+        
+        guard let expected = SwiftTestMockProvider.readJson(from: "alias_with_options")?.trimmed else { 
+            Issue.record("\(errorMessageFailedToRead)")
+            return
+        }
+        
+        #expect(json == expected)
     }
+}
+
+// MARK: - Error Messages
+extension AliasEventTests {
+    private var errorMessageFailedToSerialize: String { "Failed to serialize the event." }
+    private var errorMessageFailedToRead: String { "Failed to read the expected JSON." }
 }
