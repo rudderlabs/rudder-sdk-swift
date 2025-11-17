@@ -33,12 +33,12 @@ class LoggerAnalyticsTests {
         LoggerAnalytics.warn("This is warn")
         LoggerAnalytics.error("This is error")
         
-        let loggedLevels = mockLogger.logs.map { $0.level }
-        #expect(!loggedLevels.contains("VERBOSE"))
-        #expect(!loggedLevels.contains("DEBUG"))
-        #expect(loggedLevels.contains("INFO"))
-        #expect(loggedLevels.contains("WARN"))
-        #expect(loggedLevels.contains("ERROR"))
+        let loggedLabels = mockLogger.logs.map { $0.level }
+        #expect(!loggedLabels.contains("VERBOSE"))
+        #expect(!loggedLabels.contains("DEBUG"))
+        #expect(loggedLabels.contains("INFO"))
+        #expect(loggedLabels.contains("WARN"))
+        #expect(loggedLabels.contains("ERROR"))
     }
     
     @Test("given a mock logger with error level, when logging error with and without error object, then both errors are logged with correct messages")
@@ -46,12 +46,15 @@ class LoggerAnalyticsTests {
         LoggerAnalytics.setLogger(mockLogger)
         LoggerAnalytics.logLevel = .error
         
+        let error = NSError(domain: "Test", code: 1)
+        
         LoggerAnalytics.error("Only log")
-        LoggerAnalytics.error("With error", cause: NSError(domain: "Test", code: 1))
+        LoggerAnalytics.error("With error", cause: error)
         
         #expect(mockLogger.logs.count == 2)
         #expect(mockLogger.logs[0].message.contains("Only log"))
         #expect(mockLogger.logs[1].message.contains("With error"))
+        #expect(mockLogger.logs[1].message.contains(error.localizedDescription))
     }
     
     @Test("given a mock logger with none level, when calling all log methods, then no logs are captured")
