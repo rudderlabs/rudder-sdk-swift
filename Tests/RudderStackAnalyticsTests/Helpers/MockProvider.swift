@@ -13,13 +13,8 @@ import Foundation
 final class MockProvider {
     private init() {}
     
-    static var mockWriteKey: String {
-        return "test-write-key-\(UUID().uuidString)"
-    }
-    
-    static var mockDataPlaneUrl: String {
-        return "https://test.dataplane.com"
-    }
+    static let mockDataPlaneUrl = "https://test.dataplane.com"
+    static var mockWriteKey: String { "test-write-key-\(UUID().uuidString)" }
     
     static func createMockAnalytics(
         storage: Storage = MockStorage(),

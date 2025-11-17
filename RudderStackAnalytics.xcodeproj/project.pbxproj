@@ -562,8 +562,8 @@
 		538180BB2EC60A000019EE05 /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
 				539001052EA11A7400DAC164 /* AnalyticsTests.swift */,
+				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";

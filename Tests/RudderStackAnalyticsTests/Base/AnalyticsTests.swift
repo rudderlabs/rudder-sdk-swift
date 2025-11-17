@@ -367,12 +367,12 @@ class AnalyticsTests {
     @Test("when calling flush, then flush is propagated to plugins")
     func testFlush() async {
         // Track some events first
-        let analytics = MockAnalytics()
-        analytics.track(name: "Test Event")
+        let mockAnalytics = MockAnalytics()
+        mockAnalytics.track(name: "Test Event")
         
-        analytics.flush()
+        mockAnalytics.flush()
         
-        #expect(analytics.isFlushed)
+        #expect(mockAnalytics.isFlushed)
     }
     
     // MARK: - Deep Link Tests

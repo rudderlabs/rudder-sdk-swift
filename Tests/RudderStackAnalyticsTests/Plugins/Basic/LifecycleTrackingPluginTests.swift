@@ -79,9 +79,9 @@ class LifecycleTrackingPluginTests {
     
     @Test("when setup is called, then analytics reference is stored")
     func test_pluginSetup() {
-        let analytics = MockProvider.createMockAnalytics()
+        let mockAnalytics = MockProvider.createMockAnalytics()
         
-        lifecycleTrackingPlugin.setup(analytics: analytics)
+        lifecycleTrackingPlugin.setup(analytics: mockAnalytics)
         
         #expect(lifecycleTrackingPlugin.analytics != nil)
         #expect(lifecycleTrackingPlugin.pluginType == .utility)

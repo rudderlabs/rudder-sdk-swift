@@ -42,53 +42,14 @@ final class MockEventCapturePlugin: Plugin {
     
     func intercept(event: any Event) -> (any Event)? {
         executeCalled = true
+        captureEvent(event)
         
-        // Always capture the event (before any filtering/modification)
-        eventLock.lock()
-        capturedEvents.append(event)
-        eventLock.unlock()
-        
-        // Handle filtering
         if shouldFilterEvent {
             return nil
         }
         
-        // Handle event modification
         if shouldModifyEvent {
-            var modifiedEvent = event
-            
-            // Apply modifications based on event type
-            if var trackEvent = modifiedEvent as? TrackEvent {
-                var properties = trackEvent.properties?.dictionary?.rawDictionary ?? [:]
-                for (key, value) in eventModifications {
-                    properties[key] = value
-                }
-                trackEvent.properties = CodableCollection(dictionary: properties)
-                modifiedEvent = trackEvent
-            } else if var screenEvent = modifiedEvent as? ScreenEvent {
-                var properties = screenEvent.properties?.dictionary?.rawDictionary ?? [:]
-                for (key, value) in eventModifications {
-                    properties[key] = value
-                }
-                screenEvent.properties = CodableCollection(dictionary: properties)
-                modifiedEvent = screenEvent
-            } else if var identifyEvent = modifiedEvent as? IdentifyEvent {
-                var traits = identifyEvent.traits?.dictionary?.rawDictionary ?? [:]
-                for (key, value) in eventModifications {
-                    traits[key] = value
-                }
-                identifyEvent.traits = CodableCollection(dictionary: traits)
-                modifiedEvent = identifyEvent
-            } else if var groupEvent = modifiedEvent as? GroupEvent {
-                var traits = groupEvent.traits?.dictionary?.rawDictionary ?? [:]
-                for (key, value) in eventModifications {
-                    traits[key] = value
-                }
-                groupEvent.traits = CodableCollection(dictionary: traits)
-                modifiedEvent = groupEvent
-            }
-            
-            return modifiedEvent
+            return applyEventModifications(to: event)
         }
         
         return event
@@ -152,6 +113,71 @@ final class MockEventCapturePlugin: Plugin {
     
     func setEventModifications(_ modifications: [String: Any]) {
         eventModifications = modifications
+    }
+}
+
+// MARK: - Private Helper Methods
+extension MockEventCapturePlugin {
+    private func captureEvent(_ event: any Event) {
+        eventLock.lock()
+        capturedEvents.append(event)
+        eventLock.unlock()
+    }
+    
+    private func applyEventModifications(to event: any Event) -> any Event {
+        var modifiedEvent = event
+        
+        if let trackEvent = modifiedEvent as? TrackEvent {
+            modifiedEvent = applyPropertiesModifications(to: trackEvent)
+        } else if let screenEvent = modifiedEvent as? ScreenEvent {
+            modifiedEvent = applyPropertiesModifications(to: screenEvent)
+        } else if let identifyEvent = modifiedEvent as? IdentifyEvent {
+            modifiedEvent = applyTraitsModifications(to: identifyEvent)
+        } else if let groupEvent = modifiedEvent as? GroupEvent {
+            modifiedEvent = applyTraitsModifications(to: groupEvent)
+        }
+        
+        return modifiedEvent
+    }
+    
+    private func applyPropertiesModifications(to trackEvent: TrackEvent) -> TrackEvent {
+        var event = trackEvent
+        var properties = event.properties?.dictionary?.rawDictionary ?? [:]
+        for (key, value) in eventModifications {
+            properties[key] = value
+        }
+        event.properties = CodableCollection(dictionary: properties)
+        return event
+    }
+    
+    private func applyPropertiesModifications(to screenEvent: ScreenEvent) -> ScreenEvent {
+        var event = screenEvent
+        var properties = event.properties?.dictionary?.rawDictionary ?? [:]
+        for (key, value) in eventModifications {
+            properties[key] = value
+        }
+        event.properties = CodableCollection(dictionary: properties)
+        return event
+    }
+    
+    private func applyTraitsModifications(to identifyEvent: IdentifyEvent) -> IdentifyEvent {
+        var event = identifyEvent
+        var traits = event.traits?.dictionary?.rawDictionary ?? [:]
+        for (key, value) in eventModifications {
+            traits[key] = value
+        }
+        event.traits = CodableCollection(dictionary: traits)
+        return event
+    }
+    
+    private func applyTraitsModifications(to groupEvent: GroupEvent) -> GroupEvent {
+        var event = groupEvent
+        var traits = event.traits?.dictionary?.rawDictionary ?? [:]
+        for (key, value) in eventModifications {
+            traits[key] = value
+        }
+        event.traits = CodableCollection(dictionary: traits)
+        return event
     }
 }
 
