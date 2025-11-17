@@ -13,7 +13,7 @@ struct StandardIntegrationPluginTests {
     var analytics: Analytics
     
     init() {
-        let mockConfiguration = SwiftTestMockProvider.createMockConfiguration()
+        let mockConfiguration = MockProvider.createMockConfiguration()
         mockConfiguration.flushPolicies = []
         
         self.analytics = Analytics(configuration: mockConfiguration)

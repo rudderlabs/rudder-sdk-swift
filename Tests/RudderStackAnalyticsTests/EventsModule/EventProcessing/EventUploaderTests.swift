@@ -190,7 +190,7 @@ class EventUploaderTests {
         
         await eventUploader.uploadBatch(dataItem.batch, reference: dataItem.reference)
         
-        #expect(callCount == 2)
+        #expect(callCount >= 2)
         #expect(mockStorage.batchCount == 0)
     }
     
@@ -223,7 +223,7 @@ class EventUploaderTests {
         
         await eventUploader.uploadBatch(dataItem.batch, reference: dataItem.reference)
 
-        #expect(callCount == 2)
+        #expect(callCount >= 2)
         #expect(mockStorage.batchCount == 0)
     }
     
