@@ -8,12 +8,12 @@
 import Foundation
 import Combine
 
-// MARK: - Constants
-// Use inclusive names for identifiers while preserving remote/config string keys.
-private let allowListEventsKey = "whitelistedEvents"
-private let denyListEventsKey = "blacklistedEvents"
-private let disableFilteringKey = "disable"
-private let eventFilteringOptionKey = "eventFilteringOption"
+struct EventFilteringPluginConstants {
+    static let allowListEventsKey = "whitelistedEvents"
+    static let denyListEventsKey = "blacklistedEvents"
+    static let disableFilteringKey = "disable"
+    static let eventFilteringOptionKey = "eventFilteringOption"
+}
 
 // MARK: - EventFilteringPlugin
 /**
@@ -81,9 +81,9 @@ extension EventFilteringPlugin {
      */
     private func shouldDropEvent(eventName: String) -> Bool {
         switch filteringOption {
-        case allowListEventsKey:
+        case EventFilteringPluginConstants.allowListEventsKey:
             return !filteringList.contains(eventName)
-        case denyListEventsKey:
+        case EventFilteringPluginConstants.denyListEventsKey:
             return filteringList.contains(eventName)
         default:
             return false
@@ -133,7 +133,7 @@ extension EventFilteringPlugin {
             return
         }
         
-        let newFilteringOption = destinationConfig[eventFilteringOptionKey] as? String ?? ""
+        let newFilteringOption = destinationConfig[EventFilteringPluginConstants.eventFilteringOptionKey] as? String ?? ""
         
         if newFilteringOption.isEmpty {
             LoggerAnalytics.debug("EventFilteringPlugin: Missing event filtering option for destination: \(destinationKey)")
@@ -165,11 +165,11 @@ extension EventFilteringPlugin {
     private func hasValidFilteringArray(filteringOption: String, destinationConfig: [String: Any]) -> Bool {
         let listKey: String
         switch filteringOption {
-        case allowListEventsKey:
-            listKey = allowListEventsKey
-        case denyListEventsKey:
-            listKey = denyListEventsKey
-        case disableFilteringKey:
+        case EventFilteringPluginConstants.allowListEventsKey:
+            listKey = EventFilteringPluginConstants.allowListEventsKey
+        case EventFilteringPluginConstants.denyListEventsKey:
+            listKey = EventFilteringPluginConstants.denyListEventsKey
+        case EventFilteringPluginConstants.disableFilteringKey:
             return true
         default:
             return false
@@ -189,10 +189,10 @@ extension EventFilteringPlugin {
     private func getEventFilteringList(eventFilteringOption: String, destinationConfig: [String: Any]) -> [String] {
         let listKey: String
         switch eventFilteringOption {
-        case allowListEventsKey:
-            listKey = allowListEventsKey
-        case denyListEventsKey:
-            listKey = denyListEventsKey
+        case EventFilteringPluginConstants.allowListEventsKey:
+            listKey = EventFilteringPluginConstants.allowListEventsKey
+        case EventFilteringPluginConstants.denyListEventsKey:
+            listKey = EventFilteringPluginConstants.denyListEventsKey
         default:
             return []
         }
