@@ -11,7 +11,9 @@ import Foundation
 
 // MARK: - MockProvider
 final class MockProvider {
-    private init() {}
+    private init() {
+        /* Default implementation (no-op) */
+    }
     
     static let mockDataPlaneUrl = "https://test.dataplane.com"
     static var mockWriteKey: String { "test-write-key-\(UUID().uuidString)" }
@@ -218,25 +220,27 @@ extension MockProvider {
 // MARK: - MockProvider(Extension)
 extension MockProvider {
     struct SampleEventName {
-        private init() {}
+        private init() {
+            /* Default implementation (no-op) */
+        }
         static let track = "Sample_Track_Event"
         static let screen = "Sample_Screen_Event"
         static let group = "Sample_Group_Event"
     }
     
     static let sampleEventproperties: [String: Any] = [
-        "key-1": "String value",
+        "key-1": "String value1",
         "key-2": 123,
         "key-3": true,
         "key-4": 123.456,
         "key-5": [
-            "key-6": "String value",
+            "key-6": "String value2",
             "key-7": 123,
             "key-8": true,
             "key-9": 123.456
         ],
         "key-10": [
-            "String value",
+            "String value3",
             123,
             true,
             123.456
