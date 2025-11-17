@@ -610,6 +610,27 @@
 			path = DeviceMode;
 			sourceTree = "<group>";
 		};
+		538180C12ECAF3620019EE05 /* Integration */ = {
+			isa = PBXGroup;
+			children = (
+				85A10BBC2EA0B76C00E47E01 /* MockDestination.swift */,
+				859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */,
+				85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */,
+			);
+			path = Integration;
+			sourceTree = "<group>";
+		};
+		538180C22ECAF37F0019EE05 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				539D87342E5888C7009FC144 /* MockURLProtocol.swift */,
+				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
+				53A83F9B2E9F750400DDA0CC /* MockStorage.swift */,
+				538180BF2EC61C220019EE05 /* MockEventCapturePlugin.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
 		538F82C82E79584000C7ECEB /* SourceConfig */ = {
 			isa = PBXGroup;
 			children = (
@@ -645,13 +666,8 @@
 		539D87362E5888DE009FC144 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				539D87342E5888C7009FC144 /* MockURLProtocol.swift */,
-				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
-				859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */,
-				85A10BBC2EA0B76C00E47E01 /* MockDestination.swift */,
-				85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */,
-				53A83F9B2E9F750400DDA0CC /* MockStorage.swift */,
-				538180BF2EC61C220019EE05 /* MockEventCapturePlugin.swift */,
+				538180C22ECAF37F0019EE05 /* Base */,
+				538180C12ECAF3620019EE05 /* Integration */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
