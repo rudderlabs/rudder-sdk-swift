@@ -17,14 +17,14 @@ class DeviceInfoPluginTests {
     }
     
     @Test("when intercepting different events, then adds device context information", arguments:[
-        SwiftTestMockProvider.mockTrackEvent as Event,
-        SwiftTestMockProvider.mockScreenEvent as Event,
-        SwiftTestMockProvider.mockIdentifyEvent as Event,
-        SwiftTestMockProvider.mockGroupEvent as Event,
-        SwiftTestMockProvider.mockAliasEvent as Event
+        MockProvider.mockTrackEvent as Event,
+        MockProvider.mockScreenEvent as Event,
+        MockProvider.mockIdentifyEvent as Event,
+        MockProvider.mockGroupEvent as Event,
+        MockProvider.mockAliasEvent as Event
     ])
     func test_pluginIntercept(_ event: Event) {
-        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        let analytics = MockProvider.createMockAnalytics()
         deviceInfoPlugin.setup(analytics: analytics)
         
         let result = deviceInfoPlugin.intercept(event: event)
@@ -50,12 +50,12 @@ class DeviceInfoPluginTests {
     
     @Test("given Analytics with collectDeviceId enabled, when intercepting event, then includes device id")
     func test_pluginInterceptWithDeviceIdCollection() {
-        let config = SwiftTestMockProvider.createMockConfiguration()
+        let config = MockProvider.createMockConfiguration()
         config.collectDeviceId = true
         let analytics = Analytics(configuration: config)
         deviceInfoPlugin.setup(analytics: analytics)
         
-        let trackEvent = SwiftTestMockProvider.mockTrackEvent
+        let trackEvent = MockProvider.mockTrackEvent
         let result = deviceInfoPlugin.intercept(event: trackEvent)
         
         #expect(result?.context != nil)
@@ -78,12 +78,12 @@ class DeviceInfoPluginTests {
     
     @Test("given Analytics with collectDeviceId disabled, when intercepting event, then excludes device id")
     func test_pluginInterceptWithoutDeviceIdCollection() {
-        let config = SwiftTestMockProvider.createMockConfiguration()
+        let config = MockProvider.createMockConfiguration()
         config.collectDeviceId = false
         let analytics = Analytics(configuration: config)
         deviceInfoPlugin.setup(analytics: analytics)
         
-        let trackEvent = SwiftTestMockProvider.mockTrackEvent
+        let trackEvent = MockProvider.mockTrackEvent
         let result = deviceInfoPlugin.intercept(event: trackEvent)
         
         #expect(result?.context != nil)
@@ -106,7 +106,7 @@ class DeviceInfoPluginTests {
     
     @Test("when setup is called, then analytics reference is stored")
     func test_pluginSetup() {
-        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        let analytics = MockProvider.createMockAnalytics()
         
         deviceInfoPlugin.setup(analytics: analytics)
         

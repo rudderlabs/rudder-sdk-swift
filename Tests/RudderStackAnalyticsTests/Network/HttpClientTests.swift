@@ -16,7 +16,7 @@ struct HttpClientTests {
     private let httpClient: HttpClient
 
     init() {
-        mockAnalytics = SwiftTestMockProvider.createMockAnalytics()
+        mockAnalytics = MockProvider.createMockAnalytics()
         httpClient = HttpClient(analytics: mockAnalytics)
     }
 
@@ -89,10 +89,11 @@ struct HttpClientTests {
         #expect(queryParameters["writeKey"] == mockAnalytics.configuration.writeKey)
     }
 
+#if !os(watchOS) // URLProtocol-based mocks don’t work on watchOS..
     @Test("given successful HTTP response, when requesting configuration data, then configuration data is returned successfully")
     func testGetConfigDataSuccess() async {
-        SwiftTestMockProvider.setupMockURLSession()
-        defer { SwiftTestMockProvider.teardownMockURLSession() }
+        MockProvider.setupMockURLSession()
+        defer { MockProvider.teardownMockURLSession() }
         
         let expectedData = Data("{\"success\": true}".utf8)
         MockURLProtocol.requestHandler = { request in
@@ -105,8 +106,8 @@ struct HttpClientTests {
     
     @Test("given a failure HTTP response, when requesting configuration data, then the error is handled properly")
     func testGetConfigDataFailure() async {
-        SwiftTestMockProvider.setupMockURLSession()
-        defer { SwiftTestMockProvider.teardownMockURLSession() }
+        MockProvider.setupMockURLSession()
+        defer { MockProvider.teardownMockURLSession() }
         
         MockURLProtocol.requestHandler = { request in
             return (400, nil, nil)
@@ -118,8 +119,8 @@ struct HttpClientTests {
     
     @Test("given successful HTTP response, when posting batch events, then handles success response")
     func testPostBatchEventsSuccess() async {
-        SwiftTestMockProvider.setupMockURLSession()
-        defer { SwiftTestMockProvider.teardownMockURLSession() }
+        MockProvider.setupMockURLSession()
+        defer { MockProvider.teardownMockURLSession() }
         
         let eventBatch = "{\"batch\": [\"event1\", \"event2\"]}"
         let expectedResponseData = "{\"success\": true}".utf8Data
@@ -134,8 +135,8 @@ struct HttpClientTests {
     
     @Test("given a failure HTTP response, when posting batch events failure, then the error is handled properly")
     func testPostBatchEventsFailure() async {
-        SwiftTestMockProvider.setupMockURLSession()
-        defer { SwiftTestMockProvider.teardownMockURLSession() }
+        MockProvider.setupMockURLSession()
+        defer { MockProvider.teardownMockURLSession() }
         
         let batchData = "{\"batch\": []}"
         MockURLProtocol.requestHandler = { request in
@@ -145,6 +146,7 @@ struct HttpClientTests {
         let result = await httpClient.postBatchEvents(batchData)
         #expect(result.error is RetryableEventUploadError, "Expected retryable event upload error")
     }
+#endif
 }
 
 // MARK: - Helpers

@@ -15,14 +15,14 @@ struct AliasEventTests {
     func testDefaultAliasEvent() {
         var event: Event = AliasEvent(previousId: "test_previous_id", userIdentity: UserIdentity(userId: "test_user_id"))
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
         
-        guard let expected = SwiftTestMockProvider.readJson(from: "alias_with_default_arguments")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "alias_with_default_arguments")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }
@@ -36,14 +36,14 @@ struct AliasEventTests {
         
         var event: Event = AliasEvent(previousId: "test_previous_id", options: option, userIdentity: UserIdentity(userId: "test_user_id"))
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
         
-        guard let expected = SwiftTestMockProvider.readJson(from: "alias_with_options")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "alias_with_options")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }

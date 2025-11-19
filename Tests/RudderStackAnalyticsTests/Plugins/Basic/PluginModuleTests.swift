@@ -13,7 +13,7 @@ class PluginModuleTests {
     
     @Test("given PluginChain, when processing event, then executes plugins in correct order")
     func testPluginChain_EventProcessingOrder() {
-        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        let analytics = MockProvider.createMockAnalytics()
         let pluginChain = PluginChain(analytics: analytics)
         
         // Add test plugins
@@ -25,7 +25,7 @@ class PluginModuleTests {
         pluginChain.add(plugin: onProcessPlugin)
         pluginChain.add(plugin: terminalPlugin)
         
-        let event = SwiftTestMockProvider.mockTrackEvent
+        let event = MockProvider.mockTrackEvent
         pluginChain.process(event: event)
         
         // Verify plugins were set up

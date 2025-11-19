@@ -10,11 +10,19 @@ import Testing
 
 struct StandardIntegrationPluginTests {
     
+    var analytics: Analytics
+    
+    init() {
+        let mockConfiguration = MockProvider.createMockConfiguration()
+        mockConfiguration.flushPolicies = []
+        
+        self.analytics = Analytics(configuration: mockConfiguration)
+    }
+    
     // MARK: - Basic Protocol Tests
     
     @Test("Given a mock integration plugin, When plugin properties are accessed, Then plugin should have correct type and key")
     func pluginProperties() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         
         mockPlugin.setup(analytics: analytics)
@@ -26,7 +34,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin without created destination, When getDestinationInstance is called, Then instance should be nil and method should be tracked")
     func getDestinationInstanceWhenNotCreated() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         
@@ -38,7 +45,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin with created destination, When destination is created and getDestinationInstance is called, Then instance should not be nil")
     func getDestinationInstanceWhenCreated() throws {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let config = ["apiKey": "test_key"]
@@ -55,7 +61,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin and valid configuration, When create is called, Then destination should be created successfully")
     func createSuccess() throws {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let config = ["apiKey": "test_key", "enabled": true] as [String: Any]
@@ -83,7 +88,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin with created destination, When update is called, Then destination should be updated successfully")
     func updateSuccess() throws {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let initialConfig = ["apiKey": "test_key"]
@@ -99,7 +103,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin configured to throw error on update, When update is called, Then update should be tracked and error thrown")
     func updateFailure() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let config = ["apiKey": "test_key"]
@@ -115,7 +118,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin, When flush is called, Then flush should be tracked")
     func flush() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         
@@ -126,7 +128,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin with created destination, When reset is called, Then reset should be tracked and destination cleared")
     func reset() throws {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let config = ["apiKey": "test_key"]
@@ -144,7 +145,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin and identify event, When identify is called, Then event should be received and stored")
     func identifyEventHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let identifyEvent = IdentifyEvent()
@@ -156,7 +156,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin and track event, When track is called, Then event should be received and stored")
     func trackEventHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let trackEvent = TrackEvent(event: "Button Clicked")
@@ -169,7 +168,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin and screen event, When screen is called, Then event should be received and stored")
     func screenEventHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let screenEvent = ScreenEvent(screenName: "Test Screen")
@@ -181,7 +179,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin and group event, When group is called, Then event should be received and stored")
     func groupEventHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let groupEvent = GroupEvent(groupId: "group123")
@@ -194,7 +191,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin and alias event, When alias is called, Then event should be received and stored")
     func aliasEventHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let aliasEvent = AliasEvent(previousId: "old_id", userIdentity: UserIdentity(userId: "new_id"))
@@ -208,7 +204,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin setup with analytics that has integration manager, When pluginStore is accessed, Then store should be accessible")
     func pluginStoreAccess() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let pluginStore = IntegrationPluginStore(analytics: analytics)
@@ -224,7 +219,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin with plugin store, When pluginChain is accessed, Then chain should be accessible from store")
     func pluginChainAccess() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         let pluginStore = IntegrationPluginStore(analytics: analytics)
@@ -242,7 +236,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a standard integration plugin, When plugin is checked for StandardIntegration conformance, Then plugin should conform to StandardIntegration")
     func StandardIntegrationConformance() {
-        let analytics = MockProvider.clientWithDiskStorage
         let StandardIntegration = MockStandardIntegrationPlugin(key: "standard_destination")
         StandardIntegration.setup(analytics: analytics)
         
@@ -253,7 +246,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin without destination ready, When onDestinationReady is called, Then callback should be stored for later execution")
     func onDestinationReadyWhenDestinationNotReady() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         var callbackCalled = false
@@ -270,7 +262,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a plugin with ready destination, When onDestinationReady is called, Then callback should be called immediately with success")
     func onDestinationReadyWhenDestinationReadyWithInstance() throws {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
         mockPlugin.setup(analytics: analytics)
         var callbackCalled = false
@@ -306,7 +297,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a standard plugin added to IntegrationsController, When plugin store is created, Then isStandardIntegration should be true")
     func customPluginStoreConfiguration() {
-        let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: "standard_destination")
         
@@ -320,7 +310,6 @@ struct StandardIntegrationPluginTests {
     
     @Test("Given a standard integration plugin, When plugin is checked for StandardIntegration conformance, Then plugin should conform to StandardIntegration")
     func customPluginNotStandardIntegration() {
-        let analytics = MockProvider.clientWithDiskStorage
         let customPlugin = MockStandardIntegrationPlugin(key: "standard_destination")
         customPlugin.setup(analytics: analytics)
         

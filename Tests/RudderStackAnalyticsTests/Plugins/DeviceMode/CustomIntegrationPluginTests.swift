@@ -10,11 +10,19 @@ import Testing
 
 struct CustomIntegrationPluginTests {
     
+    var analytics: Analytics
+    
+    init() {
+        let mockConfiguration = MockProvider.createMockConfiguration()
+        mockConfiguration.flushPolicies = []
+        
+        self.analytics = Analytics(configuration: mockConfiguration)
+    }
+    
     // MARK: - Basic Protocol Tests
     
     @Test("Given a custom integration plugin, When plugin properties are accessed, Then plugin should have correct type and key")
     func pluginProperties() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         
         mockPlugin.setup(analytics: analytics)
@@ -26,7 +34,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin without created destination, When getDestinationInstance is called, Then instance should be nil and method should be tracked")
     func getDestinationInstanceWhenNotCreated() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         
@@ -38,7 +45,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin with created destination, When destination is created and getDestinationInstance is called, Then instance should not be nil")
     func getDestinationInstanceWhenCreated() throws {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         let config: [String: Any] = [:] // empty config for custom integration
@@ -55,7 +61,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin and valid configuration, When create is called, Then destination should be created successfully")
     func createSuccess() throws {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         let config = ["apiKey": "test_key", "enabled": true] as [String: Any]
@@ -83,7 +88,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin, When flush is called, Then flush should be tracked")
     func flush() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         
@@ -94,7 +98,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin with created destination, When reset is called, Then reset should be tracked and destination cleared")
     func reset() throws {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         let config: [String: Any] = ["apiKey": "test_key"]
@@ -112,7 +115,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin and identify event, When identify is called, Then event should be received and stored")
     func identifyEventHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         let identifyEvent = IdentifyEvent()
@@ -124,7 +126,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin and track event, When track is called, Then event should be received and stored")
     func trackEventHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         let trackEvent = TrackEvent(event: "Custom Button Clicked")
@@ -137,7 +138,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin and screen event, When screen is called, Then event should be received and stored")
     func screenEventHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         let screenEvent = ScreenEvent(screenName: "Custom Screen")
@@ -149,7 +149,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin and group event, When group is called, Then event should be received and stored")
     func groupEventHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         let groupEvent = GroupEvent(groupId: "custom_group123")
@@ -162,7 +161,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin and alias event, When alias is called, Then event should be received and stored")
     func aliasEventHandling() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         let aliasEvent = AliasEvent(previousId: "old_custom_id", userIdentity: UserIdentity(userId: "new_custom_id"))
@@ -176,7 +174,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin setup with analytics that has integration controller, When pluginStore is accessed, Then store should be accessible")
     func pluginStoreAccess() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         let pluginStore = IntegrationPluginStore(analytics: analytics)
@@ -192,7 +189,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin with plugin store, When pluginChain is accessed, Then chain should be accessible from store")
     func pluginChainAccess() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         let pluginStore = IntegrationPluginStore(analytics: analytics)
@@ -210,7 +206,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom integration plugin, When plugin is checked for StandardIntegration conformance, Then plugin should NOT conform to StandardIntegration")
     func customPluginNotStandardIntegration() {
-        let analytics = MockProvider.clientWithDiskStorage
         let customPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         customPlugin.setup(analytics: analytics)
         
@@ -220,7 +215,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin added to IntegrationsController, When plugin store is created, Then isStandardIntegration should be false")
     func customPluginStoreConfiguration() {
-        let analytics = MockProvider.clientWithDiskStorage
         let controller = analytics.integrationsController!
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         
@@ -234,7 +228,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin without destination ready, When onDestinationReady is called, Then callback should be stored for later execution")
     func onDestinationReadyWhenDestinationNotReady() {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         var callbackCalled = false
@@ -251,7 +244,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given a custom plugin with ready destination, When onDestinationReady is called, Then callback should be called immediately with success")
     func onDestinationReadyWhenDestinationReadyWithInstance() throws {
-        let analytics = MockProvider.clientWithDiskStorage
         let mockPlugin = MockCustomIntegrationPlugin(key: "custom_destination")
         mockPlugin.setup(analytics: analytics)
         var callbackCalled = false
@@ -289,7 +281,6 @@ struct CustomIntegrationPluginTests {
     
     @Test("Given multiple custom integrations, When they are added to analytics, Then they should all be managed independently")
     func multipleCustomIntegrationsManagement() {
-        let analytics = MockProvider.clientWithDiskStorage
         let plugin1 = MockCustomIntegrationPlugin(key: "custom1")
         let plugin2 = MockCustomIntegrationPlugin(key: "custom2")
         let plugin3 = MockCustomIntegrationPlugin(key: "custom3")

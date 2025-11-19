@@ -12,10 +12,10 @@ import Foundation
 @Suite("LoggerAnalytics Tests")
 class LoggerAnalyticsTests {
     
-    var mockLogger: SwiftMockLogger
+    var mockLogger: MockLogger
     
     init() {
-        mockLogger = SwiftMockLogger()
+        mockLogger = MockLogger()
     }
     
     deinit {
@@ -69,5 +69,46 @@ class LoggerAnalyticsTests {
         LoggerAnalytics.error("This is error")
         
         #expect(mockLogger.logs.isEmpty)
+    }
+}
+
+// MARK: - MockLogger
+final class MockLogger: Logger {
+    var logs: [(level: String, message: String)] = []
+    
+    func verbose(log: String) {
+        logs.append(("VERBOSE", log))
+    }
+    
+    func debug(log: String) {
+        logs.append(("DEBUG", log))
+    }
+    
+    func info(log: String) {
+        logs.append(("INFO", log))
+    }
+    
+    func warn(log: String) {
+        logs.append(("WARN", log))
+    }
+    
+    func error(log: String, error: Error?) {
+        if let error {
+            logs.append(("ERROR", "\(log) - \(error.localizedDescription)"))
+        } else {
+            logs.append(("ERROR", log))
+        }
+    }
+    
+    func clearLogs() {
+        logs.removeAll()
+    }
+    
+    func hasLog(level: String, containing message: String) -> Bool {
+        return logs.contains { $0.level == level && $0.message.contains(message) }
+    }
+    
+    func logCount(for level: String) -> Int {
+        return logs.filter { $0.level == level }.count
     }
 }

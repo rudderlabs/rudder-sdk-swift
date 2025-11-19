@@ -93,7 +93,7 @@ struct DisableSourceConfigActionTests {
     }
 }
 
-// MARK: - Test Data Helpers using SwiftTestMockProvider
+// MARK: - Test Data Helpers using MockProvider
 extension DisableSourceConfigActionTests {
     
     private func createCustomSourceConfig(
@@ -105,7 +105,7 @@ extension DisableSourceConfigActionTests {
         updatedAt: String? = nil,
         destinations: [Destination]? = nil
     ) -> SourceConfig {
-        let baseMock = SwiftTestMockProvider.mockSourceConfig
+        let baseMock = MockProvider.mockSourceConfig
         
         let customSource = RudderServerConfigSource(
             sourceId: sourceId ?? baseMock.source.sourceId,
@@ -126,7 +126,7 @@ extension DisableSourceConfigActionTests {
         name: String = "Test Destination",
         enabled: Bool = true
     ) -> Destination {
-        let baseMock = SwiftTestMockProvider.mockSourceConfig.source.destinations.first!
+        let baseMock = MockProvider.mockSourceConfig.source.destinations.first!
         
         return Destination(
             destinationId: id,

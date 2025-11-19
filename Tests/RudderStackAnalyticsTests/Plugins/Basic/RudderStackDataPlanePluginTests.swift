@@ -17,7 +17,7 @@ class RudderStackDataPlanePluginTests {
     init() {
         self.mockStorage = MockStorage()
         
-        let configuration = SwiftTestMockProvider.createMockConfiguration(storage: mockStorage)
+        let configuration = MockProvider.createMockConfiguration(storage: mockStorage)
         configuration.flushPolicies = []
         configuration.trackApplicationLifecycleEvents = false
         
@@ -36,11 +36,11 @@ class RudderStackDataPlanePluginTests {
     }
     
     @Test("when event methods are called, then events are queued for processing", arguments: [
-            (EventType.track, SwiftTestMockProvider.mockTrackEvent as any Event),
-            (EventType.identify, SwiftTestMockProvider.mockIdentifyEvent as any Event),
-            (EventType.screen, SwiftTestMockProvider.mockScreenEvent as any Event),
-            (EventType.group, SwiftTestMockProvider.mockGroupEvent as any Event),
-            (EventType.alias, SwiftTestMockProvider.mockAliasEvent as any Event)
+            (EventType.track, MockProvider.mockTrackEvent as any Event),
+            (EventType.identify, MockProvider.mockIdentifyEvent as any Event),
+            (EventType.screen, MockProvider.mockScreenEvent as any Event),
+            (EventType.group, MockProvider.mockGroupEvent as any Event),
+            (EventType.alias, MockProvider.mockAliasEvent as any Event)
         ])
     func testProcessEvent(_ eventType: EventType, _ event: any Event) async {
         switch eventType {
@@ -79,7 +79,7 @@ class RudderStackDataPlanePluginTests {
     
     @Test("when setup is called, then analytics reference is stored")
     func test_pluginSetup() {
-        let localAnalytics = SwiftTestMockProvider.createMockAnalytics()
+        let localAnalytics = MockProvider.createMockAnalytics()
         
         plugin.setup(analytics: localAnalytics)
         

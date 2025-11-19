@@ -17,15 +17,15 @@ class SessionTrackingPluginTests {
     }
     
     @Test("given SessionTrackingPlugin with active session, when intercepting event, then adds session information", arguments:[
-        SwiftTestMockProvider.mockTrackEvent as Event,
-        SwiftTestMockProvider.mockScreenEvent as Event,
-        SwiftTestMockProvider.mockIdentifyEvent as Event,
-        SwiftTestMockProvider.mockGroupEvent as Event,
-        SwiftTestMockProvider.mockAliasEvent as Event
+        MockProvider.mockTrackEvent as Event,
+        MockProvider.mockScreenEvent as Event,
+        MockProvider.mockIdentifyEvent as Event,
+        MockProvider.mockGroupEvent as Event,
+        MockProvider.mockAliasEvent as Event
     ])
     func test_pluginInterceptWithActiveSession(_ event: Event) {
-        let sessionConfig = SwiftTestMockProvider.mockSessionConfiguration
-        let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: sessionConfig)
+        let sessionConfig = MockProvider.mockSessionConfiguration
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
         sessionTrackingPlugin.setup(analytics: analytics)
         
         // Start a session
@@ -45,11 +45,11 @@ class SessionTrackingPluginTests {
     
     @Test("given SessionTrackingPlugin without active session, when intercepting event, then context is empty")
     func testSessionTrackingPlugin_WithoutActiveSession() {
-        let sessionConfig = SwiftTestMockProvider.mockManualSessionConfiguration
-        let analytics = SwiftTestMockProvider.createMockAnalytics(sessionConfig: sessionConfig)
+        let sessionConfig = MockProvider.mockManualSessionConfiguration
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
         sessionTrackingPlugin.setup(analytics: analytics)
         
-        let trackEvent = SwiftTestMockProvider.mockTrackEvent
+        let trackEvent = MockProvider.mockTrackEvent
         let result = sessionTrackingPlugin.intercept(event: trackEvent)
         
         #expect(result != nil)
@@ -65,7 +65,7 @@ class SessionTrackingPluginTests {
     
     @Test("when setup is called, then analytics reference is stored")
     func test_pluginSetup() {
-        let analytics = SwiftTestMockProvider.createMockAnalytics()
+        let analytics = MockProvider.createMockAnalytics()
         
         sessionTrackingPlugin.setup(analytics: analytics)
         

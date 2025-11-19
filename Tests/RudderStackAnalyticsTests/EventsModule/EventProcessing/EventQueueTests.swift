@@ -10,7 +10,6 @@ import Testing
 @testable import RudderStackAnalytics
 
 @Suite("EventQueue Tests")
-@MainActor
 class EventQueueTests {
     var analytics: Analytics
     var mockStorage: MockStorage
@@ -18,7 +17,7 @@ class EventQueueTests {
     
     init() {
         mockStorage = MockStorage()
-        let config = SwiftTestMockProvider.createMockConfiguration(storage: mockStorage)
+        let config = MockProvider.createMockConfiguration(storage: mockStorage)
         config.trackApplicationLifecycleEvents = false
         config.sessionConfiguration.automaticSessionTracking = false
         config.flushPolicies = []

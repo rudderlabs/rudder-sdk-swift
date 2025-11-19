@@ -15,14 +15,14 @@ struct ScreenEventTests {
     func testDefaultScreenEvent() {
         var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen)
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
 
-        guard let expected = SwiftTestMockProvider.readJson(from: "screen_with_default_arguments")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "screen_with_default_arguments")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }
@@ -34,14 +34,14 @@ struct ScreenEventTests {
     func testScreenEventCategory() {
         var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main")
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
         
-        guard let expected = SwiftTestMockProvider.readJson(from: "screen_with_category")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "screen_with_category")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }
@@ -53,14 +53,14 @@ struct ScreenEventTests {
     func testScreenEventProperties() {
         var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, properties: MockProvider.sampleEventproperties)
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
         
-        guard let expected = SwiftTestMockProvider.readJson(from: "screen_with_properties")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "screen_with_properties")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }
@@ -74,14 +74,14 @@ struct ScreenEventTests {
         
         var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, options: option)
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
 
-        guard let expected = SwiftTestMockProvider.readJson(from: "screen_with_options")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "screen_with_options")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }
@@ -95,14 +95,14 @@ struct ScreenEventTests {
         
         var event: Event = ScreenEvent(screenName: MockProvider.SampleEventName.screen, category: "Main", properties: MockProvider.sampleEventproperties, options: option)
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
         
-        guard let expected = SwiftTestMockProvider.readJson(from: "screen_with_all_values")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "screen_with_all_values")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }

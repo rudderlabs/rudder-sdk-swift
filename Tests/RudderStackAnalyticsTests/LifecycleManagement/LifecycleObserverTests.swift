@@ -17,7 +17,7 @@ class LifecycleObserverTests {
     var lifecycleObserver: LifecycleObserver?
     
     init() {
-        mockAnalytics = SwiftTestMockProvider.createMockAnalytics()
+        mockAnalytics = MockProvider.createMockAnalytics()
         mockListener = MockLifecycleEventListener()
         lifecycleObserver = LifecycleObserver(analytics: mockAnalytics)
     }

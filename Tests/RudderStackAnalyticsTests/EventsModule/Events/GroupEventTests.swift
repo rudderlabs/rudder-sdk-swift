@@ -15,14 +15,14 @@ struct GroupEventTests {
     func testDefaultGroupEvent() {
         var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group)
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
         
-        guard let expected = SwiftTestMockProvider.readJson(from: "group_with_default_arguments")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "group_with_default_arguments")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }
@@ -34,14 +34,14 @@ struct GroupEventTests {
     func testGroupEventTraits() {
         var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties)
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
         
-        guard let expected = SwiftTestMockProvider.readJson(from: "group_with_traits")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "group_with_traits")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }
@@ -55,14 +55,14 @@ struct GroupEventTests {
         
         var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group, options: option)
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
         
-        guard let expected = SwiftTestMockProvider.readJson(from: "group_with_options")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "group_with_options")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }
@@ -76,14 +76,14 @@ struct GroupEventTests {
         
         var event: Event = GroupEvent(groupId: MockProvider.SampleEventName.group, traits: MockProvider.sampleEventproperties, options: option)
         event = event.updateEventData()
-        MockHelper.resetDynamicValues(&event)
+        MockProvider.resetDynamicValues(&event)
         
         guard let json = event.jsonString?.trimmed else { 
             Issue.record("\(errorMessageFailedToSerialize)")
             return
         }
         
-        guard let expected = SwiftTestMockProvider.readJson(from: "group_with_all_values")?.trimmed else { 
+        guard let expected = MockProvider.readJson(from: "group_with_all_values")?.trimmed else { 
             Issue.record("\(errorMessageFailedToRead)")
             return
         }

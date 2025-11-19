@@ -269,3 +269,12 @@ struct StateManagementTests {
         #expect(state1.state.value != state2.state.value)
     }
 }
+
+// MARK: - MockStateAction
+private struct MockStateAction<T>: StateAction {
+    let mockReduce: (T) -> T
+    
+    func reduce(currentState: T) -> T {
+        return mockReduce(currentState)
+    }
+}

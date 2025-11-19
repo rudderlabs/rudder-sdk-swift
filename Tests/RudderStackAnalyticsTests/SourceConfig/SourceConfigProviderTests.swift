@@ -19,7 +19,7 @@ class SourceConfigProviderTests {
     
     init() {
         self.mockStorage = MockStorage()
-        self.analytics = SwiftTestMockProvider.createMockAnalytics(storage: mockStorage)
+        self.analytics = MockProvider.createMockAnalytics(storage: mockStorage)
         self.sourceConfigProvider = SourceConfigProvider(analytics: analytics, backoffPolicy: ExponentialBackoffPolicy(minDelayInMillis: 0))
     }
     
@@ -139,8 +139,8 @@ class SourceConfigProviderTests {
     @Test("given a SourceConfig request returning HTTP 400 error, when refreshConfig is called, then handles invalidWriteKey without retries")
     func testHandleHTTP400InvalidWriteKey() {
         
-        SwiftTestMockProvider.setupMockURLSession()
-        HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 400)
+        MockProvider.setupMockURLSession()
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 400)
         
         let initialConfig = analytics.sourceConfigState.state.value
         var receivedConfig: SourceConfig?
@@ -149,7 +149,7 @@ class SourceConfigProviderTests {
         
         defer {
             cancellables.removeAll()
-            SwiftTestMockProvider.teardownMockURLSession()
+            MockProvider.teardownMockURLSession()
         }
         
         analytics.sourceConfigState.state
@@ -167,10 +167,10 @@ class SourceConfigProviderTests {
     
     @Test("given a SourceConfig request returning invalidWriteKey error, when refreshConfig is called, then shuts down analytics and clears storage")
     func testHandleInvalidWriteKeyError() async {
-        SwiftTestMockProvider.setupMockURLSession()
-        HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 400)
+        MockProvider.setupMockURLSession()
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 400)
         
-        defer { SwiftTestMockProvider.teardownMockURLSession() }
+        defer { MockProvider.teardownMockURLSession() }
         
         mockStorage.write(value: "test_user_data", key: "user_data")
         mockStorage.write(value: "cached_config_data", key: Constants.storageKeys.sourceConfig)
@@ -192,17 +192,17 @@ class SourceConfigProviderTests {
     
     @Test("given a SourceConfig request returning success after a failure, when refreshConfig is called, then eventually succeeds with valid config")
     func testHandleSuccessAfterRetries() async {
-        SwiftTestMockProvider.setupMockURLSession()
+        MockProvider.setupMockURLSession()
         HttpNetwork.session = prepareMockUrlSessionWithEventualSuccess(failureCount: 1)
         
         var receivedConfig: SourceConfig?
         var configUpdateCount = 0
         var cancellables = Set<AnyCancellable>()
-        let expectedConfig = SwiftTestMockProvider.sourceConfiguration
+        let expectedConfig = MockProvider.sourceConfiguration
         
         defer {
             cancellables.removeAll()
-            SwiftTestMockProvider.teardownMockURLSession()
+            MockProvider.teardownMockURLSession()
         }
         
         analytics.sourceConfigState.state
@@ -222,18 +222,18 @@ class SourceConfigProviderTests {
     
     @Test("given storage has a valid cached source config, when fetchCachedConfig and refreshConfig are called, then both complete successfully")
     func testCachedAndRefreshIntegration() async {
-        let mockConfig = SwiftTestMockProvider.sourceConfiguration
+        let mockConfig = MockProvider.sourceConfiguration
         mockStorage.write(value: mockConfig?.jsonString, key: Constants.storageKeys.sourceConfig)
         
-        SwiftTestMockProvider.setupMockURLSession()
-        HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 200)
+        MockProvider.setupMockURLSession()
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 200)
         
         var receivedConfigs: [SourceConfig] = []
         var cancellables = Set<AnyCancellable>()
         
         defer {
             cancellables.removeAll()
-            SwiftTestMockProvider.teardownMockURLSession()
+            MockProvider.teardownMockURLSession()
         }
         
         analytics.sourceConfigState.state
@@ -257,8 +257,8 @@ class SourceConfigProviderTests {
     
     @Test("given a SourceConfig request returning HTTP 500 error, when refreshConfig is called, then retries with exponential backoff until max attempts")
     func testHandleHTTP500WithRetries() async {
-        SwiftTestMockProvider.setupMockURLSession()
-        HttpNetwork.session = SwiftTestMockProvider.prepareMockSessionConfigSession(with: 500)
+        MockProvider.setupMockURLSession()
+        HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 500)
         
         let initialConfig = analytics.sourceConfigState.state.value
         var receivedConfig: SourceConfig?
@@ -267,7 +267,7 @@ class SourceConfigProviderTests {
         
         defer {
             cancellables.removeAll()
-            SwiftTestMockProvider.teardownMockURLSession()
+            MockProvider.teardownMockURLSession()
         }
         
         analytics.sourceConfigState.state
@@ -319,7 +319,7 @@ extension SourceConfigProviderTests {
                 return (500, data, _defautltHeaders)
             } else {
                 // Return success after failure count is reached
-                let json = SwiftTestMockProvider.sourceConfigurationDictionary ?? [:]
+                let json = MockProvider.sourceConfigurationDictionary ?? [:]
                 let data = json.jsonString?.utf8Data
                 return (200, data, _defautltHeaders)
             }
