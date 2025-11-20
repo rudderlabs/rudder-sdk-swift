@@ -17,6 +17,8 @@ class DiskStoreTests {
     private let sampleEventJson = """
         {"messageId":"test-msg-123","type":"track","event":"Test Event","properties":{"test":true}}
         """
+    private let testEventName = "Test Event"
+    
     var store: DiskStore
     var keyValueStore: KeyValueStore
     
@@ -63,15 +65,15 @@ class DiskStoreTests {
         
         let retrievedItems = await store.retrieve()
         #expect(retrievedItems.count == 1)
-        #expect(retrievedItems.first?.isClosed == true)
-        #expect(retrievedItems.first?.reference.isEmpty == false)
+        #expect(retrievedItems.first?.isClosed ?? false)
+        #expect(!(retrievedItems.first?.reference.isEmpty ?? true))
         
         // Verify file content by reading it
         if let filePath = retrievedItems.first?.reference {
             let fileContent = FileManager.contentsOf(file: filePath)
-            #expect(fileContent?.contains("Test Event") == true)
-            #expect(fileContent?.hasPrefix(DataStoreConstants.fileBatchPrefix) == true)
-            #expect(fileContent?.hasSuffix(DataStoreConstants.fileBatchSuffix) == true)
+            #expect(fileContent?.contains(testEventName) ?? false)
+            #expect(fileContent?.hasPrefix(DataStoreConstants.fileBatchPrefix) ?? false)
+            #expect(fileContent?.hasSuffix(DataStoreConstants.fileBatchSuffix) ?? false)
         }
         
         // Clean up the store
@@ -96,9 +98,9 @@ class DiskStoreTests {
         
         if let filePath = retrievedItems.first?.reference {
             let fileContent = FileManager.contentsOf(file: filePath)
-            #expect(fileContent?.contains("Event 1") == true)
-            #expect(fileContent?.contains("Event 2") == true)
-            #expect(fileContent?.contains("sentAt") == true) // Should include timestamp
+            #expect(fileContent?.contains("Event 1") ?? false)
+            #expect(fileContent?.contains("Event 2") ?? false)
+            #expect(fileContent?.contains("sentAt") ?? false) // Should include timestamp
         }
         
         // Clean up the store
@@ -115,9 +117,9 @@ class DiskStoreTests {
         
         if let filePath = retrievedItems.first?.reference {
             let fileContent = FileManager.contentsOf(file: filePath)
-            #expect(fileContent?.hasPrefix(DataStoreConstants.fileBatchPrefix) == true)
-            #expect(fileContent?.hasSuffix(DataStoreConstants.fileBatchSuffix) == true)
-            #expect(fileContent?.contains("Test Event") == true)
+            #expect(fileContent?.hasPrefix(DataStoreConstants.fileBatchPrefix) ?? false)
+            #expect(fileContent?.hasSuffix(DataStoreConstants.fileBatchSuffix) ?? false)
+            #expect(fileContent?.contains(testEventName) ?? false)
             
             // Verify it's valid JSON structure (basic check)
             #expect(fileContent?.filter { $0 == "[" }.count == 1)
@@ -177,15 +179,15 @@ class DiskStoreTests {
             Issue.record("Expected at least one batch reference")
             return
         }
-        let removed = await store.remove(reference: batchReference)
         
-        #expect(removed == true)
+        let removed = await store.remove(reference: batchReference)
+        #expect(removed)
         
         retrievedItems = await store.retrieve()
         #expect(retrievedItems.isEmpty)
         
         // Verify file is actually deleted from disk
-        #expect(FileManager.default.fileExists(atPath: batchReference) == false)
+        #expect(!FileManager.default.fileExists(atPath: batchReference))
         
         // Clean up the store
         await store.removeAll()
@@ -211,7 +213,7 @@ class DiskStoreTests {
         
         // Verify directory is cleaned up
         let fileStorageURL = await store.fileStorageURL
-        #expect(FileManager.default.fileExists(atPath: fileStorageURL.path) == false)
+        #expect(!FileManager.default.fileExists(atPath: fileStorageURL.path))
         
         // Clean up the store
         await store.removeAll()
@@ -240,7 +242,7 @@ class DiskStoreTests {
             FileManager.contentsOf(file: item.reference)
         }.joined()
         
-        #expect(allContent.contains("Test Event") == true)
+        #expect(allContent.contains(testEventName))
         
         // Clean up the store
         await store.removeAll()
@@ -262,12 +264,10 @@ class DiskStoreTests {
         #expect(finalizedFiles.isEmpty)
     }
     
-    @Test("when removing non-existent batch, then operation returns false")
-    func testRemoveNonExistentBatch() async {
-        let fakeReference = "/non/existent/file/path"
+    @Test("when removing non-existent batch, then operation returns false", arguments: ["/non/existent/file/path"])
+    func testRemoveNonExistentBatch(_ fakeReference: String) async {
         let removed = await store.remove(reference: fakeReference)
-        
-        #expect(removed == false)
+        #expect(!removed)
     }
     
     @Test("when storing events with special characters, then events are properly encoded")
@@ -284,9 +284,9 @@ class DiskStoreTests {
         
         if let filePath = retrievedItems.first?.reference {
             let fileContent = FileManager.contentsOf(file: filePath)
-            #expect(fileContent?.contains("🚀") == true)
-            #expect(fileContent?.contains("café") == true)
-            #expect(fileContent?.contains("hello") == true)
+            #expect(fileContent?.contains("🚀") ?? false)
+            #expect(fileContent?.contains("café") ?? false)
+            #expect(fileContent?.contains("hello") ?? false)
         }
         
         // Clean up the store
@@ -319,7 +319,7 @@ class DiskStoreTests {
             
             // Verify all events are present
             for i in 0..<eventCount {
-                #expect(fileContent.contains("Concurrent Event \(i)") == true)
+                #expect(fileContent.contains("Concurrent Event \(i)"))
             }
         }
         
@@ -352,8 +352,8 @@ class DiskStoreTests {
         
         // Verify file indices are sequential
         let fileIndices = retrievedItems.map { extractFileIndex(from: $0.reference) }
-        #expect(fileIndices.contains(0) == true)
-        #expect(fileIndices.contains(1) == true)
+        #expect(fileIndices.contains(0))
+        #expect(fileIndices.contains(1))
         
         // Clean up new store
         await newStore.removeAll()
@@ -368,13 +368,13 @@ class DiskStoreTests {
         let fileStorageURL = await testStore.fileStorageURL
         
         // Directory shouldn't exist initially
-        #expect(FileManager.default.fileExists(atPath: fileStorageURL.path) == false)
+        #expect(!FileManager.default.fileExists(atPath: fileStorageURL.path))
         
         // Store an event (this should create the directory)
         await testStore.retain(value: sampleEventJson)
         
         // Now directory should exist
-        #expect(FileManager.default.fileExists(atPath: fileStorageURL.path) == true)
+        #expect(FileManager.default.fileExists(atPath: fileStorageURL.path))
         
         // Clean up
         await testStore.removeAll()

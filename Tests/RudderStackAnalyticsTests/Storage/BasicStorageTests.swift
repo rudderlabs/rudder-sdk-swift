@@ -114,8 +114,8 @@ class BasicStorageTests {
         
         let result = await storage.read()
         #expect(result.dataItems.count == 1)
-        #expect(result.dataItems.first?.isClosed == true)
-        #expect(result.dataItems.first?.batch.contains("Test Event") == true)
+        #expect(result.dataItems.first?.isClosed ?? false)
+        #expect(result.dataItems.first?.batch.contains("Test Event") ?? false)
     }
     
     @Test("when storing multiple events before rollover, then events are batched together")
@@ -139,9 +139,9 @@ class BasicStorageTests {
         #expect(result.dataItems.count == 1)
         
         let batchContent = result.dataItems.first?.batch ?? ""
-        #expect(batchContent.contains("Event 1") == true)
-        #expect(batchContent.contains("Event 2") == true)
-        #expect(batchContent.contains("Event 3") == true)
+        #expect(batchContent.contains("Event 1"))
+        #expect(batchContent.contains("Event 2"))
+        #expect(batchContent.contains("Event 3"))
     }
     
     @Test("given BasicStorage with multiple batches, when retrieving events, then all batches are returned")
@@ -169,7 +169,7 @@ class BasicStorageTests {
         
         // then all batches are closed
         for dataItem in result.dataItems {
-            #expect(dataItem.isClosed == true)
+            #expect(dataItem.isClosed)
         }
     }
     
@@ -185,9 +185,9 @@ class BasicStorageTests {
             Issue.record("Expected at least one data item")
             return
         }
-        let removed = await storage.remove(batchReference: batchReference)
         
-        #expect(removed == true)
+        let removed = await storage.remove(batchReference: batchReference)
+        #expect(removed)
         
         result = await storage.read()
         #expect(result.dataItems.isEmpty)
@@ -197,8 +197,7 @@ class BasicStorageTests {
     func testEventStorageRemoveNonExistentBatch() async {
         let fakeBatchReference = "non-existent-batch-reference"
         let removed = await storage.remove(batchReference: fakeBatchReference)
-        
-        #expect(removed == false)
+        #expect(!removed)
     }
     
     @Test("when calling rollover without events, then no batch is created")
@@ -229,7 +228,7 @@ class BasicStorageTests {
         // Verify event storage
         let eventResult = await storage.read()
         #expect(eventResult.dataItems.count == 1)
-        #expect(eventResult.dataItems.first?.batch.contains("Test Event") == true)
+        #expect(eventResult.dataItems.first?.batch.contains("Test Event") ?? false)
     }
     
     @Test("given BasicStorage with mixed data, when calling removeAll, then all data is cleared")
@@ -275,7 +274,7 @@ class BasicStorageTests {
         
         let result = await storage.read()
         #expect(result.dataItems.count == 1)
-        #expect(result.dataItems.first?.batch.contains(DataStoreConstants.fileBatchPrefix) == true)
+        #expect(result.dataItems.first?.batch.contains(DataStoreConstants.fileBatchPrefix) ?? false)
     }
     
     @Test("when storing events with special characters, then events are preserved correctly")
@@ -291,9 +290,9 @@ class BasicStorageTests {
         #expect(result.dataItems.count == 1)
         
         let batchContent = result.dataItems.first?.batch ?? ""
-        #expect(batchContent.contains("🚀") == true)
-        #expect(batchContent.contains("café") == true)
-        #expect(batchContent.contains("hello") == true)
+        #expect(batchContent.contains("🚀"))
+        #expect(batchContent.contains("café"))
+        #expect(batchContent.contains("hello"))
     }
     
     @Test("when overwriting existing key, then new value replaces old value")
