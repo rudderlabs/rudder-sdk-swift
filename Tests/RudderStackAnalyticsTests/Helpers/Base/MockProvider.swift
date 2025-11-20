@@ -15,7 +15,7 @@ final class MockProvider {
         /* Default implementation (no-op) */
     }
     
-    static var mockDataPlaneUrl: String = "https://test.dataplane.com" // NOSONAR
+    static var mockDataPlaneUrl: String = "https://test.dataplane.com"
     
     static var mockWriteKey: String { "test-write-key-\(UUID().uuidString)" }
     
