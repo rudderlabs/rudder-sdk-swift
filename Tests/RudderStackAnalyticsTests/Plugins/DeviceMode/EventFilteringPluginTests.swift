@@ -14,8 +14,7 @@ struct EventFilteringPluginTests {
     private let destinationKey = "TestDestination"
     
     private func createAnalytics() -> Analytics {
-        let configuration = Configuration(writeKey: "test-write-key", dataPlaneUrl: "https://test.rudderstack.com")
-        return Analytics(configuration: configuration)
+        return MockProvider.createMockAnalytics()
     }
     
     private func createPlugin() -> EventFilteringPlugin {
@@ -45,14 +44,14 @@ struct EventFilteringPluginTests {
         let analytics = createAnalytics()
         let plugin = createPlugin()
         plugin.setup(analytics: analytics)
-        let trackEvent = TrackEvent(event: "Test Event")
+        let trackEvent = MockProvider.mockTrackEvent
         
         let result = plugin.intercept(event: trackEvent)
         
         #expect(result != nil)
         #expect(result is TrackEvent)
         if let resultTrack = result as? TrackEvent {
-            #expect(resultTrack.event == "Test Event")
+            #expect(resultTrack.event == MockProvider.mockTrackEvent.event)
         }
     }
     
@@ -77,21 +76,23 @@ struct EventFilteringPluginTests {
         let plugin = createPlugin()
         plugin.setup(analytics: analytics)
         
+        let testEventName = "Product Purchased 1"
+        
         let destinationConfig: [String: Any] = [
             "eventFilteringOption": "whitelistedEvents",
             "whitelistedEvents": [
-                ["eventName": "Product Purchased"],
+                ["eventName": testEventName],
                 ["eventName": "User Registered"]
             ]
         ]
         plugin.updateConfiguration(destinationConfig: destinationConfig)
         
-        let allowedEvent = TrackEvent(event: "Product Purchased")
+        let allowedEvent = TrackEvent(event: testEventName)
         let result = plugin.intercept(event: allowedEvent)
         
         #expect(result != nil)
         if let resultTrack = result as? TrackEvent {
-            #expect(resultTrack.event == "Product Purchased")
+            #expect(resultTrack.event == testEventName)
         }
     }
     
@@ -101,10 +102,12 @@ struct EventFilteringPluginTests {
         let plugin = createPlugin()
         plugin.setup(analytics: analytics)
         
+        let testEventName = "Product Purchased 12"
+        
         let destinationConfig: [String: Any] = [
             "eventFilteringOption": "whitelistedEvents",
             "whitelistedEvents": [
-                ["eventName": "Product Purchased"],
+                ["eventName": testEventName],
                 ["eventName": "User Registered"]
             ]
         ]
@@ -124,16 +127,18 @@ struct EventFilteringPluginTests {
         let plugin = createPlugin()
         plugin.setup(analytics: analytics)
         
+        let testEventName = "Application Opened"
+        
         let destinationConfig: [String: Any] = [
             "eventFilteringOption": "blacklistedEvents",
             "blacklistedEvents": [
-                ["eventName": "Application Opened"],
+                ["eventName": testEventName],
                 ["eventName": "Application Backgrounded"]
             ]
         ]
         plugin.updateConfiguration(destinationConfig: destinationConfig)
         
-        let blockedEvent = TrackEvent(event: "Application Opened")
+        let blockedEvent = TrackEvent(event: testEventName)
         let result = plugin.intercept(event: blockedEvent)
         
         #expect(result == nil)
@@ -154,12 +159,11 @@ struct EventFilteringPluginTests {
         ]
         plugin.updateConfiguration(destinationConfig: destinationConfig)
         
-        let allowedEvent = TrackEvent(event: "Product Purchased")
-        let result = plugin.intercept(event: allowedEvent)
+        let result = plugin.intercept(event: MockProvider.mockTrackEvent)
         
         #expect(result != nil)
         if let resultTrack = result as? TrackEvent {
-            #expect(resultTrack.event == "Product Purchased")
+            #expect(resultTrack.event == MockProvider.mockTrackEvent.event)
         }
     }
     
@@ -174,7 +178,7 @@ struct EventFilteringPluginTests {
         let destinationConfig: [String: Any] = [
             "eventFilteringOption": "whitelistedEvents",
             "whitelistedEvents": [
-                ["eventName": "Valid Event"]
+                ["eventName": "Valid Event1"]
             ]
         ]
         plugin.updateConfiguration(destinationConfig: destinationConfig)
@@ -221,8 +225,7 @@ struct EventFilteringPluginTests {
         
         plugin.updateConfiguration(destinationConfig: malformedConfig)
         
-        let testEvent = TrackEvent(event: "Test Event")
-        let result = plugin.intercept(event: testEvent)
+        let result = plugin.intercept(event: MockProvider.mockTrackEvent)
         
         #expect(result != nil)
     }
@@ -236,7 +239,7 @@ struct EventFilteringPluginTests {
         let configWithMissingNames: [String: Any] = [
             "eventFilteringOption": "whitelistedEvents",
             "whitelistedEvents": [
-                ["eventName": "Valid Event"],
+                ["eventName": "Valid Event12"],
                 ["invalidKey": "Invalid Entry"],
                 ["eventName": ""]
             ]
@@ -244,7 +247,7 @@ struct EventFilteringPluginTests {
         
         plugin.updateConfiguration(destinationConfig: configWithMissingNames)
         
-        let validEvent = TrackEvent(event: "Valid Event")
+        let validEvent = TrackEvent(event: "Valid Event12")
         let invalidEvent = TrackEvent(event: "Invalid Entry")
         
         let validResult = plugin.intercept(event: validEvent)
@@ -283,8 +286,7 @@ struct EventFilteringPluginTests {
         let newPlugin = createPlugin()
         newPlugin.setup(analytics: analytics)
         
-        let testEvent = TrackEvent(event: "Test Event")
-        let result = newPlugin.intercept(event: testEvent)
+        let result = newPlugin.intercept(event: MockProvider.mockTrackEvent)
         
         #expect(result != nil)
     }
@@ -304,7 +306,7 @@ struct EventFilteringPluginTests {
         let destinationConfig: [String: Any] = [
             "eventFilteringOption": "whitelistedEvents",
             "whitelistedEvents": [
-                ["eventName": "Allowed Event"]
+                ["eventName": "Allowed Event1"]
             ]
         ]
         
@@ -312,7 +314,7 @@ struct EventFilteringPluginTests {
         plugin.updateConfiguration(destinationConfig: destinationConfig)
         
         // Now filtering should be applied
-        let allowedEvent = TrackEvent(event: "Allowed Event")
+        let allowedEvent = TrackEvent(event: "Allowed Event1")
         let blockedEvent = TrackEvent(event: "Blocked Event")
         
         let allowedResult = plugin.intercept(event: allowedEvent)
