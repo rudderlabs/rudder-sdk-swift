@@ -23,12 +23,7 @@ class AnalyticsTests {
         mockStorage = MockStorage()
         
         // Create analytics with mock configuration using our mock storage
-        let config = MockProvider.createMockConfiguration(
-            writeKey: MockProvider.mockWriteKey,
-            dataPlaneUrl: MockProvider.mockDataPlaneUrl,
-            storage: mockStorage
-        )
-        
+        let config = MockProvider.createMockConfiguration(storage: mockStorage)
         config.trackApplicationLifecycleEvents = false
         config.sessionConfiguration.automaticSessionTracking = false
         
