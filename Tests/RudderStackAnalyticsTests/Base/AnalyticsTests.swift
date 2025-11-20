@@ -377,9 +377,9 @@ class AnalyticsTests {
     
     // MARK: - Deep Link Tests
     
-    @Test("when opening deep link URL, then deep link event is tracked")
-    func testDeepLinkTracking() async {
-        guard let testURL = URL(string: EventTestCaseParameters.testDeepLinkUrlLong) else {
+    @Test("when opening deep link URL, then deep link event is tracked", arguments: ["myapp://product?id=123&ref=deeplink"])
+    func testDeepLinkTracking(_ deepLinkUrl: String) async {
+        guard let testURL = URL(string: deepLinkUrl) else {
             Issue.record("Invalid deep link URL")
             return
         }
@@ -397,9 +397,9 @@ class AnalyticsTests {
         #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["source"] as? String == "test")
     }
     
-    @Test("when opening URL without query parameters, then basic deep link event is tracked")
-    func testDeepLinkWithoutParameters() async {
-        guard let testURL = URL(string: EventTestCaseParameters.testDeepLinkUrlShort) else {
+    @Test("when opening URL without query parameters, then basic deep link event is tracked", arguments: ["myapp://home"])
+    func testDeepLinkWithoutParameters(_ deepLinkUrl: String) async {
+        guard let testURL = URL(string: deepLinkUrl) else {
             Issue.record("Invalid deep link URL")
             return
         }
@@ -674,10 +674,7 @@ enum EventTestCaseParameters {
     
     static var testUserId: String { "test-user" }
     static var testMailId: String { "test@example.com" }
-    
-    static var testDeepLinkUrlLong: String { "myapp://product?id=123&ref=deeplink" }
-    static var testDeepLinkUrlShort: String { "test@example.com" }
-    
+        
     private static var sampleJsonPayload: [String: Any] {
         ["key": "value", "number": 1]
     }
