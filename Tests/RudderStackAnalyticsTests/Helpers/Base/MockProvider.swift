@@ -15,8 +15,7 @@ final class MockProvider {
         /* Default implementation (no-op) */
     }
     
-    // sonar-ignore: S1075 (Hardcoded URL)
-    static var mockDataPlaneUrl: String = "https://test.dataplane.com"
+    static var mockDataPlaneUrl: String = "https://test.dataplane.com" // NOSONAR
     
     static var mockWriteKey: String { "test-write-key-\(UUID().uuidString)" }
     
