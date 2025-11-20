@@ -15,7 +15,7 @@ final class MockProvider {
         /* Default implementation (no-op) */
     }
     
-    static let mockDataPlaneUrl = "https://test.dataplane.com"
+    static var mockDataPlaneUrl: String = "https://test.dataplane.com"
     static var mockWriteKey: String { "test-write-key-\(UUID().uuidString)" }
     
     static func createMockAnalytics(
@@ -133,7 +133,7 @@ final class MockProvider {
             )
         )
     }
-
+    
     // MARK: - Mock User Identity
     static var mockUserIdentity: UserIdentity {
         return UserIdentity(
@@ -197,17 +197,17 @@ extension MockProvider {
         ]
         
         // Try to add Bundle.module if available (Swift Package Manager)
-        #if SWIFT_PACKAGE
+#if SWIFT_PACKAGE
         bundles.insert(Bundle.module, at: 0)
-        #endif
+#endif
         
-         for bundle in bundles {
-             if let fileUrl = bundle.url(forResource: file, withExtension: "json"),
-                let data = try? Data(contentsOf: fileUrl) {
-                 return data.jsonString
-             }
-         }
-         return nil
+        for bundle in bundles {
+            if let fileUrl = bundle.url(forResource: file, withExtension: "json"),
+               let data = try? Data(contentsOf: fileUrl) {
+                return data.jsonString
+            }
+        }
+        return nil
     }
     
     static func resetDynamicValues(_ event: inout Event) {
@@ -228,25 +228,29 @@ extension MockProvider {
         static let group = "Sample_Group_Event"
     }
     
-    static let sampleEventproperties: [String: Any] = [
-        "key-1": "String value1",
-        "key-2": 123,
-        "key-3": true,
-        "key-4": 123.456,
-        "key-5": [
-            "key-6": "String value2",
-            "key-7": 123,
-            "key-8": true,
-            "key-9": 123.456
-        ],
-        "key-10": [
-            "String value3",
-            123,
-            true,
-            123.456
-        ],
-        "key-11": [:]
-    ]
+    static var sampleEventproperties: [String: Any] {
+        let stringValue = "String value"
+        
+        return [
+            "key-1": stringValue,
+            "key-2": 123,
+            "key-3": true,
+            "key-4": 123.456,
+            "key-5": [
+                "key-6": stringValue,
+                "key-7": 123,
+                "key-8": true,
+                "key-9": 123.456
+            ],
+            "key-10": [
+                stringValue,
+                123,
+                true,
+                123.456
+            ],
+            "key-11": [:]
+        ]
+    }
     
     static let sampleEventIntegrations: [String: Bool] = [
         "Amplitude": true,
