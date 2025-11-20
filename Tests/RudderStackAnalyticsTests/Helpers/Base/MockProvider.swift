@@ -9,15 +9,17 @@ import Testing
 import Foundation
 @testable import RudderStackAnalytics
 
+// MARK: - MockConstant
+enum MockConstant {
+    static var mockDataPlaneUrl: String = "https://test.dataplane.com"
+    static var mockWriteKey: String { "test-write-key-\(UUID().uuidString)" }
+}
+
 // MARK: - MockProvider
 final class MockProvider {
     private init() {
         /* Default implementation (no-op) */
     }
-    
-    static var mockDataPlaneUrl: String = "https://test.dataplane.com"
-    
-    static var mockWriteKey: String { "test-write-key-\(UUID().uuidString)" }
     
     static func createMockAnalytics(
         storage: Storage = MockStorage(),
@@ -38,8 +40,8 @@ final class MockProvider {
         storage: Storage = MockStorage()
     ) -> Configuration {
         let config = Configuration(
-            writeKey: writeKey ?? mockWriteKey,
-            dataPlaneUrl: dataPlaneUrl ?? mockDataPlaneUrl
+            writeKey: writeKey ?? MockConstant.mockWriteKey,
+            dataPlaneUrl: dataPlaneUrl ?? MockConstant.mockDataPlaneUrl
         )
         config.storageMode = storage.eventStorageMode
         config.storage = storage
