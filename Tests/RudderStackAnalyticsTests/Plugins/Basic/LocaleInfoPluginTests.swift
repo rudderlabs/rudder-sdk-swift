@@ -23,7 +23,7 @@ class LocaleInfoPluginTests {
         MockProvider.mockGroupEvent as Event,
         MockProvider.mockAliasEvent as Event
     ])
-    func test_pluginIntercept(_ event: Event) {
+    func testPluginIntercept(_ event: Event) {
         let analytics = MockProvider.createMockAnalytics()
         localeInfoPlugin.setup(analytics: analytics)
         
@@ -40,7 +40,7 @@ class LocaleInfoPluginTests {
     }
     
     @Test("when setup is called, then analytics reference is stored")
-    func test_pluginSetup() {
+    func testPluginSetup() {
         let analytics = MockProvider.createMockAnalytics()
         
         localeInfoPlugin.setup(analytics: analytics)

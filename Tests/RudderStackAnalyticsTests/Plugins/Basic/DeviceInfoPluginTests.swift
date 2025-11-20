@@ -23,7 +23,7 @@ class DeviceInfoPluginTests {
         MockProvider.mockGroupEvent as Event,
         MockProvider.mockAliasEvent as Event
     ])
-    func test_pluginIntercept(_ event: Event) {
+    func testPluginIntercept(_ event: Event) {
         let analytics = MockProvider.createMockAnalytics()
         deviceInfoPlugin.setup(analytics: analytics)
         
@@ -49,7 +49,7 @@ class DeviceInfoPluginTests {
     }
     
     @Test("given Analytics with collectDeviceId enabled, when intercepting event, then includes device id")
-    func test_pluginInterceptWithDeviceIdCollection() {
+    func testPluginInterceptWithDeviceIdCollection() {
         let config = MockProvider.createMockConfiguration()
         config.collectDeviceId = true
         let analytics = Analytics(configuration: config)
@@ -77,7 +77,7 @@ class DeviceInfoPluginTests {
     }
     
     @Test("given Analytics with collectDeviceId disabled, when intercepting event, then excludes device id")
-    func test_pluginInterceptWithoutDeviceIdCollection() {
+    func testPluginInterceptWithoutDeviceIdCollection() {
         let config = MockProvider.createMockConfiguration()
         config.collectDeviceId = false
         let analytics = Analytics(configuration: config)
@@ -105,7 +105,7 @@ class DeviceInfoPluginTests {
     }
     
     @Test("when setup is called, then analytics reference is stored")
-    func test_pluginSetup() {
+    func testPluginSetup() {
         let analytics = MockProvider.createMockAnalytics()
         
         deviceInfoPlugin.setup(analytics: analytics)

@@ -78,7 +78,7 @@ class RudderStackDataPlanePluginTests {
     }
     
     @Test("when setup is called, then analytics reference is stored")
-    func test_pluginSetup() {
+    func testPluginSetup() {
         let localAnalytics = MockProvider.createMockAnalytics()
         
         plugin.setup(analytics: localAnalytics)
