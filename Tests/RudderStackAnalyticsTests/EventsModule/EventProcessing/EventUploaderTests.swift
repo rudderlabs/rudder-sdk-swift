@@ -103,16 +103,16 @@ class EventUploaderTests {
     
 #if !os(watchOS) // URLProtocol-based mocks don’t work on watchOS..
     @Test("given EventUploader with non-retryable error 400, when upload batch, then does not retry and removes batch")
-    func testUploadBatch_withNonRetryableError400_doesNotRetryAndRemovesBatch() async throws {
+    func testUploadBatchWithNonRetryableError400DoesNotRetryAndRemovesBatch() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
-            Issue.record("Can't prepare mock event json")
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
             return
         }
         await mockStorage.write(event: mockEventJson)
         await mockStorage.rollover()
         
         guard let dataItem = await mockStorage.read().dataItems.first else {
-            Issue.record("Can't read data item from storage")
+            Issue.record("\(EventUploaderTestsIssue.readStorageDataItem)")
             return
         }
         
@@ -128,16 +128,16 @@ class EventUploaderTests {
     }
     
     @Test("given EventUploader with retryable error 502, when upload batch, then retries with backoff")
-    func testUploadBatch_withRetryableError502_retriesWithBackoff() async throws {
+    func testUploadBatchWithRetryableError502RetriesWithBackoff() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
-            Issue.record("Can't prepare mock event json")
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
             return
         }
         await mockStorage.write(event: mockEventJson)
         await mockStorage.rollover()
         
         guard let dataItem = await mockStorage.read().dataItems.first else {
-            Issue.record("Can't read data item from storage")
+            Issue.record("\(EventUploaderTestsIssue.readStorageDataItem)")
             return
         }
         
@@ -162,16 +162,16 @@ class EventUploaderTests {
     }
     
     @Test("given EventUploader with network unavailable error, when upload batch, then retries")
-    func testUploadBatch_withNetworkUnavailableError_retries() async throws {
+    func testUploadBatchWithNetworkUnavailableErrorRetries() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
-            Issue.record("Can't prepare mock event json")
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
             return
         }
         await mockStorage.write(event: mockEventJson)
         await mockStorage.rollover()
         
         guard let dataItem = await mockStorage.read().dataItems.first else {
-            Issue.record("Can't read data item from storage")
+            Issue.record("\(EventUploaderTestsIssue.readStorageDataItem)")
             return
         }
         
@@ -195,16 +195,16 @@ class EventUploaderTests {
     }
     
     @Test("given EventUploader with timeout error, when upload batch, then retries as retryable error")
-    func testUploadBatch_withTimeoutError_retriesAsRetryableError() async throws {
+    func testUploadBatchWithTimeoutErrorRetriesAsRetryableError() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
-            Issue.record("Can't prepare mock event json")
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
             return
         }
         await mockStorage.write(event: mockEventJson)
         await mockStorage.rollover()
         
         guard let dataItem = await mockStorage.read().dataItems.first else {
-            Issue.record("Can't read data item from storage")
+            Issue.record("\(EventUploaderTestsIssue.readStorageDataItem)")
             return
         }
         
@@ -228,16 +228,16 @@ class EventUploaderTests {
     }
     
     @Test("given EventUploader with non-retryable error 401, when upload batch, then stops uploader")
-    func testUploadBatch_withNonRetryableError401_stopsUploader() async throws {
+    func testUploadBatchWithNonRetryableError401StopsUploader() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
-            Issue.record("Can't prepare mock event json")
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
             return
         }
         await mockStorage.write(event: mockEventJson)
         await mockStorage.rollover()
         
         guard let dataItem = await mockStorage.read().dataItems.first else {
-            Issue.record("Can't read data item from storage")
+            Issue.record("\(EventUploaderTestsIssue.readStorageDataItem)")
             return
         }
         
@@ -258,16 +258,16 @@ class EventUploaderTests {
     }
     
     @Test("given EventUploader with non-retryable error 404, when upload batch, then stops uploader")
-    func testUploadBatch_withNonRetryableError404_stopsUploader() async throws {
+    func testUploadBatchWithNonRetryableError404StopsUploader() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
-            Issue.record("Can't prepare mock event json")
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
             return
         }
         await mockStorage.write(event: mockEventJson)
         await mockStorage.rollover()
         
         guard let dataItem = await mockStorage.read().dataItems.first else {
-            Issue.record("Can't read data item from storage")
+            Issue.record("\(EventUploaderTestsIssue.readStorageDataItem)")
             return
         }
         
@@ -284,20 +284,20 @@ class EventUploaderTests {
         
         #expect(callCount == 1) // Should not have retried
         #expect(uploadChannel.isClosed) // Upload channel should be closed
-        #expect(analytics.isSourceEnabled == false) // Source should be disabled
+        #expect(!analytics.isSourceEnabled) // Source should be disabled
     }
     
     @Test("given EventUploader with non-retryable error 413, when upload batch, then does not retry")
-    func testUploadBatch_withNonRetryableError413_doesNotRetry() async throws {
+    func testUploadBatchWithNonRetryableError413DoesNotRetry() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
-            Issue.record("Can't prepare mock event json")
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
             return
         }
         await mockStorage.write(event: mockEventJson)
         await mockStorage.rollover()
         
         guard let dataItem = await mockStorage.read().dataItems.first else {
-            Issue.record("Can't read data item from storage")
+            Issue.record("\(EventUploaderTestsIssue.readStorageDataItem)")
             return
         }
         
@@ -317,16 +317,16 @@ class EventUploaderTests {
     }
     
     @Test("given EventUploader with successful response, when upload batch, then completes without retry")
-    func testUploadBatch_withSuccessfulResponse_completesWithoutRetry() async throws {
+    func testUploadBatchWithSuccessfulResponseCompletesWithoutRetry() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
-            Issue.record("Can't prepare mock event json")
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
             return
         }
         await mockStorage.write(event: mockEventJson)
         await mockStorage.rollover()
         
         guard let dataItem = await mockStorage.read().dataItems.first else {
-            Issue.record("Can't read data item from storage")
+            Issue.record("\(EventUploaderTestsIssue.readStorageDataItem)")
             return
         }
         
@@ -349,3 +349,9 @@ class EventUploaderTests {
     }
 #endif
 }
+
+enum EventUploaderTestsIssue {
+    static var prepareMockEventJson: String { "Can't prepare mock event json" }
+    static var readStorageDataItem: String { "Can't read data item from storage" }
+}
+

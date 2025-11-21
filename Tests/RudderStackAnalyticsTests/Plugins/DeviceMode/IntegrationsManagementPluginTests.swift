@@ -13,6 +13,7 @@ import Foundation
 struct IntegrationsManagementPluginTests {
     
     var analytics: Analytics
+    let mockPluginKey = "Google Ads"
     
     init() {
         let mockConfiguration = MockProvider.createMockConfiguration()
@@ -47,12 +48,12 @@ struct IntegrationsManagementPluginTests {
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
-        let trackEvent = TrackEvent(event: "Test Event")
+        let trackEvent = MockProvider.mockTrackEvent
         
         let result = plugin.intercept(event: trackEvent)
         
         #expect(result != nil)
-        #expect((result as? TrackEvent)?.event == "Test Event")
+        #expect((result as? TrackEvent)?.event == MockProvider.mockTrackEvent.event)
     }
     
     @Test("Given IntegrationsManagementPlugin, When multiple events are intercepted, Then all events should be queued")
@@ -93,7 +94,7 @@ struct IntegrationsManagementPluginTests {
         analytics.add(plugin: plugin)
         
         // Add a mock integration to the controller
-        let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
+        let mockPlugin = MockStandardIntegrationPlugin(key: mockPluginKey)
         analytics.add(plugin: mockPlugin)
         
         guard let sourceConfig = MockProvider.sourceConfiguration else {
@@ -104,8 +105,8 @@ struct IntegrationsManagementPluginTests {
         analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
         
         await runAfter(0.2) {
-            #expect(mockPlugin.createCalled == true)
-            #expect(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce == true)
+            #expect(mockPlugin.createCalled)
+            #expect(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce ?? false)
         }
     }
     
@@ -115,14 +116,14 @@ struct IntegrationsManagementPluginTests {
         analytics.add(plugin: plugin)
         
         // Add a mock integration to the controller
-        let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
+        let mockPlugin = MockStandardIntegrationPlugin(key: mockPluginKey)
         analytics.add(plugin: mockPlugin)
         
         analytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
         
         await runAfter(0.2) {
-            #expect(mockPlugin.createCalled == false)
-            #expect(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce == false)
+            #expect(!mockPlugin.createCalled)
+            #expect(!(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce ?? true))
         }
     }
     
@@ -134,7 +135,7 @@ struct IntegrationsManagementPluginTests {
         analytics.add(plugin: plugin)
         
         // Add a mock integration to track processed events
-        let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
+        let mockPlugin = MockStandardIntegrationPlugin(key: mockPluginKey)
         analytics.add(plugin: mockPlugin)
         
         // Queue some events before source config
@@ -149,7 +150,7 @@ struct IntegrationsManagementPluginTests {
         analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
         
         await runAfter(0.3) {
-            #expect(mockPlugin.createCalled == true)
+            #expect(mockPlugin.createCalled)
             // Events should have been processed through the integration plugin chain
             // We verify that track events were received (could be lifecycle events + our queued events)
             #expect(mockPlugin.trackEventReceived != nil)
@@ -189,11 +190,11 @@ struct IntegrationsManagementPluginTests {
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
-        #expect(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce == false)
+        #expect(!(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce ?? true))
         
         plugin.setIsSourceEnabledFetchedAtLeastOnce(true)
         
-        #expect(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce == true)
+        #expect(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce ?? false)
     }
     
     @Test("Given IntegrationsManagementPlugin, When initDestination is called, Then should delegate to IntegrationsController")
@@ -201,14 +202,14 @@ struct IntegrationsManagementPluginTests {
         let plugin = IntegrationsManagementPlugin()
         analytics.add(plugin: plugin)
         
-        let mockPlugin = MockStandardIntegrationPlugin(key: "Google Ads")
+        let mockPlugin = MockStandardIntegrationPlugin(key: mockPluginKey)
         analytics.add(plugin: mockPlugin)
         
         let sourceConfig = MockProvider.sourceConfiguration!
         
         plugin.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
-        #expect(mockPlugin.createCalled == true)
+        #expect(mockPlugin.createCalled)
     }
     
     // MARK: - Memory Management Tests

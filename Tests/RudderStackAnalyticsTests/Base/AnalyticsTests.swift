@@ -23,12 +23,7 @@ class AnalyticsTests {
         mockStorage = MockStorage()
         
         // Create analytics with mock configuration using our mock storage
-        let config = MockProvider.createMockConfiguration(
-            writeKey: MockProvider.mockWriteKey,
-            dataPlaneUrl: MockProvider.mockDataPlaneUrl,
-            storage: mockStorage
-        )
-        
+        let config = MockProvider.createMockConfiguration(storage: mockStorage)
         config.trackApplicationLifecycleEvents = false
         config.sessionConfiguration.automaticSessionTracking = false
         
@@ -294,7 +289,7 @@ class AnalyticsTests {
         
         await additionalPlugin.waitForEvents()
         
-        #expect(additionalPlugin.setupCalled == true)
+        #expect(additionalPlugin.setupCalled)
         #expect(additionalPlugin.eventCount >= 1)
     }
     
@@ -326,13 +321,13 @@ class AnalyticsTests {
     @Test("given Analytics with user data, when resetting, then user data is cleared from storage")
     func testReset() async {
         // Set up user data
-        analytics.identify(userId: "test-user", traits: ["email": "test@example.com"])
+        analytics.identify(userId: EventTestCaseParameters.testUserId, traits: ["email": EventTestCaseParameters.testMailId])
         analytics.track(name: "Before Reset Event")
         
         await mockPlugin.waitForEvents(count: 2)
         
-        #expect(self.analytics.userId == "test-user")
-        #expect(self.analytics.traits?["email"] as? String == "test@example.com")
+        #expect(self.analytics.userId == EventTestCaseParameters.testUserId)
+        #expect(self.analytics.traits?["email"] as? String == EventTestCaseParameters.testMailId)
 
         // Reset
         self.analytics.reset()
@@ -340,14 +335,14 @@ class AnalyticsTests {
         await runAfter(0.1) {
             #expect(self.analytics.userId?.isEmpty ?? true)
             #expect(self.analytics.traits?.isEmpty ?? true)
-            #expect(self.analytics.anonymousId?.isEmpty == false) // Anonymous ID should be regenerated
+            #expect(!(self.analytics.anonymousId?.isEmpty ?? true)) // Anonymous ID should be regenerated
         }
     }
     
     @Test("when resetting with specific options, then only specified data is cleared")
     func testResetWithOptions() async {
         // Set up user data
-        analytics.identify(userId: "test-user", traits: ["email": "test@example.com"])
+        analytics.identify(userId: EventTestCaseParameters.testUserId, traits: ["email": EventTestCaseParameters.testMailId])
         
         // Reset only traits, keep userId
         let resetEntries = ResetEntries(anonymousId: false, userId: false, traits: true, session: false)
@@ -357,7 +352,7 @@ class AnalyticsTests {
         self.analytics.reset(options: resetOptions)
         
         await runAfter(0.1) {
-            #expect(self.analytics.userId == "test-user") // Should remain
+            #expect(self.analytics.userId == EventTestCaseParameters.testUserId) // Should remain
             #expect(self.analytics.traits?.isEmpty ?? true) // Should be cleared
         }
     }
@@ -377,9 +372,9 @@ class AnalyticsTests {
     
     // MARK: - Deep Link Tests
     
-    @Test("when opening deep link URL, then deep link event is tracked")
-    func testDeepLinkTracking() async {
-        guard let testURL = URL(string: "myapp://product?id=123&ref=deeplink") else {
+    @Test("when opening deep link URL, then deep link event is tracked", arguments: ["myapp://product?id=123&ref=deeplink"])
+    func testDeepLinkTracking(_ deepLinkUrl: String) async {
+        guard let testURL = URL(string: deepLinkUrl) else {
             Issue.record("Invalid deep link URL")
             return
         }
@@ -397,9 +392,9 @@ class AnalyticsTests {
         #expect(deepLinkEvent?.properties?.dictionary?.rawDictionary["source"] as? String == "test")
     }
     
-    @Test("when opening URL without query parameters, then basic deep link event is tracked")
-    func testDeepLinkWithoutParameters() async {
-        guard let testURL = URL(string: "myapp://home") else {
+    @Test("when opening URL without query parameters, then basic deep link event is tracked", arguments: ["myapp://home"])
+    func testDeepLinkWithoutParameters(_ deepLinkUrl: String) async {
+        guard let testURL = URL(string: deepLinkUrl) else {
             Issue.record("Invalid deep link URL")
             return
         }
@@ -416,9 +411,9 @@ class AnalyticsTests {
     
     @Test("when shutting down, then analytics becomes inactive")
     func testShutdown() async {
-        #expect(analytics.isAnalyticsActive == true)
+        #expect(analytics.isAnalyticsActive)
         analytics.shutdown()
-        #expect(analytics.isAnalyticsActive == false)
+        #expect(!analytics.isAnalyticsActive)
     }
     
     @Test("when Analytics shutdown and attempting to track events, then events are not processed")
@@ -429,12 +424,13 @@ class AnalyticsTests {
             
             let initialEventCount = self.mockPlugin.eventCount
             
+            let eventString = "Should Not Track"
             // Try to track events after shutdown
-            self.analytics.track(name: "Should Not Track")
-            self.analytics.screen(screenName: "Should Not Track")
-            self.analytics.identify(userId: "Should Not Track")
-            self.analytics.group(groupId: "Should Not Track")
-            self.analytics.alias(newId: "Should Not Track")
+            self.analytics.track(name: eventString)
+            self.analytics.screen(screenName: eventString)
+            self.analytics.identify(userId: eventString)
+            self.analytics.group(groupId: eventString)
+            self.analytics.alias(newId: eventString)
             
             await self.mockPlugin.waitForEvents(timeout: 0.1)
             // No new events should be processed
@@ -445,11 +441,11 @@ class AnalyticsTests {
     @Test("when Analytics shutdown and accessing user properties, then nil is returned")
     func testUserPropertiesReturnNilAfterShutdown() async {
         // Set up user data first
-        analytics.identify(userId: "test-user", traits: ["email": "test@example.com"])
+        analytics.identify(userId: EventTestCaseParameters.testUserId, traits: ["email": EventTestCaseParameters.testMailId])
         await self.mockPlugin.waitForEvents()
         
-        #expect(self.analytics.userId == "test-user")
-        #expect(self.analytics.anonymousId?.isEmpty == false)
+        #expect(self.analytics.userId == EventTestCaseParameters.testUserId)
+        #expect(!(self.analytics.anonymousId?.isEmpty ?? true))
         
         // Shutdown
         self.analytics.shutdown()
@@ -480,7 +476,7 @@ class AnalyticsTests {
         // Verify all events were processed
         for i in 0..<eventCount {
             let eventExists = trackEvents.contains { $0.event == "Concurrent Event \(i)" }
-            #expect(eventExists == true)
+            #expect(eventExists)
         }
     }
     
@@ -496,7 +492,7 @@ class AnalyticsTests {
         
         // Final user ID should be the last set value
         let finalUserId = self.analytics.userId
-        #expect(finalUserId?.hasPrefix("user-") == true)
+        #expect(finalUserId?.hasPrefix("user-") ?? false)
     }
     
     // MARK: - Edge Cases Tests
@@ -557,7 +553,7 @@ class AnalyticsTests {
         let anonymousId2 = analytics.anonymousId
         
         #expect(anonymousId1 == anonymousId2)
-        #expect(anonymousId1?.isEmpty == false)
+        #expect(!(anonymousId1?.isEmpty ?? true))
         
         // Verify anonymous ID is stored in mock storage
         let storedData = mockStorage.allKeyValuePairs
@@ -605,7 +601,10 @@ extension AnalyticsTests {
                 let actualDict = actualId.dictionary ?? [:]
                 return validate(expectedDict, with: actualDict)
             }
-            if !containsMatch { return false }
+            
+            if !containsMatch {
+                return false
+            }
         }
         return true
     }
@@ -615,63 +614,66 @@ extension AnalyticsTests {
 enum EventTestCaseParameters {
     static var trackEvent: [(name: String, properties: [String: Any]?, options: RudderOption?)] {
         return [
-            (_trackEventName, nil, nil),
-            (_trackEventName, _sampleJsonPayload, nil),
-            (_trackEventName, nil, _sampleRudderOption),
+            (trackEventName, nil, nil),
+            (trackEventName, sampleJsonPayload, nil),
+            (trackEventName, nil, sampleRudderOption),
         ]
     }
     
     static var screenEvent: [(name: String, category: String?, properties: [String: Any]?, options: RudderOption?)] {
         return [
-            (_screenEventName, nil, nil, nil),
-            (_screenEventName, _screenEventCategory, nil, nil),
-            (_screenEventName, _screenEventCategory, _sampleJsonPayload, nil),
-            (_screenEventName, nil, _sampleJsonPayload, nil),
-            (_screenEventName, nil, nil, _sampleRudderOption),
+            (screenEventName, nil, nil, nil),
+            (screenEventName, screenEventCategory, nil, nil),
+            (screenEventName, screenEventCategory, sampleJsonPayload, nil),
+            (screenEventName, nil, sampleJsonPayload, nil),
+            (screenEventName, nil, nil, sampleRudderOption),
         ]
     }
     
     static var identifyEvent: [(userId: String?, traits: [String: Any]?, options: RudderOption?)] {
         return [
             (nil, nil, nil),
-            (nil, _sampleJsonPayload, nil),
-            (_identifyEventUserId, nil, nil),
-            (_identifyEventUserId, _sampleJsonPayload, nil),
-            (_identifyEventUserId, nil, _sampleRudderOption)
+            (nil, sampleJsonPayload, nil),
+            (identifyEventUserId, nil, nil),
+            (identifyEventUserId, sampleJsonPayload, nil),
+            (identifyEventUserId, nil, sampleRudderOption)
         ]
     }
     
     static var groupEvent: [(groupId: String, traits: [String: Any]?, options: RudderOption?)] {
         return [
-            (_groupId, nil, nil),
-            (_groupId, _sampleJsonPayload, nil),
-            (_groupId, _sampleJsonPayload, _sampleRudderOption)
+            (groupId, nil, nil),
+            (groupId, sampleJsonPayload, nil),
+            (groupId, sampleJsonPayload, sampleRudderOption)
         ]
     }
      
     static var aliasEvent: [(alias: String, previousId: String?, options: RudderOption?)] {
         return [
-            (_aliasId, nil, nil),
-            (_aliasId, _previousId, nil),
-            (_aliasId, nil, _sampleRudderOption)
+            (aliasId, nil, nil),
+            (aliasId, previousId, nil),
+            (aliasId, nil, sampleRudderOption)
         ]
     }
      
-    private static var _trackEventName: String { "track_event" }
+    private static var trackEventName: String { "track_event" }
     
-    private static var _screenEventName: String { "screen_event" }
-    private static var _screenEventCategory: String { "screen_category" }
+    private static var screenEventName: String { "screen_event" }
+    private static var screenEventCategory: String { "screen_category" }
     
-    private static var _identifyEventUserId: String { "identify_event_user_id" }
-    private static var _groupId: String { "group_id" }
+    private static var identifyEventUserId: String { "identify_event_user_id" }
+    private static var groupId: String { "group_id" }
     
-    private static var _aliasId: String { "alias_id" }
-    private static var _previousId: String { "previous_id" }
+    private static var aliasId: String { "alias_id" }
+    private static var previousId: String { "previous_id" }
     
-    private static var _sampleJsonPayload: [String: Any] {
+    static var testUserId: String { "test-user" }
+    static var testMailId: String { "test@example.com" }
+        
+    private static var sampleJsonPayload: [String: Any] {
         ["key": "value", "number": 1]
     }
-    private static var _sampleRudderOption: RudderOption {
+    private static var sampleRudderOption: RudderOption {
         RudderOption(
             integrations: [
                 "facebook": false,

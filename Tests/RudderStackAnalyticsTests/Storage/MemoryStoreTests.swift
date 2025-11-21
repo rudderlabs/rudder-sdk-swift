@@ -38,8 +38,8 @@ class MemoryStoreTests {
         
         let dataItems = await store.dataItems
         #expect(dataItems.count == 1)
-        #expect(dataItems.first?.batch.contains("Test Event") == true)
-        #expect(dataItems.first?.isClosed == false)
+        #expect(dataItems.first?.batch.contains("Test Event") ?? false)
+        #expect(!(dataItems.first?.isClosed ?? true))
     }
     
     @Test("given MemoryStore with event, when calling rollover, then batch is finalized")
@@ -49,8 +49,8 @@ class MemoryStoreTests {
         
         let retrievedItems = await store.retrieve()
         #expect(retrievedItems.count == 1)
-        #expect(retrievedItems.first?.isClosed == true)
-        #expect(retrievedItems.first?.batch.hasSuffix(DataStoreConstants.fileBatchSuffix) == true)
+        #expect(retrievedItems.first?.isClosed ?? false)
+        #expect(retrievedItems.first?.batch.hasSuffix(DataStoreConstants.fileBatchSuffix) ?? false)
     }
     
     @Test("when storing multiple events before rollover, then events are batched together")
@@ -67,8 +67,8 @@ class MemoryStoreTests {
         
         let dataItems = await store.dataItems
         #expect(dataItems.count == 1)
-        #expect(dataItems.first?.batch.contains("Event 1") == true)
-        #expect(dataItems.first?.batch.contains("Event 2") == true)
+        #expect(dataItems.first?.batch.contains("Event 1") ?? false)
+        #expect(dataItems.first?.batch.contains("Event 2") ?? false)
     }
     
     // MARK: - Batch Management Tests
@@ -84,7 +84,7 @@ class MemoryStoreTests {
         
         let retrievedItems = await store.retrieve()
         #expect(retrievedItems.count == 1) // Only the closed batch
-        #expect(retrievedItems.first?.isClosed == true)
+        #expect(retrievedItems.first?.isClosed ?? false)
         
         let allDataItems = await store.dataItems
         #expect(allDataItems.count == 2) // Both open and closed batches exist internally
@@ -108,8 +108,8 @@ class MemoryStoreTests {
         #expect(retrievedItems.count == 3)
         
         for item in retrievedItems {
-            #expect(item.isClosed == true)
-            #expect(item.batch.hasSuffix(DataStoreConstants.fileBatchSuffix) == true)
+            #expect(item.isClosed)
+            #expect(item.batch.hasSuffix(DataStoreConstants.fileBatchSuffix))
         }
     }
     
@@ -132,21 +132,19 @@ class MemoryStoreTests {
             Issue.record("Expected at least one batch before removal")
             return
         }
-        let wasRemoved = await store.remove(reference: referenceToRemove)
         
-        #expect(wasRemoved == true)
+        let wasRemoved = await store.remove(reference: referenceToRemove)
+        #expect(wasRemoved)
         
         let itemsAfterRemoval = await store.retrieve()
         #expect(itemsAfterRemoval.count == 1)
         #expect(itemsAfterRemoval.first?.reference != referenceToRemove)
     }
     
-    @Test("when removing non-existent reference, then returns false")
-    func testRemoveNonExistentReference() async {
-        let store = MemoryStore(writeKey: testWriteKey)
-        
-        let wasRemoved = await store.remove(reference: "non-existent-reference")
-        #expect(wasRemoved == false)
+    @Test("when removing non-existent reference, then returns false", arguments: ["non-existent-reference"])
+    func testRemoveNonExistentReference(_ nonExistentReference: String) async {
+        let wasRemoved = await store.remove(reference: nonExistentReference)
+        #expect(!wasRemoved)
     }
     
     @Test("given MemoryStore with multiple batches, when calling removeAll, then all batches are cleared")
@@ -198,7 +196,7 @@ class MemoryStoreTests {
         // Verify that rollover actually happened by checking that we have closed batches
         let retrievedItems = await store.retrieve()
         #expect(retrievedItems.count >= 1)
-        #expect(retrievedItems.first?.isClosed == true)
+        #expect(retrievedItems.first?.isClosed ?? false)
     }
     
     // MARK: - Batch Format Tests
@@ -223,11 +221,11 @@ class MemoryStoreTests {
             Issue.record("Expected a batch after rollover")
             return
         }
-        #expect(batchContent.hasPrefix(DataStoreConstants.fileBatchPrefix) == true)
-        #expect(batchContent.hasSuffix(DataStoreConstants.fileBatchSuffix) == true)
-        #expect(batchContent.contains("Event 1") == true)
-        #expect(batchContent.contains("Event 2") == true)
-        #expect(batchContent.contains("sentAt") == true) // Should include timestamp
+        #expect(batchContent.hasPrefix(DataStoreConstants.fileBatchPrefix))
+        #expect(batchContent.hasSuffix(DataStoreConstants.fileBatchSuffix))
+        #expect(batchContent.contains("Event 1"))
+        #expect(batchContent.contains("Event 2"))
+        #expect(batchContent.contains("sentAt")) // Should include timestamp
     }
     
     @Test("when single event is stored and rolled over, then proper batch format is created")
@@ -241,9 +239,9 @@ class MemoryStoreTests {
             return
         }
         
-        #expect(batchContent.hasPrefix(DataStoreConstants.fileBatchPrefix) == true)
-        #expect(batchContent.hasSuffix(DataStoreConstants.fileBatchSuffix) == true)
-        #expect(batchContent.contains("Test Event") == true)
+        #expect(batchContent.hasPrefix(DataStoreConstants.fileBatchPrefix))
+        #expect(batchContent.hasSuffix(DataStoreConstants.fileBatchSuffix))
+        #expect(batchContent.contains("Test Event"))
         
         // Verify it's valid JSON structure (basic check)
         #expect(batchContent.filter { $0 == "[" }.count == 1)

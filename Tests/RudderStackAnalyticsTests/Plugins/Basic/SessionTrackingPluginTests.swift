@@ -23,7 +23,7 @@ class SessionTrackingPluginTests {
         MockProvider.mockGroupEvent as Event,
         MockProvider.mockAliasEvent as Event
     ])
-    func test_pluginInterceptWithActiveSession(_ event: Event) {
+    func testPluginInterceptWithActiveSession(_ event: Event) {
         let sessionConfig = MockProvider.mockSessionConfiguration
         let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
         sessionTrackingPlugin.setup(analytics: analytics)
@@ -44,7 +44,7 @@ class SessionTrackingPluginTests {
     }
     
     @Test("given SessionTrackingPlugin without active session, when intercepting event, then context is empty")
-    func testSessionTrackingPlugin_WithoutActiveSession() {
+    func testSessionTrackingPluginWithoutActiveSession() {
         let sessionConfig = MockProvider.mockManualSessionConfiguration
         let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
         sessionTrackingPlugin.setup(analytics: analytics)
@@ -64,7 +64,7 @@ class SessionTrackingPluginTests {
     }
     
     @Test("when setup is called, then analytics reference is stored")
-    func test_pluginSetup() {
+    func testPluginSetup() {
         let analytics = MockProvider.createMockAnalytics()
         
         sessionTrackingPlugin.setup(analytics: analytics)

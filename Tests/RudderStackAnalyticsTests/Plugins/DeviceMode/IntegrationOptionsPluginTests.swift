@@ -15,6 +15,10 @@ struct IntegrationOptionsPluginTests {
     
     var analytics: Analytics
     
+    var testEvent: TrackEvent {
+        TrackEvent(event: "event-name", properties: [:])
+    }
+    
     init() {
         let mockConfiguration = MockProvider.createMockConfiguration()
         mockConfiguration.flushPolicies = []
@@ -27,8 +31,7 @@ struct IntegrationOptionsPluginTests {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         plugin.setup(analytics: analytics)
         
-        let event = TrackEvent(event: "event-name", properties: [:])
-        var eventWithIntegrations = event
+        var eventWithIntegrations = testEvent
         eventWithIntegrations.integrations = ["All": AnyCodable(true)]
         
         let result = plugin.intercept(event: eventWithIntegrations)
@@ -42,8 +45,7 @@ struct IntegrationOptionsPluginTests {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         plugin.setup(analytics: analytics)
         
-        let event = TrackEvent(event: "event-name", properties: [:])
-        var eventWithIntegrations = event
+        var eventWithIntegrations = testEvent
         eventWithIntegrations.integrations = [mockDestinationKey: AnyCodable(false)]
         
         let result = plugin.intercept(event: eventWithIntegrations)
@@ -56,8 +58,7 @@ struct IntegrationOptionsPluginTests {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         plugin.setup(analytics: analytics)
         
-        let event = TrackEvent(event: "event-name", properties: [:])
-        var eventWithIntegrations = event
+        var eventWithIntegrations = testEvent
         eventWithIntegrations.integrations = ["All": AnyCodable(false)]
         
         let result = plugin.intercept(event: eventWithIntegrations)
@@ -70,8 +71,7 @@ struct IntegrationOptionsPluginTests {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         plugin.setup(analytics: analytics)
         
-        let event = TrackEvent(event: "event-name", properties: [:])
-        var eventWithIntegrations = event
+        var eventWithIntegrations = testEvent
         eventWithIntegrations.integrations = [
             "All": AnyCodable(false),
             mockDestinationKey: AnyCodable(true)
@@ -88,8 +88,7 @@ struct IntegrationOptionsPluginTests {
         let plugin = IntegrationOptionsPlugin(key: "SomeOtherDestination")
         plugin.setup(analytics: analytics)
         
-        let event = TrackEvent(event: "event-name", properties: [:])
-        var eventWithIntegrations = event
+        var eventWithIntegrations = testEvent
         eventWithIntegrations.integrations = [
             "All": AnyCodable(true),
             mockDestinationKey: AnyCodable(false)
@@ -106,8 +105,7 @@ struct IntegrationOptionsPluginTests {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         plugin.setup(analytics: analytics)
         
-        let event = TrackEvent(event: "event-name", properties: [:])
-        var eventWithIntegrations = event
+        var eventWithIntegrations = testEvent
         eventWithIntegrations.integrations = [:]
         
         let result = plugin.intercept(event: eventWithIntegrations)
@@ -121,8 +119,7 @@ struct IntegrationOptionsPluginTests {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         plugin.setup(analytics: analytics)
         
-        let event = TrackEvent(event: "event-name", properties: [:])
-        var eventWithIntegrations = event
+        var eventWithIntegrations = testEvent
         eventWithIntegrations.integrations = [mockDestinationKey: AnyCodable("some string value")]
         
         let result = plugin.intercept(event: eventWithIntegrations)
@@ -136,8 +133,7 @@ struct IntegrationOptionsPluginTests {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         plugin.setup(analytics: analytics)
         
-        let event = TrackEvent(event: "event-name", properties: [:])
-        var eventWithIntegrations = event
+        var eventWithIntegrations = testEvent
         eventWithIntegrations.integrations = [
             mockDestinationKey: AnyCodable(["key": "value"])
         ]
@@ -152,10 +148,8 @@ struct IntegrationOptionsPluginTests {
     func eventWithNilIntegrations() {
         let plugin = IntegrationOptionsPlugin(key: mockDestinationKey)
         plugin.setup(analytics: analytics)
-        
-        let event = TrackEvent(event: "event-name", properties: [:])
-        
-        let result = plugin.intercept(event: event)
+                
+        let result = plugin.intercept(event: testEvent)
         
         #expect(result != nil)
         #expect(result?.type == .track)

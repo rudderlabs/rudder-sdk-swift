@@ -23,7 +23,7 @@ class AppInfoPluginTests {
         MockProvider.mockGroupEvent as Event,
         MockProvider.mockAliasEvent as Event
     ])
-    func test_pluginIntercept(_ event: Event) {
+    func testPluginIntercept(_ event: Event) {
         let result = appInfoPlugin.intercept(event: event)
         
         #expect(result != nil)
@@ -37,7 +37,7 @@ class AppInfoPluginTests {
     }
     
     @Test("when setup is called, then analytics reference is stored")
-    func test_pluginSetup() {
+    func testPluginSetup() {
         let analytics = MockProvider.createMockAnalytics()
         
         appInfoPlugin.setup(analytics: analytics)

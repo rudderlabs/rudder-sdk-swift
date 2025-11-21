@@ -12,7 +12,7 @@ import Testing
 class PluginModuleTests {
     
     @Test("given PluginChain, when processing event, then executes plugins in correct order")
-    func testPluginChain_EventProcessingOrder() {
+    func testPluginChainEventProcessingOrder() {
         let analytics = MockProvider.createMockAnalytics()
         let pluginChain = PluginChain(analytics: analytics)
         
@@ -35,7 +35,7 @@ class PluginModuleTests {
     }
     
     @Test("given PluginInteractor, when adding and removing plugins, then plugin list is updated correctly")
-    func testPluginInteractor_AddRemovePlugins() {
+    func testPluginInteractorAddRemovePlugins() {
         let interactor = PluginInteractor()
         let plugin1 = TestPreProcessPlugin()
         let plugin2 = TestOnProcessPlugin()
@@ -54,7 +54,7 @@ class PluginModuleTests {
     }
     
     @Test("given PluginInteractor, when finding plugins by type, then returns correct instances")
-    func testPluginInteractor_FindPluginsByType() {
+    func testPluginInteractorFindPluginsByType() {
         let interactor = PluginInteractor()
         let plugin1 = TestPreProcessPlugin()
         let plugin2 = TestOnProcessPlugin()

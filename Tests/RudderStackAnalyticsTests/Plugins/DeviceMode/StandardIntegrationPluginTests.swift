@@ -314,6 +314,5 @@ struct StandardIntegrationPluginTests {
         customPlugin.setup(analytics: analytics)
         
         #expect(customPlugin.key == "standard_destination")
-        #expect(customPlugin is StandardIntegration)
     }
 }

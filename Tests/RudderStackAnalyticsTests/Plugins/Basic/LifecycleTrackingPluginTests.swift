@@ -28,7 +28,7 @@ class LifecycleTrackingPluginTests {
     }
     
     @Test("when setup is called, then application installed event triggered")
-    func test_applicationInstalledEvent() async {
+    func testApplicationInstalledEvent() async {
         lifecycleTrackingPlugin.setup(analytics: analytics)
         
         await mockStorage.waitForCurrentBatchEvents(expectedCount: 1)
@@ -39,7 +39,7 @@ class LifecycleTrackingPluginTests {
     }
     
     @Test("when setup is called, then application opened event triggered")
-    func test_applicationOpenedEvent() async {
+    func testApplicationOpenedEvent() async {
         lifecycleTrackingPlugin.setup(analytics: analytics)
         
         await mockStorage.waitForCurrentBatchEvents(expectedCount: 2)
@@ -50,7 +50,7 @@ class LifecycleTrackingPluginTests {
     }
     
     @Test("when app moves background, then application backgrounded event triggered")
-    func test_applicationBackgroundedEvent() async {
+    func testApplicationBackgroundedEvent() async {
         lifecycleTrackingPlugin.setup(analytics: analytics)
         
         lifecycleTrackingPlugin.onBackground()
@@ -63,7 +63,7 @@ class LifecycleTrackingPluginTests {
     }
     
     @Test("when current app version is different, then application updated event triggered")
-    func test_applicationUpdatedEvent() async {
+    func testApplicationUpdatedEvent() async {
         
         mockStorage.write(value: "1.0", key: Constants.storageKeys.appVersion)
         mockStorage.write(value: 10, key: Constants.storageKeys.appBuild)
@@ -78,7 +78,7 @@ class LifecycleTrackingPluginTests {
     }
     
     @Test("when setup is called, then analytics reference is stored")
-    func test_pluginSetup() {
+    func testPluginSetup() {
         let mockAnalytics = MockProvider.createMockAnalytics()
         
         lifecycleTrackingPlugin.setup(analytics: mockAnalytics)
