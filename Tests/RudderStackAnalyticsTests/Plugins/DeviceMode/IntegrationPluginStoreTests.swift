@@ -130,7 +130,9 @@ struct IntegrationPluginStoreTests {
         do {
             let store = IntegrationPluginStore(analytics: analytics)
             
-            let callback: IntegrationCallback = { _, _ in }
+            let callback: IntegrationCallback = { _, _ in
+                /* Default implementation (no-op) */
+            }
             store.destinationReadyCallbacks.append(callback)
             weakPluginChain = store.pluginChain
         }
