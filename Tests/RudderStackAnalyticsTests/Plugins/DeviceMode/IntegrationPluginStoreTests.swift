@@ -125,16 +125,17 @@ struct IntegrationPluginStoreTests {
     
     @Test("given an analytics instance, when store is deallocated, then plugin chain should be deallocated")
     func deinitCleanup() {
-        var store: IntegrationPluginStore? = IntegrationPluginStore(analytics: analytics)
+        weak var weakPluginChain: PluginChain?
         
-        let callback: IntegrationCallback = { _, _ in
-            /* Default implementation (no-op) */
+        do {
+            let store = IntegrationPluginStore(analytics: analytics)
+            
+            let callback: IntegrationCallback = { _, _ in }
+            store.destinationReadyCallbacks.append(callback)
+            weakPluginChain = store.pluginChain
         }
-        store?.destinationReadyCallbacks.append(callback)
         
-        weak var weakPluginChain = store?.pluginChain
-        store = nil
-        
+        // After the do–scope ends, store is deallocated automatically
         #expect(weakPluginChain == nil)
     }
     

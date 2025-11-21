@@ -127,7 +127,7 @@ final class MockProvider {
             source: RudderServerConfigSource(
                 sourceId: "test-source-id",
                 sourceName: "Test Source",
-                writeKey: mockWriteKey,
+                writeKey: MockConstant.mockWriteKey,
                 isSourceEnabled: true,
                 workspaceId: "test-workspace-id",
                 updatedAt: "2024-10-15T10:00:00Z",

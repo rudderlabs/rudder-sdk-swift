@@ -33,13 +33,13 @@ class NetworkInfoPluginTests {
         #expect(result != nil)
         #expect(result?.context != nil)
         guard let context = result?.context?.rawDictionary else {
-            Issue.record("Event context not found")
+            Issue.record("\(NetworkInfoPluginIssue.noEventContext)")
             return
         }
         
         #expect(context["network"] != nil)
         guard let networkInfo = context["network"] as? [String: Any] else {
-            Issue.record("network info not found")
+            Issue.record("\(NetworkInfoPluginIssue.noNetworkInfo)")
             return
         }
         
@@ -60,18 +60,18 @@ class NetworkInfoPluginTests {
         #expect(result != nil)
         #expect(result?.context != nil)
         guard let context = result?.context?.rawDictionary else {
-            Issue.record("Event context not found")
+            Issue.record("\(NetworkInfoPluginIssue.noEventContext)")
             return
         }
         
         #expect(context["network"] != nil)
         guard let networkInfo = context["network"] as? [String: Any] else {
-            Issue.record("network info not found")
+            Issue.record("\(NetworkInfoPluginIssue.noNetworkInfo)")
             return
         }
         
-        #expect(networkInfo["wifi"] as? Bool == true)
-        #expect(networkInfo["cellular"] as? Bool == false)
+        #expect(networkInfo["wifi"] as? Bool ?? false)
+        #expect(!(networkInfo["cellular"] as? Bool ?? true))
     }
     
     @Test("given mock network utils for cellular, when intercepting event, then uses mock connectivity data")
@@ -87,21 +87,21 @@ class NetworkInfoPluginTests {
         #expect(result != nil)
         #expect(result?.context != nil)
         guard let context = result?.context?.rawDictionary else {
-            Issue.record("Event context not found")
+            Issue.record("\(NetworkInfoPluginIssue.noEventContext)")
             return
         }
         
         #expect(context["network"] != nil)
         guard let networkInfo = context["network"] as? [String: Any] else {
-            Issue.record("network info not found")
+            Issue.record("\(NetworkInfoPluginIssue.noNetworkInfo)")
             return
         }
         
-        #expect(networkInfo["wifi"] as? Bool == false)
+        #expect(!(networkInfo["wifi"] as? Bool ?? true))
 #if os(tvOS)
-        #expect(networkInfo["cellular"] as? Bool == false)
+        #expect(!(networkInfo["cellular"] as? Bool ?? true))
 #else
-        #expect(networkInfo["cellular"] as? Bool == true)
+        #expect(networkInfo["cellular"] as? Bool ?? false)
 #endif
         
     }
@@ -115,6 +115,12 @@ class NetworkInfoPluginTests {
         #expect(networkInfoPlugin.analytics != nil)
         #expect(networkInfoPlugin.pluginType == .preProcess)
     }
+}
+
+// MARK: - NetworkInfoPluginIssue
+enum NetworkInfoPluginIssue {
+    static let noNetworkInfo: String = "Network info not found"
+    static let noEventContext: String = "Event context not found"
 }
 
 // MARK: - MockNetworkMonitor

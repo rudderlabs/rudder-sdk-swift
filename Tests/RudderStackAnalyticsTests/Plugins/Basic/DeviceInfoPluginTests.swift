@@ -32,13 +32,13 @@ class DeviceInfoPluginTests {
         #expect(result != nil)
         #expect(result?.context != nil)
         guard let context = result?.context?.rawDictionary else {
-            Issue.record("Event context not found")
+            Issue.record("\(DeviceInfoPluginIssue.noEventContext)")
             return
         }
         
         #expect(context["device"] != nil)
         guard let deviceInfo = context["device"] as? [String: Any] else {
-            Issue.record("Device info not found")
+            Issue.record("\(DeviceInfoPluginIssue.noDeviceInfo)")
             return
         }
         
@@ -60,13 +60,13 @@ class DeviceInfoPluginTests {
         
         #expect(result?.context != nil)
         guard let context = result?.context?.rawDictionary else {
-            Issue.record("Event context not found")
+            Issue.record("\(DeviceInfoPluginIssue.noEventContext)")
             return
         }
         
         #expect(context["device"] != nil)
         guard let deviceInfo = context["device"] as? [String: Any] else {
-            Issue.record("Device info not found")
+            Issue.record("\(DeviceInfoPluginIssue.noDeviceInfo)")
             return
         }
         
@@ -88,13 +88,13 @@ class DeviceInfoPluginTests {
         
         #expect(result?.context != nil)
         guard let context = result?.context?.rawDictionary else {
-            Issue.record("Event context not found")
+            Issue.record("\(DeviceInfoPluginIssue.noEventContext)")
             return
         }
         
         #expect(context["device"] != nil)
         guard let deviceInfo = context["device"] as? [String: Any] else {
-            Issue.record("Device info not found")
+            Issue.record("\(DeviceInfoPluginIssue.noDeviceInfo)")
             return
         }
         
@@ -113,4 +113,9 @@ class DeviceInfoPluginTests {
         #expect(deviceInfoPlugin.analytics != nil)
         #expect(deviceInfoPlugin.pluginType == .preProcess)
     }
+}
+
+enum DeviceInfoPluginIssue {
+    static let noDeviceInfo: String = "Device info not found"
+    static let noEventContext: String = "Event context not found"
 }
