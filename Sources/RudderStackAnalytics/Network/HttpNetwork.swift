@@ -11,7 +11,7 @@ import Foundation
 /**
  Enum for basic network error states.
  */
-enum HttpNetworkError: Error {
+enum HttpNetworkError: Error, Equatable {
     case requestFailed(Int)
     case invalidResponse
     case networkUnavailable

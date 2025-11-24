@@ -46,7 +46,7 @@ final class EventQueue {
 // MARK: - Operations
 extension EventQueue {
     
-    private func start() {
+    func start() {
         self.eventUploader?.start()
         
         self.observeConfigAndUpdateSchedule()
@@ -64,7 +64,7 @@ extension EventQueue {
     /**
      Stops the event management system by canceling flush policies and closing channels.
      */
-    private func stop() {
+    func stop() {
         // Cancel flush policy first to prevent new uploads from being triggered
         self.eventWriter?.cancelSchedule()
         
