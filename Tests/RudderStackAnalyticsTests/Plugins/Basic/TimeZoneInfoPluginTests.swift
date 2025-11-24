@@ -16,7 +16,7 @@ class TimeZoneInfoPluginTests {
         self.timeZoneInfoPlugin = TimeZoneInfoPlugin()
     }
     
-    @Test("when intercepting different events, then adds timezone context information", arguments:[
+    @Test("when intercepting different events, then adds timezone context information", arguments: [
         MockProvider.mockTrackEvent as Event,
         MockProvider.mockScreenEvent as Event,
         MockProvider.mockIdentifyEvent as Event,

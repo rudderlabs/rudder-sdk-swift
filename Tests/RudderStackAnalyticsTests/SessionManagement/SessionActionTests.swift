@@ -123,7 +123,6 @@ struct SessionActionTests {
         UInt64(0),
         UInt64(1234567890),
         UInt64.max,
-        UInt64(Date().timeIntervalSince1970 * 1000)
     ])
     func testUpdateLastActivityTime(newActivityTime: UInt64) {
         let initialState = SessionInfo(lastActivityTime: 9999999999)

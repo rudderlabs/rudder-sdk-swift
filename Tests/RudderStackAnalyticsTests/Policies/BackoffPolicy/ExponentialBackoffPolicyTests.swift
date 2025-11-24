@@ -69,16 +69,11 @@ class ExponentialBackoffPolicyTests {
     func testJitterVariability() {
         let policy = ExponentialBackoffPolicy(minDelayInMillis: 1000)
         
-        policy.resetBackoff()
-        let delay1 = policy.nextDelayInMilliseconds()
-        
-        policy.resetBackoff()
-        let delay2 = policy.nextDelayInMilliseconds()
-        
-        policy.resetBackoff()
-        let delay3 = policy.nextDelayInMilliseconds()
-        
-        let delays = [delay1, delay2, delay3]
+        var delays: [Int] = []
+        for _ in 0..<10 {  // Increased sample size
+            policy.resetBackoff()
+            delays.append(policy.nextDelayInMilliseconds())
+        }
         
         // All should be in the correct range
         for delay in delays {

@@ -109,7 +109,9 @@ extension UpdateSourceConfigActionTests {
         name: String,
         enabled: Bool = true
     ) -> Destination {
-        let baseMock = MockProvider.mockSourceConfig.source.destinations.first!
+        guard let baseMock = MockProvider.mockSourceConfig.source.destinations.first else {
+            fatalError("MockProvider.mockSourceConfig must contain at least one destination for test setup")
+        }
         
         return Destination(
             destinationId: id,

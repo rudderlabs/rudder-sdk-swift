@@ -17,7 +17,7 @@ class NetworkInfoPluginTests {
         self.networkInfoPlugin = NetworkInfoPlugin()
     }
     
-    @Test("when intercepting different events, then adds network context information", arguments:[
+    @Test("when intercepting different events, then adds network context information", arguments: [
         MockProvider.mockTrackEvent as Event,
         MockProvider.mockScreenEvent as Event,
         MockProvider.mockIdentifyEvent as Event,

@@ -290,7 +290,7 @@ class SourceConfigProviderTests {
 // MARK: - Helpers
 extension SourceConfigProviderTests {
     
-    private var _defautltHeaders: [String: String] { ["Content-Type": "application/json"] }
+    private var _defaultHeaders: [String: String] { ["Content-Type": "application/json"] }
     
     private var _simpleSourceConfig: SourceConfig {
         return SourceConfig(
@@ -316,12 +316,12 @@ extension SourceConfigProviderTests {
                 // Return 500 error for first few attempts
                 let json = ["error": "Server error", "code": 500]
                 let data = json.jsonString?.utf8Data
-                return (500, data, _defautltHeaders)
+                return (500, data, _defaultHeaders)
             } else {
                 // Return success after failure count is reached
                 let json = MockProvider.sourceConfigurationDictionary ?? [:]
                 let data = json.jsonString?.utf8Data
-                return (200, data, _defautltHeaders)
+                return (200, data, _defaultHeaders)
             }
         }
         
