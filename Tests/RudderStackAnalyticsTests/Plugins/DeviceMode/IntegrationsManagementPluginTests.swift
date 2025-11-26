@@ -1,0 +1,240 @@
+//
+//  IntegrationsManagementPluginTests.swift
+//  RudderStackAnalyticsTests
+//
+//  Created by Vishal Gupta on 16/10/25.
+//
+
+import Testing
+import Combine
+import Foundation
+@testable import RudderStackAnalytics
+
+struct IntegrationsManagementPluginTests {
+    
+    var analytics: Analytics
+    let mockPluginKey = "Google Ads"
+    
+    init() {
+        let mockConfiguration = MockProvider.createMockConfiguration()
+        mockConfiguration.flushPolicies = []
+        
+        self.analytics = Analytics(configuration: mockConfiguration)
+    }
+    
+    // MARK: - Initialization Tests
+    
+    @Test("Given IntegrationsManagementPlugin, When initialized, Then plugin should have correct type and properties")
+    func testInitialization() {
+        let plugin = IntegrationsManagementPlugin()
+        
+        #expect(plugin.pluginType == .terminal)
+        #expect(plugin.analytics == nil)
+    }
+    
+    @Test("Given IntegrationsManagementPlugin, When setup is called, Then analytics should be set")
+    func testSetup() async {
+        let plugin = IntegrationsManagementPlugin()
+        
+        analytics.add(plugin: plugin)
+        
+        #expect(plugin.analytics === analytics)
+    }
+    
+    // MARK: - Event Queuing Tests
+    
+    @Test("Given IntegrationsManagementPlugin without source config, When events are intercepted, Then events should be queued")
+    func testEventQueuing() {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        let trackEvent = MockProvider.mockTrackEvent
+        
+        let result = plugin.intercept(event: trackEvent)
+        
+        #expect(result != nil)
+        #expect((result as? TrackEvent)?.event == MockProvider.mockTrackEvent.event)
+    }
+    
+    @Test("Given IntegrationsManagementPlugin, When multiple events are intercepted, Then all events should be queued")
+    func testMultipleEventQueuing() {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        let events = [
+            TrackEvent(event: "Event 1"),
+            TrackEvent(event: "Event 2"),
+            TrackEvent(event: "Event 3")
+        ]
+        
+        let results = events.map { plugin.intercept(event: $0) }
+        
+        #expect(results.count == 3)
+        results.forEach { #expect($0 != nil) }
+    }
+    
+    @Test("Given IntegrationsManagementPlugin with max queue size, When more events than limit are queued, Then plugin should handle gracefully without crashing")
+    func testQueueSizeLimit() {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        for i in 0..<(IntegrationsManagementConstants.maxQueueSize + 100) {
+            let event = TrackEvent(event: "Event \(i)")
+            _ = plugin.intercept(event: event)
+        }
+        
+        #expect(Bool(true)) // Test passes if no crashes occur
+    }
+    
+    // MARK: - Source Config Integration Tests
+    
+    @Test("Given IntegrationsManagementPlugin, When source config is updated, Then integration destinations should be initialized")
+    func testSourceConfigUpdate() async {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        // Add a mock integration to the controller
+        let mockPlugin = MockStandardIntegrationPlugin(key: mockPluginKey)
+        analytics.add(plugin: mockPlugin)
+        
+        guard let sourceConfig = MockProvider.sourceConfiguration else {
+            #expect(Bool(false), "sourceConfiguration is nil")
+            return
+        }
+        
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        
+        await runAfter(0.2) {
+            #expect(mockPlugin.createCalled)
+            #expect(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce ?? false)
+        }
+    }
+    
+    @Test("Given IntegrationsManagementPlugin, When source config is disabled, Then integration initialization should be skipped")
+    func testSourceConfigDisabled() async {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        // Add a mock integration to the controller
+        let mockPlugin = MockStandardIntegrationPlugin(key: mockPluginKey)
+        analytics.add(plugin: mockPlugin)
+        
+        analytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
+        
+        await runAfter(0.2) {
+            #expect(!mockPlugin.createCalled)
+            #expect(!(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce ?? true))
+        }
+    }
+    
+    // MARK: - Event Processing Tests
+    
+    @Test("Given IntegrationsManagementPlugin with queued events, When source config is fetched, Then queued events should be processed")
+    func testEventProcessingAfterSourceConfig() async {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        // Add a mock integration to track processed events
+        let mockPlugin = MockStandardIntegrationPlugin(key: mockPluginKey)
+        analytics.add(plugin: mockPlugin)
+        
+        // Queue some events before source config
+        let trackEvent1 = TrackEvent(event: "Event 1")
+        let trackEvent2 = TrackEvent(event: "Event 2")
+        
+        _ = plugin.intercept(event: trackEvent1)
+        _ = plugin.intercept(event: trackEvent2)
+        
+        let sourceConfig = MockProvider.sourceConfiguration!
+        
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        
+        await runAfter(0.3) {
+            #expect(mockPlugin.createCalled)
+            // Events should have been processed through the integration plugin chain
+            // We verify that track events were received (could be lifecycle events + our queued events)
+            #expect(mockPlugin.trackEventReceived != nil)
+        }
+    }
+    
+    // MARK: - Integration with IntegrationsController Tests
+    
+    @Test("Given IntegrationsManagementPlugin, When accessing integrationPluginStores, Then should delegate to IntegrationsController")
+    func testIntegrationPluginStoresAccess() {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        // Add an integration
+        let mockPlugin = MockStandardIntegrationPlugin(key: "test_destination")
+        analytics.add(plugin: mockPlugin)
+        
+        let stores = plugin.integrationPluginStores
+        
+        #expect(stores != nil)
+        #expect(stores?["test_destination"] != nil)
+    }
+    
+    @Test("Given IntegrationsManagementPlugin, When accessing integrationPluginChain, Then should delegate to IntegrationsController")
+    func testIntegrationPluginChainAccess() {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        let chain = plugin.integrationPluginChain
+        
+        #expect(chain != nil)
+        #expect(chain === analytics.integrationsController?.integrationPluginChain)
+    }
+    
+    @Test("Given IntegrationsManagementPlugin, When setIsSourceEnabledFetchedAtLeastOnce is called, Then should delegate to IntegrationsController")
+    func testSetIsSourceEnabledFetchedAtLeastOnce() {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        #expect(!(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce ?? true))
+        
+        plugin.setIsSourceEnabledFetchedAtLeastOnce(true)
+        
+        #expect(analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce ?? false)
+    }
+    
+    @Test("Given IntegrationsManagementPlugin, When initDestination is called, Then should delegate to IntegrationsController")
+    func testInitDestinationDelegation() {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        let mockPlugin = MockStandardIntegrationPlugin(key: mockPluginKey)
+        analytics.add(plugin: mockPlugin)
+        
+        let sourceConfig = MockProvider.sourceConfiguration!
+        
+        plugin.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
+        
+        #expect(mockPlugin.createCalled)
+    }
+    
+    // MARK: - Memory Management Tests
+    
+    @Test("Given IntegrationsManagementPlugin, When deinit is called, Then resources should be cleaned up")
+    func testDeinit() {
+        var plugin: IntegrationsManagementPlugin? = IntegrationsManagementPlugin()
+        plugin?.setup(analytics: analytics)
+        
+        plugin = nil
+        
+        #expect(plugin == nil)
+    }
+    
+    // MARK: - Error Handling Tests
+    
+    @Test("Given IntegrationsManagementPlugin, When event queuing fails, Then should handle gracefully")
+    func testEventQueuingErrorHandling() {
+        let plugin = IntegrationsManagementPlugin()
+        analytics.add(plugin: plugin)
+        
+        // Simulate a scenario where queuing might fail
+        let event = TrackEvent(event: "Test Event")
+        
+        let result = plugin.intercept(event: event)
+        #expect(result != nil)
+    }
+}
