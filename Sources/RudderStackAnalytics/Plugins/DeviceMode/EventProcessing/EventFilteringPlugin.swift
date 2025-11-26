@@ -8,10 +8,12 @@
 import Foundation
 import Combine
 
-// MARK: - Constants
-private let whiteListEventsKey = "whitelistedEvents"
-private let blackListEventsKey = "blacklistedEvents"
-private let eventFilteringOptionKey = "eventFilteringOption"
+struct EventFilteringPluginConstants {
+    static let allowListEventsKey = "whitelistedEvents"
+    static let denyListEventsKey = "blacklistedEvents"
+    static let disableFilteringKey = "disable"
+    static let eventFilteringOptionKey = "eventFilteringOption"
+}
 
 // MARK: - EventFilteringPlugin
 /**
@@ -19,8 +21,8 @@ private let eventFilteringOptionKey = "eventFilteringOption"
  
  This plugin filters the events based on the event filtering option provided in the destination config.
  The plugin supports two types of event filtering options based on the dashboard configuration:
- 1. Whitelist events: Only the events present in the whitelist will be allowed.
- 2. Blacklist events: All the events except the ones present in the blacklist will be allowed.
+ 1. Allow list events: Only the events present in the allow list will be allowed.
+ 2. Deny list events: All the events except the ones present in the deny list will be allowed.
  */
 final class EventFilteringPlugin: Plugin {
     
@@ -79,9 +81,9 @@ extension EventFilteringPlugin {
      */
     private func shouldDropEvent(eventName: String) -> Bool {
         switch filteringOption {
-        case whiteListEventsKey:
+        case EventFilteringPluginConstants.allowListEventsKey:
             return !filteringList.contains(eventName)
-        case blackListEventsKey:
+        case EventFilteringPluginConstants.denyListEventsKey:
             return filteringList.contains(eventName)
         default:
             return false
@@ -131,7 +133,7 @@ extension EventFilteringPlugin {
             return
         }
         
-        let newFilteringOption = destinationConfig[eventFilteringOptionKey] as? String ?? ""
+        let newFilteringOption = destinationConfig[EventFilteringPluginConstants.eventFilteringOptionKey] as? String ?? ""
         
         if newFilteringOption.isEmpty {
             LoggerAnalytics.debug("EventFilteringPlugin: Missing event filtering option for destination: \(destinationKey)")
@@ -163,10 +165,12 @@ extension EventFilteringPlugin {
     private func hasValidFilteringArray(filteringOption: String, destinationConfig: [String: Any]) -> Bool {
         let listKey: String
         switch filteringOption {
-        case whiteListEventsKey:
-            listKey = whiteListEventsKey
-        case blackListEventsKey:
-            listKey = blackListEventsKey
+        case EventFilteringPluginConstants.allowListEventsKey:
+            listKey = EventFilteringPluginConstants.allowListEventsKey
+        case EventFilteringPluginConstants.denyListEventsKey:
+            listKey = EventFilteringPluginConstants.denyListEventsKey
+        case EventFilteringPluginConstants.disableFilteringKey:
+            return true
         default:
             return false
         }
@@ -185,10 +189,10 @@ extension EventFilteringPlugin {
     private func getEventFilteringList(eventFilteringOption: String, destinationConfig: [String: Any]) -> [String] {
         let listKey: String
         switch eventFilteringOption {
-        case whiteListEventsKey:
-            listKey = whiteListEventsKey
-        case blackListEventsKey:
-            listKey = blackListEventsKey
+        case EventFilteringPluginConstants.allowListEventsKey:
+            listKey = EventFilteringPluginConstants.allowListEventsKey
+        case EventFilteringPluginConstants.denyListEventsKey:
+            listKey = EventFilteringPluginConstants.denyListEventsKey
         default:
             return []
         }
