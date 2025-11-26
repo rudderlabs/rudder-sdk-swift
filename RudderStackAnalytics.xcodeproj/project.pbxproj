@@ -173,6 +173,8 @@
 		53E777622EB502A700564D61 /* BackoffPolicyHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */; };
 		53E777652EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777642EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift */; };
 		53E777672EB5134C00564D61 /* BackoffPolicyHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777662EB5134C00564D61 /* BackoffPolicyHandlerTests.swift */; };
+		8595FAAC2ED6D51600057B60 /* ECommerceParamNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8595FAAA2ED6D51500057B60 /* ECommerceParamNames.swift */; };
+		8595FAAD2ED6D51600057B60 /* ECommerceEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8595FAA92ED6D51500057B60 /* ECommerceEvents.swift */; };
 		859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */; };
 		859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */; };
 		85A10BB92EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BB82EA0B16100E47E01 /* IntegrationsManagementPluginTests.swift */; };
@@ -181,8 +183,6 @@
 		85A10BBF2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */; };
 		85A10BC12EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */; };
 		85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */; };
-		85C5EC712EC23F4200F0569B /* ECommerceEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */; };
-		85C5EC732EC2401200F0569B /* ECommerceParamNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */; };
 		85CE839C2EB0859C00249576 /* DestinationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CE839B2EB0859C00249576 /* DestinationError.swift */; };
 		85E7C4EE2E9BB53200520FDB /* IntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */; };
 		85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */; };
@@ -372,6 +372,8 @@
 		53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHelperTests.swift; sourceTree = "<group>"; };
 		53E777642EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponentialBackoffPolicyTests.swift; sourceTree = "<group>"; };
 		53E777662EB5134C00564D61 /* BackoffPolicyHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHandlerTests.swift; sourceTree = "<group>"; };
+		8595FAA92ED6D51500057B60 /* ECommerceEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECommerceEvents.swift; sourceTree = "<group>"; };
+		8595FAAA2ED6D51500057B60 /* ECommerceParamNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECommerceParamNames.swift; sourceTree = "<group>"; };
 		859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStandardIntegrationPlugin.swift; sourceTree = "<group>"; };
 		859CEE132E9CDE5700519C90 /* IntegrationPluginStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPluginStoreTests.swift; sourceTree = "<group>"; };
 		859CEE152E9CDE9B00519C90 /* StandardIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardIntegrationPluginTests.swift; sourceTree = "<group>"; };
@@ -513,6 +515,7 @@
 				53DEA5DF2E03D05A00D6C371 /* Sources */,
 				53DEA65E2E03D06F00D6C371 /* Tests */,
 				5351AA672C6BE95D003C3C47 /* Products */,
+				8595FAA82ED6D4DF00057B60 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -720,7 +723,6 @@
 		53DEA5A12E03D05A00D6C371 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				85B4CD3E2EC2F2240061CEC1 /* ECommerce */,
 				53DEA59B2E03D05A00D6C371 /* AsyncChannel.swift */,
 				53DEA59C2E03D05A00D6C371 /* CodableTypes.swift */,
 				53DEA59D2E03D05A00D6C371 /* Constants.swift */,
@@ -728,6 +730,7 @@
 				53DEA59F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift */,
 				53DEA5A02E03D05A00D6C371 /* PropertyWrappers.swift */,
 				53E112D92E7C4B9E005FEF67 /* Connectivity.swift */,
+				8595FAAB2ED6D51500057B60 /* ECommerce */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1038,6 +1041,24 @@
 			path = BackoffPolicy;
 			sourceTree = "<group>";
 		};
+		8595FAA82ED6D4DF00057B60 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */,
+				85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		8595FAAB2ED6D51500057B60 /* ECommerce */ = {
+			isa = PBXGroup;
+			children = (
+				8595FAA92ED6D51500057B60 /* ECommerceEvents.swift */,
+				8595FAAA2ED6D51500057B60 /* ECommerceParamNames.swift */,
+			);
+			path = ECommerce;
+			sourceTree = "<group>";
+		};
 		85E7C4EC2E9BB51D00520FDB /* DeviceMode */ = {
 			isa = PBXGroup;
 			children = (
@@ -1257,6 +1278,8 @@
 				53DEA5F52E03D05A00D6C371 /* FlushPolicy.swift in Sources */,
 				53DEA5F62E03D05A00D6C371 /* Storage.swift in Sources */,
 				53DEA5F72E03D05A00D6C371 /* AppInfoPlugin.swift in Sources */,
+				8595FAAC2ED6D51600057B60 /* ECommerceParamNames.swift in Sources */,
+				8595FAAD2ED6D51600057B60 /* ECommerceEvents.swift in Sources */,
 				85F2AC022EA78EF200BE93AF /* EventFilteringPlugin.swift in Sources */,
 				53DEA5F82E03D05A00D6C371 /* ObjCFlushPolicy.swift in Sources */,
 				85F2AC102EAA300800BE93AF /* IntegrationOptionsPlugin.swift in Sources */,
@@ -1282,7 +1305,6 @@
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
 				85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */,
-				85C5EC712EC23F4200F0569B /* ECommerceEvents.swift in Sources */,
 				53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */,
 				5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */,
 				53DEA6092E03D05A00D6C371 /* HttpClient.swift in Sources */,
@@ -1299,7 +1321,6 @@
 				5328B8772E3B7E4D0051A202 /* ObjCUserIdentity.swift in Sources */,
 				53DEA6112E03D05A00D6C371 /* LifecycleManagementUtils.swift in Sources */,
 				53DEA6122E03D05A00D6C371 /* SwiftLogger.swift in Sources */,
-				85C5EC732EC2401200F0569B /* ECommerceParamNames.swift in Sources */,
 				53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */,
 				5328B8792E3B817B0051A202 /* ObjCTrackEvent.swift in Sources */,
 				53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */,
