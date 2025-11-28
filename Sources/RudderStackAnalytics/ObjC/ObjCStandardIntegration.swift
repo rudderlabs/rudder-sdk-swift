@@ -30,15 +30,15 @@ public protocol ObjCStandardIntegration: AnyObject {
 public typealias ObjCIntegrationCallback = @convention(block) (Any?, NSError?) -> Void
 
 // MARK: - Analytics Extension for ObjC Integration Plugins
-public extension Analytics {
+extension ObjCAnalytics {
     /**
      Adds an Objective-C integration plugin to the analytics instance.
      
      - Parameter objcPlugin: The Objective-C integration plugin to add.
      */
     @objc(addIntegration:)
-    func add(integration: ObjCIntegrationPlugin) {
-        let adapter = ObjCIntegrationPluginAdapter(objcIntegration: integration)
+    public func add(integration: ObjCIntegrationPlugin) {
+        guard let adapter = ObjCIntegrationPluginAdapter(objcIntegration: integration) as? ObjCPlugin else { return }
         self.add(plugin: adapter)
     }
 }
