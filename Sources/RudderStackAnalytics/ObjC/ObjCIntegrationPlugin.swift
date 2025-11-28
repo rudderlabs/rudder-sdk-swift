@@ -91,13 +91,19 @@ public protocol ObjCIntegrationPlugin: ObjCEventPlugin {
     optional func onDestinationReady(_ callback: @escaping ObjCIntegrationCallback)
 }
 
+// MARK: - ObjCIntegrationCallback
+/**
+ An Objective-C compatible callback type for integration ready status.
+ */
+public typealias ObjCIntegrationCallback = @convention(block) (Any?, NSError?) -> Void
+
 // MARK: - ObjCIntegrationPluginAdapter
 /**
  An adapter that bridges an Objective-C conforming integration plugin (`ObjCIntegrationPlugin`) to the Swift-native `IntegrationPlugin` protocol.
 
  This allows Objective-C integration plugins to be used seamlessly in the analytics pipeline.
  */
-final class ObjCIntegrationPluginAdapter: NSObject, IntegrationPlugin {
+class ObjCIntegrationPluginAdapter: IntegrationPlugin {
     
     /// The type of plugin, bridged from the Objective-C plugin.
     var pluginType: PluginType {
@@ -124,29 +130,6 @@ final class ObjCIntegrationPluginAdapter: NSObject, IntegrationPlugin {
      */
     init(objcIntegration: ObjCIntegrationPlugin) {
         self.objcIntegration = objcIntegration
-        super.init()
-    }
-    
-    /**
-     Sets up the plugin using the provided `Analytics`.
-
-     - Parameter analytics: The Swift analytics client managing the plugin lifecycle.
-     */
-    func setup(analytics: Analytics) {
-        self.analytics = analytics
-        let objcAnalytics = ObjCAnalytics(analytics: analytics)
-        objcIntegration.setup?(objcAnalytics)
-    }
-    
-    /**
-     Intercepts and optionally modifies an event using the wrapped Objective-C plugin.
-
-     - Parameter event: The incoming event to be processed.
-     - Returns: The processed event or `nil` to drop the event.
-     */
-    func intercept(event: Event) -> Event? {
-        let objcEvent = ObjCEvent.createObjCEvent(from: event)
-        return objcIntegration.intercept?(objcEvent)?.event ?? event
     }
     
     /**
@@ -218,5 +201,22 @@ final class ObjCIntegrationPluginAdapter: NSObject, IntegrationPlugin {
     func alias(payload: AliasEvent) {
         let objcEvent = ObjCAliasEvent(event: payload)
         objcIntegration.alias?(objcEvent)
+    }
+}
+
+// MARK: - Analytics Extension for ObjC Integration Plugins
+
+extension ObjCAnalytics {
+    /**
+     Adds an Objective-C integration plugin to the analytics instance.
+     
+     - Parameter integration: The Objective-C integration plugin to add.
+     */
+    @objc(addIntegration:)
+    public func add(integration: ObjCIntegrationPlugin) {
+        let isStandardIntegration = integration is ObjCStandardIntegration
+        
+        let adapter = isStandardIntegration ? ObjCStandardIntegrationAdapter(objcIntegration: integration) : ObjCIntegrationPluginAdapter(objcIntegration: integration)
+        analytics.add(plugin: adapter)
     }
 }

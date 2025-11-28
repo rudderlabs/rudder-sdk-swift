@@ -23,22 +23,25 @@ public protocol ObjCStandardIntegration: AnyObject {
     // No additional methods are required as StandardIntegration is also a marker protocol
 }
 
-// MARK: - ObjCIntegrationCallback
+// MARK: - ObjCStandardIntegrationAdapter
 /**
- An Objective-C compatible callback type for integration ready status.
- */
-public typealias ObjCIntegrationCallback = @convention(block) (Any?, NSError?) -> Void
+ An adapter that bridges an Objective-C conforming standard integration plugin (`ObjCStandardIntegration`)
+ to the Swift-native `StandardIntegration` protocol.
 
-// MARK: - Analytics Extension for ObjC Integration Plugins
-extension ObjCAnalytics {
+ This allows Objective-C standard integration plugins to be used seamlessly in the analytics pipeline.
+ */
+final class ObjCStandardIntegrationAdapter: ObjCIntegrationPluginAdapter, StandardIntegration {
+    
+    /// The wrapped Objective-C integration plugin instance.
+    private let objcIntegration: ObjCIntegrationPlugin
+    
     /**
-     Adds an Objective-C integration plugin to the analytics instance.
-     
-     - Parameter objcPlugin: The Objective-C integration plugin to add.
+     Initializes the adapter with a given `ObjCIntegrationPlugin`.
+
+     - Parameter objcPlugin: The Objective-C integration plugin to adapt.
      */
-    @objc(addIntegration:)
-    public func add(integration: ObjCIntegrationPlugin) {
-        guard let adapter = ObjCIntegrationPluginAdapter(objcIntegration: integration) as? ObjCPlugin else { return }
-        self.add(plugin: adapter)
+    override init(objcIntegration: ObjCIntegrationPlugin) {
+        self.objcIntegration = objcIntegration
+        super.init(objcIntegration: objcIntegration)
     }
 }
