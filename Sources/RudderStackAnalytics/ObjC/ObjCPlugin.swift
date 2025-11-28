@@ -24,7 +24,8 @@ public protocol ObjCPlugin: AnyObject {
 
      - Parameter analytics: The analytics client to which this plugin is being attached.
      */
-    func setup(_ analytics: ObjCAnalytics)
+    @objc
+    optional func setup(_ analytics: ObjCAnalytics)
 
     /**
      Intercepts an event before it is sent, allowing for modification or filtering.
@@ -32,12 +33,14 @@ public protocol ObjCPlugin: AnyObject {
      - Parameter event: The event to intercept.
      - Returns: A modified `ObjCEvent`, the same event, or `nil` to drop the event.
      */
-    func intercept(_ event: ObjCEvent) -> ObjCEvent?
+    @objc
+    optional func intercept(_ event: ObjCEvent) -> ObjCEvent?
 
     /**
      Called when the plugin is being removed or the analytics client is being deinitialized.
      */
-    func teardown()
+    @objc
+    optional func teardown()
 }
 
 // MARK: - ObjCPluginAdapter
@@ -77,7 +80,7 @@ final class ObjCPluginAdapter: Plugin {
     func setup(analytics: Analytics) {
         self.analytics = analytics
         let objcAnalytics = ObjCAnalytics(analytics: analytics)
-        objcPlugin.setup(objcAnalytics)
+        objcPlugin.setup?(objcAnalytics)
     }
 
     /**
@@ -88,7 +91,7 @@ final class ObjCPluginAdapter: Plugin {
      */
     func intercept(event: Event) -> Event? {
         let objcEvent = createObjCEvent(from: event)
-        return objcPlugin.intercept(objcEvent)?.event
+        return objcPlugin.intercept?(objcEvent)?.event ?? event
     }
     
     /**
@@ -118,6 +121,6 @@ final class ObjCPluginAdapter: Plugin {
      Tears down the plugin and performs any necessary cleanup.
      */
     func teardown() {
-        objcPlugin.teardown()
+        objcPlugin.teardown?()
     }
 }
