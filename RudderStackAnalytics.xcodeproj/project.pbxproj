@@ -564,6 +564,36 @@
 			path = CoreSupport;
 			sourceTree = "<group>";
 		};
+		536388C32EDF005E005ADA61 /* IntegrationProcessing */ = {
+			isa = PBXGroup;
+			children = (
+				85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */,
+				85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */,
+				85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */,
+				85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */,
+				85CE839B2EB0859C00249576 /* DestinationError.swift */,
+			);
+			path = IntegrationProcessing;
+			sourceTree = "<group>";
+		};
+		536388C42EDF0149005ADA61 /* Standard */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5B92E03D05A00D6C371 /* AppInfoPlugin.swift */,
+				53DEA5BA2E03D05A00D6C371 /* DeviceInfoPlugin.swift */,
+				53DEA5BB2E03D05A00D6C371 /* LibraryInfoPlugin.swift */,
+				53DEA5BC2E03D05A00D6C371 /* LifecycleTrackingPlugin.swift */,
+				53DEA5BD2E03D05A00D6C371 /* LocaleInfoPlugin.swift */,
+				53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */,
+				53DEA5BF2E03D05A00D6C371 /* OSInfoPlugin.swift */,
+				53DEA5C02E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift */,
+				53DEA5C12E03D05A00D6C371 /* ScreenInfoPlugin.swift */,
+				53DEA5C22E03D05A00D6C371 /* SessionTrackingPlugin.swift */,
+				53DEA5C32E03D05A00D6C371 /* TimeZoneInfoPlugin.swift */,
+			);
+			path = Standard;
+			sourceTree = "<group>";
+		};
 		537B96492EABF7AE00E3ADE7 /* SourceConfig */ = {
 			isa = PBXGroup;
 			children = (
@@ -811,32 +841,22 @@
 			path = ObjC;
 			sourceTree = "<group>";
 		};
-		53DEA5B82E03D05A00D6C371 /* Base */ = {
+		53DEA5B82E03D05A00D6C371 /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				53DEA5B52E03D05A00D6C371 /* Plugin.swift */,
 				53DEA5B62E03D05A00D6C371 /* PluginChain.swift */,
 				53DEA5B72E03D05A00D6C371 /* PluginInteractor.swift */,
 			);
-			path = Base;
+			path = Core;
 			sourceTree = "<group>";
 		};
 		53DEA5C42E03D05A00D6C371 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				53DEA5B82E03D05A00D6C371 /* Core */,
+				536388C42EDF0149005ADA61 /* Standard */,
 				85E7C4EC2E9BB51D00520FDB /* DeviceMode */,
-				53DEA5B82E03D05A00D6C371 /* Base */,
-				53DEA5B92E03D05A00D6C371 /* AppInfoPlugin.swift */,
-				53DEA5BA2E03D05A00D6C371 /* DeviceInfoPlugin.swift */,
-				53DEA5BB2E03D05A00D6C371 /* LibraryInfoPlugin.swift */,
-				53DEA5BC2E03D05A00D6C371 /* LifecycleTrackingPlugin.swift */,
-				53DEA5BD2E03D05A00D6C371 /* LocaleInfoPlugin.swift */,
-				53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */,
-				53DEA5BF2E03D05A00D6C371 /* OSInfoPlugin.swift */,
-				53DEA5C02E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift */,
-				53DEA5C12E03D05A00D6C371 /* ScreenInfoPlugin.swift */,
-				53DEA5C22E03D05A00D6C371 /* SessionTrackingPlugin.swift */,
-				53DEA5C32E03D05A00D6C371 /* TimeZoneInfoPlugin.swift */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -1087,23 +1107,19 @@
 		85E7C4EC2E9BB51D00520FDB /* DeviceMode */ = {
 			isa = PBXGroup;
 			children = (
-				85F2AC0E2EAA2FE200BE93AF /* EventProcessing */,
-				85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */,
-				85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */,
-				85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */,
-				85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */,
-				85CE839B2EB0859C00249576 /* DestinationError.swift */,
+				85F2AC0E2EAA2FE200BE93AF /* IntegrationPlugins */,
+				536388C32EDF005E005ADA61 /* IntegrationProcessing */,
 			);
 			path = DeviceMode;
 			sourceTree = "<group>";
 		};
-		85F2AC0E2EAA2FE200BE93AF /* EventProcessing */ = {
+		85F2AC0E2EAA2FE200BE93AF /* IntegrationPlugins */ = {
 			isa = PBXGroup;
 			children = (
 				85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */,
 				85F2AC012EA78EF200BE93AF /* EventFilteringPlugin.swift */,
 			);
-			path = EventProcessing;
+			path = IntegrationPlugins;
 			sourceTree = "<group>";
 		};
 		8CCA98802E817881006C3537 /* Network */ = {
