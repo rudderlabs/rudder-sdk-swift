@@ -54,7 +54,7 @@ open class ObjCIntegrationPluginHelper: NSObject {
             if let destination {
                 callback(destination, nil)
             } else {
-                callback(nil, NSError(domain: "Destination \(adaptedIntegration.key) is absent or disabled in dashboard.", code: -1))
+                callback(nil, NSError(domain: "com.rudderstack.IntegrationPluginError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Destination \(adaptedIntegration.key) is absent or disabled in dashboard."]))
             }
         }
     }

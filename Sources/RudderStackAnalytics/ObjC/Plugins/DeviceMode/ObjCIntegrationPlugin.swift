@@ -96,7 +96,7 @@ class ObjCIntegrationPluginAdapter: IntegrationPlugin {
     /**
      Initializes the adapter with a given `ObjCIntegrationPlugin`.
 
-     - Parameter objcPlugin: The Objective-C integration plugin to adapt.
+     - Parameter objcIntegration: The Objective-C integration plugin to adapt.
      */
     init(objcIntegration: ObjCIntegrationPlugin) {
         self.objcIntegration = objcIntegration
