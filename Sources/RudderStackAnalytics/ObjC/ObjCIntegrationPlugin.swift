@@ -65,37 +65,7 @@ public protocol ObjCIntegrationPlugin: ObjCEventPlugin {
      */
     @objc
     optional func reset()
-    
-    /**
-     This method adds a plugin to modify the events before sending to this destination.
-     
-     - Parameter plugin: The plugin to be added.
-     */
-    @objc
-    optional func addPlugin(_ plugin: ObjCPlugin)
-    
-    /**
-     This method removes a plugin from the destination.
-     
-     - Parameter plugin: The plugin to be removed.
-     */
-    @objc
-    optional func removePlugin(_ plugin: ObjCPlugin)
-    
-    /**
-     Registers a callback to be invoked when the destination of this plugin is ready.
-     
-     - Parameter callback: The callback to be invoked when the destination is ready.
-     */
-    @objc
-    optional func onDestinationReady(_ callback: @escaping ObjCIntegrationCallback)
 }
-
-// MARK: - ObjCIntegrationCallback
-/**
- An Objective-C compatible callback type for integration ready status.
- */
-public typealias ObjCIntegrationCallback = @convention(block) (Any?, NSError?) -> Void
 
 // MARK: - ObjCIntegrationPluginAdapter
 /**
@@ -215,8 +185,60 @@ extension ObjCAnalytics {
     @objc(addIntegration:)
     public func add(integration: ObjCIntegrationPlugin) {
         let isStandardIntegration = integration is ObjCStandardIntegration
-        
         let adapter = isStandardIntegration ? ObjCStandardIntegrationAdapter(objcIntegration: integration) : ObjCIntegrationPluginAdapter(objcIntegration: integration)
         analytics.add(plugin: adapter)
+    }
+}
+
+// MARK: - ObjCIntegrationCallback
+/**
+ An Objective-C compatible callback type for integration ready status.
+ */
+public typealias ObjCIntegrationCallback = @convention(block) (Any?, NSError?) -> Void
+
+// MARK: - RSSIntegrationPluginHelper
+/**
+ A helper class to manage Objective-C integration plugins within the analytics instance.
+ */
+@objc(RSSIntegrationPluginHelper)
+open class ObjCIntegrationPluginHelper: NSObject {
+    
+    @objc public var analytics: ObjCAnalytics
+    @objc public var integration: ObjCIntegrationPlugin
+    
+    var adaptedIntegration: IntegrationPlugin? {
+        return self.analytics.analytics.integrationsController?.integrationPluginChain?.find(key: integration.key)
+    }
+    
+    @objc
+    public init(analytics: ObjCAnalytics, integration: ObjCIntegrationPlugin) {
+        self.analytics = analytics
+        self.integration = integration
+    }
+    
+    @objc
+    public func addPlugin(_ plugin: ObjCPlugin) {
+        guard let adaptedIntegration else { return }
+        let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
+        adaptedIntegration.add(plugin: adaptedPlugin)
+    }
+    
+    @objc
+    public func removePlugin(_ plugin: ObjCPlugin) {
+        guard let adaptedIntegration else { return }
+        let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
+        adaptedIntegration.remove(plugin: adaptedPlugin)
+    }
+    
+    @objc
+    public func onDestinationReady(_ callback: @escaping ObjCIntegrationCallback) {
+        guard let adaptedIntegration else { return }
+        adaptedIntegration.onDestinationReady { destination, _ in
+            if let destination {
+                callback(destination, nil)
+            } else {
+                callback(nil, NSError(domain: "Destination \(adaptedIntegration.key) is absent or disabled in dashboard.", code: -1))
+            }
+        }
     }
 }
