@@ -33,6 +33,7 @@
 		5358C58D2E702FCC0058E117 /* ResetEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C58C2E702FCC0058E117 /* ResetEntries.swift */; };
 		5358C5912E7092FD0058E117 /* ObjCResetOptionsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */; };
 		5358C59B2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */; };
+		536388CE2EDF033C005ADA61 /* ObjCIntegrationPluginHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536388CD2EDF033C005ADA61 /* ObjCIntegrationPluginHelper.swift */; };
 		537846AB2EA1723400520374 /* KeyValueStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846AA2EA1723400520374 /* KeyValueStoreTests.swift */; };
 		537846AD2EAA22A200520374 /* EventQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846AC2EAA22A200520374 /* EventQueueTests.swift */; };
 		537846AF2EAA24CB00520374 /* EventWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537846AE2EAA24CB00520374 /* EventWriterTests.swift */; };
@@ -235,6 +236,7 @@
 		5358C58C2E702FCC0058E117 /* ResetEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetEntries.swift; sourceTree = "<group>"; };
 		5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCResetOptionsBuilder.swift; sourceTree = "<group>"; };
 		5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCResetEntriesBuilder.swift; sourceTree = "<group>"; };
+		536388CD2EDF033C005ADA61 /* ObjCIntegrationPluginHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCIntegrationPluginHelper.swift; sourceTree = "<group>"; };
 		537846AA2EA1723400520374 /* KeyValueStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueStoreTests.swift; sourceTree = "<group>"; };
 		537846AC2EAA22A200520374 /* EventQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueueTests.swift; sourceTree = "<group>"; };
 		537846AE2EAA24CB00520374 /* EventWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriterTests.swift; sourceTree = "<group>"; };
@@ -594,6 +596,85 @@
 			path = Standard;
 			sourceTree = "<group>";
 		};
+		536388C52EDF01C5005ADA61 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5AB2E03D05A00D6C371 /* ObjCAnalytics.swift */,
+				53DEA5AC2E03D05A00D6C371 /* ObjCConfiguration.swift */,
+				53DEA5B32E03D05A00D6C371 /* ObjCSessionConfiguration.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		536388C62EDF01E4005ADA61 /* FlushPolicy */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5AE2E03D05A00D6C371 /* ObjCFlushPolicy.swift */,
+			);
+			path = FlushPolicy;
+			sourceTree = "<group>";
+		};
+		536388C72EDF01F2005ADA61 /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5AF2E03D05A00D6C371 /* ObjCLogger.swift */,
+				53DEA5B02E03D05A00D6C371 /* ObjCLoggerAnalytics.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
+		536388C82EDF0240005ADA61 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5AD2E03D05A00D6C371 /* ObjCEvent.swift */,
+				5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */,
+				5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */,
+				5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */,
+				5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */,
+				5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */,
+				53DEA5B12E03D05A00D6C371 /* ObjCOption.swift */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		536388C92EDF0285005ADA61 /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				536388CB2EDF02CF005ADA61 /* Base */,
+				536388CC2EDF02E9005ADA61 /* DeviceMode */,
+			);
+			path = Plugins;
+			sourceTree = "<group>";
+		};
+		536388CA2EDF02C1005ADA61 /* StateManagement */ = {
+			isa = PBXGroup;
+			children = (
+				5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */,
+				5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */,
+				5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */,
+			);
+			path = StateManagement;
+			sourceTree = "<group>";
+		};
+		536388CB2EDF02CF005ADA61 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5B22E03D05A00D6C371 /* ObjCPlugin.swift */,
+				531B80612ED98285000B1D6A /* ObjCEventPlugin.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		536388CC2EDF02E9005ADA61 /* DeviceMode */ = {
+			isa = PBXGroup;
+			children = (
+				531B80652ED9836B000B1D6A /* ObjCStandardIntegration.swift */,
+				531B80632ED9830C000B1D6A /* ObjCIntegrationPlugin.swift */,
+				536388CD2EDF033C005ADA61 /* ObjCIntegrationPluginHelper.swift */,
+			);
+			path = DeviceMode;
+			sourceTree = "<group>";
+		};
 		537B96492EABF7AE00E3ADE7 /* SourceConfig */ = {
 			isa = PBXGroup;
 			children = (
@@ -817,26 +898,12 @@
 		53DEA5B42E03D05A00D6C371 /* ObjC */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA5AB2E03D05A00D6C371 /* ObjCAnalytics.swift */,
-				53DEA5AC2E03D05A00D6C371 /* ObjCConfiguration.swift */,
-				53DEA5AD2E03D05A00D6C371 /* ObjCEvent.swift */,
-				53DEA5AE2E03D05A00D6C371 /* ObjCFlushPolicy.swift */,
-				53DEA5AF2E03D05A00D6C371 /* ObjCLogger.swift */,
-				53DEA5B02E03D05A00D6C371 /* ObjCLoggerAnalytics.swift */,
-				53DEA5B12E03D05A00D6C371 /* ObjCOption.swift */,
-				53DEA5B22E03D05A00D6C371 /* ObjCPlugin.swift */,
-				53DEA5B32E03D05A00D6C371 /* ObjCSessionConfiguration.swift */,
-				5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */,
-				5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */,
-				5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */,
-				5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */,
-				5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */,
-				5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */,
-				5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */,
-				5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */,
-				531B80612ED98285000B1D6A /* ObjCEventPlugin.swift */,
-				531B80632ED9830C000B1D6A /* ObjCIntegrationPlugin.swift */,
-				531B80652ED9836B000B1D6A /* ObjCStandardIntegration.swift */,
+				536388C52EDF01C5005ADA61 /* Base */,
+				536388C82EDF0240005ADA61 /* Events */,
+				536388C62EDF01E4005ADA61 /* FlushPolicy */,
+				536388C72EDF01F2005ADA61 /* Logger */,
+				536388C92EDF0285005ADA61 /* Plugins */,
+				536388CA2EDF02C1005ADA61 /* StateManagement */,
 			);
 			path = ObjC;
 			sourceTree = "<group>";
@@ -913,10 +980,10 @@
 		53DEA5DD2E03D05A00D6C371 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
+				53DEA5DC2E03D05A00D6C371 /* Storage.swift */,
+				53DEA5DB2E03D05A00D6C371 /* BasicStorage.swift */,
 				53DEA5D82E03D05A00D6C371 /* Store */,
 				53DEA5DA2E03D05A00D6C371 /* StoreModels */,
-				53DEA5DB2E03D05A00D6C371 /* BasicStorage.swift */,
-				53DEA5DC2E03D05A00D6C371 /* Storage.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -1379,6 +1446,7 @@
 				53DEA61B2E03D05A00D6C371 /* ObjCEvent.swift in Sources */,
 				53DEA61C2E03D05A00D6C371 /* FrequencyFlushPolicy.swift in Sources */,
 				530939D32E78299100E22EE1 /* SourceConfigProvider.swift in Sources */,
+				536388CE2EDF033C005ADA61 /* ObjCIntegrationPluginHelper.swift in Sources */,
 				539D87202E55B8DD009FC144 /* ProcessingEvent.swift in Sources */,
 				85E7C4F22E9BB95100520FDB /* IntegrationPluginStore.swift in Sources */,
 				53DEA61D2E03D05A00D6C371 /* Plugin.swift in Sources */,
