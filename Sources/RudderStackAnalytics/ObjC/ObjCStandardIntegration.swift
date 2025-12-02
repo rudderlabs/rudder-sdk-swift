@@ -31,17 +31,12 @@ public protocol ObjCStandardIntegration: AnyObject {
  This allows Objective-C standard integration plugins to be used seamlessly in the analytics pipeline.
  */
 final class ObjCStandardIntegrationAdapter: ObjCIntegrationPluginAdapter, StandardIntegration {
-    
-    /// The wrapped Objective-C integration plugin instance.
-    private let objcIntegration: ObjCIntegrationPlugin
-    
     /**
      Initializes the adapter with a given `ObjCIntegrationPlugin`.
 
      - Parameter objcPlugin: The Objective-C integration plugin to adapt.
      */
     override init(objcIntegration: ObjCIntegrationPlugin) {
-        self.objcIntegration = objcIntegration
         super.init(objcIntegration: objcIntegration)
     }
 }

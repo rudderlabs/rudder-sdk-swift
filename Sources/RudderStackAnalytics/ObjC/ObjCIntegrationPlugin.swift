@@ -96,7 +96,7 @@ class ObjCIntegrationPluginAdapter: IntegrationPlugin {
     /**
      Initializes the adapter with a given `ObjCIntegrationPlugin`.
 
-     - Parameter objcPlugin: The Objective-C integration plugin to adapt.
+     - Parameter objcIntegration: The Objective-C integration plugin to adapt.
      */
     init(objcIntegration: ObjCIntegrationPlugin) {
         self.objcIntegration = objcIntegration
@@ -237,7 +237,7 @@ open class ObjCIntegrationPluginHelper: NSObject {
             if let destination {
                 callback(destination, nil)
             } else {
-                callback(nil, NSError(domain: "Destination \(adaptedIntegration.key) is absent or disabled in dashboard.", code: -1))
+                callback(nil, NSError(domain: "com.rudderstack.IntegrationPluginError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Destination \(adaptedIntegration.key) is absent or disabled in dashboard."]))
             }
         }
     }
