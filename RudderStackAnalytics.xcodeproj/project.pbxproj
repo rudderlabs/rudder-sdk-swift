@@ -543,6 +543,27 @@
 			path = Reset;
 			sourceTree = "<group>";
 		};
+		536388C12EDEF57F005ADA61 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA59D2E03D05A00D6C371 /* Constants.swift */,
+				53DEA59E2E03D05A00D6C371 /* Extensions.swift */,
+				53DEA59F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		536388C22EDEFE00005ADA61 /* CoreSupport */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA59B2E03D05A00D6C371 /* AsyncChannel.swift */,
+				53DEA59C2E03D05A00D6C371 /* CodableTypes.swift */,
+				53DEA5A02E03D05A00D6C371 /* PropertyWrappers.swift */,
+				53E112D92E7C4B9E005FEF67 /* Connectivity.swift */,
+			);
+			path = CoreSupport;
+			sourceTree = "<group>";
+		};
 		537B96492EABF7AE00E3ADE7 /* SourceConfig */ = {
 			isa = PBXGroup;
 			children = (
@@ -729,13 +750,8 @@
 		53DEA5A12E03D05A00D6C371 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA59B2E03D05A00D6C371 /* AsyncChannel.swift */,
-				53DEA59C2E03D05A00D6C371 /* CodableTypes.swift */,
-				53DEA59D2E03D05A00D6C371 /* Constants.swift */,
-				53DEA59E2E03D05A00D6C371 /* Extensions.swift */,
-				53DEA59F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift */,
-				53DEA5A02E03D05A00D6C371 /* PropertyWrappers.swift */,
-				53E112D92E7C4B9E005FEF67 /* Connectivity.swift */,
+				536388C22EDEFE00005ADA61 /* CoreSupport */,
+				536388C12EDEF57F005ADA61 /* Utils */,
 				8595FAAB2ED6D51500057B60 /* ECommerce */,
 			);
 			path = Helpers;
