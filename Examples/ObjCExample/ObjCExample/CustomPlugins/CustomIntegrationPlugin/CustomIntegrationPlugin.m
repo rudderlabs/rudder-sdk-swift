@@ -6,11 +6,11 @@
 //
 
 #import "CustomIntegrationPlugin.h"
-#import "CustomDeviceDestination.h"
+#import "SampleDestination.h"
 
 @interface CustomIntegrationPlugin()
 
-@property CustomDeviceDestination *destination;
+@property SampleDestination *destination;
 
 @end
 
@@ -30,7 +30,7 @@
 
 - (BOOL)createWithDestinationConfig:(NSDictionary<NSString *,id> * _Nonnull)destinationConfig error:(NSError * _Nullable __autoreleasing * _Nullable)error {
     if (_destination == nil) {
-        _destination = [CustomDeviceDestination createWithApiKey:@"MyCustomDeviceDestination"];
+        _destination = [SampleDestination createWithApiKey:@"MyCustomDeviceDestination"];
     }
     return YES;
 }
