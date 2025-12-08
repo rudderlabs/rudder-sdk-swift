@@ -22,7 +22,7 @@
 		535BB4D32E048E8200E1DAB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB4C42E048E8200E1DAB0 /* Assets.xcassets */; };
 		535BB4D52E048E8200E1DAB0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 535BB4BD2E048E8200E1DAB0 /* LaunchScreen.storyboard */; };
 		536260F62EE6944E0087317E /* CustomIntegrationPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 536260F52EE6944E0087317E /* CustomIntegrationPlugin.m */; };
-		536260FA2EE694E40087317E /* CustomDeviceDestination.m in Sources */ = {isa = PBXBuildFile; fileRef = 536260F92EE694E40087317E /* CustomDeviceDestination.m */; };
+		536260FA2EE694E40087317E /* SampleDestination.m in Sources */ = {isa = PBXBuildFile; fileRef = 536260F92EE694E40087317E /* SampleDestination.m */; };
 		53DEA7352E03EBD600D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7342E03EBD600D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA7362E03EBD600D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7342E03EBD600D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -70,8 +70,8 @@
 		535BB4C62E048E8200E1DAB0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		536260F42EE6944E0087317E /* CustomIntegrationPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomIntegrationPlugin.h; sourceTree = "<group>"; };
 		536260F52EE6944E0087317E /* CustomIntegrationPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomIntegrationPlugin.m; sourceTree = "<group>"; };
-		536260F82EE694E40087317E /* CustomDeviceDestination.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomDeviceDestination.h; sourceTree = "<group>"; };
-		536260F92EE694E40087317E /* CustomDeviceDestination.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomDeviceDestination.m; sourceTree = "<group>"; };
+		536260F82EE694E40087317E /* SampleDestination.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleDestination.h; sourceTree = "<group>"; };
+		536260F92EE694E40087317E /* SampleDestination.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SampleDestination.m; sourceTree = "<group>"; };
 		53DEA7342E03EBD600D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -238,8 +238,8 @@
 			children = (
 				536260F42EE6944E0087317E /* CustomIntegrationPlugin.h */,
 				536260F52EE6944E0087317E /* CustomIntegrationPlugin.m */,
-				536260F82EE694E40087317E /* CustomDeviceDestination.h */,
-				536260F92EE694E40087317E /* CustomDeviceDestination.m */,
+				536260F82EE694E40087317E /* SampleDestination.h */,
+				536260F92EE694E40087317E /* SampleDestination.m */,
 			);
 			path = CustomIntegrationPlugin;
 			sourceTree = "<group>";
@@ -329,7 +329,7 @@
 				535BB4CF2E048E8200E1DAB0 /* SetAnonymousIdPlugin.m in Sources */,
 				5328B8752E3B7BEA0051A202 /* EventFilteringPlugin.m in Sources */,
 				535BB4D02E048E8200E1DAB0 /* SetPushTokenPlugin.m in Sources */,
-				536260FA2EE694E40087317E /* CustomDeviceDestination.m in Sources */,
+				536260FA2EE694E40087317E /* SampleDestination.m in Sources */,
 				536260F62EE6944E0087317E /* CustomIntegrationPlugin.m in Sources */,
 				535BB4D12E048E8200E1DAB0 /* CustomLogger.m in Sources */,
 			);

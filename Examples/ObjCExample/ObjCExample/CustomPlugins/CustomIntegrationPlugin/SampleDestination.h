@@ -1,5 +1,5 @@
 //
-//  CustomDeviceDestination.h
+//  SampleDestination.h
 //  ObjCExampleApp
 //
 //  Created by Satheesh Kannan on 08/12/25.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CustomDeviceDestination : NSObject
+@interface SampleDestination : NSObject
 
 @property (nonatomic, copy, readonly) NSString *key;
 

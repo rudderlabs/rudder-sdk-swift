@@ -1,20 +1,20 @@
 //
-//  CustomDeviceDestination.m
+//  SampleDestination.m
 //  ObjCExampleApp
 //
 //  Created by Satheesh Kannan on 08/12/25.
 //
 
-#import "CustomDeviceDestination.h"
+#import "SampleDestination.h"
 
-@interface CustomDeviceDestination()
+@interface SampleDestination()
 
 - (instancetype)initWithKey:(NSString *)key;
 
 @end
 
 
-@implementation CustomDeviceDestination
+@implementation SampleDestination
 
 -(instancetype)initWithKey:(NSString *)key {
     self = [super init];
