@@ -6,10 +6,11 @@
 //
 
 #import <Foundation/Foundation.h>
+@import RudderStackAnalytics;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CustomIntegrationPlugin : NSObject
+@interface CustomIntegrationPlugin : NSObject<RSSIntegrationPlugin>
 
 @end
 
