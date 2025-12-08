@@ -67,6 +67,14 @@ public protocol ObjCIntegrationPlugin: ObjCEventPlugin {
     optional func reset()
 }
 
+/** An extension to provide a computed property that adapts an `ObjCIntegrationPlugin` to an `IntegrationPlugin`. */
+extension ObjCIntegrationPlugin {
+    var integration: IntegrationPlugin {
+        let isStandardIntegration = self is ObjCStandardIntegration
+        return isStandardIntegration ? ObjCStandardIntegrationAdapter(objcIntegration: self) : ObjCIntegrationPluginAdapter(objcIntegration: self)
+    }
+}
+
 // MARK: - ObjCIntegrationPluginAdapter
 /**
  An adapter that bridges an Objective-C conforming integration plugin (`ObjCIntegrationPlugin`) to the Swift-native `IntegrationPlugin` protocol.
@@ -174,22 +182,6 @@ class ObjCIntegrationPluginAdapter: IntegrationPlugin {
     }
 }
 
-// MARK: - Analytics Extension for ObjC Integration Plugins
-
-extension ObjCAnalytics {
-    /**
-     Adds an Objective-C integration plugin to the analytics instance.
-     
-     - Parameter integration: The Objective-C integration plugin to add.
-     */
-    @objc(addIntegration:)
-    public func add(integration: ObjCIntegrationPlugin) {
-        let isStandardIntegration = integration is ObjCStandardIntegration
-        let adapter = isStandardIntegration ? ObjCStandardIntegrationAdapter(objcIntegration: integration) : ObjCIntegrationPluginAdapter(objcIntegration: integration)
-        analytics.add(plugin: adapter)
-    }
-}
-
 // MARK: - ObjCIntegrationCallback
 /**
  An Objective-C compatible callback type for integration ready status.
@@ -198,41 +190,27 @@ public typealias ObjCIntegrationCallback = @convention(block) (Any?, NSError?) -
 
 // MARK: - RSSIntegrationPluginHelper
 /**
- A helper class to manage Objective-C integration plugins within the analytics instance.
+ A extension to `ObjCAnalytics` that provides helper methods for managing Objective-C integration plugins.
  */
-@objc(RSSIntegrationPluginHelper)
-open class ObjCIntegrationPluginHelper: NSObject {
+extension ObjCAnalytics {
     
-    @objc public var analytics: ObjCAnalytics
-    @objc public var integration: ObjCIntegrationPlugin
-    
-    var adaptedIntegration: IntegrationPlugin? {
-        return self.analytics.analytics.integrationsController?.integrationPluginChain?.find(key: integration.key)
+    /**
+     Retrieves the adapted integration plugin for a given key.
+     */
+    func integrationPlugin(for key: String) -> IntegrationPlugin? {
+        return self.analytics.integrationsController?.integrationPluginChain?.find(key: key)
     }
     
+    /**
+     Calls the `onDestinationReady` method for the integration plugin with the specified key.
+
+     - Parameters:
+        - key: The key of the integration plugin.
+        - callback: The callback to be invoked when the destination is ready.
+     */
     @objc
-    public init(analytics: ObjCAnalytics, integration: ObjCIntegrationPlugin) {
-        self.analytics = analytics
-        self.integration = integration
-    }
-    
-    @objc
-    public func addPlugin(_ plugin: ObjCPlugin) {
-        guard let adaptedIntegration else { return }
-        let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
-        adaptedIntegration.add(plugin: adaptedPlugin)
-    }
-    
-    @objc
-    public func removePlugin(_ plugin: ObjCPlugin) {
-        guard let adaptedIntegration else { return }
-        let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
-        adaptedIntegration.remove(plugin: adaptedPlugin)
-    }
-    
-    @objc
-    public func onDestinationReady(_ callback: @escaping ObjCIntegrationCallback) {
-        guard let adaptedIntegration else { return }
+    public func onDestinationReady(forKey destinationKey: String, _ callback: @escaping ObjCIntegrationCallback) {
+        guard let adaptedIntegration = self.integrationPlugin(for: destinationKey) else { return }
         adaptedIntegration.onDestinationReady { destination, _ in
             if let destination {
                 callback(destination, nil)
@@ -240,5 +218,33 @@ open class ObjCIntegrationPluginHelper: NSObject {
                 callback(nil, NSError(domain: "com.rudderstack.IntegrationPluginError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Destination \(adaptedIntegration.key) is absent or disabled in dashboard."]))
             }
         }
+    }
+    
+    /**
+     Adds the plugin to the integration plugin with the specified key.
+
+     - Parameters:
+        - plugin: The plugin to be added.
+        - destinationKey: The key of the integration plugin.
+     */
+    @objc(addPlugin:destinationKey:)
+    public func add(plugin: ObjCPlugin, destinationKey: String) {
+        guard let adaptedIntegration = self.integrationPlugin(for: destinationKey) else { return }
+        let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
+        adaptedIntegration.add(plugin: adaptedPlugin)
+    }
+    
+    /**
+     Removes the plugin from the integration plugin with the specified key.
+
+     - Parameters:
+        - plugin: The plugin to be removed.
+        - destinationKey: The key of the integration plugin.
+     */
+    @objc(removePlugin:destinationKey:)
+    public func remove(plugin: ObjCPlugin, destinationKey: String) {
+        guard let adaptedIntegration = self.integrationPlugin(for: destinationKey) else { return }
+        let adaptedPlugin = ObjCPluginAdapter(objcPlugin: plugin)
+        adaptedIntegration.remove(plugin: adaptedPlugin)
     }
 }

@@ -9,6 +9,7 @@
 #import "CustomLogger.h"
 #import "CustomOptionPlugin.h"
 #import "CustomIntegrationPlugin.h"
+#import "SetPushTokenPlugin.h"
 
 @interface AnalyticsManager()
 
@@ -60,11 +61,12 @@
     [self.client addPlugin:plugin];
     
     CustomIntegrationPlugin *deviceModeIntegration = [CustomIntegrationPlugin new];
-    [self.client addIntegration:deviceModeIntegration];
+    [self.client addPlugin:deviceModeIntegration];
     
-    RSSIntegrationPluginHelper *helper = [[RSSIntegrationPluginHelper alloc] initWithAnalytics:_client integration:deviceModeIntegration];
+    SetPushTokenPlugin *pushPlugin = [[SetPushTokenPlugin alloc] initWithPushToken:@"Sample_Push_Token"];
+    [self.client addPlugin:pushPlugin destinationKey:deviceModeIntegration.key];
     
-    [helper onDestinationReady:^(id _Nullable destination, NSError * _Nullable error) {
+    [self.client onDestinationReadyForKey:deviceModeIntegration.key :^(id _Nullable destination, NSError * _Nullable error) {
         [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"Destination: %@", destination]];
         [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"Error: %@", [error localizedDescription]]];
     }];
