@@ -8,6 +8,7 @@
 #import "AnalyticsManager.h"
 #import "CustomLogger.h"
 #import "CustomOptionPlugin.h"
+#import "CustomIntegrationPlugin.h"
 
 @interface AnalyticsManager()
 
@@ -57,6 +58,16 @@
     // Adding custom plugin..
     CustomOptionPlugin *plugin = [[CustomOptionPlugin alloc] initWithOption:[optionBuilder build]];
     [self.client addPlugin:plugin];
+    
+    CustomIntegrationPlugin *deviceModeIntegration = [CustomIntegrationPlugin new];
+    [self.client addIntegration:deviceModeIntegration];
+    
+    RSSIntegrationPluginHelper *helper = [[RSSIntegrationPluginHelper alloc] initWithAnalytics:_client integration:deviceModeIntegration];
+    
+    [helper onDestinationReady:^(id _Nullable destination, NSError * _Nullable error) {
+        [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"Destination: %@", destination]];
+        [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"Error: %@", [error localizedDescription]]];
+    }];
 }
 
 - (void)identify:(NSString * _Nullable)userId traits:(NSDictionary<NSString *,id> * _Nullable)traits options:(RSSOption* _Nullable)option {
