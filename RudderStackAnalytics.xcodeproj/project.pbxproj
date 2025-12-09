@@ -17,6 +17,9 @@
 		530F89242E61D9CA007A81B2 /* BackoffPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89232E61D9CA007A81B2 /* BackoffPolicy.swift */; };
 		530F89262E61DC67007A81B2 /* ExponentialBackoffPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89252E61DC67007A81B2 /* ExponentialBackoffPolicy.swift */; };
 		530F89282E61F3BE007A81B2 /* BackoffPolicyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530F89272E61F3BE007A81B2 /* BackoffPolicyHandler.swift */; };
+		531B80622ED98285000B1D6A /* ObjCEventPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531B80612ED98285000B1D6A /* ObjCEventPlugin.swift */; };
+		531B80642ED9830C000B1D6A /* ObjCIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531B80632ED9830C000B1D6A /* ObjCIntegrationPlugin.swift */; };
+		531B80662ED9836B000B1D6A /* ObjCStandardIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531B80652ED9836B000B1D6A /* ObjCStandardIntegration.swift */; };
 		531F0D2C2E79B1C200180C05 /* mock_source_config.json in Resources */ = {isa = PBXBuildFile; fileRef = 531F0D2B2E79B1C200180C05 /* mock_source_config.json */; };
 		5328B8772E3B7E4D0051A202 /* ObjCUserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */; };
 		5328B8792E3B817B0051A202 /* ObjCTrackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */; };
@@ -215,6 +218,9 @@
 		530F89232E61D9CA007A81B2 /* BackoffPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicy.swift; sourceTree = "<group>"; };
 		530F89252E61DC67007A81B2 /* ExponentialBackoffPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponentialBackoffPolicy.swift; sourceTree = "<group>"; };
 		530F89272E61F3BE007A81B2 /* BackoffPolicyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHandler.swift; sourceTree = "<group>"; };
+		531B80612ED98285000B1D6A /* ObjCEventPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCEventPlugin.swift; sourceTree = "<group>"; };
+		531B80632ED9830C000B1D6A /* ObjCIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCIntegrationPlugin.swift; sourceTree = "<group>"; };
+		531B80652ED9836B000B1D6A /* ObjCStandardIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCStandardIntegration.swift; sourceTree = "<group>"; };
 		531F0D2B2E79B1C200180C05 /* mock_source_config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = mock_source_config.json; sourceTree = "<group>"; };
 		5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCUserIdentity.swift; sourceTree = "<group>"; };
 		5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCTrackEvent.swift; sourceTree = "<group>"; };
@@ -782,6 +788,9 @@
 				5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */,
 				5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */,
 				5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */,
+				531B80612ED98285000B1D6A /* ObjCEventPlugin.swift */,
+				531B80632ED9830C000B1D6A /* ObjCIntegrationPlugin.swift */,
+				531B80652ED9836B000B1D6A /* ObjCStandardIntegration.swift */,
 			);
 			path = ObjC;
 			sourceTree = "<group>";
@@ -1251,6 +1260,7 @@
 				53DEA5E22E03D05A00D6C371 /* ResetUserIdentityAction.swift in Sources */,
 				53DEA5E32E03D05A00D6C371 /* NetworkInfoPlugin.swift in Sources */,
 				53DEA5E42E03D05A00D6C371 /* ScreenInfoPlugin.swift in Sources */,
+				531B80662ED9836B000B1D6A /* ObjCStandardIntegration.swift in Sources */,
 				53DEA5E52E03D05A00D6C371 /* LocaleInfoPlugin.swift in Sources */,
 				53DEA5E62E03D05A00D6C371 /* AliasEvent.swift in Sources */,
 				530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */,
@@ -1289,6 +1299,7 @@
 				53DEA5FC2E03D05A00D6C371 /* ScreenEvent.swift in Sources */,
 				53DEA5FD2E03D05A00D6C371 /* DeviceInfoPlugin.swift in Sources */,
 				539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */,
+				531B80622ED98285000B1D6A /* ObjCEventPlugin.swift in Sources */,
 				53DEA5FE2E03D05A00D6C371 /* Extensions.swift in Sources */,
 				539D87312E5791DE009FC144 /* EventUploadResult.swift in Sources */,
 				53DEA6002E03D05A00D6C371 /* Event.swift in Sources */,
@@ -1331,6 +1342,7 @@
 				53DEA6182E03D05A00D6C371 /* Constants.swift in Sources */,
 				53DEA6192E03D05A00D6C371 /* PropertyWrappers.swift in Sources */,
 				85CE839C2EB0859C00249576 /* DestinationError.swift in Sources */,
+				531B80642ED9830C000B1D6A /* ObjCIntegrationPlugin.swift in Sources */,
 				53DEA61A2E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift in Sources */,
 				53DEA61B2E03D05A00D6C371 /* ObjCEvent.swift in Sources */,
 				53DEA61C2E03D05A00D6C371 /* FrequencyFlushPolicy.swift in Sources */,

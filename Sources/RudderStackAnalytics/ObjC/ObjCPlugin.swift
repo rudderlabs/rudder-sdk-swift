@@ -24,7 +24,8 @@ public protocol ObjCPlugin: AnyObject {
 
      - Parameter analytics: The analytics client to which this plugin is being attached.
      */
-    func setup(_ analytics: ObjCAnalytics)
+    @objc
+    optional func setup(_ analytics: ObjCAnalytics)
 
     /**
      Intercepts an event before it is sent, allowing for modification or filtering.
@@ -32,12 +33,14 @@ public protocol ObjCPlugin: AnyObject {
      - Parameter event: The event to intercept.
      - Returns: A modified `ObjCEvent`, the same event, or `nil` to drop the event.
      */
-    func intercept(_ event: ObjCEvent) -> ObjCEvent?
+    @objc
+    optional func intercept(_ event: ObjCEvent) -> ObjCEvent?
 
     /**
      Called when the plugin is being removed or the analytics client is being deinitialized.
      */
-    func teardown()
+    @objc
+    optional func teardown()
 }
 
 // MARK: - ObjCPluginAdapter
@@ -77,7 +80,7 @@ final class ObjCPluginAdapter: Plugin {
     func setup(analytics: Analytics) {
         self.analytics = analytics
         let objcAnalytics = ObjCAnalytics(analytics: analytics)
-        objcPlugin.setup(objcAnalytics)
+        objcPlugin.setup?(objcAnalytics)
     }
 
     /**
@@ -87,37 +90,14 @@ final class ObjCPluginAdapter: Plugin {
      - Returns: The processed event or `nil` to drop the event.
      */
     func intercept(event: Event) -> Event? {
-        let objcEvent = createObjCEvent(from: event)
-        return objcPlugin.intercept(objcEvent)?.event
-    }
-    
-    /**
-     Creates the appropriate ObjC event wrapper based on the event type.
-     
-     - Parameter event: The Swift event to wrap.
-     - Returns: The appropriate ObjC event wrapper.
-     */
-    private func createObjCEvent(from event: Event) -> ObjCEvent {
-        switch event {
-        case let trackEvent as TrackEvent:
-            return ObjCTrackEvent(event: trackEvent)
-        case let screenEvent as ScreenEvent:
-            return ObjCScreenEvent(event: screenEvent)
-        case let groupEvent as GroupEvent:
-            return ObjCGroupEvent(event: groupEvent)
-        case let identifyEvent as IdentifyEvent:
-            return ObjCIdentifyEvent(event: identifyEvent)
-        case let aliasEvent as AliasEvent:
-            return ObjCAliasEvent(event: aliasEvent)
-        default:
-            return ObjCEvent(event: event)
-        }
+        let objcEvent = ObjCEvent.createObjCEvent(from: event)
+        return objcPlugin.intercept?(objcEvent)?.event ?? event
     }
 
     /**
      Tears down the plugin and performs any necessary cleanup.
      */
     func teardown() {
-        objcPlugin.teardown()
+        objcPlugin.teardown?()
     }
 }
