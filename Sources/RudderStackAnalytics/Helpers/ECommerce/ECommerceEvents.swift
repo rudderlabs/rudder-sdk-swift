@@ -7,6 +7,7 @@
 
 import Foundation
 
+// swiftlint:disable missing_docs
 /**
  * This enum class contains the names of the E-Commerce events.
  */
@@ -40,3 +41,4 @@ public enum ECommerceEvents {
     public static let cartShared = "Cart Shared"
     public static let productReviewed = "Product Reviewed"
 }
+// swiftlint:enable missing_docs

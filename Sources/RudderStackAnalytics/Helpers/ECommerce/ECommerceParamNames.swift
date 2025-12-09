@@ -7,6 +7,7 @@
 
 import Foundation
 
+// swiftlint:disable missing_docs
 /**
  * This enum class contains the names of the parameters that are used in the E-Commerce events.
  */
@@ -39,3 +40,4 @@ public enum ECommerceParamNames {
     public static let reviewBody = "review_body"
     public static let rating = "rating"
 }
+// swiftlint:enable missing_docs

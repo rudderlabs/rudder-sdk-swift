@@ -543,6 +543,135 @@
 			path = Reset;
 			sourceTree = "<group>";
 		};
+		536388C12EDEF57F005ADA61 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA59D2E03D05A00D6C371 /* Constants.swift */,
+				53DEA59E2E03D05A00D6C371 /* Extensions.swift */,
+				53DEA59F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		536388C22EDEFE00005ADA61 /* CoreSupport */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA59B2E03D05A00D6C371 /* AsyncChannel.swift */,
+				53DEA59C2E03D05A00D6C371 /* CodableTypes.swift */,
+				53DEA5A02E03D05A00D6C371 /* PropertyWrappers.swift */,
+				53E112D92E7C4B9E005FEF67 /* Connectivity.swift */,
+			);
+			path = CoreSupport;
+			sourceTree = "<group>";
+		};
+		536388C32EDF005E005ADA61 /* IntegrationProcessing */ = {
+			isa = PBXGroup;
+			children = (
+				85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */,
+				85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */,
+				85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */,
+				85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */,
+				85CE839B2EB0859C00249576 /* DestinationError.swift */,
+			);
+			path = IntegrationProcessing;
+			sourceTree = "<group>";
+		};
+		536388C42EDF0149005ADA61 /* Standard */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5B92E03D05A00D6C371 /* AppInfoPlugin.swift */,
+				53DEA5BA2E03D05A00D6C371 /* DeviceInfoPlugin.swift */,
+				53DEA5BB2E03D05A00D6C371 /* LibraryInfoPlugin.swift */,
+				53DEA5BC2E03D05A00D6C371 /* LifecycleTrackingPlugin.swift */,
+				53DEA5BD2E03D05A00D6C371 /* LocaleInfoPlugin.swift */,
+				53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */,
+				53DEA5BF2E03D05A00D6C371 /* OSInfoPlugin.swift */,
+				53DEA5C02E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift */,
+				53DEA5C12E03D05A00D6C371 /* ScreenInfoPlugin.swift */,
+				53DEA5C22E03D05A00D6C371 /* SessionTrackingPlugin.swift */,
+				53DEA5C32E03D05A00D6C371 /* TimeZoneInfoPlugin.swift */,
+			);
+			path = Standard;
+			sourceTree = "<group>";
+		};
+		536388C52EDF01C5005ADA61 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5AB2E03D05A00D6C371 /* ObjCAnalytics.swift */,
+				53DEA5AC2E03D05A00D6C371 /* ObjCConfiguration.swift */,
+				53DEA5B32E03D05A00D6C371 /* ObjCSessionConfiguration.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		536388C62EDF01E4005ADA61 /* FlushPolicy */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5AE2E03D05A00D6C371 /* ObjCFlushPolicy.swift */,
+			);
+			path = FlushPolicy;
+			sourceTree = "<group>";
+		};
+		536388C72EDF01F2005ADA61 /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5AF2E03D05A00D6C371 /* ObjCLogger.swift */,
+				53DEA5B02E03D05A00D6C371 /* ObjCLoggerAnalytics.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
+		536388C82EDF0240005ADA61 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5AD2E03D05A00D6C371 /* ObjCEvent.swift */,
+				5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */,
+				5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */,
+				5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */,
+				5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */,
+				5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */,
+				53DEA5B12E03D05A00D6C371 /* ObjCOption.swift */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		536388C92EDF0285005ADA61 /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				536388CB2EDF02CF005ADA61 /* Base */,
+				536388CC2EDF02E9005ADA61 /* DeviceMode */,
+			);
+			path = Plugins;
+			sourceTree = "<group>";
+		};
+		536388CA2EDF02C1005ADA61 /* StateManagement */ = {
+			isa = PBXGroup;
+			children = (
+				5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */,
+				5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */,
+				5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */,
+			);
+			path = StateManagement;
+			sourceTree = "<group>";
+		};
+		536388CB2EDF02CF005ADA61 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				53DEA5B22E03D05A00D6C371 /* ObjCPlugin.swift */,
+				531B80612ED98285000B1D6A /* ObjCEventPlugin.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		536388CC2EDF02E9005ADA61 /* DeviceMode */ = {
+			isa = PBXGroup;
+			children = (
+				531B80652ED9836B000B1D6A /* ObjCStandardIntegration.swift */,
+				531B80632ED9830C000B1D6A /* ObjCIntegrationPlugin.swift */,
+			);
+			path = DeviceMode;
+			sourceTree = "<group>";
+		};
 		537B96492EABF7AE00E3ADE7 /* SourceConfig */ = {
 			isa = PBXGroup;
 			children = (
@@ -729,13 +858,8 @@
 		53DEA5A12E03D05A00D6C371 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA59B2E03D05A00D6C371 /* AsyncChannel.swift */,
-				53DEA59C2E03D05A00D6C371 /* CodableTypes.swift */,
-				53DEA59D2E03D05A00D6C371 /* Constants.swift */,
-				53DEA59E2E03D05A00D6C371 /* Extensions.swift */,
-				53DEA59F2E03D05A00D6C371 /* NetworkInfoPluginUtils.swift */,
-				53DEA5A02E03D05A00D6C371 /* PropertyWrappers.swift */,
-				53E112D92E7C4B9E005FEF67 /* Connectivity.swift */,
+				536388C22EDEFE00005ADA61 /* CoreSupport */,
+				536388C12EDEF57F005ADA61 /* Utils */,
 				8595FAAB2ED6D51500057B60 /* ECommerce */,
 			);
 			path = Helpers;
@@ -771,56 +895,32 @@
 		53DEA5B42E03D05A00D6C371 /* ObjC */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA5AB2E03D05A00D6C371 /* ObjCAnalytics.swift */,
-				53DEA5AC2E03D05A00D6C371 /* ObjCConfiguration.swift */,
-				53DEA5AD2E03D05A00D6C371 /* ObjCEvent.swift */,
-				53DEA5AE2E03D05A00D6C371 /* ObjCFlushPolicy.swift */,
-				53DEA5AF2E03D05A00D6C371 /* ObjCLogger.swift */,
-				53DEA5B02E03D05A00D6C371 /* ObjCLoggerAnalytics.swift */,
-				53DEA5B12E03D05A00D6C371 /* ObjCOption.swift */,
-				53DEA5B22E03D05A00D6C371 /* ObjCPlugin.swift */,
-				53DEA5B32E03D05A00D6C371 /* ObjCSessionConfiguration.swift */,
-				5328B8762E3B7E4D0051A202 /* ObjCUserIdentity.swift */,
-				5328B8782E3B817B0051A202 /* ObjCTrackEvent.swift */,
-				5328B87A2E3C8B760051A202 /* ObjCScreenEvent.swift */,
-				5328B87C2E3C8C240051A202 /* ObjCGroupEvent.swift */,
-				5328B87E2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift */,
-				5328B8802E3C939D0051A202 /* ObjCAliasEvent.swift */,
-				5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */,
-				5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */,
-				531B80612ED98285000B1D6A /* ObjCEventPlugin.swift */,
-				531B80632ED9830C000B1D6A /* ObjCIntegrationPlugin.swift */,
-				531B80652ED9836B000B1D6A /* ObjCStandardIntegration.swift */,
+				536388C52EDF01C5005ADA61 /* Base */,
+				536388C82EDF0240005ADA61 /* Events */,
+				536388C62EDF01E4005ADA61 /* FlushPolicy */,
+				536388C72EDF01F2005ADA61 /* Logger */,
+				536388C92EDF0285005ADA61 /* Plugins */,
+				536388CA2EDF02C1005ADA61 /* StateManagement */,
 			);
 			path = ObjC;
 			sourceTree = "<group>";
 		};
-		53DEA5B82E03D05A00D6C371 /* Base */ = {
+		53DEA5B82E03D05A00D6C371 /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				53DEA5B52E03D05A00D6C371 /* Plugin.swift */,
 				53DEA5B62E03D05A00D6C371 /* PluginChain.swift */,
 				53DEA5B72E03D05A00D6C371 /* PluginInteractor.swift */,
 			);
-			path = Base;
+			path = Core;
 			sourceTree = "<group>";
 		};
 		53DEA5C42E03D05A00D6C371 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				53DEA5B82E03D05A00D6C371 /* Core */,
+				536388C42EDF0149005ADA61 /* Standard */,
 				85E7C4EC2E9BB51D00520FDB /* DeviceMode */,
-				53DEA5B82E03D05A00D6C371 /* Base */,
-				53DEA5B92E03D05A00D6C371 /* AppInfoPlugin.swift */,
-				53DEA5BA2E03D05A00D6C371 /* DeviceInfoPlugin.swift */,
-				53DEA5BB2E03D05A00D6C371 /* LibraryInfoPlugin.swift */,
-				53DEA5BC2E03D05A00D6C371 /* LifecycleTrackingPlugin.swift */,
-				53DEA5BD2E03D05A00D6C371 /* LocaleInfoPlugin.swift */,
-				53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */,
-				53DEA5BF2E03D05A00D6C371 /* OSInfoPlugin.swift */,
-				53DEA5C02E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift */,
-				53DEA5C12E03D05A00D6C371 /* ScreenInfoPlugin.swift */,
-				53DEA5C22E03D05A00D6C371 /* SessionTrackingPlugin.swift */,
-				53DEA5C32E03D05A00D6C371 /* TimeZoneInfoPlugin.swift */,
 			);
 			path = Plugins;
 			sourceTree = "<group>";
@@ -877,10 +977,10 @@
 		53DEA5DD2E03D05A00D6C371 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
+				53DEA5DC2E03D05A00D6C371 /* Storage.swift */,
+				53DEA5DB2E03D05A00D6C371 /* BasicStorage.swift */,
 				53DEA5D82E03D05A00D6C371 /* Store */,
 				53DEA5DA2E03D05A00D6C371 /* StoreModels */,
-				53DEA5DB2E03D05A00D6C371 /* BasicStorage.swift */,
-				53DEA5DC2E03D05A00D6C371 /* Storage.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -1071,23 +1171,19 @@
 		85E7C4EC2E9BB51D00520FDB /* DeviceMode */ = {
 			isa = PBXGroup;
 			children = (
-				85F2AC0E2EAA2FE200BE93AF /* EventProcessing */,
-				85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */,
-				85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */,
-				85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */,
-				85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */,
-				85CE839B2EB0859C00249576 /* DestinationError.swift */,
+				85F2AC0E2EAA2FE200BE93AF /* IntegrationPlugins */,
+				536388C32EDF005E005ADA61 /* IntegrationProcessing */,
 			);
 			path = DeviceMode;
 			sourceTree = "<group>";
 		};
-		85F2AC0E2EAA2FE200BE93AF /* EventProcessing */ = {
+		85F2AC0E2EAA2FE200BE93AF /* IntegrationPlugins */ = {
 			isa = PBXGroup;
 			children = (
 				85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */,
 				85F2AC012EA78EF200BE93AF /* EventFilteringPlugin.swift */,
 			);
-			path = EventProcessing;
+			path = IntegrationPlugins;
 			sourceTree = "<group>";
 		};
 		8CCA98802E817881006C3537 /* Network */ = {
