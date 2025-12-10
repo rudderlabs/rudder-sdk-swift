@@ -39,7 +39,7 @@
   "messageId" : "<message-id>",
   "originalTimestamp" : "<original-timestamp>",
   "previousId" : "test_previous_id",
-  "sentAt" : "{{_RSA_DEF_SENT_AT_TS_}}",
+  "sentAt" : "{{ RSA_DEF_SENT_AT_TS }}",
   "type" : "alias",
   "userId" : "test_user_id"
 }

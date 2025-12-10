@@ -7,6 +7,6 @@
   },
   "messageId" : "<message-id>",
   "originalTimestamp" : "<original-timestamp>",
-  "sentAt" : "{{_RSA_DEF_SENT_AT_TS_}}",
+  "sentAt" : "{{ RSA_DEF_SENT_AT_TS }}",
   "type" : "track"
 }
