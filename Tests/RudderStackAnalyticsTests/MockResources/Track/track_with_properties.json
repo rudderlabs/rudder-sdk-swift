@@ -28,6 +28,6 @@
       "key-9" : 123.456
     }
   },
-  "sentAt" : "{{_RSA_DEF_SENT_AT_TS_}}",
+  "sentAt" : "{{ RSA_DEF_SENT_AT_TS }}",
   "type" : "track"
 }

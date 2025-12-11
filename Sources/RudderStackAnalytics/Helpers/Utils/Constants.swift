@@ -149,7 +149,7 @@ struct _Payload {
     }
     
     /// Placeholder used for adding sent-at timestamps in event payloads.
-    let sentAtPlaceholder = "{{_RSA_DEF_SENT_AT_TS_}}"
+    let sentAtPlaceholder = "{{ RSA_DEF_SENT_AT_TS }}"
 
     /// Identifier for the SDK channel type.
     let channel = "mobile"
@@ -204,7 +204,7 @@ public struct _DefaultConfig {
     }
     
     /// Special signal string used to trigger uploads.
-    let uploadSignal = "#!upload!#"
+    let uploadSignal = "#!upload"
 }
 // swiftlint:enable type_name
 
