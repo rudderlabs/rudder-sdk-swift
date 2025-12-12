@@ -48,7 +48,7 @@ Add the SDK to your Swift project using Swift Package Manager:
  
 ![Select package version in Xcode](https://github.com/user-attachments/assets/8a64c1df-4d97-45bb-9afd-0c38277eddf1)
 
-4. Select the project to which you want to add the package.
+4. Select the target to which you want to add the package.
 5. Finally, click on **Add Package**.
 
 ![Add Package button in Xcode](https://github.com/user-attachments/assets/ebdf6203-a38e-44d5-a608-1a66d3841d74)
@@ -71,7 +71,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/rudderlabs/rudder-sdk-swift.git", from: "<latest_version>")
+        .package(url: "https://github.com/rudderlabs/rudder-sdk-swift.git", .upToNextMajor(from: "<latest_version>"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
