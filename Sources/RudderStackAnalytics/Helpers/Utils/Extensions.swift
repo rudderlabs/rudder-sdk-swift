@@ -58,7 +58,11 @@ extension Date {
 // MARK: - UserDefaults
 extension UserDefaults {
     static func rudder(_ writeKey: String) -> UserDefaults? {
-        let suiteName = (Bundle.main.bundleIdentifier ?? "com.rudder.poc") + ".analytics." + writeKey
+        guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
+            LoggerAnalytics.debug("Bundle.main.bundleIdentifier is nil. UserDefaults suite cannot be created. Key-value storage will be disabled and data may be lost.")
+            return nil
+        }
+        let suiteName = bundleIdentifier + ".analytics." + writeKey
         return UserDefaults(suiteName: suiteName)
     }
 }
