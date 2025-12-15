@@ -194,6 +194,8 @@
 		85F2AC072EA7940200BE93AF /* EventFilteringPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F2AC062EA7940200BE93AF /* EventFilteringPluginTests.swift */; };
 		85F2AC102EAA300800BE93AF /* IntegrationOptionsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */; };
 		85F2AC122EAA302100BE93AF /* IntegrationOptionsPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */; };
+		8C047DA22EF078060019659F /* ExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C047DA12EF078060019659F /* ExtensionsTests.swift */; };
+		8C047DA62EF078870019659F /* CodableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C047DA52EF078870019659F /* CodableTypes.swift */; };
 		8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCA98812E8178D0006C3537 /* HttpClientTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -399,6 +401,8 @@
 		85F2AC062EA7940200BE93AF /* EventFilteringPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFilteringPluginTests.swift; sourceTree = "<group>"; };
 		85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationOptionsPlugin.swift; sourceTree = "<group>"; };
 		85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationOptionsPluginTests.swift; sourceTree = "<group>"; };
+		8C047DA12EF078060019659F /* ExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionsTests.swift; sourceTree = "<group>"; };
+		8C047DA52EF078870019659F /* CodableTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTypes.swift; sourceTree = "<group>"; };
 		8CCA98812E8178D0006C3537 /* HttpClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -808,6 +812,8 @@
 		539D87362E5888DE009FC144 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				8C047DA42EF078440019659F /* CoreSupport */,
+				8C047DA02EF077EB0019659F /* Utils */,
 				538180C22ECAF37F0019EE05 /* Base */,
 				538180C12ECAF3620019EE05 /* Integration */,
 			);
@@ -1186,6 +1192,22 @@
 			path = IntegrationPlugins;
 			sourceTree = "<group>";
 		};
+		8C047DA02EF077EB0019659F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				8C047DA12EF078060019659F /* ExtensionsTests.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		8C047DA42EF078440019659F /* CoreSupport */ = {
+			isa = PBXGroup;
+			children = (
+				8C047DA52EF078870019659F /* CodableTypes.swift */,
+			);
+			path = CoreSupport;
+			sourceTree = "<group>";
+		};
 		8CCA98802E817881006C3537 /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -1478,6 +1500,7 @@
 				53E7775C2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift in Sources */,
 				8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */,
 				539001062EA11A7400DAC164 /* AnalyticsTests.swift in Sources */,
+				8C047DA62EF078870019659F /* CodableTypes.swift in Sources */,
 				537846AD2EAA22A200520374 /* EventQueueTests.swift in Sources */,
 				53E7775E2EB4D21000564D61 /* StartupFlushPolicyTests.swift in Sources */,
 				53DEA6662E03D06F00D6C371 /* GroupEventTests.swift in Sources */,
@@ -1498,6 +1521,7 @@
 				53DEA66F2E03D06F00D6C371 /* LocaleInfoPluginTests.swift in Sources */,
 				53DEA6702E03D06F00D6C371 /* AppInfoPluginTests.swift in Sources */,
 				537B96442EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift in Sources */,
+				8C047DA22EF078060019659F /* ExtensionsTests.swift in Sources */,
 				53DEA6712E03D06F00D6C371 /* MockProvider.swift in Sources */,
 				53E777672EB5134C00564D61 /* BackoffPolicyHandlerTests.swift in Sources */,
 				537B96462EAB5D0A00E3ADE7 /* PluginModuleTests.swift in Sources */,

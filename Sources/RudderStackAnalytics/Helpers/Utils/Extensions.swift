@@ -214,9 +214,9 @@ extension Dictionary where Key == String {
 // MARK: - [String: Any]
 extension Dictionary where Key == String, Value == Any {
     var jsonString: String? {
-        return try? JSONSerialization.data(withJSONObject: self, options: []).jsonString
+        return try? JSONSerialization.data(withJSONObject: self.objCSanitized, options: []).jsonString
     }
-    
+
     var objCSanitized: [String: Any] {
         self.mapValues { objCSanitizeValue($0) }
     }
@@ -232,17 +232,17 @@ public extension Dictionary where Key == String, Value == Any {
 
 // MARK: - [String: AnyCodable]
 public extension Dictionary where Key == String, Value == AnyCodable {
-    /** A computed property that converts `[String: AnyCodable]` to `[String: Any]` */
+    /** A computed property that converts `[String: AnyCodable]` to `[String: Any]` with sanitized values */
     var rawDictionary: [String: Any] {
-        self.mapValues { $0.value }
+        self.mapValues { $0.value }.objCSanitized
     }
 }
 
 // MARK: - [AnyCodable]
 public extension Array where Element == AnyCodable {
-    /** A computed property that converts `[AnyCodable]` to `[Any]` */
+    /** A computed property that converts `[AnyCodable]` to `[Any]` with sanitized values */
     var rawArray: [Any] {
-        self.map { $0.value }
+        self.map { $0.value }.objCSanitized
     }
 }
 
@@ -272,6 +272,12 @@ private func objCSanitizeValue(_ value: Any) -> Any {
     switch value {
     case let number as NSNumber:
         return sanitizeNSNumber(number)
+    case let date as Date:
+        return date.iso8601TimeStamp
+    case let url as URL:
+        return url.absoluteString
+    case let nsurl as NSURL:
+        return nsurl.absoluteString ?? ""
     case let array as [Any]:
         return array.objCSanitized
     case let dict as [String: Any]:
