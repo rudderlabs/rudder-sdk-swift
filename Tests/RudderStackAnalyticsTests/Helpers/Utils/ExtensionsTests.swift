@@ -24,6 +24,7 @@ class ExtensionsTests {
             "date": Date(timeIntervalSince1970: 631152000),
             "url": URL(string: "https://example.com")!,
             "nsurl": NSURL(string: "https://nsurl.com")!,
+            "nsnull": NSNull(),
 
             // Nested dictionary
             "nested": [
@@ -44,6 +45,7 @@ class ExtensionsTests {
         #expect(sanitized["date"] as? String == "1990-01-01T00:00:00.000Z")
         #expect(sanitized["url"] as? String == "https://example.com")
         #expect(sanitized["nsurl"] as? String == "https://nsurl.com")
+        #expect(sanitized["nsnull"] == nil || sanitized["nsnull"] is NSNull)
 
         let nested = sanitized["nested"] as? [String: Any]
         #expect(nested?["nestedDate"] is String)
