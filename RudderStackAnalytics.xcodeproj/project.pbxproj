@@ -391,8 +391,6 @@
 		85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCustomIntegrationPlugin.swift; sourceTree = "<group>"; };
 		85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomIntegrationPluginTests.swift; sourceTree = "<group>"; };
 		85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsController.swift; sourceTree = "<group>"; };
-		85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECommerceEvents.swift; sourceTree = "<group>"; };
-		85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECommerceParamNames.swift; sourceTree = "<group>"; };
 		85CE839B2EB0859C00249576 /* DestinationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationError.swift; sourceTree = "<group>"; };
 		85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPlugin.swift; sourceTree = "<group>"; };
 		85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsManagementPlugin.swift; sourceTree = "<group>"; };
@@ -525,7 +523,6 @@
 				53DEA5DF2E03D05A00D6C371 /* Sources */,
 				53DEA65E2E03D06F00D6C371 /* Tests */,
 				5351AA672C6BE95D003C3C47 /* Products */,
-				8595FAA82ED6D4DF00057B60 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1154,15 +1151,6 @@
 				53E777662EB5134C00564D61 /* BackoffPolicyHandlerTests.swift */,
 			);
 			path = BackoffPolicy;
-			sourceTree = "<group>";
-		};
-		8595FAA82ED6D4DF00057B60 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */,
-				85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */,
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		8595FAAB2ED6D51500057B60 /* ECommerce */ = {
