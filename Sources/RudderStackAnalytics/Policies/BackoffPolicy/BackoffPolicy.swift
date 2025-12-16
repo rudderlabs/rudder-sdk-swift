@@ -33,11 +33,11 @@ protocol BackoffPolicy {
  A struct containing constants used in backoff policies.
  */
 struct BackoffPolicyConstants {
-
+    
     private init() {
         /* Default implementation (no-op) */
     }
-
+    
     static let maxAttempts = 5
     static let coolOffPeriodInMilliseconds = 1800000 // 30 minutes
 }
@@ -73,24 +73,26 @@ struct BackoffPolicyHelper {
         let minutes = totalSeconds / secondsPerMinute
         let seconds = totalSeconds % secondsPerMinute
         
-        func unit(_ value: Int, _ label: String) -> String {
+        let unit: (Int, String) -> String = { value, label in
             value == 1 ? "\(value) \(label)" : "\(value) \(label)s"
         }
         
+        var parts: [String] = []
+        
         if minutes > 0 {
-            if seconds > 0 {
-                return "\(unit(minutes, "min")) \(unit(seconds, "sec"))"
-            } else {
-                return unit(minutes, "min")
-            }
-        } else if seconds > 0 {
-            if milliseconds > 0 {
-                return "\(unit(seconds, "sec")) \(milliseconds)ms"
-            } else {
-                return unit(seconds, "sec")
-            }
-        } else {
-            return "\(milliseconds)ms"
+            parts.append(unit(minutes, "min"))
         }
+        if seconds > 0 {
+            parts.append(unit(seconds, "sec"))
+        }
+        if milliseconds > 0 {
+            parts.append("\(milliseconds)ms")
+        }
+        
+        if parts.isEmpty {
+            return "0ms"
+        }
+        
+        return parts.joined(separator: " ")
     }
 }

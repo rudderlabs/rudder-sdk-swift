@@ -36,7 +36,7 @@ final class SessionHandler {
     }
     
     func startSession(id: UInt64, type: SessionType) {
-        self.updateSessionStart(isSessionStrat: true)
+        self.updateSessionStart(isSessionStart: true)
         self.updateSessionType(type: type)
         self.updateSessionId(id: id)
         self.sessionType == .automatic ? self.registerObserver() : self.deregisterObserver()
@@ -138,11 +138,11 @@ extension SessionHandler {
         self.sessionInstance.storeSessionId(id: id, storage: self.storage)
     }
     
-    func updateSessionStart(isSessionStrat: Bool) {
-        guard self.sessionInstance.isStart != isSessionStrat else { return }
+    func updateSessionStart(isSessionStart: Bool) {
+        guard self.sessionInstance.isStart != isSessionStart else { return }
         
-        self.sessionState.dispatch(action: UpdateIsSessionStartAction(isSessionStart: isSessionStrat))
-        self.sessionInstance.storeIsSessionStart(isSessionStart: isSessionStrat, storage: self.storage)
+        self.sessionState.dispatch(action: UpdateIsSessionStartAction(isSessionStart: isSessionStart))
+        self.sessionInstance.storeIsSessionStart(isSessionStart: isSessionStart, storage: self.storage)
     }
     
     private func updateSessionType(type: SessionType) {

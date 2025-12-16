@@ -27,6 +27,7 @@ The Swift SDK enables you to track customer event data from your iOS, macOS, tvO
 - [Initializing the SDK](#initializing-the-sdk)
 - [Identifying users](#identifying-users)
 - [Tracking user actions](#tracking-user-actions)
+- [Integrations](#integrations)
 - [Contact us](#contact-us)
 - [Follow Us](#follow-us)
 
@@ -47,7 +48,7 @@ Add the SDK to your Swift project using Swift Package Manager:
  
 ![Select package version in Xcode](https://github.com/user-attachments/assets/8a64c1df-4d97-45bb-9afd-0c38277eddf1)
 
-4. Select the project to which you want to add the package.
+4. Select the target to which you want to add the package.
 5. Finally, click on **Add Package**.
 
 ![Add Package button in Xcode](https://github.com/user-attachments/assets/ebdf6203-a38e-44d5-a608-1a66d3841d74)
@@ -70,7 +71,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/rudderlabs/rudder-sdk-swift.git", from: "<latest_version>")
+        .package(url: "https://github.com/rudderlabs/rudder-sdk-swift.git", .upToNextMajor(from: "<latest_version>"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -152,6 +153,60 @@ analytics?.track(
         "currency": "USD"
         ]
 )
+```
+
+---
+
+## Integrations
+
+RudderStack Swift SDK supports various third-party integrations that allow you to send your event data to external analytics and marketing platforms. These integrations are implemented as separate modules that you can include in your project as needed.
+
+### Available Integrations
+
+The following integrations are currently available:
+
+- [Adjust](https://github.com/rudderlabs/integration-swift-adjust) - Send your event data to Adjust for product analytics
+- [AppsFlyer](https://github.com/rudderlabs/integration-swift-appsflyer) - Send your event data to AppsFlyer for mobile attribution and analytics
+- [Braze](https://github.com/rudderlabs/integration-swift-braze) - Send your event data to Braze for customer engagement
+- [Firebase](https://github.com/rudderlabs/integration-swift-firebase) - Send your event data to Google Firebase Analytics
+- [Facebook](https://github.com/rudderlabs/integration-swift-facebook) - Send your event data to Facebook for analytics and advertising
+
+### Using Integrations
+
+To use an integration, follow these steps:
+
+1. Add the integration dependency to your project using Swift Package Manager
+2. Initialize the RudderStack SDK as usual
+3. Add the integration to your Analytics instance
+
+Example with multiple integrations:
+
+```swift
+import RudderStackAnalytics
+import RudderIntegrationAdjust
+import RudderIntegrationFirebase
+
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    var analytics: Analytics?
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        // Initialize the RudderStack Analytics SDK
+        let config = Configuration(
+            writeKey: "<WRITE_KEY>",
+            dataPlaneUrl: "<DATA_PLANE_URL>"
+        )
+        self.analytics = Analytics(configuration: config)
+        
+        // Add integrations
+        analytics?.add(plugin: AdjustIntegration())
+        analytics?.add(plugin: FirebaseIntegration())
+        // Add more integrations as needed
+        
+        return true
+    }
+}
 ```
 
 ---

@@ -64,6 +64,11 @@ public class Analytics {
      A flag indicating whether the write key provided is invalid.
      */
     var isInvalidWriteKey: Bool = false
+    
+    /**
+     A class which manages/controls all the integration plugins.
+     */
+    var integrationsController: IntegrationsController?
         
     /**
      Initializes the `Analytics` with the given configuration.
@@ -225,6 +230,8 @@ extension Analytics {
                 plugin.flush()
             }
         }
+        
+        self.integrationsController?.flush()
     }
     
     /**
@@ -241,6 +248,10 @@ extension Analytics {
         if options.entries.session {
             self.sessionHandler?.refreshSession()
         }
+
+        guard self.isSourceEnabled else { return }
+
+        self.integrationsController?.reset()
     }
 }
 
@@ -255,7 +266,12 @@ extension Analytics {
      */
     public func add(plugin: Plugin) {
         guard self.isAnalyticsActive else { return }
-        self.pluginChain?.add(plugin: plugin)
+        
+        if let integrationPlugin = plugin as? IntegrationPlugin {
+            integrationsController?.add(integration: integrationPlugin)
+        } else {
+            pluginChain?.add(plugin: plugin)
+        }
     }
     
     /**
@@ -265,7 +281,12 @@ extension Analytics {
      */
     public func remove(plugin: Plugin) {
         guard self.isAnalyticsActive else { return }
-        self.pluginChain?.remove(plugin: plugin)
+        
+        if let integrationPlugin = plugin as? IntegrationPlugin {
+            integrationsController?.remove(integration: integrationPlugin)
+        } else {
+            self.pluginChain?.remove(plugin: plugin)
+        }
     }
 }
 
@@ -299,6 +320,8 @@ extension Analytics {
         self.lifecycleSessionWrapper = nil
         
         self.sourceConfigProvider = nil
+        
+        self.integrationsController = nil
     
         if self.isInvalidWriteKey {
             await self.storage.removeAll()
@@ -348,8 +371,10 @@ extension Analytics {
         
         self.pluginChain = PluginChain(analytics: self)
         self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
+        self.integrationsController = IntegrationsController(analytics: self)
         
         // Add default plugins
+        self.pluginChain?.add(plugin: IntegrationsManagementPlugin())
         self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())
         self.pluginChain?.add(plugin: DeviceInfoPlugin())
         self.pluginChain?.add(plugin: LocaleInfoPlugin())

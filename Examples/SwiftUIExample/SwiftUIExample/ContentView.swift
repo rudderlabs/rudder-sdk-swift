@@ -14,9 +14,96 @@ struct ContentView: View {
         VStack {
             HStack {
                 CustomButton(title: "Identify") {
-                    let options = RudderOption(integrations: ["Amplitude": false], customContext: ["identify_key1": "identify_value1"], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
+                    let options = RudderOption(integrations: [
+                        "Amplitude": false,
+                        "facebook" : [
+                            "createdAt": Date(),
+                            "mapUrl": URL(string: "https://maps.google.com/")!,
+                            "enabled": true,
+                            "facebook_null": NSNull()
+                        ]
+                    ], customContext: [
+                        "identify_key1": "identify_value1",
+                        "customContext_createdAt": Date(),
+                        "customContext_createdAt2": NSDate(),
+                        "customContext_mapUrl": URL(string: "https://maps.google.com/",)!,
+                        "customContext_mapUrl2": NSURL(string: "https://maps.google.com/",)!,
+                        "customContext_null": NSNull(),
+                    ], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
                     
-                    AnalyticsManager.shared.identify(userId: "12345", traits: ["IdentifyTraits_key1": "IdentifyTraits_value1"], options: options)
+                    AnalyticsManager.shared.identify(
+                        userId: "12345",
+                        traits: [
+                            // Nested dictionary with Date/URL
+                            "address": [
+                                "createdAt": Date(),
+                                "mapUrl": URL(string: "https://maps.google.com/")!,
+                                "street": "123 Main St",
+                            ],
+                            
+                            // Basic types (should pass through unchanged)
+                            "string": "test_value",
+                            "int": 42,
+                            "double": 3.14,
+                            "bool": true,
+                            "null": NSNull(),
+
+                            // Date handling (should convert to ISO8601 string)
+                            
+                            "createdAt": Date(timeIntervalSince1970: 631152000), // 1990-01-01
+
+                            // URL handling (should convert to absolute string)
+                            "url": URL(string: "https://www.rudderstack.com/")!,
+
+                            // NSNumber variants (existing sanitization)
+                            "count": NSNumber(value: 100),
+                            "isActive": NSNumber(value: true),
+                            "rating": NSNumber(value: 4.5),
+
+                            // Array with mixed types
+                            "favoriteUrls": [
+                                URL(string: "https://github.com")!,
+                                URL(string: "https://stackoverflow.com")!
+                            ],
+
+                            // Array with dates
+                            "importantDates": [
+                                Date(),
+                                Date(timeIntervalSince1970: 946684800) // 2000-01-01
+                            ],
+
+                            // Nested array of dictionaries
+                            "events": [
+                                [
+                                    "name": "signup",
+                                    "timestamp": Date(),
+                                    "url": URL(string: "https://app.example.com/signup")!,
+                                ],
+                                [
+                                    "amount": 99.99,
+                                    "name": "purchase",
+                                    "timestamp": Date(timeIntervalSince1970: 1640000000),
+                                ]
+                            ],
+
+                            // Complex nested structure
+                            "metadata": [
+                                "links": [
+                                    "homepage": URL(string: "https://example.com")!,
+                                    "docs": URL(string: "https://docs.example.com/api")!,
+                                ],
+                                "user": [
+                                    "preferences": [
+                                        "theme": "dark",
+                                        "notifications": true,
+                                        "lastUpdated": Date()
+                                    ],
+                                    "registeredAt": Date(),
+                                ],
+                            ]
+                        ],
+                        options: options
+                    )
                 }
                 
                 CustomButton(title: "Alias") {
