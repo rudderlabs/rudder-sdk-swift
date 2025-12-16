@@ -45,7 +45,7 @@ class ExtensionsTests {
         #expect(sanitized["date"] as? String == "1990-01-01T00:00:00.000Z")
         #expect(sanitized["url"] as? String == "https://example.com")
         #expect(sanitized["nsurl"] as? String == "https://nsurl.com")
-        #expect(sanitized["nsnull"] == nil || sanitized["nsnull"] is NSNull)
+        #expect(sanitized["nsnull"] is NSNull)
 
         let nested = sanitized["nested"] as? [String: Any]
         #expect(nested?["nestedDate"] is String)
@@ -58,10 +58,11 @@ class ExtensionsTests {
         // Test jsonString doesn't crash and contains expected values
         // Note: JSON escapes forward slashes, so we check for escaped or unescaped versions
         let jsonString = dict.jsonString
-        
+
         #expect(jsonString != nil)
         #expect(jsonString!.contains("1990-01-01"))
         #expect(jsonString!.contains("example.com"))
+        #expect(jsonString!.contains("\"nsnull\":null"))
 
         // Test rawDictionary via AnyCodable
         let codableDict: [String: AnyCodable] = [
