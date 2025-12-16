@@ -213,6 +213,7 @@ extension Dictionary where Key == String {
 
 // MARK: - [String: Any]
 public extension Dictionary where Key == String, Value == Any {
+    /** Converts the dictionary to a JSON string representation after sanitizing values for compatibility */
     var jsonString: String? {
         return try? JSONSerialization.data(withJSONObject: self.objCSanitized, options: []).jsonString
     }
