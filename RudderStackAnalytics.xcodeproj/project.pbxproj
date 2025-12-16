@@ -194,6 +194,8 @@
 		85F2AC072EA7940200BE93AF /* EventFilteringPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F2AC062EA7940200BE93AF /* EventFilteringPluginTests.swift */; };
 		85F2AC102EAA300800BE93AF /* IntegrationOptionsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */; };
 		85F2AC122EAA302100BE93AF /* IntegrationOptionsPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */; };
+		8C047DA22EF078060019659F /* ExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C047DA12EF078060019659F /* ExtensionsTests.swift */; };
+		8C047DA62EF078870019659F /* CodableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C047DA52EF078870019659F /* CodableTypes.swift */; };
 		8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCA98812E8178D0006C3537 /* HttpClientTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -389,8 +391,6 @@
 		85A10BBE2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCustomIntegrationPlugin.swift; sourceTree = "<group>"; };
 		85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomIntegrationPluginTests.swift; sourceTree = "<group>"; };
 		85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsController.swift; sourceTree = "<group>"; };
-		85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECommerceEvents.swift; sourceTree = "<group>"; };
-		85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECommerceParamNames.swift; sourceTree = "<group>"; };
 		85CE839B2EB0859C00249576 /* DestinationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationError.swift; sourceTree = "<group>"; };
 		85E7C4ED2E9BB53200520FDB /* IntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationPlugin.swift; sourceTree = "<group>"; };
 		85E7C4EF2E9BB6A000520FDB /* IntegrationsManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationsManagementPlugin.swift; sourceTree = "<group>"; };
@@ -399,6 +399,8 @@
 		85F2AC062EA7940200BE93AF /* EventFilteringPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFilteringPluginTests.swift; sourceTree = "<group>"; };
 		85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationOptionsPlugin.swift; sourceTree = "<group>"; };
 		85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationOptionsPluginTests.swift; sourceTree = "<group>"; };
+		8C047DA12EF078060019659F /* ExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionsTests.swift; sourceTree = "<group>"; };
+		8C047DA52EF078870019659F /* CodableTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTypes.swift; sourceTree = "<group>"; };
 		8CCA98812E8178D0006C3537 /* HttpClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -521,7 +523,6 @@
 				53DEA5DF2E03D05A00D6C371 /* Sources */,
 				53DEA65E2E03D06F00D6C371 /* Tests */,
 				5351AA672C6BE95D003C3C47 /* Products */,
-				8595FAA82ED6D4DF00057B60 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -808,6 +809,8 @@
 		539D87362E5888DE009FC144 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				8C047DA42EF078440019659F /* CoreSupport */,
+				8C047DA02EF077EB0019659F /* Utils */,
 				538180C22ECAF37F0019EE05 /* Base */,
 				538180C12ECAF3620019EE05 /* Integration */,
 			);
@@ -1150,15 +1153,6 @@
 			path = BackoffPolicy;
 			sourceTree = "<group>";
 		};
-		8595FAA82ED6D4DF00057B60 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				85C5EC702EC23F4200F0569B /* ECommerceEvents.swift */,
-				85C5EC722EC2401200F0569B /* ECommerceParamNames.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		8595FAAB2ED6D51500057B60 /* ECommerce */ = {
 			isa = PBXGroup;
 			children = (
@@ -1184,6 +1178,22 @@
 				85F2AC012EA78EF200BE93AF /* EventFilteringPlugin.swift */,
 			);
 			path = IntegrationPlugins;
+			sourceTree = "<group>";
+		};
+		8C047DA02EF077EB0019659F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				8C047DA12EF078060019659F /* ExtensionsTests.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		8C047DA42EF078440019659F /* CoreSupport */ = {
+			isa = PBXGroup;
+			children = (
+				8C047DA52EF078870019659F /* CodableTypes.swift */,
+			);
+			path = CoreSupport;
 			sourceTree = "<group>";
 		};
 		8CCA98802E817881006C3537 /* Network */ = {
@@ -1478,6 +1488,7 @@
 				53E7775C2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift in Sources */,
 				8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */,
 				539001062EA11A7400DAC164 /* AnalyticsTests.swift in Sources */,
+				8C047DA62EF078870019659F /* CodableTypes.swift in Sources */,
 				537846AD2EAA22A200520374 /* EventQueueTests.swift in Sources */,
 				53E7775E2EB4D21000564D61 /* StartupFlushPolicyTests.swift in Sources */,
 				53DEA6662E03D06F00D6C371 /* GroupEventTests.swift in Sources */,
@@ -1498,6 +1509,7 @@
 				53DEA66F2E03D06F00D6C371 /* LocaleInfoPluginTests.swift in Sources */,
 				53DEA6702E03D06F00D6C371 /* AppInfoPluginTests.swift in Sources */,
 				537B96442EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift in Sources */,
+				8C047DA22EF078060019659F /* ExtensionsTests.swift in Sources */,
 				53DEA6712E03D06F00D6C371 /* MockProvider.swift in Sources */,
 				53E777672EB5134C00564D61 /* BackoffPolicyHandlerTests.swift in Sources */,
 				537B96462EAB5D0A00E3ADE7 /* PluginModuleTests.swift in Sources */,

@@ -119,11 +119,14 @@ public struct AnyCodable: Codable {
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported type")
         }
     }
-    
+
+    // swiftlint:disable:next cyclomatic_complexity
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        
-        if let intValue = value as? Int {
+
+        if value is NSNull {
+            try container.encodeNil()
+        } else if let intValue = value as? Int {
             try container.encode(intValue)
         } else if let intValue = value as? UInt64 {
             try container.encode(intValue)
@@ -137,6 +140,8 @@ public struct AnyCodable: Codable {
             try container.encode(dateValue.iso8601TimeStamp)
         } else if let urlValue = value as? URL {
             try container.encode(urlValue.absoluteString)
+        } else if let nsurl = value as? NSURL {
+            try container.encode(nsurl.absoluteString ?? "")
         } else if let stringValue = value as? String {
             try container.encode(stringValue)
         } else if let arrayValue = value as? [Any] {

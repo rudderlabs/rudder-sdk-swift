@@ -212,11 +212,13 @@ extension Dictionary where Key == String {
 }
 
 // MARK: - [String: Any]
-extension Dictionary where Key == String, Value == Any {
+public extension Dictionary where Key == String, Value == Any {
+    /** Converts the dictionary to a JSON string representation after sanitizing values for compatibility */
     var jsonString: String? {
-        return try? JSONSerialization.data(withJSONObject: self, options: []).jsonString
+        return try? JSONSerialization.data(withJSONObject: self.objCSanitized, options: []).jsonString
     }
-    
+
+    /** Recursively sanitizes dictionary values to ensure JSON compatibility by converting Date, URL, NSURL, and NSNumber types */
     var objCSanitized: [String: Any] {
         self.mapValues { objCSanitizeValue($0) }
     }
@@ -232,17 +234,17 @@ public extension Dictionary where Key == String, Value == Any {
 
 // MARK: - [String: AnyCodable]
 public extension Dictionary where Key == String, Value == AnyCodable {
-    /** A computed property that converts `[String: AnyCodable]` to `[String: Any]` */
+    /** A computed property that converts `[String: AnyCodable]` to `[String: Any]` with sanitized values */
     var rawDictionary: [String: Any] {
-        self.mapValues { $0.value }
+        self.mapValues { $0.value }.objCSanitized
     }
 }
 
 // MARK: - [AnyCodable]
 public extension Array where Element == AnyCodable {
-    /** A computed property that converts `[AnyCodable]` to `[Any]` */
+    /** A computed property that converts `[AnyCodable]` to `[Any]` with sanitized values */
     var rawArray: [Any] {
-        self.map { $0.value }
+        self.map { $0.value }.objCSanitized
     }
 }
 
@@ -255,7 +257,8 @@ public extension Array where Element == Any {
 }
 
 // MARK: - [Any]
-extension Array where Element == Any {
+public extension Array where Element == Any {
+    /** Recursively sanitizes array values to ensure JSON compatibility by converting Date, URL, NSURL, and NSNumber types */
     var objCSanitized: [Any] {
         self.map { objCSanitizeValue($0) }
     }
@@ -263,15 +266,24 @@ extension Array where Element == Any {
 
 // MARK: - ObjC Sanitization Helper
 /**
- Recursively sanitizes values to ensure compatibility with Objective-C.
- 
- This function handles NSNumber type disambiguation (which is crucial for Objective-C interop),
- and recursively processes nested arrays and dictionaries.
+ Recursively sanitizes values to ensure compatibility with Objective-C and JSON serialization.
+
+ This function handles:
+ - NSNumber type disambiguation (which is crucial for Objective-C interop)
+ - Date → ISO8601 string conversion
+ - URL/NSURL → absolute string conversion
+ - Recursive processing of nested arrays and dictionaries
  */
-private func objCSanitizeValue(_ value: Any) -> Any {
+internal func objCSanitizeValue(_ value: Any) -> Any {
     switch value {
     case let number as NSNumber:
         return sanitizeNSNumber(number)
+    case let date as Date:
+        return date.iso8601TimeStamp
+    case let url as URL:
+        return url.absoluteString
+    case let nsurl as NSURL:
+        return nsurl.absoluteString ?? ""
     case let array as [Any]:
         return array.objCSanitized
     case let dict as [String: Any]:
