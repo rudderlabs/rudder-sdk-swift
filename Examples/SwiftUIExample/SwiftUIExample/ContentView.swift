@@ -14,8 +14,23 @@ struct ContentView: View {
         VStack {
             HStack {
                 CustomButton(title: "Identify") {
-                    let options = RudderOption(integrations: ["Amplitude": false], customContext: ["identify_key1": "identify_value1"], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
-
+                    let options = RudderOption(integrations: [
+                        "Amplitude": false,
+                        "facebook" : [
+                            "createdAt": Date(),
+                            "mapUrl": URL(string: "https://maps.google.com/")!,
+                            "enabled": true,
+                            "facebook_null": NSNull()
+                        ]
+                    ], customContext: [
+                        "identify_key1": "identify_value1",
+                        "customContext_createdAt": Date(),
+                        "customContext_createdAt2": NSDate(),
+                        "customContext_mapUrl": URL(string: "https://maps.google.com/",)!,
+                        "customContext_mapUrl2": NSURL(string: "https://maps.google.com/",)!,
+                        "customContext_null": NSNull(),
+                    ], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
+                    
                     AnalyticsManager.shared.identify(
                         userId: "12345",
                         traits: [
