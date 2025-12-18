@@ -12,17 +12,17 @@ import RudderStackAnalytics
 /**
  A plugin that sets a given ATT tracking status (`attTrackingStatus`) inside `context.device`
  for every event.
-
+ 
  Set this plugin immediately after SDK initialisation, e.g.:
-
+ 
  ```swift
  analytics.add(plugin: SetATTTrackingStatusPlugin(attTrackingStatus: 3))
  ```
-
+ 
  - Parameter attTrackingStatus: Integer ATT tracking status value (0–3).
  */
 class SetATTTrackingStatusPlugin: Plugin {
-     /// The type of plugin, set to `.preProcess`.
+    /// The type of plugin, set to `.preProcess`.
     var pluginType: PluginType = .preProcess
     
     /// Analytics client
@@ -32,7 +32,12 @@ class SetATTTrackingStatusPlugin: Plugin {
     private let attTrackingStatus: UInt
     
     init(attTrackingStatus: UInt) {
-        self.attTrackingStatus = attTrackingStatus
+        if attTrackingStatus > 3 {
+            LoggerAnalytics.error("SetATTTrackingStatusPlugin: Invalid attTrackingStatus value: \(attTrackingStatus). Defaulting to 0.")
+            self.attTrackingStatus = 0
+        } else {
+            self.attTrackingStatus = attTrackingStatus
+        }
     }
     
     func setup(analytics: Analytics) {
@@ -48,11 +53,11 @@ class SetATTTrackingStatusPlugin: Plugin {
         LoggerAnalytics.debug("SetATTTrackingStatusPlugin: Setting attTrackingStatus: \(attTrackingStatus) in event context.device")
         var updatedEvent = event
         var contextDict = updatedEvent.context?.rawDictionary ?? [:]
-
+        
         var deviceInfoDict = contextDict["device"] as? [String: Any] ?? [:]
-        deviceInfoDict["attTrackingStatus"] = attTrackingStatus
+        deviceInfoDict["attTrackingStatus"] = Int(attTrackingStatus)
         contextDict["device"] = deviceInfoDict
-
+        
         updatedEvent.context = contextDict.codableWrapped
         return updatedEvent
     }

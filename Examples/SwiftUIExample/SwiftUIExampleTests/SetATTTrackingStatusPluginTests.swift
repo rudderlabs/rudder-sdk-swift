@@ -10,14 +10,14 @@ import RudderStackAnalytics
 @testable import SwiftUIExampleApp
 
 struct SetATTTrackingStatusPluginTests {
-
+    
     @Test("given SetATTTrackingStatusPlugin with various ATT status values, when plugin intercepts events, then correct status values are set", arguments: [
         0 as UInt, // notDetermined
         1 as UInt, // restricted
         2 as UInt, // denied
         3 as UInt  // authorized
     ])
-    func testATTTrackingStatus_handlesAllValidStatusValues(_ statusValue: UInt) {
+    func testATTTrackingStatusHandlesAllValidStatusValues(_ statusValue: UInt) {
         let plugin = SetATTTrackingStatusPlugin(attTrackingStatus: statusValue)
         let event = MockEvent()
         event.context = [
@@ -28,7 +28,7 @@ struct SetATTTrackingStatusPluginTests {
         ].codableWrapped
         
         let result = plugin.intercept(event: event)
-
+        
         guard let contextDict = result?.context?.rawDictionary,
               let deviceContext = contextDict["device"] as? [String: Any] else {
             #expect(Bool(false), "Device context should be created for ATT status \(statusValue)")
@@ -40,8 +40,32 @@ struct SetATTTrackingStatusPluginTests {
         #expect(deviceContext["token"] as? String == "abc123")
     }
     
+    @Test("given SetATTTrackingStatusPlugin with invalid ATT status values, when plugin intercepts events, then default status value (0 - notDetermined) is set")
+    func testATTTrackingStatusHandlesInvalidStatusValues() {
+        let plugin = SetATTTrackingStatusPlugin(attTrackingStatus: 5)
+        let event = MockEvent()
+        event.context = [
+            "device": [
+                "model": "iPhone",
+                "token": "abc123"
+            ]
+        ].codableWrapped
+        
+        let result = plugin.intercept(event: event)
+        
+        guard let contextDict = result?.context?.rawDictionary,
+              let deviceContext = contextDict["device"] as? [String: Any] else {
+            #expect(Bool(false), "Device context should be present in the event context")
+            return
+        }
+        
+        #expect(deviceContext["attTrackingStatus"] as? Int == 0)
+        #expect(deviceContext["model"] as? String == "iPhone")
+        #expect(deviceContext["token"] as? String == "abc123")
+    }
+    
     @Test("given SetATTTrackingStatusPlugin with status 1 and event with existing attTrackingStatus, when plugin intercepts event, then existing attTrackingStatus is replaced and other fields preserved")
-    func testATTTrackingStatus_replacesExistingStatus_inDeviceContext() {
+    func testATTTrackingStatusReplacesExistingStatus() {
         let plugin = SetATTTrackingStatusPlugin(attTrackingStatus: 1)
         let event = MockEvent()
         event.context = [
@@ -51,9 +75,9 @@ struct SetATTTrackingStatusPluginTests {
                 "identifier": "device123"
             ]
         ].codableWrapped
-
+        
         let result = plugin.intercept(event: event)
-
+        
         guard let contextDict = result?.context?.rawDictionary,
               let deviceContext = contextDict["device"] as? [String: Any] else {
             #expect(Bool(false), "Device context should be preserved when replacing ATT status")
@@ -63,9 +87,9 @@ struct SetATTTrackingStatusPluginTests {
         #expect(deviceContext["model"] as? String == "iPad")
         #expect(deviceContext["identifier"] as? String == "device123")
     }
-
+    
     @Test("given SetATTTrackingStatusPlugin and event with existing context but no device section, when plugin intercepts event, then device section is created with attTrackingStatus and existing context preserved")
-    func testATTTrackingStatus_createsDeviceSection_whenContextExistsButNoDevice() {
+    func testATTTrackingStatusCreatesDeviceSectionWhenMissing() {
         let plugin = SetATTTrackingStatusPlugin(attTrackingStatus: 3)
         let event = MockEvent()
         event.context = [
@@ -78,9 +102,9 @@ struct SetATTTrackingStatusPluginTests {
                 "version": "2.0.0"
             ]
         ].codableWrapped
-
+        
         let result = plugin.intercept(event: event)
-
+        
         guard let contextDict = result?.context?.rawDictionary else {
             #expect(Bool(false), "Context should be preserved when adding device section")
             return
@@ -97,7 +121,7 @@ struct SetATTTrackingStatusPluginTests {
         #expect(contextDict["app"] != nil)
         #expect(contextDict["library"] != nil)
     }
-
+    
     @Test("given SetATTTrackingStatusPlugin, when checking plugin type, then returns preProcess")
     func testPluginType() {
         let plugin = SetATTTrackingStatusPlugin(attTrackingStatus: 1)

@@ -11,7 +11,7 @@
 
 @interface SetATTTrackingStatusPlugin()
 
-@property(nonatomic, retain) RSSAnalytics *client;
+@property(nonatomic, strong) RSSAnalytics *client;
 @property(nonatomic, assign) NSUInteger attTrackingStatus;
 
 @end
@@ -29,7 +29,12 @@
 {
     self = [super init];
     if (self) {
-        self.attTrackingStatus = attTrackingStatus;
+        if (attTrackingStatus > 3) {
+            [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"SetATTTrackingStatusPlugin: Invalid attTrackingStatus %lu provided. Defaulting to 0.", (unsigned long)attTrackingStatus]];
+            self.attTrackingStatus = 0;
+        } else {
+            self.attTrackingStatus = attTrackingStatus;
+        }
     }
     return self;
 }
@@ -78,7 +83,7 @@
     event.context = contextDict;
     
     // Log the action for debugging purposes
-    NSLog(@"SetATTTrackingStatusPlugin: Setting attTrackingStatus: %lu in event context.device", (unsigned long)self.attTrackingStatus);
+    [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"SetATTTrackingStatusPlugin: Setting attTrackingStatus: %lu in event context.device", (unsigned long)self.attTrackingStatus]];
 }
 
 /**
