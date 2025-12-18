@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UserNotifications
+import AppTrackingTransparency
 
 // MARK: - SwiftUIExampleApp
 @main
@@ -40,6 +41,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             if !self.pushToken.isEmpty {
                 AnalyticsManager.shared.addPlugin(SetPushTokenPlugin(pushToken: self.pushToken))
             }
+            
+            AnalyticsManager.shared.addPlugin(SetATTTrackingStatusPlugin(attTrackingStatus: ATTrackingManager.trackingAuthorizationStatus.rawValue))
         }
         return true
     }
