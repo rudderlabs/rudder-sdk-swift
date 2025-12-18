@@ -32,6 +32,7 @@
 		539301C82E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */; };
 		539301CA2E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */; };
 		539301CC2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */; };
+		53C361522EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C361512EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift */; };
 		53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		85A10BC32EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */; };
@@ -91,6 +92,7 @@
 		539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicUserAgentPluginTests.swift; sourceTree = "<group>"; };
 		539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticUserAgentPlugin.swift; sourceTree = "<group>"; };
 		539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticUserAgentPluginTests.swift; sourceTree = "<group>"; };
+		53C361512EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetATTTrackingStatusPlugin.swift; sourceTree = "<group>"; };
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCustomIntegrationPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -153,6 +155,7 @@
 				5328B86B2E3B48820051A202 /* EventFilteringPlugin.swift */,
 				5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */,
 				85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */,
+				53C361512EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift */,
 			);
 			path = CustomPlugins;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				539301A02E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift in Sources */,
 				535BB3EA2E04642400E1DAB0 /* ContentView.swift in Sources */,
 				535BB3EB2E04642400E1DAB0 /* BluetoothInfoPlugin.swift in Sources */,
+				53C361522EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift in Sources */,
 				5328B86C2E3B48820051A202 /* EventFilteringPlugin.swift in Sources */,
 				535BB3EC2E04642400E1DAB0 /* OptionPlugin.swift in Sources */,
 				535BB3ED2E04642400E1DAB0 /* AdvertisingIdPlugin.swift in Sources */,
