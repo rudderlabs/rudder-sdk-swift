@@ -36,6 +36,8 @@
 		53C361582EF3F3B300E566B8 /* SetATTTrackingStatusPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C361572EF3F3B300E566B8 /* SetATTTrackingStatusPluginTests.swift */; };
 		53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; };
 		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		53E687542EF9232200DF1FBD /* PersistenceMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E687532EF9232200DF1FBD /* PersistenceMigrator.swift */; };
+		53E687552EF9232200DF1FBD /* MigrationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E687522EF9232200DF1FBD /* MigrationUtils.swift */; };
 		85A10BC32EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */; };
 /* End PBXBuildFile section */
 
@@ -96,6 +98,8 @@
 		53C361512EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetATTTrackingStatusPlugin.swift; sourceTree = "<group>"; };
 		53C361572EF3F3B300E566B8 /* SetATTTrackingStatusPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetATTTrackingStatusPluginTests.swift; sourceTree = "<group>"; };
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		53E687522EF9232200DF1FBD /* MigrationUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationUtils.swift; sourceTree = "<group>"; };
+		53E687532EF9232200DF1FBD /* PersistenceMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceMigrator.swift; sourceTree = "<group>"; };
 		85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCustomIntegrationPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -185,6 +189,7 @@
 				535BB3E02E04642400E1DAB0 /* SwiftUIExampleApp.swift */,
 				535BB3DC2E04642400E1DAB0 /* ContentView.swift */,
 				535BB3DD2E04642400E1DAB0 /* CustomLogger.swift */,
+				53E687562EF9233000DF1FBD /* PersistenceMigrator */,
 				535BB3D52E04642400E1DAB0 /* CustomPlugins */,
 				535BB3D82E04642400E1DAB0 /* Managers */,
 				535BB3DA2E04642400E1DAB0 /* Preview Content */,
@@ -211,6 +216,15 @@
 				53C361572EF3F3B300E566B8 /* SetATTTrackingStatusPluginTests.swift */,
 			);
 			path = SwiftUIExampleTests;
+			sourceTree = "<group>";
+		};
+		53E687562EF9233000DF1FBD /* PersistenceMigrator */ = {
+			isa = PBXGroup;
+			children = (
+				53E687522EF9232200DF1FBD /* MigrationUtils.swift */,
+				53E687532EF9232200DF1FBD /* PersistenceMigrator.swift */,
+			);
+			path = PersistenceMigrator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -324,6 +338,8 @@
 				535BB3E82E04642400E1DAB0 /* CustomLogger.swift in Sources */,
 				535BB3E92E04642400E1DAB0 /* SetAnonymousIdPlugin.swift in Sources */,
 				539301A02E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift in Sources */,
+				53E687542EF9232200DF1FBD /* PersistenceMigrator.swift in Sources */,
+				53E687552EF9232200DF1FBD /* MigrationUtils.swift in Sources */,
 				535BB3EA2E04642400E1DAB0 /* ContentView.swift in Sources */,
 				535BB3EB2E04642400E1DAB0 /* BluetoothInfoPlugin.swift in Sources */,
 				53C361522EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift in Sources */,
