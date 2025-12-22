@@ -146,6 +146,7 @@ enum MigrationUtils {
          PersistenceKeys.legacyIsSessionAutoTrackEnabled,
          PersistenceKeys.legacyLastEventTimeStamp
         ].forEach { UserDefaults.standard.removeObject(forKey: $0) }
+        UserDefaults.standard.synchronize()
         
         print("MigrationUtils: Cleared legacy UserDefaults values")
     }

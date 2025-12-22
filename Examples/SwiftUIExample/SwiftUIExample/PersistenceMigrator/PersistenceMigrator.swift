@@ -13,6 +13,10 @@ import Foundation
  Reads legacy data from plist files or UserDefaults, then stores it in the new Swift SDK's UserDefaults suite.
  Handles anonymous ID, user ID, traits, and session data migration.
  
+ - Important: Call `restorePersistence()` only once during app initialization, before initializing the RudderStack SDK.
+ This method is not thread-safe for concurrent calls. Ensure it is called from a single location (e.g., in
+ `application(_:didFinishLaunchingWithOptions:)` or app initialization).
+ 
  Usage:
  ```swift
  let migrator = PersistenceMigrator(writeKey: "writeKey")
@@ -42,8 +46,8 @@ final class PersistenceMigrator {
     /**
      Reads legacy persistence data and migrates it to Swift SDK UserDefaults.
      
-     Checks plist file first, then UserDefaults fallback. Logs migration progress. Clear legacy values once restored.
-     Returns silently if no legacy data found.
+     Checks plist file first, then UserDefaults fallback. Logs migration progress. Clears legacy values after successful migration.
+     Returns without performing migration, if no legacy data found.
      */
     func restorePersistence() {
         let persistedValues = readPersistence()
@@ -81,14 +85,19 @@ final class PersistenceMigrator {
             if let encodedTraits = MigrationUtils.encodeJSONDict(traits) {
                 userDefaults.set(encodedTraits, forKey: PersistenceKeys.traitsKey)
                 print("PersistenceMigrator: Migrated user traits")
+            } else {
+                print("PersistenceMigrator: Failed to encode traits for migration, traits data will not migrated")
             }
         }
         
         // Migrate session-related values
         migrateSessionValues(from: persistedValues, to: userDefaults)
         
+        // Force synchronization to ensure migrated data is persisted to disk before clearing legacy data
+        userDefaults.synchronize()
         print("PersistenceMigrator: Successfully completed persistence migration for writeKey: \(writeKey)")
         
+        // Clear legacy data after successful migration
         MigrationUtils.clearLegacyData()
     }
     
@@ -130,7 +139,7 @@ private extension PersistenceMigrator {
     
     /**
      Attempts to read persisted values from UserDefaults.standard
-     - Returns: Dictionary of persisted values, empty if none found
+     - Returns: Dictionary of persisted values, or nil if none found
      */
     func readFromUserDefaults() -> [String: Any]? {
         guard let dict = MigrationUtils.readLegacyUserDefaults() else {
