@@ -57,6 +57,8 @@ final class SessionHandler {
         if self.sessionCofiguration.automaticSessionTracking {
             if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
                 self.startSession(id: Self.generatedSessionId, type: .automatic)
+            } else {
+                self.registerObserver()
             }
         } else if self.sessionId != nil, self.sessionType == .automatic {
             self.endSession()
