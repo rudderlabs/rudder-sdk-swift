@@ -309,7 +309,7 @@ struct SessionHandlerTests {
     
     @Test("given an existing valid automatic session, when calling startAutomaticSessionIfNeeded, then it should register the observer for lifecycle events")
     func testStartAutomaticSessionIfNeededRegistersObserverForExistingValidSession() {
-        let config = SessionConfiguration(sessionTimeoutInMillis: 5000)
+        let config = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 5000)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: config)
         let handler = SessionHandler(analytics: analytics)
 
