@@ -6,6 +6,7 @@
 //
 
 import Testing
+import Foundation
 @testable import RudderStackAnalytics
 
 @Suite("SessionHandler Tests")
@@ -53,7 +54,7 @@ struct SessionHandlerTests {
     }
     
     // MARK: - Session Management Tests
-
+    
     @Test("given a session configuration with automatic tracking enabled, when starting a session, then it should set the session ID and type correctly", arguments: [
         SessionHandlerTestCase(sessionId: 1234567890, sessionType: .manual),
         SessionHandlerTestCase(sessionId: 9876543210, sessionType: .automatic),
@@ -97,7 +98,7 @@ struct SessionHandlerTests {
         #expect(sessionHandler.isSessionStart == SessionConstants.defaultIsSessionStart)
         #expect(sessionHandler.sessionType == SessionConstants.defaultSessionType)
     }
-
+    
     @Test("given a session configuration with active session, when refreshing a session, then it should update the session ID and type correctly")
     func testRefreshSessionWithActiveSession() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
@@ -127,7 +128,7 @@ struct SessionHandlerTests {
     }
     
     // MARK: - Automatic Session Tests
-
+    
     @Test("given automatic session tracking enabled with no active session, when starting an automatic session, then it should create a new automatic session")
     func testStatAutomaticSessionWithNoSessionWhenTrackingEnabled() {
         let config = SessionConfiguration(automaticSessionTracking: true)
@@ -183,7 +184,7 @@ struct SessionHandlerTests {
     }
     
     // MARK: - Timeout and State Management Tests
-
+    
     @Test("given a session configuration with automatic tracking enabled, when testing session timeout, then it should correctly identify timeout states", arguments: [
         (5000, 6000, true),
         (10000, 5000, false),
@@ -199,7 +200,7 @@ struct SessionHandlerTests {
         
         #expect(sessionHandler.isSessionTimedOut == expectedTimedOut)
     }
-
+    
     @Test("given a session configuration with automatic tracking enabled, when updating the session start flag, then it should set the session start state correctly", arguments: [true, false])
     func testUpdateSessionStart(isSessionStart: Bool) {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
@@ -210,7 +211,7 @@ struct SessionHandlerTests {
         
         #expect(sessionHandler.isSessionStart == isSessionStart)
     }
-
+    
     @Test("given a session configuration with automatic tracking enabled, when updating the session activity time, then it should set the last activity time correctly")
     func testUpdateSessionActivityTime() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
@@ -231,7 +232,7 @@ struct SessionHandlerTests {
     }
     
     // MARK: - Integration Tests
-
+    
     @Test("given a session configuration with automatic tracking enabled, when completing the session lifecycle, then it should transition through all states correctly")
     func testCompleteSessionLifecycle() {
         let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 5000)
@@ -260,7 +261,7 @@ struct SessionHandlerTests {
         #expect(sessionHandler.sessionId == nil)
         #expect(sessionHandler.isSessionStart == SessionConstants.defaultIsSessionStart)
     }
-
+    
     @Test("given a session configuration with automatic tracking enabled, when testing session persistence across handler instances, then it should maintain session state correctly")
     func testSessionPersistence() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
@@ -277,7 +278,7 @@ struct SessionHandlerTests {
         #expect(sessionHandler2.sessionType == .manual)
         #expect(sessionHandler2.isSessionStart)
     }
-
+    
     @Test("given a session configuration with automatic tracking enabled, when testing session type transitions, then it should transition between manual and automatic types correctly")
     func testSessionTypeTransitions() {
         let configuration = SessionConfiguration(automaticSessionTracking: true)
@@ -304,6 +305,63 @@ struct SessionHandlerTests {
         // Should maintain automatic session
         #expect(sessionHandler.sessionType == .automatic)
         #expect(sessionHandler.sessionId != nil)
+    }
+    
+    @Test("given an existing valid automatic session, when calling startAutomaticSessionIfNeeded, then it should register the observer for lifecycle events")
+    func testStartAutomaticSessionIfNeededRegistersObserverForExistingValidSession() {
+        let config = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 5000)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: config)
+        let handler = SessionHandler(analytics: analytics)
+
+        // Start an automatic session first
+        let originalId: UInt64 = 1111111111
+        handler.startSession(id: originalId, type: .automatic)
+
+        // Update activity time to ensure session is not timed out
+        handler.updateSessionLastActivityTime()
+
+        // Verify session is valid and not timed out
+        #expect(handler.sessionId == originalId)
+        #expect(handler.sessionType == .automatic)
+        #expect(!handler.isSessionTimedOut)
+
+        // Deregister the observer to simulate state where session exists but observer is not registered
+        // This is the key: we need to verify that startAutomaticSessionIfNeeded() registers the observer
+        handler.deregisterObserver()
+
+        // Verify observer is deregistered by checking foreground event does NOT create a new session
+        let pastTime = handler.monotonicCurrentTime - 6000 // Beyond timeout
+        handler.updateSessionLastActivityTime(pastTime)
+        #expect(handler.isSessionTimedOut, "Session should be timed out")
+
+        // Trigger foreground event - observer is deregistered, so this should NOT create a new session
+        NotificationCenter.default.post(name: AppLifecycleEvent.foreground.notificationName, object: nil)
+        #expect(handler.sessionId == originalId, "Session ID should remain unchanged because observer is deregistered")
+
+        // Reset the session state for the actual test
+        handler.updateSessionLastActivityTime() // Make session valid again
+        #expect(!handler.isSessionTimedOut, "Session should not be timed out after activity update")
+
+        // Now call startAutomaticSessionIfNeeded - this should register the observer
+        // even though no new session is created
+        handler.startAutomaticSessionIfNeeded()
+
+        // Session should remain unchanged (no new session created)
+        #expect(handler.sessionId == originalId, "Session ID should remain unchanged for valid automatic session")
+        #expect(handler.sessionType == .automatic, "Session type should remain automatic")
+
+        // Now verify the observer was registered by startAutomaticSessionIfNeeded
+        // Simulate session timeout and foreground event
+        let newPastTime = handler.monotonicCurrentTime - 6000 // Beyond timeout
+        handler.updateSessionLastActivityTime(newPastTime)
+        #expect(handler.isSessionTimedOut, "Session should be timed out")
+
+        // Trigger foreground event - if observer is registered, this should create a new session
+        NotificationCenter.default.post(name: AppLifecycleEvent.foreground.notificationName, object: nil)
+
+        // Verify new session was created (proves observer was registered by startAutomaticSessionIfNeeded)
+        #expect(handler.sessionId != originalId, "New session should be created on foreground after timeout")
+        #expect(handler.sessionType == .automatic, "Session type should remain automatic")
     }
 }
 
