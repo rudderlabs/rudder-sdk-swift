@@ -86,7 +86,7 @@ final class PersistenceMigrator {
                 userDefaults.set(encodedTraits, forKey: PersistenceKeys.traitsKey)
                 print("PersistenceMigrator: Migrated user traits")
             } else {
-                print("PersistenceMigrator: Failed to encode traits for migration, traits data will not migrated")
+                print("PersistenceMigrator: Failed to encode traits for migration, traits data will not be migrated")
             }
         }
         
