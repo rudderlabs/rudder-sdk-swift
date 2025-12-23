@@ -33,6 +33,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
+        // Restore persistence from legacy storage if exists.
+        PersistenceMigrator(writeKey: "swift-sdk-write-key").restorePersistence()
+        
         self.permissionManager.requestPermissions([.idfa, .pushNotification, .bluetooth]) {
             print("All required permissions requested..")
             self.permissionsRequested = true
