@@ -1,295 +1,394 @@
 //
 //  PersistenceMigrator.swift
-//  MultiRSA
+//  SwiftUIExample
 //
 //  Created by Satheesh Kannan on 20/12/25.
 //
 
 import Foundation
 
+// MARK: - PersistenceMigrator
+
 /**
- A utility class for reading legacy Rudder SDK (iOS-V1) persistence data and migrating it to the new Swift SDK.
- 
- Reads legacy data from plist files or UserDefaults, then stores it in the new Swift SDK's UserDefaults suite.
- Handles anonymous ID, user ID, traits, and session data migration.
- 
- - Important: Call `restorePersistence()` only once during app initialization, before initializing the RudderStack SDK.
- This method is not thread-safe for concurrent calls. Ensure it is called from a single location (e.g., in
- `application(_:didFinishLaunchingWithOptions:)` or app initialization).
- 
- Usage:
+ Migrates persistence data from the legacy Rudder iOS SDK (V1) to the new Swift SDK.
+
+ This class reads data stored by the legacy SDK (from plist files or UserDefaults) and writes it
+ to the Swift SDK's UserDefaults suite. It handles migration of:
+ - Anonymous ID
+ - User ID
+ - User traits
+ - Session data
+ - Application version and build
+
+ ## Usage
+
+ Call `migrate()` once during app initialization, **before** initializing the RudderStack Swift SDK:
+
  ```swift
- let migrator = PersistenceMigrator(writeKey: "writeKey")
- migrator.restorePersistence()
+ // In AppDelegate or App init
+ let migrator = PersistenceMigrator(writeKey: "your_write_key")
+ migrator.migrate()
+
+ // Then initialize the Swift SDK
+ let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
+ let analytics = Analytics(configuration: config)
+ ```
+
+ ## Inspecting Legacy Data
+
+ Use `readLegacyData()` to inspect what data will be migrated:
+
+ ```swift
+ let migrator = PersistenceMigrator(writeKey: "your_write_key")
+ if let legacyData = migrator.readLegacyData() {
+     print("Data to migrate: \(legacyData)")
+ }
  ```
  */
-final class PersistenceMigrator {
-    
+public final class PersistenceMigrator {
+
     // MARK: - Properties
-    
-    /** The write key used to create the UserDefaults suite for the Swift SDK */
-    let writeKey: String
-    
+
+    /// The write key used to identify the Swift SDK's UserDefaults suite
+    private let writeKey: String
+
     // MARK: - Initialization
-    
+
     /**
-     Initializes the persistence migrator with the specified write key
-     
-     - Parameter writeKey: The write key for the analytics instance of Swift SDK
+     Creates a new persistence migrator.
+
+     - Parameter writeKey: The write key for your RudderStack Swift SDK instance
      */
-    init(writeKey: String) {
+    public init(writeKey: String) {
         self.writeKey = writeKey
     }
-    
+
     // MARK: - Public API
-    
+
     /**
-     Reads legacy persistence data and migrates it to Swift SDK UserDefaults.
+     Reads legacy SDK data without performing migration.
 
-     Checks plist file first, then UserDefaults fallback. Logs migration progress. Clears legacy values after successful migration.
-     Returns without performing migration, if no legacy data found.
+     Use this method to inspect what data will be migrated before calling `migrate()`.
+
+     - Returns: Dictionary containing legacy data, or `nil` if no legacy data exists.
+
+     The dictionary contains the following keys (if available):
+     - `anonymousId`: The anonymous ID (String)
+     - `userId`: The user ID (String)
+     - `traits`: User traits dictionary ([String: Any])
+     - `sessionId`: Session ID (UInt64)
+     - `lastActivityTime`: Last activity time in milliseconds (UInt64)
+     - `isManualSession`: Whether session tracking is manual (Bool)
+     - `applicationVersion`: The application version (String)
+     - `applicationBuild`: The application build number (String)
      */
-    func restorePersistence() {
-        // Phase 1: Read legacy data
-        guard let persistedValues = readPersistence(), !persistedValues.isEmpty else {
-            print("PersistenceMigrator: No persisted values found for migration")
-            return
+    public func readLegacyData() -> [String: Any]? {
+        guard let legacyData = extractLegacyData() else {
+            return nil
         }
-
-        guard let userDefaults = MigrationUtils.rudderSwiftDefaults(writeKey) else {
-            print("PersistenceMigrator: Failed to access Swift SDK UserDefaults for writeKey: \(writeKey)")
-            return
-        }
-
-        print("PersistenceMigrator: Found persisted values, beginning migration for writeKey: \(writeKey)")
-
-        // Phase 2: Migrate identity values
-        migrateAnonymousId(from: persistedValues, to: userDefaults)
-        migrateUserId(from: persistedValues, to: userDefaults)
-        migrateTraits(from: persistedValues, to: userDefaults)
-
-        // Phase 3: Migrate session values
-        migrateSessionValues(from: persistedValues, to: userDefaults)
-
-        // Phase 4: Finalize migration
-        finalizeMigration(userDefaults: userDefaults)
+        return legacyData.toDictionary()
     }
-    
+
     /**
-     Reads legacy persistence data from plist (preferred) or UserDefaults (fallback).
-     
-     - Returns: Dictionary containing the persisted values, or nil if none found
+     Migrates legacy SDK data to the Swift SDK.
+
+     This method:
+     1. Checks if Swift SDK storage already exists (aborts if so)
+     2. Reads legacy data from plist file or UserDefaults
+     3. Transforms and writes data to the Swift SDK's storage
+     4. Clears legacy data after successful migration
+
+     Safe to call multiple times - returns early if Swift SDK data or no legacy data exists.
      */
-    func readPersistence() -> [String: Any]? {
-        // Try plist first, then UserDefaults fallback
-        if let plistValues = readFromPlist() {
-            print("PersistenceMigrator: Found persisted values in plist file for writeKey: \(writeKey)")
-            return plistValues
+    public func migrate() {
+        guard !MigrationUtils.isSwiftDefaultsAvailable(writeKey) else {
+            log("Swift SDK storage already exists, skipping migration")
+            return
         }
-        
-        if let userDefaultsValues = readFromUserDefaults() {
-            print("PersistenceMigrator: Found persisted values in UserDefaults for writeKey: \(writeKey)")
-            return userDefaultsValues
+
+        guard let legacyData = extractLegacyData() else {
+            log("No legacy data found, skipping migration")
+            return
         }
-        
-        print("PersistenceMigrator: No persisted values found in plist or UserDefaults for writeKey: \(writeKey)")
-        return nil
+
+        guard let targetDefaults = MigrationUtils.rudderSwiftDefaults(writeKey) else {
+            log("Failed to access Swift SDK storage for writeKey: \(writeKey)")
+            return
+        }
+
+        log("Starting migration for writeKey: \(writeKey)")
+
+        writeMigratedData(legacyData, to: targetDefaults)
+        completeMigration(targetDefaults)
     }
 }
 
 // MARK: - Reading Legacy Data
+
 private extension PersistenceMigrator {
-    
-    /**
-     Attempts to read persisted values from the legacy plist file
-     - Returns: Dictionary of persisted values, or nil if plist doesn't exist or can't be read
-     */
-    func readFromPlist() -> [String: Any]? {
+
+    /// Extracts legacy data from plist file (preferred) or UserDefaults (fallback)
+    func extractLegacyData() -> LegacyData? {
+        if let plistData = readFromPlist() {
+            log("Found legacy data in plist file")
+            return plistData
+        }
+
+        if let userDefaultsData = readFromUserDefaults() {
+            log("Found legacy data in UserDefaults")
+            return userDefaultsData
+        }
+
+        return nil
+    }
+
+    /// Reads and extracts legacy data from plist file
+    func readFromPlist() -> LegacyData? {
         guard let dict = MigrationUtils.readPlist() else {
             return nil
         }
-        return extractValuesFromDictionary(dict)
+        return extractLegacyData(from: dict)
     }
-    
-    /**
-     Attempts to read persisted values from UserDefaults.standard
-     - Returns: Dictionary of persisted values, or nil if none found
-     */
-    func readFromUserDefaults() -> [String: Any]? {
+
+    /// Reads and extracts legacy data from UserDefaults
+    func readFromUserDefaults() -> LegacyData? {
         guard let dict = MigrationUtils.readLegacyUserDefaults() else {
             return nil
         }
-        return extractValuesFromDictionary(dict)
-    }
-    
-    /**
-     Extracts and transforms values from a source dictionary
-     - Parameter dict: Source dictionary containing legacy values
-     - Returns: Dictionary of transformed values, or nil if no values found
-     */
-    func extractValuesFromDictionary(_ dict: [String: Any]) -> [String: Any]? {
-        var result: [String: Any] = [:]
-        
-        // Extract anonymous ID
-        if let anonymousId = dict[PersistenceKeys.legacyAnonymousIdKey] as? String {
-            result[PersistenceKeys.anonymousIdKey] = anonymousId
-        }
-        
-        // Extract traits (stored as JSON string)
-        if let traitsJsonString = dict[PersistenceKeys.legacyTraitsKey] as? String {
-            if let traits = MigrationUtils.decodeJSONDict(from: traitsJsonString) {
-                result[PersistenceKeys.traitsKey] = traits
-
-                // Extract user ID from within traits
-                if let userId = traits[PersistenceKeys.legacyUserIdKey] as? String {
-                    result[PersistenceKeys.userIdKey] = userId
-                }
-            } else {
-                print("PersistenceMigrator: Failed to decode traits JSON, userId embedded in traits will not be extracted")
-            }
-        }
-        
-        // Extract session-related values
-        extractSessionValues(from: dict, into: &result)
-        
-        return result.isEmpty ? nil : result
-    }
-    
-    /**
-     Extracts session-related values from dictionary
-     - Parameters:
-     - dict: Source dictionary containing legacy session values
-     - result: Inout dictionary to store extracted values
-     */
-    func extractSessionValues(from dict: [String: Any], into result: inout [String: Any]) {
-        // Extract session ID (required for all session migration)
-        guard let sessionIdNumber = dict[PersistenceKeys.legacySessionId] as? NSNumber else {
-            print("PersistenceMigrator: No legacy session ID found in dictionary, skipping session migration")
-            return
-        }
-        
-        // Extract and convert lastEventTimeStamp to lastActivityTime
-        if let lastEventTimeNumber = dict[PersistenceKeys.legacyLastEventTimeStamp] as? NSNumber {
-            let lastEventTime = lastEventTimeNumber.doubleValue
-            
-            guard let convertedTime = MigrationUtils.convertTimestampToSystemUptime(lastEventTime) else {
-                print("PersistenceMigrator: Failed to convert lastEventTimeStamp from dictionary, skipping session migration")
-                return
-            }
-            result[PersistenceKeys.lastActivityTime] = convertedTime
-        }
-        
-        result[PersistenceKeys.sessionId] = sessionIdNumber.uint64Value
-        
-        // Extract and convert isSessionAutoTrackEnabled to isManualSession
-        if let isAutoTrackNumber = dict[PersistenceKeys.legacyIsSessionAutoTrackEnabled] as? NSNumber {
-            let isAutoTrack = isAutoTrackNumber.boolValue
-            result[PersistenceKeys.isManualSession] = !isAutoTrack
-        }
+        return extractLegacyData(from: dict)
     }
 }
 
-// MARK: - Migration Helpers
+// MARK: - Extracting Legacy Values
+
 private extension PersistenceMigrator {
 
-    /**
-     Migrates anonymous ID from persisted data to Swift SDK UserDefaults
-     - Parameters:
-       - persistedValues: Dictionary containing the persisted values
-       - userDefaults: Target UserDefaults instance for Swift SDK
-     */
-    func migrateAnonymousId(from persistedValues: [String: Any], to userDefaults: UserDefaults) {
-        guard let anonymousId = persistedValues[PersistenceKeys.anonymousIdKey] as? String else {
-            return
+    /// Extracts all legacy values from a source dictionary into a structured format
+    func extractLegacyData(from dict: [String: Any]) -> LegacyData? {
+        let anonymousId = extractAnonymousId(from: dict)
+        let (userId, traits) = extractUserIdAndTraits(from: dict)
+        let sessionData = extractSessionData(from: dict)
+        let applicationData = extractApplicationData(from: dict)
+
+        // Return nil if no data was extracted
+        if anonymousId == nil && userId == nil && traits == nil && sessionData == nil && applicationData == nil {
+            return nil
         }
-        userDefaults.set(anonymousId, forKey: PersistenceKeys.anonymousIdKey)
-        print("PersistenceMigrator: Migrated anonymous ID")
+
+        return LegacyData(
+            anonymousId: anonymousId,
+            userId: userId,
+            traits: traits,
+            sessionData: sessionData,
+            applicationData: applicationData
+        )
     }
 
-    /**
-     Migrates user ID from persisted data to Swift SDK UserDefaults
-     - Parameters:
-       - persistedValues: Dictionary containing the persisted values
-       - userDefaults: Target UserDefaults instance for Swift SDK
-     */
-    func migrateUserId(from persistedValues: [String: Any], to userDefaults: UserDefaults) {
-        guard let userId = persistedValues[PersistenceKeys.userIdKey] as? String else {
-            return
-        }
-        userDefaults.set(userId, forKey: PersistenceKeys.userIdKey)
-        print("PersistenceMigrator: Migrated user ID")
+    /// Extracts anonymous ID from legacy storage
+    func extractAnonymousId(from dict: [String: Any]) -> String? {
+        return dict[PersistenceKeys.legacyAnonymousIdKey] as? String
     }
 
-    /**
-     Migrates user traits from persisted data to Swift SDK UserDefaults
-     - Parameters:
-       - persistedValues: Dictionary containing the persisted values
-       - userDefaults: Target UserDefaults instance for Swift SDK
-     */
-    func migrateTraits(from persistedValues: [String: Any], to userDefaults: UserDefaults) {
-        guard var traits = persistedValues[PersistenceKeys.traitsKey] as? [String: Any] else {
-            return
+    /// Extracts user ID and traits from legacy storage
+    /// Note: User ID is stored within the traits JSON in the legacy SDK
+    func extractUserIdAndTraits(from dict: [String: Any]) -> (userId: String?, traits: [String: Any]?) {
+        guard let traitsJson = dict[PersistenceKeys.legacyTraitsKey] as? String else {
+            return (nil, nil)
         }
 
-        // Remove user ID and anonymous ID from traits as they are stored separately
+        guard let traits = MigrationUtils.decodeJSONDict(from: traitsJson) else {
+            log("Failed to decode traits JSON - userId and traits will not be migrated")
+            return (nil, nil)
+        }
+
+        let userId = traits[PersistenceKeys.legacyUserIdKey] as? String
+        return (userId, traits)
+    }
+
+    /// Extracts session-related data from legacy storage
+    func extractSessionData(from dict: [String: Any]) -> SessionData? {
+        guard let sessionIdNumber = dict[PersistenceKeys.legacySessionId] as? NSNumber else {
+            log("No active session details found.")
+            return nil
+        }
+        
+        guard let lastActivityTime = extractLastActivityTime(from: dict) else {
+            log("Unable to extract last activity time from the legacy value. Aborting session details migration.")
+            return nil
+        }
+
+        let isManualSession = extractIsManualSession(from: dict)
+
+        return SessionData(
+            sessionId: sessionIdNumber.uint64Value,
+            lastActivityTime: lastActivityTime,
+            isManualSession: isManualSession
+        )
+    }
+
+    /// Extracts and converts last activity time from legacy timestamp format
+    func extractLastActivityTime(from dict: [String: Any]) -> UInt64? {
+        guard let timestampNumber = dict[PersistenceKeys.legacyLastEventTimeStamp] as? NSNumber else {
+            return nil
+        }
+
+        guard let convertedTime = MigrationUtils.convertTimestampToSystemUptime(timestampNumber.doubleValue) else {
+            log("Failed to convert lastEventTimeStamp - session timing may be affected")
+            return nil
+        }
+
+        return convertedTime
+    }
+
+    /// Extracts and inverts the auto-track flag to get manual session setting
+    func extractIsManualSession(from dict: [String: Any]) -> Bool? {
+        guard let isAutoTrack = dict[PersistenceKeys.legacyIsSessionAutoTrackEnabled] as? NSNumber else {
+            return nil
+        }
+        return !isAutoTrack.boolValue
+    }
+
+    /// Extracts application version and build from legacy storage
+    func extractApplicationData(from dict: [String: Any]) -> ApplicationData? {
+        let version = dict[PersistenceKeys.legacyApplicationVersion] as? String
+        let build = dict[PersistenceKeys.legacyApplicationBuild] as? String
+
+        // Return nil if neither value exists
+        guard version != nil || build != nil else {
+            return nil
+        }
+
+        return ApplicationData(version: version, build: build)
+    }
+}
+
+// MARK: - Writing Migrated Data
+
+private extension PersistenceMigrator {
+
+    /// Writes all migrated data to Swift SDK storage
+    func writeMigratedData(_ data: LegacyData, to defaults: UserDefaults) {
+        writeAnonymousId(data.anonymousId, to: defaults)
+        writeUserId(data.userId, to: defaults)
+        writeTraits(data.traits, to: defaults)
+        writeSessionData(data.sessionData, to: defaults)
+        writeApplicationData(data.applicationData, to: defaults)
+    }
+
+    /// Writes anonymous ID to Swift SDK storage
+    func writeAnonymousId(_ anonymousId: String?, to defaults: UserDefaults) {
+        guard let anonymousId = anonymousId else { return }
+
+        defaults.set(anonymousId, forKey: PersistenceKeys.anonymousIdKey)
+        log("Migrated anonymous ID")
+    }
+
+    /// Writes user ID to Swift SDK storage
+    func writeUserId(_ userId: String?, to defaults: UserDefaults) {
+        guard let userId = userId else { return }
+
+        defaults.set(userId, forKey: PersistenceKeys.userIdKey)
+        log("Migrated user ID")
+    }
+
+    /// Writes traits to Swift SDK storage (excluding userId and anonymousId which are stored separately)
+    func writeTraits(_ traits: [String: Any]?, to defaults: UserDefaults) {
+        guard var traits = traits else { return }
+
+        // Remove IDs from traits - they are stored separately in Swift SDK
         traits.removeValue(forKey: PersistenceKeys.traitsAnonymousIdKey)
         traits.removeValue(forKey: PersistenceKeys.traitsUserIdKey)
 
         guard let encodedTraits = MigrationUtils.encodeJSONDict(traits) else {
-            print("PersistenceMigrator: Failed to encode traits for migration, traits data will not be migrated")
+            log("Failed to encode traits - traits will not be migrated")
             return
         }
 
-        userDefaults.set(encodedTraits, forKey: PersistenceKeys.traitsKey)
-        print("PersistenceMigrator: Migrated user traits")
+        defaults.set(encodedTraits, forKey: PersistenceKeys.traitsKey)
+        log("Migrated user traits")
     }
 
-    /**
-     Migrates session-related values from persisted data to Swift SDK UserDefaults
-     - Parameters:
-       - persistedValues: Dictionary containing the persisted values
-       - userDefaults: Target UserDefaults instance for Swift SDK
-     */
-    func migrateSessionValues(from persistedValues: [String: Any], to userDefaults: UserDefaults) {
-        // Check if session ID exists first - this is required for all session migration
-        guard let sessionId = persistedValues[PersistenceKeys.sessionId] as? UInt64 else {
-            print("PersistenceMigrator: No session ID found, skipping session migration")
-            return
-        }
-        
-        print("PersistenceMigrator: Migrating session values")
-        
-        // Migrate session ID
-        userDefaults.set(String(sessionId), forKey: PersistenceKeys.sessionId)
-        print("PersistenceMigrator: Migrated session ID: \(sessionId)")
-        
-        // Migrate isManualSession (toggled value of legacyIsSessionAutoTrackEnabled)
-        if let isManualSession = persistedValues[PersistenceKeys.isManualSession] as? Bool {
-            userDefaults.set(isManualSession, forKey: PersistenceKeys.isManualSession)
-            print("PersistenceMigrator: Migrated isManualSession: \(isManualSession)")
-        }
-        
-        // Set isSessionStart to false, since the session is being restored
-        userDefaults.set(false, forKey: PersistenceKeys.isSessionStart)
-        print("PersistenceMigrator: Set isSessionStart to false")
-        
-        // Migrate lastActivityTime
-        if let lastActivityTime = persistedValues[PersistenceKeys.lastActivityTime] as? UInt64 {
-            userDefaults.set(String(lastActivityTime), forKey: PersistenceKeys.lastActivityTime)
-            print("PersistenceMigrator: Migrated lastActivityTime: \(lastActivityTime)")
-        }
+    /// Writes session data to Swift SDK storage
+    func writeSessionData(_ sessionData: SessionData?, to defaults: UserDefaults) {
+        guard let sessionData = sessionData else { return }
+
+        writeSessionId(sessionData.sessionId, to: defaults)
+        writeIsManualSession(sessionData.isManualSession, to: defaults)
+        writeLastActivityTime(sessionData.lastActivityTime, to: defaults)
+        writeSessionStartFlag(to: defaults)
     }
 
-    /**
-     Finalizes the migration by synchronizing UserDefaults and clearing legacy data
-     - Parameter userDefaults: The UserDefaults instance to synchronize
-     */
-    func finalizeMigration(userDefaults: UserDefaults) {
-        // Force synchronization to ensure migrated data is persisted to disk before clearing legacy data
-        userDefaults.synchronize()
-        print("PersistenceMigrator: Successfully completed persistence migration for writeKey: \(writeKey)")
+    /// Writes session ID to Swift SDK storage
+    func writeSessionId(_ sessionId: UInt64, to defaults: UserDefaults) {
+        defaults.set(String(sessionId), forKey: PersistenceKeys.sessionId)
+        log("Migrated session ID: \(sessionId)")
+    }
 
-        // Clear legacy data after successful migration
+    /// Writes manual session flag to Swift SDK storage
+    func writeIsManualSession(_ isManualSession: Bool?, to defaults: UserDefaults) {
+        guard let isManualSession = isManualSession else { return }
+
+        defaults.set(isManualSession, forKey: PersistenceKeys.isManualSession)
+        log("Migrated isManualSession: \(isManualSession)")
+    }
+
+    /// Writes last activity time to Swift SDK storage
+    func writeLastActivityTime(_ lastActivityTime: UInt64?, to defaults: UserDefaults) {
+        guard let lastActivityTime = lastActivityTime else { return }
+
+        defaults.set(String(lastActivityTime), forKey: PersistenceKeys.lastActivityTime)
+        log("Migrated lastActivityTime: \(lastActivityTime)")
+    }
+
+    /// Marks session as not starting (since we're restoring an existing session)
+    func writeSessionStartFlag(to defaults: UserDefaults) {
+        defaults.set(false, forKey: PersistenceKeys.isSessionStart)
+        log("Set isSessionStart to false")
+    }
+
+    /// Writes application data to Swift SDK storage
+    func writeApplicationData(_ applicationData: ApplicationData?, to defaults: UserDefaults) {
+        guard let applicationData = applicationData else { return }
+
+        writeApplicationVersion(applicationData.version, to: defaults)
+        writeApplicationBuild(applicationData.build, to: defaults)
+    }
+
+    /// Writes application version to Swift SDK storage
+    func writeApplicationVersion(_ version: String?, to defaults: UserDefaults) {
+        guard let version = version else { return }
+
+        defaults.set(version, forKey: PersistenceKeys.applicationVersion)
+        log("Migrated application version: \(version)")
+    }
+
+    /// Writes application build to Swift SDK storage (converts String to Int)
+    func writeApplicationBuild(_ build: String?, to defaults: UserDefaults) {
+        guard let build = build, let buildNumber = Int(build) else { return }
+
+        defaults.set(buildNumber, forKey: PersistenceKeys.applicationBuild)
+        log("Migrated application build: \(buildNumber)")
+    }
+}
+
+// MARK: - Migration Completion
+
+private extension PersistenceMigrator {
+
+    /// Completes migration by persisting changes and clearing legacy data
+    func completeMigration(_ defaults: UserDefaults) {
+        defaults.synchronize()
         MigrationUtils.clearLegacyData()
+        log("Migration completed successfully")
+    }
+}
+
+// MARK: - Logging
+
+private extension PersistenceMigrator {
+
+    /// Logs a message with the PersistenceMigrator prefix
+    func log(_ message: String) {
+        print("PersistenceMigrator: \(message)")
     }
 }

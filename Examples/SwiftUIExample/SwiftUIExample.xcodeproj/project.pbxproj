@@ -38,6 +38,7 @@
 		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53E687542EF9232200DF1FBD /* PersistenceMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E687532EF9232200DF1FBD /* PersistenceMigrator.swift */; };
 		53E687552EF9232200DF1FBD /* MigrationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E687522EF9232200DF1FBD /* MigrationUtils.swift */; };
+		53E687642EFA8DBF00DF1FBD /* LegacyDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E687632EFA8DBF00DF1FBD /* LegacyDataModel.swift */; };
 		85A10BC32EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */; };
 /* End PBXBuildFile section */
 
@@ -100,6 +101,7 @@
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E687522EF9232200DF1FBD /* MigrationUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationUtils.swift; sourceTree = "<group>"; };
 		53E687532EF9232200DF1FBD /* PersistenceMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceMigrator.swift; sourceTree = "<group>"; };
+		53E687632EFA8DBF00DF1FBD /* LegacyDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyDataModel.swift; sourceTree = "<group>"; };
 		85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCustomIntegrationPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -223,6 +225,7 @@
 			children = (
 				53E687522EF9232200DF1FBD /* MigrationUtils.swift */,
 				53E687532EF9232200DF1FBD /* PersistenceMigrator.swift */,
+				53E687632EFA8DBF00DF1FBD /* LegacyDataModel.swift */,
 			);
 			path = PersistenceMigrator;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 				53E687552EF9232200DF1FBD /* MigrationUtils.swift in Sources */,
 				535BB3EA2E04642400E1DAB0 /* ContentView.swift in Sources */,
 				535BB3EB2E04642400E1DAB0 /* BluetoothInfoPlugin.swift in Sources */,
+				53E687642EFA8DBF00DF1FBD /* LegacyDataModel.swift in Sources */,
 				53C361522EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift in Sources */,
 				5328B86C2E3B48820051A202 /* EventFilteringPlugin.swift in Sources */,
 				535BB3EC2E04642400E1DAB0 /* OptionPlugin.swift in Sources */,

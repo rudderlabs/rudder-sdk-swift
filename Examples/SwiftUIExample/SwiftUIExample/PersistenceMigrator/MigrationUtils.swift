@@ -1,6 +1,6 @@
 //
 //  MigrationUtils.swift
-//  MultiRSA
+//  SwiftUIExampleApp
 //
 //  Created by Satheesh Kannan on 20/12/25.
 //
@@ -14,16 +14,31 @@ import Foundation
 enum MigrationUtils {
     
     // MARK: - UserDefaults
-    
+
     /**
      Creates a UserDefaults instance for the new Swift SDK
      - Parameter writeKey: The write key for the analytics instance
      - Returns: UserDefaults instance with the appropriate suite name, or nil if bundle identifier unavailable
      */
     static func rudderSwiftDefaults(_ writeKey: String) -> UserDefaults? {
-        guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return nil }
-        let suiteName = bundleIdentifier + ".analytics." + writeKey
+        guard let suiteName = swiftSuiteName(for: writeKey) else { return nil }
         return UserDefaults(suiteName: suiteName)
+    }
+
+    /**
+     Checks if the Swift SDK UserDefaults suite exists
+     - Parameter writeKey: The write key for the analytics instance
+     - Returns: True if the UserDefaults suite exists, false otherwise
+     */
+    static func isSwiftDefaultsAvailable(_ writeKey: String) -> Bool {
+        guard let suiteName = swiftSuiteName(for: writeKey) else { return false }
+        return UserDefaults.standard.persistentDomain(forName: suiteName) != nil
+    }
+
+    /// Generates the UserDefaults suite name for the Swift SDK
+    private static func swiftSuiteName(for writeKey: String) -> String? {
+        guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return nil }
+        return "\(bundleIdentifier).analytics.\(writeKey)"
     }
     
     // MARK: - JSON Encoding/Decoding
@@ -232,6 +247,9 @@ enum PersistenceKeys {
     static let legacyLastEventTimeStamp = "rl_last_event_time_stamp"
     static let legacyIsSessionAutoTrackEnabled = "rl_session_auto_track_status"
     
+    static let legacyApplicationVersion = "rl_application_version_key"
+    static let legacyApplicationBuild = "rl_application_build_key"
+    
     // Keys that may exist within traits dictionary
     static let traitsUserIdKey = "userId"
     static let traitsAnonymousIdKey = "anonymousId"
@@ -245,4 +263,7 @@ enum PersistenceKeys {
     static let isManualSession = "is_manual_session"
     static let isSessionStart = "is_session_start"
     static let lastActivityTime = "last_activity_time"
+    
+    static let applicationVersion = "rudder.app_version"
+    static let applicationBuild = "rudder.app_build"
 }
