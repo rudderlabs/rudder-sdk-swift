@@ -27,7 +27,7 @@ final class PersistenceMigrator {
     
     // MARK: - Properties
     
-    /** The write key used to identify the analytics instance */
+    /** The write key used to create the UserDefaults suite for the Swift SDK */
     let writeKey: String
     
     // MARK: - Initialization
@@ -35,7 +35,7 @@ final class PersistenceMigrator {
     /**
      Initializes the persistence migrator with the specified write key
      
-     - Parameter writeKey: The write key for the analytics instance
+     - Parameter writeKey: The write key for the analytics instance of Swift SDK
      */
     init(writeKey: String) {
         self.writeKey = writeKey
@@ -45,60 +45,34 @@ final class PersistenceMigrator {
     
     /**
      Reads legacy persistence data and migrates it to Swift SDK UserDefaults.
-     
+
      Checks plist file first, then UserDefaults fallback. Logs migration progress. Clears legacy values after successful migration.
      Returns without performing migration, if no legacy data found.
      */
     func restorePersistence() {
-        let persistedValues = readPersistence()
-        
-        guard let persistedValues = persistedValues, !persistedValues.isEmpty else {
+        // Phase 1: Read legacy data
+        guard let persistedValues = readPersistence(), !persistedValues.isEmpty else {
             print("PersistenceMigrator: No persisted values found for migration")
             return
         }
-        
+
         guard let userDefaults = MigrationUtils.rudderSwiftDefaults(writeKey) else {
             print("PersistenceMigrator: Failed to access Swift SDK UserDefaults for writeKey: \(writeKey)")
             return
         }
-        
+
         print("PersistenceMigrator: Found persisted values, beginning migration for writeKey: \(writeKey)")
-        
-        // Migrate anonymous ID
-        if let anonymousId = persistedValues[PersistenceKeys.anonymousIdKey] as? String {
-            userDefaults.set(anonymousId, forKey: PersistenceKeys.anonymousIdKey)
-            print("PersistenceMigrator: Migrated anonymous ID")
-        }
-        
-        // Migrate user ID
-        if let userId = persistedValues[PersistenceKeys.userIdKey] as? String {
-            userDefaults.set(userId, forKey: PersistenceKeys.userIdKey)
-            print("PersistenceMigrator: Migrated user ID")
-        }
-        
-        // Migrate traits
-        if var traits = persistedValues[PersistenceKeys.traitsKey] as? [String: Any] {
-            // Remove user ID and anonymous ID from traits as they are stored separately
-            traits.removeValue(forKey: PersistenceKeys.traitsAnonymousIdKey)
-            traits.removeValue(forKey: PersistenceKeys.traitsUserIdKey)
-            
-            if let encodedTraits = MigrationUtils.encodeJSONDict(traits) {
-                userDefaults.set(encodedTraits, forKey: PersistenceKeys.traitsKey)
-                print("PersistenceMigrator: Migrated user traits")
-            } else {
-                print("PersistenceMigrator: Failed to encode traits for migration, traits data will not be migrated")
-            }
-        }
-        
-        // Migrate session-related values
+
+        // Phase 2: Migrate identity values
+        migrateAnonymousId(from: persistedValues, to: userDefaults)
+        migrateUserId(from: persistedValues, to: userDefaults)
+        migrateTraits(from: persistedValues, to: userDefaults)
+
+        // Phase 3: Migrate session values
         migrateSessionValues(from: persistedValues, to: userDefaults)
-        
-        // Force synchronization to ensure migrated data is persisted to disk before clearing legacy data
-        userDefaults.synchronize()
-        print("PersistenceMigrator: Successfully completed persistence migration for writeKey: \(writeKey)")
-        
-        // Clear legacy data after successful migration
-        MigrationUtils.clearLegacyData()
+
+        // Phase 4: Finalize migration
+        finalizeMigration(userDefaults: userDefaults)
     }
     
     /**
@@ -162,12 +136,16 @@ private extension PersistenceMigrator {
         }
         
         // Extract traits (stored as JSON string)
-        if let traits = MigrationUtils.decodeJSONDict(from: dict[PersistenceKeys.legacyTraitsKey] as? String) {
-            result[PersistenceKeys.traitsKey] = traits
-            
-            // Extract user ID from within traits
-            if let userId = traits[PersistenceKeys.legacyUserIdKey] as? String {
-                result[PersistenceKeys.userIdKey] = userId
+        if let traitsJsonString = dict[PersistenceKeys.legacyTraitsKey] as? String {
+            if let traits = MigrationUtils.decodeJSONDict(from: traitsJsonString) {
+                result[PersistenceKeys.traitsKey] = traits
+
+                // Extract user ID from within traits
+                if let userId = traits[PersistenceKeys.legacyUserIdKey] as? String {
+                    result[PersistenceKeys.userIdKey] = userId
+                }
+            } else {
+                print("PersistenceMigrator: Failed to decode traits JSON, userId embedded in traits will not be extracted")
             }
         }
         
@@ -213,12 +191,64 @@ private extension PersistenceMigrator {
 
 // MARK: - Migration Helpers
 private extension PersistenceMigrator {
-    
+
+    /**
+     Migrates anonymous ID from persisted data to Swift SDK UserDefaults
+     - Parameters:
+       - persistedValues: Dictionary containing the persisted values
+       - userDefaults: Target UserDefaults instance for Swift SDK
+     */
+    func migrateAnonymousId(from persistedValues: [String: Any], to userDefaults: UserDefaults) {
+        guard let anonymousId = persistedValues[PersistenceKeys.anonymousIdKey] as? String else {
+            return
+        }
+        userDefaults.set(anonymousId, forKey: PersistenceKeys.anonymousIdKey)
+        print("PersistenceMigrator: Migrated anonymous ID")
+    }
+
+    /**
+     Migrates user ID from persisted data to Swift SDK UserDefaults
+     - Parameters:
+       - persistedValues: Dictionary containing the persisted values
+       - userDefaults: Target UserDefaults instance for Swift SDK
+     */
+    func migrateUserId(from persistedValues: [String: Any], to userDefaults: UserDefaults) {
+        guard let userId = persistedValues[PersistenceKeys.userIdKey] as? String else {
+            return
+        }
+        userDefaults.set(userId, forKey: PersistenceKeys.userIdKey)
+        print("PersistenceMigrator: Migrated user ID")
+    }
+
+    /**
+     Migrates user traits from persisted data to Swift SDK UserDefaults
+     - Parameters:
+       - persistedValues: Dictionary containing the persisted values
+       - userDefaults: Target UserDefaults instance for Swift SDK
+     */
+    func migrateTraits(from persistedValues: [String: Any], to userDefaults: UserDefaults) {
+        guard var traits = persistedValues[PersistenceKeys.traitsKey] as? [String: Any] else {
+            return
+        }
+
+        // Remove user ID and anonymous ID from traits as they are stored separately
+        traits.removeValue(forKey: PersistenceKeys.traitsAnonymousIdKey)
+        traits.removeValue(forKey: PersistenceKeys.traitsUserIdKey)
+
+        guard let encodedTraits = MigrationUtils.encodeJSONDict(traits) else {
+            print("PersistenceMigrator: Failed to encode traits for migration, traits data will not be migrated")
+            return
+        }
+
+        userDefaults.set(encodedTraits, forKey: PersistenceKeys.traitsKey)
+        print("PersistenceMigrator: Migrated user traits")
+    }
+
     /**
      Migrates session-related values from persisted data to Swift SDK UserDefaults
      - Parameters:
-     - persistedValues: Dictionary containing the persisted values
-     - userDefaults: Target UserDefaults instance for Swift SDK
+       - persistedValues: Dictionary containing the persisted values
+       - userDefaults: Target UserDefaults instance for Swift SDK
      */
     func migrateSessionValues(from persistedValues: [String: Any], to userDefaults: UserDefaults) {
         // Check if session ID exists first - this is required for all session migration
@@ -248,5 +278,18 @@ private extension PersistenceMigrator {
             userDefaults.set(String(lastActivityTime), forKey: PersistenceKeys.lastActivityTime)
             print("PersistenceMigrator: Migrated lastActivityTime: \(lastActivityTime)")
         }
+    }
+
+    /**
+     Finalizes the migration by synchronizing UserDefaults and clearing legacy data
+     - Parameter userDefaults: The UserDefaults instance to synchronize
+     */
+    func finalizeMigration(userDefaults: UserDefaults) {
+        // Force synchronization to ensure migrated data is persisted to disk before clearing legacy data
+        userDefaults.synchronize()
+        print("PersistenceMigrator: Successfully completed persistence migration for writeKey: \(writeKey)")
+
+        // Clear legacy data after successful migration
+        MigrationUtils.clearLegacyData()
     }
 }
