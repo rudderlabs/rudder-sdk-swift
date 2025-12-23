@@ -22,12 +22,12 @@ import Foundation
 
  ## Usage
 
- Call `migrate()` once during app initialization, **before** initializing the RudderStack Swift SDK:
+ Call `restorePersistence()` once during app initialization, **before** initializing the RudderStack Swift SDK:
 
  ```swift
  // In AppDelegate or App init
  let migrator = PersistenceMigrator(writeKey: "your_write_key")
- migrator.migrate()
+ migrator.restorePersistence()
 
  // Then initialize the Swift SDK
  let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
@@ -36,11 +36,11 @@ import Foundation
 
  ## Inspecting Legacy Data
 
- Use `readLegacyData()` to inspect what data will be migrated:
+ Use `readPersistence()` to inspect what data will be migrated:
 
  ```swift
  let migrator = PersistenceMigrator(writeKey: "your_write_key")
- if let legacyData = migrator.readLegacyData() {
+ if let legacyData = migrator.readPersistence() {
      print("Data to migrate: \(legacyData)")
  }
  ```
@@ -66,9 +66,9 @@ public final class PersistenceMigrator {
     // MARK: - Public API
 
     /**
-     Reads legacy SDK data without performing migration.
+     Reads legacy SDK persistence data without performing migration.
 
-     Use this method to inspect what data will be migrated before calling `migrate()`.
+     Use this method to inspect what data will be migrated before calling `restorePersistence()`.
 
      - Returns: Dictionary containing legacy data, or `nil` if no legacy data exists.
 
@@ -82,7 +82,7 @@ public final class PersistenceMigrator {
      - `applicationVersion`: The application version (String)
      - `applicationBuild`: The application build number (String)
      */
-    public func readLegacyData() -> [String: Any]? {
+    public func readPersistence() -> [String: Any]? {
         guard let legacyData = extractLegacyData() else {
             return nil
         }
@@ -90,7 +90,7 @@ public final class PersistenceMigrator {
     }
 
     /**
-     Migrates legacy SDK data to the Swift SDK.
+     Restores legacy SDK persistence data to the Swift SDK.
 
      This method:
      1. Checks if Swift SDK storage already exists (aborts if so)
@@ -100,7 +100,7 @@ public final class PersistenceMigrator {
 
      Safe to call multiple times - returns early if Swift SDK data or no legacy data exists.
      */
-    public func migrate() {
+    public func restorePersistence() {
         guard !MigrationUtils.isSwiftDefaultsAvailable(writeKey) else {
             log("Swift SDK storage already exists, skipping migration")
             return
