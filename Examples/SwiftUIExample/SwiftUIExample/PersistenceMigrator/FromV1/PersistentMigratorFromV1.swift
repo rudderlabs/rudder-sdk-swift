@@ -101,7 +101,7 @@ public final class PersistentMigratorFromV1 {
      Safe to call multiple times - returns early if Swift SDK data or no legacy data exists.
      */
     public func restorePersistence() {
-        guard !MigrationUtils.isSwiftDefaultsAvailable(writeKey) else {
+        guard !MigrationUtilsV1.isSwiftDefaultsAvailable(writeKey) else {
             log("Swift SDK storage already exists, skipping migration")
             return
         }
@@ -111,7 +111,7 @@ public final class PersistentMigratorFromV1 {
             return
         }
 
-        guard let targetDefaults = MigrationUtils.rudderSwiftDefaults(writeKey) else {
+        guard let targetDefaults = MigrationUtilsV1.rudderSwiftDefaults(writeKey) else {
             log("Failed to access Swift SDK storage for writeKey: \(writeKey)")
             return
         }
@@ -128,7 +128,7 @@ public final class PersistentMigratorFromV1 {
 private extension PersistentMigratorFromV1 {
 
     /// Extracts legacy data from plist file (preferred) or UserDefaults (fallback)
-    func extractLegacyData() -> LegacyData? {
+    func extractLegacyData() -> LegacyDataV1? {
         if let plistData = readFromPlist() {
             log("Found legacy data in plist file")
             return plistData
@@ -143,16 +143,16 @@ private extension PersistentMigratorFromV1 {
     }
 
     /// Reads and extracts legacy data from plist file
-    func readFromPlist() -> LegacyData? {
-        guard let dict = MigrationUtils.readPlist() else {
+    func readFromPlist() -> LegacyDataV1? {
+        guard let dict = MigrationUtilsV1.readPlist() else {
             return nil
         }
         return extractLegacyData(from: dict)
     }
 
     /// Reads and extracts legacy data from UserDefaults
-    func readFromUserDefaults() -> LegacyData? {
-        guard let dict = MigrationUtils.readLegacyUserDefaults() else {
+    func readFromUserDefaults() -> LegacyDataV1? {
+        guard let dict = MigrationUtilsV1.readLegacyUserDefaults() else {
             return nil
         }
         return extractLegacyData(from: dict)
@@ -164,7 +164,7 @@ private extension PersistentMigratorFromV1 {
 private extension PersistentMigratorFromV1 {
 
     /// Extracts all legacy values from a source dictionary into a structured format
-    func extractLegacyData(from dict: [String: Any]) -> LegacyData? {
+    func extractLegacyData(from dict: [String: Any]) -> LegacyDataV1? {
         let anonymousId = extractAnonymousId(from: dict)
         let (userId, traits) = extractUserIdAndTraits(from: dict)
         let sessionData = extractSessionData(from: dict)
@@ -175,7 +175,7 @@ private extension PersistentMigratorFromV1 {
             return nil
         }
 
-        return LegacyData(
+        return LegacyDataV1(
             anonymousId: anonymousId,
             userId: userId,
             traits: traits,
@@ -186,28 +186,28 @@ private extension PersistentMigratorFromV1 {
 
     /// Extracts anonymous ID from legacy storage
     func extractAnonymousId(from dict: [String: Any]) -> String? {
-        return dict[PersistenceKeys.legacyAnonymousIdKey] as? String
+        return dict[PersistenceKeysV1.legacyAnonymousIdKey] as? String
     }
 
     /// Extracts user ID and traits from legacy storage
     /// Note: User ID is stored within the traits JSON in the legacy SDK
     func extractUserIdAndTraits(from dict: [String: Any]) -> (userId: String?, traits: [String: Any]?) {
-        guard let traitsJson = dict[PersistenceKeys.legacyTraitsKey] as? String else {
+        guard let traitsJson = dict[PersistenceKeysV1.legacyTraitsKey] as? String else {
             return (nil, nil)
         }
 
-        guard let traits = MigrationUtils.decodeJSONDict(from: traitsJson) else {
+        guard let traits = MigrationUtilsV1.decodeJSONDict(from: traitsJson) else {
             log("Failed to decode traits JSON - userId and traits will not be migrated")
             return (nil, nil)
         }
 
-        let userId = traits[PersistenceKeys.legacyUserIdKey] as? String
+        let userId = traits[PersistenceKeysV1.legacyUserIdKey] as? String
         return (userId, traits)
     }
 
     /// Extracts session-related data from legacy storage
-    func extractSessionData(from dict: [String: Any]) -> SessionData? {
-        guard let sessionIdNumber = dict[PersistenceKeys.legacySessionId] as? NSNumber else {
+    func extractSessionData(from dict: [String: Any]) -> SessionDataV1? {
+        guard let sessionIdNumber = dict[PersistenceKeysV1.legacySessionId] as? NSNumber else {
             log("No active session details found.")
             return nil
         }
@@ -219,7 +219,7 @@ private extension PersistentMigratorFromV1 {
 
         let isManualSession = extractIsManualSession(from: dict)
 
-        return SessionData(
+        return SessionDataV1(
             sessionId: sessionIdNumber.uint64Value,
             lastActivityTime: lastActivityTime,
             isManualSession: isManualSession
@@ -228,11 +228,11 @@ private extension PersistentMigratorFromV1 {
 
     /// Extracts and converts last activity time from legacy timestamp format
     func extractLastActivityTime(from dict: [String: Any]) -> UInt64? {
-        guard let timestampNumber = dict[PersistenceKeys.legacyLastEventTimeStamp] as? NSNumber else {
+        guard let timestampNumber = dict[PersistenceKeysV1.legacyLastEventTimeStamp] as? NSNumber else {
             return nil
         }
 
-        guard let convertedTime = MigrationUtils.convertTimestampToSystemUptime(timestampNumber.doubleValue) else {
+        guard let convertedTime = MigrationUtilsV1.convertTimestampToSystemUptime(timestampNumber.doubleValue) else {
             log("Failed to convert lastEventTimeStamp - session timing may be affected")
             return nil
         }
@@ -242,23 +242,23 @@ private extension PersistentMigratorFromV1 {
 
     /// Extracts and inverts the auto-track flag to get manual session setting
     func extractIsManualSession(from dict: [String: Any]) -> Bool? {
-        guard let isAutoTrack = dict[PersistenceKeys.legacyIsSessionAutoTrackEnabled] as? NSNumber else {
+        guard let isAutoTrack = dict[PersistenceKeysV1.legacyIsSessionAutoTrackEnabled] as? NSNumber else {
             return nil
         }
         return !isAutoTrack.boolValue
     }
 
     /// Extracts application version and build from legacy storage
-    func extractApplicationData(from dict: [String: Any]) -> ApplicationData? {
-        let version = dict[PersistenceKeys.legacyApplicationVersion] as? String
-        let build = dict[PersistenceKeys.legacyApplicationBuild] as? String
+    func extractApplicationData(from dict: [String: Any]) -> ApplicationDataV1? {
+        let version = dict[PersistenceKeysV1.legacyApplicationVersion] as? String
+        let build = dict[PersistenceKeysV1.legacyApplicationBuild] as? String
 
         // Return nil if neither value exists
         guard version != nil || build != nil else {
             return nil
         }
 
-        return ApplicationData(version: version, build: build)
+        return ApplicationDataV1(version: version, build: build)
     }
 }
 
@@ -267,7 +267,7 @@ private extension PersistentMigratorFromV1 {
 private extension PersistentMigratorFromV1 {
 
     /// Writes all migrated data to Swift SDK storage
-    func writeMigratedData(_ data: LegacyData, to defaults: UserDefaults) {
+    func writeMigratedData(_ data: LegacyDataV1, to defaults: UserDefaults) {
         writeAnonymousId(data.anonymousId, to: defaults)
         writeUserId(data.userId, to: defaults)
         writeTraits(data.traits, to: defaults)
@@ -279,7 +279,7 @@ private extension PersistentMigratorFromV1 {
     func writeAnonymousId(_ anonymousId: String?, to defaults: UserDefaults) {
         guard let anonymousId = anonymousId else { return }
 
-        defaults.set(anonymousId, forKey: PersistenceKeys.anonymousIdKey)
+        defaults.set(anonymousId, forKey: PersistenceKeysV1.anonymousIdKey)
         log("Migrated anonymous ID")
     }
 
@@ -287,7 +287,7 @@ private extension PersistentMigratorFromV1 {
     func writeUserId(_ userId: String?, to defaults: UserDefaults) {
         guard let userId = userId else { return }
 
-        defaults.set(userId, forKey: PersistenceKeys.userIdKey)
+        defaults.set(userId, forKey: PersistenceKeysV1.userIdKey)
         log("Migrated user ID")
     }
 
@@ -296,20 +296,20 @@ private extension PersistentMigratorFromV1 {
         guard var traits = traits else { return }
 
         // Remove IDs from traits - they are stored separately in Swift SDK
-        traits.removeValue(forKey: PersistenceKeys.traitsAnonymousIdKey)
-        traits.removeValue(forKey: PersistenceKeys.traitsUserIdKey)
+        traits.removeValue(forKey: PersistenceKeysV1.traitsAnonymousIdKey)
+        traits.removeValue(forKey: PersistenceKeysV1.traitsUserIdKey)
 
-        guard let encodedTraits = MigrationUtils.encodeJSONDict(traits) else {
+        guard let encodedTraits = MigrationUtilsV1.encodeJSONDict(traits) else {
             log("Failed to encode traits - traits will not be migrated")
             return
         }
 
-        defaults.set(encodedTraits, forKey: PersistenceKeys.traitsKey)
+        defaults.set(encodedTraits, forKey: PersistenceKeysV1.traitsKey)
         log("Migrated user traits")
     }
 
     /// Writes session data to Swift SDK storage
-    func writeSessionData(_ sessionData: SessionData?, to defaults: UserDefaults) {
+    func writeSessionData(_ sessionData: SessionDataV1?, to defaults: UserDefaults) {
         guard let sessionData = sessionData else { return }
 
         writeSessionId(sessionData.sessionId, to: defaults)
@@ -320,7 +320,7 @@ private extension PersistentMigratorFromV1 {
 
     /// Writes session ID to Swift SDK storage
     func writeSessionId(_ sessionId: UInt64, to defaults: UserDefaults) {
-        defaults.set(String(sessionId), forKey: PersistenceKeys.sessionId)
+        defaults.set(String(sessionId), forKey: PersistenceKeysV1.sessionId)
         log("Migrated session ID: \(sessionId)")
     }
 
@@ -328,7 +328,7 @@ private extension PersistentMigratorFromV1 {
     func writeIsManualSession(_ isManualSession: Bool?, to defaults: UserDefaults) {
         guard let isManualSession = isManualSession else { return }
 
-        defaults.set(isManualSession, forKey: PersistenceKeys.isManualSession)
+        defaults.set(isManualSession, forKey: PersistenceKeysV1.isManualSession)
         log("Migrated isManualSession: \(isManualSession)")
     }
 
@@ -336,18 +336,18 @@ private extension PersistentMigratorFromV1 {
     func writeLastActivityTime(_ lastActivityTime: UInt64?, to defaults: UserDefaults) {
         guard let lastActivityTime = lastActivityTime else { return }
 
-        defaults.set(String(lastActivityTime), forKey: PersistenceKeys.lastActivityTime)
+        defaults.set(String(lastActivityTime), forKey: PersistenceKeysV1.lastActivityTime)
         log("Migrated lastActivityTime: \(lastActivityTime)")
     }
 
     /// Marks session as not starting (since we're restoring an existing session)
     func writeSessionStartFlag(to defaults: UserDefaults) {
-        defaults.set(false, forKey: PersistenceKeys.isSessionStart)
+        defaults.set(false, forKey: PersistenceKeysV1.isSessionStart)
         log("Set isSessionStart to false")
     }
 
     /// Writes application data to Swift SDK storage
-    func writeApplicationData(_ applicationData: ApplicationData?, to defaults: UserDefaults) {
+    func writeApplicationData(_ applicationData: ApplicationDataV1?, to defaults: UserDefaults) {
         guard let applicationData = applicationData else { return }
 
         writeApplicationVersion(applicationData.version, to: defaults)
@@ -358,7 +358,7 @@ private extension PersistentMigratorFromV1 {
     func writeApplicationVersion(_ version: String?, to defaults: UserDefaults) {
         guard let version = version else { return }
 
-        defaults.set(version, forKey: PersistenceKeys.applicationVersion)
+        defaults.set(version, forKey: PersistenceKeysV1.applicationVersion)
         log("Migrated application version: \(version)")
     }
 
@@ -366,7 +366,7 @@ private extension PersistentMigratorFromV1 {
     func writeApplicationBuild(_ build: String?, to defaults: UserDefaults) {
         guard let build = build, let buildNumber = Int(build) else { return }
 
-        defaults.set(buildNumber, forKey: PersistenceKeys.applicationBuild)
+        defaults.set(buildNumber, forKey: PersistenceKeysV1.applicationBuild)
         log("Migrated application build: \(buildNumber)")
     }
 }
@@ -378,7 +378,7 @@ private extension PersistentMigratorFromV1 {
     /// Completes migration by persisting changes and clearing legacy data
     func completeMigration(_ defaults: UserDefaults) {
         defaults.synchronize()
-        MigrationUtils.clearLegacyData()
+        MigrationUtilsV1.clearLegacyData()
         log("Migration completed successfully")
     }
 }

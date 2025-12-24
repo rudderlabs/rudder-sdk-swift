@@ -1,5 +1,5 @@
 //
-//  LegacyDataModel.swift
+//  LegacyDataModelV1.swift
 //  SwiftUIExampleApp
 //
 //  Created by Satheesh Kannan on 23/12/25.
@@ -8,12 +8,12 @@
 import Foundation
 
 /// Holds all extracted legacy data in a structured format
-struct LegacyData {
+struct LegacyDataV1 {
     let anonymousId: String?
     let userId: String?
     let traits: [String: Any]?
-    let sessionData: SessionData?
-    let applicationData: ApplicationData?
+    let sessionData: SessionDataV1?
+    let applicationData: ApplicationDataV1?
 
     /// Converts legacy data to a dictionary for public API
     func toDictionary() -> [String: Any] {
@@ -51,14 +51,14 @@ struct LegacyData {
 }
 
 /// Holds session-related data extracted from legacy storage
-struct SessionData {
+struct SessionDataV1 {
     let sessionId: UInt64
     let lastActivityTime: UInt64?
     let isManualSession: Bool?
 }
 
 /// Holds application version data extracted from legacy storage
-struct ApplicationData {
+struct ApplicationDataV1 {
     let version: String?
     let build: String?
 }

@@ -1,5 +1,5 @@
 //
-//  MigrationUtils.swift
+//  MigrationUtilsV1.swift
 //  SwiftUIExampleApp
 //
 //  Created by Satheesh Kannan on 20/12/25.
@@ -11,7 +11,7 @@ import Foundation
  Utility methods for persistence operations including JSON encoding/decoding,
  file operations, and timestamp conversions.
  */
-enum MigrationUtils {
+enum MigrationUtilsV1 {
     
     // MARK: - UserDefaults
 
@@ -98,24 +98,24 @@ enum MigrationUtils {
         var dict: [String: Any] = [:]
         
         // Read all potential legacy keys
-        if let anonymousId = userDefaults.string(forKey: PersistenceKeys.legacyAnonymousIdKey) {
-            dict[PersistenceKeys.legacyAnonymousIdKey] = anonymousId
+        if let anonymousId = userDefaults.string(forKey: PersistenceKeysV1.legacyAnonymousIdKey) {
+            dict[PersistenceKeysV1.legacyAnonymousIdKey] = anonymousId
         }
         
-        if let traits = userDefaults.string(forKey: PersistenceKeys.legacyTraitsKey) {
-            dict[PersistenceKeys.legacyTraitsKey] = traits
+        if let traits = userDefaults.string(forKey: PersistenceKeysV1.legacyTraitsKey) {
+            dict[PersistenceKeysV1.legacyTraitsKey] = traits
         }
         
-        if let sessionId = userDefaults.object(forKey: PersistenceKeys.legacySessionId) {
-            dict[PersistenceKeys.legacySessionId] = sessionId
+        if let sessionId = userDefaults.object(forKey: PersistenceKeysV1.legacySessionId) {
+            dict[PersistenceKeysV1.legacySessionId] = sessionId
         }
         
-        if let isAutoTrack = userDefaults.object(forKey: PersistenceKeys.legacyIsSessionAutoTrackEnabled) {
-            dict[PersistenceKeys.legacyIsSessionAutoTrackEnabled] = isAutoTrack
+        if let isAutoTrack = userDefaults.object(forKey: PersistenceKeysV1.legacyIsSessionAutoTrackEnabled) {
+            dict[PersistenceKeysV1.legacyIsSessionAutoTrackEnabled] = isAutoTrack
         }
         
-        if let lastEventTime = userDefaults.object(forKey: PersistenceKeys.legacyLastEventTimeStamp) {
-            dict[PersistenceKeys.legacyLastEventTimeStamp] = lastEventTime
+        if let lastEventTime = userDefaults.object(forKey: PersistenceKeysV1.legacyLastEventTimeStamp) {
+            dict[PersistenceKeysV1.legacyLastEventTimeStamp] = lastEventTime
         }
         
         return dict.isEmpty ? nil : dict
@@ -148,22 +148,22 @@ enum MigrationUtils {
         if FileManager.default.fileExists(atPath: fileURL.path) {
             do {
                 try FileManager.default.removeItem(at: fileURL)
-                print("MigrationUtils: Deleted legacy plist file")
+                print("MigrationUtilsV1: Deleted legacy plist file")
             } catch {
-                print("MigrationUtils: Failed to delete legacy plist file: \(error)")
+                print("MigrationUtilsV1: Failed to delete legacy plist file: \(error)")
             }
         }
         
         // Remove legacy keys from UserDefaults.standard
-        [PersistenceKeys.legacyAnonymousIdKey,
-         PersistenceKeys.legacyTraitsKey,
-         PersistenceKeys.legacySessionId,
-         PersistenceKeys.legacyIsSessionAutoTrackEnabled,
-         PersistenceKeys.legacyLastEventTimeStamp
+        [PersistenceKeysV1.legacyAnonymousIdKey,
+         PersistenceKeysV1.legacyTraitsKey,
+         PersistenceKeysV1.legacySessionId,
+         PersistenceKeysV1.legacyIsSessionAutoTrackEnabled,
+         PersistenceKeysV1.legacyLastEventTimeStamp
         ].forEach { UserDefaults.standard.removeObject(forKey: $0) }
         UserDefaults.standard.synchronize()
         
-        print("MigrationUtils: Cleared legacy UserDefaults values")
+        print("MigrationUtilsV1: Cleared legacy UserDefaults values")
     }
     
     // MARK: - Timestamp Conversion
@@ -217,7 +217,7 @@ enum MigrationUtils {
         
         // Timestamp must be valid and in the past
         guard timestamp > 0, timestamp <= currentTimestamp else {
-            print("MigrationUtils: Invalid timestamp: \(timestamp)")
+            print("MigrationUtilsV1: Invalid timestamp: \(timestamp)")
             return nil
         }
         
@@ -227,7 +227,7 @@ enum MigrationUtils {
         // Calculate uptime at the time of the legacy timestamp
         let uptimeAtTimestamp = timestamp - bootTimestamp
         guard uptimeAtTimestamp >= 0 else {
-            print("MigrationUtils: Timestamp predates system boot: \(timestamp)")
+            print("MigrationUtilsV1: Timestamp predates system boot: \(timestamp)")
             return nil
         }
         
@@ -237,7 +237,7 @@ enum MigrationUtils {
 }
 
 // MARK: - Persistence Keys
-enum PersistenceKeys {
+enum PersistenceKeysV1 {
     // Keys read from legacy storage (both plist and UserDefaults.standard)
     static let legacyAnonymousIdKey = "rl_anonymous_id"
     static let legacyUserIdKey = "userId"
