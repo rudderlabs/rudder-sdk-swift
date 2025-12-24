@@ -118,6 +118,14 @@ enum MigrationUtilsV1 {
             dict[PersistenceKeysV1.legacyLastEventTimeStamp] = lastEventTime
         }
         
+        if let appVersion = userDefaults.object(forKey: PersistenceKeysV1.legacyApplicationVersion) {
+            dict[PersistenceKeysV1.legacyApplicationVersion] = appVersion
+        }
+        
+        if let appBuild = userDefaults.object(forKey: PersistenceKeysV1.legacyApplicationBuild) {
+            dict[PersistenceKeysV1.legacyApplicationBuild] = appBuild
+        }
+        
         return dict.isEmpty ? nil : dict
     }
     
@@ -264,7 +272,6 @@ enum PersistenceKeysV1 {
     
     static let sessionId = "session_id"
     static let isManualSession = "is_manual_session"
-    static let isSessionStart = "is_session_start"
     static let lastActivityTime = "last_activity_time"
     
     static let applicationVersion = "rudder.app_version"

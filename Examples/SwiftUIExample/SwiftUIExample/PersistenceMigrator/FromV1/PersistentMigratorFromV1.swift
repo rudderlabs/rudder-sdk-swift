@@ -291,7 +291,7 @@ private extension PersistentMigratorFromV1 {
         log("Migrated user ID")
     }
 
-    /// Writes traits to Swift SDK storage (excluding userId and anonymousId which are stored separately)
+    /// Writes traits to Swift SDK storage (excluding userId, id and anonymousId)
     func writeTraits(_ traits: [String: Any]?, to defaults: UserDefaults) {
         guard var traits = traits else { return }
 
@@ -300,6 +300,11 @@ private extension PersistentMigratorFromV1 {
         traits.removeValue(forKey: PersistenceKeysV1.traitsUserIdKey)
         traits.removeValue(forKey: PersistenceKeysV1.traitsIdKey)
 
+        guard !traits.isEmpty else {
+            log("Traits empty after removing IDs - skipping traits migration")
+            return
+        }
+        
         guard let encodedTraits = MigrationUtilsV1.encodeJSONDict(traits) else {
             log("Failed to encode traits - traits will not be migrated")
             return
