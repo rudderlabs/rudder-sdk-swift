@@ -159,7 +159,9 @@ enum MigrationUtilsV1 {
          PersistenceKeysV1.legacyTraitsKey,
          PersistenceKeysV1.legacySessionId,
          PersistenceKeysV1.legacyIsSessionAutoTrackEnabled,
-         PersistenceKeysV1.legacyLastEventTimeStamp
+         PersistenceKeysV1.legacyLastEventTimeStamp,
+         PersistenceKeysV1.legacyApplicationVersion,
+         PersistenceKeysV1.legacyApplicationBuild
         ].forEach { UserDefaults.standard.removeObject(forKey: $0) }
         UserDefaults.standard.synchronize()
         

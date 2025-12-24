@@ -315,7 +315,6 @@ private extension PersistentMigratorFromV1 {
         writeSessionId(sessionData.sessionId, to: defaults)
         writeIsManualSession(sessionData.isManualSession, to: defaults)
         writeLastActivityTime(sessionData.lastActivityTime, to: defaults)
-        writeSessionStartFlag(to: defaults)
     }
 
     /// Writes session ID to Swift SDK storage
@@ -338,12 +337,6 @@ private extension PersistentMigratorFromV1 {
 
         defaults.set(String(lastActivityTime), forKey: PersistenceKeysV1.lastActivityTime)
         log("Migrated lastActivityTime: \(lastActivityTime)")
-    }
-
-    /// Marks session as not starting (since we're restoring an existing session)
-    func writeSessionStartFlag(to defaults: UserDefaults) {
-        defaults.set(false, forKey: PersistenceKeysV1.isSessionStart)
-        log("Set isSessionStart to false")
     }
 
     /// Writes application data to Swift SDK storage
