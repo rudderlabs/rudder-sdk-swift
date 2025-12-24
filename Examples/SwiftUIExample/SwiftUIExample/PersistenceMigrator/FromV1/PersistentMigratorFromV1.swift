@@ -291,14 +291,20 @@ private extension PersistentMigratorFromV1 {
         log("Migrated user ID")
     }
 
-    /// Writes traits to Swift SDK storage (excluding userId and anonymousId which are stored separately)
+    /// Writes traits to Swift SDK storage (excluding userId, id and anonymousId)
     func writeTraits(_ traits: [String: Any]?, to defaults: UserDefaults) {
         guard var traits = traits else { return }
 
         // Remove IDs from traits - they are stored separately in Swift SDK
         traits.removeValue(forKey: PersistenceKeysV1.traitsAnonymousIdKey)
         traits.removeValue(forKey: PersistenceKeysV1.traitsUserIdKey)
+        traits.removeValue(forKey: PersistenceKeysV1.traitsIdKey)
 
+        guard !traits.isEmpty else {
+            log("Traits empty after removing IDs - skipping traits migration")
+            return
+        }
+        
         guard let encodedTraits = MigrationUtilsV1.encodeJSONDict(traits) else {
             log("Failed to encode traits - traits will not be migrated")
             return
@@ -315,7 +321,6 @@ private extension PersistentMigratorFromV1 {
         writeSessionId(sessionData.sessionId, to: defaults)
         writeIsManualSession(sessionData.isManualSession, to: defaults)
         writeLastActivityTime(sessionData.lastActivityTime, to: defaults)
-        writeSessionStartFlag(to: defaults)
     }
 
     /// Writes session ID to Swift SDK storage
@@ -338,12 +343,6 @@ private extension PersistentMigratorFromV1 {
 
         defaults.set(String(lastActivityTime), forKey: PersistenceKeysV1.lastActivityTime)
         log("Migrated lastActivityTime: \(lastActivityTime)")
-    }
-
-    /// Marks session as not starting (since we're restoring an existing session)
-    func writeSessionStartFlag(to defaults: UserDefaults) {
-        defaults.set(false, forKey: PersistenceKeysV1.isSessionStart)
-        log("Set isSessionStart to false")
     }
 
     /// Writes application data to Swift SDK storage
