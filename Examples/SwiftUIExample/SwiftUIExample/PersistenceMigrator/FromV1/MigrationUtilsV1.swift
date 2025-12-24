@@ -253,6 +253,7 @@ enum PersistenceKeysV1 {
     static let legacyApplicationBuild = "rl_application_build_key"
     
     // Keys that may exist within traits dictionary
+    static let traitsIdKey = "id"
     static let traitsUserIdKey = "userId"
     static let traitsAnonymousIdKey = "anonymousId"
     

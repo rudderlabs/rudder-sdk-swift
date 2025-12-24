@@ -298,6 +298,7 @@ private extension PersistentMigratorFromV1 {
         // Remove IDs from traits - they are stored separately in Swift SDK
         traits.removeValue(forKey: PersistenceKeysV1.traitsAnonymousIdKey)
         traits.removeValue(forKey: PersistenceKeysV1.traitsUserIdKey)
+        traits.removeValue(forKey: PersistenceKeysV1.traitsIdKey)
 
         guard let encodedTraits = MigrationUtilsV1.encodeJSONDict(traits) else {
             log("Failed to encode traits - traits will not be migrated")
