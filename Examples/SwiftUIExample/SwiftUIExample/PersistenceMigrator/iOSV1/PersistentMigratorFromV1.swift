@@ -1,5 +1,5 @@
 //
-//  PersistenceMigrator.swift
+//  PersistentMigratorFromV1.swift
 //  SwiftUIExample
 //
 //  Created by Satheesh Kannan on 20/12/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - PersistenceMigrator
+// MARK: - PersistentMigratorFromV1
 
 /**
  Migrates persistence data from the legacy Rudder iOS SDK (V1) to the new Swift SDK.
@@ -26,7 +26,7 @@ import Foundation
 
  ```swift
  // In AppDelegate or App init
- let migrator = PersistenceMigrator(writeKey: "your_write_key")
+ let migrator = PersistentMigratorFromV1(writeKey: "your_write_key")
  migrator.restorePersistence()
 
  // Then initialize the Swift SDK
@@ -39,13 +39,13 @@ import Foundation
  Use `readPersistence()` to inspect what data will be migrated:
 
  ```swift
- let migrator = PersistenceMigrator(writeKey: "your_write_key")
+ let migrator = PersistentMigratorFromV1(writeKey: "your_write_key")
  if let legacyData = migrator.readPersistence() {
      print("Data to migrate: \(legacyData)")
  }
  ```
  */
-public final class PersistenceMigrator {
+public final class PersistentMigratorFromV1 {
 
     // MARK: - Properties
 
@@ -125,7 +125,7 @@ public final class PersistenceMigrator {
 
 // MARK: - Reading Legacy Data
 
-private extension PersistenceMigrator {
+private extension PersistentMigratorFromV1 {
 
     /// Extracts legacy data from plist file (preferred) or UserDefaults (fallback)
     func extractLegacyData() -> LegacyData? {
@@ -161,7 +161,7 @@ private extension PersistenceMigrator {
 
 // MARK: - Extracting Legacy Values
 
-private extension PersistenceMigrator {
+private extension PersistentMigratorFromV1 {
 
     /// Extracts all legacy values from a source dictionary into a structured format
     func extractLegacyData(from dict: [String: Any]) -> LegacyData? {
@@ -264,7 +264,7 @@ private extension PersistenceMigrator {
 
 // MARK: - Writing Migrated Data
 
-private extension PersistenceMigrator {
+private extension PersistentMigratorFromV1 {
 
     /// Writes all migrated data to Swift SDK storage
     func writeMigratedData(_ data: LegacyData, to defaults: UserDefaults) {
@@ -373,7 +373,7 @@ private extension PersistenceMigrator {
 
 // MARK: - Migration Completion
 
-private extension PersistenceMigrator {
+private extension PersistentMigratorFromV1 {
 
     /// Completes migration by persisting changes and clearing legacy data
     func completeMigration(_ defaults: UserDefaults) {
@@ -385,10 +385,10 @@ private extension PersistenceMigrator {
 
 // MARK: - Logging
 
-private extension PersistenceMigrator {
+private extension PersistentMigratorFromV1 {
 
-    /// Logs a message with the PersistenceMigrator prefix
+    /// Logs a message with the PersistentMigratorFromV1 prefix
     func log(_ message: String) {
-        print("PersistenceMigrator: \(message)")
+        print("PersistentMigratorFromV1: \(message)")
     }
 }
