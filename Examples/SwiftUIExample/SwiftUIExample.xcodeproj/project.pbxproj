@@ -28,6 +28,9 @@
 		535BB3FB2E04643900E1DAB0 /* BluetoothInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F12E04643900E1DAB0 /* BluetoothInfoPluginTests.swift */; };
 		535BB3FC2E04643900E1DAB0 /* SwiftUIAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */; };
 		535BB3FD2E04643900E1DAB0 /* AppTestingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F02E04643900E1DAB0 /* AppTestingHelper.swift */; };
+		53825E112F03C06200B20FCF /* MigrationUtilsV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53825E0F2F03C06200B20FCF /* MigrationUtilsV2.swift */; };
+		53825E122F03C06200B20FCF /* PersistentMigratorFromV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53825E102F03C06200B20FCF /* PersistentMigratorFromV2.swift */; };
+		53825E132F03C06200B20FCF /* LegacyDataModelV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53825E0E2F03C06200B20FCF /* LegacyDataModelV2.swift */; };
 		539301A02E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */; };
 		539301C82E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */; };
 		539301CA2E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */; };
@@ -91,6 +94,9 @@
 		535BB3F32E04643900E1DAB0 /* SetAnonymousIdPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetAnonymousIdPluginTests.swift; sourceTree = "<group>"; };
 		535BB3F42E04643900E1DAB0 /* SetPushTokenPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetPushTokenPluginTests.swift; sourceTree = "<group>"; };
 		535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAppTests.swift; sourceTree = "<group>"; };
+		53825E0E2F03C06200B20FCF /* LegacyDataModelV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyDataModelV2.swift; sourceTree = "<group>"; };
+		53825E0F2F03C06200B20FCF /* MigrationUtilsV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationUtilsV2.swift; sourceTree = "<group>"; };
+		53825E102F03C06200B20FCF /* PersistentMigratorFromV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentMigratorFromV2.swift; sourceTree = "<group>"; };
 		5383D2CE2D3EAC0C00291B00 /* SwiftUIExampleAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftUIExampleAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5393019F2E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicUserAgentPlugin.swift; sourceTree = "<group>"; };
 		539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicUserAgentPluginTests.swift; sourceTree = "<group>"; };
@@ -220,10 +226,21 @@
 			path = SwiftUIExampleTests;
 			sourceTree = "<group>";
 		};
+		53825E142F03C06700B20FCF /* FromV2 */ = {
+			isa = PBXGroup;
+			children = (
+				53825E0F2F03C06200B20FCF /* MigrationUtilsV2.swift */,
+				53825E0E2F03C06200B20FCF /* LegacyDataModelV2.swift */,
+				53825E102F03C06200B20FCF /* PersistentMigratorFromV2.swift */,
+			);
+			path = FromV2;
+			sourceTree = "<group>";
+		};
 		53E687562EF9233000DF1FBD /* PersistenceMigrator */ = {
 			isa = PBXGroup;
 			children = (
 				53E6876C2EFB179300DF1FBD /* FromV1 */,
+				53825E142F03C06700B20FCF /* FromV2 */,
 			);
 			path = PersistenceMigrator;
 			sourceTree = "<group>";
@@ -350,6 +367,9 @@
 				535BB3E92E04642400E1DAB0 /* SetAnonymousIdPlugin.swift in Sources */,
 				539301A02E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift in Sources */,
 				53E687542EF9232200DF1FBD /* PersistentMigratorFromV1.swift in Sources */,
+				53825E112F03C06200B20FCF /* MigrationUtilsV2.swift in Sources */,
+				53825E122F03C06200B20FCF /* PersistentMigratorFromV2.swift in Sources */,
+				53825E132F03C06200B20FCF /* LegacyDataModelV2.swift in Sources */,
 				53E687552EF9232200DF1FBD /* MigrationUtilsV1.swift in Sources */,
 				535BB3EA2E04642400E1DAB0 /* ContentView.swift in Sources */,
 				535BB3EB2E04642400E1DAB0 /* BluetoothInfoPlugin.swift in Sources */,
