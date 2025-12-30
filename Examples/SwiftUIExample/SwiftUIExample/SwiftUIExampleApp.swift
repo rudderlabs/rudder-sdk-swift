@@ -36,6 +36,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         // Uncomment the below line to migrate persisted values from iOS V1 SDK to Swift SDK
 //         PersistentMigratorFromV1(writeKey: "swift-sdk-write-key").restorePersistence()
         
+        // Uncomment the below line to migrate persisted values from iOS V2 SDK to Swift SDK
+//         PersistentMigratorFromV2(writeKey: "swift-sdk-write-key").restorePersistence()
+        
         self.permissionManager.requestPermissions([.idfa, .pushNotification, .bluetooth]) {
             print("All required permissions requested..")
             self.permissionsRequested = true
