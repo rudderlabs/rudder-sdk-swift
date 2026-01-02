@@ -22,7 +22,7 @@ import Foundation
 
  Note:
  - V2 SDK stores data only in UserDefaults.standard.
- - V2 SDK don't stores the anonymousId anywhere it uses current device's `identifierForVendor` instead.
+ - V2 SDK doesn't store the anonymousId anywhere; it uses the current device's `identifierForVendor` instead.
 
  ## Usage
 
@@ -210,7 +210,7 @@ private extension PersistentMigratorFromV2 {
         return SessionDataV2(
             sessionId: sessionIdNumber.uint64Value,
             lastActivityTime: lastActivityTime,
-            isManualSession: isManualSession,
+            isManualSession: isManualSession
         )
     }
 
@@ -231,7 +231,7 @@ private extension PersistentMigratorFromV2 {
     /// Extracts manual session flag
     /// Note: V2 stores this directly as manual status (no inversion needed unlike V1)
     func extractIsManualSession(from dict: [String: Any]) -> Bool? {
-        guard let isManualTrack = dict[PersistenceKeysV2.legacyIsSessionAutoTrackEnabled] as? NSNumber else {
+        guard let isManualTrack = dict[PersistenceKeysV2.legacySessionManualTrackStatus] as? NSNumber else {
             return nil
         }
         return isManualTrack.boolValue

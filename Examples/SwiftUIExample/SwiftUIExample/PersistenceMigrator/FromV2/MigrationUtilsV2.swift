@@ -112,8 +112,8 @@ enum MigrationUtilsV2 {
             dict[PersistenceKeysV2.legacySessionId] = sessionId
         }
         
-        if let isManualTrack = userDefaults.object(forKey: PersistenceKeysV2.legacyIsSessionAutoTrackEnabled) {
-            dict[PersistenceKeysV2.legacyIsSessionAutoTrackEnabled] = isManualTrack
+        if let isManualTrack = userDefaults.object(forKey: PersistenceKeysV2.legacySessionManualTrackStatus) {
+            dict[PersistenceKeysV2.legacySessionManualTrackStatus] = isManualTrack
         }
         
         if let lastEventTime = userDefaults.object(forKey: PersistenceKeysV2.legacyLastEventTimeStamp) {
@@ -147,7 +147,7 @@ enum MigrationUtilsV2 {
         [PersistenceKeysV2.legacyUserIdKey,
          PersistenceKeysV2.legacyTraitsKey,
          PersistenceKeysV2.legacySessionId,
-         PersistenceKeysV2.legacyIsSessionAutoTrackEnabled,
+         PersistenceKeysV2.legacySessionManualTrackStatus,
          PersistenceKeysV2.legacyLastEventTimeStamp,
          PersistenceKeysV2.legacyApplicationVersion,
          PersistenceKeysV2.legacyApplicationBuild
@@ -223,11 +223,9 @@ enum MigrationUtilsV2 {
     private static func getAnonymousId() -> String? {
 #if os(iOS) || os(tvOS)
         return UIDevice.current.identifierForVendor?.uuidString.lowercased()
-#endif
-#if os(watchOS)
+#elseif os(watchOS)
         return WKInterfaceDevice.current().identifierForVendor?.uuidString.lowercased()
-#endif
-#if os(macOS)
+#elseif os(macOS)
         return macAddress(bsd: "en0")
 #endif
     }
@@ -238,37 +236,40 @@ enum MigrationUtilsV2 {
      - Returns: The MAC address string, or nil if unavailable
      */
     private static func macAddress(bsd: String) -> String? {
-        let MAC_ADDRESS_LENGTH = 6
+        let macAddressLength = 6
         let separator = ":"
+        let mibSize = 6
+        let indexOffset = 1
         
         var length: size_t = 0
         var buffer: [CChar]
         
         let bsdIndex = Int32(if_nametoindex(bsd))
-        if bsdIndex == 0 {
-            return nil
-        }
+        guard bsdIndex != 0 else { return nil }
+        
         let bsdData = Data(bsd.utf8)
-        var managementInfoBase = [CTL_NET, AF_ROUTE, 0, AF_LINK, NET_RT_IFLIST, bsdIndex]
+        var managementInfoBase: [Int32] = [CTL_NET, AF_ROUTE, 0, AF_LINK, NET_RT_IFLIST, bsdIndex]
         
-        if sysctl(&managementInfoBase, 6, nil, &length, nil, 0) < 0 {
+        guard sysctl(&managementInfoBase, u_int(mibSize), nil, &length, nil, 0) >= 0 else {
             return nil
         }
         
-        buffer = [CChar](unsafeUninitializedCapacity: length, initializingWith: {buffer, initializedCount in
-            for x in 0..<length { buffer[x] = 0 }
-            initializedCount = length
-        })
-        
-        if sysctl(&managementInfoBase, 6, &buffer, &length, nil, 0) < 0 {
+        buffer = [CChar](repeating: 0, count: length)
+        guard sysctl(&managementInfoBase, u_int(mibSize), &buffer, &length, nil, 0) >= 0 else {
             return nil
         }
         
         let infoData = Data(bytes: buffer, count: length)
-        let indexAfterMsghdr = MemoryLayout<if_msghdr>.stride + 1
-        let rangeOfToken = infoData[indexAfterMsghdr...].range(of: bsdData)!
+        let startIndex = MemoryLayout<if_msghdr>.stride + indexOffset
+        
+        guard let rangeOfToken = infoData[startIndex...].range(of: bsdData) else {
+            return nil
+        }
+        
         let lower = rangeOfToken.upperBound
-        let upper = lower + MAC_ADDRESS_LENGTH
+        let upper = lower + macAddressLength
+        guard upper <= infoData.count else { return nil }
+        
         let macAddressData = infoData[lower..<upper]
         let addressBytes = macAddressData.map { String(format: "%02x", $0) }
         return addressBytes.joined(separator: separator)
@@ -283,7 +284,7 @@ enum PersistenceKeysV2 {
     
     static let legacySessionId = "rl_session_id"
     static let legacyLastEventTimeStamp = "rl_last_event_time_stamp"
-    static let legacyIsSessionAutoTrackEnabled = "rl_session_manual_track_status"
+    static let legacySessionManualTrackStatus = "rl_session_manual_track_status"
     
     static let legacyApplicationVersion = "rs_application_version_key"
     static let legacyApplicationBuild = "rs_application_build_key"
