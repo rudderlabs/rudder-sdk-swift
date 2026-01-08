@@ -327,7 +327,7 @@ struct SessionHandlerTests {
 
         // Deregister the observer to simulate state where session exists but observer is not registered
         // This is the key: we need to verify that startAutomaticSessionIfNeeded() registers the observer
-        handler.deregisterObserver()
+        handler.forceDeregisterObserver()
 
         // Verify observer is deregistered by checking foreground event does NOT create a new session
         let pastTime = handler.monotonicCurrentTime - 6000 // Beyond timeout
