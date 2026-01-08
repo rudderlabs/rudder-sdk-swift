@@ -85,18 +85,19 @@ extension SessionHandler: LifecycleEventListener {
     /// It ensures consistent lifecycle handling and prevents duplicate registrations.
     func syncObserverState() {
         let shouldBeRegistered = self.sessionId != nil && self.sessionType == .automatic
-        
-        if shouldBeRegistered && !self.isObserverRegistered {
-            self.analytics.lifecycleObserver?.addObserver(self)
-            self.isObserverRegistered = true
-        } else if !shouldBeRegistered && self.isObserverRegistered {
-            self.analytics.lifecycleObserver?.removeObserver(self)
-            self.isObserverRegistered = false
+
+        $isObserverRegistered.modify { registered in
+            if shouldBeRegistered && !registered {
+                self.analytics.lifecycleObserver?.addObserver(self)
+                registered = true
+            } else if !shouldBeRegistered && registered {
+                self.analytics.lifecycleObserver?.removeObserver(self)
+                registered = false
+            }
         }
     }
     
     /// Force deregisters the observer without state checks.
-    /// Used only in deinit to ensure cleanup regardless of state.
     func forceDeregisterObserver() {
         self.analytics.lifecycleObserver?.removeObserver(self)
         self.isObserverRegistered = false
