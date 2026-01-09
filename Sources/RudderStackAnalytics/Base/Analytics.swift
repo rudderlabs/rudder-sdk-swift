@@ -36,14 +36,10 @@ public class Analytics {
     
     /**
      The handler instance responsible for managing lifecycle events and session-related operations.
-     
-     - Note: When this property is set, `startAutomaticSessionIfNeeded()` is automatically triggered to ensure the automatic session begins as required.
-     */
-    internal var lifecycleSessionWrapper: LifecycleSessionWrapper? {
-        didSet {
-            self.sessionHandler?.startAutomaticSessionIfNeeded()
-        }
-    }
+    */
+    internal var lifecycleObserver: LifecycleObserver?
+    
+    internal var sessionHandler: SessionHandler?
     
     /**
      The state container for SourceConfig management within the analytics system.
@@ -316,11 +312,9 @@ extension Analytics {
         self.pluginChain?.removeAll()
         self.pluginChain = nil
         
-        self.lifecycleSessionWrapper?.invalidate()
-        self.lifecycleSessionWrapper = nil
-        
+        self.lifecycleObserver = nil
+        self.sessionHandler = nil
         self.sourceConfigProvider = nil
-        
         self.integrationsController = nil
     
         if self.isInvalidWriteKey {
@@ -370,7 +364,8 @@ extension Analytics {
         self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
-        self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
+        self.lifecycleObserver = LifecycleObserver(analytics: self)
+        self.sessionHandler = SessionHandler(analytics: self)
         self.integrationsController = IntegrationsController(analytics: self)
         
         // Add default plugins
