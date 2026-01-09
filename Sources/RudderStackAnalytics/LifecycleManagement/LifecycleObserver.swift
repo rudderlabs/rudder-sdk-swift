@@ -63,6 +63,7 @@ extension LifecycleObserver {
 // MARK: - Observer Management
 extension LifecycleObserver {
     func addObserver(_ observer: LifecycleEventListener) {
+        guard !observers.contains(where: { $0.observer === observer }) else { return }
         observers.append(WeakObserver(observer))
     }
     

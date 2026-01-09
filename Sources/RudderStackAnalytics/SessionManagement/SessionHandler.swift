@@ -22,10 +22,6 @@ final class SessionHandler {
     
     private var storage: KeyValueStorage
     private var sessionState: StateImpl<SessionInfo>
-    
-    /// Tracks current observer registration state to avoid redundant operations
-    @Synchronized private var isObserverRegistered: Bool = false
-    
     private var sessionInstance: SessionInfo { self.sessionState.state.value }
     private var sessionCofiguration: SessionConfiguration { analytics.configuration.sessionConfiguration }
     private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
@@ -42,13 +38,13 @@ final class SessionHandler {
         self.updateSessionStart(isSessionStart: true)
         self.updateSessionType(type: type)
         self.updateSessionId(id: id)
-        self.syncObserverState()
+        self.syncObserverRegistration()
     }
     
     func endSession() {
         self.sessionState.dispatch(action: EndSessionAction())
         self.sessionInstance.resetSessionState(storage: self.storage)
-        self.syncObserverState()
+        self.syncObserverRegistration()
     }
     
     func refreshSession() {
@@ -61,7 +57,7 @@ final class SessionHandler {
             if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
                 self.startSession(id: Self.generatedSessionId, type: .automatic)
             } else {
-                self.syncObserverState()
+                self.syncObserverRegistration()
             }
         } else if self.sessionId != nil, self.sessionType == .automatic {
             self.endSession()
@@ -69,7 +65,7 @@ final class SessionHandler {
     }
     
     deinit {
-        self.forceDeregisterObserver()
+        self.deregisterObserver()
     }
 }
 
@@ -82,25 +78,18 @@ extension SessionHandler: LifecycleEventListener {
     /// This method determines whether the observer should be registered based on:
     /// - Whether there's an active session (sessionId != nil)
     /// - Whether the session type is automatic
-    /// It ensures consistent lifecycle handling and prevents duplicate registrations.
-    func syncObserverState() {
+    func syncObserverRegistration() {
         let shouldBeRegistered = self.sessionId != nil && self.sessionType == .automatic
-
-        $isObserverRegistered.modify { registered in
-            if shouldBeRegistered && !registered {
-                self.analytics.lifecycleObserver?.addObserver(self)
-                registered = true
-            } else if !shouldBeRegistered && registered {
-                self.analytics.lifecycleObserver?.removeObserver(self)
-                registered = false
-            }
+        if shouldBeRegistered {
+            self.analytics.lifecycleObserver?.addObserver(self)
+        } else {
+            self.analytics.lifecycleObserver?.removeObserver(self)
         }
     }
     
-    /// Force deregisters the observer without state checks.
-    func forceDeregisterObserver() {
+    /// Deregisters the observer from lifecycle events.
+    func deregisterObserver() {
         self.analytics.lifecycleObserver?.removeObserver(self)
-        self.isObserverRegistered = false
     }
     
     // MARK: - Lifecycle Event Handlers
