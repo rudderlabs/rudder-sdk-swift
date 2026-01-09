@@ -315,10 +315,7 @@ extension Analytics {
         self.pluginChain?.removeAll()
         self.pluginChain = nil
         
-        self.lifecycleObserver = nil
-        self.sessionHandler = nil
-        self.sourceConfigProvider = nil
-        self.integrationsController = nil
+        await self.referenceCleanup()
     
         if self.isInvalidWriteKey {
             await self.storage.removeAll()
@@ -326,6 +323,16 @@ extension Analytics {
         }
         
         LoggerAnalytics.debug("Analytics shutdown complete.")
+    }
+
+    /**
+     Cleans up strong references to various components to prevent memory leaks.
+     */
+    private func referenceCleanup() async {
+        self.sessionHandler = nil
+        self.lifecycleObserver = nil
+        self.sourceConfigProvider = nil
+        self.integrationsController = nil
     }
     
     /**
