@@ -32,19 +32,34 @@ final class SessionHandler {
         self.analytics = analytics
         self.storage = analytics.configuration.storage
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
+        
+        if sessionCofiguration.automaticSessionTracking {
+            self.checkAndStartSessionOnLaunch()
+            self.attachSessionTrackingObservers()
+        } else if !isSessionManual {
+            self.endSession()
+        }
+    }
+    
+    private func checkAndStartSessionOnLaunch() {
+        guard self.sessionId == nil || self.isSessionManual || self.isSessionTimedOut else { return }
+        self.startSession(id: Self.generatedSessionId, type: .automatic)
     }
     
     func startSession(id: UInt64, type: SessionType) {
         self.updateSessionStart(isSessionStart: true)
         self.updateSessionType(type: type)
+        if isSessionManual {
+            detachSessionTrackingObservers()
+        }
         self.updateSessionId(id: id)
-        self.syncObserverRegistration()
     }
     
     func endSession() {
+        self.detachSessionTrackingObservers()
+        
         self.sessionState.dispatch(action: EndSessionAction())
         self.sessionInstance.resetSessionState(storage: self.storage)
-        self.syncObserverRegistration()
     }
     
     func refreshSession() {
@@ -52,43 +67,19 @@ final class SessionHandler {
         self.startSession(id: SessionHandler.generatedSessionId, type: self.sessionType)
     }
     
-    func startAutomaticSessionIfNeeded() {
-        if self.sessionCofiguration.automaticSessionTracking {
-            if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
-                self.startSession(id: Self.generatedSessionId, type: .automatic)
-            } else {
-                self.syncObserverRegistration()
-            }
-        } else if self.sessionId != nil, self.sessionType == .automatic {
-            self.endSession()
-        }
-    }
-    
     deinit {
-        self.deregisterObserver()
+        self.detachSessionTrackingObservers()
     }
 }
 
 // MARK: - Observers
 extension SessionHandler: LifecycleEventListener {
     
-    // MARK: - Centralized Observer Management
-    
-    /// Centralized point for managing observer registration state.
-    /// This method determines whether the observer should be registered based on:
-    /// - Whether there's an active session (sessionId != nil)
-    /// - Whether the session type is automatic
-    func syncObserverRegistration() {
-        let shouldBeRegistered = self.sessionId != nil && self.sessionType == .automatic
-        if shouldBeRegistered {
-            self.analytics.lifecycleObserver?.addObserver(self)
-        } else {
-            self.analytics.lifecycleObserver?.removeObserver(self)
-        }
+    func attachSessionTrackingObservers() {
+        self.analytics.lifecycleObserver?.addObserver(self)
     }
     
-    /// Deregisters the observer from lifecycle events.
-    func deregisterObserver() {
+    func detachSessionTrackingObservers() {
         self.analytics.lifecycleObserver?.removeObserver(self)
     }
     
@@ -122,6 +113,10 @@ extension SessionHandler {
     
     var isSessionStart: Bool {
         return self.sessionInstance.isStart
+    }
+    
+    var isSessionManual: Bool {
+        return self.sessionInstance.type == .manual
     }
     
     var sessionType: SessionType {
