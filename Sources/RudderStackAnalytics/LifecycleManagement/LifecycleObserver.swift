@@ -12,49 +12,42 @@ import Foundation
  A class created to observe app lifecycle events.
  */
 final class LifecycleObserver {
-    var analytics: Analytics?
-    
-    private var observers: [WeakObserver] = []
+    private let store = LifecycleObserverStore()
     private var notificationObservers: [NSObjectProtocol] = []
     
-    init(analytics: Analytics) {
-        self.analytics = analytics
-        self.registerNotifications()
+    init() {
+        registerNotifications()
     }
     
     deinit {
-        self.observers.removeAll()
-        self.notificationObservers.forEach { NotificationCenter.default.removeObserver($0) }
+        notificationObservers.forEach(NotificationCenter.default.removeObserver)
     }
 }
 
 // MARK: - Event Management
 extension LifecycleObserver {
-    func registerNotifications() {
+    private func registerNotifications() {
         AppLifecycleEvent.allCases.forEach { event in
-            let observer = NotificationCenter.default.addObserver(forName: event.notificationName, object: nil, queue: .main) { [weak self] _ in
-                guard let self else { return }
-                self.handleEvent(event)
+            let observer = NotificationCenter.default.addObserver(
+                forName: event.notificationName,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.handle(event)
             }
             notificationObservers.append(observer)
         }
     }
     
-    private func handleEvent(_ event: AppLifecycleEvent) {
-        switch event {
-        case .background: notifyObservers { $0.onBackground() }
-        case .terminate: notifyObservers { $0.onTerminate() }
-        case .foreground: notifyObservers { $0.onForeground() }
-        case .becomeActive: notifyObservers { $0.onBecomeActive() }
-        }
-    }
-    
-    private func notifyObservers(_ action: (LifecycleEventListener) -> Void) {
-        observers.removeAll { $0.observer == nil } // Clean up nil references
-        
-        for wrapper in observers {
-            if let observer = wrapper.observer {
-                action(observer)
+    private func handle(_ event: AppLifecycleEvent) {
+        Task {
+            let observers = await store.snapshot()
+            
+            switch event {
+            case .background: observers.forEach { $0.onBackground() }
+            case .terminate: observers.forEach { $0.onTerminate() }
+            case .foreground: observers.forEach { $0.onForeground() }
+            case .becomeActive: observers.forEach { $0.onBecomeActive() }
             }
         }
     }
@@ -63,11 +56,33 @@ extension LifecycleObserver {
 // MARK: - Observer Management
 extension LifecycleObserver {
     func addObserver(_ observer: LifecycleEventListener) {
-        guard !observers.contains(where: { $0.observer === observer }) else { return }
-        observers.append(WeakObserver(observer))
+        Task { await store.add(observer) }
     }
     
     func removeObserver(_ observer: LifecycleEventListener) {
+        Task { await store.remove(observer) }
+    }
+}
+
+// MARK: - LifecycleObserverStore
+/**
+ An actor to manage lifecycle event observers safely across concurrent contexts.
+ */
+actor LifecycleObserverStore {
+    
+    private var observers: [WeakObserver] = []
+    
+    func add(_ observer: LifecycleEventListener) {
+        guard observers.contains(where: { $0.observer === observer }) == false else { return }
+        observers.append(WeakObserver(observer))
+    }
+    
+    func remove(_ observer: LifecycleEventListener) {
         observers.removeAll { $0.observer === observer }
+    }
+    
+    func snapshot() -> [LifecycleEventListener] {
+        observers.removeAll { $0.observer == nil }
+        return observers.compactMap { $0.observer }
     }
 }

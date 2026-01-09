@@ -35,10 +35,13 @@ public class Analytics {
     private var processEventChannel: AsyncChannel<Event>
     
     /**
-     The handler instance responsible for managing lifecycle events and session-related operations.
+     The observer responsible for monitoring application lifecycle events.
     */
-    internal var lifecycleObserver: LifecycleObserver?
+    internal var lifecycleObserver: LifecycleObserver? = LifecycleObserver()
     
+    /**
+     The handler responsible for managing user sessions.
+     */
     internal var sessionHandler: SessionHandler?
     
     /**
@@ -364,7 +367,6 @@ extension Analytics {
         self.startProcessingEvents()
         
         self.pluginChain = PluginChain(analytics: self)
-        self.lifecycleObserver = LifecycleObserver(analytics: self)
         self.sessionHandler = SessionHandler(analytics: self)
         self.integrationsController = IntegrationsController(analytics: self)
         
