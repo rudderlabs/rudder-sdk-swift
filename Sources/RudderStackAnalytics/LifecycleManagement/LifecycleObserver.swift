@@ -40,9 +40,10 @@ extension LifecycleObserver {
     }
     
     private func handle(_ event: AppLifecycleEvent) {
-        Task {
+        // Capture store explicitly to avoid implicit self capture
+        Task { [store] in
             let observers = await store.snapshot()
-            
+
             switch event {
             case .background: observers.forEach { $0.onBackground() }
             case .terminate: observers.forEach { $0.onTerminate() }
@@ -56,11 +57,21 @@ extension LifecycleObserver {
 // MARK: - Observer Management
 extension LifecycleObserver {
     func addObserver(_ observer: LifecycleEventListener) {
-        Task { await store.add(observer) }
+        // Capture observer weakly to avoid extending its lifetime if Task is delayed.
+        // Also capture store explicitly to avoid implicit self capture.
+        Task { [weak observer, store] in
+            guard let observer = observer else { return }
+            await store.add(observer)
+        }
     }
-    
+
     func removeObserver(_ observer: LifecycleEventListener) {
-        Task { await store.remove(observer) }
+        // Capture ObjectIdentifier instead of observer to avoid strong reference.
+        // This is safe to call from deinit as it won't extend the observer's lifetime.
+        let observerId = ObjectIdentifier(observer)
+        Task { [store] in
+            await store.remove(byId: observerId)
+        }
     }
 }
 
@@ -73,12 +84,12 @@ actor LifecycleObserverStore {
     private var observers: [WeakObserver] = []
     
     func add(_ observer: LifecycleEventListener) {
-        guard observers.contains(where: { $0.observer === observer }) == false else { return }
+        guard observers.contains(where: { $0.id == ObjectIdentifier(observer) }) == false else { return }
         observers.append(WeakObserver(observer))
     }
     
-    func remove(_ observer: LifecycleEventListener) {
-        observers.removeAll { $0.observer === observer }
+    func remove(byId id: ObjectIdentifier) {
+        observers.removeAll { $0.id == id }
     }
     
     func snapshot() -> [LifecycleEventListener] {

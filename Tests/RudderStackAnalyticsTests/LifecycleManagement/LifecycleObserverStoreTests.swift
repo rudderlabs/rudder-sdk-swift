@@ -40,7 +40,7 @@ struct LifecycleObserverStoreTests {
         #expect(observers.count == 1)
     }
 
-    @Test("when removing an observer, then it should no longer be in snapshot")
+    @Test("when removing an observer by id, then it should no longer be in snapshot")
     func testRemoveObserver() async {
         let store = LifecycleObserverStore()
         let observer1 = MockLifecycleEventListener()
@@ -48,7 +48,7 @@ struct LifecycleObserverStoreTests {
 
         await store.add(observer1)
         await store.add(observer2)
-        await store.remove(observer1)
+        await store.remove(byId: ObjectIdentifier(observer1))
 
         let observers = await store.snapshot()
 
@@ -56,14 +56,14 @@ struct LifecycleObserverStoreTests {
         #expect(observers.first === observer2)
     }
 
-    @Test("when removing non-existent observer, then no error should occur")
+    @Test("when removing non-existent observer by id, then no error should occur")
     func testRemoveNonExistentObserver() async {
         let store = LifecycleObserverStore()
         let observer1 = MockLifecycleEventListener()
         let observer2 = MockLifecycleEventListener()
 
         await store.add(observer1)
-        await store.remove(observer2)
+        await store.remove(byId: ObjectIdentifier(observer2))
 
         let observers = await store.snapshot()
 
@@ -105,7 +105,7 @@ struct LifecycleObserverStoreTests {
         #expect(observers.count == 3)
     }
 
-    @Test("when all observers are removed, then snapshot should be empty")
+    @Test("when all observers are removed by id, then snapshot should be empty")
     func testRemoveAllObservers() async {
         let store = LifecycleObserverStore()
         let observer1 = MockLifecycleEventListener()
@@ -113,8 +113,8 @@ struct LifecycleObserverStoreTests {
 
         await store.add(observer1)
         await store.add(observer2)
-        await store.remove(observer1)
-        await store.remove(observer2)
+        await store.remove(byId: ObjectIdentifier(observer1))
+        await store.remove(byId: ObjectIdentifier(observer2))
 
         let observers = await store.snapshot()
 
