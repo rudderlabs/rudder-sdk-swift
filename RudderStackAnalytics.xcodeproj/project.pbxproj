@@ -177,6 +177,7 @@
 		53E777622EB502A700564D61 /* BackoffPolicyHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */; };
 		53E777652EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777642EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift */; };
 		53E777672EB5134C00564D61 /* BackoffPolicyHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777662EB5134C00564D61 /* BackoffPolicyHandlerTests.swift */; };
+		53ED4C3E2F123BE100093264 /* MockLifecycleEventListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ED4C3D2F123BE100093264 /* MockLifecycleEventListener.swift */; };
 		8595FAAC2ED6D51600057B60 /* ECommerceParamNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8595FAAA2ED6D51500057B60 /* ECommerceParamNames.swift */; };
 		8595FAAD2ED6D51600057B60 /* ECommerceEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8595FAA92ED6D51500057B60 /* ECommerceEvents.swift */; };
 		859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */; };
@@ -382,6 +383,7 @@
 		53E777612EB502A700564D61 /* BackoffPolicyHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHelperTests.swift; sourceTree = "<group>"; };
 		53E777642EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponentialBackoffPolicyTests.swift; sourceTree = "<group>"; };
 		53E777662EB5134C00564D61 /* BackoffPolicyHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackoffPolicyHandlerTests.swift; sourceTree = "<group>"; };
+		53ED4C3D2F123BE100093264 /* MockLifecycleEventListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLifecycleEventListener.swift; sourceTree = "<group>"; };
 		8595FAA92ED6D51500057B60 /* ECommerceEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECommerceEvents.swift; sourceTree = "<group>"; };
 		8595FAAA2ED6D51500057B60 /* ECommerceParamNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECommerceParamNames.swift; sourceTree = "<group>"; };
 		859CEE112E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStandardIntegrationPlugin.swift; sourceTree = "<group>"; };
@@ -772,6 +774,7 @@
 				53DEA6422E03D06F00D6C371 /* MockProvider.swift */,
 				53A83F9B2E9F750400DDA0CC /* MockStorage.swift */,
 				538180BF2EC61C220019EE05 /* MockEventCapturePlugin.swift */,
+				53ED4C3D2F123BE100093264 /* MockLifecycleEventListener.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -1489,6 +1492,7 @@
 				539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */,
 				53078F1D2EB10B18006F5847 /* LifecycleManagementUtilsTests.swift in Sources */,
 				53E7775C2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift in Sources */,
+				53ED4C3E2F123BE100093264 /* MockLifecycleEventListener.swift in Sources */,
 				8CCA98822E8178D0006C3537 /* HttpClientTests.swift in Sources */,
 				539001062EA11A7400DAC164 /* AnalyticsTests.swift in Sources */,
 				8C047DA62EF078870019659F /* CodableTypes.swift in Sources */,
