@@ -40,8 +40,8 @@ extension LifecycleObserver {
     }
     
     private func handle(_ event: AppLifecycleEvent) {
-        // Capture store explicitly to avoid implicit self capture
-        Task { [store] in
+        // Capture store explicitly to avoid implicit self capture.
+        Task { @MainActor [store] in
             let observers = await store.snapshot()
 
             switch event {
