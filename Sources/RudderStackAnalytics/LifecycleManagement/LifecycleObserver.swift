@@ -55,10 +55,14 @@ extension LifecycleObserver {
 // MARK: - Observer Management
 extension LifecycleObserver {
     func addObserver(_ observer: LifecycleEventListener) {
-        observers.append(WeakObserver(observer))
+        $observers.modify { observers in
+            observers.append(WeakObserver(observer))
+        }
     }
 
     func removeObserver(_ observer: LifecycleEventListener) {
-        observers.removeAll { $0.observer === observer }
+        $observers.modify { observers in
+            observers.removeAll { $0.observer === observer }
+        }
     }
 }
