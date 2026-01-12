@@ -40,12 +40,14 @@ extension LifecycleObserver {
     }
     
     private func handle(_ event: AppLifecycleEvent) {
-        observers.removeAll { $0.observer == nil }
-        switch event {
-        case .background: observers.forEach { $0.observer?.onBackground() }
-        case .terminate: observers.forEach { $0.observer?.onTerminate() }
-        case .foreground: observers.forEach { $0.observer?.onForeground() }
-        case .becomeActive: observers.forEach { $0.observer?.onBecomeActive() }
+        $observers.modify { observers in
+            observers.removeAll { $0.observer == nil }
+            switch event {
+            case .background: observers.forEach { $0.observer?.onBackground() }
+            case .terminate: observers.forEach { $0.observer?.onTerminate() }
+            case .foreground: observers.forEach { $0.observer?.onForeground() }
+            case .becomeActive: observers.forEach { $0.observer?.onBecomeActive() }
+            }
         }
     }
 }
