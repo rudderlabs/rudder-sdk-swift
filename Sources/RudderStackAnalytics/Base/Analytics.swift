@@ -37,7 +37,7 @@ public class Analytics {
     /**
      The observer responsible for monitoring application lifecycle events.
     */
-    internal var lifecycleObserver: LifecycleObserver? = LifecycleObserver()
+    internal var lifecycleObserver: LifecycleObserver?
     
     /**
      The handler responsible for managing user sessions.
@@ -374,6 +374,7 @@ extension Analytics {
         self.setupSourceConfig()
         self.startProcessingEvents()
         
+        self.lifecycleObserver = LifecycleObserver() // Should be initialized before SessionHandler
         self.pluginChain = PluginChain(analytics: self)
         self.sessionHandler = SessionHandler(analytics: self)
         self.integrationsController = IntegrationsController(analytics: self)
