@@ -79,12 +79,9 @@ extension LifecycleEventListener {
  Wrapper to hold weak references to observers
  */
 class WeakObserver {
-    // Capture ObjectIdentifier instead of observer to avoid strong reference. So it won't extend the observer's lifetime.
-    let id: ObjectIdentifier
     weak var observer: LifecycleEventListener?
     
     init(_ observer: LifecycleEventListener) {
-        self.id = ObjectIdentifier(observer)
         self.observer = observer
     }
 }
