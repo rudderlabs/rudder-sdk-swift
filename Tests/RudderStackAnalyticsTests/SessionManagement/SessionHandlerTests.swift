@@ -14,7 +14,7 @@ struct SessionHandlerTests {
     
     // MARK: - Initialization Tests
     
-    @Test("given a session configuration with automatic tracking enabled, when initializing, then it should have a session ID and isSessionStart values")
+    @Test("given automatic session tracking enabled, when session handler is initialized, then it should have a session ID and isSessionStart values")
     func testInitWhenAutomaticSessionTrackingEnabled() {
         let configuration = SessionConfiguration(automaticSessionTracking: true)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -24,7 +24,7 @@ struct SessionHandlerTests {
         #expect(sessionHandler.isSessionStart != SessionConstants.defaultIsSessionStart)
     }
     
-    @Test("given a session configuration with automatic tracking disabled, when initializing, then it should not have a session ID and isSessionStart")
+    @Test("given automatic session tracking disabled, when session handler is initialized, then it should not have a session ID and isSessionStart")
     func testInitWhenAutomaticSessionTrackingDisabled() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -53,9 +53,24 @@ struct SessionHandlerTests {
         #expect(sessionHandler.lastActivityTime == 9876543210)
     }
     
+    @Test("given no session id stored previously, when automatic session enabled and app launched, then new automatic session is started with correct session id")
+    func testNewAutomaticSessionStartsWithCorrectIdWhenNoPreviousSession() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        
+        let beforeTime = UInt64(Date().timeIntervalSince1970)
+        let sessionHandler = SessionHandler(analytics: analytics)
+        let afterTime = UInt64(Date().timeIntervalSince1970)
+        
+        #expect(sessionHandler.sessionId != nil)
+        #expect(sessionHandler.sessionId! >= beforeTime)
+        #expect(sessionHandler.sessionId! <= afterTime)
+        #expect(sessionHandler.sessionType == .automatic)
+    }
+    
     // MARK: - Session Management Tests
     
-    @Test("given a session configuration with automatic tracking enabled, when starting a session, then it should set the session ID and type correctly", arguments: [
+    @Test("given a session configuration, when starting a session, then it should set the session ID and type correctly", arguments: [
         SessionHandlerTestCase(sessionId: 1234567890, sessionType: .manual),
         SessionHandlerTestCase(sessionId: 9876543210, sessionType: .automatic),
         SessionHandlerTestCase(sessionId: UInt64.max, sessionType: .automatic)
@@ -72,7 +87,7 @@ struct SessionHandlerTests {
         #expect(sessionHandler.sessionType == testCase.sessionType)
     }
     
-    @Test("given a session configuration with automatic tracking enabled, when starting a session, then it should set the session ID and type correctly")
+    @Test("given a session configuration, when starting a session with zero id, then session id should be nil")
     func testStartSessionWithZeroId() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -85,7 +100,7 @@ struct SessionHandlerTests {
         #expect(sessionHandler.sessionType == .manual)
     }
     
-    @Test("given a session configuration with automatic tracking enabled, when ending a session, then it should reset the session state")
+    @Test("given an active session, when ending the session, then it should reset the session state")
     func testEndSession() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -99,7 +114,44 @@ struct SessionHandlerTests {
         #expect(sessionHandler.sessionType == SessionConstants.defaultSessionType)
     }
     
-    @Test("given a session configuration with active session, when refreshing a session, then it should update the session ID and type correctly")
+    @Test("given automatic session enabled previously, when session is ended with endSession, then all the session variables are cleared")
+    func testEndSessionClearsAllVariablesForAutomaticSession() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let storage = analytics.configuration.storage
+        
+        storage.write(value: "1234567890", key: Constants.storageKeys.sessionId)
+        storage.write(value: false, key: Constants.storageKeys.isManualSession)
+        storage.write(value: true, key: Constants.storageKeys.isSessionStart)
+        storage.write(value: "9876543210", key: Constants.storageKeys.lastActivityTime)
+        
+        let sessionHandler = SessionHandler(analytics: analytics)
+        sessionHandler.endSession()
+        
+        #expect(sessionHandler.sessionId == nil)
+        #expect(sessionHandler.sessionType == .automatic)
+        #expect(sessionHandler.isSessionStart == false)
+        #expect(sessionHandler.lastActivityTime == 0)
+    }
+    
+    @Test("given manual session enabled previously, when session is ended with endSession, then all the session variables are cleared")
+    func testEndSessionClearsAllVariablesForManualSession() {
+        let configuration = SessionConfiguration(automaticSessionTracking: false)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let storage = analytics.configuration.storage
+        
+        storage.write(value: "1234567890", key: Constants.storageKeys.sessionId)
+        storage.write(value: true, key: Constants.storageKeys.isManualSession)
+        storage.write(value: true, key: Constants.storageKeys.isSessionStart)
+        
+        let sessionHandler = SessionHandler(analytics: analytics)
+        sessionHandler.endSession()
+        
+        #expect(sessionHandler.sessionId == nil)
+        #expect(sessionHandler.isSessionStart == false)
+    }
+    
+    @Test("given an active session, when refreshing a session, then it should update the session ID while maintaining session type")
     func testRefreshSessionWithActiveSession() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -116,7 +168,39 @@ struct SessionHandlerTests {
         #expect(sessionHandler.sessionType == .manual, "Session type should remain manual")
     }
     
-    @Test("given a session configuration without active session, when refreshing a session, then it should update the session ID and type correctly")
+    @Test("given automatic session enabled previously, when reset called (which internally calls refreshSession), then session is refreshed")
+    func testRefreshSessionForAutomaticSession() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let storage = analytics.configuration.storage
+        
+        let previousSessionId: UInt64 = 1234567890
+        storage.write(value: String(previousSessionId), key: Constants.storageKeys.sessionId)
+        storage.write(value: false, key: Constants.storageKeys.isManualSession)
+        
+        let sessionHandler = SessionHandler(analytics: analytics)
+        sessionHandler.refreshSession()
+        
+        #expect(sessionHandler.sessionId != previousSessionId)
+    }
+    
+    @Test("given manual session enabled previously, when reset called (which internally calls refreshSession), then session is refreshed")
+    func testRefreshSessionForManualSession() {
+        let configuration = SessionConfiguration(automaticSessionTracking: false)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let storage = analytics.configuration.storage
+        
+        let previousSessionId: UInt64 = 1234567890
+        storage.write(value: String(previousSessionId), key: Constants.storageKeys.sessionId)
+        storage.write(value: true, key: Constants.storageKeys.isManualSession)
+        
+        let sessionHandler = SessionHandler(analytics: analytics)
+        sessionHandler.refreshSession()
+        
+        #expect(sessionHandler.sessionId != previousSessionId)
+    }
+    
+    @Test("given no active session, when refreshing a session, then it should remain nil")
     func testRefreshSessionWithoutActiveSession() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -127,65 +211,81 @@ struct SessionHandlerTests {
         #expect(sessionHandler.sessionId == nil, "Session ID should remain nil when no active session exists")
     }
     
-    // MARK: - Automatic Session Tests
+    // MARK: - Automatic Session Launch Tests
     
-    @Test("given automatic session tracking enabled with no active session, when starting an automatic session, then it should create a new automatic session")
-    func testStatAutomaticSessionWithNoSessionWhenTrackingEnabled() {
-        let config = SessionConfiguration(automaticSessionTracking: true)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: config)
-        let handler = SessionHandler(analytics: analytics)
+    @Test("given an automatic session enabled, when app is launched and session is timed out, then new session starts")
+    func testAutomaticSessionTimedOutOnLaunchStartsNewSession() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 5000)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let storage = analytics.configuration.storage
         
-        handler.startAutomaticSessionIfNeeded()
+        let initialSessionId: UInt64 = 1234567890
+        storage.write(value: String(initialSessionId), key: Constants.storageKeys.sessionId)
+        storage.write(value: false, key: Constants.storageKeys.isManualSession)
+        // Simulate last activity 10 seconds ago (past timeout of 5 seconds)
+        let pastTime = UInt64(ProcessInfo.processInfo.systemUptime * 1000) - 10000
+        storage.write(value: String(pastTime), key: Constants.storageKeys.lastActivityTime)
         
-        #expect(handler.sessionId != nil, "Expected a new session ID when auto-tracking is enabled")
-        #expect(handler.sessionType == .automatic, "Expected session type to be automatic")
+        let sessionHandler = SessionHandler(analytics: analytics)
+        
+        #expect(sessionHandler.sessionId != initialSessionId)
+        #expect(sessionHandler.sessionType == .automatic)
     }
     
-    @Test("given automatic session tracking enabled with an active manual session, when starting an automatic session, then it should switch to automatic session")
-    func testStatAutomaticSessionWithActiveManualSessionWhenTrackingEnabled() {
-        let config = SessionConfiguration(automaticSessionTracking: true)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: config)
-        let handler = SessionHandler(analytics: analytics)
+    @Test("given previous session was manual, when automatic session enabled and app launched, then new automatic session starts")
+    func testManualSessionReplacedWithAutomaticOnLaunch() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let storage = analytics.configuration.storage
         
-        let originalId: UInt64 = 1111111111
-        handler.startSession(id: originalId, type: .manual)
+        let initialSessionId: UInt64 = 1234567890
+        storage.write(value: String(initialSessionId), key: Constants.storageKeys.sessionId)
+        storage.write(value: true, key: Constants.storageKeys.isManualSession)
         
-        handler.startAutomaticSessionIfNeeded()
+        let sessionHandler = SessionHandler(analytics: analytics)
         
-        #expect(handler.sessionId != originalId, "Expected a new session ID when auto-tracking is enabled")
-        #expect(handler.sessionType == .automatic, "Expected session type to be automatic")
+        #expect(sessionHandler.sessionId != initialSessionId)
+        #expect(sessionHandler.sessionType == .automatic)
     }
     
-    @Test("given a disabled automatic session tracking tracking with an active automatic session, when starting an automatic session, then it should stop the session")
-    func testStatAutomaticSessionWithActiveAutomaticSessionWhenTrackingDisabled() {
-        let config = SessionConfiguration(automaticSessionTracking: false)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: config)
-        let handler = SessionHandler(analytics: analytics)
+    @Test("given previous session was manual, when automatic session is disabled and app launched, then previous session variables are not cleared")
+    func testManualSessionPersistsWhenAutomaticTrackingDisabled() {
+        let configuration = SessionConfiguration(automaticSessionTracking: false)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let storage = analytics.configuration.storage
         
-        handler.startSession(id: 1111111111, type: .automatic)
-        handler.startAutomaticSessionIfNeeded()
+        let previousSessionId: UInt64 = 1234567890
+        storage.write(value: String(previousSessionId), key: Constants.storageKeys.sessionId)
+        storage.write(value: true, key: Constants.storageKeys.isManualSession)
         
-        #expect(handler.sessionId == nil, "Expected no session when auto-tracking is disabled with automatic type")
+        let sessionHandler = SessionHandler(analytics: analytics)
+        
+        #expect(sessionHandler.sessionId == previousSessionId)
+        #expect(sessionHandler.sessionType == .manual)
     }
     
-    @Test("given a disabled automatic session tracking with an active manual session, when starting a session, then it should retain the manual session")
-    func testStatAutomaticSessionWithActiveManualSessionWhenTrackingDisabled() {
-        let config = SessionConfiguration(automaticSessionTracking: false)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: config)
-        let handler = SessionHandler(analytics: analytics)
+    @Test("given previous session was automatic, when automatic session is disabled and app launched, then previous session variables are cleared")
+    func testAutomaticSessionClearedWhenAutomaticTrackingDisabled() {
+        let configuration = SessionConfiguration(automaticSessionTracking: false)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let storage = analytics.configuration.storage
         
-        let originalId: UInt64 = 1111111111
-        handler.startSession(id: originalId, type: .manual)
+        let previousSessionId: UInt64 = 1234567890
+        let lastActivityTime: UInt64 = 9876543210
+        storage.write(value: String(previousSessionId), key: Constants.storageKeys.sessionId)
+        storage.write(value: false, key: Constants.storageKeys.isManualSession)
+        storage.write(value: String(lastActivityTime), key: Constants.storageKeys.lastActivityTime)
         
-        handler.startAutomaticSessionIfNeeded()
+        let sessionHandler = SessionHandler(analytics: analytics)
         
-        #expect(handler.sessionId == originalId, "Expected manual session to remain unchanged")
-        #expect(handler.sessionType == .manual, "Expected session type to remain manual")
+        #expect(sessionHandler.sessionId == nil)
+        #expect(sessionHandler.sessionType == .automatic)
+        #expect(sessionHandler.lastActivityTime == 0)
     }
     
     // MARK: - Timeout and State Management Tests
     
-    @Test("given a session configuration with automatic tracking enabled, when testing session timeout, then it should correctly identify timeout states", arguments: [
+    @Test("given a session configuration, when testing session timeout, then it should correctly identify timeout states", arguments: [
         (5000, 6000, true),
         (10000, 5000, false),
         (5000, 5000, false)
@@ -201,7 +301,7 @@ struct SessionHandlerTests {
         #expect(sessionHandler.isSessionTimedOut == expectedTimedOut)
     }
     
-    @Test("given a session configuration with automatic tracking enabled, when updating the session start flag, then it should set the session start state correctly", arguments: [true, false])
+    @Test("given a session configuration, when updating the session start flag, then it should set the session start state correctly", arguments: [true, false])
     func testUpdateSessionStart(isSessionStart: Bool) {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -212,7 +312,7 @@ struct SessionHandlerTests {
         #expect(sessionHandler.isSessionStart == isSessionStart)
     }
     
-    @Test("given a session configuration with automatic tracking enabled, when updating the session activity time, then it should set the last activity time correctly")
+    @Test("given a session configuration, when updating the session activity time, then it should set the last activity time correctly")
     func testUpdateSessionActivityTime() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -231,9 +331,60 @@ struct SessionHandlerTests {
         #expect(sessionHandler.lastActivityTime <= afterTime)
     }
     
+    // MARK: - Foreground Tests
+    
+    @Test("given automatic session ongoing previously, when app is foregrounded and session is timed out, then new session starts")
+    func testForegroundWithTimedOutSessionStartsNewSession() async {
+        let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 5000)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let storage = analytics.configuration.storage
+        
+        let previousSessionId: UInt64 = 1234567890
+        storage.write(value: String(previousSessionId), key: Constants.storageKeys.sessionId)
+        storage.write(value: false, key: Constants.storageKeys.isManualSession)
+        // Set last activity time to be beyond timeout
+        let pastTime = UInt64(ProcessInfo.processInfo.systemUptime * 1000) - 10000
+        storage.write(value: String(pastTime), key: Constants.storageKeys.lastActivityTime)
+        
+        let sessionHandler = SessionHandler(analytics: analytics)
+        
+        // Simulate foreground event
+        NotificationCenter.default.post(name: AppLifecycleEvent.foreground.notificationName, object: nil)
+        
+        // Allow async observers to process
+        try? await Task.sleep(nanoseconds: 100_000_000)
+        
+        #expect(sessionHandler.sessionId != previousSessionId)
+        #expect(sessionHandler.sessionType == .automatic)
+    }
+    
+    // MARK: - System Restart Tests
+    
+    @Test("given automatic session enabled and the system is restarted (monotonic time less than last activity), when app is launched, then new session starts")
+    func testSystemRestartOnLaunchStartsNewSession() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 300000)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let storage = analytics.configuration.storage
+        
+        let initialSessionId: UInt64 = 1234567890
+        // Current monotonic time will be small (since system just restarted)
+        // But last activity time was stored before restart, so it's larger
+        let veryLargeLastActivityTime: UInt64 = UInt64.max - 1000
+        
+        storage.write(value: String(initialSessionId), key: Constants.storageKeys.sessionId)
+        storage.write(value: false, key: Constants.storageKeys.isManualSession)
+        storage.write(value: String(veryLargeLastActivityTime), key: Constants.storageKeys.lastActivityTime)
+        
+        let sessionHandler = SessionHandler(analytics: analytics)
+        
+        // After system restart, monotonic time is small, so session should be timed out
+        #expect(sessionHandler.sessionId != initialSessionId)
+        #expect(sessionHandler.sessionType == .automatic)
+    }
+    
     // MARK: - Integration Tests
     
-    @Test("given a session configuration with automatic tracking enabled, when completing the session lifecycle, then it should transition through all states correctly")
+    @Test("given a session configuration, when completing the session lifecycle, then it should transition through all states correctly")
     func testCompleteSessionLifecycle() {
         let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 5000)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -262,7 +413,7 @@ struct SessionHandlerTests {
         #expect(sessionHandler.isSessionStart == SessionConstants.defaultIsSessionStart)
     }
     
-    @Test("given a session configuration with automatic tracking enabled, when testing session persistence across handler instances, then it should maintain session state correctly")
+    @Test("given a session configuration, when testing session persistence across handler instances, then it should maintain session state correctly")
     func testSessionPersistence() {
         let configuration = SessionConfiguration(automaticSessionTracking: false)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -279,7 +430,7 @@ struct SessionHandlerTests {
         #expect(sessionHandler2.isSessionStart)
     }
     
-    @Test("given a session configuration with automatic tracking enabled, when testing session type transitions, then it should transition between manual and automatic types correctly")
+    @Test("given a session configuration, when testing session type transitions, then it should transition between manual and automatic types correctly")
     func testSessionTypeTransitions() {
         let configuration = SessionConfiguration(automaticSessionTracking: true)
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
@@ -298,70 +449,6 @@ struct SessionHandlerTests {
         // Should be automatic
         #expect(sessionHandler.sessionType == .automatic)
         #expect(sessionHandler.sessionId == 2222222222)
-        
-        // Call automatic session check
-        sessionHandler.startAutomaticSessionIfNeeded()
-        
-        // Should maintain automatic session
-        #expect(sessionHandler.sessionType == .automatic)
-        #expect(sessionHandler.sessionId != nil)
-    }
-    
-    @Test("given an existing valid automatic session, when calling startAutomaticSessionIfNeeded, then it should register the observer for lifecycle events")
-    func testStartAutomaticSessionIfNeededRegistersObserverForExistingValidSession() {
-        let config = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 5000)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: config)
-        let handler = SessionHandler(analytics: analytics)
-
-        // Start an automatic session first
-        let originalId: UInt64 = 1111111111
-        handler.startSession(id: originalId, type: .automatic)
-
-        // Update activity time to ensure session is not timed out
-        handler.updateSessionLastActivityTime()
-
-        // Verify session is valid and not timed out
-        #expect(handler.sessionId == originalId)
-        #expect(handler.sessionType == .automatic)
-        #expect(!handler.isSessionTimedOut)
-
-        // Deregister the observer to simulate state where session exists but observer is not registered
-        // This is the key: we need to verify that startAutomaticSessionIfNeeded() registers the observer
-        handler.deregisterObserver()
-
-        // Verify observer is deregistered by checking foreground event does NOT create a new session
-        let pastTime = handler.monotonicCurrentTime - 6000 // Beyond timeout
-        handler.updateSessionLastActivityTime(pastTime)
-        #expect(handler.isSessionTimedOut, "Session should be timed out")
-
-        // Trigger foreground event - observer is deregistered, so this should NOT create a new session
-        NotificationCenter.default.post(name: AppLifecycleEvent.foreground.notificationName, object: nil)
-        #expect(handler.sessionId == originalId, "Session ID should remain unchanged because observer is deregistered")
-
-        // Reset the session state for the actual test
-        handler.updateSessionLastActivityTime() // Make session valid again
-        #expect(!handler.isSessionTimedOut, "Session should not be timed out after activity update")
-
-        // Now call startAutomaticSessionIfNeeded - this should register the observer
-        // even though no new session is created
-        handler.startAutomaticSessionIfNeeded()
-
-        // Session should remain unchanged (no new session created)
-        #expect(handler.sessionId == originalId, "Session ID should remain unchanged for valid automatic session")
-        #expect(handler.sessionType == .automatic, "Session type should remain automatic")
-
-        // Now verify the observer was registered by startAutomaticSessionIfNeeded
-        // Simulate session timeout and foreground event
-        let newPastTime = handler.monotonicCurrentTime - 6000 // Beyond timeout
-        handler.updateSessionLastActivityTime(newPastTime)
-        #expect(handler.isSessionTimedOut, "Session should be timed out")
-
-        // Trigger foreground event - if observer is registered, this should create a new session
-        NotificationCenter.default.post(name: AppLifecycleEvent.foreground.notificationName, object: nil)
-
-        // Verify new session was created (proves observer was registered by startAutomaticSessionIfNeeded)
-        #expect(handler.sessionId != originalId, "New session should be created on foreground after timeout")
-        #expect(handler.sessionType == .automatic, "Session type should remain automatic")
     }
 }
 

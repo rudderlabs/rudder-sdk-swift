@@ -9,102 +9,173 @@ import Foundation
 import Testing
 @testable import RudderStackAnalytics
 
+// MARK: - LifecycleObserver Tests
+
 @Suite("LifecycleObserver Tests")
-class LifecycleObserverTests {
+struct LifecycleObserverTests {
     
-    var mockAnalytics: Analytics
-    var mockListener: MockLifecycleEventListener
-    var lifecycleObserver: LifecycleObserver?
-    
-    init() {
-        mockAnalytics = MockProvider.createMockAnalytics()
-        mockListener = MockLifecycleEventListener()
-        lifecycleObserver = LifecycleObserver(analytics: mockAnalytics)
-    }
-    
-    @Test("when lifecycle events are posted, then the correct callbacks are triggered", arguments: [
-        (AppLifecycleEvent.background,  \MockLifecycleEventListener.onBackgroundCalled),
-        (AppLifecycleEvent.foreground,  \MockLifecycleEventListener.onForegroundCalled),
-        (AppLifecycleEvent.terminate,   \MockLifecycleEventListener.onTerminateCalled),
-        (AppLifecycleEvent.becomeActive, \MockLifecycleEventListener.onBecomeActiveCalled)
-    ])
-    func testLifecycleEventHandling(_ event: AppLifecycleEvent,
-                                    _ expectedFlag: KeyPath<MockLifecycleEventListener, Bool>) {
-        lifecycleObserver?.addObserver(mockListener)
-        NotificationCenter.default.post(name: event.notificationName, object: nil)
+    @Test("when background notification is posted, then observer should receive onBackground callback")
+    func testBackgroundNotificationCallsObserver() async throws {
+        let lifecycleObserver = LifecycleObserver()
+        let mockListener = MockLifecycleEventListener()
         
-        #expect(mockListener[keyPath: expectedFlag], "Expected correct callback for \(event)")
+        lifecycleObserver.addObserver(mockListener)
         
-        let allFlags: [KeyPath<MockLifecycleEventListener, Bool>] = [
-            \.onBackgroundCalled,
-            \.onForegroundCalled,
-            \.onTerminateCalled,
-            \.onBecomeActiveCalled
-        ]
-        
-        for flag in allFlags where flag != expectedFlag {
-            #expect(!mockListener[keyPath: flag], "Expected \(flag) to remain false for \(event)")
+        try await postAndWaitUntil(notification: AppLifecycleEvent.background.notificationName) {
+            mockListener.onBackgroundCalled
         }
+        
+        #expect(mockListener.onBackgroundCalled)
     }
     
-    @Test("when multiple observers are registered, then all should receive lifecycle event callbacks")
-    func testMultipleObservers() {
+    @Test("when foreground notification is posted, then observer should receive onForeground callback")
+    func testForegroundNotificationCallsObserver() async throws {
+        let lifecycleObserver = LifecycleObserver()
+        let mockListener = MockLifecycleEventListener()
+        
+        lifecycleObserver.addObserver(mockListener)
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.foreground.notificationName) {
+            mockListener.onForegroundCalled
+        }
+        
+        #expect(mockListener.onForegroundCalled)
+    }
+    
+    @Test("when terminate notification is posted, then observer should receive onTerminate callback")
+    func testTerminateNotificationCallsObserver() async throws {
+        let lifecycleObserver = LifecycleObserver()
+        let mockListener = MockLifecycleEventListener()
+        
+        lifecycleObserver.addObserver(mockListener)
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.terminate.notificationName) {
+            mockListener.onTerminateCalled
+        }
+        
+        #expect(mockListener.onTerminateCalled)
+    }
+    
+    @Test("when becomeActive notification is posted, then observer should receive onBecomeActive callback")
+    func testBecomeActiveNotificationCallsObserver() async throws {
+        let lifecycleObserver = LifecycleObserver()
+        let mockListener = MockLifecycleEventListener()
+        
+        lifecycleObserver.addObserver(mockListener)
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.becomeActive.notificationName) {
+            mockListener.onBecomeActiveCalled
+        }
+        
+        #expect(mockListener.onBecomeActiveCalled)
+    }
+    
+    // MARK: - Multiple Observers Tests
+    
+    @Test("when background notification is posted, then all observers should receive callback")
+    func testMultipleObserversReceiveBackgroundNotification() async throws {
+        let lifecycleObserver = LifecycleObserver()
         let mockListener1 = MockLifecycleEventListener()
         let mockListener2 = MockLifecycleEventListener()
         
-        lifecycleObserver?.addObserver(mockListener1)
-        lifecycleObserver?.addObserver(mockListener2)
-        NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
+        lifecycleObserver.addObserver(mockListener1)
+        lifecycleObserver.addObserver(mockListener2)
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.background.notificationName) {
+            mockListener1.onBackgroundCalled && mockListener2.onBackgroundCalled
+        }
         
         #expect(mockListener1.onBackgroundCalled)
         #expect(mockListener2.onBackgroundCalled)
     }
     
-    @Test("when sequential lifecycle events are posted, then they should be handled correctly")
-    func testSequentialEventHandling() {
-        lifecycleObserver?.addObserver(mockListener)
-        NotificationCenter.default.post(name: AppLifecycleEvent.foreground.notificationName, object: nil)
-        NotificationCenter.default.post(name: AppLifecycleEvent.becomeActive.notificationName, object: nil)
-        NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
-        
-        #expect(mockListener.onForegroundCalled)
-        #expect(mockListener.onBecomeActiveCalled)
-        #expect(mockListener.onBackgroundCalled)
-    }
-    
-    @Test("when observer removal during event processing is attempted, it should work correctly")
-    func testObserverRemovalDuringEventProcessing() {
+    @Test("when foreground notification is posted, then all observers should receive callback")
+    func testMultipleObserversReceiveForegroundNotification() async throws {
+        let lifecycleObserver = LifecycleObserver()
         let mockListener1 = MockLifecycleEventListener()
         let mockListener2 = MockLifecycleEventListener()
         
-        lifecycleObserver?.addObserver(mockListener1)
-        lifecycleObserver?.addObserver(mockListener2)
+        lifecycleObserver.addObserver(mockListener1)
+        lifecycleObserver.addObserver(mockListener2)
         
-        lifecycleObserver?.removeObserver(mockListener1)
-        NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
+        try await postAndWaitUntil(notification: AppLifecycleEvent.foreground.notificationName) {
+            mockListener1.onForegroundCalled && mockListener2.onForegroundCalled
+        }
+        
+        #expect(mockListener1.onForegroundCalled)
+        #expect(mockListener2.onForegroundCalled)
+    }
+    
+    // MARK: - Removed Observer Tests
+    
+    @Test("when observer is removed, then it should not receive notifications")
+    func testRemovedObserverDoesNotReceiveNotification() async throws {
+        let lifecycleObserver = LifecycleObserver()
+        let mockListener1 = MockLifecycleEventListener()
+        let mockListener2 = MockLifecycleEventListener()
+        
+        lifecycleObserver.addObserver(mockListener1)
+        lifecycleObserver.addObserver(mockListener2)
+        lifecycleObserver.removeObserver(mockListener1)
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.background.notificationName) {
+            mockListener2.onBackgroundCalled
+        }
         
         #expect(!mockListener1.onBackgroundCalled)
         #expect(mockListener2.onBackgroundCalled)
     }
-}
-
-// MARK: - MockLifecycleEventListener
-
-final class MockLifecycleEventListener: LifecycleEventListener {
-    var onBackgroundCalled = false
-    var onForegroundCalled = false
-    var onTerminateCalled = false
-    var onBecomeActiveCalled = false
     
-    func onBackground() { onBackgroundCalled = true }
-    func onForeground() { onForegroundCalled = true }
-    func onTerminate() { onTerminateCalled = true }
-    func onBecomeActive() { onBecomeActiveCalled = true }
+    // MARK: - Sequential Notification Tests
     
-    func reset() {
-        onBackgroundCalled = false
-        onForegroundCalled = false
-        onTerminateCalled = false
-        onBecomeActiveCalled = false
+    @Test("when multiple different notifications are posted, then observer should receive all callbacks")
+    func testSequentialNotificationsCallObserver() async throws {
+        let lifecycleObserver = LifecycleObserver()
+        let mockListener = MockLifecycleEventListener()
+        
+        lifecycleObserver.addObserver(mockListener)
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.background.notificationName) {
+            mockListener.onBackgroundCalled
+        }
+        
+        #expect(mockListener.onBackgroundCalled)
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.foreground.notificationName) {
+            mockListener.onForegroundCalled
+        }
+        
+        #expect(mockListener.onForegroundCalled)
+    }
+    
+    // MARK: - All Lifecycle Events Test
+    
+    @Test("when all lifecycle notifications are posted, then observer should receive all callbacks")
+    func testAllLifecycleEventsCallObserver() async throws {
+        let lifecycleObserver = LifecycleObserver()
+        let mockListener = MockLifecycleEventListener()
+        
+        lifecycleObserver.addObserver(mockListener)
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.background.notificationName) {
+            mockListener.onBackgroundCalled
+        }
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.foreground.notificationName) {
+            mockListener.onForegroundCalled
+        }
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.terminate.notificationName) {
+            mockListener.onTerminateCalled
+        }
+        
+        try await postAndWaitUntil(notification: AppLifecycleEvent.becomeActive.notificationName) {
+            mockListener.onBecomeActiveCalled
+        }
+        
+        #expect(mockListener.onBackgroundCalled)
+        #expect(mockListener.onForegroundCalled)
+        #expect(mockListener.onTerminateCalled)
+        #expect(mockListener.onBecomeActiveCalled)
     }
 }

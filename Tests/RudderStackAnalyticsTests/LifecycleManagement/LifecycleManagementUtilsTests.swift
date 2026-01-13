@@ -19,15 +19,7 @@ import WatchKit
 @testable import RudderStackAnalytics
 
 @Suite("LifecycleManagementUtils Tests")
-class LifecycleManagementUtilsTests {
-    
-    var mockAnalytics: Analytics
-    var lifecycleSessionWrapper: LifecycleSessionWrapper
-    
-    init() {
-        mockAnalytics = MockProvider.createMockAnalytics()
-        lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: mockAnalytics)
-    }
+struct LifecycleManagementUtilsTests {
     
     @Test("when platform-specific notification mapping is checked, then correct mappings are returned")
     func testPlatformSpecificNotificationMapping() {
@@ -51,37 +43,36 @@ class LifecycleManagementUtilsTests {
         #endif
     }
     
-    @Test("when initialized, LifecycleSessionWrapper should set up components correctly")
-    func testLifecycleSessionWrapperInitialization() {
-        #expect(lifecycleSessionWrapper.lifecycleObserver != nil)
-        #expect(lifecycleSessionWrapper.sessionHandler != nil)
-        #expect(lifecycleSessionWrapper.lifecycleObserver?.analytics === mockAnalytics)
-        #expect(lifecycleSessionWrapper.sessionHandler?.analytics === mockAnalytics)
+    // MARK: - WeakObserver Tests
+    
+    @Test("when wrapping an observer, then it should be accessible")
+    func testWeakObserverWrapping() {
+        let observer = MockLifecycleEventListener()
+        let weakWrapper = WeakObserver(observer)
+        
+        #expect(weakWrapper.observer === observer)
     }
     
-    @Test("when invalidating, LifecycleSessionWrapper should clean up components in correct order")
-    func testLifecycleSessionWrapperInvalidate() {
-        lifecycleSessionWrapper.invalidate()
+    @Test("when wrapped observer is deallocated, then weak reference should be nil")
+    func testWeakObserverDeallocation() {
+        var observer: MockLifecycleEventListener? = MockLifecycleEventListener()
+        let weakWrapper = WeakObserver(observer!)
         
-        #expect(lifecycleSessionWrapper.sessionHandler == nil)
-        #expect(lifecycleSessionWrapper.lifecycleObserver == nil)
+        observer = nil
+        
+        #expect(weakWrapper.observer == nil)
     }
     
-    @Test("given lifecycle observer integrated through wrapper, when app triggers foreground and background events, then listener methods should be invoked")
-    func testIntegratedLifecycleEventHandling() {
-        let mockListener = MockLifecycleEventListener()
+    @Test("when wrapping multiple observers, then each wrapper should hold its own reference")
+    func testMultipleWeakObservers() {
+        let observer1 = MockLifecycleEventListener()
+        let observer2 = MockLifecycleEventListener()
         
-        lifecycleSessionWrapper.lifecycleObserver?.addObserver(mockListener)
-        NotificationCenter.default.post(name: AppLifecycleEvent.foreground.notificationName, object: nil)
-        NotificationCenter.default.post(name: AppLifecycleEvent.background.notificationName, object: nil)
+        let weakWrapper1 = WeakObserver(observer1)
+        let weakWrapper2 = WeakObserver(observer2)
         
-        #expect(mockListener.onForegroundCalled)
-        #expect(mockListener.onBackgroundCalled)
-    }
-    
-    @Test("when initialized, wrapper components should reference the same Analytics instance")
-    func testWrapperComponentsAnalyticsReference() {
-        #expect(lifecycleSessionWrapper.lifecycleObserver?.analytics === mockAnalytics)
-        #expect(lifecycleSessionWrapper.sessionHandler?.analytics === mockAnalytics)
+        #expect(weakWrapper1.observer === observer1)
+        #expect(weakWrapper2.observer === observer2)
+        #expect(weakWrapper1.observer !== weakWrapper2.observer)
     }
 }

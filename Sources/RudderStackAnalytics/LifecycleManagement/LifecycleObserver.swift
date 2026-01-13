@@ -1,5 +1,5 @@
 //
-//  LifeCycleObserver.swift
+//  LifecycleObserver.swift
 //  Analytics
 //
 //  Created by Satheesh Kannan on 12/03/25.
@@ -12,61 +12,67 @@ import Foundation
  A class created to observe app lifecycle events.
  */
 final class LifecycleObserver {
-    var analytics: Analytics?
-    
-    private var observers: [WeakObserver] = []
+    @Synchronized private var observers: [WeakObserver] = []
     private var notificationObservers: [NSObjectProtocol] = []
     
-    init(analytics: Analytics) {
-        self.analytics = analytics
-        self.registerNotifications()
+    init() {
+        registerNotifications()
     }
     
     deinit {
-        self.observers.removeAll()
-        self.notificationObservers.forEach { NotificationCenter.default.removeObserver($0) }
+        notificationObservers.forEach(NotificationCenter.default.removeObserver)
     }
 }
 
 // MARK: - Event Management
 extension LifecycleObserver {
-    func registerNotifications() {
+    private func registerNotifications() {
         AppLifecycleEvent.allCases.forEach { event in
-            let observer = NotificationCenter.default.addObserver(forName: event.notificationName, object: nil, queue: .main) { [weak self] _ in
-                guard let self else { return }
-                self.handleEvent(event)
+            let observer = NotificationCenter.default.addObserver(
+                forName: event.notificationName,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.handle(event)
             }
             notificationObservers.append(observer)
         }
     }
     
-    private func handleEvent(_ event: AppLifecycleEvent) {
+    private func handle(_ event: AppLifecycleEvent) {
+        let currentObservers = getObserversSnapshot()
+
         switch event {
-        case .background: notifyObservers { $0.onBackground() }
-        case .terminate: notifyObservers { $0.onTerminate() }
-        case .foreground: notifyObservers { $0.onForeground() }
-        case .becomeActive: notifyObservers { $0.onBecomeActive() }
+        case .background: currentObservers.forEach { $0.onBackground() }
+        case .terminate: currentObservers.forEach { $0.onTerminate() }
+        case .foreground: currentObservers.forEach { $0.onForeground() }
+        case .becomeActive: currentObservers.forEach { $0.onBecomeActive() }
         }
     }
-    
-    private func notifyObservers(_ action: (LifecycleEventListener) -> Void) {
-        observers.removeAll { $0.observer == nil } // Clean up nil references
-        
-        for wrapper in observers {
-            if let observer = wrapper.observer {
-                action(observer)
-            }
+
+    /// Returns a snapshot of active observers while cleaning up nil references.
+    /// This prevents deadlock if any observer tries to add/remove observers during callback.
+    private func getObserversSnapshot() -> [LifecycleEventListener] {
+        var currentObservers: [LifecycleEventListener] = []
+        $observers.modify { observers in
+            observers.removeAll { $0.observer == nil }
+            currentObservers = observers.compactMap { $0.observer }
         }
+        return currentObservers
     }
 }
 
 // MARK: - Observer Management
 extension LifecycleObserver {
     func addObserver(_ observer: LifecycleEventListener) {
-        observers.append(WeakObserver(observer))
+        $observers.modify { observers in
+            observers.append(WeakObserver(observer))
+        }
     }
-    
+
     func removeObserver(_ observer: LifecycleEventListener) {
-        observers.removeAll { $0.observer === observer }
+        $observers.modify { observers in
+            observers.removeAll { $0.observer === observer }
+        }
     }
 }

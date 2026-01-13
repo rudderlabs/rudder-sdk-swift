@@ -22,7 +22,6 @@ final class SessionHandler {
     
     private var storage: KeyValueStorage
     private var sessionState: StateImpl<SessionInfo>
-    
     private var sessionInstance: SessionInfo { self.sessionState.state.value }
     private var sessionCofiguration: SessionConfiguration { analytics.configuration.sessionConfiguration }
     private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
@@ -33,19 +32,34 @@ final class SessionHandler {
         self.analytics = analytics
         self.storage = analytics.configuration.storage
         self.sessionState = createState(initialState: SessionInfo.initializeState(storage))
+        
+        if sessionCofiguration.automaticSessionTracking {
+            self.checkAndStartSessionOnLaunch()
+            self.attachSessionTrackingObservers()
+        } else if !isSessionManual {
+            self.endSession()
+        }
+    }
+    
+    private func checkAndStartSessionOnLaunch() {
+        guard self.sessionId == nil || self.isSessionManual || self.isSessionTimedOut else { return }
+        self.startSession(id: Self.generatedSessionId, type: .automatic)
     }
     
     func startSession(id: UInt64, type: SessionType) {
         self.updateSessionStart(isSessionStart: true)
         self.updateSessionType(type: type)
+        if isSessionManual {
+            detachSessionTrackingObservers()
+        }
         self.updateSessionId(id: id)
-        self.sessionType == .automatic ? self.registerObserver() : self.deregisterObserver()
     }
     
     func endSession() {
+        self.detachSessionTrackingObservers()
+        
         self.sessionState.dispatch(action: EndSessionAction())
         self.sessionInstance.resetSessionState(storage: self.storage)
-        self.deregisterObserver()
     }
     
     func refreshSession() {
@@ -53,34 +67,23 @@ final class SessionHandler {
         self.startSession(id: SessionHandler.generatedSessionId, type: self.sessionType)
     }
     
-    func startAutomaticSessionIfNeeded() {
-        if self.sessionCofiguration.automaticSessionTracking {
-            if self.sessionId == nil || self.sessionType == .manual || self.isSessionTimedOut {
-                self.startSession(id: Self.generatedSessionId, type: .automatic)
-            } else {
-                self.registerObserver()
-            }
-        } else if self.sessionId != nil, self.sessionType == .automatic {
-            self.endSession()
-        }
-    }
-    
     deinit {
-        self.deregisterObserver()
+        self.detachSessionTrackingObservers()
     }
 }
 
 // MARK: - Observers
 extension SessionHandler: LifecycleEventListener {
     
-    func registerObserver() {
-        self.deregisterObserver()
+    func attachSessionTrackingObservers() {
         self.analytics.lifecycleObserver?.addObserver(self)
     }
     
-    func deregisterObserver() {
+    func detachSessionTrackingObservers() {
         self.analytics.lifecycleObserver?.removeObserver(self)
     }
+    
+    // MARK: - Lifecycle Event Handlers
     
     func onBackground() {
         self.updateSessionLastActivityTime()
@@ -110,6 +113,10 @@ extension SessionHandler {
     
     var isSessionStart: Bool {
         return self.sessionInstance.isStart
+    }
+    
+    var isSessionManual: Bool {
+        return self.sessionInstance.type == .manual
     }
     
     var sessionType: SessionType {
