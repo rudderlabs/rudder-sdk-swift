@@ -11,10 +11,10 @@
 
 @interface EventFilteringPlugin()
 
-/// Reference to the analytics client
+/// The analytics instance this plugin is attached to.
 @property(nonatomic, retain) RSSAnalytics *client;
 
-/// Array of event names that should be filtered out
+/// The list of event names that should be filtered out from the analytics pipeline.
 @property(nonatomic, retain) NSMutableArray *eventsToFilter;
 
 @end
@@ -25,7 +25,15 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        // Initialize with default events to filter
+        self.eventsToFilter = [NSMutableArray arrayWithArray: @[@"Application Opened", @"Application Backgrounded"]];
+    }
+    return self;
+}
+
+- (instancetype)initWithEventsToFilter:(NSArray<NSString *> *)eventsToFilter {
+    self = [super init];
+    if (self) {
+        self.eventsToFilter = [NSMutableArray arrayWithArray:eventsToFilter];
     }
     return self;
 }
@@ -36,15 +44,13 @@
 
 - (void)setup:(RSSAnalytics * _Nonnull)analytics {
     self.client = analytics;
-    // Set up default events to filter - Application lifecycle events that are often noise
-    self.eventsToFilter = [NSMutableArray arrayWithArray: @[@"Application Opened", @"Application Backgrounded"]];
 }
 
 /**
- Intercepts events and filters out unwanted events based on the configured filter list.
- 
- @param event The event to potentially filter
- @return The original event if it should pass through, or nil if it should be filtered out
+ Intercepts analytics events and filters out specified track events.
+
+ @param event The event to potentially filter.
+ @return The original event if it should be processed, or nil if it should be filtered out.
  */
 - (RSSEvent * _Nullable)intercept:(RSSEvent * _Nonnull)event {
     if ([event isKindOfClass:[RSSTrackEvent class]]) {
@@ -59,17 +65,15 @@
 
 /**
  Determines whether a track event should be filtered based on its event name.
- 
- @param trackEvent The track event to evaluate
- @return YES if the event should be filtered out, NO if it should pass through
+
+ @param trackEvent The track event to evaluate.
+ @return YES if the event should be filtered out, NO if it should pass through.
  */
 - (BOOL)shouldFilterEvent:(RSSTrackEvent *)trackEvent {
     return [self.eventsToFilter containsObject:trackEvent.eventName];
 }
 
-/**
- Cleans up resources when the plugin is being removed or the analytics client is shutting down.
- */
+/** Called when the plugin is being removed or the analytics instance is being torn down. */
 - (void)teardown {
     [self.eventsToFilter removeAllObjects];
     self.eventsToFilter = nil;
