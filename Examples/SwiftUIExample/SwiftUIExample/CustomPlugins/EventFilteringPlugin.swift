@@ -14,21 +14,33 @@ import RudderStackAnalytics
  
  ## Usage:
  ```swift
- // Create and add the plugin
+ // Create and add the plugin with default filtering (filters "Application Opened" and "Application Backgrounded")
  let eventFilteringPlugin = EventFilteringPlugin()
  analytics.add(plugin: eventFilteringPlugin)
+ 
+ // Or create with custom events to filter
+ let customEventFilteringPlugin = EventFilteringPlugin(eventsToFilter: ["Custom Event", "Unwanted Event", "Test Event"])
+ analytics.add(plugin: customEventFilteringPlugin)
  ```
 */
 final class EventFilteringPlugin: Plugin {
     var pluginType: PluginType = .onProcess
     var analytics: Analytics?
     
-    private var eventsToFilter = [String]()
+    private let eventsToFilter: [String]
+    
+    /** 
+     Initializes the EventFilteringPlugin with events to filter
+     
+     - Parameter eventsToFilter: Array of event names to filter out. Defaults to ["Application Opened", "Application Backgrounded"]
+     */
+    init(eventsToFilter: [String] = ["Application Opened", "Application Backgrounded"]) {
+        self.eventsToFilter = eventsToFilter
+    }
     
     /** Called when the plugin is added to the analytics instance */
     func setup(analytics: Analytics) {
         self.analytics = analytics
-        self.eventsToFilter = ["Application Opened", "Application Backgrounded"]
     }
     
     /** 
@@ -43,10 +55,5 @@ final class EventFilteringPlugin: Plugin {
             return nil
         }
         return event
-    }
-    
-    /** Called when the plugin is being removed or the analytics instance is being torn down */
-    func teardown() {
-        self.eventsToFilter.removeAll()
     }
 }
