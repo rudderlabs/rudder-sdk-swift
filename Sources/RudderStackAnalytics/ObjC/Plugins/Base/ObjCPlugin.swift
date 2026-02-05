@@ -91,7 +91,7 @@ final class ObjCPluginAdapter: Plugin {
      */
     func intercept(event: Event) -> Event? {
         let objcEvent = ObjCEvent.createObjCEvent(from: event)
-        return objcPlugin.intercept?(objcEvent)?.event ?? event
+        return objcPlugin.intercept?(objcEvent)?.event
     }
 
     /**
