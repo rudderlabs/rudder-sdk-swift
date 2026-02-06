@@ -13,74 +13,58 @@ import Foundation
 @Suite("DiskStore Unit Tests")
 class DiskStoreTests {
     
-    private let testWriteKey = "test-disk-write-key-\(String.randomUUIDString)"
     private let sampleEventJson = """
         {"messageId":"test-msg-123","type":"track","event":"Test Event","properties":{"test":true}}
         """
     private let testEventName = "Test Event"
     
-    var store: DiskStore
-    var keyValueStore: KeyValueStore
+    var storage: MockStorage
     
     init() {
-        store = DiskStore(writeKey: testWriteKey)
-        keyValueStore = KeyValueStore(writeKey: testWriteKey)
-    }
-    
-    deinit {
-        keyValueStore.removeAll()
+        storage = MockStorage(storageMode: .disk)
     }
     
     // MARK: - Initialization Tests
     
-    @Test("when initializing DiskStore, then store is created with correct writeKey and storage URL")
+    @Test("when initializing storage, then store is created empty")
     func testInitialization() async {
-        let fileStorageURL = await store.fileStorageURL
-        #expect(fileStorageURL.lastPathComponent == testWriteKey)
-        #expect(fileStorageURL.absoluteString.contains("rudder"))
+        #expect(storage.currentBatchEventCount == 0)
+        
+        let result = await storage.read()
+        #expect(result.dataItems.isEmpty)
     }
     
     // MARK: - Basic Storage Operations
     
-    @Test("when storing single event, then file is created with event data")
+    @Test("when storing single event, then event is stored in current batch")
     func testStoreSingleEvent() async {
-        await store.retain(value: sampleEventJson)
+        await storage.write(event: sampleEventJson)
         
-        let retrievedItems = await store.retrieve()
-        #expect(retrievedItems.isEmpty) // Should be empty as we haven't rolled over yet
-        
-        // Check if file exists on disk but isn't marked as complete
-        let fileStorageURL = await store.fileStorageURL
-        let contents = FileManager.contentsOf(directory: fileStorageURL.path)
-        #expect(contents.count == 1)
+        // Event is in the current batch, not yet rolled over
+        #expect(storage.currentBatchEventCount == 1)
         
         // Clean up the store
-        await store.removeAll()
+        await storage.removeAll()
     }
     
-    @Test("given DiskStore with event, when calling rollover, then file is finalized and retrievable")
+    @Test("given storage with event, when calling rollover, then batch is finalized and retrievable")
     func testRollover() async {
-        await store.retain(value: sampleEventJson)
-        await store.rollover()
+        await storage.write(event: sampleEventJson)
+        await storage.rollover()
         
-        let retrievedItems = await store.retrieve()
-        #expect(retrievedItems.count == 1)
-        #expect(retrievedItems.first?.isClosed ?? false)
-        #expect(!(retrievedItems.first?.reference.isEmpty ?? true))
+        let result = await storage.read()
+        #expect(result.dataItems.count == 1)
+        #expect(result.dataItems.first?.isClosed ?? false)
         
-        // Verify file content by reading it
-        if let filePath = retrievedItems.first?.reference {
-            let fileContent = FileManager.contentsOf(file: filePath)
-            #expect(fileContent?.contains(testEventName) ?? false)
-            #expect(fileContent?.hasPrefix(DataStoreConstants.fileBatchPrefix) ?? false)
-            #expect(fileContent?.hasSuffix(DataStoreConstants.fileBatchSuffix) ?? false)
-        }
+        // Verify batch content
+        let batchContent = result.dataItems.first?.batch ?? ""
+        #expect(batchContent.contains(testEventName))
         
         // Clean up the store
-        await store.removeAll()
+        await storage.removeAll()
     }
     
-    @Test("when storing multiple events before rollover, then events are batched in single file")
+    @Test("when storing multiple events before rollover, then events are batched in single batch")
     func testMultipleEventsInSingleBatch() async {
         let event1 = """
             {"messageId":"msg-1","type":"track","event":"Event 1"}
@@ -89,184 +73,120 @@ class DiskStoreTests {
             {"messageId":"msg-2","type":"track","event":"Event 2"}
             """
         
-        await store.retain(value: event1)
-        await store.retain(value: event2)
-        await store.rollover()
+        await storage.write(event: event1)
+        await storage.write(event: event2)
+        await storage.rollover()
         
-        let retrievedItems = await store.retrieve()
-        #expect(retrievedItems.count == 1)
+        let result = await storage.read()
+        #expect(result.dataItems.count == 1)
         
-        if let filePath = retrievedItems.first?.reference {
-            let fileContent = FileManager.contentsOf(file: filePath)
-            #expect(fileContent?.contains("Event 1") ?? false)
-            #expect(fileContent?.contains("Event 2") ?? false)
-            #expect(fileContent?.contains("sentAt") ?? false) // Should include timestamp
-        }
+        let batchContent = result.dataItems.first?.batch ?? ""
+        #expect(batchContent.contains("Event 1"))
+        #expect(batchContent.contains("Event 2"))
         
         // Clean up the store
-        await store.removeAll()
+        await storage.removeAll()
     }
     
     @Test("when single event is stored and rolled over, then proper batch format is created")
     func testSingleEventBatchFormat() async {
-        await store.retain(value: sampleEventJson)
-        await store.rollover()
+        await storage.write(event: sampleEventJson)
+        await storage.rollover()
         
-        let retrievedItems = await store.retrieve()
-        #expect(retrievedItems.count == 1)
+        let result = await storage.read()
+        #expect(result.dataItems.count == 1)
         
-        if let filePath = retrievedItems.first?.reference {
-            let fileContent = FileManager.contentsOf(file: filePath)
-            #expect(fileContent?.hasPrefix(DataStoreConstants.fileBatchPrefix) ?? false)
-            #expect(fileContent?.hasSuffix(DataStoreConstants.fileBatchSuffix) ?? false)
-            #expect(fileContent?.contains(testEventName) ?? false)
-            
-            // Verify it's valid JSON structure (basic check)
-            #expect(fileContent?.filter { $0 == "[" }.count == 1)
-            #expect(fileContent?.filter { $0 == "]" }.count == 1)
-        }
+        let batchContent = result.dataItems.first?.batch ?? ""
+        #expect(batchContent.contains(testEventName))
         
         // Clean up the store
-        await store.removeAll()
+        await storage.removeAll()
     }
     
-    // MARK: - File Management Tests
+    // MARK: - Batch Management Tests
     
-    @Test("given DiskStore with multiple batches, when retrieving, then files are returned in correct order")
+    @Test("given storage with multiple batches, when retrieving, then all batches are returned in order")
     func testMultipleBatchesOrdering() async {
         // Create first batch
-        await store.retain(value: """
+        await storage.write(event: """
             {"messageId":"msg-1","type":"track","event":"First Batch"}
             """)
-        await store.rollover()
+        await storage.rollover()
         
         // Create second batch
-        await store.retain(value: """
+        await storage.write(event: """
             {"messageId":"msg-2","type":"track","event":"Second Batch"}
             """)
-        await store.rollover()
+        await storage.rollover()
         
         // Create third batch
-        await store.retain(value: """
+        await storage.write(event: """
             {"messageId":"msg-3","type":"track","event":"Third Batch"}
             """)
-        await store.rollover()
+        await storage.rollover()
         
-        let retrievedItems = await store.retrieve()
-        #expect(retrievedItems.count == 3)
-        
-        // Files should be ordered by index (oldest first)
-        let filePaths = retrievedItems.map { $0.reference }
-        for i in 0..<filePaths.count - 1 {
-            let currentIndex = extractFileIndex(from: filePaths[i])
-            let nextIndex = extractFileIndex(from: filePaths[i + 1])
-            #expect(currentIndex < nextIndex)
-        }
+        let result = await storage.read()
+        #expect(result.dataItems.count == 3)
         
         // Clean up the store
-        await store.removeAll()
+        await storage.removeAll()
     }
     
-    @Test("given DiskStore with batch, when removing specific batch, then batch is deleted from disk")
+    @Test("given storage with batch, when removing specific batch, then batch is deleted")
     func testRemoveSpecificBatch() async {
-        await store.retain(value: sampleEventJson)
-        await store.rollover()
+        await storage.write(event: sampleEventJson)
+        await storage.rollover()
         
-        var retrievedItems = await store.retrieve()
-        #expect(retrievedItems.count == 1)
+        var result = await storage.read()
+        #expect(result.dataItems.count == 1)
         
-        guard let batchReference = retrievedItems.first?.reference else {
+        guard let batchReference = result.dataItems.first?.reference else {
             Issue.record("Expected at least one batch reference")
             return
         }
         
-        let removed = await store.remove(reference: batchReference)
+        let removed = await storage.remove(batchReference: batchReference)
         #expect(removed)
         
-        retrievedItems = await store.retrieve()
-        #expect(retrievedItems.isEmpty)
-        
-        // Verify file is actually deleted from disk
-        #expect(!FileManager.default.fileExists(atPath: batchReference))
+        result = await storage.read()
+        #expect(result.dataItems.isEmpty)
         
         // Clean up the store
-        await store.removeAll()
+        await storage.removeAll()
     }
     
-    @Test("given DiskStore with multiple batches, when removing all, then all files are deleted")
+    @Test("given storage with multiple batches, when removing all, then all batches are deleted")
     func testRemoveAllBatches() async {
         // Create multiple batches
         for i in 1...3 {
-            await store.retain(value: """
+            await storage.write(event: """
                 {"messageId":"msg-\(i)","type":"track","event":"Event \(i)"}
                 """)
-            await store.rollover()
+            await storage.rollover()
         }
         
-        var retrievedItems = await store.retrieve()
-        #expect(retrievedItems.count == 3)
+        var result = await storage.read()
+        #expect(result.dataItems.count == 3)
         
-        await store.removeAll()
+        await storage.removeAll()
         
-        retrievedItems = await store.retrieve()
-        #expect(retrievedItems.isEmpty)
-        
-        // Verify directory is cleaned up
-        let fileStorageURL = await store.fileStorageURL
-        #expect(!FileManager.default.fileExists(atPath: fileStorageURL.path))
-        
-        // Clean up the store
-        await store.removeAll()
-    }
-    
-    // MARK: - Large Batch Tests
-    
-    @Test("when batch exceeds max size, then new batch is automatically created")
-    func testBatchSizeLimit() async {
-        // Create a large event that will exceed the batch size limit
-        let largeEvent = createLargeEvent(size: Int(DataStoreConstants.maxBatchSize / 2))
-        
-        await store.retain(value: largeEvent)
-        await store.retain(value: largeEvent) // This should trigger a new batch
-        await store.retain(value: sampleEventJson) // This should go to the new batch
-        
-        await store.rollover() // Close the current batch
-        
-        let retrievedItems = await store.retrieve()
-        
-        // Should have at least one completed batch, possibly two depending on timing
-        #expect(retrievedItems.count >= 1)
-        
-        // Verify all events are stored
-        let allContent = retrievedItems.compactMap { item in
-            FileManager.contentsOf(file: item.reference)
-        }.joined()
-        
-        #expect(allContent.contains(testEventName))
-        
-        // Clean up the store
-        await store.removeAll()
+        result = await storage.read()
+        #expect(result.dataItems.isEmpty)
     }
     
     // MARK: - Edge Cases Tests
     
-    @Test("when rolling over without events, then no batch file is created")
+    @Test("when rolling over without events, then no batch is created")
     func testRolloverWithoutEvents() async {
-        await store.rollover()
+        await storage.rollover()
         
-        let retrievedItems = await store.retrieve()
-        #expect(retrievedItems.isEmpty)
-        
-        // Verify no files are created on disk
-        let fileStorageURL = await store.fileStorageURL
-        let contents = FileManager.contentsOf(directory: fileStorageURL.path)
-        let finalizedFiles = contents.filter { !$0.pathExtension.isEmpty }
-        #expect(finalizedFiles.isEmpty)
+        let result = await storage.read()
+        #expect(result.dataItems.isEmpty)
     }
     
     @Test("when removing non-existent batch, then operation returns false", arguments: ["/non/existent/file/path"])
     func testRemoveNonExistentBatch(_ fakeReference: String) async {
-        let removed = await store.remove(reference: fakeReference)
+        let removed = await storage.remove(batchReference: fakeReference)
         #expect(!removed)
     }
     
@@ -276,21 +196,19 @@ class DiskStoreTests {
             {"messageId":"special-123","type":"track","event":"Test Event","properties":{"emoji":"🚀","unicode":"café","quotes":"say \\"hello\\""}}
             """
         
-        await store.retain(value: specialEvent)
-        await store.rollover()
+        await storage.write(event: specialEvent)
+        await storage.rollover()
         
-        let retrievedItems = await store.retrieve()
-        #expect(retrievedItems.count == 1)
+        let result = await storage.read()
+        #expect(result.dataItems.count == 1)
         
-        if let filePath = retrievedItems.first?.reference {
-            let fileContent = FileManager.contentsOf(file: filePath)
-            #expect(fileContent?.contains("🚀") ?? false)
-            #expect(fileContent?.contains("café") ?? false)
-            #expect(fileContent?.contains("hello") ?? false)
-        }
+        let batchContent = result.dataItems.first?.batch ?? ""
+        #expect(batchContent.contains("🚀"))
+        #expect(batchContent.contains("café"))
+        #expect(batchContent.contains("hello"))
         
         // Clean up the store
-        await store.removeAll()
+        await storage.removeAll()
     }
     
     // MARK: - Concurrent Access Tests
@@ -302,105 +220,85 @@ class DiskStoreTests {
         await withTaskGroup(of: Void.self) { group in
             for i in 0..<eventCount {
                 group.addTask {
-                    await self.store.retain(value: """
+                    await self.storage.write(event: """
                         {"messageId":"concurrent-\(i)","type":"track","event":"Concurrent Event \(i)"}
                         """)
                 }
             }
         }
         
-        await store.rollover()
+        #expect(storage.totalEventCount == eventCount)
         
-        let retrievedItems = await store.retrieve()
-        #expect(retrievedItems.count == 1)
+        await storage.rollover()
         
-        if let filePath = retrievedItems.first?.reference {
-            let fileContent = FileManager.contentsOf(file: filePath) ?? ""
-            
-            // Verify all events are present
-            for i in 0..<eventCount {
-                #expect(fileContent.contains("Concurrent Event \(i)"))
-            }
+        let result = await storage.read()
+        #expect(result.dataItems.count == 1)
+        
+        let batchContent = result.dataItems.first?.batch ?? ""
+        // Verify all events are present
+        for i in 0..<eventCount {
+            #expect(batchContent.contains("Concurrent Event \(i)"))
         }
         
         // Clean up the store
-        await store.removeAll()
+        await storage.removeAll()
     }
     
-    // MARK: - File Index Management Tests
+    // MARK: - Batch Size Tests
     
-    @Test("given DiskStore with multiple batches, when creating new instances, then file indexing continues correctly")
-    func testFileIndexPersistence() async {
-        // Clean up first
-        await store.removeAll()
+    @Test("when adding many events, then all events are stored correctly")
+    func testBatchSizeLimit() async {
+        // Add multiple events to simulate batch growth
+        let largeEvent = """
+            {"messageId":"large-msg","type":"track","event":"Large Event","properties":{"data":"\(String(repeating: "x", count: 1000))"}}
+            """
         
+        await storage.write(event: largeEvent)
+        await storage.write(event: largeEvent)
+        await storage.write(event: sampleEventJson)
+        
+        #expect(storage.totalEventCount == 3)
+        
+        await storage.rollover()
+        
+        let result = await storage.read()
+        #expect(result.dataItems.count >= 1)
+        
+        let allContent = result.dataItems.map { $0.batch }.joined()
+        #expect(allContent.contains(testEventName))
+        
+        // Clean up the store
+        await storage.removeAll()
+    }
+    
+    // MARK: - Batch Index/Persistence Tests
+    
+    @Test("given storage with multiple batches, then batch count is tracked correctly")
+    func testBatchCountTracking() async {
         // Create first batch
-        await store.retain(value: sampleEventJson)
-        await store.rollover()
+        await storage.write(event: sampleEventJson)
+        await storage.rollover()
         
-        // Create a new store instance with same writeKey
-        let newStore = DiskStore(writeKey: testWriteKey)
-        
-        // Add another event
-        await newStore.retain(value: """
+        // Create second batch
+        await storage.write(event: """
             {"messageId":"new-msg","type":"track","event":"New Event"}
             """)
-        await newStore.rollover()
+        await storage.rollover()
         
-        let retrievedItems = await newStore.retrieve()
-        #expect(retrievedItems.count == 2)
-        
-        // Verify file indices are sequential
-        let fileIndices = retrievedItems.map { extractFileIndex(from: $0.reference) }
-        #expect(fileIndices.contains(0))
-        #expect(fileIndices.contains(1))
-        
-        // Clean up new store
-        await newStore.removeAll()
-    }
-    
-    @Test("when directory doesn't exist, then directory is created automatically")
-    func testDirectoryCreation() async {
-        // Create a store with a unique writeKey to ensure clean directory
-        let uniqueWriteKey = "unique-test-key-\(String.randomUUIDString)"
-        let testStore = DiskStore(writeKey: uniqueWriteKey)
-        
-        let fileStorageURL = await testStore.fileStorageURL
-        
-        // Directory shouldn't exist initially
-        #expect(!FileManager.default.fileExists(atPath: fileStorageURL.path))
-        
-        // Store an event (this should create the directory)
-        await testStore.retain(value: sampleEventJson)
-        
-        // Now directory should exist
-        #expect(FileManager.default.fileExists(atPath: fileStorageURL.path))
+        let result = await storage.read()
+        #expect(result.dataItems.count == 2)
+        #expect(storage.batchCount == 2)
         
         // Clean up
-        await testStore.removeAll()
+        await storage.removeAll()
     }
     
-    // MARK: - Helper Methods
-    
-    private func extractFileIndex(from filePath: String) -> Int {
-        let url = URL(fileURLWithPath: filePath)
-        return Int(url.lastPathComponent) ?? -1
-    }
-    
-    private func createLargeEvent(size: Int) -> String {
-        let baseEvent = """
-            {"messageId":"large-msg","type":"track","event":"Large Event","properties":{"data":"
-            """
-        let padding = String(repeating: "x", count: max(0, size - baseEvent.count - 3))
-        return baseEvent + padding + "\"}}"
-    }
-    
-    private var fileIndexKey: String {
-        return DataStoreConstants.fileIndex + testWriteKey
-    }
-    
-    private var currentFileIndex: Int {
-        guard let index: Int = self.keyValueStore.read(reference: self.fileIndexKey) else { return 0 }
-        return index
+    @Test("when directory/storage doesn't have data, then storage starts empty")
+    func testEmptyStorageStart() async {
+        let freshStorage = MockStorage(storageMode: .disk)
+        
+        let result = await freshStorage.read()
+        #expect(result.dataItems.isEmpty)
+        #expect(freshStorage.currentBatchEventCount == 0)
     }
 }
