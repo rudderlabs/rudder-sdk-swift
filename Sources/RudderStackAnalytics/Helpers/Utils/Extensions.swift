@@ -58,35 +58,12 @@ extension Date {
 // MARK: - UserDefaults
 extension UserDefaults {
     static func rudder(_ writeKey: String) -> UserDefaults? {
-        let bundleIdentifier: String
-        if let mainBundleId = Bundle.main.bundleIdentifier {
-            bundleIdentifier = mainBundleId
-        } else if Self.isTestEnvironment {
-            // Fallback for test environment where Bundle.main.bundleIdentifier is nil
-            bundleIdentifier = "com.rudderstack.analytics.tests"
-        } else {
+        guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
             LoggerAnalytics.debug("Bundle.main.bundleIdentifier is nil. UserDefaults suite cannot be created. Key-value storage will be disabled and data may be lost.")
             return nil
         }
         let suiteName = bundleIdentifier + ".analytics." + writeKey
         return UserDefaults(suiteName: suiteName)
-    }
-
-    private static var isTestEnvironment: Bool {
-        // Check for XCTest environment variable
-        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
-            return true
-        }
-        // Check for Swift Testing or general test runner
-        let processName = ProcessInfo.processInfo.processName
-        if processName.contains("xctest") || processName.contains("swift-testing") {
-            return true
-        }
-        // Check if running via swift test command
-        if ProcessInfo.processInfo.arguments.contains(where: { $0.contains("xctest") || $0.contains(".xctest") }) {
-            return true
-        }
-        return false
     }
 }
 
