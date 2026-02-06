@@ -8,6 +8,7 @@
 import Testing
 @testable import RudderStackAnalytics
 
+@Suite("CustomIntegration Plugin Tests")
 struct CustomIntegrationPluginTests {
     
     var analytics: Analytics
