@@ -11,29 +11,37 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- A plugin that filters out specific events from being processed by the analytics pipeline.
- 
+ This plugin filters out specific analytics events from being processed in the analytics pipeline.
+ It allows you to prevent certain track events from being tracked or sent to destinations.
+
  By default, this plugin filters out "Application Opened" and "Application Backgrounded" events.
- This is useful for reducing noise in analytics data by excluding automated lifecycle events
- that may not be relevant for your specific use case.
- 
- **Note**: Filtered events are completely removed from the processing pipeline and will not be sent to any destinations.
- 
- Set this plugin just after the SDK initialization to start filtering events:
- ```objective-c
+ You can also provide a custom list of event names to filter using `initWithEventsToFilter:`.
+
+ @code
+ // Using default filter list
  [analytics add:[[EventFilteringPlugin alloc] init]];
- ```
- 
- The plugin logs when events are filtered for debugging purposes.
+
+ // Using a custom filter list
+ NSArray *eventsToFilter = @[@"Event 1", @"Event 2"];
+ [analytics add:[[EventFilteringPlugin alloc] initWithEventsToFilter:eventsToFilter]];
+ @endcode
  */
 @interface EventFilteringPlugin : NSObject<RSSPlugin>
 
 /**
- Initializes the EventFilteringPlugin with default filtering rules.
-  
- @return An initialized EventFilteringPlugin instance
+ Initializes the plugin with the default filter list: "Application Opened" and "Application Backgrounded".
+
+ @return An initialized EventFilteringPlugin instance.
  */
 - (instancetype)init;
+
+/**
+ Initializes the plugin with a custom list of event names to filter out.
+
+ @param eventsToFilter An array of event names that should be filtered from the analytics pipeline.
+ @return An initialized EventFilteringPlugin instance.
+ */
+- (instancetype)initWithEventsToFilter:(NSArray<NSString *> *)eventsToFilter;
 
 @end
 
