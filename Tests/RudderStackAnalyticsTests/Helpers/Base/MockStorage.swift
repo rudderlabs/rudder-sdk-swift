@@ -19,7 +19,6 @@ import Foundation
  Features:
  - In-memory key-value storage
  - Event batch management with rollover support
- - Thread-safe operations using actor-based concurrency
  - Configurable storage mode simulation
  - Easy test data inspection and manipulation
  */
