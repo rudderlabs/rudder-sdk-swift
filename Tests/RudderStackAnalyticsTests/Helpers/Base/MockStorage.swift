@@ -125,15 +125,15 @@ extension MockStorage {
      This is useful for checking event count without triggering rollover.
      */
     var currentBatchEventCount: Int {
-        return mockEventStorage.getCurrentBatchEventCount()
+        return mockEventStorage.currentBatchEventCount
     }
-    
+
     /**
      Returns the total number of individual events across all batches (current + closed).
      This provides a count of all events regardless of batch boundaries.
      */
     var totalEventCount: Int {
-        return mockEventStorage.getTotalEventCount()
+        return mockEventStorage.totalEventCount
     }
 }
 
@@ -342,54 +342,43 @@ extension MockStorage {
 // MARK: - MockKeyValueStorage
 
 class MockKeyValueStorage: KeyValueStorage {
-    
+
     private var storage: [String: Any] = [:]
-    private let queue = DispatchQueue(label: "MockKeyValueStorage", attributes: .concurrent)
-    
+
     func write<T: Codable>(value: T, key: String) {
-        queue.async(flags: .barrier) {
-            if self.isPrimitiveType(value) {
-                self.storage[key] = value
-            } else {
-                guard let encodedData = try? JSONEncoder().encode(value) else { return }
-                self.storage[key] = encodedData
-            }
+        if isPrimitiveType(value) {
+            storage[key] = value
+        } else {
+            guard let encodedData = try? JSONEncoder().encode(value) else { return }
+            storage[key] = encodedData
         }
     }
-    
+
     func read<T: Codable>(key: String) -> T? {
-        return queue.sync {
-            let rawValue = self.storage[key]
-            if let rawData = rawValue as? Data {
-                guard let decodedValue = try? JSONDecoder().decode(T.self, from: rawData) else { return nil }
-                return decodedValue
-            } else {
-                return rawValue as? T
-            }
+        let rawValue = storage[key]
+        if let rawData = rawValue as? Data {
+            guard let decodedValue = try? JSONDecoder().decode(T.self, from: rawData) else { return nil }
+            return decodedValue
+        } else {
+            return rawValue as? T
         }
     }
-    
+
     func remove(key: String) {
-        queue.async(flags: .barrier) {
-            self.storage.removeValue(forKey: key)
-        }
+        storage.removeValue(forKey: key)
     }
-    
+
     func removeAll() {
-        queue.async(flags: .barrier) {
-            self.storage.removeAll()
-        }
+        storage.removeAll()
     }
-    
+
     var allStoredData: [String: Any] {
-        return queue.sync {
-            return self.storage
-        }
+        return storage
     }
-    
+
     private func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
         guard let value = value else { return true }
-        
+
         return switch value {
         case is Int, is Double, is Float, is NSNumber, is Bool, is String, is Character,
             is [Int], is [Double], is [Float], is [NSNumber], is [Bool], is [String], is [Character]:
@@ -405,19 +394,19 @@ class MockKeyValueStorage: KeyValueStorage {
  Class-based mock event storage for thread-safe test operations.
  */
 final class MockEventStorage {
-    
+
     // MARK: - Properties
-    
+
     private var currentBatch: EventDataItem = EventDataItem()
     private var closedBatches: [EventDataItem] = []
-    private var currentBatchEventCount: Int = 0
-    private var totalEventCount: Int = 0  // Track total events across all batches
-    private let queue = DispatchQueue(label: "MockEventStorage.queue", attributes: .concurrent)
-    
+    private(set) var currentBatchEventCount: Int = 0
+    private(set) var totalEventCount: Int = 0
+    private let queue = DispatchQueue(label: "MockEventStorage.queue")
+
     // MARK: - EventStorage Protocol Methods
-    
+
     func write(event: String) {
-        queue.async(flags: .barrier) {
+        queue.sync {
             // Auto-split: if current batch exceeds max size, close it and start a new one
             if let existingData = self.currentBatch.batch.utf8Data,
                existingData.count > DataStoreConstants.maxBatchSize {
@@ -437,70 +426,61 @@ final class MockEventStorage {
             self.totalEventCount += 1
         }
     }
-    
+
     func read() -> EventDataResult {
-        return queue.sync {
-            var allBatches = self.closedBatches
-            
-            // Include current batch if it has events
-            if !self.currentBatch.batch.isEmpty {
-                var batchToInclude = self.currentBatch
-                batchToInclude.batch += DataStoreConstants.fileBatchSentAtSuffix + String.currentTimeStamp + DataStoreConstants.fileBatchSuffix
-                batchToInclude.isClosed = true
-                allBatches.append(batchToInclude)
-            }
-            
-            return EventDataResult(dataItems: allBatches)
+        queue.sync {
+            // Only return closed batches, matching production MemoryStore.retrieve() behavior
+            return EventDataResult(dataItems: self.closedBatches)
         }
     }
-    
+
     func remove(batchReference: String) -> Bool {
-        return queue.sync(flags: .barrier) {
+        queue.sync {
             // Remove from closed batches
             if let index = self.closedBatches.firstIndex(where: { $0.reference == batchReference }) {
                 self.closedBatches.remove(at: index)
                 return true
             }
-            
+
             // Check if it's the current batch
             if self.currentBatch.reference == batchReference {
                 self.currentBatch = EventDataItem()
                 self.currentBatchEventCount = 0
                 return true
             }
-            
+
             return false
         }
     }
-    
+
     func rollover() {
-        queue.async(flags: .barrier) {
+        queue.sync {
             guard !self.currentBatch.batch.isEmpty else { return }
-            
+
             // Close current batch and move to closed batches
             self.currentBatch.batch += DataStoreConstants.fileBatchSentAtSuffix + String.currentTimeStamp + DataStoreConstants.fileBatchSuffix
             self.currentBatch.isClosed = true
             self.closedBatches.append(self.currentBatch)
-            
+
             // Start new batch and reset counter
             self.currentBatch = EventDataItem()
             self.currentBatchEventCount = 0
         }
     }
-    
+
     func removeAll() {
-        queue.async(flags: .barrier) {
+        queue.sync {
             self.currentBatch = EventDataItem()
             self.closedBatches.removeAll()
             self.currentBatchEventCount = 0
             self.totalEventCount = 0
         }
     }
-    
+
     // MARK: - Test Helper Methods
-    
+
     func getAllEvents() -> [EventDataItem] {
-        return queue.sync {
+        queue.sync {
             var allBatches = self.closedBatches
             if !self.currentBatch.batch.isEmpty {
                 allBatches.append(self.currentBatch)
@@ -508,28 +488,14 @@ final class MockEventStorage {
             return allBatches
         }
     }
-    
+
     func getBatchCount() -> Int {
-        return queue.sync {
+        queue.sync {
             var count = self.closedBatches.count
             if !self.currentBatch.batch.isEmpty {
                 count += 1
             }
             return count
-        }
-    }
-    
-    /// Returns the number of events in the current batch (before rollover)
-    func getCurrentBatchEventCount() -> Int {
-        return queue.sync {
-            return self.currentBatchEventCount
-        }
-    }
-    
-    /// Returns the total number of individual events across all batches (current + closed)
-    func getTotalEventCount() -> Int {
-        return queue.sync {
-            return self.totalEventCount
         }
     }
 }

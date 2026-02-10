@@ -85,8 +85,11 @@ class MemoryStoreTests {
         // Add another event but don't rollover (open batch)
         await storage.write(event: sampleEventJson)
         
-        // Closed batch count is 1 (rolled over), plus current batch has 1 event
-        #expect(storage.batchCount == 2)
+        // read() should only return the closed batch, not the open one
+        let result = await storage.read()
+        #expect(result.dataItems.count == 1)
+        #expect(result.dataItems.first?.isClosed ?? false)
+
         #expect(storage.currentBatchEventCount == 1)
     }
     

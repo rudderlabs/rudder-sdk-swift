@@ -129,7 +129,12 @@ class DiskStoreTests {
         
         let result = await storage.read()
         #expect(result.dataItems.count == 3)
-        
+
+        // Verify ordering
+        #expect(result.dataItems[0].batch.contains("First Batch"))
+        #expect(result.dataItems[1].batch.contains("Second Batch"))
+        #expect(result.dataItems[2].batch.contains("Third Batch"))
+
         // Clean up the store
         await storage.removeAll()
     }
