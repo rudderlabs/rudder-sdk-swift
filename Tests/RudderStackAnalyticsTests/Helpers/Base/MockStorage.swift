@@ -399,9 +399,17 @@ final class MockEventStorage {
 
     private var currentBatch: EventDataItem = EventDataItem()
     private var closedBatches: [EventDataItem] = []
-    private(set) var currentBatchEventCount: Int = 0
-    private(set) var totalEventCount: Int = 0
+    private var _currentBatchEventCount: Int = 0
+    private var _totalEventCount: Int = 0
     private let queue = DispatchQueue(label: "MockEventStorage.queue")
+
+    var currentBatchEventCount: Int {
+        queue.sync { _currentBatchEventCount }
+    }
+
+    var totalEventCount: Int {
+        queue.sync { _totalEventCount }
+    }
 
     // MARK: - EventStorage Protocol Methods
 
@@ -414,7 +422,7 @@ final class MockEventStorage {
                 self.currentBatch.isClosed = true
                 self.closedBatches.append(self.currentBatch)
                 self.currentBatch = EventDataItem()
-                self.currentBatchEventCount = 0
+                self._currentBatchEventCount = 0
             }
 
             if self.currentBatch.batch.isEmpty {
@@ -422,8 +430,8 @@ final class MockEventStorage {
             } else {
                 self.currentBatch.batch += ",\(event)"
             }
-            self.currentBatchEventCount += 1
-            self.totalEventCount += 1
+            self._currentBatchEventCount += 1
+            self._totalEventCount += 1
         }
     }
 
@@ -445,7 +453,7 @@ final class MockEventStorage {
             // Check if it's the current batch
             if self.currentBatch.reference == batchReference {
                 self.currentBatch = EventDataItem()
-                self.currentBatchEventCount = 0
+                self._currentBatchEventCount = 0
                 return true
             }
 
@@ -464,7 +472,7 @@ final class MockEventStorage {
 
             // Start new batch and reset counter
             self.currentBatch = EventDataItem()
-            self.currentBatchEventCount = 0
+            self._currentBatchEventCount = 0
         }
     }
 
@@ -472,8 +480,8 @@ final class MockEventStorage {
         queue.sync {
             self.currentBatch = EventDataItem()
             self.closedBatches.removeAll()
-            self.currentBatchEventCount = 0
-            self.totalEventCount = 0
+            self._currentBatchEventCount = 0
+            self._totalEventCount = 0
         }
     }
 
