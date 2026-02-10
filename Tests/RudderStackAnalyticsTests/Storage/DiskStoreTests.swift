@@ -51,15 +51,17 @@ class DiskStoreTests {
     func testRollover() async {
         await storage.write(event: sampleEventJson)
         await storage.rollover()
-        
+
         let result = await storage.read()
         #expect(result.dataItems.count == 1)
         #expect(result.dataItems.first?.isClosed ?? false)
-        
-        // Verify batch content
+
+        // Verify batch content and format
         let batchContent = result.dataItems.first?.batch ?? ""
         #expect(batchContent.contains(testEventName))
-        
+        #expect(batchContent.hasPrefix(DataStoreConstants.fileBatchPrefix))
+        #expect(batchContent.hasSuffix(DataStoreConstants.fileBatchSuffix))
+
         // Clean up the store
         await storage.removeAll()
     }
@@ -296,9 +298,41 @@ class DiskStoreTests {
     @Test("when directory/storage doesn't have data, then storage starts empty")
     func testEmptyStorageStart() async {
         let freshStorage = MockStorage(storageMode: .disk)
-        
+
         let result = await freshStorage.read()
         #expect(result.dataItems.isEmpty)
         #expect(freshStorage.currentBatchEventCount == 0)
+    }
+
+    // MARK: - Batch Size Limit Tests
+
+    @Test("when batch exceeds max size, then new batch is automatically created")
+    func testBatchExceedsMaxSizeCreatesNewBatch() async {
+        // Create a large event that is about 3/4 of maxBatchSize (500 KB),
+        // so two events will clearly exceed the limit and trigger auto-split
+        let largePayload = String(repeating: "x", count: Int(DataStoreConstants.maxBatchSize * 3 / 4))
+        let largeEvent = "{\"messageId\":\"large-msg\",\"type\":\"track\",\"event\":\"Large Event\",\"properties\":{\"data\":\"\(largePayload)\"}}"
+
+        // First large event fits in the batch
+        await storage.write(event: largeEvent)
+        // Second large event should exceed maxBatchSize and trigger a new batch
+        await storage.write(event: largeEvent)
+        // Small event goes into the new batch
+        await storage.write(event: sampleEventJson)
+
+        await storage.rollover()
+
+        let result = await storage.read()
+
+        // Should have at least 2 batches: one closed when size exceeded, one from rollover
+        #expect(result.dataItems.count >= 2, "Expected at least 2 batches when batch size limit is exceeded, got \(result.dataItems.count)")
+
+        // Verify all events are stored across batches
+        let allContent = result.dataItems.map { $0.batch }.joined()
+        #expect(allContent.contains("Large Event"))
+        #expect(allContent.contains(testEventName))
+
+        // Clean up
+        await storage.removeAll()
     }
 }

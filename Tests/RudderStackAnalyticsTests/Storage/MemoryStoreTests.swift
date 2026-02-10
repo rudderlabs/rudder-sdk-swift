@@ -63,8 +63,15 @@ class MemoryStoreTests {
         
         await storage.write(event: event1)
         await storage.write(event: event2)
-        
+
         #expect(storage.currentBatchEventCount == 2)
+
+        await storage.rollover()
+
+        let result = await storage.read()
+        let batchContent = result.dataItems.first?.batch ?? ""
+        #expect(batchContent.contains("Event 1"))
+        #expect(batchContent.contains("Event 2"))
     }
     
     // MARK: - Batch Management Tests
@@ -220,6 +227,36 @@ class MemoryStoreTests {
         #expect(storage.totalEventCount == 11)
     }
     
+    @Test("when adding events exceeding batch size, then automatic rollover occurs")
+    func testBatchSizeLimitAutoRollover() async {
+        // Create a large event that is about 3/4 of maxBatchSize (500 KB),
+        // so two events will clearly exceed the limit and trigger auto-split
+        let largePayload = String(repeating: "x", count: Int(DataStoreConstants.maxBatchSize * 3 / 4))
+        let largeEvent = "{\"messageId\":\"large-msg\",\"type\":\"track\",\"event\":\"Large Event\",\"properties\":{\"data\":\"\(largePayload)\"}}"
+
+        // First large event fits in the batch
+        await storage.write(event: largeEvent)
+        // Second large event should exceed maxBatchSize and trigger auto-split
+        await storage.write(event: largeEvent)
+        // Small event goes into the new batch
+        await storage.write(event: sampleEventJson)
+
+        await storage.rollover()
+
+        let result = await storage.read()
+
+        // Should have at least 2 batches: one closed when size exceeded, one from rollover
+        #expect(result.dataItems.count >= 2, "Expected at least 2 batches when batch size limit is exceeded, got \(result.dataItems.count)")
+
+        // Verify all events are stored across batches
+        let allContent = result.dataItems.map { $0.batch }.joined()
+        #expect(allContent.contains("Large Event"))
+        #expect(allContent.contains("Test Event"))
+
+        // Clean up
+        await storage.removeAll()
+    }
+
     // MARK: - Edge Cases Tests
     
     @Test("when rolling over without events, then no batch is created")

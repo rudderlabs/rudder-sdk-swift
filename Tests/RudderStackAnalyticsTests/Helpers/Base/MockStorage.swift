@@ -418,6 +418,16 @@ final class MockEventStorage {
     
     func write(event: String) {
         queue.async(flags: .barrier) {
+            // Auto-split: if current batch exceeds max size, close it and start a new one
+            if let existingData = self.currentBatch.batch.utf8Data,
+               existingData.count > DataStoreConstants.maxBatchSize {
+                self.currentBatch.batch += DataStoreConstants.fileBatchSentAtSuffix + String.currentTimeStamp + DataStoreConstants.fileBatchSuffix
+                self.currentBatch.isClosed = true
+                self.closedBatches.append(self.currentBatch)
+                self.currentBatch = EventDataItem()
+                self.currentBatchEventCount = 0
+            }
+
             if self.currentBatch.batch.isEmpty {
                 self.currentBatch.batch = "{\"batch\":[\(event)"
             } else {
@@ -435,7 +445,7 @@ final class MockEventStorage {
             // Include current batch if it has events
             if !self.currentBatch.batch.isEmpty {
                 var batchToInclude = self.currentBatch
-                batchToInclude.batch += "]}"
+                batchToInclude.batch += DataStoreConstants.fileBatchSentAtSuffix + String.currentTimeStamp + DataStoreConstants.fileBatchSuffix
                 batchToInclude.isClosed = true
                 allBatches.append(batchToInclude)
             }
@@ -468,7 +478,7 @@ final class MockEventStorage {
             guard !self.currentBatch.batch.isEmpty else { return }
             
             // Close current batch and move to closed batches
-            self.currentBatch.batch += "]}"
+            self.currentBatch.batch += DataStoreConstants.fileBatchSentAtSuffix + String.currentTimeStamp + DataStoreConstants.fileBatchSuffix
             self.currentBatch.isClosed = true
             self.closedBatches.append(self.currentBatch)
             
