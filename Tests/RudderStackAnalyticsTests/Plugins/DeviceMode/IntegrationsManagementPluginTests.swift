@@ -10,6 +10,7 @@ import Combine
 import Foundation
 @testable import RudderStackAnalytics
 
+@Suite("IntegrationsManagement Plugin Tests")
 struct IntegrationsManagementPluginTests {
     
     var analytics: Analytics

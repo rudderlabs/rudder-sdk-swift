@@ -32,18 +32,20 @@ class LifecycleTrackingPluginTests {
         lifecycleTrackingPlugin.setup(analytics: analytics)
         
         await mockStorage.waitForCurrentBatchEvents(expectedCount: 1)
-        
+        await mockStorage.rollover()
+
         let result = await mockStorage.read()
         let combinedBatch = result.dataItems.map { $0.batch }.joined()
         #expect(combinedBatch.contains(LifecycleEvent.applicationInstalled.rawValue))
     }
-    
+
     @Test("when setup is called, then application opened event triggered")
     func testApplicationOpenedEvent() async {
         lifecycleTrackingPlugin.setup(analytics: analytics)
-        
+
         await mockStorage.waitForCurrentBatchEvents(expectedCount: 2)
-        
+        await mockStorage.rollover()
+
         let result = await mockStorage.read()
         let combinedBatch = result.dataItems.map { $0.batch }.joined()
         #expect(combinedBatch.contains(LifecycleEvent.applicationOpened.rawValue))
