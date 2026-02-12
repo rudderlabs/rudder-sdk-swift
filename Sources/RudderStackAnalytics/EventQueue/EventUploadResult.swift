@@ -44,13 +44,16 @@ enum RetryableEventUploadError: RetryableError {
     /** Indicates a retryable error, typically happens when the network is unavailable. */
     case networkUnavailable
     
+    /** Indicates a retryable error, typically happens when the request times out. */
+    case timeout
+    
     /** Indicates a fatal error, typically associated with some exception or failure that can be retried. */
     case unknown
     
     var statusCode: Int? {
         switch self {
         case .retryable(let code): code
-        case .networkUnavailable, .unknown: nil
+        case .networkUnavailable, .timeout, .unknown: nil
         }
     }
 }
