@@ -227,6 +227,19 @@ class EventUploaderTests {
         #expect(mockStorage.batchCount == 0)
     }
     
+    @Test("given timeout HttpNetworkError, when converting to EventUploadResult, then returns retryable timeout error")
+    func testTimeoutErrorMapsToRetryableTimeout() {
+        let result: Result<Data, Error> = .failure(HttpNetworkError.timeout)
+        let uploadResult = result.eventUploadResult
+
+        if case .failure(let error) = uploadResult,
+           let retryable = error as? RetryableEventUploadError {
+            #expect(retryable == .timeout)
+        } else {
+            Issue.record("Expected RetryableEventUploadError.timeout")
+        }
+    }
+    
     @Test("given EventUploader with non-retryable error 401, when upload batch, then stops uploader")
     func testUploadBatchWithNonRetryableError401StopsUploader() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {

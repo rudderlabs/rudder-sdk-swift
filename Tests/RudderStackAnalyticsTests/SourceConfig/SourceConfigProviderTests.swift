@@ -285,6 +285,18 @@ class SourceConfigProviderTests {
             #expect(configUpdateCount == 1)
         }
     }
+    
+    @Test("given timeout HttpNetworkError, when converting to SourceConfigResult, then returns timeout error")
+    func testTimeoutErrorMapsToSourceConfigTimeout() {
+        let result: Result<Data, Error> = .failure(HttpNetworkError.timeout)
+        let configResult = result.sourceConfigResult
+
+        if case .failure(let error) = configResult {
+            #expect(error == .timeout)
+        } else {
+            Issue.record("Expected SourceConfigError.timeout")
+        }
+    }
 }
 
 // MARK: - Helpers
