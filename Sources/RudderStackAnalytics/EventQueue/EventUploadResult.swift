@@ -36,7 +36,7 @@ protocol NonRetryableError: EventUploadError {}
 /**
  Represents different types of retryable event upload errors.
  */
-enum RetryableEventUploadError: RetryableError {
+enum RetryableEventUploadError: RetryableError, Equatable {
     
     /** Indicates a retryable error, typically associated with HTTP status code 4xx-5xx, excluding non-retryable errors. */
     case retryable(statusCode: Int?)
