@@ -126,6 +126,13 @@ class ObjCIntegrationPluginAdapter: IntegrationPlugin {
     }
     
     func create(destinationConfig: [String: Any]) throws {
+        // Propagate analytics to ObjC integration before create
+        // NOTE: This calls ObjCPlugin.setup(_:), NOT IntegrationPlugin.setup(analytics:)
+        if let analytics {
+            let objcAnalytics = ObjCAnalytics(analytics: analytics)
+            objcIntegration.setup?(objcAnalytics)
+        }
+        
         var error: NSError?
         let success = objcIntegration.createWithDestinationConfig(destinationConfig, error: &error)
         if let error = error {
