@@ -14,7 +14,7 @@ import Foundation
 @objc(RSSAnalytics)
 public final class ObjCAnalytics: NSObject {
     
-    let analytics: Analytics
+    public let analytics: Analytics
     
     /**
      Initializes the analytics client using the provided Objective-C configuration.
