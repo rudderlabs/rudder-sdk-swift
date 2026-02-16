@@ -87,6 +87,14 @@ protocol EventStorage {
      This is typically used to finalize or batch stored events for processing or uploading.
      */
     func rollover() async
+    
+    /**
+     Resolves the batch ID associated with a given batch reference.
+  
+     - Parameter batchReference: The reference of the batch for which to retrieve the batch ID.
+     - Returns: The batch ID as a `String`.
+    */
+    func resolveBatchId(batchReference: String) -> String
 }
 
 // MARK: - Storage

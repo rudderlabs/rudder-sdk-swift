@@ -86,6 +86,10 @@ extension MockStorage {
     func rollover() async {
         mockEventStorage.rollover()
     }
+    
+    func resolveBatchId(batchReference: String) -> String {
+        return batchReference
+    }
 }
 
 // MARK: - Test Helper Methods

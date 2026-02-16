@@ -58,6 +58,10 @@ extension BasicStorage {
     func rollover() async {
         await self.dataStore.rollover()
     }
+    
+    func resolveBatchId(batchReference: String) -> String {
+        storageMode == .memory ? batchReference : URL(fileURLWithPath: batchReference).lastPathComponent
+    }
 }
 
 // MARK: - KeyValueStorage
