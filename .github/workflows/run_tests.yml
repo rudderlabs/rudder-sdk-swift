@@ -3,14 +3,22 @@ name: Run Swift Tests
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Run Tests Sequentially
-    runs-on: macos-latest-large
+    runs-on: macos-latest
+    timeout-minutes: 20
     
     steps:
       - name: Checkout Repository
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
 
+      - name: Build
+        run: swift build --build-tests
+
       - name: Run Tests (No Parallel)
-        run: swift test --no-parallel
+        run: swift test --skip-build --no-parallel
+        
