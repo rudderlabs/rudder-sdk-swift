@@ -79,3 +79,22 @@ enum NonRetryableEventUploadError: Int, NonRetryableError {
         "Status code: \(self.rawValue)"
     }
 }
+
+// MARK: - Retry Reason Mapping
+/**
+ Provides a mapping from `RetryableEventUploadError` to a retry reason string for use in `RetryMetadata`.
+ */
+extension RetryableEventUploadError {
+    var retryReason: String {
+        return switch self {
+        case .retryable(statusCode: .some(let code)):
+            "server-\(code)"
+        case .retryable(statusCode: .none), .networkUnavailable:
+            "client-network"
+        case .timeout:
+            "client-timeout"
+        case .unknown:
+            "client-unknown"
+        }
+    }
+}
