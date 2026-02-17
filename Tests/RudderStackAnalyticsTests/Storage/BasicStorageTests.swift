@@ -13,14 +13,13 @@ import Foundation
 @Suite("BasicStorage Unit Tests")
 class BasicStorageTests {
     
-    private let testWriteKey = "test-basic-storage-key-\(String.randomUUIDString)"
     private let sampleEventJson = """
         {"messageId":"test-msg-123","type":"track","event":"Test Event","properties":{"test":true}}
         """
-    var storage: BasicStorage
+    var storage: MockStorage
     
     init() {
-        storage = BasicStorage(writeKey: testWriteKey, storageMode: .memory)
+        storage = MockStorage(storageMode: .memory)
     }
     
     // MARK: - KeyValueStorage Tests
@@ -98,13 +97,12 @@ class BasicStorageTests {
     
     // MARK: - EventStorage Tests
     
-    @Test("when writing single event, then event is stored")
+    @Test("when writing single event, then event is stored in current batch")
     func testEventStorageSingleEvent() async {
         await storage.write(event: sampleEventJson)
         
-        let result = await storage.read()
-        // Should be empty until rollover is called
-        #expect(result.dataItems.isEmpty)
+        // Event is in the current batch, not yet rolled over
+        #expect(storage.currentBatchEventCount == 1)
     }
     
     @Test("given BasicStorage with event, when calling rollover, then event batch is finalized")

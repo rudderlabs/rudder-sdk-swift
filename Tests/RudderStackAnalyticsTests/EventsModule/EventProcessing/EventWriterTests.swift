@@ -95,7 +95,8 @@ class EventWriterTests {
         }
         
         await mockStorage.waitForCurrentBatchEvents(expectedCount: 3)
-        
+        await mockStorage.rollover()
+
         let result = await mockStorage.read()
         #expect(result.dataItems.count == 1)
         

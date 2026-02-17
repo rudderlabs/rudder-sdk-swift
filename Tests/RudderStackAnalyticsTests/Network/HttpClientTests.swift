@@ -49,11 +49,9 @@ struct HttpClientTests {
 
     @Test("when preparing events headers with gzip enabled, then includes gzip header")
     func testEventsHeadersIncludeGzipWhenEnabled() {
-        let configuration = Configuration(
-            writeKey: "test-write-key",
-            dataPlaneUrl: "https://test.com",
-            gzipEnabled: true
-        )
+        let configuration = MockProvider.createMockConfiguration()
+        configuration.gzipEnabled = true
+
         let gzipAnalytics = Analytics(configuration: configuration)
         let testAnonymousId = "test-anonymous-id"
 

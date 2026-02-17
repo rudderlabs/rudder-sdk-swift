@@ -35,15 +35,14 @@ public class Analytics {
     private var processEventChannel: AsyncChannel<Event>
     
     /**
-     The handler instance responsible for managing lifecycle events and session-related operations.
-     
-     - Note: When this property is set, `startAutomaticSessionIfNeeded()` is automatically triggered to ensure the automatic session begins as required.
+     The observer responsible for monitoring application lifecycle events.
+    */
+    internal var lifecycleObserver: LifecycleObserver?
+    
+    /**
+     The handler responsible for managing user sessions.
      */
-    internal var lifecycleSessionWrapper: LifecycleSessionWrapper? {
-        didSet {
-            self.sessionHandler?.startAutomaticSessionIfNeeded()
-        }
-    }
+    internal var sessionHandler: SessionHandler?
     
     /**
      The state container for SourceConfig management within the analytics system.
@@ -310,18 +309,14 @@ extension Analytics {
      Cleans up resources when the event processing task completes.
      
      This method is to be called when the event processing task finishes, ensuring that all resources are properly released.
-     It removes all plugins from the plugin chain, invalidates the lifecycle session wrapper, and clears the source configuration provider. If the write key is invalid, it also clears all stored data.
+     It removes all plugins from the plugin chain and clears strong references to various components.
+     If the write key is invalid, it also clears the storage.
      */
     private func shutdownHook() async {
         self.pluginChain?.removeAll()
         self.pluginChain = nil
         
-        self.lifecycleSessionWrapper?.invalidate()
-        self.lifecycleSessionWrapper = nil
-        
-        self.sourceConfigProvider = nil
-        
-        self.integrationsController = nil
+        await self.referenceCleanup()
     
         if self.isInvalidWriteKey {
             await self.storage.removeAll()
@@ -329,6 +324,16 @@ extension Analytics {
         }
         
         LoggerAnalytics.debug("Analytics shutdown complete.")
+    }
+
+    /**
+     Cleans up strong references to various components to prevent memory leaks.
+     */
+    private func referenceCleanup() async {
+        self.sessionHandler = nil
+        self.lifecycleObserver = nil
+        self.sourceConfigProvider = nil
+        self.integrationsController = nil
     }
     
     /**
@@ -369,8 +374,9 @@ extension Analytics {
         self.setupSourceConfig()
         self.startProcessingEvents()
         
+        self.lifecycleObserver = LifecycleObserver() // Should be initialized before SessionHandler
         self.pluginChain = PluginChain(analytics: self)
-        self.lifecycleSessionWrapper = LifecycleSessionWrapper(analytics: self)
+        self.sessionHandler = SessionHandler(analytics: self)
         self.integrationsController = IntegrationsController(analytics: self)
         
         // Add default plugins

@@ -9,6 +9,7 @@ import Foundation
 import Testing
 @testable import RudderStackAnalytics
 
+@Suite("EventFiltering Plugin Tests")
 struct EventFilteringPluginTests {
     
     private let destinationKey = "TestDestination"

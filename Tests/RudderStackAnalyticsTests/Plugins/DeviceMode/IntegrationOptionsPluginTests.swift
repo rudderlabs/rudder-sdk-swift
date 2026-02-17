@@ -11,6 +11,7 @@ import Testing
 
 private let mockDestinationKey = "MockDestination"
 
+@Suite("IntegrationOptions Plugin Tests")
 struct IntegrationOptionsPluginTests {
     
     var analytics: Analytics

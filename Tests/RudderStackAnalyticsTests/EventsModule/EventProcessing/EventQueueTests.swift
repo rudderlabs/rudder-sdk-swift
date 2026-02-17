@@ -44,7 +44,8 @@ class EventQueueTests {
         eventQueue.put(event)
         
         await mockStorage.waitForEvents()
-        
+        await mockStorage.rollover()
+
         let result = await mockStorage.read()
         #expect(result.dataItems.count > 0)
         
@@ -67,7 +68,8 @@ class EventQueueTests {
         
         await mockStorage.waitForCurrentBatchEvents(expectedCount: 3)
         #expect(mockStorage.currentBatchEventCount == 3)
-        
+        await mockStorage.rollover()
+
         let result = await mockStorage.read()
         #expect(result.dataItems.count > 0)
         
@@ -143,7 +145,8 @@ class EventQueueTests {
         eventQueue.put(screenEvent)
         
         await mockStorage.waitForCurrentBatchEvents(expectedCount: 3)
-        
+        await mockStorage.rollover()
+
         let result = await mockStorage.read()
         #expect(result.dataItems.count > 0)
         
