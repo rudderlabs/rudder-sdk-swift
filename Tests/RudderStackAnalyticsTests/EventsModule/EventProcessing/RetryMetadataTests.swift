@@ -82,4 +82,31 @@ struct RetryMetadataTests {
 
         #expect(result == nil)
     }
+
+    // MARK: - Retry Reason Mapping Tests
+
+    @Test("given retryable error with status code, when getting retry reason, then returns server reason")
+    func testRetryableWithStatusCodeReturnsServerReason() {
+        #expect(RetryableEventUploadError.retryable(statusCode: 502).retryReason == "server-502")
+    }
+
+    @Test("given retryable error with nil status code, when getting retry reason, then returns client-network")
+    func testRetryableWithNilStatusCodeReturnsClientNetwork() {
+        #expect(RetryableEventUploadError.retryable(statusCode: nil).retryReason == "client-network")
+    }
+
+    @Test("given network unavailable error, when getting retry reason, then returns client-network")
+    func testNetworkUnavailableReturnsClientNetwork() {
+        #expect(RetryableEventUploadError.networkUnavailable.retryReason == "client-network")
+    }
+
+    @Test("given timeout error, when getting retry reason, then returns client-timeout")
+    func testTimeoutReturnsClientTimeout() {
+        #expect(RetryableEventUploadError.timeout.retryReason == "client-timeout")
+    }
+
+    @Test("given unknown error, when getting retry reason, then returns client-unknown")
+    func testUnknownReturnsClientUnknown() {
+        #expect(RetryableEventUploadError.unknown.retryReason == "client-unknown")
+    }
 }
