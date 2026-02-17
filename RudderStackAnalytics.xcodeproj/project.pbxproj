@@ -837,12 +837,8 @@
 		539D87392E588951009FC144 /* EventProcessing */ = {
 			isa = PBXGroup;
 			children = (
-				537846AC2EAA22A200520374 /* EventQueueTests.swift */,
-				537846AE2EAA24CB00520374 /* EventWriterTests.swift */,
-				537846B02EAA2B3E00520374 /* EventUploaderTests.swift */,
-				53DB9D942F448B8A004FB1A4 /* RetryMetadataTests.swift */,
-				53DB9D962F448D89004FB1A4 /* PrimaryRetryHeadersProviderTests.swift */,
-				53DB9D9A2F449121004FB1A4 /* EventUploaderRetryHeadersTests.swift */,
+				53DB9D9D2F449472004FB1A4 /* EventQueue */,
+				53DB9D9C2F449461004FB1A4 /* RetryHeaders */,
 			);
 			path = EventProcessing;
 			sourceTree = "<group>";
@@ -881,6 +877,26 @@
 				53DB9D792F4454DD004FB1A4 /* PrimaryRetryHeadersProvider.swift */,
 			);
 			path = RetryHeaders;
+			sourceTree = "<group>";
+		};
+		53DB9D9C2F449461004FB1A4 /* RetryHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				53DB9D942F448B8A004FB1A4 /* RetryMetadataTests.swift */,
+				53DB9D962F448D89004FB1A4 /* PrimaryRetryHeadersProviderTests.swift */,
+				53DB9D9A2F449121004FB1A4 /* EventUploaderRetryHeadersTests.swift */,
+			);
+			path = RetryHeaders;
+			sourceTree = "<group>";
+		};
+		53DB9D9D2F449472004FB1A4 /* EventQueue */ = {
+			isa = PBXGroup;
+			children = (
+				537846AC2EAA22A200520374 /* EventQueueTests.swift */,
+				537846AE2EAA24CB00520374 /* EventWriterTests.swift */,
+				537846B02EAA2B3E00520374 /* EventUploaderTests.swift */,
+			);
+			path = EventQueue;
 			sourceTree = "<group>";
 		};
 		53DEA5922E03D05A00D6C371 /* Base */ = {
