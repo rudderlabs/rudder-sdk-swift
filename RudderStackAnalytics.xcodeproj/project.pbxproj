@@ -65,6 +65,7 @@
 		53DB9D7A2F4454DD004FB1A4 /* PrimaryRetryHeadersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D792F4454DD004FB1A4 /* PrimaryRetryHeadersProvider.swift */; };
 		53DB9D952F448B8A004FB1A4 /* RetryMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D942F448B8A004FB1A4 /* RetryMetadataTests.swift */; };
 		53DB9D972F448D89004FB1A4 /* PrimaryRetryHeadersProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D962F448D89004FB1A4 /* PrimaryRetryHeadersProviderTests.swift */; };
+		53DB9D992F448F17004FB1A4 /* MockRetryHeadersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D982F448F17004FB1A4 /* MockRetryHeadersProvider.swift */; };
 		53DEA5E12E03D05A00D6C371 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D62E03D05A00D6C371 /* KeyValueStore.swift */; };
 		53DEA5E22E03D05A00D6C371 /* ResetUserIdentityAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */; };
 		53DEA5E32E03D05A00D6C371 /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */; };
@@ -275,6 +276,7 @@
 		53DB9D792F4454DD004FB1A4 /* PrimaryRetryHeadersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryRetryHeadersProvider.swift; sourceTree = "<group>"; };
 		53DB9D942F448B8A004FB1A4 /* RetryMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryMetadataTests.swift; sourceTree = "<group>"; };
 		53DB9D962F448D89004FB1A4 /* PrimaryRetryHeadersProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryRetryHeadersProviderTests.swift; sourceTree = "<group>"; };
+		53DB9D982F448F17004FB1A4 /* MockRetryHeadersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRetryHeadersProvider.swift; sourceTree = "<group>"; };
 		53DEA58F2E03D05A00D6C371 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		53DEA5902E03D05A00D6C371 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		53DEA5932E03D05A00D6C371 /* AliasEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasEvent.swift; sourceTree = "<group>"; };
@@ -783,6 +785,7 @@
 				53A83F9B2E9F750400DDA0CC /* MockStorage.swift */,
 				538180BF2EC61C220019EE05 /* MockEventCapturePlugin.swift */,
 				53ED4C3D2F123BE100093264 /* MockLifecycleEventListener.swift */,
+				53DB9D982F448F17004FB1A4 /* MockRetryHeadersProvider.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -1555,6 +1558,7 @@
 				538180B32EC47B100019EE05 /* DisableSourceConfigActionTests.swift in Sources */,
 				53DEA66E2E03D06F00D6C371 /* LoggerAnalyticsTests.swift in Sources */,
 				53DEA66F2E03D06F00D6C371 /* LocaleInfoPluginTests.swift in Sources */,
+				53DB9D992F448F17004FB1A4 /* MockRetryHeadersProvider.swift in Sources */,
 				53DEA6702E03D06F00D6C371 /* AppInfoPluginTests.swift in Sources */,
 				537B96442EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift in Sources */,
 				8C047DA22EF078060019659F /* ExtensionsTests.swift in Sources */,
