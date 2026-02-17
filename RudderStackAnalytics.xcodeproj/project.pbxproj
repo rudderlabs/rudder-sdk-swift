@@ -66,6 +66,7 @@
 		53DB9D952F448B8A004FB1A4 /* RetryMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D942F448B8A004FB1A4 /* RetryMetadataTests.swift */; };
 		53DB9D972F448D89004FB1A4 /* PrimaryRetryHeadersProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D962F448D89004FB1A4 /* PrimaryRetryHeadersProviderTests.swift */; };
 		53DB9D992F448F17004FB1A4 /* MockRetryHeadersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D982F448F17004FB1A4 /* MockRetryHeadersProvider.swift */; };
+		53DB9D9B2F449121004FB1A4 /* EventUploaderRetryHeadersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D9A2F449121004FB1A4 /* EventUploaderRetryHeadersTests.swift */; };
 		53DEA5E12E03D05A00D6C371 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D62E03D05A00D6C371 /* KeyValueStore.swift */; };
 		53DEA5E22E03D05A00D6C371 /* ResetUserIdentityAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */; };
 		53DEA5E32E03D05A00D6C371 /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */; };
@@ -277,6 +278,7 @@
 		53DB9D942F448B8A004FB1A4 /* RetryMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryMetadataTests.swift; sourceTree = "<group>"; };
 		53DB9D962F448D89004FB1A4 /* PrimaryRetryHeadersProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryRetryHeadersProviderTests.swift; sourceTree = "<group>"; };
 		53DB9D982F448F17004FB1A4 /* MockRetryHeadersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRetryHeadersProvider.swift; sourceTree = "<group>"; };
+		53DB9D9A2F449121004FB1A4 /* EventUploaderRetryHeadersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploaderRetryHeadersTests.swift; sourceTree = "<group>"; };
 		53DEA58F2E03D05A00D6C371 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		53DEA5902E03D05A00D6C371 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		53DEA5932E03D05A00D6C371 /* AliasEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasEvent.swift; sourceTree = "<group>"; };
@@ -840,6 +842,7 @@
 				537846B02EAA2B3E00520374 /* EventUploaderTests.swift */,
 				53DB9D942F448B8A004FB1A4 /* RetryMetadataTests.swift */,
 				53DB9D962F448D89004FB1A4 /* PrimaryRetryHeadersProviderTests.swift */,
+				53DB9D9A2F449121004FB1A4 /* EventUploaderRetryHeadersTests.swift */,
 			);
 			path = EventProcessing;
 			sourceTree = "<group>";
@@ -1571,6 +1574,7 @@
 				859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */,
 				53E777602EB4D4D200564D61 /* FlushPolicyFacadeTests.swift in Sources */,
 				85F2AC072EA7940200BE93AF /* EventFilteringPluginTests.swift in Sources */,
+				53DB9D9B2F449121004FB1A4 /* EventUploaderRetryHeadersTests.swift in Sources */,
 				53DEA6752E03D06F00D6C371 /* OSInfoPluginTests.swift in Sources */,
 				53DEA6762E03D06F00D6C371 /* SessionTrackingPluginTests.swift in Sources */,
 				53DEA6772E03D06F00D6C371 /* LibraryInfoPluginTests.swift in Sources */,
