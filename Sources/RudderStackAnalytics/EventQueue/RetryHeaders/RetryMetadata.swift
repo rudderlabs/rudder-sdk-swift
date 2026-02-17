@@ -21,7 +21,7 @@ struct RetryMetadata: Codable, Equatable {
     let attempt: Int
     
     /** Milliseconds since epoch when the last attempt was made. */
-    let lastAttemptTimestampInMillis: Int64
+    let lastAttemptTimestampInMillis: UInt64
     
     /** Categorised failure reason from last attempt. */
     let reason: String
