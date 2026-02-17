@@ -82,7 +82,8 @@ extension EventUploader {
             LoggerAnalytics.debug("Uploading (processed): \(processed)")
             
             // Prepare retry headers
-            let currentTimestamp = UInt64(Date().timeIntervalSince1970 * 1000)
+            let millisecondsPerSecond: Double = 1_000
+            let currentTimestamp = UInt64(Date().timeIntervalSince1970 * millisecondsPerSecond)
             let retryHeaders = self.retryHeadersProvider.prepareHeaders(batchId: batchId, currentTimestampInMillis: currentTimestamp)
             
             // Send the batch to the data plane

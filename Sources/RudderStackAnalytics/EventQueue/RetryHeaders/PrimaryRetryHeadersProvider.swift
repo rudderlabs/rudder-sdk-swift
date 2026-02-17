@@ -18,7 +18,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
         self.storage = storage
     }
     
-    func prepareHeaders(batchId: String, currentTimestampInMillis: UInt64) -> [String : String] {
+    func prepareHeaders(batchId: String, currentTimestampInMillis: UInt64) -> [String: String] {
         guard let metadata = self.retrieveMetadataForBatch(batchId) else { return [:] }
         
         let sinceLastAttemptInMillis: UInt64 = currentTimestampInMillis > metadata.lastAttemptTimestampInMillis
@@ -36,7 +36,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
     
     func recordFailure(batchId: String, timestampInMillis: UInt64, error: RetryableEventUploadError) {
         // For the first failure, attempt will be 1. For subsequent failures, it increments by 1.
-        let attempt = self.retrieveMetadataForBatch(batchId).map{ $0.attempt + 1 } ?? 1
+        let attempt = self.retrieveMetadataForBatch(batchId).map { $0.attempt + 1 } ?? 1
         let reason = error.retryReason
         
         let newMetadata = RetryMetadata(batchId: batchId, attempt: attempt, lastAttemptTimestampInMillis: timestampInMillis, reason: reason)
