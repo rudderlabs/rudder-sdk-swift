@@ -61,6 +61,7 @@
 		53AC39722E1533F300B8E16C /* RudderOptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AC39712E1533F300B8E16C /* RudderOptionTests.swift */; };
 		53AC39B42E16FA6E00B8E16C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */; };
 		53DB9D3C2F4392AF004FB1A4 /* RetryMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D3B2F4392AF004FB1A4 /* RetryMetadata.swift */; };
+		53DB9D752F44515A004FB1A4 /* RetryHeadersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D742F44515A004FB1A4 /* RetryHeadersProvider.swift */; };
 		53DEA5E12E03D05A00D6C371 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5D62E03D05A00D6C371 /* KeyValueStore.swift */; };
 		53DEA5E22E03D05A00D6C371 /* ResetUserIdentityAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5CE2E03D05A00D6C371 /* ResetUserIdentityAction.swift */; };
 		53DEA5E32E03D05A00D6C371 /* NetworkInfoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */; };
@@ -267,6 +268,7 @@
 		53AC39712E1533F300B8E16C /* RudderOptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderOptionTests.swift; sourceTree = "<group>"; };
 		53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		53DB9D3B2F4392AF004FB1A4 /* RetryMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryMetadata.swift; sourceTree = "<group>"; };
+		53DB9D742F44515A004FB1A4 /* RetryHeadersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryHeadersProvider.swift; sourceTree = "<group>"; };
 		53DEA58F2E03D05A00D6C371 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		53DEA5902E03D05A00D6C371 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		53DEA5932E03D05A00D6C371 /* AliasEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasEvent.swift; sourceTree = "<group>"; };
@@ -803,11 +805,9 @@
 			isa = PBXGroup;
 			children = (
 				539D86F12E543997009FC144 /* EventQueue.swift */,
-				539D86F42E5439CB009FC144 /* EventWriter.swift */,
-				539D86F82E5439E7009FC144 /* EventUploader.swift */,
-				539D871F2E55B8DD009FC144 /* ProcessingEvent.swift */,
-				539D87302E5791DE009FC144 /* EventUploadResult.swift */,
-				53DB9D3B2F4392AF004FB1A4 /* RetryMetadata.swift */,
+				53DB9D762F445167004FB1A4 /* EventWriter */,
+				53DB9D772F44517B004FB1A4 /* EventUploader */,
+				53DB9D782F445194004FB1A4 /* RetryHeaders */,
 			);
 			path = EventQueue;
 			sourceTree = "<group>";
@@ -839,6 +839,33 @@
 				53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		53DB9D762F445167004FB1A4 /* EventWriter */ = {
+			isa = PBXGroup;
+			children = (
+				539D86F42E5439CB009FC144 /* EventWriter.swift */,
+				539D871F2E55B8DD009FC144 /* ProcessingEvent.swift */,
+			);
+			path = EventWriter;
+			sourceTree = "<group>";
+		};
+		53DB9D772F44517B004FB1A4 /* EventUploader */ = {
+			isa = PBXGroup;
+			children = (
+				539D86F82E5439E7009FC144 /* EventUploader.swift */,
+				539D87302E5791DE009FC144 /* EventUploadResult.swift */,
+			);
+			path = EventUploader;
+			sourceTree = "<group>";
+		};
+		53DB9D782F445194004FB1A4 /* RetryHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				53DB9D3B2F4392AF004FB1A4 /* RetryMetadata.swift */,
+				53DB9D742F44515A004FB1A4 /* RetryHeadersProvider.swift */,
+			);
+			path = RetryHeaders;
 			sourceTree = "<group>";
 		};
 		53DEA5922E03D05A00D6C371 /* Base */ = {
@@ -1404,6 +1431,7 @@
 				8595FAAD2ED6D51600057B60 /* ECommerceEvents.swift in Sources */,
 				85F2AC022EA78EF200BE93AF /* EventFilteringPlugin.swift in Sources */,
 				53DEA5F82E03D05A00D6C371 /* ObjCFlushPolicy.swift in Sources */,
+				53DB9D752F44515A004FB1A4 /* RetryHeadersProvider.swift in Sources */,
 				85F2AC102EAA300800BE93AF /* IntegrationOptionsPlugin.swift in Sources */,
 				53DEA5F92E03D05A00D6C371 /* MemoryStore.swift in Sources */,
 				53DEA5FA2E03D05A00D6C371 /* DiskStore.swift in Sources */,
