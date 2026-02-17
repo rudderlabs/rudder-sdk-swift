@@ -16,17 +16,19 @@ final class EventUploader {
     private let httpClient: HttpClient
     private let uploadChannel: AsyncChannel<String>
     private let backoff: BackoffPolicyHandler
+    private let retryHeadersProvider: RetryHeadersProvider
     private var lastBatchAnonymousId: String = ""
     
     private var storage: Storage {
         return self.analytics.configuration.storage
     }
     
-    init(analytics: Analytics, uploadChannel: AsyncChannel<String>) {
+    init(analytics: Analytics, uploadChannel: AsyncChannel<String>, retryHeadersProvider: RetryHeadersProvider? = nil) {
         self.analytics = analytics
         self.httpClient = HttpClient(analytics: analytics)
         self.uploadChannel = uploadChannel
         self.backoff = BackoffPolicyHandler()
+        self.retryHeadersProvider = retryHeadersProvider ?? PrimaryRetryHeadersProvider(storage: analytics.storage)
     }
     
     func start() {
@@ -71,14 +73,20 @@ final class EventUploader {
 extension EventUploader {
     func uploadBatch(_ batch: String, reference: String) async {
         var shouldRetry = false
+        let batchId = self.storage.resolveBatchId(batchReference: reference)
+        
         repeat {
             LoggerAnalytics.debug("Upload started: \(reference)")
             // Process the batch by replacing timestamp placeholder with current time
             let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
             LoggerAnalytics.debug("Uploading (processed): \(processed)")
             
+            // Prepare retry headers
+            let currentTimestamp = UInt64(Date().timeIntervalSince1970 * 1000)
+            let retryHeaders = self.retryHeadersProvider.prepareHeaders(batchId: batchId, currentTimestampInMillis: currentTimestamp)
+            
             // Send the batch to the data plane
-            let responseResult = await self.httpClient.postBatchEvents(processed)
+            let responseResult = await self.httpClient.postBatchEvents(processed, additionalHeaders: retryHeaders)
             
             // Handle the response and determine if retry is needed
             switch responseResult {
@@ -88,6 +96,11 @@ extension EventUploader {
                 shouldRetry = false
             
             case .failure(let error):
+                // record failure only for retryable errors
+                if let retryableError = error as? RetryableEventUploadError {
+                    self.retryHeadersProvider.recordFailure(batchId: batchId, timestampInMillis: currentTimestamp, error: retryableError)
+                }
+                
                 await self.handleBatchUploadFailure(error, reference: reference)
                 shouldRetry = error is RetryableEventUploadError
             }
@@ -96,7 +109,7 @@ extension EventUploader {
     
     private func handleBatchUploadResponse(_ data: Data, reference: String) async {
         // Remove successfully uploaded batch from storage
-        await self.backoff.reset()
+        await self.resetRetryState()
         await self.deleteBatchFile(reference)
         LoggerAnalytics.debug("Upload completed: \(reference)")
     }
@@ -106,7 +119,7 @@ extension EventUploader {
         
         // Handle non-retryable errors
         if let nonRetryableError = error as? NonRetryableEventUploadError {
-            await self.backoff.reset()
+            await self.resetRetryState()
             await self.handleNonRetryableError(nonRetryableError, reference: reference)
         }
         
@@ -114,6 +127,11 @@ extension EventUploader {
         if error is RetryableEventUploadError {
             await self.backoff.waitWithBackoff()
         }
+    }
+    
+    private func resetRetryState() async {
+        self.retryHeadersProvider.clear()
+        await backoff.reset()
     }
 }
 
