@@ -57,10 +57,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
 
 private extension PrimaryRetryHeadersProvider {
     func retrieveMetadataForBatch(_ batchId: String) -> RetryMetadata? {
-        guard let json: String = self.storage.read(key: Constants.storageKeys.retryMetadata), !json.isEmpty else {
-            LoggerAnalytics.debug("No retry metadata found in storage.")
-            return nil
-        }
+        guard let json: String = self.storage.read(key: Constants.storageKeys.retryMetadata), !json.isEmpty else { return nil }
         
         guard let metadata = RetryMetadata.fromJson(json) else {
             LoggerAnalytics.warn("Failed to parse retry metadata from JSON.")
