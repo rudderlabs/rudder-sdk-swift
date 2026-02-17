@@ -17,11 +17,20 @@ import Foundation
  */
 protocol RetryHeadersProvider {
     /** Returns retry headers for the current upload attempt, or an empty dictionary if no prior failure is recorded. */
-    func getHeaders(batchId: String, currentTimestampInMillis: Int64) -> [String: String]
+    func prepareHeaders(batchId: String, currentTimestampInMillis: UInt64) -> [String: String]
     
     /** Records a failed upload attempt for retry tracking. */
-    func recordFailure(batchId: String, timestampInMillis: Int64, error: RetryableEventUploadError)
+    func recordFailure(batchId: String, timestampInMillis: UInt64, error: RetryableEventUploadError)
     
     /** Clears all persisted retry metadata. */
     func clear()
+}
+
+/**
+ Keys for retry headers used in event batch upload requests.
+ */
+enum RetryHeaderKeys {
+    static let rsaRetryAttempt = "Rsa-Retry-Attempt"
+    static let rsaSinceLastAttempt = "Rsa-Since-Last-Attempt"
+    static let rsaRetryReason = "Rsa-Retry-Reason"
 }
