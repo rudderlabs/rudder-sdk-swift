@@ -23,6 +23,7 @@ enum SourceConfigResult {
 enum SourceConfigError: Error, Equatable {
     case invalidWriteKey
     case networkUnavailable
+    case timeout
     case invalidResponse
     case unknown
     case requestFailed(Int)
@@ -33,6 +34,8 @@ enum SourceConfigError: Error, Equatable {
             return "Invalid write key (HTTP 400)"
         case .networkUnavailable:
             return "Network unavailable"
+        case .timeout:
+            return "Request timed out"
         case .invalidResponse:
             return "Invalid server response"
         case .requestFailed(let statusCode):

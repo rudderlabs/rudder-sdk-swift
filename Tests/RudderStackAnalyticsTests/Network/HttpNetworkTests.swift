@@ -70,7 +70,6 @@ class HttpNetworkTests {
             (URLError.Code.notConnectedToInternet, "https://error.test.com"),
             (URLError.Code.networkConnectionLost, "https://error.test.com"),
             (URLError.Code.cannotConnectToHost, "https://error.test.com"),
-            (URLError.Code.timedOut, "https://error.test.com"),
             (URLError.Code.dnsLookupFailed, "https://error.test.com"),
             (URLError.Code.cannotFindHost, "https://error.test.com"),
             (URLError.Code.dataNotAllowed, "https://error.test.com")
@@ -78,6 +77,27 @@ class HttpNetworkTests {
     func testNetworkErrorsInRange(_ errorCode: URLError.Code, url: String) async {
         let result = await performRequest(error: errorCode, urlString: url)
         expectHttpFailure(result, expectedError: .networkUnavailable, context: "\(errorCode)")
+    }
+    
+    @Test("given SSL errors, when performing request, then HttpNetwork handles them as networkUnavailable",
+          arguments: [
+            (URLError.Code.serverCertificateHasBadDate, "https://ssl-error.test.com"),
+            (URLError.Code.serverCertificateUntrusted, "https://ssl-error.test.com"),
+            (URLError.Code.serverCertificateHasUnknownRoot, "https://ssl-error.test.com"),
+            (URLError.Code.serverCertificateNotYetValid, "https://ssl-error.test.com"),
+            (URLError.Code.clientCertificateRejected, "https://ssl-error.test.com"),
+            (URLError.Code.clientCertificateRequired, "https://ssl-error.test.com"),
+            (URLError.Code.secureConnectionFailed, "https://ssl-error.test.com")
+          ])
+    func testSSLErrorsReturnNetworkUnavailable(_ errorCode: URLError.Code, url: String) async {
+        let result = await performRequest(error: errorCode, urlString: url)
+        expectHttpFailure(result, expectedError: .networkUnavailable, context: "\(errorCode)")
+    }
+
+    @Test("given timeout error, when performing request, then HttpNetwork returns timeout error")
+    func testTimeoutErrorReturnsTimeout() async {
+        let result = await performRequest(error: .timedOut, urlString: "https://timeout.test.com")
+        expectHttpFailure(result, expectedError: .timeout, context: "timedOut")
     }
 }
 
