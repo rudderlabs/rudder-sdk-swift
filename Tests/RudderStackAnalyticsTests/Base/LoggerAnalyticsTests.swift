@@ -26,7 +26,10 @@ class LoggerAnalyticsTests {
     func testLoggerLogsAtCorrectLevels() {
         LoggerAnalytics.setLogger(mockLogger)
         LoggerAnalytics.logLevel = .info
-        
+
+        // Clear any logs captured from background activity (e.g., source config decode errors)
+        mockLogger.clearLogs()
+
         LoggerAnalytics.verbose("This is verbose")
         LoggerAnalytics.debug("This is debug")
         LoggerAnalytics.info("This is info")
@@ -45,9 +48,12 @@ class LoggerAnalyticsTests {
     func testErrorLoggingWithAndWithoutErrorObject() {
         LoggerAnalytics.setLogger(mockLogger)
         LoggerAnalytics.logLevel = .error
-        
+
         let error = NSError(domain: "Test", code: 1)
-        
+
+        // Clear any logs captured from background activity (e.g., source config decode errors)
+        mockLogger.clearLogs()
+
         LoggerAnalytics.error("Only log")
         LoggerAnalytics.error("With error", cause: error)
         
@@ -61,7 +67,10 @@ class LoggerAnalyticsTests {
     func noLoggingWhenLevelIsNone() {
         LoggerAnalytics.setLogger(mockLogger)
         LoggerAnalytics.logLevel = .none
-        
+
+        // Clear any logs captured from background activity (e.g., source config decode errors)
+        mockLogger.clearLogs()
+
         LoggerAnalytics.verbose("This is verbose")
         LoggerAnalytics.debug("This is debug")
         LoggerAnalytics.info("This is info")
