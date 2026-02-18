@@ -18,6 +18,7 @@ struct HttpClientTests {
     init() {
         mockAnalytics = MockProvider.createMockAnalytics()
         httpClient = HttpClient(analytics: mockAnalytics)
+        MockURLProtocol.forwardGetRequestsToHandler = true
     }
 
     @Test("when initialized, then anonymousId header uses analytics anonymousId")

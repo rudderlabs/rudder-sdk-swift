@@ -21,6 +21,7 @@ class SourceConfigProviderTests {
         self.mockStorage = MockStorage()
         self.analytics = MockProvider.createMockAnalytics(storage: mockStorage)
         self.sourceConfigProvider = SourceConfigProvider(analytics: analytics, backoffPolicy: ExponentialBackoffPolicy(minDelayInMillis: 0))
+        MockURLProtocol.forwardGetRequestsToHandler = true
     }
     
     deinit {

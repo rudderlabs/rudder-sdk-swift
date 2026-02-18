@@ -119,6 +119,7 @@ class EventUploaderTests {
         // Configure mock to return 400 error (non-retryable)
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             return (statusCode: 400, data: nil, headers: nil)
         }
         
@@ -145,6 +146,7 @@ class EventUploaderTests {
         // Configure mock to return 502 error
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             
             if callCount == 1 {
@@ -180,6 +182,7 @@ class EventUploaderTests {
         // Configure mock to simulate network unavailable
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             if callCount == 1 {
                 throw URLError(.notConnectedToInternet)
@@ -213,6 +216,7 @@ class EventUploaderTests {
         // Configure mock to simulate timeout
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             if callCount == 1 {
                 throw URLError(.timedOut)
@@ -259,6 +263,7 @@ class EventUploaderTests {
         // Configure mock to return 401 error (invalid write key)
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             return (statusCode: 401, data: nil, headers: nil)
         }
@@ -289,6 +294,7 @@ class EventUploaderTests {
         // Configure mock to return 404 error (source not found)
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             return (statusCode: 404, data: nil, headers: nil)
         }
@@ -319,6 +325,7 @@ class EventUploaderTests {
         // Configure mock to return 413 error (payload too large)
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             return (statusCode: 413, data: nil, headers: nil)
         }
@@ -348,6 +355,7 @@ class EventUploaderTests {
         // Configure mock to return success
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             let successResponse = """
             {"success": "ok"}
