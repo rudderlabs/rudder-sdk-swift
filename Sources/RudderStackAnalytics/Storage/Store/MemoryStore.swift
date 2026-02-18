@@ -152,7 +152,7 @@ extension MemoryStore: DataStore {
         }
     }
     
-    func refineBatchId(batchReference: String) async -> String {
+    func refineBatchId(batchReference: String) -> String {
         return batchReference.components(separatedBy: DataStoreConstants.referenceSeparator).last ?? batchReference
     }
 }
