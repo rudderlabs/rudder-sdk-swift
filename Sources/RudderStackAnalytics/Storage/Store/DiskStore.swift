@@ -164,7 +164,7 @@ extension DiskStore: DataStore {
         }
     }
     
-    func refineBatchId(batchReference: String) -> String {
+    nonisolated func refineBatchId(batchReference: String) -> String {
         return URL(fileURLWithPath: batchReference).lastPathComponent
     }
 }
