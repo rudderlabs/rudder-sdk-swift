@@ -27,7 +27,7 @@ class LoggerAnalyticsTests {
         LoggerAnalytics.setLogger(mockLogger)
         LoggerAnalytics.logLevel = .info
 
-        // Clear any logs captured from background activity (e.g., source config decode errors)
+        // Clear any logs captured from background activity.
         mockLogger.clearLogs()
 
         LoggerAnalytics.verbose("This is verbose")
@@ -51,7 +51,7 @@ class LoggerAnalyticsTests {
 
         let error = NSError(domain: "Test", code: 1)
 
-        // Clear any logs captured from background activity (e.g., source config decode errors)
+        // Clear any logs captured from background activity.
         mockLogger.clearLogs()
 
         LoggerAnalytics.error("Only log")
@@ -68,7 +68,7 @@ class LoggerAnalyticsTests {
         LoggerAnalytics.setLogger(mockLogger)
         LoggerAnalytics.logLevel = .none
 
-        // Clear any logs captured from background activity (e.g., source config decode errors)
+        // Clear any logs captured from background activity.
         mockLogger.clearLogs()
 
         LoggerAnalytics.verbose("This is verbose")
