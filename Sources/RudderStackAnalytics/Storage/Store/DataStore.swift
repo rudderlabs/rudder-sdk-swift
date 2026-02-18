@@ -18,6 +18,7 @@ protocol DataStore {
     func remove(reference: String) async -> Bool
     func rollover() async
     func removeAll() async
+    func refineBatchId(batchReference: String) -> String
 }
 
 // MARK: - StoreProvider

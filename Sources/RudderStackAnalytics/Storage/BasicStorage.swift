@@ -60,7 +60,7 @@ extension BasicStorage {
     }
     
     func resolveBatchId(batchReference: String) -> String {
-        storageMode == .memory ? batchReference : URL(fileURLWithPath: batchReference).lastPathComponent
+        return self.dataStore.refineBatchId(batchReference: batchReference)
     }
 }
 

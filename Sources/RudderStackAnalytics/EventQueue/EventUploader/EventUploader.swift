@@ -82,9 +82,8 @@ extension EventUploader {
             LoggerAnalytics.debug("Uploading (processed): \(processed)")
             
             // Prepare retry headers
-            let millisecondsPerSecond: Double = 1_000
-            let currentTimestamp = UInt64(Date().timeIntervalSince1970 * millisecondsPerSecond)
-            let retryHeaders = self.retryHeadersProvider.prepareHeaders(batchId: batchId, currentTimestampInMillis: currentTimestamp)
+            let currentTimestampInMillis = self.currentTimeInMillis
+            let retryHeaders = self.retryHeadersProvider.prepareHeaders(batchId: batchId, currentTimestampInMillis: currentTimestampInMillis)
             
             // Send the batch to the data plane
             let responseResult = await self.httpClient.postBatchEvents(processed, additionalHeaders: retryHeaders)
@@ -95,14 +94,9 @@ extension EventUploader {
                 LoggerAnalytics.debug("Upload response: \(data.jsonString ?? "No response")")
                 await self.handleBatchUploadResponse(data, reference: reference)
                 shouldRetry = false
-            
-            case .failure(let error):
-                // record failure only for retryable errors
-                if let retryableError = error as? RetryableEventUploadError {
-                    self.retryHeadersProvider.recordFailure(batchId: batchId, timestampInMillis: currentTimestamp, error: retryableError)
-                }
                 
-                await self.handleBatchUploadFailure(error, reference: reference)
+            case .failure(let error):
+                await self.handleBatchUploadFailure(error, reference: reference, batchId: batchId, timestampInMillis: currentTimestampInMillis)
                 shouldRetry = error is RetryableEventUploadError
             }
         } while shouldRetry
@@ -115,7 +109,7 @@ extension EventUploader {
         LoggerAnalytics.debug("Upload completed: \(reference)")
     }
     
-    private func handleBatchUploadFailure(_ error: EventUploadError, reference: String) async {
+    private func handleBatchUploadFailure(_ error: EventUploadError, reference: String, batchId: String, timestampInMillis: UInt64) async {
         LoggerAnalytics.error("Upload failed: \(reference)", cause: error)
         
         // Handle non-retryable errors
@@ -124,8 +118,9 @@ extension EventUploader {
             await self.handleNonRetryableError(nonRetryableError, reference: reference)
         }
         
-        // Apply backoff for retryable errors
-        if error is RetryableEventUploadError {
+        // Record failure and Apply backoff for retryable errors
+        if let retryableError = error as? RetryableEventUploadError {
+            self.retryHeadersProvider.recordFailure(batchId: batchId, timestampInMillis: timestampInMillis, error: retryableError)
             await self.backoff.waitWithBackoff()
         }
     }
@@ -143,7 +138,7 @@ extension EventUploader: TypeIdentifiable {
         case .error400:
             LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties.")
             await self.deleteBatchFile(reference)
-          
+            
         case .error401:
             LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). " + "Invalid write key. Ensure the write key is valid.")
             self.stop()
@@ -153,7 +148,7 @@ extension EventUploader: TypeIdentifiable {
             LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.")
             self.stop()
             self.analytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
-
+            
         case .error413:
             LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
             await self.deleteBatchFile(reference)
@@ -166,32 +161,37 @@ extension EventUploader {
     private func deleteBatchFile(_ reference: String) async {
         await self.storage.remove(batchReference: reference)
     }
-
+    
     private func updateAnonymousIdHeaderIfNeeded(_ batch: String) {
         guard let anonymousId = self.extractAnonymousIdFromBatch(batch) else {
             return // No anonymousId found, don't update header
         }
-
+        
         if anonymousId != lastBatchAnonymousId {
             self.httpClient.updateAnonymousIdHeader(anonymousId)
             self.lastBatchAnonymousId = anonymousId
         }
     }
-
+    
     func extractAnonymousIdFromBatch(_ batch: String) -> String? {
         do {
             let anonymousIdRegex = try NSRegularExpression(pattern: "\"anonymousId\"\\s*:\\s*\"([^\"]+)\"")
             let range = NSRange(location: 0, length: batch.utf16.count)
-
+            
             guard let match = anonymousIdRegex.firstMatch(in: batch, options: [], range: range),
                   let anonymousIdRange = Range(match.range(at: 1), in: batch) else {
                 return nil
             }
-
+            
             return String(batch[anonymousIdRange])
         } catch {
             LoggerAnalytics.error("Failed to create regex for anonymousId extraction: \(error)")
             return nil
         }
+    }
+    
+    private var currentTimeInMillis: UInt64 {
+        let millisecondsPerSecond: Double = 1_000
+        return UInt64(Date().timeIntervalSince1970 * millisecondsPerSecond)
     }
 }

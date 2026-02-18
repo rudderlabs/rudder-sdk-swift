@@ -163,4 +163,8 @@ extension DiskStore: DataStore {
             continuation.resume()
         }
     }
+    
+    func refineBatchId(batchReference: String) -> String {
+        return URL(fileURLWithPath: batchReference).lastPathComponent
+    }
 }
