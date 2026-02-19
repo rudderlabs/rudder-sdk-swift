@@ -329,6 +329,42 @@ class EventUploaderTests {
         #expect(mockStorage.batchCount == 0)
     }
     
+    @Test("given multiple queued batches and retryable error followed by non-retryable error on first batch, when start processes batches, then stops without processing remaining batches")
+    func testStopsProcessingRemainingBatchesAfterNonRetryableError() async throws {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
+            return
+        }
+
+        // Write two separate batches
+        await mockStorage.write(event: mockEventJson)
+        await mockStorage.rollover()
+        await mockStorage.write(event: mockEventJson)
+        await mockStorage.rollover()
+
+        guard let dataItem = await mockStorage.read().dataItems.first else {
+            Issue.record("\(EventUploaderTestsIssue.readStorageDataItem)")
+            return
+        }
+
+        var uploadCallCount = 0
+
+        MockProvider.setupMockURLSession()
+        MockURLProtocol.requestHandler = { _ in
+            uploadCallCount += 1
+            if uploadCallCount == 1 {
+                return (statusCode: 502, data: nil, headers: nil) // retryable
+            } else {
+                return (statusCode: 404, data: nil, headers: nil) // non-retryable, stops uploader
+            }
+        }
+
+        await eventUploader.uploadBatch(dataItem.batch, reference: dataItem.reference)
+
+        #expect(uploadChannel.isClosed) // Uploader stopped after non-retryable error
+        #expect(uploadCallCount == 2)   // Only first batch attempted: 1 retryable + 1 non-retryable
+    }
+
     @Test("given EventUploader with successful response, when upload batch, then completes without retry")
     func testUploadBatchWithSuccessfulResponseCompletesWithoutRetry() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
