@@ -9,7 +9,7 @@ import Foundation
 import Testing
 @testable import RudderStackAnalytics
 
-@Suite("EventUploader Retry Headers Tests")
+@Suite("EventUploader Retry Headers Tests", .serialized)
 class EventUploaderRetryHeadersTests {
     var analytics: Analytics
     var mockStorage: MockStorage
