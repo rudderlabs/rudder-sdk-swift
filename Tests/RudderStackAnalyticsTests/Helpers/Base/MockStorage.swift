@@ -87,8 +87,8 @@ extension MockStorage {
         mockEventStorage.rollover()
     }
     
-    func resolveBatchId(batchReference: String) -> String {
-        return batchReference
+    func resolveBatchId(batchReference: String) -> Int {
+        return DataStoreConstants.batchUnavailableId
     }
 }
 

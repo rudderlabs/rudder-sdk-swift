@@ -13,7 +13,7 @@ import Testing
 struct RetryMetadataTests {
 
     private let sampleMetadata = RetryMetadata(
-        batchId: "batch-123",
+        batchId: 123,
         attempt: 3,
         lastAttemptTimestampInMillis: 1700000000000,
         reason: "server-502"
@@ -26,19 +26,19 @@ struct RetryMetadataTests {
         let json = sampleMetadata.toJson()
 
         #expect(json != nil)
-        #expect(json?.contains("batch-123") == true)
+        #expect(json?.contains("123") == true)
         #expect(json?.contains("server-502") == true)
     }
 
     @Test("given valid JSON string, when parsing, then all fields are correctly decoded")
     func testFromJsonParsesCorrectly() {
         let json = """
-        {"batchId":"batch-456","attempt":2,"lastAttemptTimestampInMillis":1700000005000,"reason":"client-timeout"}
+        {"batchId":456,"attempt":2,"lastAttemptTimestampInMillis":1700000005000,"reason":"client-timeout"}
         """
 
         let metadata = RetryMetadata.fromJson(json)
 
-        #expect(metadata?.batchId == "batch-456")
+        #expect(metadata?.batchId == 456)
         #expect(metadata?.attempt == 2)
         #expect(metadata?.lastAttemptTimestampInMillis == 1700000005000)
         #expect(metadata?.reason == "client-timeout")
@@ -75,7 +75,7 @@ struct RetryMetadataTests {
     @Test("given JSON with missing required fields, when parsing, then returns nil")
     func testFromJsonWithMissingFieldsReturnsNil() {
         let json = """
-        {"batchId":"batch-789","attempt":1}
+        {"batchId":789,"attempt":1}
         """
 
         let result = RetryMetadata.fromJson(json)
