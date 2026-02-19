@@ -18,7 +18,7 @@ protocol DataStore {
     func remove(reference: String) async -> Bool
     func rollover() async
     func removeAll() async
-    func refineBatchId(batchReference: String) -> String
+    func refineBatchId(batchReference: String) -> Int
 }
 
 // MARK: - StoreProvider
@@ -51,6 +51,7 @@ struct DataStoreConstants {
     static let fileBatchPrefix = "{\"batch\":["
     static let fileBatchSentAtSuffix = "],\"sentAt\":\""
     static let fileBatchSuffix = "\"}"
+    static let batchUnavailableId = -1
     
     private static let bytesInKilobyte: Int64 = 1024
     static var maxSize: Int64 {

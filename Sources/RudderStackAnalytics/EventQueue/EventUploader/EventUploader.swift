@@ -109,7 +109,7 @@ extension EventUploader {
         LoggerAnalytics.debug("Upload completed: \(reference)")
     }
     
-    private func handleBatchUploadFailure(_ error: EventUploadError, reference: String, batchId: String, timestampInMillis: UInt64) async {
+    private func handleBatchUploadFailure(_ error: EventUploadError, reference: String, batchId: Int, timestampInMillis: UInt64) async {
         LoggerAnalytics.error("Upload failed: \(reference)", cause: error)
         
         // Handle non-retryable errors

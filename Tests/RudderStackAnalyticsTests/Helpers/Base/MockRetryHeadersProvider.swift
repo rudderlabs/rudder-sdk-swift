@@ -13,19 +13,19 @@ final class MockRetryHeadersProvider: RetryHeadersProvider {
       var recordFailureCallCount = 0
       var clearCallCount = 0
 
-      var lastPrepareHeadersBatchId: String?
-      var lastRecordFailureBatchId: String?
+      var lastPrepareHeadersBatchId: Int?
+      var lastRecordFailureBatchId: Int?
       var lastRecordFailureError: RetryableEventUploadError?
 
       var headersToReturn: [String: String] = [:]
 
-      func prepareHeaders(batchId: String, currentTimestampInMillis: UInt64) -> [String: String] {
+      func prepareHeaders(batchId: Int, currentTimestampInMillis: UInt64) -> [String: String] {
           prepareHeadersCallCount += 1
           lastPrepareHeadersBatchId = batchId
           return headersToReturn
       }
 
-      func recordFailure(batchId: String, timestampInMillis: UInt64, error: RetryableEventUploadError) {
+      func recordFailure(batchId: Int, timestampInMillis: UInt64, error: RetryableEventUploadError) {
           recordFailureCallCount += 1
           lastRecordFailureBatchId = batchId
           lastRecordFailureError = error

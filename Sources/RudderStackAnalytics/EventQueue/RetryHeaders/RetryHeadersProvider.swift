@@ -17,10 +17,10 @@ import Foundation
  */
 protocol RetryHeadersProvider {
     /** Returns retry headers for the current upload attempt, or an empty dictionary if no prior failure is recorded. */
-    func prepareHeaders(batchId: String, currentTimestampInMillis: UInt64) -> [String: String]
+    func prepareHeaders(batchId: Int, currentTimestampInMillis: UInt64) -> [String: String]
     
     /** Records a failed upload attempt for retry tracking. */
-    func recordFailure(batchId: String, timestampInMillis: UInt64, error: RetryableEventUploadError)
+    func recordFailure(batchId: Int, timestampInMillis: UInt64, error: RetryableEventUploadError)
     
     /** Clears all persisted retry metadata. */
     func clear()

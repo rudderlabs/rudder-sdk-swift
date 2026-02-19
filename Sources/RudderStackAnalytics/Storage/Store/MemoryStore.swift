@@ -152,7 +152,8 @@ extension MemoryStore: DataStore {
         }
     }
     
-    nonisolated func refineBatchId(batchReference: String) -> String {
-        return batchReference.components(separatedBy: DataStoreConstants.referenceSeparator).last ?? batchReference
+    nonisolated func refineBatchId(batchReference: String) -> Int {
+        // Since retry headers flow paused for the MemoryStore, returning -1
+        return DataStoreConstants.batchUnavailableId
     }
 }

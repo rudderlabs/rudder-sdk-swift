@@ -15,7 +15,7 @@ import Foundation
  */
 struct RetryMetadata: Codable, Equatable {
     /** Unique identifier used to detect stale metadata when batches are evicted. */
-    let batchId: String
+    let batchId: Int
     
     /** Current retry attempt number (1 = first retry). */
     let attempt: Int
