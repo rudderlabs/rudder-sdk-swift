@@ -59,7 +59,7 @@ extension BasicStorage {
         await self.dataStore.rollover()
     }
     
-    func resolveBatchId(batchReference: String) -> String {
+    func resolveBatchId(batchReference: String) -> Int {
         return self.dataStore.refineBatchId(batchReference: batchReference)
     }
 }

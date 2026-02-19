@@ -94,7 +94,7 @@ protocol EventStorage {
      - Parameter batchReference: The reference of the batch for which to retrieve the batch ID.
      - Returns: The batch ID as a `String`.
     */
-    func resolveBatchId(batchReference: String) -> String
+    func resolveBatchId(batchReference: String) -> Int
 }
 
 // MARK: - Storage

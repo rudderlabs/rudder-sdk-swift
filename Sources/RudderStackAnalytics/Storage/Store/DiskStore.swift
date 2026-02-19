@@ -164,7 +164,7 @@ extension DiskStore: DataStore {
         }
     }
     
-    nonisolated func refineBatchId(batchReference: String) -> String {
-        return URL(fileURLWithPath: batchReference).lastPathComponent
+    nonisolated func refineBatchId(batchReference: String) -> Int {
+        return Int(URL(fileURLWithPath: batchReference).lastPathComponent) ?? DataStoreConstants.batchUnavailableId
     }
 }
