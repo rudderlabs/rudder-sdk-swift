@@ -22,7 +22,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
     }
     
     func prepareHeaders(batchId: Int, currentTimestampInMillis: UInt64) -> [String: String] {
-        guard batchId != DataStoreConstants.batchUnavailableId, let metadata = self.retrieveMetadataForBatch(batchId) else { return [:] }
+        guard let metadata = self.retrieveMetadataForBatch(batchId) else { return [:] }
         
         let sinceLastAttemptInMillis: UInt64 = currentTimestampInMillis > metadata.lastAttemptTimestampInMillis
         ? currentTimestampInMillis - metadata.lastAttemptTimestampInMillis
@@ -38,7 +38,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
     }
     
     func recordFailure(batchId: Int, timestampInMillis: UInt64, error: RetryableEventUploadError) {
-        guard batchId != DataStoreConstants.batchUnavailableId else { return }
+        guard self.isBatchAvailable(batchId) else { return }
         
         // For the first failure, attempt will be 1. For subsequent failures, it increments by 1.
         let attempt = self.retrieveMetadataForBatch(batchId).map { $0.attempt + 1 } ?? Self.firstAttempt
@@ -62,7 +62,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
 
 private extension PrimaryRetryHeadersProvider {
     func retrieveMetadataForBatch(_ batchId: Int) -> RetryMetadata? {
-        guard batchId != DataStoreConstants.batchUnavailableId, let json: String = self.storage.read(key: Constants.storageKeys.retryMetadata), !json.isEmpty else { return nil }
+        guard self.isBatchAvailable(batchId), let json: String = self.storage.read(key: Constants.storageKeys.retryMetadata), !json.isEmpty else { return nil }
         
         guard let metadata = RetryMetadata.fromJson(json) else {
             LoggerAnalytics.warn("Failed to parse retry metadata from JSON.")
@@ -75,5 +75,9 @@ private extension PrimaryRetryHeadersProvider {
         }
         
         return metadata
+    }
+    
+    func isBatchAvailable(_ batchId: Int) -> Bool {
+        return batchId != DataStoreConstants.batchUnavailableId
     }
 }
