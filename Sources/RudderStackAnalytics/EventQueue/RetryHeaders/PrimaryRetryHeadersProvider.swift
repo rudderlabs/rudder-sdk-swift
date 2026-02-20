@@ -22,7 +22,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
     }
     
     func prepareHeaders(batchId: Int, currentTimestampInMillis: UInt64) -> [String: String] {
-        guard let metadata = self.retrieveMetadataForBatch(batchId) else { return [:] }
+        guard self.isBatchAvailable(batchId), let metadata = self.retrieveMetadataForBatch(batchId) else { return [:] }
         
         let sinceLastAttemptInMillis: UInt64 = currentTimestampInMillis > metadata.lastAttemptTimestampInMillis
         ? currentTimestampInMillis - metadata.lastAttemptTimestampInMillis
@@ -62,7 +62,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
 
 private extension PrimaryRetryHeadersProvider {
     func retrieveMetadataForBatch(_ batchId: Int) -> RetryMetadata? {
-        guard self.isBatchAvailable(batchId), let json: String = self.storage.read(key: Constants.storageKeys.retryMetadata), !json.isEmpty else { return nil }
+        guard let json: String = self.storage.read(key: Constants.storageKeys.retryMetadata), !json.isEmpty else { return nil }
         
         guard let metadata = RetryMetadata.fromJson(json) else {
             LoggerAnalytics.warn("Failed to parse retry metadata from JSON.")
