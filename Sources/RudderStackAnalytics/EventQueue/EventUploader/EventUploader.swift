@@ -41,7 +41,7 @@ final class EventUploader {
                 let dataItems = await self.storage.read().dataItems
                 for item in dataItems {
                     // Check shutdown conditions before processing each item
-                    if self.analytics.isAnalyticsShutdown { break }
+                    if self.analytics.isAnalyticsShutdown || self.uploadChannel.isClosed { break }
                     
                     // Read the event batch from storage
                     let batch = self.analytics.storage.eventStorageMode == .memory ? item.batch : (FileManager.contentsOf(file: item.reference) ?? .empty)
