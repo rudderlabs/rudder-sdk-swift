@@ -25,6 +25,7 @@ class SourceConfigProviderTests {
     }
     
     deinit {
+        MockURLProtocol.forwardGetRequestsToHandler = false
         let storage = self.mockStorage
         Task.detached {
             await storage.removeAll()
