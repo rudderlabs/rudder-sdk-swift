@@ -13,7 +13,7 @@ import Foundation
  */
 protocol HttpClientRequests {
     func getConfigurationData() async -> SourceConfigResult
-    func postBatchEvents(_ batch: String) async -> EventUploadResult
+    func postBatchEvents(_ batch: String, additionalHeaders: [String: String]) async -> EventUploadResult
 }
 
 // MARK: - HttpClient
@@ -59,10 +59,13 @@ extension HttpClient: HttpClientRequests {
         return await HttpNetwork.perform(request: urlRequest).sourceConfigResult
     }
     
-    func postBatchEvents(_ batch: String) async -> EventUploadResult {
+    func postBatchEvents(_ batch: String, additionalHeaders: [String: String] = [:]) async -> EventUploadResult {
         guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else {
             return .failure(RetryableEventUploadError.unknown)
         }
+        
+        additionalHeaders.forEach { urlRequest.setValue($1, forHTTPHeaderField: $0) }
+        
         urlRequest.httpBody = batch.utf8Data
         
         if self.analytics.configuration.gzipEnabled, let gzipped = try? urlRequest.httpBody?.gzipped() as? Data {
