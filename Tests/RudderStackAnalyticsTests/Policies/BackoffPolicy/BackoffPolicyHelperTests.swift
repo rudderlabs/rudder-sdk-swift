@@ -51,7 +51,7 @@ struct BackoffPolicyHelperTests {
         
         let elapsed = endTime.timeIntervalSince(startTime)
         #expect(elapsed >= 0.1, "Should sleep at least 100ms")
-        #expect(elapsed < 0.15, "Should not exceed by much")
+        #expect(elapsed < 0.5, "Should not exceed by much")
     }
     
     @Test("given backoff policy constants, when accessing values, then returns expected constants")

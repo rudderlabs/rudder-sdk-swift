@@ -39,6 +39,7 @@ final class MockProvider {
         dataPlaneUrl: String? = nil,
         storage: Storage = MockStorage()
     ) -> Configuration {
+        setupMockURLSession()
         let config = Configuration(
             writeKey: writeKey ?? MockConstant.mockWriteKey,
             dataPlaneUrl: dataPlaneUrl ?? MockConstant.mockDataPlaneUrl
@@ -158,6 +159,8 @@ extension MockProvider {
     
     static func teardownMockURLSession() {
         URLProtocol.unregisterClass(MockURLProtocol.self)
+        MockURLProtocol.requestHandler = nil
+        MockURLProtocol.forwardGetRequestsToHandler = false
         let config = URLSessionConfiguration.ephemeral
         HttpNetwork.session = URLSession(configuration: config)
     }

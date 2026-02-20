@@ -9,14 +9,22 @@ import Foundation
 
 /**
  A `URLProtocol` subclass for mocking HTTP responses in tests.
-*/
+ */
 final class MockURLProtocol: URLProtocol {
     
     /**
-    Closure the test sets to provide a mocked response.
-    - Returns: `(statusCode, responseData, headers)`
-    */
+     Closure the test sets to provide a mocked response.
+     - Returns: `(statusCode, responseData, headers)`
+     */
     static var requestHandler: ((URLRequest) throws -> (Int, Data?, [String: String]?))?
+    
+    /**
+     When `false` (default), GET requests return 200 empty even if `requestHandler` is set.
+     This absorbs background source config downloads spawned by `Analytics` initialization.
+     Tests that need GET requests to reach the handler (e.g. SourceConfigProviderTests)
+     must set this to `true`.
+     */
+    static var forwardGetRequestsToHandler = false
     
     // MARK: - URLProtocol overrides
     
@@ -30,8 +38,25 @@ final class MockURLProtocol: URLProtocol {
     }
     
     override func startLoading() {
+        // GET requests return 200 empty unless the test explicitly opts in.
+        // This absorbs background source config downloads (GET /sourceConfig)
+        // that Analytics initialization spawns asynchronously, preventing them from
+        // going through the test's handler and corrupting callCount/attemptCount.
+        //
+        // POST requests with no handler stay pending — no success (batches not deleted)
+        // and no failure (no retry loop).
+        if request.httpMethod == "GET" &&
+            (MockURLProtocol.requestHandler == nil || !MockURLProtocol.forwardGetRequestsToHandler) {
+            if let url = request.url,
+               let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: nil) {
+                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+                client?.urlProtocolDidFinishLoading(self)
+            }
+            return
+        }
+        
         guard let handler = MockURLProtocol.requestHandler else {
-            client?.urlProtocol(self, didFailWithError: URLError(.badServerResponse))
+            // POST with no handler: keep pending
             return
         }
         
