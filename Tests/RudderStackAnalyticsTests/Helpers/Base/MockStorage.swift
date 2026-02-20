@@ -130,7 +130,7 @@ extension MockStorage {
     var currentBatchEventCount: Int {
         return mockEventStorage.currentBatchEventCount
     }
-
+    
     /**
      Returns the total number of individual events across all batches (current + closed).
      This provides a count of all events regardless of batch boundaries.
@@ -141,7 +141,7 @@ extension MockStorage {
 }
 
 extension MockStorage {
-
+    
     /** Polling interval in nanoseconds for wait methods. */
     static var pollInterval: UInt64 { 10_000_000 } // 10ms
     
@@ -241,8 +241,8 @@ extension MockStorage {
      Waits for a specific key to exist in storage.
      
      - Parameters:
-       - key: The key to wait for
-       - timeout: Maximum time to wait in seconds
+     - key: The key to wait for
+     - timeout: Maximum time to wait in seconds
      - Returns: True if key exists within timeout, false otherwise
      */
     @discardableResult
@@ -266,9 +266,9 @@ extension MockStorage {
      Waits for a specific key-value pair with expected value.
      
      - Parameters:
-       - key: The key to wait for
-       - expectedValue: The expected value for the key
-       - timeout: Maximum time to wait in seconds
+     - key: The key to wait for
+     - expectedValue: The expected value for the key
+     - timeout: Maximum time to wait in seconds
      - Returns: True if key-value pair matches within timeout, false otherwise
      */
     @discardableResult
@@ -293,9 +293,9 @@ extension MockStorage {
      Waits for a key-value pair with a predicate condition.
      
      - Parameters:
-        - key: The key to wait for
-        - timeout: Maximum time to wait in seconds
-        - predicate: Predicate to evaluate the stored value
+     - key: The key to wait for
+     - timeout: Maximum time to wait in seconds
+     - predicate: Predicate to evaluate the stored value
      - Returns: True if predicate condition is met within timeout, false otherwise
      */
     @discardableResult
@@ -320,8 +320,8 @@ extension MockStorage {
      Waits until a given key is removed (i.e., no longer present) from the storage.
      
      - Parameters:
-       - key: The key to monitor for removal.
-       - timeout: The maximum duration to wait, in seconds. Default is `2.0`.
+     - key: The key to monitor for removal.
+     - timeout: The maximum duration to wait, in seconds. Default is `2.0`.
      - Returns: `true` if the key was removed within the timeout period, otherwise `false`.
      */
     @discardableResult
@@ -345,9 +345,9 @@ extension MockStorage {
 // MARK: - MockKeyValueStorage
 
 class MockKeyValueStorage: KeyValueStorage {
-
+    
     private var storage: [String: Any] = [:]
-
+    
     func write<T: Codable>(value: T, key: String) {
         if isPrimitiveType(value) {
             storage[key] = value
@@ -356,7 +356,7 @@ class MockKeyValueStorage: KeyValueStorage {
             storage[key] = encodedData
         }
     }
-
+    
     func read<T: Codable>(key: String) -> T? {
         let rawValue = storage[key]
         if let rawData = rawValue as? Data {
@@ -366,22 +366,22 @@ class MockKeyValueStorage: KeyValueStorage {
             return rawValue as? T
         }
     }
-
+    
     func remove(key: String) {
         storage.removeValue(forKey: key)
     }
-
+    
     func removeAll() {
         storage.removeAll()
     }
-
+    
     var allStoredData: [String: Any] {
         return storage
     }
-
+    
     private func isPrimitiveType<T: Codable>(_ value: T?) -> Bool {
         guard let value = value else { return true }
-
+        
         return switch value {
         case is Int, is Double, is Float, is NSNumber, is Bool, is String, is Character,
             is [Int], is [Double], is [Float], is [NSNumber], is [Bool], is [String], is [Character]:
@@ -397,25 +397,25 @@ class MockKeyValueStorage: KeyValueStorage {
  Class-based mock event storage for thread-safe test operations.
  */
 final class MockEventStorage {
-
+    
     // MARK: - Properties
-
+    
     private var currentBatch: EventDataItem = EventDataItem()
     private var closedBatches: [EventDataItem] = []
     private var _currentBatchEventCount: Int = 0
     private var _totalEventCount: Int = 0
     private let queue = DispatchQueue(label: "MockEventStorage.queue")
-
+    
     var currentBatchEventCount: Int {
         queue.sync { _currentBatchEventCount }
     }
-
+    
     var totalEventCount: Int {
         queue.sync { _totalEventCount }
     }
-
+    
     // MARK: - EventStorage Protocol Methods
-
+    
     func write(event: String) {
         queue.sync {
             // Auto-split: if current batch exceeds max size, close it and start a new one
@@ -427,7 +427,7 @@ final class MockEventStorage {
                 self.currentBatch = EventDataItem()
                 self._currentBatchEventCount = 0
             }
-
+            
             if self.currentBatch.batch.isEmpty {
                 self.currentBatch.batch = "{\"batch\":[\(event)"
             } else {
@@ -437,14 +437,14 @@ final class MockEventStorage {
             self._totalEventCount += 1
         }
     }
-
+    
     func read() -> EventDataResult {
         queue.sync {
             // Only return closed batches, matching production MemoryStore.retrieve() behavior
             return EventDataResult(dataItems: self.closedBatches)
         }
     }
-
+    
     func remove(batchReference: String) -> Bool {
         queue.sync {
             // Remove from closed batches
@@ -452,33 +452,33 @@ final class MockEventStorage {
                 self.closedBatches.remove(at: index)
                 return true
             }
-
+            
             // Check if it's the current batch
             if self.currentBatch.reference == batchReference {
                 self.currentBatch = EventDataItem()
                 self._currentBatchEventCount = 0
                 return true
             }
-
+            
             return false
         }
     }
-
+    
     func rollover() {
         queue.sync {
             guard !self.currentBatch.batch.isEmpty else { return }
-
+            
             // Close current batch and move to closed batches
             self.currentBatch.batch += DataStoreConstants.fileBatchSentAtSuffix + String.currentTimeStamp + DataStoreConstants.fileBatchSuffix
             self.currentBatch.isClosed = true
             self.closedBatches.append(self.currentBatch)
-
+            
             // Start new batch and reset counter
             self.currentBatch = EventDataItem()
             self._currentBatchEventCount = 0
         }
     }
-
+    
     func removeAll() {
         queue.sync {
             self.currentBatch = EventDataItem()
@@ -487,9 +487,9 @@ final class MockEventStorage {
             self._totalEventCount = 0
         }
     }
-
+    
     // MARK: - Test Helper Methods
-
+    
     func getAllEvents() -> [EventDataItem] {
         queue.sync {
             var allBatches = self.closedBatches
@@ -499,7 +499,7 @@ final class MockEventStorage {
             return allBatches
         }
     }
-
+    
     func getBatchCount() -> Int {
         queue.sync {
             var count = self.closedBatches.count

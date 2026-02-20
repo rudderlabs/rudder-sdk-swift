@@ -199,7 +199,7 @@ extension MockEventCapturePlugin {
             await Task.yield()
         }
     }
-
+    
     // Non-generic version (wait for all events)
     @discardableResult
     func waitForEvents(count expectedCount: Int = 1, timeout: TimeInterval? = nil) async -> [Event] {

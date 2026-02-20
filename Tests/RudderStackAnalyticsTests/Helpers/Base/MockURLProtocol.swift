@@ -9,13 +9,13 @@ import Foundation
 
 /**
  A `URLProtocol` subclass for mocking HTTP responses in tests.
-*/
+ */
 final class MockURLProtocol: URLProtocol {
     
     /**
-    Closure the test sets to provide a mocked response.
-    - Returns: `(statusCode, responseData, headers)`
-    */
+     Closure the test sets to provide a mocked response.
+     - Returns: `(statusCode, responseData, headers)`
+     */
     static var requestHandler: ((URLRequest) throws -> (Int, Data?, [String: String]?))?
     
     /**

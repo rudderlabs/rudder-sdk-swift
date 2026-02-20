@@ -16,12 +16,12 @@ final class MockLifecycleEventListener: LifecycleEventListener {
     private(set) var onForegroundCalled = false
     private(set) var onTerminateCalled = false
     private(set) var onBecomeActiveCalled = false
-
+    
     func onBackground() { onBackgroundCalled = true }
     func onForeground() { onForegroundCalled = true }
     func onTerminate() { onTerminateCalled = true }
     func onBecomeActive() { onBecomeActiveCalled = true }
-
+    
     func reset() {
         onBackgroundCalled = false
         onForegroundCalled = false
@@ -36,7 +36,7 @@ final class MockLifecycleEventListener: LifecycleEventListener {
  A test-safe lifecycle observer that mirrors the real `LifecycleObserver`'s
  add/remove/notify contract but uses direct method invocation instead of
  `NotificationCenter.default`.
-
+ 
  **Why this exists:** The real `LifecycleObserver` registers for real system
  notifications (e.g. `NSApplication.didBecomeActiveNotification`) on
  `NotificationCenter.default`. When tests post these notifications, ALL
@@ -47,19 +47,19 @@ final class MockLifecycleEventListener: LifecycleEventListener {
  */
 final class MockLifecycleObserver {
     private var observers: [WeakObserver] = []
-
+    
     func addObserver(_ observer: LifecycleEventListener) {
         observers.append(WeakObserver(observer))
     }
-
+    
     func removeObserver(_ observer: LifecycleEventListener) {
         observers.removeAll { $0.observer === observer }
     }
-
+    
     func simulateEvent(_ event: AppLifecycleEvent) {
         observers.removeAll { $0.observer == nil }
         let active = observers.compactMap { $0.observer }
-
+        
         switch event {
         case .background: active.forEach { $0.onBackground() }
         case .terminate: active.forEach { $0.onTerminate() }
