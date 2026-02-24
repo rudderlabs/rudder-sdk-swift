@@ -13,7 +13,11 @@ import Testing
 @Suite("HttpNetwork Tests")
 class HttpNetworkTests {
     
-    init() { MockProvider.setupMockURLSession() }
+    init() {
+        MockProvider.setupMockURLSession()
+        MockURLProtocol.forwardGetRequestsToHandler = true
+    }
+    
     deinit { MockProvider.teardownMockURLSession() }
     
     @Test("given a success request, when it returns success status code in range, then HttpNetwork returns expected data",

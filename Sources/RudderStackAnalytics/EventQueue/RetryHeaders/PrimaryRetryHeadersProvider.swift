@@ -76,7 +76,7 @@ private extension PrimaryRetryHeadersProvider {
         
         return metadata
     }
-    
+
     func isBatchAvailable(_ batchId: Int) -> Bool {
         return batchId != DataStoreConstants.batchUnavailableId
     }

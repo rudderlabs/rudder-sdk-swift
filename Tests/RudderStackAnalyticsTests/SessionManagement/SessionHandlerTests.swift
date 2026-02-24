@@ -367,9 +367,11 @@ struct SessionHandlerTests {
         let storage = analytics.configuration.storage
         
         let initialSessionId: UInt64 = 1234567890
-        // Current monotonic time will be small (since system just restarted)
-        // But last activity time was stored before restart, so it's larger
-        let veryLargeLastActivityTime: UInt64 = UInt64.max - 1000
+        // Simulate system restart: last activity time is slightly ahead of current monotonic time.
+        // With wrapping subtraction (monotonicCurrentTime &- lastActivityTime), this produces
+        // a very large value (close to UInt64.max), which exceeds the session timeout.
+        let currentMonotonicTime = UInt64(ProcessInfo.processInfo.systemUptime * 1000.0)
+        let veryLargeLastActivityTime: UInt64 = currentMonotonicTime + 1000
         
         storage.write(value: String(initialSessionId), key: Constants.storageKeys.sessionId)
         storage.write(value: false, key: Constants.storageKeys.isManualSession)
