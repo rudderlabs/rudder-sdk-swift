@@ -156,7 +156,6 @@ extension SessionHandler {
         }
         
         let timeDifference = currentTime - self.lastActivityTime
-        print("Vishal123, currentTime: \(currentTime), lastActivityTime: \(self.lastActivityTime), timeDifference: \(timeDifference)")
         
         return timeDifference > self.automaticSessionTimeout
     }
@@ -187,7 +186,6 @@ extension SessionHandler {
     
     func updateSessionLastActivityTime(_ time: UInt64? = nil) {
         let lastActivityTime = time ?? self.systemCurrentTime
-        print("Vishal123: updating session last activity time: \(lastActivityTime)")
         self.sessionState.dispatch(action: UpdateSessionLastActivityAction(lastActivityTime: lastActivityTime))
         self.sessionInstance.storeSessionActivity(time: lastActivityTime, storage: self.storage)
     }
