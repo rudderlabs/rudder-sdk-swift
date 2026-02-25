@@ -110,6 +110,10 @@ extension SessionHandler {
         return UInt64(Date().timeIntervalSince1970)
     }
     
+    var sessionSnapshot: SessionInfo {
+        return self.sessionState.state.value
+    }
+    
     var sessionId: UInt64? {
         return self.sessionInstance.id == SessionConstants.defaultSessionId ? nil : self.sessionInstance.id
     }
