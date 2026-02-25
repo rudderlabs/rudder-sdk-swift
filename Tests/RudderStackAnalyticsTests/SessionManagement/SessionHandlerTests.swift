@@ -374,9 +374,11 @@ struct SessionHandlerTests {
         #expect(sessionHandler.sessionType == .manual)
         #expect(sessionHandler.isSessionStart)
         
-        // Update activity
-        sessionHandler.updateSessionLastActivityTime()
-        
+        // Update activity with a known recent past time so that systemCurrentTime
+        // is strictly greater when isSessionTimedOut evaluates it.
+        let recentActivityTime = sessionHandler.systemCurrentTime - 1000
+        sessionHandler.updateSessionLastActivityTime(recentActivityTime)
+
         // Activity updated
         #expect(sessionHandler.lastActivityTime > 0)
         #expect(!sessionHandler.isSessionTimedOut)
@@ -425,6 +427,20 @@ struct SessionHandlerTests {
         // Should be automatic
         #expect(sessionHandler.sessionType == .automatic)
         #expect(sessionHandler.sessionId == 2222222222)
+    }
+    
+    @Test("given a last activity time set to a future timestamp, when checking session timeout, then it should be considered timed out due to clock tampering")
+    func testSessionTimedOutWhenLastActivityTimeIsInFuture() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 5000)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let sessionHandler = SessionHandler(analytics: analytics)
+
+        // Simulate a last activity time that is 1 minute ahead of now,
+        // as would happen if the system clock was moved backward after the time was stored.
+        let futureTime = sessionHandler.systemCurrentTime + 60000
+        sessionHandler.updateSessionLastActivityTime(futureTime)
+
+        #expect(sessionHandler.isSessionTimedOut)
     }
 }
 
