@@ -91,8 +91,9 @@ struct HttpClientTests {
     @Test("given successful HTTP response, when requesting configuration data, then configuration data is returned successfully")
     func testGetConfigDataSuccess() async {
         MockProvider.setupMockURLSession()
+        MockURLProtocol.forwardGetRequestsToHandler = true
         defer { MockProvider.teardownMockURLSession() }
-        
+
         let expectedData = Data("{\"success\": true}".utf8)
         MockURLProtocol.requestHandler = { request in
             return (200, expectedData, _defaultHeaders)
@@ -105,8 +106,9 @@ struct HttpClientTests {
     @Test("given a failure HTTP response, when requesting configuration data, then the error is handled properly")
     func testGetConfigDataFailure() async {
         MockProvider.setupMockURLSession()
+        MockURLProtocol.forwardGetRequestsToHandler = true
         defer { MockProvider.teardownMockURLSession() }
-        
+
         MockURLProtocol.requestHandler = { request in
             return (400, nil, nil)
         }
