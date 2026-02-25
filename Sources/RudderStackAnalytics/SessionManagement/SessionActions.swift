@@ -7,6 +7,23 @@
 
 import Foundation
 
+// MARK: - StartSessionAction
+
+struct StartSessionAction: StateAction {
+    typealias T = SessionInfo
+    
+    let sessionId: UInt64
+    let sessionType: SessionType
+    
+    func reduce(currentState: SessionInfo) -> SessionInfo {
+        var state = currentState
+        state.id = sessionId
+        state.isStart = true
+        state.type = sessionType
+        return state
+    }
+}
+
 // MARK: - UpdateSessionIdAction
 
 struct UpdateSessionIdAction: StateAction {
