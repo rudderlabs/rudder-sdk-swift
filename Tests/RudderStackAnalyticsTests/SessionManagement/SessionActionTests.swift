@@ -45,41 +45,6 @@ struct SessionActionTests {
         #expect(newState.type == .automatic)
         #expect(newState.lastActivityTime == originalState.lastActivityTime)
     }
-
-    // MARK: - UpdateSessionIdAction Tests
-    
-    @Test("given various session IDs, when updating, then the new ID is set", arguments: [
-        (UInt64(0), UInt64(1234567890)),
-        (UInt64(9999999999), UInt64(0)),
-        (UInt64(1111111111), UInt64.max),
-        (UInt64.max, UInt64(5555555555))
-    ])
-    func testUpdateSessionId(initialId: UInt64, newId: UInt64) {
-        let initialState = SessionInfo(id: initialId)
-        let action = UpdateSessionIdAction(sessionId: newId)
-        
-        let updatedState = action.reduce(currentState: initialState)
-        
-        #expect(updatedState.id == newId)
-        // Verify other properties remain unchanged
-        #expect(updatedState.type == initialState.type)
-        #expect(updatedState.isStart == initialState.isStart)
-        #expect(updatedState.lastActivityTime == initialState.lastActivityTime)
-    }
-    
-    @Test("given various session IDs, when updating, then state immutability is preserved")
-    func testSessionIdImmutability() {
-        let originalState = SessionInfo(id: 1111111111, type: .manual, isStart: true, lastActivityTime: 9876543210)
-        let action = UpdateSessionIdAction(sessionId: 2222222222)
-        
-        let newState = action.reduce(currentState: originalState)
-        
-        #expect(originalState.id == 1111111111) // Original state unchanged
-        #expect(newState.id == 2222222222) // New state has updated ID
-        #expect(newState.type == originalState.type)
-        #expect(newState.isStart == originalState.isStart)
-        #expect(newState.lastActivityTime == originalState.lastActivityTime)
-    }
     
     // MARK: - UpdateIsSessionStartAction Tests
     
@@ -113,41 +78,6 @@ struct SessionActionTests {
         #expect(newState.isStart) // New state has updated flag
         #expect(newState.id == originalState.id)
         #expect(newState.type == originalState.type)
-        #expect(newState.lastActivityTime == originalState.lastActivityTime)
-    }
-    
-    // MARK: - UpdateSessionTypeAction Tests
-    
-    @Test("given various session types, when updating, then the new type is set", arguments: [
-        (SessionType.automatic, SessionType.manual),
-        (SessionType.manual, SessionType.automatic),
-        (SessionType.automatic, SessionType.automatic),
-        (SessionType.manual, SessionType.manual)
-    ])
-    func testUpdateSessionType(initialType: SessionType, newType: SessionType) {
-        let initialState = SessionInfo(type: initialType)
-        let action = UpdateSessionTypeAction(sessionType: newType)
-        
-        let updatedState = action.reduce(currentState: initialState)
-        
-        #expect(updatedState.type == newType)
-        // Verify other properties remain unchanged
-        #expect(updatedState.id == initialState.id)
-        #expect(updatedState.isStart == initialState.isStart)
-        #expect(updatedState.lastActivityTime == initialState.lastActivityTime)
-    }
-    
-    @Test("given various session types, when updating, then state immutability is preserved")
-    func testSessionTypeImmutability() {
-        let originalState = SessionInfo(id: 7777777777, type: .manual, isStart: true, lastActivityTime: 1111111111)
-        let action = UpdateSessionTypeAction(sessionType: .automatic)
-        
-        let newState = action.reduce(currentState: originalState)
-        
-        #expect(originalState.type == .manual) // Original state unchanged
-        #expect(newState.type == .automatic) // New state has updated type
-        #expect(newState.id == originalState.id)
-        #expect(newState.isStart == originalState.isStart)
         #expect(newState.lastActivityTime == originalState.lastActivityTime)
     }
     

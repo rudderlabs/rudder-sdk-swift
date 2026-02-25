@@ -172,23 +172,11 @@ extension SessionHandler {
 
 extension SessionHandler {
     
-    private func updateSessionId(id: UInt64) {
-        self.sessionState.dispatch(action: UpdateSessionIdAction(sessionId: id))
-        self.sessionInstance.storeSessionId(id: id, storage: self.storage)
-    }
-    
     func updateSessionStart(isSessionStart: Bool) {
         guard self.sessionInstance.isStart != isSessionStart else { return }
         
         self.sessionState.dispatch(action: UpdateIsSessionStartAction(isSessionStart: isSessionStart))
         self.sessionInstance.storeIsSessionStart(isSessionStart: isSessionStart, storage: self.storage)
-    }
-    
-    private func updateSessionType(type: SessionType) {
-        guard self.sessionInstance.type != type else { return }
-        
-        self.sessionState.dispatch(action: UpdateSessionTypeAction(sessionType: type))
-        self.sessionInstance.storeSessionType(type: type, storage: self.storage)
     }
     
     func updateSessionLastActivityTime(_ time: UInt64? = nil) {
