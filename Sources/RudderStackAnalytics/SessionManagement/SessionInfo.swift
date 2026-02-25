@@ -17,6 +17,10 @@ struct SessionInfo {
     var isStart: Bool = SessionConstants.defaultIsSessionStart
     var lastActivityTime: UInt64 = SessionConstants.defaultSessionLastActivityTime
     
+    var sessionId: UInt64? {
+        return id == SessionConstants.defaultSessionId ? nil : id
+    }
+    
     static func initializeState(_ storage: KeyValueStorage) -> SessionInfo {
         var state = SessionInfo()
         
@@ -35,7 +39,7 @@ struct SessionInfo {
         if let lastActivityTimeValue: String = storage.read(key: Constants.storageKeys.lastActivityTime), let lastActivityTime = UInt64(lastActivityTimeValue) {
             state.lastActivityTime = lastActivityTime
         }
-      
+        
         return state
     }
 }

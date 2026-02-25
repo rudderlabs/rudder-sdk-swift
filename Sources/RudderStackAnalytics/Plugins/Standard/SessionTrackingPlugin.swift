@@ -27,9 +27,10 @@ final class SessionTrackingPlugin: Plugin {
         guard let sessionHandler = self.analytics?.sessionHandler else { return info }
         
         let snapshot = sessionHandler.sessionSnapshot
-        guard snapshot.id != SessionConstants.defaultSessionId else { return info }
+        guard let sessionId = snapshot.sessionId else { return info }
         
-        info["sessionId"] = snapshot.id
+        info["sessionId"] = sessionId
+        
         if snapshot.isStart {
             info["sessionStart"] = true
             sessionHandler.updateSessionStart(isSessionStart: false)
@@ -38,6 +39,7 @@ final class SessionTrackingPlugin: Plugin {
         if snapshot.type == .automatic {
             sessionHandler.updateSessionLastActivityTime()
         }
+        
         return info
     }
 }

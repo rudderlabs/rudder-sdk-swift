@@ -115,7 +115,7 @@ extension SessionHandler {
     }
     
     var sessionId: UInt64? {
-        return self.sessionInstance.id == SessionConstants.defaultSessionId ? nil : self.sessionInstance.id
+        return self.sessionInstance.sessionId
     }
     
     var isSessionStart: Bool {
