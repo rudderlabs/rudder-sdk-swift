@@ -47,12 +47,15 @@ final class SessionHandler {
     }
     
     func startSession(id: UInt64, type: SessionType) {
-        self.updateSessionStart(isSessionStart: true)
-        self.updateSessionType(type: type)
+        self.sessionState.dispatch(action: StartSessionAction(sessionId: id, sessionType: type))
+        
+        self.sessionInstance.storeSessionId(id: id, storage: self.storage)
+        self.sessionInstance.storeIsSessionStart(isSessionStart: true, storage: self.storage)
+        self.sessionInstance.storeSessionType(type: type, storage: self.storage)
+        
         if isSessionManual {
             detachSessionTrackingObservers()
         }
-        self.updateSessionId(id: id)
     }
     
     func endSession() {
