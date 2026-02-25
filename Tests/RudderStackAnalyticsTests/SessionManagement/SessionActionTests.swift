@@ -12,6 +12,40 @@ import Testing
 @Suite("SessionActionTests Tests")
 struct SessionActionTests {
     
+    // MARK: - StartSessionAction Tests
+    
+    @Test("given various session start parameters, when reducing, then id, isStart, and type are all set atomically", arguments: [
+        (UInt64(1234567890), SessionType.automatic),
+        (UInt64(9876543210), SessionType.manual),
+        (UInt64.max, SessionType.automatic)
+    ])
+    func testStartSession(sessionId: UInt64, sessionType: SessionType) {
+        let initialState = SessionInfo(id: 1111111111, type: .manual, isStart: false, lastActivityTime: 9999999999)
+        let action = StartSessionAction(sessionId: sessionId, sessionType: sessionType)
+        let newState = action.reduce(currentState: initialState)
+
+        #expect(newState.id == sessionId)
+        #expect(newState.isStart == true)
+        #expect(newState.type == sessionType)
+        #expect(newState.lastActivityTime == initialState.lastActivityTime)
+    }
+
+    @Test("given an active session, when start session action is applied, then state immutability is preserved")
+    func testStartSessionImmutability() {
+        let originalState = SessionInfo(id: 1111111111, type: .manual, isStart: false, lastActivityTime: 9876543210)
+        let action = StartSessionAction(sessionId: 2222222222, sessionType: .automatic)
+        
+        let newState = action.reduce(currentState: originalState)
+        
+        #expect(originalState.id == 1111111111)
+        #expect(originalState.isStart == false)
+        #expect(originalState.type == .manual)
+        #expect(newState.id == 2222222222)
+        #expect(newState.isStart == true)
+        #expect(newState.type == .automatic)
+        #expect(newState.lastActivityTime == originalState.lastActivityTime)
+    }
+
     // MARK: - UpdateSessionIdAction Tests
     
     @Test("given various session IDs, when updating, then the new ID is set", arguments: [
