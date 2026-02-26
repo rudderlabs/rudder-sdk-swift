@@ -179,51 +179,21 @@ enum MigrationUtilsV1 {
     // MARK: - Timestamp Conversion
     
     /**
-     Converts a legacy wall-clock timestamp (timeIntervalSince1970) into a
-     system uptime value (ProcessInfo.processInfo.systemUptime) expressed
-     in milliseconds.
+     Converts a legacy wall-clock timestamp (timeIntervalSince1970 in seconds) into
+     milliseconds for the new SDK format.
      
      This method is used during SDK migration where the legacy SDK stored
-     the last activity time as an absolute timestamp, while the new SDK
-     stores it as system uptime (time since last device boot).
-     
-     Conversion logic:
-     - Read the current timestamp (t_now)
-     - Read the current system uptime (u_now)
-     - Calculate the system boot timestamp:
-     bootTimestamp = t_now - u_now
-     - Calculate the uptime at which the legacy event occurred:
-     uptimeAtTimestamp = legacyTimestamp - bootTimestamp
-     
-     If the legacy timestamp occurred before the current system boot,
-     the conversion is not possible and the method returns nil.
-     
-     Example:
-     currentTimestamp = 1_725_000_000   (seconds since 1970)
-     currentUptime    = 10_000          (seconds since last boot)
-     
-     bootTimestamp    = 1_724_990_000
-     
-     legacyTimestamp  = 1_724_995_000
-     
-     uptimeAtTimestamp = 5_000 seconds
-     result            = 5_000_000 milliseconds
-     
-     Important notes:
-     - This conversion only succeeds if the device has not rebooted since
-     the legacy timestamp was recorded.
-     - If a reboot occurred, returning nil is the correct and safe behavior.
+     the last activity time as seconds since 1970, while the new SDK
+     stores it as milliseconds since 1970.
      
      - Parameter timestamp:
-     Legacy timestamp represented as timeIntervalSince1970.
+     Legacy timestamp represented as timeIntervalSince1970 (seconds).
      
      - Returns:
-     System uptime in milliseconds corresponding to the legacy timestamp,
-     or nil if the conversion is not valid.
+     Timestamp in milliseconds, or nil if the timestamp is invalid.
      */
-    static func convertTimestampToSystemUptime(_ timestamp: Double) -> UInt64? {
+    static func convertTimestampToMilliseconds(_ timestamp: Double) -> UInt64? {
         let currentTimestamp = Date().timeIntervalSince1970
-        let currentUptime = ProcessInfo.processInfo.systemUptime
         
         // Timestamp must be valid and in the past
         guard timestamp > 0, timestamp <= currentTimestamp else {
@@ -231,18 +201,8 @@ enum MigrationUtilsV1 {
             return nil
         }
         
-        // Calculate system boot time as a timestamp
-        let bootTimestamp = currentTimestamp - currentUptime
-        
-        // Calculate uptime at the time of the legacy timestamp
-        let uptimeAtTimestamp = timestamp - bootTimestamp
-        guard uptimeAtTimestamp >= 0 else {
-            print("MigrationUtilsV1: Timestamp predates system boot: \(timestamp)")
-            return nil
-        }
-        
         // Convert seconds to milliseconds
-        return UInt64(uptimeAtTimestamp * 1000)
+        return UInt64(timestamp * 1000)
     }
 }
 
