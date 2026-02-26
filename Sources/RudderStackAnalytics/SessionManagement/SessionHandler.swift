@@ -136,7 +136,8 @@ extension SessionHandler {
     
     var systemCurrentTime: UInt64 {
         let millisecondsInSecond: TimeInterval = 1000.0
-        return UInt64(Date().timeIntervalSince1970 * millisecondsInSecond)
+        let interval = Date().timeIntervalSince1970
+        return interval > 0 ? UInt64(interval * millisecondsInSecond) : 0
     }
     
     /**
