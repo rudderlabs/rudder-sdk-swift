@@ -220,7 +220,7 @@ private extension PersistentMigratorFromV2 {
             return nil
         }
 
-        guard let convertedTime = MigrationUtilsV2.convertTimestampToSystemUptime(timestampNumber.doubleValue) else {
+        guard let convertedTime = MigrationUtilsV2.convertTimestampToMilliseconds(timestampNumber.doubleValue) else {
             log("Failed to convert lastEventTimeStamp - session timing may be affected")
             return nil
         }

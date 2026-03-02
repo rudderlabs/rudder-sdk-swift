@@ -223,7 +223,7 @@ struct SessionHandlerTests {
         storage.write(value: String(initialSessionId), key: Constants.storageKeys.sessionId)
         storage.write(value: false, key: Constants.storageKeys.isManualSession)
         // Simulate last activity 10 seconds ago (past timeout of 5 seconds)
-        let pastTime = UInt64(ProcessInfo.processInfo.systemUptime * 1000) - 10000
+        let pastTime = UInt64(Date().timeIntervalSince1970 * 1000) - 10000
         storage.write(value: String(pastTime), key: Constants.storageKeys.lastActivityTime)
         
         let sessionHandler = SessionHandler(analytics: analytics)
@@ -295,7 +295,7 @@ struct SessionHandlerTests {
         let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
         let sessionHandler = SessionHandler(analytics: analytics)
         
-        let pastTime = sessionHandler.monotonicCurrentTime - timeDifferenceMs
+        let pastTime = sessionHandler.systemCurrentTime - timeDifferenceMs
         sessionHandler.updateSessionLastActivityTime(pastTime)
         
         #expect(sessionHandler.isSessionTimedOut == expectedTimedOut)
@@ -319,13 +319,13 @@ struct SessionHandlerTests {
         let sessionHandler = SessionHandler(analytics: analytics)
         
         let testTime: UInt64 = 1234567890
-        let beforeTime = sessionHandler.monotonicCurrentTime
+        let beforeTime = sessionHandler.systemCurrentTime
         
         sessionHandler.updateSessionLastActivityTime(testTime)
         #expect(sessionHandler.lastActivityTime == testTime)
         
         sessionHandler.updateSessionLastActivityTime()
-        let afterTime = sessionHandler.monotonicCurrentTime
+        let afterTime = sessionHandler.systemCurrentTime
         
         #expect(sessionHandler.lastActivityTime >= beforeTime)
         #expect(sessionHandler.lastActivityTime <= afterTime)
@@ -343,7 +343,7 @@ struct SessionHandlerTests {
         storage.write(value: String(previousSessionId), key: Constants.storageKeys.sessionId)
         storage.write(value: false, key: Constants.storageKeys.isManualSession)
         // Set last activity time to be beyond timeout
-        let pastTime = UInt64(ProcessInfo.processInfo.systemUptime * 1000) - 10000
+        let pastTime = UInt64(Date().timeIntervalSince1970 * 1000) - 10000
         storage.write(value: String(pastTime), key: Constants.storageKeys.lastActivityTime)
         
         let sessionHandler = SessionHandler(analytics: analytics)
@@ -355,32 +355,6 @@ struct SessionHandlerTests {
         try? await Task.sleep(nanoseconds: 100_000_000)
         
         #expect(sessionHandler.sessionId != previousSessionId)
-        #expect(sessionHandler.sessionType == .automatic)
-    }
-    
-    // MARK: - System Restart Tests
-    
-    @Test("given automatic session enabled and the system is restarted (monotonic time less than last activity), when app is launched, then new session starts")
-    func testSystemRestartOnLaunchStartsNewSession() {
-        let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 300000)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
-        let storage = analytics.configuration.storage
-        
-        let initialSessionId: UInt64 = 1234567890
-        // Simulate system restart: last activity time is slightly ahead of current monotonic time.
-        // With wrapping subtraction (monotonicCurrentTime &- lastActivityTime), this produces
-        // a very large value (close to UInt64.max), which exceeds the session timeout.
-        let currentMonotonicTime = UInt64(ProcessInfo.processInfo.systemUptime * 1000.0)
-        let veryLargeLastActivityTime: UInt64 = currentMonotonicTime + 1000
-        
-        storage.write(value: String(initialSessionId), key: Constants.storageKeys.sessionId)
-        storage.write(value: false, key: Constants.storageKeys.isManualSession)
-        storage.write(value: String(veryLargeLastActivityTime), key: Constants.storageKeys.lastActivityTime)
-        
-        let sessionHandler = SessionHandler(analytics: analytics)
-        
-        // After system restart, monotonic time is small, so session should be timed out
-        #expect(sessionHandler.sessionId != initialSessionId)
         #expect(sessionHandler.sessionType == .automatic)
     }
     
@@ -400,9 +374,11 @@ struct SessionHandlerTests {
         #expect(sessionHandler.sessionType == .manual)
         #expect(sessionHandler.isSessionStart)
         
-        // Update activity
-        sessionHandler.updateSessionLastActivityTime()
-        
+        // Update activity with a known recent past time so that systemCurrentTime
+        // is strictly greater when isSessionTimedOut evaluates it.
+        let recentActivityTime = sessionHandler.systemCurrentTime - 1000
+        sessionHandler.updateSessionLastActivityTime(recentActivityTime)
+
         // Activity updated
         #expect(sessionHandler.lastActivityTime > 0)
         #expect(!sessionHandler.isSessionTimedOut)
@@ -451,6 +427,20 @@ struct SessionHandlerTests {
         // Should be automatic
         #expect(sessionHandler.sessionType == .automatic)
         #expect(sessionHandler.sessionId == 2222222222)
+    }
+    
+    @Test("given a last activity time set to a future timestamp, when checking session timeout, then it should be considered timed out due to clock tampering")
+    func testSessionTimedOutWhenLastActivityTimeIsInFuture() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 5000)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let sessionHandler = SessionHandler(analytics: analytics)
+
+        // Simulate a last activity time that is 1 minute ahead of now,
+        // as would happen if the system clock was moved backward after the time was stored.
+        let futureTime = sessionHandler.systemCurrentTime + 60000
+        sessionHandler.updateSessionLastActivityTime(futureTime)
+
+        #expect(sessionHandler.isSessionTimedOut)
     }
 }
 
