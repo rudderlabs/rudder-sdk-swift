@@ -47,12 +47,15 @@ final class SessionHandler {
     }
     
     func startSession(id: UInt64, type: SessionType) {
-        self.updateSessionStart(isSessionStart: true)
-        self.updateSessionType(type: type)
+        self.sessionState.dispatch(action: StartSessionAction(sessionId: id, sessionType: type))
+        
+        self.sessionInstance.storeSessionId(id: id, storage: self.storage)
+        self.sessionInstance.storeIsSessionStart(isSessionStart: true, storage: self.storage)
+        self.sessionInstance.storeSessionType(type: type, storage: self.storage)
+        
         if isSessionManual {
             detachSessionTrackingObservers()
         }
-        self.updateSessionId(id: id)
     }
     
     func endSession() {
@@ -107,8 +110,12 @@ extension SessionHandler {
         return UInt64(Date().timeIntervalSince1970)
     }
     
+    var sessionSnapshot: SessionInfo {
+        return self.sessionState.state.value
+    }
+    
     var sessionId: UInt64? {
-        return self.sessionInstance.id == SessionConstants.defaultSessionId ? nil : self.sessionInstance.id
+        return self.sessionInstance.sessionId
     }
     
     var isSessionStart: Bool {
@@ -166,23 +173,11 @@ extension SessionHandler {
 
 extension SessionHandler {
     
-    private func updateSessionId(id: UInt64) {
-        self.sessionState.dispatch(action: UpdateSessionIdAction(sessionId: id))
-        self.sessionInstance.storeSessionId(id: id, storage: self.storage)
-    }
-    
     func updateSessionStart(isSessionStart: Bool) {
         guard self.sessionInstance.isStart != isSessionStart else { return }
         
         self.sessionState.dispatch(action: UpdateIsSessionStartAction(isSessionStart: isSessionStart))
         self.sessionInstance.storeIsSessionStart(isSessionStart: isSessionStart, storage: self.storage)
-    }
-    
-    private func updateSessionType(type: SessionType) {
-        guard self.sessionInstance.type != type else { return }
-        
-        self.sessionState.dispatch(action: UpdateSessionTypeAction(sessionType: type))
-        self.sessionInstance.storeSessionType(type: type, storage: self.storage)
     }
     
     func updateSessionLastActivityTime(_ time: UInt64? = nil) {

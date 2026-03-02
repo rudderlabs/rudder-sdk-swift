@@ -7,21 +7,20 @@
 
 import Foundation
 
-// MARK: - UpdateSessionIdAction
+// MARK: - StartSessionAction
 
-struct UpdateSessionIdAction: StateAction {
+struct StartSessionAction: StateAction {
     typealias T = SessionInfo
     
-    private let sessionId: UInt64
-    
-    init(sessionId: UInt64) {
-        self.sessionId = sessionId
-    }
+    let sessionId: UInt64
+    let sessionType: SessionType
     
     func reduce(currentState: SessionInfo) -> SessionInfo {
-        var updatedState = currentState
-        updatedState.id = sessionId
-        return updatedState
+        var state = currentState
+        state.id = sessionId
+        state.isStart = true
+        state.type = sessionType
+        return state
     }
 }
 
@@ -39,24 +38,6 @@ struct UpdateIsSessionStartAction: StateAction {
     func reduce(currentState: SessionInfo) -> SessionInfo {
         var updatedState = currentState
         updatedState.isStart = isSessionStart
-        return updatedState
-    }
-}
-
-// MARK: - UpdateSessionTypeAction
-
-struct UpdateSessionTypeAction: StateAction {
-    typealias T = SessionInfo
-    
-    private let sessionType: SessionType
-    
-    init(sessionType: SessionType) {
-        self.sessionType = sessionType
-    }
-    
-    func reduce(currentState: SessionInfo) -> SessionInfo {
-        var updatedState = currentState
-        updatedState.type = sessionType
         return updatedState
     }
 }
