@@ -36,7 +36,7 @@ protocol NonRetryableError: EventUploadError {}
 /**
  Represents different types of retryable event upload errors.
  */
-enum RetryableEventUploadError: RetryableError {
+enum RetryableEventUploadError: RetryableError, Equatable {
     
     /** Indicates a retryable error, typically associated with HTTP status code 4xx-5xx, excluding non-retryable errors. */
     case retryable(statusCode: Int?)
@@ -44,13 +44,16 @@ enum RetryableEventUploadError: RetryableError {
     /** Indicates a retryable error, typically happens when the network is unavailable. */
     case networkUnavailable
     
+    /** Indicates a retryable error, typically happens when the request times out. */
+    case timeout
+    
     /** Indicates a fatal error, typically associated with some exception or failure that can be retried. */
     case unknown
     
     var statusCode: Int? {
         switch self {
         case .retryable(let code): code
-        case .networkUnavailable, .unknown: nil
+        case .networkUnavailable, .timeout, .unknown: nil
         }
     }
 }
@@ -74,5 +77,24 @@ enum NonRetryableEventUploadError: Int, NonRetryableError {
     
     var formatStatusCodeMessage: String {
         "Status code: \(self.rawValue)"
+    }
+}
+
+// MARK: - Retry Reason Mapping
+/**
+ Provides a mapping from `RetryableEventUploadError` to a retry reason string for use in `RetryMetadata`.
+ */
+extension RetryableEventUploadError {
+    var retryReason: String {
+        return switch self {
+        case .retryable(statusCode: .some(let code)):
+            "server-\(code)"
+        case .retryable(statusCode: .none), .networkUnavailable:
+            "client-network"
+        case .timeout:
+            "client-timeout"
+        case .unknown:
+            "client-unknown"
+        }
     }
 }

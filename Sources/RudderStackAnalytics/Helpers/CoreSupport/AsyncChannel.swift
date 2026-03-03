@@ -23,7 +23,10 @@ final class AsyncChannel<Element> {
     /**
      Indicates whether the channel is closed.
      */
-    private(set) var isClosed = false
+    var isClosed: Bool {
+        lock.withLock { _isClosed }
+    }
+    private var _isClosed = false
     
     /**
      Creates a new async channel.
@@ -48,7 +51,7 @@ final class AsyncChannel<Element> {
         lock.lock()
         defer { lock.unlock() }
         
-        guard !isClosed else {
+        guard !_isClosed else {
             throw ChannelError.closed
         }
         
@@ -71,8 +74,8 @@ final class AsyncChannel<Element> {
         lock.lock()
         defer { lock.unlock() }
         
-        guard !isClosed else { return }
-        isClosed = true
+        guard !_isClosed else { return }
+        _isClosed = true
         continuation?.finish()
         continuation = nil
     }

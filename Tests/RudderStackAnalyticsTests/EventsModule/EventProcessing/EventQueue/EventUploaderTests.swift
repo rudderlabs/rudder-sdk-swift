@@ -119,6 +119,7 @@ class EventUploaderTests {
         // Configure mock to return 400 error (non-retryable)
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             return (statusCode: 400, data: nil, headers: nil)
         }
         
@@ -145,6 +146,7 @@ class EventUploaderTests {
         // Configure mock to return 502 error
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             
             if callCount == 1 {
@@ -180,6 +182,7 @@ class EventUploaderTests {
         // Configure mock to simulate network unavailable
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             if callCount == 1 {
                 throw URLError(.notConnectedToInternet)
@@ -213,6 +216,7 @@ class EventUploaderTests {
         // Configure mock to simulate timeout
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             if callCount == 1 {
                 throw URLError(.timedOut)
@@ -225,6 +229,19 @@ class EventUploaderTests {
 
         #expect(callCount >= 2)
         #expect(mockStorage.batchCount == 0)
+    }
+    
+    @Test("given timeout HttpNetworkError, when converting to EventUploadResult, then returns retryable timeout error")
+    func testTimeoutErrorMapsToRetryableTimeout() {
+        let result: Result<Data, Error> = .failure(HttpNetworkError.timeout)
+        let uploadResult = result.eventUploadResult
+
+        if case .failure(let error) = uploadResult,
+           let retryable = error as? RetryableEventUploadError {
+            #expect(retryable == .timeout)
+        } else {
+            Issue.record("Expected RetryableEventUploadError.timeout")
+        }
     }
     
     @Test("given EventUploader with non-retryable error 401, when upload batch, then stops uploader")
@@ -246,6 +263,7 @@ class EventUploaderTests {
         // Configure mock to return 401 error (invalid write key)
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             return (statusCode: 401, data: nil, headers: nil)
         }
@@ -276,6 +294,7 @@ class EventUploaderTests {
         // Configure mock to return 404 error (source not found)
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             return (statusCode: 404, data: nil, headers: nil)
         }
@@ -306,6 +325,7 @@ class EventUploaderTests {
         // Configure mock to return 413 error (payload too large)
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             return (statusCode: 413, data: nil, headers: nil)
         }
@@ -316,6 +336,47 @@ class EventUploaderTests {
         #expect(mockStorage.batchCount == 0)
     }
     
+    @Test("given multiple queued batches and retryable error followed by non-retryable error on first batch, when start processes batches, then stops without processing remaining batches")
+    func testStopsProcessingRemainingBatchesAfterNonRetryableError() async throws {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
+            return
+        }
+
+        // Write two separate batches
+        await mockStorage.write(event: mockEventJson)
+        await mockStorage.rollover()
+        await mockStorage.write(event: mockEventJson)
+        await mockStorage.rollover()
+
+        var uploadCallCount = 0
+
+        MockProvider.setupMockURLSession()
+        MockURLProtocol.requestHandler = { request in
+            // Only count batch upload requests; let background requests (e.g. source config) pass through
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
+            uploadCallCount += 1
+            if uploadCallCount == 1 {
+                return (statusCode: 502, data: nil, headers: nil) // retryable
+            } else {
+                return (statusCode: 404, data: nil, headers: nil) // non-retryable, stops uploader
+            }
+        }
+
+        // Trigger start()'s processing loop via the upload channel
+        try uploadChannel.send("trigger")
+
+        // Wait for the channel to close, which happens when the non-retryable error is handled
+        let deadline = Date().addingTimeInterval(15.0)
+        while !uploadChannel.isClosed && Date() < deadline {
+            try? await Task.sleep(nanoseconds: MockStorage.pollInterval)
+        }
+
+        #expect(uploadChannel.isClosed) // Uploader stopped after non-retryable error
+        #expect(uploadCallCount == 2)   // Only first batch attempted: 1 retryable + 1 non-retryable
+                                        // If the second batch were processed, uploadCallCount would be > 2
+    }
+
     @Test("given EventUploader with successful response, when upload batch, then completes without retry")
     func testUploadBatchWithSuccessfulResponseCompletesWithoutRetry() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
@@ -335,6 +396,7 @@ class EventUploaderTests {
         // Configure mock to return success
         MockProvider.setupMockURLSession()
         MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
             callCount += 1
             let successResponse = """
             {"success": "ok"}

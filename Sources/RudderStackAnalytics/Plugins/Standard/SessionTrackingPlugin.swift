@@ -24,17 +24,22 @@ final class SessionTrackingPlugin: Plugin {
     
     var prepareSessionInfo: [String: Any] {
         var info: [String: Any] = [:]
-        guard let sessionHandler = self.analytics?.sessionHandler, let sessionId = sessionHandler.sessionId else { return info }
+        guard let sessionHandler = self.analytics?.sessionHandler else { return info }
+        
+        let sessionSnapshot = sessionHandler.sessionSnapshot
+        guard let sessionId = sessionSnapshot.sessionId else { return info }
+        
         info["sessionId"] = sessionId
         
-        if sessionHandler.isSessionStart {
+        if sessionSnapshot.isStart {
             info["sessionStart"] = true
             sessionHandler.updateSessionStart(isSessionStart: false)
         }
         
-        if sessionHandler.sessionType == .automatic {
+        if sessionSnapshot.type == .automatic {
             sessionHandler.updateSessionLastActivityTime()
         }
+        
         return info
     }
 }

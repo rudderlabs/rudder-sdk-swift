@@ -21,9 +21,11 @@ class SourceConfigProviderTests {
         self.mockStorage = MockStorage()
         self.analytics = MockProvider.createMockAnalytics(storage: mockStorage)
         self.sourceConfigProvider = SourceConfigProvider(analytics: analytics, backoffPolicy: ExponentialBackoffPolicy(minDelayInMillis: 0))
+        MockURLProtocol.forwardGetRequestsToHandler = true
     }
     
     deinit {
+        MockURLProtocol.forwardGetRequestsToHandler = false
         let storage = self.mockStorage
         Task.detached {
             await storage.removeAll()
@@ -283,6 +285,18 @@ class SourceConfigProviderTests {
         await runAfter(0.1) {
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
             #expect(configUpdateCount == 1)
+        }
+    }
+    
+    @Test("given timeout HttpNetworkError, when converting to SourceConfigResult, then returns timeout error")
+    func testTimeoutErrorMapsToSourceConfigTimeout() {
+        let result: Result<Data, Error> = .failure(HttpNetworkError.timeout)
+        let configResult = result.sourceConfigResult
+
+        if case .failure(let error) = configResult {
+            #expect(error == .timeout)
+        } else {
+            Issue.record("Expected SourceConfigError.timeout")
         }
     }
 }

@@ -47,12 +47,15 @@ final class SessionHandler {
     }
     
     func startSession(id: UInt64, type: SessionType) {
-        self.updateSessionStart(isSessionStart: true)
-        self.updateSessionType(type: type)
+        self.sessionState.dispatch(action: StartSessionAction(sessionId: id, sessionType: type))
+        
+        self.sessionInstance.storeSessionId(id: id, storage: self.storage)
+        self.sessionInstance.storeIsSessionStart(isSessionStart: true, storage: self.storage)
+        self.sessionInstance.storeSessionType(type: type, storage: self.storage)
+        
         if isSessionManual {
             detachSessionTrackingObservers()
         }
-        self.updateSessionId(id: id)
     }
     
     func endSession() {
@@ -107,8 +110,12 @@ extension SessionHandler {
         return UInt64(Date().timeIntervalSince1970)
     }
     
+    var sessionSnapshot: SessionInfo {
+        return self.sessionState.state.value
+    }
+    
     var sessionId: UInt64? {
-        return self.sessionInstance.id == SessionConstants.defaultSessionId ? nil : self.sessionInstance.id
+        return self.sessionInstance.sessionId
     }
     
     var isSessionStart: Bool {
@@ -127,13 +134,37 @@ extension SessionHandler {
         return self.sessionInstance.lastActivityTime
     }
     
-    var monotonicCurrentTime: UInt64 {
+    var systemCurrentTime: UInt64 {
         let millisecondsInSecond: TimeInterval = 1000.0
-        return UInt64(ProcessInfo.processInfo.systemUptime * millisecondsInSecond)
+        let interval = Date().timeIntervalSince1970
+        return interval > 0 ? UInt64(interval * millisecondsInSecond) : 0
     }
     
+    /**
+     Determines if the current session has timed out.
+     
+     A session is considered timed out if the elapsed time since the last recorded
+     activity exceeds the configured session timeout.
+     
+     This method uses system current time. If the current system
+     time is less than or equal to the last activity time, it indicates that the clock has been tampered with.
+     In such cases, the session is treated as expired.
+     
+     - Returns: `true` if the session has timed out, `false` otherwise.
+     */
     var isSessionTimedOut: Bool {
-        let timeDifference = self.monotonicCurrentTime &- self.lastActivityTime // Safe subtraction
+        let currentTime = self.systemCurrentTime
+        
+        if currentTime <= self.lastActivityTime {
+            LoggerAnalytics.warn(
+                "Current system time is less than or equal to last activity time." +
+                " This indicates potential clock tampering. Resetting the session"
+            )
+            return true
+        }
+        
+        let timeDifference = currentTime - self.lastActivityTime
+        
         return timeDifference > self.automaticSessionTimeout
     }
 }
@@ -142,11 +173,6 @@ extension SessionHandler {
 
 extension SessionHandler {
     
-    private func updateSessionId(id: UInt64) {
-        self.sessionState.dispatch(action: UpdateSessionIdAction(sessionId: id))
-        self.sessionInstance.storeSessionId(id: id, storage: self.storage)
-    }
-    
     func updateSessionStart(isSessionStart: Bool) {
         guard self.sessionInstance.isStart != isSessionStart else { return }
         
@@ -154,15 +180,8 @@ extension SessionHandler {
         self.sessionInstance.storeIsSessionStart(isSessionStart: isSessionStart, storage: self.storage)
     }
     
-    private func updateSessionType(type: SessionType) {
-        guard self.sessionInstance.type != type else { return }
-        
-        self.sessionState.dispatch(action: UpdateSessionTypeAction(sessionType: type))
-        self.sessionInstance.storeSessionType(type: type, storage: self.storage)
-    }
-    
     func updateSessionLastActivityTime(_ time: UInt64? = nil) {
-        let lastActivityTime = time ?? self.monotonicCurrentTime
+        let lastActivityTime = time ?? self.systemCurrentTime
         self.sessionState.dispatch(action: UpdateSessionLastActivityAction(lastActivityTime: lastActivityTime))
         self.sessionInstance.storeSessionActivity(time: lastActivityTime, storage: self.storage)
     }

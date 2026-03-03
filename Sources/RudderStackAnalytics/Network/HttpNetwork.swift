@@ -15,6 +15,7 @@ enum HttpNetworkError: Error, Equatable {
     case requestFailed(Int)
     case invalidResponse
     case networkUnavailable
+    case timeout
     case unknown
 }
 
@@ -57,8 +58,14 @@ final class HttpNetwork {
             // Check if the error is network-related
             if let urlError = error as? URLError {
                 switch urlError.code {
+                case .timedOut:
+                    return .failure(HttpNetworkError.timeout)
                 case .notConnectedToInternet, .networkConnectionLost, .cannotConnectToHost,
-                        .timedOut, .dnsLookupFailed, .cannotFindHost, .dataNotAllowed:
+                        .dnsLookupFailed, .cannotFindHost, .dataNotAllowed,
+                        .serverCertificateUntrusted, .serverCertificateHasBadDate,
+                        .serverCertificateNotYetValid, .serverCertificateHasUnknownRoot,
+                        .clientCertificateRejected, .clientCertificateRequired,
+                        .secureConnectionFailed:
                     return .failure(HttpNetworkError.networkUnavailable)
                 default:
                     break

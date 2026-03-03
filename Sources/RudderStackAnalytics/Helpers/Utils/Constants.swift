@@ -99,6 +99,9 @@ struct _StorageKeys {
 
     /// Key for storing the app build number.
     let appBuild = "rudder.app_build"
+    
+    /// Key for storing retry metadata for batch upload retry headers.
+    let retryMetadata = "retry_metadata"
 }
 
 /**
@@ -215,5 +218,5 @@ public struct _DefaultConfig {
  **Important:**
  Do not edit this value unless performing a manual release.
  */
-let RSVersion: String = "1.1.0"
+let RSVersion: String = "1.2.0"
 let RSLibraryName: String = "rudder-sdk-swift"

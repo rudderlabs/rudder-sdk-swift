@@ -340,6 +340,7 @@ extension Result where Success == Data, Failure == Error {
             if let httpError = error as? HttpNetworkError {
                 switch httpError {
                 case .networkUnavailable: .failure(RetryableEventUploadError.networkUnavailable)
+                case .timeout: .failure(RetryableEventUploadError.timeout)
                 case .requestFailed(let statusCode):
                     if let nonRetryable = NonRetryableEventUploadError(rawValue: statusCode) {
                         .failure(nonRetryable)
@@ -361,6 +362,7 @@ extension Result where Success == Data, Failure == Error {
             if let httpError = error as? HttpNetworkError {
                 switch httpError {
                 case .networkUnavailable: .failure(SourceConfigError.networkUnavailable)
+                case .timeout: .failure(SourceConfigError.timeout)
                 case .requestFailed(let statusCode):
                     if statusCode == NonRetryableEventUploadError.error400.rawValue {
                         .failure(SourceConfigError.invalidWriteKey)
