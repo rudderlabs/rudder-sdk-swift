@@ -56,25 +56,23 @@ protocol NetworkMonitorProtocol {
  */
 class NetworkMonitor: NetworkMonitorProtocol {
     private let monitor = NWPathMonitor()
-    private let semaphore = DispatchSemaphore(value: 0)
-    private var path: NWPath?
-    
+
     init() {
-        monitor.pathUpdateHandler = { [weak self] path in
-            self?.path = path
-            self?.semaphore.signal()
+        let semaphore = DispatchSemaphore(value: 0)
+        monitor.pathUpdateHandler = { _ in
+            semaphore.signal()
         }
         let queue = DispatchQueue(label: "NetworkMonitor")
         monitor.start(queue: queue)
         semaphore.wait()
     }
-    
+
     var status: NWPath.Status {
-        return path?.status ?? .unsatisfied
+        return monitor.currentPath.status
     }
-    
+
     func usesInterfaceType(_ type: NWInterface.InterfaceType) -> Bool {
-        return path?.usesInterfaceType(type) ?? false
+        return monitor.currentPath.usesInterfaceType(type)
     }
     
     func start(queue: DispatchQueue) {
