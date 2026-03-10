@@ -56,11 +56,11 @@ protocol NetworkMonitorProtocol {
  */
 class NetworkMonitor: NetworkMonitorProtocol {
     private let monitor = NWPathMonitor()
-    private let semaphore = DispatchSemaphore(value: 0)
 
     init() {
-        monitor.pathUpdateHandler = { [weak self] _ in
-            self?.semaphore.signal()
+        let semaphore = DispatchSemaphore(value: 0)
+        monitor.pathUpdateHandler = { _ in
+            semaphore.signal()
         }
         let queue = DispatchQueue(label: "NetworkMonitor")
         monitor.start(queue: queue)
