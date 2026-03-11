@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# ──────────────────────────────────────────────────────────────
+# pre-commit hook
+# Runs SwiftLint on staged Swift source files before committing.
+#
+# This hook does NOT use `set -e` intentionally — see explanation
+# in the developer guide about why (Gitleaks chaining safety).
+# ──────────────────────────────────────────────────────────────
+
+# ──────────────────────────────────────────────────────────────
+# Run global hooks first (Gitleaks, etc.) — DO NOT REMOVE
+# Our local core.hooksPath overrides the global one, so we must
+# manually invoke it to keep Gitleaks and other global hooks alive.
+# ──────────────────────────────────────────────────────────────
+GLOBAL_HOOKS_PATH=$(git config --global --get core.hooksPath 2>/dev/null)
+if [ -n "$GLOBAL_HOOKS_PATH" ] && [ -x "$GLOBAL_HOOKS_PATH/pre-commit" ]; then
+    "$GLOBAL_HOOKS_PATH/pre-commit" "$@" || exit $?
+fi
+
+echo "Running pre-commit checks..."
+
+# Get list of staged Swift files under Sources/ that are Added, Copied, or Modified
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM -- 'Sources/**/*.swift')
+
+if [ -n "$STAGED_FILES" ]; then
+    # Check if SwiftLint is installed on this machine
+    if command -v swiftlint &> /dev/null; then
+        echo "[INFO] Running SwiftLint on staged files..."
+
+        # Run SwiftLint in strict mode (warnings are treated as errors)
+        if ! echo "$STAGED_FILES" | xargs swiftlint lint --config .swiftlint.yml --strict; then
+            echo ""
+            echo "[ERROR] SwiftLint found issues. Please fix them before committing."
+            echo "        Run 'swiftlint lint --config .swiftlint.yml' to see all issues."
+            exit 1
+        fi
+
+        echo "[SUCCESS] SwiftLint checks passed."
+    else
+        echo "[WARNING] SwiftLint is not installed. Skipping lint checks."
+        echo "          Install it with: brew install swiftlint"
+    fi
+else
+    echo "[INFO] No staged Swift source files to lint. Skipping."
+fi
