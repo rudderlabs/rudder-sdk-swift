@@ -60,12 +60,5 @@ else
     echo "  No global hooks detected. Only local hooks will run."
 fi
 
-# ──────────────────────────────────────────────────────────────
-# Pre-approve Swift Package Manager binaries
-# Running swift build once from Terminal lets macOS Gatekeeper
-# approve the SPM binaries (e.g. rudder-sdk-swift-manifest).
-# Without this, GUI git clients (SourceTree, Fork, etc.) trigger
-# a Gatekeeper "Not Opened" dialog when the pre-push hook builds.
-# ──────────────────────────────────────────────────────────────
 echo ""
 echo "Done. You can verify with: git config --local core.hooksPath"
