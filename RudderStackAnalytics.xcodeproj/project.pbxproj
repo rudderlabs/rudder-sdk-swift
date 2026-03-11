@@ -1422,6 +1422,7 @@
 		};
 		5348DB662F617E4000DB7FAC /* Setup Git Hooks */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
