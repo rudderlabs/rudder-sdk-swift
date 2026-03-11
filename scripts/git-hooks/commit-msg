@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# ──────────────────────────────────────────────────────────────
+# commit-msg hook
+# Validates that commit messages follow Conventional Commits format.
+# Runs after the developer types the message, before the commit is saved.
+#
+# Git passes the path to the commit message file as $1.
+# ──────────────────────────────────────────────────────────────
+
+# ──────────────────────────────────────────────────────────────
+# Run global hooks first (Gitleaks, etc.) — DO NOT REMOVE
+# Our local core.hooksPath overrides the global one, so we must
+# manually invoke it to keep Gitleaks and other global hooks alive.
+# ──────────────────────────────────────────────────────────────
+GLOBAL_HOOKS_PATH=$(git config --global --get core.hooksPath 2>/dev/null)
+if [ -n "$GLOBAL_HOOKS_PATH" ] && [ -x "$GLOBAL_HOOKS_PATH/commit-msg" ]; then
+    "$GLOBAL_HOOKS_PATH/commit-msg" "$@" || exit $?
+fi
+
+commit_message_file="$1"
+commit_message=$(cat "$commit_message_file")
+
+# Block empty or whitespace-only messages
+if [[ -z "$commit_message" || "$commit_message" =~ ^[[:space:]]*$ ]]; then
+    echo "Error: Commit message cannot be empty." >&2
+    exit 1
+fi
+
+# Validate format: type(optional-scope): description  OR  Merge ...
+valid_commit_regex="^(feat|fix|refactor|perf|style|test|docs|chore|build|ci|revert)(\(.*\))?!?: .*$|^Merge .*"
+
+if [[ ! $commit_message =~ $valid_commit_regex ]]; then
+    echo ""
+    echo "Error: Invalid commit message format."
+    echo ""
+    echo "  Your message:  $commit_message"
+    echo ""
+    echo "  Expected format: <type>(<optional scope>): <description>"
+    echo "  Allowed types:   feat | fix | refactor | perf | style | test | docs | chore | build | ci | revert"
+    echo ""
+    echo "  Examples:"
+    echo "    feat(session): add automatic session timeout"
+    echo "    fix: resolve crash on app foreground"
+    echo "    chore(release): v1.3.0"
+    echo ""
+    exit 1
+fi
