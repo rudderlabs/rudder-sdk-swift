@@ -1,90 +1,88 @@
+# PR Validation Workflow
+#
+# Triggered on every PR opened, reopened, updated, or edited against:
+#   main, develop, feat/*, refactor/*, release/*, ci/*, fix/*
+#
+# Job execution order:
+#
+#   swiftlint-check ──┐
+#                     ├──→ build-check
+#   test-check ───────┘
+#
+# - swiftlint-check and test-check run in parallel.
+# - build-check runs only after both above pass.
+# - Concurrency: duplicate runs for the same PR are cancelled automatically.
+#
+# Note: CodeQL security scanning is handled by GitHub's default setup
+#       (Settings → Security → Code scanning) and runs automatically on PRs.
+
 name: PR Validation
 
 on:
-    pull_request:
-      branches: [ "main", "develop", "feat/*", "refactor/*", "release/*", "ci/*", "fix/*" ]
-      types: [ "opened", "reopened", "synchronize", "edited" ]
+  pull_request:
+    branches: [ "main", "develop", "feat/*", "refactor/*", "release/*", "ci/*", "fix/*" ]
+    types: [ "opened", "reopened", "synchronize", "edited" ]
 
 concurrency:
-    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.head_ref }}
-    cancel-in-progress: true
-    
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
-    swiftlint-check:
-      name: SwiftLint Check
-      runs-on: macos-latest
-      steps:
-        - name: Harden the runner (Audit all outbound calls)
-          uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
-          with:
-            egress-policy: audit
+  # Runs SwiftLint against all Swift source files using the repo's .swiftlint.yml config.
+  # Violations appear as inline annotations on the PR diff.
+  swiftlint-check:
+    name: SwiftLint Check
+    runs-on: macos-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        with:
+          egress-policy: audit
 
-        - name: Checkout code
-          uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
 
-        - name: Run SwiftLint
-          run: swiftlint lint --reporter github-actions-logging
+      - name: Install SwiftLint
+        run: brew install swiftlint
 
-    test-check:
-      name: Unit Tests
-      runs-on: macos-latest
-      steps:
-        - name: Harden the runner (Audit all outbound calls)
-          uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
-          with:
-            egress-policy: audit
+      - name: Run SwiftLint
+        run: swiftlint lint --reporter github-actions-logging
 
-        - name: Checkout code
-          uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+  # Builds the package with test targets and runs all unit tests.
+  # --no-parallel is intentional to avoid async test race conditions
+  # (matches the existing run_tests.yml setup).
+  test-check:
+    name: Unit Tests
+    runs-on: macos-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        with:
+          egress-policy: audit
 
-        - name: Build for testing
-          run: swift build --build-tests
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
 
-        - name: Run tests
-          run: swift test --skip-build --no-parallel
+      - name: Build for testing
+        run: swift build --build-tests
 
-    build-check:
-      name: SPM Build Verification
-      runs-on: macos-latest
-      needs: [ swiftlint-check, test-check ]
-      steps:
-        - name: Harden the runner (Audit all outbound calls)
-          uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
-          with:
-            egress-policy: audit
+      - name: Run tests
+        run: swift test --skip-build --no-parallel
 
-        - name: Checkout code
-          uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+  # Verifies the Swift package builds cleanly via SPM.
+  # Runs only after swiftlint-check and test-check both pass.
+  build-check:
+    name: SPM Build Verification
+    runs-on: macos-latest
+    needs: [ swiftlint-check, test-check ]
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        with:
+          egress-policy: audit
 
-        - name: Build Swift package
-          run: swift build
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
 
-    codeql-analysis:
-      name: CodeQL Analysis
-      runs-on: macos-latest
-      permissions:
-        security-events: write
-        actions: read
-        contents: read
-      steps:
-        - name: Harden the runner (Audit all outbound calls)
-          uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
-          with:
-            egress-policy: audit
-
-        - name: Checkout code
-          uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
-
-        - name: Initialize CodeQL
-          uses: github/codeql-action/init@9e907b5e64f6b83e7804b09294d44122997950d6 # v4.32.3
-          with:
-            languages: swift
-            build-mode: manual
-
-        - name: Build for CodeQL
-          run: swift build --build-tests
-
-        - name: Perform CodeQL Analysis
-          uses: github/codeql-action/analyze@9e907b5e64f6b83e7804b09294d44122997950d6 # v4.32.3
-          with:
-            category: "/language:swift"
+      - name: Build Swift package
+        run: swift build
