@@ -50,7 +50,6 @@ jobs:
 
   # Builds the package with test targets and runs all unit tests.
   # --no-parallel is intentional to avoid async test race conditions
-  # (matches the existing run_tests.yml setup).
   test-check:
     name: Unit Tests
     runs-on: macos-latest
