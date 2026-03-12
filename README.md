@@ -28,6 +28,7 @@ The Swift SDK enables you to track customer event data from your iOS, macOS, tvO
 - [Identifying users](#identifying-users)
 - [Tracking user actions](#tracking-user-actions)
 - [Integrations](#integrations)
+- [Development](#development)
 - [Contact us](#contact-us)
 - [Follow Us](#follow-us)
 
@@ -207,6 +208,68 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 }
+```
+
+---
+
+## Development
+
+This section provides information for developers contributing to the RudderStack Swift SDK.
+
+### Git Hooks
+
+The project includes automated git hooks to maintain code quality and enforce development standards. These hooks run automatically during git operations to catch issues early.
+
+#### Available Hooks
+
+- **commit-msg**: Runs when creating commit messages
+  - Validates commit message format using conventional commits
+  - Enforces format: `type(scope): description` (e.g., `feat: add new analytics feature`)
+  - Supported types: `feat`, `fix`, `refactor`, `perf`, `style`, `test`, `docs`, `chore`, `build`, `ci`, `revert`
+
+- **pre-commit**: Runs before each commit
+  - Runs SwiftLint on staged Swift source files under `Sources/`
+  - Skips gracefully if SwiftLint is not installed
+
+- **pre-push**: Runs before each push
+  - Validates branch naming conventions
+  - Builds the project and runs the test suite (Terminal only — GUI clients skip this, CI enforces it)
+  - Prevents pushes if validation or checks fail
+
+#### Enabling Git Hooks
+
+The git hooks are automatically configured the first time you build the project in Xcode. You can also enable them manually:
+
+```bash
+sh scripts/setup-hooks.sh
+```
+
+#### Branch Naming Convention
+
+When creating branches, follow this naming pattern:
+
+```text
+<type>/<description>
+
+Examples:
+  feat/sdk-4614-add-session-tracking
+  fix/session-timeout-crash
+  chore/update-dependencies
+```
+
+Allowed types: `feat`, `fix`, `hotfix`, `refactor`, `release`, `docs`, `chore`, `test`, `ci`
+
+#### Commit Message Convention
+
+Follow the [Conventional Commits](https://www.conventionalcommits.org/) format:
+
+```text
+<type>(<optional scope>): <description>
+
+Examples:
+  feat(session): add automatic session timeout
+  fix: resolve crash on app foreground
+  chore(release): v1.3.0
 ```
 
 ---

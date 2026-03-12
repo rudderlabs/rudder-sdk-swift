@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# ──────────────────────────────────────────────────────────────
+# pre-commit hook
+# Runs SwiftLint on staged Swift source files before committing.
+#
+# NOTE: This hook intentionally does NOT use `set -e`.
+# `set -e` would cause the script to exit immediately on any error,
+# potentially before reaching the global hooks chaining block at the
+# top. If that block were skipped, Gitleaks (or any other global hook)
+# would silently stop running. Explicit exit code checks are used
+# instead to ensure the global hooks always execute.
+# ──────────────────────────────────────────────────────────────
+
+# ──────────────────────────────────────────────────────────────
+# Run global hooks first (Gitleaks, etc.) — DO NOT REMOVE
+# Our local core.hooksPath overrides the global one, so we must
+# manually invoke it to keep Gitleaks and other global hooks alive.
+# ──────────────────────────────────────────────────────────────
+GLOBAL_HOOKS_PATH=$(git config --global --get core.hooksPath 2>/dev/null)
+if [ -n "$GLOBAL_HOOKS_PATH" ] && [ -x "$GLOBAL_HOOKS_PATH/pre-commit" ]; then
+    "$GLOBAL_HOOKS_PATH/pre-commit" "$@" || exit $?
+fi
+
+echo "Running pre-commit checks..."
+
+# Enumerate staged Swift files once into a temp list (null-delimited).
+# -z produces NUL-separated paths — safe for filenames with spaces, newlines,
+# or special characters. ACMR includes renames so the new path is also linted.
+TMP_LIST=$(mktemp)
+git diff --cached -z --name-only --diff-filter=ACMR -- 'Sources/**/*.swift' > "$TMP_LIST"
+
+if [ -s "$TMP_LIST" ]; then
+    # Check if SwiftLint is installed on this machine
+    if command -v swiftlint &> /dev/null; then
+        echo "[INFO] Running SwiftLint on staged files..."
+
+        # Lint the staged index content, not the working tree.
+        # For each staged file, extract the blob from the index via
+        # `git show ":$file"` into a temp file that mirrors the original
+        # directory structure so SwiftLint error output shows readable paths.
+        LINT_FAILED=0
+        TMP_DIR=$(mktemp -d)
+
+        while IFS= read -r -d '' file; do
+            tmp_file="$TMP_DIR/$file"
+            mkdir -p "$(dirname "$tmp_file")"
+            git show ":$file" > "$tmp_file"
+
+            if ! swiftlint lint --config .swiftlint.yml --strict "$tmp_file"; then
+                LINT_FAILED=1
+            fi
+        done < "$TMP_LIST"
+        rm -f "$TMP_LIST"
+
+        rm -rf "$TMP_DIR"
+
+        if [ $LINT_FAILED -ne 0 ]; then
+            echo ""
+            echo "[ERROR] SwiftLint found issues. Please fix them before committing."
+            echo "        Run 'swiftlint lint --config .swiftlint.yml' to see all issues."
+            exit 1
+        fi
+
+        echo "[SUCCESS] SwiftLint checks passed."
+    else
+        rm -f "$TMP_LIST"
+        echo "[WARNING] SwiftLint is not installed. Skipping lint checks."
+        echo "          Install it with: brew install swiftlint"
+    fi
+else
+    rm -f "$TMP_LIST"
+    echo "[INFO] No staged Swift source files to lint. Skipping."
+fi

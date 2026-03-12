@@ -1287,6 +1287,7 @@
 			buildConfigurationList = 5351AA6D2C6BE95D003C3C47 /* Build configuration list for PBXNativeTarget "RudderStackAnalytics" */;
 			buildPhases = (
 				5351AA612C6BE95D003C3C47 /* Headers */,
+				5348DB662F617E4000DB7FAC /* Setup Git Hooks */,
 				531744862D5618E000E98C03 /* SwiftLint */,
 				5351AA622C6BE95D003C3C47 /* Sources */,
 				5351AA632C6BE95D003C3C47 /* Frameworks */,
@@ -1418,6 +1419,25 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint --config \"${PROJECT_DIR}/.swiftlint.yml\"\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		5348DB662F617E4000DB7FAC /* Setup Git Hooks */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Setup Git Hooks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if ! git -C \"${SRCROOT}\" rev-parse --is-inside-work-tree > /dev/null 2>&1; then\n    echo \"info: Not inside a git repository. Skipping git hooks setup.\"\n    exit 0\nfi\nif [ -z \"$(git config --local core.hooksPath 2>/dev/null)\" ]; then\n    echo \"Setting up git hooks for the first time...\"\n    sh \"${SRCROOT}/scripts/setup-hooks.sh\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
