@@ -30,7 +30,7 @@ echo ""
 # git passes each pushed ref on stdin as:
 #   <local-ref> <local-sha> <remote-ref> <remote-sha>
 # Read all lines upfront so stdin is available for later commands.
-valid_branch_regex="^(feat|fix|hotfix|refactor|release|docs|chore|test|ci|feature)\/[a-zA-Z0-9._-]+$|^(main|develop)$"
+valid_branch_regex="^(feat|fix|hotfix|refactor|release|docs|chore|test|ci)\/[a-zA-Z0-9._-]+$|^(main|develop)$"
 
 while read -r local_ref local_sha remote_ref remote_sha; do
     # Skip non-branch refs (tags, delete operations, etc.)
@@ -46,11 +46,11 @@ while read -r local_ref local_sha remote_ref remote_sha; do
         echo "  Branch names must follow this format:"
         echo "    <type>/<description>"
         echo ""
-        echo "  Allowed types: feat | fix | hotfix | refactor | release | docs | chore | test | ci | feature"
+        echo "  Allowed types: feat | fix | hotfix | refactor | release | docs | chore | test | ci"
         echo "  Allowed as-is: main | develop"
         echo ""
         echo "  Examples:"
-        echo "    feature/sdk-4614-implement-local-hooks"
+        echo "    feat/sdk-4614-implement-local-hooks"
         echo "    fix/session-timeout-crash"
         echo ""
         exit 1

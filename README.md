@@ -252,12 +252,12 @@ When creating branches, follow this naming pattern:
 <type>/<description>
 
 Examples:
-  feature/sdk-4614-add-session-tracking
+  feat/sdk-4614-add-session-tracking
   fix/session-timeout-crash
   chore/update-dependencies
 ```
 
-Allowed types: `feat`, `feature`, `fix`, `hotfix`, `refactor`, `release`, `docs`, `chore`, `test`, `ci`
+Allowed types: `feat`, `fix`, `hotfix`, `refactor`, `release`, `docs`, `chore`, `test`, `ci`
 
 #### Commit Message Convention
 
