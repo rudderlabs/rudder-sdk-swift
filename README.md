@@ -248,7 +248,7 @@ sh scripts/setup-hooks.sh
 
 When creating branches, follow this naming pattern:
 
-```
+```text
 <type>/<description>
 
 Examples:
@@ -263,7 +263,7 @@ Allowed types: `feat`, `feature`, `fix`, `hotfix`, `refactor`, `release`, `docs`
 
 Follow the [Conventional Commits](https://www.conventionalcommits.org/) format:
 
-```
+```text
 <type>(<optional scope>): <description>
 
 Examples:

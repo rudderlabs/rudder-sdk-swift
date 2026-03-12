@@ -4,8 +4,12 @@
 # pre-commit hook
 # Runs SwiftLint on staged Swift source files before committing.
 #
-# This hook does NOT use `set -e` intentionally — see explanation
-# in the developer guide about why (Gitleaks chaining safety).
+# NOTE: This hook intentionally does NOT use `set -e`.
+# `set -e` would cause the script to exit immediately on any error,
+# potentially before reaching the global hooks chaining block at the
+# top. If that block were skipped, Gitleaks (or any other global hook)
+# would silently stop running. Explicit exit code checks are used
+# instead to ensure the global hooks always execute.
 # ──────────────────────────────────────────────────────────────
 
 # ──────────────────────────────────────────────────────────────
@@ -21,6 +25,8 @@ fi
 echo "Running pre-commit checks..."
 
 # Get list of staged Swift files under Sources/ that are Added, Copied, or Modified
+# Use --name-only (non-null) only for the existence check; actual linting uses -z / xargs -0
+# to safely handle file paths that contain spaces or special characters.
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM -- 'Sources/**/*.swift')
 
 if [ -n "$STAGED_FILES" ]; then
@@ -28,8 +34,26 @@ if [ -n "$STAGED_FILES" ]; then
     if command -v swiftlint &> /dev/null; then
         echo "[INFO] Running SwiftLint on staged files..."
 
-        # Run SwiftLint in strict mode (warnings are treated as errors)
-        if ! echo "$STAGED_FILES" | xargs swiftlint lint --config .swiftlint.yml --strict; then
+        # Lint the staged index content, not the working tree.
+        # For each staged file, extract the blob from the index via
+        # `git show ":$file"` into a temp file that mirrors the original
+        # directory structure so SwiftLint error output shows readable paths.
+        LINT_FAILED=0
+        TMP_DIR=$(mktemp -d)
+
+        while IFS= read -r file; do
+            tmp_file="$TMP_DIR/$file"
+            mkdir -p "$(dirname "$tmp_file")"
+            git show ":$file" > "$tmp_file"
+
+            if ! swiftlint lint --config .swiftlint.yml --strict "$tmp_file"; then
+                LINT_FAILED=1
+            fi
+        done < <(git diff --cached --name-only --diff-filter=ACM -- 'Sources/**/*.swift')
+
+        rm -rf "$TMP_DIR"
+
+        if [ $LINT_FAILED -ne 0 ]; then
             echo ""
             echo "[ERROR] SwiftLint found issues. Please fix them before committing."
             echo "        Run 'swiftlint lint --config .swiftlint.yml' to see all issues."

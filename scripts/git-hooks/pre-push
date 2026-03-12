@@ -27,25 +27,37 @@ echo ""
 
 # ── 1. Validate branch name ──────────────────────────────────
 
-local_branch="$(git rev-parse --abbrev-ref HEAD)"
+# git passes each pushed ref on stdin as:
+#   <local-ref> <local-sha> <remote-ref> <remote-sha>
+# Read all lines upfront so stdin is available for later commands.
 valid_branch_regex="^(feat|fix|hotfix|refactor|release|docs|chore|test|ci|feature)\/[a-zA-Z0-9._-]+$|^(main|develop)$"
 
-if [[ ! $local_branch =~ $valid_branch_regex ]]; then
-    echo "[ERROR] Invalid branch name: '$local_branch'"
-    echo ""
-    echo "  Branch names must follow this format:"
-    echo "    <type>/<description>"
-    echo ""
-    echo "  Allowed types: feat | fix | hotfix | refactor | release | docs | chore | test | ci | feature"
-    echo "  Allowed as-is: main | develop"
-    echo ""
-    echo "  Examples:"
-    echo "    feature/sdk-4614-implement-local-hooks"
-    echo "    fix/session-timeout-crash"
-    echo ""
-    exit 1
-fi
-echo "[SUCCESS] Branch name validation passed: '$local_branch'"
+while read -r local_ref local_sha remote_ref remote_sha; do
+    # Skip non-branch refs (tags, delete operations, etc.)
+    if [[ "$local_ref" != refs/heads/* ]]; then
+        continue
+    fi
+
+    branch="${local_ref#refs/heads/}"
+
+    if [[ ! $branch =~ $valid_branch_regex ]]; then
+        echo "[ERROR] Invalid branch name: '$branch'"
+        echo ""
+        echo "  Branch names must follow this format:"
+        echo "    <type>/<description>"
+        echo ""
+        echo "  Allowed types: feat | fix | hotfix | refactor | release | docs | chore | test | ci | feature"
+        echo "  Allowed as-is: main | develop"
+        echo ""
+        echo "  Examples:"
+        echo "    feature/sdk-4614-implement-local-hooks"
+        echo "    fix/session-timeout-crash"
+        echo ""
+        exit 1
+    fi
+
+    echo "[SUCCESS] Branch name validation passed: '$branch'"
+done
 
 # ── 2. Build & test (Terminal only) ──────────────────────────
 

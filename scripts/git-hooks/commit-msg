@@ -19,22 +19,26 @@ if [ -n "$GLOBAL_HOOKS_PATH" ] && [ -x "$GLOBAL_HOOKS_PATH/commit-msg" ]; then
 fi
 
 commit_message_file="$1"
-commit_message=$(cat "$commit_message_file")
+
+# Extract the subject line: first non-empty, non-comment line.
+# This correctly handles multi-line messages (subject + body) and
+# editor template comments (lines starting with #).
+commit_subject=$(grep -v '^#' "$commit_message_file" | grep -v '^[[:space:]]*$' | head -1)
 
 # Block empty or whitespace-only messages
-if [[ -z "$commit_message" || "$commit_message" =~ ^[[:space:]]*$ ]]; then
+if [[ -z "$commit_subject" ]]; then
     echo "Error: Commit message cannot be empty." >&2
     exit 1
 fi
 
 # Validate format: type(optional-scope): description  OR  Merge ...
-valid_commit_regex="^(feat|fix|refactor|perf|style|test|docs|chore|build|ci|revert)(\(.*\))?!?: .*$|^Merge .*"
+valid_commit_regex="^(feat|fix|refactor|perf|style|test|docs|chore|build|ci|revert)(\(.*\))?!?: .+$|^Merge .*"
 
-if [[ ! $commit_message =~ $valid_commit_regex ]]; then
+if [[ ! $commit_subject =~ $valid_commit_regex ]]; then
     echo ""
     echo "Error: Invalid commit message format."
     echo ""
-    echo "  Your message:  $commit_message"
+    echo "  Your message:  $commit_subject"
     echo ""
     echo "  Expected format: <type>(<optional scope>): <description>"
     echo "  Allowed types:   feat | fix | refactor | perf | style | test | docs | chore | build | ci | revert"

@@ -10,6 +10,12 @@
 
 HOOK_DIR="scripts/git-hooks"
 
+# Check that we're inside a git repository
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    echo "Warning: Not inside a git repository. Skipping git hooks setup."
+    exit 0
+fi
+
 # Check that we're in the repo root
 if [ ! -d "$HOOK_DIR" ]; then
     echo "Error: Could not find '$HOOK_DIR'."
@@ -23,7 +29,10 @@ GLOBAL_HOOKS_PATH=$(git config --global core.hooksPath 2>/dev/null || true)
 # Set the LOCAL core.hooksPath for this repo only.
 # IMPORTANT: This overrides the global core.hooksPath for this repo.
 # Each hook script chains back to the global hooks to keep Gitleaks working.
-git config --local core.hooksPath "$HOOK_DIR"
+if ! git config --local core.hooksPath "$HOOK_DIR"; then
+    echo "Error: Failed to set local core.hooksPath. Check your git configuration."
+    exit 1
+fi
 
 # Make sure all hook scripts are executable
 chmod +x "$HOOK_DIR/commit-msg"
