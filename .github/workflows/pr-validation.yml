@@ -5,12 +5,13 @@
 #
 # Job execution order:
 #
+#   pr-title-check   (runs independently in parallel)
 #   swiftlint-check ──┐
 #                     ├──→ build-check
 #   test-check ───────┘
 #
-# - swiftlint-check and test-check run in parallel.
-# - build-check runs only after both above pass.
+# - pr-title-check, swiftlint-check, and test-check all run in parallel.
+# - build-check runs only after swiftlint-check and test-check both pass.
 # - Concurrency: duplicate runs for the same PR are cancelled automatically.
 #
 # Note: CodeQL security scanning is handled by GitHub's default setup
@@ -28,6 +29,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Validates the PR title follows the Conventional Commits format:
+  #   <type>(<scope>): <description>
+  # Valid types: feat, fix, chore, docs, refactor, perf, test, ci, style, build, revert
+  # Fails if the title does not match — enforces a consistent commit history on main/develop.
+  pr-title-check:
+    name: PR Title Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        with:
+          egress-policy: audit
+
+      - name: Validate PR title
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          PATTERN='^(feat|fix|chore|docs|refactor|perf|test|ci|style|build|revert)(\(.+\))?!?: .+'
+          if ! echo "$TITLE" | grep -qE "$PATTERN"; then
+            echo "❌ PR title does not follow Conventional Commits format."
+            echo ""
+            echo "   Title:    $TITLE"
+            echo "   Expected: <type>(<scope>): <description>"
+            echo "   Example:  feat(session): add automatic session timeout"
+            echo ""
+            echo "   Valid types: feat, fix, chore, docs, refactor, perf, test, ci, style, build, revert"
+            exit 1
+          fi
+          echo "✅ PR title is valid: $TITLE"
+
   # Runs SwiftLint against all Swift source files using the repo's .swiftlint.yml config.
   # Violations appear as inline annotations on the PR diff.
   swiftlint-check:
@@ -50,6 +80,7 @@ jobs:
 
   # Builds the package with test targets and runs all unit tests.
   # --no-parallel is intentional to avoid async test race conditions
+  # (matches the existing run_tests.yml setup).
   test-check:
     name: Unit Tests
     runs-on: macos-latest
