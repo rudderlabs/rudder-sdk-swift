@@ -1,21 +1,25 @@
-# Publish New Release Workflow                                                                                                                                                                   
-  #                                                                                                                                                                                                
-  # Triggered automatically when a PR is closed (merged) into main.
-  # Only runs if the merged PR's source branch starts with:
-  #   - release/*
-  #   - hotfix-release/*
-  #
-  # All other merges into main (back-merges, bug fixes, etc.) are skipped.
-  #
-  # What it does:
-  #   1. Reads RSVersion from Constants.swift on main (single source of truth)
-  #   2. Creates and pushes a git tag (x.y.z — no v prefix)
-  #   3. Creates a GitHub Release with auto-generated release notes
-  #   4. Sends a Slack notification with version, tag, and release link
-  #   5. Raises a back-merge PR from main → develop
-  #
-  # Requires: SLACK_WEBHOOK_URL (secret)
-  # Uses:     GITHUB_TOKEN (built-in — no setup needed)
+# Publish New Release Workflow
+#
+# Triggered automatically when a PR is closed (merged) into main.
+# Only runs if the merged PR's source branch starts with:
+#   - release/*
+#   - hotfix-release/*
+#
+# All other merges into main (back-merges, hotfixes, regular PRs) are skipped.
+#
+# What it does:
+#   1. Reads RSVersion from Constants.swift on main (single source of truth)
+#   2. Creates and pushes a git tag (x.y.z — no v prefix)
+#   3. Creates a GitHub Release with auto-generated release notes
+#   4. Sends a Slack notification with version, tag, and release link
+#   5. Raises a back-merge PR from main → develop
+#
+# Permissions:
+#   contents: write      — required to create and push git tags
+#   pull-requests: write — required to raise the back-merge PR (main → develop)
+#
+# Requires: SLACK_WEBHOOK_URL (secret)
+# Uses:     GITHUB_TOKEN (built-in — no setup needed)
 
 name: Publish New Release
 

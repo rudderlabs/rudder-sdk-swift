@@ -7,17 +7,19 @@
 # What it does:
 #   1. Generates a GitHub App token (needed to push to protected branches and open PRs)
 #   2. Reads current version from Constants.swift
-#   3. Scans commits since last git tag to determine bump type:
-#        BREAKING CHANGE / !:  → major (x+1.0.0)
-#        feat:                 → minor (x.y+1.0)
-#        fix: / chore: / etc.  → patch (x.y.z+1)
+#   3. Scans commits since last git tag — highest bump wins:
+#        BREAKING CHANGE / !:        → major (X.0.0)
+#        feat:                       → minor (x.Y.0)
+#        fix: / refactor: / chore:   → patch (x.y.Z)
+#        docs: / test: / ci:         → no release triggered
 #   4. Creates release branch via GitHub API (cut from HEAD of triggered branch)
 #   5. Updates RSVersion in Constants.swift
 #   6. Generates updated CHANGELOG.md
 #   7. Creates a verified commit on the release branch
 #   8. Raises a PR from release branch into main
 #
-# Fails if no conventional commits are found since the last git tag.
+# Fails if no releasable commits (feat/fix/refactor/chore) are found since the last tag.
+# Permissions: contents:read at workflow level — elevated access via GitHub App token only.
 # Requires: RELEASE_APP_ID (variable) + RELEASE_PRIVATE_KEY (secret)
 
 name: Draft New Release
