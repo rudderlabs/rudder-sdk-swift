@@ -1,0 +1,76 @@
+# CodeQL Advanced Workflow
+#
+# Runs deep static analysis on the codebase to detect security vulnerabilities.
+#
+# Triggered on:
+#   - Push to main or develop
+#   - Every pull request
+#   - Scheduled: every Monday at 6am UTC
+#
+# Languages scanned:
+#   - swift   → manual build on macos-latest (autobuild does not work reliably with SPM)
+#   - actions → no build needed, runs on ubuntu-latest
+#
+# Results appear in: repo Security → Code scanning tab.
+# Note: GitHub's default CodeQL setup must be DISABLED for this workflow to upload results.
+
+name: CodeQL Advanced
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1' # Every Monday at 6am UTC
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    # Use macos-latest for Swift (required by CodeQL Swift support).
+    # Use ubuntu-latest for Actions (faster and sufficient for workflow file scanning).
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+            runner: ubuntu-latest
+          - language: swift
+            build-mode: manual
+            runner: macos-latest
+
+    steps:
+      # Audits all outbound network calls made during the job for supply-chain security.
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+
+      # Initialises the CodeQL tools and sets up the analysis environment.
+      - name: Initialise CodeQL
+        uses: github/codeql-action/init@9e907b5e64f6b83e7804b09294d44122997950d6 # v4.32.3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      # Builds the Swift package manually so CodeQL can instrument the compilation.
+      # Only runs for Swift — Actions language scan requires no build.
+      - name: Build Swift package
+        if: matrix.build-mode == 'manual'
+        run: swift build
+
+      # Performs the CodeQL analysis and uploads results to the Security tab.
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@9e907b5e64f6b83e7804b09294d44122997950d6 # v4.32.3
+        with:
+          category: "/language:${{ matrix.language }}"
