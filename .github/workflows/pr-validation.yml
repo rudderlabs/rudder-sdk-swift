@@ -31,7 +31,7 @@ concurrency:
 jobs:
   # Validates the PR title follows the Conventional Commits format:
   #   <type>(<scope>): <description>
-  # Valid types: feat, fix, chore, docs, refactor, perf, test, ci, style, build, revert
+  # Valid types: feat, fix, chore, docs, refactor, test, ci, revert
   # Fails if the title does not match — enforces a consistent commit history on main/develop.
   pr-title-check:
     name: PR Title Check
@@ -45,7 +45,7 @@ jobs:
       - name: Validate PR title
         run: |
           TITLE="${{ github.event.pull_request.title }}"
-          PATTERN='^(feat|fix|chore|docs|refactor|perf|test|ci|style|build|revert)(\(.+\))?!?: .+'
+          PATTERN='^(feat|fix|chore|docs|refactor|test|ci|revert)(\(.+\))?!?: .+'
           if ! echo "$TITLE" | grep -qE "$PATTERN"; then
             echo "❌ PR title does not follow Conventional Commits format."
             echo ""
@@ -53,7 +53,7 @@ jobs:
             echo "   Expected: <type>(<scope>): <description>"
             echo "   Example:  feat(session): add automatic session timeout"
             echo ""
-            echo "   Valid types: feat, fix, chore, docs, refactor, perf, test, ci, style, build, revert"
+            echo "   Valid types: feat, fix, chore, docs, refactor, test, ci, revert"
             exit 1
           fi
           echo "✅ PR title is valid: $TITLE"

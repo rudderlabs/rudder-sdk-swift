@@ -87,20 +87,26 @@ jobs:
             # Get last git tag
             last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
 
-            # Scan commits since last tag — determine bump type
+            # Scan commits since last tag — determine bump type.
+            # Bump rules (highest wins):
+            #   major → feat! / BREAKING CHANGE
+            #   minor → feat
+            #   patch → fix / refactor / chore
+            #   none  → docs / test / ci (no release triggered)
             BUMP="none"
             while IFS= read -r commit; do
               if echo "$commit" | grep -qE '(BREAKING CHANGE|!:)'; then
                 BUMP="major"; break
               elif echo "$commit" | grep -qE '^feat(\([^)]+\))?:'; then
                 BUMP="minor"
-              elif [[ "$BUMP" == "none" ]] && echo "$commit" | grep -qE '^(fix|chore|docs|refactor|perf|test|ci|style)(\([^)]+\))?:'; then
+              elif [[ "$BUMP" == "none" ]] && echo "$commit" | grep -qE '^(fix|refactor|chore)(\([^)]+\))?:'; then
                 BUMP="patch"
               fi
             done <<< "$(git log "${last_tag}..HEAD" --pretty=format:"%s %b")"
 
             if [[ "$BUMP" == "none" ]]; then
-              echo "❌ No conventional commits found since $last_tag"
+              echo "❌ No releasable commits found since $last_tag."
+              echo "   docs / test / ci commits do not trigger a release."
               exit 1
             fi
 
