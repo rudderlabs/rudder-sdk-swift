@@ -15,7 +15,11 @@
   </b>
 </p>
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/rudderlabs/rudder-sdk-swift)
+<p align="center">
+  <a href="https://deepwiki.com/rudderlabs/rudder-sdk-swift">
+    <img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki">
+  </a>
+</p>
 
 ---
 
