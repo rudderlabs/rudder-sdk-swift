@@ -14,8 +14,10 @@
 # - build-check runs only after swiftlint-check and test-check both pass.
 # - Concurrency: duplicate runs for the same PR are cancelled automatically.
 #
-# Note: CodeQL security scanning is handled by GitHub's default setup
-#       (Settings → Security → Code scanning) and runs automatically on PRs.
+# Permissions: contents:read only — no jobs write to issues, PRs, or any other resources.
+#
+# Note: CodeQL security scanning is handled by the codeql.yml workflow which triggers
+#       automatically on every PR alongside these checks.
 
 name: PR Validation
 

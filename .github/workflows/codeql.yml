@@ -23,6 +23,10 @@ on:
   schedule:
     - cron: '0 6 * * 1' # Every Monday at 6am UTC
 
+# Restrict GITHUB_TOKEN to no permissions by default.
+# Each job declares only what it needs via its own permissions block.
+permissions: {}
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
@@ -30,11 +34,13 @@ jobs:
     # Use ubuntu-latest for Actions (faster and sufficient for workflow file scanning).
     runs-on: ${{ matrix.runner }}
     permissions:
-      security-events: write
-      packages: read
-      actions: read
-      contents: read
+      security-events: write # required to upload CodeQL results to the Security tab
+      packages: read         # required to read packages during build
+      actions: read          # required to read workflow run info for analysis context
+      contents: read         # required to checkout the source code
 
+    # Run both language scans in parallel using separate runners.
+    # fail-fast: false ensures the swift scan completes even if the actions scan fails.
     strategy:
       fail-fast: false
       matrix:
