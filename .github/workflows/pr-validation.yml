@@ -24,6 +24,9 @@ on:
     branches: [ "main", "develop", "feat/*", "refactor/*", "release/*", "ci/*", "fix/*" ]
     types: [ "opened", "reopened", "synchronize", "edited" ]
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.head_ref }}
   cancel-in-progress: true
