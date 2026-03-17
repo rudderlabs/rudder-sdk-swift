@@ -7,7 +7,7 @@
 # What it does:
 #   1. Generates a GitHub App token (needed to push to protected branches and open PRs)
 #   2. Reads current version from Constants.swift
-#   3. Scans commits since last git tag — highest bump wins:
+#   3. Scans commits since the last git tag (or all commits if no tags exist) — highest bump wins:
 #        BREAKING CHANGE / !:        → major (X.0.0)
 #        feat:                       → minor (x.Y.0)
 #        fix: / refactor: / chore:   → patch (x.y.Z)
@@ -18,7 +18,7 @@
 #   7. Creates a verified commit on the release branch
 #   8. Raises a PR from release branch into main
 #
-# Fails if no releasable commits (feat/fix/refactor/chore) are found since the last tag.
+# Fails if no releasable commits (feat/fix/refactor/chore) are found since the last tag (or in the entire history if no tags exist).
 # Permissions: contents:read at workflow level — elevated access via GitHub App token only.
 # Requires: RELEASE_APP_ID (variable) + RELEASE_PRIVATE_KEY (secret)
 
@@ -68,11 +68,12 @@ jobs:
         - name: Set up Node.js
           uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
           with:
-            node-version: 16
+            node-version: 20
 
         # Reads current version from Constants.swift, scans conventional commits since
-        # the last git tag to determine bump type, and calculates the new version.
-        # Fails the workflow if no conventional commits are found since the last tag.
+        # the last git tag (or all commits if no tags exist) to determine bump type, and
+        # calculates the new version. Outputs log_range for use in subsequent steps.
+        # Fails the workflow if no releasable conventional commits are found.
         - name: Calculate release version
           id: create-release
           run: |
@@ -86,8 +87,10 @@ jobs:
             current_version=$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' \
               Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift | head -1)
 
-            # Get last git tag
-            last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+            # Get last git tag (repo uses x.y.z format — no v prefix)
+            last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+            # When no tags exist, scan all commits; otherwise scan since the last tag.
+            log_range="${last_tag:+${last_tag}..}HEAD"
 
             # Scan commits since last tag — determine bump type.
             # Bump rules (highest wins):
@@ -104,10 +107,11 @@ jobs:
               elif [[ "$BUMP" == "none" ]] && echo "$commit" | grep -qE '^(fix|refactor|chore)(\([^)]+\))?:'; then
                 BUMP="patch"
               fi
-            done <<< "$(git log "${last_tag}..HEAD" --pretty=format:"%s %b")"
+            done <<< "$(git log "$log_range" --pretty=format:"%s %b")"
 
             if [[ "$BUMP" == "none" ]]; then
-              echo "❌ No releasable commits found since $last_tag."
+              since_msg=${last_tag:+"since $last_tag"}${last_tag:-"in the entire history"}
+              echo "❌ No releasable commits found $since_msg."
               echo "   docs / test / ci commits do not trigger a release."
               exit 1
             fi
@@ -131,6 +135,8 @@ jobs:
             echo "source_branch_name=$source_branch_name" >> $GITHUB_OUTPUT
             echo "branch_name=$branch_name" >> $GITHUB_OUTPUT
             echo "new_version=$new_version" >> $GITHUB_OUTPUT
+            echo "last_tag=$last_tag" >> $GITHUB_OUTPUT
+            echo "log_range=$log_range" >> $GITHUB_OUTPUT
             echo "CURRENT_VERSION=$current_version" >> $GITHUB_ENV
             echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
 
@@ -148,7 +154,7 @@ jobs:
 
         # Updates RSVersion in Constants.swift (single source of truth for the SDK version),
         # prepends the new release section to CHANGELOG.md, and builds the PR body
-        # from merged PR titles (feat/fix only) since the last git tag.
+        # from merged PR titles (feat/fix only) using the log_range from the previous step.
         - name: Update RSVersion and generate CHANGELOG
           id: finish-release
           run: |
@@ -159,7 +165,7 @@ jobs:
               Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift
 
             # Prepend new release section to CHANGELOG.md
-            npx conventional-changelog -p angular -i CHANGELOG.md -s
+            conventional-changelog -p angular -i CHANGELOG.md -s
 
             # Build PR body from merged PR titles since last tag
             FEATURES=""
@@ -173,7 +179,7 @@ jobs:
                 MSG=$(echo "$commit" | sed -E 's/^fix(\([^)]+\))?!?: //')
                 FIXES="${FIXES}- ${MSG}\n"
               fi
-            done <<< "$(git log "${last_tag}..HEAD" --merges --pretty=format:"%s")"
+            done <<< "$(git log "${{ steps.create-release.outputs.log_range }}" --merges --pretty=format:"%s")"
 
             PR_BODY="# RudderStack Swift SDK $NEW_VERSION"
             if [[ -n "$FEATURES" ]]; then
