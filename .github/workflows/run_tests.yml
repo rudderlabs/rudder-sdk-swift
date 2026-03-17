@@ -1,3 +1,13 @@
+# Run Swift Tests Workflow
+#
+# Triggered manually (workflow_dispatch) to run the full Swift test suite on demand.
+#
+# What it does:
+#   1. Builds the package including test targets
+#   2. Runs all unit tests sequentially (--no-parallel to avoid async race conditions)
+#
+# Permissions: contents:read only.
+
 name: Run Swift Tests
 
 on:
