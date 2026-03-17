@@ -1,5 +1,86 @@
 # Changelog
 
+## [1.2.1] - 2026-03-10
+
+### Bug Fixes
+
+- resolve data race crash in network monitor during network path changes (#217)
+
+## [1.2.0] - 2026-03-03
+
+### Features
+
+- add dedicated timeout error handling and improve SSL error categorization (#205)
+- add retry headers for event batch upload requests (#208)
+- use system time in session management (#213)
+
+### Bug Fixes
+
+- ensure EventUploader stops processing when upload channel is closed (#212)
+- resolve CI-specific test case failures (#211)
+- ensure consistent session ID on foreground after timeout (#214)
+
+## [1.1.0] - 2026-02-17
+
+### Features
+
+- add persistence migration utility for legacy V1 SDK compatibility (#194)
+- add persistence migration utility for legacy V2 SDK compatibility (#198)
+- update event filtering plugin (#201)
+
+### Bug Fixes
+
+- remove nil-coalescing fallback in ObjC integration plugins intercept method (#202)
+- refactor test classes to use mock implementations (#203)
+- add missing analytics propagation to ObjC integration plugins (#204)
+
+## [1.0.1] - 2025-12-23
+
+### Bug Fixes
+
+- ensure lifecycle observer registration for existing automatic sessions (#193)
+
+## [1.0.0] - 2025-12-16
+
+### Features
+
+- add iOS app extension example with Swift SDK integration (#160)
+- add integration plugin protocol (#159)
+- add IntegrationsController and update IntegrationsManagementPlugin implementation (#162)
+- add IntegrationOptionsPlugin (#165)
+- add event filtering plugin (#163)
+- add E-commerce helpers and public StandardIntegration protocol (#176)
+- add Objective-C compatibility layer for device mode integrations (#182)
+
+### Bug Fixes
+
+- handle Date, URL, and NSNull types in analytics events (#190)
+
+## [1.0.0-beta.1] - 2025-09-30
+
+### Features
+
+- update visibility of Event subclasses to public
+- implement retry logic with exponential backoff for batch API uploads
+- add user agent plugin examples with dynamic and static implementations
+- Implement SourceConfig logic for successful server responses
+- implement overloaded reset method with selective data clearing options
+- implement overloaded reset method with selective data clearing options (#143)
+- implement event batching based on anonymousId with automatic rollover (#144)
+- implement sourceconfig logic when response is unsuccessful (#147)
+- update network header based on the updated anonymousId (#149)
+- implement source configuration disabling for 404 error (#150)
+- add build version query parameter for source config requests (#151)
+- add writeKey query param for sourceConfig request
+
+### Bug Fixes
+
+- allow zero milliseconds for session timeout in Objective-C configuration (#113)
+- resolve shutdown implementation issues
+- enhanced MockHelper to search multiple bundles
+- resolve failing test cases (#154)
+- resolve the optional unwrapping value (#155)
+
 ## [1.0.0-alpha.1] - 2025-07-07
 
 ### Features
@@ -68,86 +149,3 @@
 - resolve broken test cases in CountFlushPolicy test cases
 - optimize zombie memory consumption
 - improve integration override behavior and flush policy validation
-
-## [1.0.0-beta.1] - 2025-09-30
-
-### Features
-
-- update visibility of Event subclasses to public
-- implement retry logic with exponential backoff for batch API uploads
-- add user agent plugin examples with dynamic and static implementations
-- Implement SourceConfig logic for successful server responses
-- implement overloaded reset method with selective data clearing options
-- implement overloaded reset method with selective data clearing options (#143)
-- implement event batching based on anonymousId with automatic rollover (#144)
-- implement sourceconfig logic when response is unsuccessful (#147)
-- update network header based on the updated anonymousId (#149)
-- implement source configuration disabling for 404 error (#150)
-- add build version query parameter for source config requests (#151)
-- add writeKey query param for sourceConfig request
-
-### Bug Fixes
-
-- allow zero milliseconds for session timeout in Objective-C configuration (#113)
-- resolve shutdown implementation issues
-- enhanced MockHelper to search multiple bundles
-- resolve failing test cases (#154)
-- resolve the optional unwrapping value (#155)
-
-## [1.0.0] - 2025-12-16
-
-### Features
-
-- add iOS app extension example with Swift SDK integration (#160)
-- add integration plugin protocol (#159)
-- add IntegrationsController and update IntegrationsManagementPlugin implementation (#162)
-- add IntegrationOptionsPlugin (#165)
-- add event filtering plugin (#163)
-- add E-commerce helpers and public StandardIntegration protocol (#176)
-- add Objective-C compatibility layer for device mode integrations (#182)
-
-### Bug Fixes
-
-- handle Date, URL, and NSNull types in analytics events (#190)
-
-## [1.0.1] - 2025-12-23
-
-### Bug Fixes
-
-- ensure lifecycle observer registration for existing automatic sessions (#193)
-
-## [1.1.0] - 2026-02-17
-
-### Features
-
-- add persistence migration utility for legacy V1 SDK compatibility (#194)
-- add persistence migration utility for legacy V2 SDK compatibility (#198)
-- update event filtering plugin (#201)
-
-### Bug Fixes
-
-- remove nil-coalescing fallback in ObjCPluginAdapter intercept method (#202)
-- refactor test classes to use mock implementations (#203)
-- add missing analytics propagation to ObjC integration plugins (#204)
-
-## [1.2.0] - 2026-03-03
-
-### Features
-
-- add dedicated timeout error handling and improve SSL error categorization (#205)
-- add retry headers for event batch upload requests (#208)
-- use system time in session management (#213)
-
-### Bug Fixes
-
-- ensure EventUploader stops processing when upload channel is closed (#212)
-- resolve CI-specific test case failures (#211)
-- ensure consistent session ID on foreground after timeout (#214)
-
-## [1.2.1] - 2026-03-10
-
-### Bug Fixes
-
-- resolve data race crash in network monitor during network path changes (#217)
-
-

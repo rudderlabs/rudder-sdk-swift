@@ -62,3 +62,6 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 
 .DS_Store
+# Node.js (used by changelog generation in CI)
+node_modules/
+package-lock.json
