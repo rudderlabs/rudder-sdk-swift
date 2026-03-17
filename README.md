@@ -15,6 +15,12 @@
   </b>
 </p>
 
+<p align="center">
+  <a href="https://deepwiki.com/rudderlabs/rudder-sdk-swift">
+    <img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki">
+  </a>
+</p>
+
 ---
 
 # RudderStack Swift SDK
