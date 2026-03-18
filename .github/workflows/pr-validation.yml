@@ -152,7 +152,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
-      - name: Check all required jobs and send Slack notification
+      - name: Check all required jobs
+        id: summary
         run: |
           echo "=== PR Validation Summary ==="
           echo "PR Title Check:      ${{ needs.pr-title-check.result }}"
@@ -195,9 +196,9 @@ jobs:
             echo -e "Failed Checks:\n$FAILED_CHECKS"
           fi
 
-          chmod +x scripts/send-slack-notification.sh
           FAILED_CHECKS_CLEAN=$(echo -e "$FAILED_CHECKS" | sed 's/\\n$//')
-          ./scripts/send-slack-notification.sh "pr" "$OVERALL_STATUS" "$FAILED_CHECKS_CLEAN"
+          echo "overall_status=$OVERALL_STATUS" >> $GITHUB_OUTPUT
+          echo "failed_checks=$FAILED_CHECKS_CLEAN" >> $GITHUB_OUTPUT
 
           if [[ "$OVERALL_STATUS" == "failed" ]]; then
             echo "❌ PR validation failed — one or more required checks failed"
@@ -205,6 +206,18 @@ jobs:
           fi
 
           echo "✅ All PR validation checks passed successfully"
+
+      # Runs after the summary check regardless of outcome.
+      # continue-on-error: true ensures a Slack failure never fails the job.
+      - name: Send Slack notification
+        if: always()
+        continue-on-error: true
+        run: |
+          chmod +x scripts/send-slack-notification.sh
+          ./scripts/send-slack-notification.sh \
+            "pr" \
+            "${{ steps.summary.outputs.overall_status }}" \
+            "${{ steps.summary.outputs.failed_checks }}"
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_EVENT_NUMBER: ${{ github.event.number }}
