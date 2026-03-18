@@ -104,13 +104,15 @@ send_notification() {
     local response
     response=$(curl -s -X POST -H 'Content-type: application/json' \
         --data "$payload" \
-        "$SLACK_WEBHOOK_URL")
+        "$SLACK_WEBHOOK_URL" 2>&1) || {
+        echo "⚠️  Slack notification failed (curl error). Continuing..."
+        return 0
+    }
 
     if [ "$response" = "ok" ]; then
         echo "✅ Slack notification sent successfully"
     else
-        echo "❌ Failed to send Slack notification: $response"
-        return 1
+        echo "⚠️  Slack notification may have failed: $response. Continuing..."
     fi
 }
 
