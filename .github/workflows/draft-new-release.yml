@@ -59,7 +59,7 @@ jobs:
         # fetch-depth: 0 fetches full history and all tags — required for
         # git describe and git log range commands in the version calculation step.
         - name: Checkout source branch
-          uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+          uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
           with:
             token: ${{ steps.generate-token.outputs.token }}
             fetch-depth: 0
