@@ -1,0 +1,53 @@
+# Delete Merged Branch Workflow
+#
+# Automatically deletes the head branch after a PR is merged into develop or main.
+#
+# Triggered on:
+#   - Pull request merged into develop (feature, fix, chore, etc. branches)
+#   - Pull request merged into main (release/* and hotfix-release/* branches)
+#
+# Skips:
+#   - main and develop branches (protected, never deleted)
+#
+# Permissions:
+#   contents: write — required to delete the remote branch
+
+name: Delete Merged Branch
+
+on:
+  pull_request:
+    branches: [ develop, main ]
+    types: [ closed ]
+
+permissions:
+  contents: write
+
+jobs:
+  delete-branch:
+    name: Delete Merged Branch
+    runs-on: ubuntu-latest
+    # Only run when the PR was merged, not just closed.
+    if: github.event.pull_request.merged == true
+    steps:
+      # Audits all outbound network calls made during the job for supply-chain security.
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      # Delete the head branch, unless it is a protected branch.
+      - name: Delete head branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          REPO: ${{ github.repository }}
+        run: |
+          # Never delete protected branches.
+          if [[ "$BRANCH" == "main" || "$BRANCH" == "develop" ]]; then
+            echo "ℹ️ Skipping deletion of protected branch: $BRANCH"
+            exit 0
+          fi
+
+          echo "🗑️ Deleting branch: $BRANCH"
+          gh api repos/$REPO/git/refs/heads/$BRANCH -X DELETE
+          echo "✅ Branch '$BRANCH' deleted successfully."
