@@ -35,7 +35,7 @@ permissions:
 jobs:
   publish-release:
       name: Publish Release
-      runs-on: macos-latest
+      runs-on: ubuntu-latest
       # Only run when a release/* or hotfix-release/* PR is merged — skip everything else.
       if: |
         github.event.pull_request.merged == true &&
@@ -102,7 +102,7 @@ jobs:
             TAG="${{ steps.read_version.outputs.tag }}"
             VERSION="${{ steps.read_version.outputs.version }}"
             RELEASE_URL=$(gh release create "$TAG" \
-              --title "Release $VERSION" \
+              --title "$VERSION" \
               --generate-notes \
               --latest \
               --verify-tag)
@@ -117,16 +117,17 @@ jobs:
             VERSION="${{ steps.read_version.outputs.version }}"
             TAG="${{ steps.read_version.outputs.tag }}"
             RELEASE_URL="${{ steps.create_release.outputs.release_url }}"
+            ACTOR="${{ github.actor }}"
             curl -s -X POST "$SLACK_WEBHOOK_URL" \
               -H 'Content-type: application/json' \
               --data "{
-                \"text\": \"🚀 *RudderStack Swift SDK $VERSION* released!\",
+                \"text\": \"🚀 *RudderStackAnalytics (Swift) SDK $VERSION* has been released!\",
                 \"blocks\": [
                   {
                     \"type\": \"section\",
                     \"text\": {
                       \"type\": \"mrkdwn\",
-                      \"text\": \"🚀 *Swift SDK $VERSION* has been released!\n*Tag:* \`$TAG\`\n*Release:* $RELEASE_URL\"
+                      \"text\": \"🚀 *RudderStackAnalytics (Swift) SDK $VERSION* has been released!\n*Tag:* \`$TAG\`\n*Release:* $RELEASE_URL\n*Released by:* $ACTOR\"
                     }
                   }
                 ]
