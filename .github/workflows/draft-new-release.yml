@@ -1,0 +1,236 @@
+# Draft New Release Workflow                                                                                                                                                                     
+#                                                                                                                                                                                                
+# Triggered manually (workflow_dispatch) from:
+#   - develop        → creates release/x.y.z branch
+#   - hotfix/*       → creates hotfix-release/x.y.z branch
+#
+# What it does:
+#   1. Generates a GitHub App token (needed to push to protected branches and open PRs)
+#   2. Reads current version from Constants.swift
+#   3. Scans commits since the last git tag (or all commits if no tags exist) — highest bump wins:
+#        BREAKING CHANGE / !:        → major (X.0.0)
+#        feat:                       → minor (x.Y.0)
+#        fix: / refactor: / chore:   → patch (x.y.Z)
+#        docs: / test: / ci:         → no release triggered
+#   4. Creates release branch via GitHub API (cut from HEAD of triggered branch)
+#   5. Updates RSVersion in Constants.swift
+#   6. Generates updated CHANGELOG.md
+#   7. Creates a verified commit on the release branch
+#   8. Raises a PR from release branch into main
+#
+# Fails if no releasable commits (feat/fix/refactor/chore) are found since the last tag (or in the entire history if no tags exist).
+# Permissions: contents:read at workflow level — elevated access via GitHub App token only.
+# Requires: RELEASE_APP_ID (variable) + RELEASE_PRIVATE_KEY (secret)
+
+name: Draft New Release
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  draft-new-release:
+      name: Draft a new release
+      runs-on: ubuntu-latest
+      if: startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/')
+      permissions:
+        contents: read
+      steps:
+        # Audits all outbound network calls made during the job for supply-chain security.
+        - name: Harden the runner (Audit all outbound calls)
+          uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+          with:
+            egress-policy: audit
+
+        # GITHUB_TOKEN cannot push to protected branches or trigger downstream workflows.
+        # A GitHub App token is used instead — scoped to contents:write and pull-requests:write,
+        # auto-expires after 1 hour, and is not tied to any personal account.
+        - name: Generate GitHub App Token
+          id: generate-token
+          uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
+          with:
+            app-id: ${{ vars.RELEASE_APP_ID }}
+            private-key: ${{ secrets.RELEASE_PRIVATE_KEY }}
+            repositories: rudder-sdk-swift
+            permission-contents: write
+            permission-pull-requests: write
+
+        # fetch-depth: 0 fetches full history and all tags — required for
+        # git describe and git log range commands in the version calculation step.
+        - name: Checkout source branch
+          uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+          with:
+            token: ${{ steps.generate-token.outputs.token }}
+            fetch-depth: 0
+
+        # Node.js is required to run conventional-changelog-cli for CHANGELOG generation.
+        - name: Set up Node.js
+          uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+          with:
+            node-version: 20
+
+        # Reads current version from Constants.swift, scans conventional commits since
+        # the last git tag (or all commits if no tags exist) to determine bump type, and
+        # calculates the new version. Outputs log_range for use in subsequent steps.
+        # Fails the workflow if no releasable conventional commits are found.
+        - name: Calculate release version
+          id: create-release
+          run: |
+            source_branch_name=${GITHUB_REF##*/}
+            release_type=release
+            grep -q "hotfix/" <<< "${GITHUB_REF}" && release_type=hotfix-release
+
+            git fetch --tags origin
+
+            # Read current version from Constants.swift
+            current_version=$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' \
+              Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift | head -1)
+
+            # Get last git tag (repo uses x.y.z format — no v prefix)
+            last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+            # When no tags exist, scan all commits; otherwise scan since the last tag.
+            log_range="${last_tag:+${last_tag}..}HEAD"
+
+            # Scan commits since last tag — determine bump type.
+            # Bump rules (highest wins):
+            #   major → feat! / BREAKING CHANGE
+            #   minor → feat
+            #   patch → fix / refactor / chore
+            #   none  → docs / test / ci (no release triggered)
+            BUMP="none"
+            while IFS= read -r commit; do
+              if echo "$commit" | grep -qE '(BREAKING CHANGE|!:)'; then
+                BUMP="major"; break
+              elif echo "$commit" | grep -qE '^feat(\([^)]+\))?:'; then
+                BUMP="minor"
+              elif [[ "$BUMP" == "none" ]] && echo "$commit" | grep -qE '^(fix|refactor|chore)(\([^)]+\))?:'; then
+                BUMP="patch"
+              fi
+            done <<< "$(git log "$log_range" --pretty=format:"%s %b")"
+
+            if [[ "$BUMP" == "none" ]]; then
+              since_msg=${last_tag:+"since $last_tag"}${last_tag:-"in the entire history"}
+              echo "❌ No releasable commits found $since_msg."
+              echo "   docs / test / ci commits do not trigger a release."
+              exit 1
+            fi
+
+            # Calculate new version
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$current_version"
+            case "$BUMP" in
+              major) new_version="$((MAJOR+1)).0.0" ;;
+              minor) new_version="${MAJOR}.$((MINOR+1)).0" ;;
+              patch) new_version="${MAJOR}.${MINOR}.$((PATCH+1))" ;;
+            esac
+
+            branch_name="${release_type}/${new_version}"
+
+            echo "Source branch:    $source_branch_name"
+            echo "Current version:  $current_version"
+            echo "Bump type:        $BUMP"
+            echo "New version:      $new_version"
+            echo "Release branch:   $branch_name"
+
+            echo "source_branch_name=$source_branch_name" >> $GITHUB_OUTPUT
+            echo "branch_name=$branch_name" >> $GITHUB_OUTPUT
+            echo "new_version=$new_version" >> $GITHUB_OUTPUT
+            echo "last_tag=$last_tag" >> $GITHUB_OUTPUT
+            echo "log_range=$log_range" >> $GITHUB_OUTPUT
+            echo "CURRENT_VERSION=$current_version" >> $GITHUB_ENV
+            echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
+
+        # Creates the release branch via GitHub API using the HEAD SHA of the triggered branch.
+        # Using the API (instead of git push) avoids the need for a local checkout on the new branch.
+        - name: Create release branch via GitHub API
+          env:
+            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          run: |
+            BASE_SHA=$(git rev-parse HEAD)
+            gh api repos/${{ github.repository }}/git/refs \
+              --method POST \
+              -f ref="refs/heads/${{ steps.create-release.outputs.branch_name }}" \
+              -f sha="$BASE_SHA"
+
+        # Updates RSVersion in Constants.swift (single source of truth for the SDK version),
+        # prepends the new release section to CHANGELOG.md using a custom config that
+        # includes feat, fix, refactor, and chore types, and builds the PR body
+        # from merged PR titles using the log_range from the previous step.
+        - name: Update RSVersion and generate CHANGELOG
+          id: finish-release
+          run: |
+            npm i -g conventional-changelog-cli@2.2.2
+
+            # Update RSVersion in Constants.swift
+            sed -i "s/let RSVersion: String = \".*\"/let RSVersion: String = \"$NEW_VERSION\"/" \
+              Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift
+
+            # Prepend new release section to CHANGELOG.md.
+            # Uses changelog.config.js to extend the Angular preset with refactor and chore types.
+            conventional-changelog -n ./changelog.config.js -i CHANGELOG.md -s
+
+            # Build PR body from merged PR titles since last tag
+            FEATURES=""
+            FIXES=""
+            REFACTORS=""
+            CHORES=""
+
+            while IFS= read -r commit; do
+              if echo "$commit" | grep -qE '^feat(\([^)]+\))?!?:'; then
+                MSG=$(echo "$commit" | sed -E 's/^feat(\([^)]+\))?!?: //')
+                FEATURES="${FEATURES}- ${MSG}\n"
+              elif echo "$commit" | grep -qE '^fix(\([^)]+\))?!?:'; then
+                MSG=$(echo "$commit" | sed -E 's/^fix(\([^)]+\))?!?: //')
+                FIXES="${FIXES}- ${MSG}\n"
+              elif echo "$commit" | grep -qE '^refactor(\([^)]+\))?!?:'; then
+                MSG=$(echo "$commit" | sed -E 's/^refactor(\([^)]+\))?!?: //')
+                REFACTORS="${REFACTORS}- ${MSG}\n"
+              elif echo "$commit" | grep -qE '^chore(\([^)]+\))?!?:'; then
+                MSG=$(echo "$commit" | sed -E 's/^chore(\([^)]+\))?!?: //')
+                CHORES="${CHORES}- ${MSG}\n"
+              fi
+            done <<< "$(git log "${{ steps.create-release.outputs.log_range }}" --merges --pretty=format:"%s")"
+
+            PR_BODY="# RudderStack Swift SDK $NEW_VERSION"
+            if [[ -n "$FEATURES" ]]; then
+              PR_BODY="${PR_BODY}\n\n## Features\n${FEATURES}"
+            fi
+            if [[ -n "$FIXES" ]]; then
+              PR_BODY="${PR_BODY}\n\n## Bug Fixes\n${FIXES}"
+            fi
+            if [[ -n "$REFACTORS" ]]; then
+              PR_BODY="${PR_BODY}\n\n## Refactors\n${REFACTORS}"
+            fi
+            if [[ -n "$CHORES" ]]; then
+              PR_BODY="${PR_BODY}\n\n## Chores\n${CHORES}"
+            fi
+
+            echo "pr_body<<EOF" >> $GITHUB_OUTPUT
+            echo -e "$PR_BODY" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+
+        # Creates a GPG-verified commit on the release branch using the GitHub App token.
+        # A verified commit is required so the commit shows as "Verified" on GitHub,
+        # satisfying branch protection rules that require signed commits.
+        - name: Create verified commit on release branch
+          uses: ryancyq/github-signed-commit@e9f3b28c80da7be66d24b8f501a5abe82a6b855f # v1.2.0
+          env:
+            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          with:
+            branch-name: ${{ steps.create-release.outputs.branch_name }}
+            commit-message: 'chore(release): ${{ steps.create-release.outputs.new_version }}'
+            files: |
+              CHANGELOG.md
+              Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift
+
+        # Raises a PR from the release branch into main.
+        # PR title and body are populated with the new version and features/fixes summary.
+        # Reviewers are auto-assigned via CODEOWNERS.
+        - name: Create pull request into main
+          uses: repo-sync/pull-request@7e79a9f5dc3ad0ce53138f01df2fad14a04831c5 # v2
+          with:
+            source_branch: ${{ steps.create-release.outputs.branch_name }}
+            destination_branch: "main"
+            github_token: ${{ steps.generate-token.outputs.token }}
+            pr_title: "chore(release): pulling ${{ steps.create-release.outputs.branch_name }} into main"
+            pr_body: "${{ steps.finish-release.outputs.pr_body }}"

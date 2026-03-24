@@ -1,0 +1,82 @@
+# CodeQL Advanced Workflow
+#
+# Runs deep static analysis on the codebase to detect security vulnerabilities.
+#
+# Triggered on:
+#   - Push to main or develop
+#   - Every pull request
+#   - Scheduled: every Monday at 6am UTC
+#
+# Languages scanned:
+#   - swift   → manual build on macos-latest (autobuild does not work reliably with SPM)
+#   - actions → no build needed, runs on ubuntu-latest
+#
+# Results appear in: repo Security → Code scanning tab.
+# Note: GitHub's default CodeQL setup must be DISABLED for this workflow to upload results.
+
+name: CodeQL Advanced
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1' # Every Monday at 6am UTC
+
+# Restrict GITHUB_TOKEN to no permissions by default.
+# Each job declares only what it needs via its own permissions block.
+permissions: {}
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    # Use macos-latest for Swift (required by CodeQL Swift support).
+    # Use ubuntu-latest for Actions (faster and sufficient for workflow file scanning).
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      security-events: write # required to upload CodeQL results to the Security tab
+      packages: read         # required to read packages during build
+      actions: read          # required to read workflow run info for analysis context
+      contents: read         # required to checkout the source code
+
+    # Run both language scans in parallel using separate runners.
+    # fail-fast: false ensures the swift scan completes even if the actions scan fails.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+            runner: ubuntu-latest
+          - language: swift
+            build-mode: manual
+            runner: macos-latest
+
+    steps:
+      # Audits all outbound network calls made during the job for supply-chain security.
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+
+      # Initialises the CodeQL tools and sets up the analysis environment.
+      - name: Initialise CodeQL
+        uses: github/codeql-action/init@9e907b5e64f6b83e7804b09294d44122997950d6 # v4.32.3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      # Builds the Swift package manually so CodeQL can instrument the compilation.
+      # Only runs for Swift — Actions language scan requires no build.
+      - name: Build Swift package
+        if: matrix.build-mode == 'manual'
+        run: swift build
+
+      # Performs the CodeQL analysis and uploads results to the Security tab.
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@9e907b5e64f6b83e7804b09294d44122997950d6 # v4.32.3
+        with:
+          category: "/language:${{ matrix.language }}"

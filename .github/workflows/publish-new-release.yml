@@ -1,0 +1,145 @@
+# Publish New Release Workflow
+#
+# Triggered automatically when a PR is closed (merged) into main.
+# Only runs if the merged PR's source branch starts with:
+#   - release/*
+#   - hotfix-release/*
+#
+# All other merges into main (back-merges, hotfixes, regular PRs) are skipped.
+#
+# What it does:
+#   1. Reads RSVersion from Constants.swift on main (single source of truth)
+#   2. Creates and pushes a git tag (x.y.z — no v prefix)
+#   3. Creates a GitHub Release with auto-generated release notes
+#   4. Sends a Slack notification with version, tag, and release link
+#   5. Raises a back-merge PR from main → develop
+#
+# Permissions:
+#   contents: write      — required to create and push git tags
+#   pull-requests: write — required to raise the back-merge PR (main → develop)
+#
+# Requires: SLACK_WEBHOOK_URL (secret)
+# Uses:     GITHUB_TOKEN (built-in — no setup needed)
+
+name: Publish New Release
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  publish-release:
+      name: Publish Release
+      runs-on: macos-latest
+      # Only run when a release/* or hotfix-release/* PR is merged — skip everything else.
+      if: |
+        github.event.pull_request.merged == true &&
+        (startsWith(github.event.pull_request.head.ref, 'release/') ||
+         startsWith(github.event.pull_request.head.ref, 'hotfix-release/'))
+      steps:
+        # Audits all outbound network calls made during the job for supply-chain security.
+        - name: Harden the runner (Audit all outbound calls)
+          uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+          with:
+            egress-policy: audit
+
+        # fetch-depth: 0 is required to push a new tag against full git history.
+        - name: Checkout main
+          uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+          with:
+            ref: main
+            fetch-depth: 0
+
+        # Constants.swift is the single source of truth for the SDK version.
+        # The version was already bumped on the release branch by draft-release.yml.
+        - name: Read RSVersion from main
+          id: read_version
+          run: |
+            VERSION=$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' \
+              Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift | head -1)
+            if [[ -z "$VERSION" ]]; then
+              echo "❌ Could not read a valid version from Constants.swift — aborting."
+              exit 1
+            fi
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "tag=$VERSION" >> $GITHUB_OUTPUT
+
+        # Tags use x.y.z format — no v prefix, consistent with Constants.swift and branch names.
+        # Idempotent: if the tag already points to HEAD (e.g. workflow re-run), the step is a no-op.
+        # Fails with a clear remediation message if the tag exists but points to a different commit.
+        - name: Create and push Git tag
+          run: |
+            TAG="${{ steps.read_version.outputs.tag }}"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            if git rev-parse "refs/tags/$TAG" >/dev/null 2>&1; then
+              EXISTING=$(git rev-parse "refs/tags/$TAG")
+              HEAD=$(git rev-parse HEAD)
+              if [[ "$EXISTING" == "$HEAD" ]]; then
+                echo "ℹ️ Tag $TAG already exists on HEAD — skipping tag creation."
+              else
+                echo "❌ Tag $TAG already exists but points to $EXISTING, not HEAD ($HEAD)."
+                echo "   To remediate: delete the existing tag (git push origin :refs/tags/$TAG) and re-run."
+                exit 1
+              fi
+            else
+              git tag "$TAG"
+              git push origin "$TAG"
+            fi
+
+        # Creates a GitHub Release with auto-generated notes from merged PRs since last tag.
+        - name: Create GitHub Release
+          id: create_release
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            TAG="${{ steps.read_version.outputs.tag }}"
+            VERSION="${{ steps.read_version.outputs.version }}"
+            RELEASE_URL=$(gh release create "$TAG" \
+              --title "Release $VERSION" \
+              --generate-notes \
+              --latest \
+              --verify-tag)
+            echo "release_url=$RELEASE_URL" >> $GITHUB_OUTPUT
+
+        # Sends a Slack message to notify the team of the new release.
+        - name: Send Slack notification
+          if: success()
+          env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          run: |
+            VERSION="${{ steps.read_version.outputs.version }}"
+            TAG="${{ steps.read_version.outputs.tag }}"
+            RELEASE_URL="${{ steps.create_release.outputs.release_url }}"
+            curl -s -X POST "$SLACK_WEBHOOK_URL" \
+              -H 'Content-type: application/json' \
+              --data "{
+                \"text\": \"🚀 *RudderStack Swift SDK $VERSION* released!\",
+                \"blocks\": [
+                  {
+                    \"type\": \"section\",
+                    \"text\": {
+                      \"type\": \"mrkdwn\",
+                      \"text\": \"🚀 *Swift SDK $VERSION* has been released!\n*Tag:* \`$TAG\`\n*Release:* $RELEASE_URL\"
+                    }
+                  }
+                ]
+              }"
+
+        # Raises an automated PR to sync the release changes back into develop.
+        - name: Raise back-merge PR (main → develop)
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            VERSION="${{ steps.read_version.outputs.version }}"
+            gh pr create \
+              --base develop \
+              --head main \
+              --title "chore(release): pulling main into develop post release $VERSION" \
+              --body "Automated back-merge of release $VERSION from \`main\` into \`develop\`."
