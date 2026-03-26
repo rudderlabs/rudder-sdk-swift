@@ -170,18 +170,28 @@ jobs:
             # This is required because the repo has no package.json (Swift project).
             echo "{\"version\": \"$NEW_VERSION\"}" > package.json
 
-            # Strip the static preamble (title + description) from CHANGELOG.md before generating,
+            # Extract and preserve the existing preamble (everything before the first version header),
             # so conventional-changelog doesn't bury it below the new entry when prepending.
-            PREAMBLE="# Changelog\n\nAll notable changes to this project will be documented in this file. See [conventional-commits](https://www.conventionalcommits.org) for commit guidelines."
-            grep -n "^#\{1,2\} \[" CHANGELOG.md | head -1 | cut -d: -f1 | xargs -I{} tail -n +{} CHANGELOG.md > /tmp/CHANGELOG_body.md
+            FIRST_VERSION_LINE=$(grep -n "^#\{1,2\} \[" CHANGELOG.md | head -1 | cut -d: -f1)
+            if [[ -n "$FIRST_VERSION_LINE" ]]; then
+              # Capture preamble lines (strip trailing blank lines for clean re-insertion)
+              PREAMBLE=$(head -n "$((FIRST_VERSION_LINE - 1))" CHANGELOG.md | sed 's/[[:space:]]*$//' | sed -e :a -e '/^\n*$/{$d;N;ba}')
+              tail -n +"$FIRST_VERSION_LINE" CHANGELOG.md > /tmp/CHANGELOG_body.md
+            else
+              PREAMBLE=""
+              cp CHANGELOG.md /tmp/CHANGELOG_body.md
+            fi
             cp /tmp/CHANGELOG_body.md CHANGELOG.md
 
             # Prepend new release section to CHANGELOG.md.
             # Uses changelog.config.js to extend the Angular preset with refactor and chore types.
             conventional-changelog -n ./changelog.config.js -i CHANGELOG.md -s
 
-            # Re-add the static preamble at the top.
-            printf "${PREAMBLE}\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
+            # Re-add the preserved preamble at the top (if any).
+            if [[ -n "$PREAMBLE" ]]; then
+              { printf '%s\n\n' "$PREAMBLE"; cat CHANGELOG.md; } > /tmp/CHANGELOG_final.md
+              mv /tmp/CHANGELOG_final.md CHANGELOG.md
+            fi
 
             # Remove the temporary package.json — it should not be committed.
             rm package.json

@@ -42,12 +42,25 @@ jobs:
           BRANCH: ${{ github.event.pull_request.head.ref }}
           REPO: ${{ github.repository }}
         run: |
+          # Never delete branches from fork PRs — the head branch lives in the
+          # fork repo and cannot be deleted via the base repo's API. Attempting
+          # it would either fail or (worse) delete a same-named branch in the
+          # base repo if one happens to exist.
+          if [[ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]]; then
+            echo "ℹ️ Skipping deletion: PR originates from a fork (${{ github.event.pull_request.head.repo.full_name }})."
+            exit 0
+          fi
+
           # Never delete protected branches.
           if [[ "$BRANCH" == "main" || "$BRANCH" == "develop" ]]; then
             echo "ℹ️ Skipping deletion of protected branch: $BRANCH"
             exit 0
           fi
 
+          # URL-encode the branch name so slashes in names like feature/foo or
+          # release/1.2.3 are not interpreted as path separators by the API.
+          ENCODED_BRANCH=$(python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$BRANCH")
+
           echo "🗑️ Deleting branch: $BRANCH"
-          gh api repos/$REPO/git/refs/heads/$BRANCH -X DELETE
+          gh api repos/$REPO/git/refs/heads/$ENCODED_BRANCH -X DELETE
           echo "✅ Branch '$BRANCH' deleted successfully."
