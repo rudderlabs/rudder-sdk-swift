@@ -15,11 +15,9 @@
 #   5. Raises a back-merge PR from main → develop
 #
 # Permissions:
-#   contents: write      — required to create and push git tags
-#   pull-requests: write — required to raise the back-merge PR (main → develop)
+#   contents: read at workflow level — elevated access via GitHub App token only.
 #
-# Requires: SLACK_WEBHOOK_URL (secret)
-# Uses:     GITHUB_TOKEN (built-in — no setup needed)
+# Requires: RELEASE_APP_ID (variable) + RELEASE_PRIVATE_KEY (secret) + SLACK_WEBHOOK_URL (secret)
 
 name: Publish New Release
 
@@ -29,13 +27,12 @@ on:
     types: [ closed ]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   publish-release:
       name: Publish Release
-      runs-on: macos-latest
+      runs-on: ubuntu-latest
       # Only run when a release/* or hotfix-release/* PR is merged — skip everything else.
       if: |
         github.event.pull_request.merged == true &&
@@ -48,10 +45,24 @@ jobs:
           with:
             egress-policy: audit
 
+        # GITHUB_TOKEN cannot push to protected branches or trigger downstream workflows.
+        # A GitHub App token is used instead — scoped to contents:write and pull-requests:write,
+        # auto-expires after 1 hour, and is not tied to any personal account.
+        - name: Generate GitHub App Token
+          id: generate-token
+          uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
+          with:
+            app-id: ${{ vars.RELEASE_APP_ID }}
+            private-key: ${{ secrets.RELEASE_PRIVATE_KEY }}
+            repositories: ${{ github.event.repository.name }}
+            permission-contents: write
+            permission-pull-requests: write
+
         # fetch-depth: 0 is required to push a new tag against full git history.
         - name: Checkout main
           uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
           with:
+            token: ${{ steps.generate-token.outputs.token }}
             ref: main
             fetch-depth: 0
 
@@ -97,12 +108,12 @@ jobs:
         - name: Create GitHub Release
           id: create_release
           env:
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
           run: |
             TAG="${{ steps.read_version.outputs.tag }}"
             VERSION="${{ steps.read_version.outputs.version }}"
             RELEASE_URL=$(gh release create "$TAG" \
-              --title "Release $VERSION" \
+              --title "$VERSION" \
               --generate-notes \
               --latest \
               --verify-tag)
@@ -117,16 +128,17 @@ jobs:
             VERSION="${{ steps.read_version.outputs.version }}"
             TAG="${{ steps.read_version.outputs.tag }}"
             RELEASE_URL="${{ steps.create_release.outputs.release_url }}"
+            ACTOR="${{ github.actor }}"
             curl -s -X POST "$SLACK_WEBHOOK_URL" \
               -H 'Content-type: application/json' \
               --data "{
-                \"text\": \"🚀 *RudderStack Swift SDK $VERSION* released!\",
+                \"text\": \"🚀 *RudderStackAnalytics (Swift) SDK $VERSION* has been released!\",
                 \"blocks\": [
                   {
                     \"type\": \"section\",
                     \"text\": {
                       \"type\": \"mrkdwn\",
-                      \"text\": \"🚀 *Swift SDK $VERSION* has been released!\n*Tag:* \`$TAG\`\n*Release:* $RELEASE_URL\"
+                      \"text\": \"🚀 *RudderStackAnalytics (Swift) SDK $VERSION* has been released!\n*Tag:* \`$TAG\`\n*Release:* $RELEASE_URL\n*Released by:* $ACTOR\"
                     }
                   }
                 ]
@@ -135,7 +147,7 @@ jobs:
         # Raises an automated PR to sync the release changes back into develop.
         - name: Raise back-merge PR (main → develop)
           env:
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
           run: |
             VERSION="${{ steps.read_version.outputs.version }}"
             gh pr create \

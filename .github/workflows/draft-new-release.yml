@@ -52,7 +52,7 @@ jobs:
           with:
             app-id: ${{ vars.RELEASE_APP_ID }}
             private-key: ${{ secrets.RELEASE_PRIVATE_KEY }}
-            repositories: rudder-sdk-swift
+            repositories: ${{ github.event.repository.name }}
             permission-contents: write
             permission-pull-requests: write
 
@@ -107,7 +107,7 @@ jobs:
               elif [[ "$BUMP" == "none" ]] && echo "$commit" | grep -qE '^(fix|refactor|chore)(\([^)]+\))?:'; then
                 BUMP="patch"
               fi
-            done <<< "$(git log "$log_range" --pretty=format:"%s %b")"
+            done <<< "$(git log "$log_range" --pretty=format:"%s %b" --first-parent)"
 
             if [[ "$BUMP" == "none" ]]; then
               since_msg=${last_tag:+"since $last_tag"}${last_tag:-"in the entire history"}
@@ -160,14 +160,41 @@ jobs:
           id: finish-release
           run: |
             npm i -g conventional-changelog-cli@2.2.2
+            npm i conventional-changelog-angular@5
 
             # Update RSVersion in Constants.swift
             sed -i "s/let RSVersion: String = \".*\"/let RSVersion: String = \"$NEW_VERSION\"/" \
               Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift
 
+            # Create a temporary package.json so conventional-changelog can resolve the version.
+            # This is required because the repo has no package.json (Swift project).
+            echo "{\"version\": \"$NEW_VERSION\"}" > package.json
+
+            # Extract and preserve the existing preamble (everything before the first version header),
+            # so conventional-changelog doesn't bury it below the new entry when prepending.
+            FIRST_VERSION_LINE=$(grep -n "^#\{1,2\} \[" CHANGELOG.md | head -1 | cut -d: -f1)
+            if [[ -n "$FIRST_VERSION_LINE" ]]; then
+              # Capture preamble lines (strip trailing blank lines for clean re-insertion)
+              PREAMBLE=$(head -n "$((FIRST_VERSION_LINE - 1))" CHANGELOG.md | sed 's/[[:space:]]*$//' | sed -e :a -e '/^\n*$/{$d;N;ba}')
+              tail -n +"$FIRST_VERSION_LINE" CHANGELOG.md > /tmp/CHANGELOG_body.md
+            else
+              PREAMBLE=""
+              cp CHANGELOG.md /tmp/CHANGELOG_body.md
+            fi
+            cp /tmp/CHANGELOG_body.md CHANGELOG.md
+
             # Prepend new release section to CHANGELOG.md.
             # Uses changelog.config.js to extend the Angular preset with refactor and chore types.
             conventional-changelog -n ./changelog.config.js -i CHANGELOG.md -s
+
+            # Re-add the preserved preamble at the top (if any).
+            if [[ -n "$PREAMBLE" ]]; then
+              { printf '%s\n\n' "$PREAMBLE"; cat CHANGELOG.md; } > /tmp/CHANGELOG_final.md
+              mv /tmp/CHANGELOG_final.md CHANGELOG.md
+            fi
+
+            # Remove the temporary package.json — it should not be committed.
+            rm package.json
 
             # Build PR body from merged PR titles since last tag
             FEATURES=""
@@ -189,7 +216,7 @@ jobs:
                 MSG=$(echo "$commit" | sed -E 's/^chore(\([^)]+\))?!?: //')
                 CHORES="${CHORES}- ${MSG}\n"
               fi
-            done <<< "$(git log "${{ steps.create-release.outputs.log_range }}" --merges --pretty=format:"%s")"
+            done <<< "$(git log "${{ steps.create-release.outputs.log_range }}" --pretty=format:"%s" --first-parent)"
 
             PR_BODY="# RudderStack Swift SDK $NEW_VERSION"
             if [[ -n "$FEATURES" ]]; then
