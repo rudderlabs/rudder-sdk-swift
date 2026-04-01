@@ -53,3 +53,25 @@ extension Encodable {
         }
     }
 }
+
+// MARK: - PayloadView
+
+struct PayloadView: View {
+    @Binding var payload: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            SectionHeader(title: "Payload Generated")
+            TextEditor(text: .constant(payload))
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundColor(.primary)
+                .frame(minHeight: 160)
+                .padding(8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.gray.opacity(0.4), lineWidth: 1)
+                )
+                .disabled(true)
+        }
+    }
+}
