@@ -54,6 +54,23 @@ extension Encodable {
     }
 }
 
+// MARK: - AdvertisingIdToggleRow
+
+struct AdvertisingIdToggleRow: View {
+    @Binding var isEnabled: Bool
+
+    var body: some View {
+        HStack {
+            Text("Enable Advertising ID")
+                .font(.system(size: 14, weight: .bold))
+            Spacer()
+            Toggle("", isOn: $isEnabled)
+                .labelsHidden()
+                .tint(Color.rudderBlue)
+        }
+    }
+}
+
 // MARK: - PayloadView
 
 struct PayloadView: View {
