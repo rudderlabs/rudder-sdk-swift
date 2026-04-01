@@ -1,5 +1,5 @@
 //
-//  AppUIUtils.swift
+//  AppUtils.swift
 //  SwiftUIExampleApp
 //
 //  Created by Satheesh Kannan on 01/04/26.
@@ -12,7 +12,7 @@ import SwiftUI
 struct ActionButton: View {
     let title: String
     let action: () -> Void
-
+    
     var body: some View {
         Button(action: action) {
             Text(title)
@@ -30,11 +30,26 @@ struct ActionButton: View {
 
 struct SectionHeader: View {
     let title: String
-
+    
     var body: some View {
         Text(title)
             .font(.system(size: 14, weight: .bold))
             .foregroundColor(.primary)
             .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+// MARK: - Encoder
+
+extension Encodable {
+    var jsonString: String? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys, .prettyPrinted, .withoutEscapingSlashes]
+        do {
+            let data = try encoder.encode(self)
+            return String(data: data, encoding: .utf8)
+        } catch {
+            return nil
+        }
     }
 }
