@@ -11,6 +11,9 @@
 		5328B86E2E3B75B90051A202 /* EventFilteringPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5328B86D2E3B75B90051A202 /* EventFilteringPluginTests.swift */; };
 		533B9DDF2F7D89CE001262EC /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533B9DDE2F7D89CE001262EC /* AppUtils.swift */; };
 		533B9DE12F7D8CE2001262EC /* PayloadCapturePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533B9DE02F7D8CE2001262EC /* PayloadCapturePlugin.swift */; };
+		533B9DE62F7D985A001262EC /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533B9DE52F7D985A001262EC /* MainViewModel.swift */; };
+		533B9DE92F7D98FF001262EC /* ScreenOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533B9DE82F7D98FF001262EC /* ScreenOne.swift */; };
+		533B9DEC2F7D9923001262EC /* ScreenTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533B9DEB2F7D9923001262EC /* ScreenTwo.swift */; };
 		535BB3E22E04642400E1DAB0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB3D92E04642400E1DAB0 /* Preview Assets.xcassets */; };
 		535BB3E42E04642400E1DAB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB3DB2E04642400E1DAB0 /* Assets.xcassets */; };
 		535BB3E52E04642400E1DAB0 /* SwiftUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3E02E04642400E1DAB0 /* SwiftUIExampleApp.swift */; };
@@ -76,6 +79,9 @@
 		5328B86D2E3B75B90051A202 /* EventFilteringPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFilteringPluginTests.swift; sourceTree = "<group>"; };
 		533B9DDE2F7D89CE001262EC /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
 		533B9DE02F7D8CE2001262EC /* PayloadCapturePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayloadCapturePlugin.swift; sourceTree = "<group>"; };
+		533B9DE52F7D985A001262EC /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		533B9DE82F7D98FF001262EC /* ScreenOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenOne.swift; sourceTree = "<group>"; };
+		533B9DEB2F7D9923001262EC /* ScreenTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTwo.swift; sourceTree = "<group>"; };
 		5351AA792C6BE9DE003C3C47 /* SwiftUIExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		535BB3D02E04642400E1DAB0 /* AdvertisingIdPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisingIdPlugin.swift; sourceTree = "<group>"; };
 		535BB3D12E04642400E1DAB0 /* BluetoothInfoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothInfoPlugin.swift; sourceTree = "<group>"; };
@@ -134,6 +140,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		533B9DE72F7D985E001262EC /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				533B9DE52F7D985A001262EC /* MainViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		533B9DEA2F7D990F001262EC /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				533B9DE82F7D98FF001262EC /* ScreenOne.swift */,
+				533B9DEB2F7D9923001262EC /* ScreenTwo.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
 		5351AA702C6BE9DE003C3C47 = {
 			isa = PBXGroup;
 			children = (
@@ -207,6 +230,8 @@
 				535BB3D52E04642400E1DAB0 /* CustomPlugins */,
 				535BB3D82E04642400E1DAB0 /* Managers */,
 				535BB3DA2E04642400E1DAB0 /* Preview Content */,
+				533B9DE72F7D985E001262EC /* ViewModels */,
+				533B9DEA2F7D990F001262EC /* Screens */,
 				535BB3DB2E04642400E1DAB0 /* Assets.xcassets */,
 				535BB3DE2E04642400E1DAB0 /* Info.plist */,
 				535BB3DF2E04642400E1DAB0 /* SwiftUIExample.entitlements */,
@@ -374,6 +399,7 @@
 				535BB3E92E04642400E1DAB0 /* SetAnonymousIdPlugin.swift in Sources */,
 				539301A02E69A5B000DAEAD1 /* DynamicUserAgentPlugin.swift in Sources */,
 				53E687542EF9232200DF1FBD /* PersistentMigratorFromV1.swift in Sources */,
+				533B9DEC2F7D9923001262EC /* ScreenTwo.swift in Sources */,
 				53825E112F03C06200B20FCF /* MigrationUtilsV2.swift in Sources */,
 				53825E122F03C06200B20FCF /* PersistentMigratorFromV2.swift in Sources */,
 				53825E132F03C06200B20FCF /* LegacyDataModelV2.swift in Sources */,
@@ -386,7 +412,9 @@
 				5328B86C2E3B48820051A202 /* EventFilteringPlugin.swift in Sources */,
 				535BB3EC2E04642400E1DAB0 /* OptionPlugin.swift in Sources */,
 				535BB3ED2E04642400E1DAB0 /* AdvertisingIdPlugin.swift in Sources */,
+				533B9DE92F7D98FF001262EC /* ScreenOne.swift in Sources */,
 				535BB3EE2E04642400E1DAB0 /* PermissionManager.swift in Sources */,
+				533B9DE62F7D985A001262EC /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
