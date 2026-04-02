@@ -39,17 +39,17 @@ struct SectionHeader: View {
     }
 }
 
-// MARK: - Encoder
+// MARK: - ButtonGrid
 
-extension Encodable {
-    var jsonString: String? {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys, .prettyPrinted, .withoutEscapingSlashes]
-        do {
-            let data = try encoder.encode(self)
-            return String(data: data, encoding: .utf8)
-        } catch {
-            return nil
+struct ButtonGrid<Content: View>: View {
+    @ViewBuilder let content: () -> Content
+    
+    var body: some View {
+        LazyVGrid(columns: [
+            GridItem(.flexible(), spacing: 8),
+            GridItem(.flexible(), spacing: 8)
+        ], spacing: 8) {
+            content()
         }
     }
 }
@@ -58,7 +58,7 @@ extension Encodable {
 
 struct AdvertisingIdToggleRow: View {
     @Binding var isEnabled: Bool
-
+    
     var body: some View {
         HStack {
             Text("Enable Advertising ID")
@@ -75,7 +75,7 @@ struct AdvertisingIdToggleRow: View {
 
 struct PayloadView: View {
     @Binding var payload: String
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionHeader(title: "Payload Generated")
@@ -89,6 +89,35 @@ struct PayloadView: View {
                         .stroke(Color.gray.opacity(0.4), lineWidth: 1)
                 )
                 .disabled(true)
+        }
+    }
+}
+
+// MARK: - Encoder
+
+extension Encodable {
+    var jsonString: String? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys, .prettyPrinted, .withoutEscapingSlashes]
+        do {
+            let data = try encoder.encode(self)
+            return String(data: data, encoding: .utf8)
+        } catch {
+            return nil
+        }
+    }
+}
+
+// MARK: - View
+
+extension View {
+    func whiteNavigationBar() -> some View {
+        self.onAppear {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .white
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
         }
     }
 }
