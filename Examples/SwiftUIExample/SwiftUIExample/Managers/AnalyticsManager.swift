@@ -99,6 +99,10 @@ extension AnalyticsManager {
     func addPlugin(_ plugin: Plugin) {
         self.analytics?.add(plugin: plugin)
     }
+
+    func removePlugin(_ plugin: Plugin) {
+        self.analytics?.remove(plugin: plugin)
+    }
     
     func flush() {
         self.analytics?.flush()
