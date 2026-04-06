@@ -62,7 +62,6 @@ class AnalyticsManager {
         self.analytics?.add(plugin: payloadPlugin)
 
         //Add external plugin to analytics..
-        self.analytics?.add(plugin: AdvertisingIdPlugin())
         self.analytics?.add(plugin: BluetoothInfoPlugin())
         
         self.addCustomIntegrationPlugin()

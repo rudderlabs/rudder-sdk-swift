@@ -10,7 +10,7 @@ import RudderStackAnalytics
 
 /// Intercepts every outgoing event and publishes its JSON payload for display.
 final class PayloadCapturePlugin: Plugin {
-    var pluginType: PluginType = .utility
+    var pluginType: PluginType = .terminal
     var analytics: Analytics?
     
     var onPayloadCaptured: ((String) -> Void)?

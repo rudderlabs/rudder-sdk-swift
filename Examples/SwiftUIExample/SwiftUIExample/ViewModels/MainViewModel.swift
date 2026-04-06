@@ -19,7 +19,9 @@ final class MainViewModel: ObservableObject {
 
     init() {
         AnalyticsManager.shared.onPayloadCaptured = { [weak self] json in
-            self?.lastPayload = json
+            DispatchQueue.main.async {
+                self?.lastPayload = json
+            }
         }
     }
 
@@ -45,8 +47,9 @@ final class MainViewModel: ObservableObject {
             advertisingPlugin = plugin
             AnalyticsManager.shared.addPlugin(plugin)
         } else {
-            // Remove plugin — call the appropriate SDK API if available
-            advertisingPlugin = nil
+            guard let advertisingPlugin else { return }
+            AnalyticsManager.shared.removePlugin(advertisingPlugin)
+            self.advertisingPlugin = nil
         }
     }
 }
