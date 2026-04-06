@@ -22,7 +22,7 @@ struct ActionButton: View {
                 .padding(.vertical, 14)
         }
         .background(Color.rudderBlue)
-        .cornerRadius(12)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 
@@ -75,20 +75,22 @@ struct AdvertisingIdToggleRow: View {
 
 struct PayloadView: View {
     @Binding var payload: String
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionHeader(title: "Payload Generated")
-            TextEditor(text: .constant(payload))
-                .font(.system(size: 12, design: .monospaced))
-                .foregroundColor(.primary)
-                .frame(minHeight: 160)
-                .padding(8)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.gray.opacity(0.4), lineWidth: 1)
-                )
-                .disabled(true)
+            ScrollView {
+                Text(payload)
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundColor(.primary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(8)
+            }
+            .frame(minHeight: 160)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.gray.opacity(0.4), lineWidth: 1)
+            )
         }
     }
 }

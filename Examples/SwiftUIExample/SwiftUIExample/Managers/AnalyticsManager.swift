@@ -40,7 +40,7 @@ import RudderStackAnalytics
   - Note: This is a singleton class. Use `AnalyticsManager.shared` to access the instance.
  */
 
-class AnalyticsManager {
+final class AnalyticsManager {
     
     static let shared = AnalyticsManager()
     private init() {}

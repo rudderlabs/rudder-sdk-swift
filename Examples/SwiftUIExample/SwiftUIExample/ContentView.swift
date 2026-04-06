@@ -28,14 +28,14 @@ struct ContentView: View {
                     
                     // MARK: - Features Section
                     SectionHeader(title: "Features")
-                    
+
                     ButtonGrid {
                         ActionButton(title: "Start Session")    { viewModel.startSession() }
                         ActionButton(title: "Start Session with custom id") { viewModel.startSessionWithCustomId() }
                         ActionButton(title: "End Session")  { viewModel.endSession() }
                         ActionButton(title: "Reset")    { viewModel.reset() }
-                        ActionButton(title: "Shutdown") { viewModel.shutdown() }
                     }
+                    ActionButton(title: "Shutdown") { viewModel.shutdown() }
                     
                     // MARK: - Advertising ID Toggle
                     AdvertisingIdToggleRow(isEnabled: $viewModel.isAdvertisingIdEnabled)

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 
 @MainActor
 final class MainViewModel: ObservableObject {
@@ -19,7 +18,7 @@ final class MainViewModel: ObservableObject {
 
     init() {
         AnalyticsManager.shared.onPayloadCaptured = { [weak self] json in
-            DispatchQueue.main.async {
+            Task { @MainActor [weak self] in
                 self?.lastPayload = json
             }
         }
