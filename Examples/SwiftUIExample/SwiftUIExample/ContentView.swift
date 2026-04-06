@@ -45,7 +45,7 @@ struct ContentView: View {
                 }
                 .padding(16)
             }
-            .background(Color.white)
+            .background(Color(UIColor.systemBackground))
             .navigationTitle("Rudderstack Analytics")
             .navigationBarTitleDisplayMode(.inline)
             .whiteNavigationBar()
