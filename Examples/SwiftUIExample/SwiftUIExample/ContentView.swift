@@ -35,16 +35,6 @@ struct ContentView: View {
                         ActionButton(title: "End Session")  { viewModel.endSession() }
                         ActionButton(title: "Reset")    { viewModel.reset() }
                         ActionButton(title: "Shutdown") { viewModel.shutdown() }
-                        
-                        NavigationLink(destination: ScreenOne(viewModel: viewModel)) {
-                            Text("Navigate to screens")
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .background(Color.rudderBlue)
-                                .cornerRadius(12)
-                        }
                     }
                     
                     // MARK: - Advertising ID Toggle
