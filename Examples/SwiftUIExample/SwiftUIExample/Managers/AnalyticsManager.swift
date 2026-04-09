@@ -40,21 +40,28 @@ import RudderStackAnalytics
   - Note: This is a singleton class. Use `AnalyticsManager.shared` to access the instance.
  */
 
-class AnalyticsManager {
+final class AnalyticsManager {
     
     static let shared = AnalyticsManager()
     private init() {}
     
     private var analytics: Analytics?
-    
+    private let payloadPlugin = PayloadCapturePlugin()
+
+    var onPayloadCaptured: ((String) -> Void)? {
+        get { payloadPlugin.onPayloadCaptured }
+        set { payloadPlugin.onPayloadCaptured = newValue }
+    }
+
     func initializeAnalyticsSDK() {
         LoggerAnalytics.logLevel = .verbose // Set the log level for analytics
         
         let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
         self.analytics = Analytics(configuration: config)
         
+        self.analytics?.add(plugin: payloadPlugin)
+
         //Add external plugin to analytics..
-        self.analytics?.add(plugin: AdvertisingIdPlugin())
         self.analytics?.add(plugin: BluetoothInfoPlugin())
         
         self.addCustomIntegrationPlugin()
@@ -90,6 +97,10 @@ extension AnalyticsManager {
     
     func addPlugin(_ plugin: Plugin) {
         self.analytics?.add(plugin: plugin)
+    }
+
+    func removePlugin(_ plugin: Plugin) {
+        self.analytics?.remove(plugin: plugin)
     }
     
     func flush() {

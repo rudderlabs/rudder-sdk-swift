@@ -6,230 +6,53 @@
 //
 
 import SwiftUI
-import RudderStackAnalytics
 
 struct ContentView: View {
+    @StateObject private var viewModel = MainViewModel()
     
     var body: some View {
-        VStack {
-            HStack {
-                CustomButton(title: "Identify") {
-                    let options = RudderOption(integrations: [
-                        "Amplitude": false,
-                        "facebook" : [
-                            "createdAt": Date(),
-                            "mapUrl": URL(string: "https://maps.google.com/")!,
-                            "enabled": true,
-                            "facebook_null": NSNull()
-                        ]
-                    ], customContext: [
-                        "identify_key1": "identify_value1",
-                        "customContext_createdAt": Date(),
-                        "customContext_createdAt2": NSDate(),
-                        "customContext_mapUrl": URL(string: "https://maps.google.com/",)!,
-                        "customContext_mapUrl2": NSURL(string: "https://maps.google.com/",)!,
-                        "customContext_null": NSNull(),
-                    ], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
                     
-                    AnalyticsManager.shared.identify(
-                        userId: "12345",
-                        traits: [
-                            // Nested dictionary with Date/URL
-                            "address": [
-                                "createdAt": Date(),
-                                "mapUrl": URL(string: "https://maps.google.com/")!,
-                                "street": "123 Main St",
-                            ],
-                            
-                            // Basic types (should pass through unchanged)
-                            "string": "test_value",
-                            "int": 42,
-                            "double": 3.14,
-                            "bool": true,
-                            "null": NSNull(),
-
-                            // Date handling (should convert to ISO8601 string)
-                            
-                            "createdAt": Date(timeIntervalSince1970: 631152000), // 1990-01-01
-
-                            // URL handling (should convert to absolute string)
-                            "url": URL(string: "https://www.rudderstack.com/")!,
-
-                            // NSNumber variants (existing sanitization)
-                            "count": NSNumber(value: 100),
-                            "isActive": NSNumber(value: true),
-                            "rating": NSNumber(value: 4.5),
-
-                            // Array with mixed types
-                            "favoriteUrls": [
-                                URL(string: "https://github.com")!,
-                                URL(string: "https://stackoverflow.com")!
-                            ],
-
-                            // Array with dates
-                            "importantDates": [
-                                Date(),
-                                Date(timeIntervalSince1970: 946684800) // 2000-01-01
-                            ],
-
-                            // Nested array of dictionaries
-                            "events": [
-                                [
-                                    "name": "signup",
-                                    "timestamp": Date(),
-                                    "url": URL(string: "https://app.example.com/signup")!,
-                                ],
-                                [
-                                    "amount": 99.99,
-                                    "name": "purchase",
-                                    "timestamp": Date(timeIntervalSince1970: 1640000000),
-                                ]
-                            ],
-
-                            // Complex nested structure
-                            "metadata": [
-                                "links": [
-                                    "homepage": URL(string: "https://example.com")!,
-                                    "docs": URL(string: "https://docs.example.com/api")!,
-                                ],
-                                "user": [
-                                    "preferences": [
-                                        "theme": "dark",
-                                        "notifications": true,
-                                        "lastUpdated": Date()
-                                    ],
-                                    "registeredAt": Date(),
-                                ],
-                            ]
-                        ],
-                        options: options
-                    )
-                }
-                
-                CustomButton(title: "Alias") {
-                    let options = RudderOption(integrations: ["Amplitude": false], customContext: ["identify_key1": "identify_value1"], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
+                    // MARK: - Public API Section
+                    SectionHeader(title: "Public API")
+                    ButtonGrid {
+                        ActionButton(title: "Track")    { viewModel.track() }
+                        ActionButton(title: "Screen")   { viewModel.screen() }
+                        ActionButton(title: "Group")    { viewModel.group() }
+                        ActionButton(title: "Identify") { viewModel.identify() }
+                        ActionButton(title: "Alias")    { viewModel.alias() }
+                        ActionButton(title: "Flush")    { viewModel.flush() }
+                    }
                     
-                    AnalyticsManager.shared.alias(newId: "123_alias_123", options: options)
-                }
-            }
-            
-            HStack {
-                let sampleURL = "https://www.rsa-test.com/"
-                CustomButton(title: "Track") {
-                    let option = RudderOption(integrations: ["Amplitude": true, "CleverTap": false], customContext: ["Key_1": ["Key1": "Value1"], "Key_2": ["value1", "value2"], "Key_3": "Value3", "Key_4": 1234, "Key_5": 5678.9, "Key_6": true, "Key_7": URL(string: sampleURL) ?? sampleURL], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
+                    // MARK: - Features Section
+                    SectionHeader(title: "Features")
+
+                    ButtonGrid {
+                        ActionButton(title: "Start Session")    { viewModel.startSession() }
+                        ActionButton(title: "Start Session with custom id") { viewModel.startSessionWithCustomId() }
+                        ActionButton(title: "End Session")  { viewModel.endSession() }
+                        ActionButton(title: "Reset")    { viewModel.reset() }
+                    }
+                    ActionButton(title: "Shutdown") { viewModel.shutdown() }
                     
-                    AnalyticsManager.shared.track(name: "Track at \(Date())", properties: ["key": "value"], options: option)
+                    // MARK: - Advertising ID Toggle
+                    AdvertisingIdToggleRow(isEnabled: $viewModel.isAdvertisingIdEnabled)
+                    
+                    // MARK: - Payload Display
+                    PayloadView(payload: $viewModel.lastPayload)
                 }
-                
-                CustomButton(title: "Multiple Track") {
-                    let option = RudderOption(integrations: ["Amplitude": true, "CleverTap": false], customContext: ["Key_1": ["Key123": "Value123"]], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
-                    for i in 1...50 {
-                        AnalyticsManager.shared.track(name: "Track: \(i)", options: option)
-                    }
-                }
+                .padding(16)
             }
-            
-            HStack {
-                CustomButton(title: "Screen") {
-                    let option = RudderOption(integrations: ["Facebook": false], customContext: ["Key_1": ["Key1": "Value1"]], externalIds: [ExternalId(type: "idCardNumber", id: "12791")])
-                    AnalyticsManager.shared.screen(name: "Analytics Screen", properties: ["key": "value"], options: option)
-                }
-                
-                CustomButton(title: "Group") {
-                    let option = RudderOption(integrations: ["Firebase": false, "Twitter": ["isEnabled": true, "consumerKey": "consumerSecret"]], customContext: ["Key_1": ["Key1": "Value1"]], externalIds: [ExternalId(type: "idCardNumber", id: "12791"), ExternalId(type: "official_idCardNumber", id: "AB123CD")])
-                    AnalyticsManager.shared.group(id: "group_id", traits: ["key": "value"], options: option)
-                }
-                
-                CustomButton(title: "Flush") {
-                    AnalyticsManager.shared.flush()
-                }
-            }
-            
-            HStack {
-                CustomButton(title: "Read AnonymousId") {
-                    if let anonymousId = AnalyticsManager.shared.anonymousId {
-                        LoggerAnalytics.debug("Current Anonymous Id: \(anonymousId)")
-                    } else {
-                        LoggerAnalytics.debug("Current Anonymous Id: nil")
-                    }
-                }
-                
-                CustomButton(title: "Read UserId") {
-                    if let userId = AnalyticsManager.shared.userId {
-                        LoggerAnalytics.debug("Current User Id: \(userId)")
-                    } else {
-                        LoggerAnalytics.debug("Current User Id: nil")
-                    }
-                }
-            }
-            
-            HStack {
-                CustomButton(title: "Reset") {
-                    AnalyticsManager.shared.reset()
-                }
-            }
-            
-            HStack {
-                CustomButton(title: "Start Session") {
-                    AnalyticsManager.shared.startSession()
-                }
-                
-                CustomButton(title: "Start Session with SessionId") {
-                    AnalyticsManager.shared.startSession(sessionId: 12312312345)
-                }
-            }
-            
-            HStack {
-                CustomButton(title: "Read SessionId") {
-                    if let sessionId = AnalyticsManager.shared.sessionId {
-                        LoggerAnalytics.debug("Current Session Id: \(String(sessionId))")
-                    } else {
-                        LoggerAnalytics.debug("No active session found.")
-                    }
-                }
-                
-                CustomButton(title: "End Session") {
-                    AnalyticsManager.shared.endSession()
-                }
-            }
-            
-            HStack {
-                CustomButton(title: "Shutdown") {
-                    AnalyticsManager.shared.shutdown()
-                }
-                
-                CustomButton(title: "Initialize SDK") {
-                    AnalyticsManager.shared.initializeAnalyticsSDK()
-                }
-            }
+            .background(Color(UIColor.systemBackground))
+            .navigationTitle("Rudderstack Analytics")
+            .navigationBarTitleDisplayMode(.inline)
+            .whiteNavigationBar()
         }
     }
 }
 
 #Preview {
     ContentView()
-}
-
-struct CustomButton: View {
-    
-    let title: String
-    let action: () -> Void
-    
-    init(title: String, action: @escaping () -> Void) {
-        self.title = title
-        self.action = action
-    }
-    
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .fontWeight(.semibold)
-                .padding(.vertical, 15)
-                .padding(.horizontal, 20)
-                .background(Color.blue.opacity(0.2))
-                .cornerRadius(8)
-                .foregroundColor(.blue)
-        }
-        .padding(5)
-    }
 }
