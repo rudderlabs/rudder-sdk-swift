@@ -5,9 +5,6 @@
       location = "group:RudderStackAnalytics.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Examples/ObjCExample/ObjCExample.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Examples/Main/SwiftUIExample/SwiftUIExample.xcodeproj">
    </FileRef>
 </Workspace>
