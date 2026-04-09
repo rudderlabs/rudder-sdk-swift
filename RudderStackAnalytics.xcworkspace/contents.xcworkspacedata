@@ -11,9 +11,6 @@
       location = "group:Examples/ObjCExample/ObjCExample.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Examples/watchOSExample/watchOSExample.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Examples/ExtensionExample/ExtensionExample.xcodeproj">
    </FileRef>
    <FileRef

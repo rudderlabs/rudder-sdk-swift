@@ -14,8 +14,7 @@
 		535BB5232E04956600E1DAB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB5202E04956600E1DAB0 /* ContentView.swift */; };
 		535BB5242E04956600E1DAB0 /* watchOSExampleWatchKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB51D2E04956600E1DAB0 /* watchOSExampleWatchKitApp.swift */; };
 		535BB5252E04956600E1DAB0 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB51E2E04956600E1DAB0 /* AnalyticsManager.swift */; };
-		53DEA73D2E03EBF300D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */; };
-		53DEA73E2E03EBF300D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA73C2E03EBF300D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		535E3C392F881D8700786413 /* RudderStackAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 535E3C382F881D8700786413 /* RudderStackAnalytics */; };
 		53DF2B862DEE0F7700FE2659 /* watchOSExampleWatchKitApp.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 53DF2B852DEE0F7700FE2659 /* watchOSExampleWatchKitApp.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -30,17 +29,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		53DEA73F2E03EBF400D6C371 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				53DEA73E2E03EBF300D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		53DF2B952DEE0F7800FE2659 /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -79,7 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53DEA73D2E03EBF300D6C371 /* RudderStackAnalytics.framework in Frameworks */,
+				535E3C392F881D8700786413 /* RudderStackAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,7 +153,6 @@
 				53DF2B812DEE0F7700FE2659 /* Sources */,
 				53DF2B822DEE0F7700FE2659 /* Frameworks */,
 				53DF2B832DEE0F7700FE2659 /* Resources */,
-				53DEA73F2E03EBF400D6C371 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -173,6 +160,7 @@
 			);
 			name = watchOSExampleWatchKitApp;
 			packageProductDependencies = (
+				535E3C382F881D8700786413 /* RudderStackAnalytics */,
 			);
 			productName = "AnalyticsAppWatch Watch App";
 			productReference = 53DF2B852DEE0F7700FE2659 /* watchOSExampleWatchKitApp.app */;
@@ -205,6 +193,9 @@
 			);
 			mainGroup = 53DF2B6F2DEE0F7600FE2659;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				535E3C372F881D8700786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 53DF2B792DEE0F7600FE2659 /* Products */;
 			projectDirPath = "";
@@ -533,6 +524,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		535E3C372F881D8700786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../../rudder-sdk-swift";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		535E3C382F881D8700786413 /* RudderStackAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RudderStackAnalytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 53DF2B702DEE0F7600FE2659 /* Project object */;
 }
