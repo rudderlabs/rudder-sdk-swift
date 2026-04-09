@@ -10,9 +10,8 @@
 		5322C3C92E97F93700DDDA72 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5322C3C72E97F93700DDDA72 /* ContentView.swift */; };
 		5322C3CA2E97F93700DDDA72 /* ExtensionExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5322C3C82E97F93700DDDA72 /* ExtensionExampleApp.swift */; };
 		5322C3CB2E97F93700DDDA72 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5322C3C62E97F93700DDDA72 /* Assets.xcassets */; };
+		535E3C422F881DF500786413 /* RudderStackAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 535E3C412F881DF500786413 /* RudderStackAnalytics */; };
 		53A83F152E9C05BD00DDA0CC /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 53A83F0B2E9C05BD00DDA0CC /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		53A83F1F2E9C06C300DDA0CC /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53A83F1E2E9C06C300DDA0CC /* RudderStackAnalytics.framework */; };
-		53A83F202E9C06C300DDA0CC /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53A83F1E2E9C06C300DDA0CC /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,17 +34,6 @@
 				53A83F152E9C05BD00DDA0CC /* ShareExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		53A83F212E9C06C300DDA0CC /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				53A83F202E9C06C300DDA0CC /* RudderStackAnalytics.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -92,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53A83F1F2E9C06C300DDA0CC /* RudderStackAnalytics.framework in Frameworks */,
+				535E3C422F881DF500786413 /* RudderStackAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,7 +155,6 @@
 				53A83F072E9C05BD00DDA0CC /* Sources */,
 				53A83F082E9C05BD00DDA0CC /* Frameworks */,
 				53A83F092E9C05BD00DDA0CC /* Resources */,
-				53A83F212E9C06C300DDA0CC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -178,6 +165,7 @@
 			);
 			name = ShareExtension;
 			packageProductDependencies = (
+				535E3C412F881DF500786413 /* RudderStackAnalytics */,
 			);
 			productName = ShareExtension;
 			productReference = 53A83F0B2E9C05BD00DDA0CC /* ShareExtension.appex */;
@@ -210,6 +198,9 @@
 			);
 			mainGroup = 5322C3AF2E97F8E200DDDA72;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				535E3C402F881DF500786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5322C3B92E97F8E200DDDA72 /* Products */;
 			projectDirPath = "";
@@ -543,6 +534,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		535E3C402F881DF500786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../../rudder-sdk-swift";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		535E3C412F881DF500786413 /* RudderStackAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RudderStackAnalytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5322C3B02E97F8E200DDDA72 /* Project object */;
 }
