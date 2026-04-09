@@ -11,23 +11,9 @@
 		535BB4FD2E0491B800E1DAB0 /* macOSExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB4F62E0491B800E1DAB0 /* macOSExampleApp.swift */; };
 		535BB4FE2E0491B800E1DAB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB4F92E0491B800E1DAB0 /* ContentView.swift */; };
 		535BB4FF2E0491B800E1DAB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB4F82E0491B800E1DAB0 /* Assets.xcassets */; };
-		53DEA7392E03EBE100D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */; };
-		53DEA73A2E03EBE100D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		535E3C2F2F881A6100786413 /* RudderStackAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 535E3C2E2F881A6100786413 /* RudderStackAnalytics */; };
+		535E3C322F881C1400786413 /* RudderStackAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 535E3C312F881C1400786413 /* RudderStackAnalytics */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		53DEA73B2E03EBE100D6C371 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				53DEA73A2E03EBE100D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		535BB4F62E0491B800E1DAB0 /* macOSExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macOSExampleApp.swift; sourceTree = "<group>"; };
@@ -44,7 +30,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53DEA7392E03EBE100D6C371 /* RudderStackAnalytics.framework in Frameworks */,
+				535E3C322F881C1400786413 /* RudderStackAnalytics in Frameworks */,
+				535E3C2F2F881A6100786413 /* RudderStackAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,7 +85,6 @@
 				53E01BE72DE999FA00602AFD /* Sources */,
 				53E01BE82DE999FA00602AFD /* Frameworks */,
 				53E01BE92DE999FA00602AFD /* Resources */,
-				53DEA73B2E03EBE100D6C371 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -106,6 +92,8 @@
 			);
 			name = macOSExampleApp;
 			packageProductDependencies = (
+				535E3C2E2F881A6100786413 /* RudderStackAnalytics */,
+				535E3C312F881C1400786413 /* RudderStackAnalytics */,
 			);
 			productName = AnalyticsAppMac;
 			productReference = 53E01BEB2DE999FA00602AFD /* macOSExampleApp.app */;
@@ -135,6 +123,9 @@
 			);
 			mainGroup = 53E01BE22DE999FA00602AFD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				535E3C302F881C1400786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 53E01BEC2DE999FA00602AFD /* Products */;
 			projectDirPath = "";
@@ -368,6 +359,24 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		535E3C302F881C1400786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../../rudder-sdk-swift";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		535E3C2E2F881A6100786413 /* RudderStackAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RudderStackAnalytics;
+		};
+		535E3C312F881C1400786413 /* RudderStackAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RudderStackAnalytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 53E01BE32DE999FA00602AFD /* Project object */;
 }
