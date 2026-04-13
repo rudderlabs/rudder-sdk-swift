@@ -19,8 +19,7 @@
 		535BB4522E0489ED00E1DAB0 /* AutomaticScreenTrackingPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB4502E0489ED00E1DAB0 /* AutomaticScreenTrackingPluginTests.swift */; };
 		535BB4532E0489ED00E1DAB0 /* SwiftExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB44E2E0489ED00E1DAB0 /* SwiftExampleTests.swift */; };
 		535BB4542E0489ED00E1DAB0 /* AppTestingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB44F2E0489ED00E1DAB0 /* AppTestingHelper.swift */; };
-		53DEA7312E03EBC800D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7302E03EBC800D6C371 /* RudderStackAnalytics.framework */; };
-		53DEA7322E03EBC800D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7302E03EBC800D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		535E3C452F881E9100786413 /* RudderStackAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 535E3C442F881E9100786413 /* RudderStackAnalytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,20 +31,6 @@
 			remoteInfo = AnalyticsAppSwift;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		53DEA7332E03EBC900D6C371 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				53DEA7322E03EBC800D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		535BB4232E0489DA00E1DAB0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -78,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53DEA7312E03EBC800D6C371 /* RudderStackAnalytics.framework in Frameworks */,
+				535E3C452F881E9100786413 /* RudderStackAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,7 +186,6 @@
 				53CC34B62DB41F4000A2EF2F /* Sources */,
 				53CC34B72DB41F4000A2EF2F /* Frameworks */,
 				53CC34B82DB41F4000A2EF2F /* Resources */,
-				53DEA7332E03EBC900D6C371 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -209,6 +193,7 @@
 			);
 			name = SwiftExampleApp;
 			packageProductDependencies = (
+				535E3C442F881E9100786413 /* RudderStackAnalytics */,
 			);
 			productName = AnalyticsAppSwift;
 			productReference = 53CC34BA2DB41F4000A2EF2F /* SwiftExampleApp.app */;
@@ -242,6 +227,9 @@
 			);
 			mainGroup = 53CC34B12DB41F4000A2EF2F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				535E3C432F881E9100786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 53CC34BB2DB41F4000A2EF2F /* Products */;
 			projectDirPath = "";
@@ -571,6 +559,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		535E3C432F881E9100786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../../rudder-sdk-swift";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		535E3C442F881E9100786413 /* RudderStackAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RudderStackAnalytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 53CC34B22DB41F4000A2EF2F /* Project object */;
 }

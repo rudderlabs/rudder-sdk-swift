@@ -35,6 +35,7 @@ The Swift SDK enables you to track customer event data from your iOS, macOS, tvO
 - [Tracking user actions](#tracking-user-actions)
 - [Integrations](#integrations)
 - [Development](#development)
+- [Example Apps](#example-apps)
 - [Contact us](#contact-us)
 - [Follow Us](#follow-us)
 
@@ -277,6 +278,37 @@ Examples:
   fix: resolve crash on app foreground
   chore(release): v1.3.0
 ```
+
+---
+
+## Example Apps
+
+The repository includes sample apps to help you explore SDK integration across Apple platforms.
+
+### Main Sample App
+
+Open `RudderStackAnalytics.xcworkspace` to work with the primary **SwiftUIExample** app alongside the SDK source. This is the recommended starting point.
+
+```
+Examples/
+└── Main/
+    └── SwiftUIExample/      ← Primary sample app (SwiftUI, iOS)
+```
+
+### Other Platform Examples
+
+Additional examples for other platforms and languages are located under `Examples/Others/`. Each is a standalone Xcode project — open the `.xcodeproj` directly, no workspace needed.
+
+| App | Platform | Language | Project |
+|-----|----------|----------|---------|
+| SwiftExample | iOS | Swift (UIKit) | `Examples/Others/SwiftExample/SwiftExample.xcodeproj` |
+| ObjCExample | iOS | Objective-C | `Examples/Others/ObjCExample/ObjCExample.xcodeproj` |
+| macOSExample | macOS | Swift | `Examples/Others/macOSExample/macOSExample.xcodeproj` |
+| tvOSExample | tvOS | Swift | `Examples/Others/tvOSExample/tvOSExample.xcodeproj` |
+| watchOSExample | watchOS | Swift | `Examples/Others/watchOSExample/watchOSExample.xcodeproj` |
+| ExtensionExample | iOS + Extension | Swift | `Examples/Others/ExtensionExample/ExtensionExample.xcodeproj` |
+
+Each example app uses the SDK via a local SPM reference, so any changes you make to the SDK source are immediately reflected when you build the example.
 
 ---
 

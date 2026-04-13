@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -31,6 +31,7 @@
 		535BB3FB2E04643900E1DAB0 /* BluetoothInfoPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F12E04643900E1DAB0 /* BluetoothInfoPluginTests.swift */; };
 		535BB3FC2E04643900E1DAB0 /* SwiftUIAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F52E04643900E1DAB0 /* SwiftUIAppTests.swift */; };
 		535BB3FD2E04643900E1DAB0 /* AppTestingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB3F02E04643900E1DAB0 /* AppTestingHelper.swift */; };
+		535E3C4B2F881FD800786413 /* RudderStackAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 535E3C4A2F881FD800786413 /* RudderStackAnalytics */; };
 		53825E112F03C06200B20FCF /* MigrationUtilsV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53825E0F2F03C06200B20FCF /* MigrationUtilsV2.swift */; };
 		53825E122F03C06200B20FCF /* PersistentMigratorFromV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53825E102F03C06200B20FCF /* PersistentMigratorFromV2.swift */; };
 		53825E132F03C06200B20FCF /* LegacyDataModelV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53825E0E2F03C06200B20FCF /* LegacyDataModelV2.swift */; };
@@ -40,8 +41,6 @@
 		539301CC2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */; };
 		53C361522EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C361512EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift */; };
 		53C361582EF3F3B300E566B8 /* SetATTTrackingStatusPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C361572EF3F3B300E566B8 /* SetATTTrackingStatusPluginTests.swift */; };
-		53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; };
-		53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		53E687542EF9232200DF1FBD /* PersistentMigratorFromV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E687532EF9232200DF1FBD /* PersistentMigratorFromV1.swift */; };
 		53E687552EF9232200DF1FBD /* MigrationUtilsV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E687522EF9232200DF1FBD /* MigrationUtilsV1.swift */; };
 		53E687642EFA8DBF00DF1FBD /* LegacyDataModelV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E687632EFA8DBF00DF1FBD /* LegacyDataModelV1.swift */; };
@@ -57,20 +56,6 @@
 			remoteInfo = AnalyticsApp;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		53DEA72F2E03EBB900D6C371 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				53DEA72E2E03EBB900D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5328B86B2E3B48820051A202 /* EventFilteringPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFilteringPlugin.swift; sourceTree = "<group>"; };
@@ -122,7 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53DEA72D2E03EBB900D6C371 /* RudderStackAnalytics.framework in Frameworks */,
+				535E3C4B2F881FD800786413 /* RudderStackAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,7 +267,6 @@
 				5351AA752C6BE9DE003C3C47 /* Sources */,
 				5351AA762C6BE9DE003C3C47 /* Frameworks */,
 				5351AA772C6BE9DE003C3C47 /* Resources */,
-				53DEA72F2E03EBB900D6C371 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -341,6 +325,9 @@
 				Base,
 			);
 			mainGroup = 5351AA702C6BE9DE003C3C47;
+			packageReferences = (
+				535E3C492F881FD800786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */,
+			);
 			productRefGroup = 5351AA7A2C6BE9DE003C3C47 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -703,6 +690,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		535E3C492F881FD800786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../../rudder-sdk-swift";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		535E3C4A2F881FD800786413 /* RudderStackAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RudderStackAnalytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5351AA712C6BE9DE003C3C47 /* Project object */;
 }

@@ -7,83 +7,66 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		535BB4FC2E0491B800E1DAB0 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB4F72E0491B800E1DAB0 /* AnalyticsManager.swift */; };
-		535BB4FD2E0491B800E1DAB0 /* macOSExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB4F62E0491B800E1DAB0 /* macOSExampleApp.swift */; };
-		535BB4FE2E0491B800E1DAB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB4F92E0491B800E1DAB0 /* ContentView.swift */; };
-		535BB4FF2E0491B800E1DAB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB4F82E0491B800E1DAB0 /* Assets.xcassets */; };
-		53DEA7392E03EBE100D6C371 /* RudderStackAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */; };
-		53DEA73A2E03EBE100D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		535BB5332E04987600E1DAB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 535BB5302E04987600E1DAB0 /* Assets.xcassets */; };
+		535BB5342E04987600E1DAB0 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB52F2E04987600E1DAB0 /* AnalyticsManager.swift */; };
+		535BB5352E04987600E1DAB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB5312E04987600E1DAB0 /* ContentView.swift */; };
+		535BB5362E04987600E1DAB0 /* tvOSExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535BB52E2E04987600E1DAB0 /* tvOSExampleApp.swift */; };
+		535E3C352F881D0600786413 /* RudderStackAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 535E3C342F881D0600786413 /* RudderStackAnalytics */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		53DEA73B2E03EBE100D6C371 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				53DEA73A2E03EBE100D6C371 /* RudderStackAnalytics.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		535BB4F62E0491B800E1DAB0 /* macOSExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macOSExampleApp.swift; sourceTree = "<group>"; };
-		535BB4F72E0491B800E1DAB0 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
-		535BB4F82E0491B800E1DAB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		535BB4F92E0491B800E1DAB0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		535BB4FA2E0491B800E1DAB0 /* macOSExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOSExample.entitlements; sourceTree = "<group>"; };
-		53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		53E01BEB2DE999FA00602AFD /* macOSExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macOSExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		535BB52E2E04987600E1DAB0 /* tvOSExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tvOSExampleApp.swift; sourceTree = "<group>"; };
+		535BB52F2E04987600E1DAB0 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
+		535BB5302E04987600E1DAB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		535BB5312E04987600E1DAB0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		53DEA7402E03EBFE00D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		53DF2C0F2DF03E0400FE2659 /* tvOSExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tvOSExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		53E01BE82DE999FA00602AFD /* Frameworks */ = {
+		53DF2C0C2DF03E0400FE2659 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53DEA7392E03EBE100D6C371 /* RudderStackAnalytics.framework in Frameworks */,
+				535E3C352F881D0600786413 /* RudderStackAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		535BB4FB2E0491B800E1DAB0 /* macOSExample */ = {
+		535BB5322E04987600E1DAB0 /* tvOSExample */ = {
 			isa = PBXGroup;
 			children = (
-				535BB4F62E0491B800E1DAB0 /* macOSExampleApp.swift */,
-				535BB4F72E0491B800E1DAB0 /* AnalyticsManager.swift */,
-				535BB4F82E0491B800E1DAB0 /* Assets.xcassets */,
-				535BB4F92E0491B800E1DAB0 /* ContentView.swift */,
-				535BB4FA2E0491B800E1DAB0 /* macOSExample.entitlements */,
+				535BB52E2E04987600E1DAB0 /* tvOSExampleApp.swift */,
+				535BB52F2E04987600E1DAB0 /* AnalyticsManager.swift */,
+				535BB5302E04987600E1DAB0 /* Assets.xcassets */,
+				535BB5312E04987600E1DAB0 /* ContentView.swift */,
 			);
-			path = macOSExample;
+			path = tvOSExample;
 			sourceTree = "<group>";
 		};
-		53E01BE22DE999FA00602AFD = {
+		53DF2C062DF03E0400FE2659 = {
 			isa = PBXGroup;
 			children = (
-				535BB4FB2E0491B800E1DAB0 /* macOSExample */,
-				53E01C0A2DE9A13800602AFD /* Frameworks */,
-				53E01BEC2DE999FA00602AFD /* Products */,
+				535BB5322E04987600E1DAB0 /* tvOSExample */,
+				53DF2C252DF03F0700FE2659 /* Frameworks */,
+				53DF2C102DF03E0400FE2659 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		53E01BEC2DE999FA00602AFD /* Products */ = {
+		53DF2C102DF03E0400FE2659 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				53E01BEB2DE999FA00602AFD /* macOSExampleApp.app */,
+				53DF2C0F2DF03E0400FE2659 /* tvOSExampleApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		53E01C0A2DE9A13800602AFD /* Frameworks */ = {
+		53DF2C252DF03F0700FE2659 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				53DEA7382E03EBE100D6C371 /* RudderStackAnalytics.framework */,
+				53DEA7402E03EBFE00D6C371 /* RudderStackAnalytics.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -91,86 +74,89 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		53E01BEA2DE999FA00602AFD /* macOSExampleApp */ = {
+		53DF2C0E2DF03E0400FE2659 /* tvOSExampleApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 53E01BF72DE999FB00602AFD /* Build configuration list for PBXNativeTarget "macOSExampleApp" */;
+			buildConfigurationList = 53DF2C1A2DF03E0600FE2659 /* Build configuration list for PBXNativeTarget "tvOSExampleApp" */;
 			buildPhases = (
-				53E01BE72DE999FA00602AFD /* Sources */,
-				53E01BE82DE999FA00602AFD /* Frameworks */,
-				53E01BE92DE999FA00602AFD /* Resources */,
-				53DEA73B2E03EBE100D6C371 /* Embed Frameworks */,
+				53DF2C0B2DF03E0400FE2659 /* Sources */,
+				53DF2C0C2DF03E0400FE2659 /* Frameworks */,
+				53DF2C0D2DF03E0400FE2659 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = macOSExampleApp;
+			name = tvOSExampleApp;
 			packageProductDependencies = (
+				535E3C342F881D0600786413 /* RudderStackAnalytics */,
 			);
-			productName = AnalyticsAppMac;
-			productReference = 53E01BEB2DE999FA00602AFD /* macOSExampleApp.app */;
+			productName = AnalyticsAppTv;
+			productReference = 53DF2C0F2DF03E0400FE2659 /* tvOSExampleApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		53E01BE32DE999FA00602AFD /* Project object */ = {
+		53DF2C072DF03E0400FE2659 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
-					53E01BEA2DE999FA00602AFD = {
+					53DF2C0E2DF03E0400FE2659 = {
 						CreatedOnToolsVersion = 16.3;
 					};
 				};
 			};
-			buildConfigurationList = 53E01BE62DE999FA00602AFD /* Build configuration list for PBXProject "macOSExample" */;
+			buildConfigurationList = 53DF2C0A2DF03E0400FE2659 /* Build configuration list for PBXProject "tvOSExample" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 53E01BE22DE999FA00602AFD;
+			mainGroup = 53DF2C062DF03E0400FE2659;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				535E3C332F881D0600786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 53E01BEC2DE999FA00602AFD /* Products */;
+			productRefGroup = 53DF2C102DF03E0400FE2659 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				53E01BEA2DE999FA00602AFD /* macOSExampleApp */,
+				53DF2C0E2DF03E0400FE2659 /* tvOSExampleApp */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		53E01BE92DE999FA00602AFD /* Resources */ = {
+		53DF2C0D2DF03E0400FE2659 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				535BB4FF2E0491B800E1DAB0 /* Assets.xcassets in Resources */,
+				535BB5332E04987600E1DAB0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		53E01BE72DE999FA00602AFD /* Sources */ = {
+		53DF2C0B2DF03E0400FE2659 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				535BB4FC2E0491B800E1DAB0 /* AnalyticsManager.swift in Sources */,
-				535BB4FD2E0491B800E1DAB0 /* macOSExampleApp.swift in Sources */,
-				535BB4FE2E0491B800E1DAB0 /* ContentView.swift in Sources */,
+				535BB5342E04987600E1DAB0 /* AnalyticsManager.swift in Sources */,
+				535BB5352E04987600E1DAB0 /* ContentView.swift in Sources */,
+				535BB5362E04987600E1DAB0 /* tvOSExampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		53E01BF52DE999FB00602AFD /* Debug */ = {
+		53DF2C182DF03E0600FE2659 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -204,9 +190,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -225,17 +209,17 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				SDKROOT = appletvos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TVOS_DEPLOYMENT_TARGET = 18.4;
 			};
 			name = Debug;
 		};
-		53E01BF62DE999FB00602AFD /* Release */ = {
+		53DF2C192DF03E0600FE2659 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -269,9 +253,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = UCL2K3J73M;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -284,90 +266,101 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				SDKROOT = macosx;
+				SDKROOT = appletvos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				TVOS_DEPLOYMENT_TARGET = 18.4;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		53E01BF82DE999FB00602AFD /* Debug */ = {
+		53DF2C1B2DF03E0600FE2659 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOSExample/macOSExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/../Frameworks",
+					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.macos.example;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.tvos.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 15.0;
 			};
 			name = Debug;
 		};
-		53E01BF92DE999FB00602AFD /* Release */ = {
+		53DF2C1C2DF03E0600FE2659 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOSExample/macOSExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/../Frameworks",
+					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.macos.example;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudder.tvos.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 15.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		53E01BE62DE999FA00602AFD /* Build configuration list for PBXProject "macOSExample" */ = {
+		53DF2C0A2DF03E0400FE2659 /* Build configuration list for PBXProject "tvOSExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				53E01BF52DE999FB00602AFD /* Debug */,
-				53E01BF62DE999FB00602AFD /* Release */,
+				53DF2C182DF03E0600FE2659 /* Debug */,
+				53DF2C192DF03E0600FE2659 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		53E01BF72DE999FB00602AFD /* Build configuration list for PBXNativeTarget "macOSExampleApp" */ = {
+		53DF2C1A2DF03E0600FE2659 /* Build configuration list for PBXNativeTarget "tvOSExampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				53E01BF82DE999FB00602AFD /* Debug */,
-				53E01BF92DE999FB00602AFD /* Release */,
+				53DF2C1B2DF03E0600FE2659 /* Debug */,
+				53DF2C1C2DF03E0600FE2659 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		535E3C332F881D0600786413 /* XCLocalSwiftPackageReference "../../../../rudder-sdk-swift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../../rudder-sdk-swift";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		535E3C342F881D0600786413 /* RudderStackAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RudderStackAnalytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 53E01BE32DE999FA00602AFD /* Project object */;
+	rootObject = 53DF2C072DF03E0400FE2659 /* Project object */;
 }
