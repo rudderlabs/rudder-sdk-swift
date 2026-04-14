@@ -54,7 +54,7 @@ jobs:
             PRIVATE_KEY: ${{ secrets.RELEASE_PRIVATE_KEY }}
           with:
             app-id: ${{ vars.RELEASE_APP_ID }}
-            private-key: ${PRIVATE_KEY}
+            private-key: ${{ env.PRIVATE_KEY }}
             repositories: ${{ github.event.repository.name }}
             permission-contents: write
             permission-pull-requests: write
