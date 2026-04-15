@@ -33,6 +33,7 @@ jobs:
   draft-new-release:
       name: Draft a new release
       runs-on: ubuntu-latest
+      environment: release
       if: startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/')
       permissions:
         contents: read
@@ -63,6 +64,7 @@ jobs:
           with:
             token: ${{ steps.generate-token.outputs.token }}
             fetch-depth: 0
+            persist-credentials: false
 
         # Node.js is required to run conventional-changelog-cli for CHANGELOG generation.
         - name: Set up Node.js
@@ -80,8 +82,6 @@ jobs:
             source_branch_name=${GITHUB_REF##*/}
             release_type=release
             grep -q "hotfix/" <<< "${GITHUB_REF}" && release_type=hotfix-release
-
-            git fetch --tags origin
 
             # Read current version from Constants.swift
             current_version=$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' \
@@ -253,11 +253,15 @@ jobs:
         # Raises a PR from the release branch into main.
         # PR title and body are populated with the new version and features/fixes summary.
         # Reviewers are auto-assigned via CODEOWNERS.
+        # Uses gh CLI instead of the archived repo-sync/pull-request action.
         - name: Create pull request into main
-          uses: repo-sync/pull-request@7e79a9f5dc3ad0ce53138f01df2fad14a04831c5 # v2
-          with:
-            source_branch: ${{ steps.create-release.outputs.branch_name }}
-            destination_branch: "main"
-            github_token: ${{ steps.generate-token.outputs.token }}
-            pr_title: "chore(release): pulling ${{ steps.create-release.outputs.branch_name }} into main"
-            pr_body: "${{ steps.finish-release.outputs.pr_body }}"
+          env:
+            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+            BRANCH_NAME: ${{ steps.create-release.outputs.branch_name }}
+            PR_BODY: ${{ steps.finish-release.outputs.pr_body }}
+          run: |
+            gh pr create \
+              --base main \
+              --head "$BRANCH_NAME" \
+              --title "chore(release): pulling ${BRANCH_NAME} into main" \
+              --body "$PR_BODY"
