@@ -33,7 +33,7 @@ jobs:
   draft-new-release:
       name: Draft a new release
       runs-on: ubuntu-latest
-      # environment: release
+      environment: release
       if: startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/')
       permissions:
         contents: read
