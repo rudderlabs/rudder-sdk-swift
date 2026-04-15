@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0] - 2026-04-16
+
+### Features
+
+- align SwiftUIExample sample app UI with Kotlin SDK sample app, adding real-time payload display and advertising ID toggle (#226)
+- reorganize sample apps structure and promote SwiftUIExample as the primary sample app (#228)
+
+### Security
+
+- pin and bump GitHub Actions refs to address supply chain security vulnerabilities (#227)
+- harden CI/CD workflows by disabling credential persistence, scoping environment access, and preventing script injection (#230)
+
 ## [1.2.1] - 2026-03-10
 
 ### Bug Fixes
