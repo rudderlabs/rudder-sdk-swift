@@ -54,6 +54,7 @@ jobs:
   sonarcloud-analysis:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
+    environment: sonarcloud
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
@@ -63,6 +64,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0 # Shallow clones should be disabled for better analysis
 
       - name: Run SonarCloud Analysis
@@ -83,6 +85,8 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
 
       - name: Install SwiftLint
         run: brew install swiftlint
@@ -104,6 +108,8 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
 
       - name: Build for testing
         run: swift build --build-tests
@@ -126,6 +132,8 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
 
       - name: Build for iOS
         run: xcodebuild build -scheme RudderStackAnalytics -destination 'generic/platform=iOS' | xcpretty
@@ -141,6 +149,7 @@ jobs:
   pr-validation-summary:
     name: PR Validation Summary
     runs-on: ubuntu-latest
+    environment: notifications
     needs: [ pr-title-check, sonarcloud-analysis, swiftlint-check, test-check, build-check ]
     if: always()
     steps:
@@ -151,6 +160,8 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
 
       - name: Check all required jobs
         id: summary

@@ -33,6 +33,7 @@ jobs:
   publish-release:
       name: Publish Release
       runs-on: ubuntu-latest
+      environment: release
       # Only run when a release/* or hotfix-release/* PR is merged — skip everything else.
       if: |
         github.event.pull_request.merged == true &&
@@ -65,6 +66,7 @@ jobs:
             token: ${{ steps.generate-token.outputs.token }}
             ref: main
             fetch-depth: 0
+            persist-credentials: false
 
         # Constants.swift is the single source of truth for the SDK version.
         # The version was already bumped on the release branch by draft-release.yml.
@@ -84,24 +86,28 @@ jobs:
         # Idempotent: if the tag already points to HEAD (e.g. workflow re-run), the step is a no-op.
         # Fails with a clear remediation message if the tag exists but points to a different commit.
         - name: Create and push Git tag
+          env:
+            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+            TAG: ${{ steps.read_version.outputs.tag }}
           run: |
-            TAG="${{ steps.read_version.outputs.tag }}"
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
+            HEAD=$(git rev-parse HEAD)
 
-            if git rev-parse "refs/tags/$TAG" >/dev/null 2>&1; then
-              EXISTING=$(git rev-parse "refs/tags/$TAG")
-              HEAD=$(git rev-parse HEAD)
-              if [[ "$EXISTING" == "$HEAD" ]]; then
+            EXISTING_SHA=$(gh api repos/${{ github.repository }}/git/ref/tags/$TAG \
+              --jq '.object.sha' 2>/dev/null || echo "")
+
+            if [[ -n "$EXISTING_SHA" ]]; then
+              if [[ "$EXISTING_SHA" == "$HEAD" ]]; then
                 echo "ℹ️ Tag $TAG already exists on HEAD — skipping tag creation."
               else
-                echo "❌ Tag $TAG already exists but points to $EXISTING, not HEAD ($HEAD)."
-                echo "   To remediate: delete the existing tag (git push origin :refs/tags/$TAG) and re-run."
+                echo "❌ Tag $TAG already exists but points to $EXISTING_SHA, not HEAD ($HEAD)."
+                echo "   To remediate: delete the existing tag and re-run."
                 exit 1
               fi
             else
-              git tag "$TAG"
-              git push origin "$TAG"
+              gh api repos/${{ github.repository }}/git/refs \
+                --method POST \
+                -f ref="refs/tags/$TAG" \
+                -f sha="$HEAD"
             fi
 
         # Creates a GitHub Release with auto-generated notes from merged PRs since last tag.
@@ -109,9 +115,9 @@ jobs:
           id: create_release
           env:
             GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+            TAG: ${{ steps.read_version.outputs.tag }}
+            VERSION: ${{ steps.read_version.outputs.version }}
           run: |
-            TAG="${{ steps.read_version.outputs.tag }}"
-            VERSION="${{ steps.read_version.outputs.version }}"
             RELEASE_URL=$(gh release create "$TAG" \
               --title "$VERSION" \
               --generate-notes \
@@ -124,11 +130,11 @@ jobs:
           if: success()
           env:
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            VERSION: ${{ steps.read_version.outputs.version }}
+            TAG: ${{ steps.read_version.outputs.tag }}
+            RELEASE_URL: ${{ steps.create_release.outputs.release_url }}
+            ACTOR: ${{ github.actor }}
           run: |
-            VERSION="${{ steps.read_version.outputs.version }}"
-            TAG="${{ steps.read_version.outputs.tag }}"
-            RELEASE_URL="${{ steps.create_release.outputs.release_url }}"
-            ACTOR="${{ github.actor }}"
             curl -s -X POST "$SLACK_WEBHOOK_URL" \
               -H 'Content-type: application/json' \
               --data "{
@@ -148,8 +154,8 @@ jobs:
         - name: Raise back-merge PR (main → develop)
           env:
             GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+            VERSION: ${{ steps.read_version.outputs.version }}
           run: |
-            VERSION="${{ steps.read_version.outputs.version }}"
             gh pr create \
               --base develop \
               --head main \
