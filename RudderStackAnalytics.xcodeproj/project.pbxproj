@@ -176,6 +176,7 @@
 		53DEA68F2E03D06F00D6C371 /* group_with_all_values.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA62D2E03D06F00D6C371 /* group_with_all_values.json */; };
 		53DEA6902E03D06F00D6C371 /* screen_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA6392E03D06F00D6C371 /* screen_with_default_arguments.json */; };
 		53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E112D92E7C4B9E005FEF67 /* Connectivity.swift */; };
+		53E58C282FA1366A002556B9 /* AnalyticsLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E58C272FA1366A002556B9 /* AnalyticsLogger.swift */; };
 		53E777582EB4C2BD00564D61 /* CountFlushPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777572EB4C2BD00564D61 /* CountFlushPolicyTests.swift */; };
 		53E7775C2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E7775B2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift */; };
 		53E7775E2EB4D21000564D61 /* StartupFlushPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E7775D2EB4D21000564D61 /* StartupFlushPolicyTests.swift */; };
@@ -388,6 +389,7 @@
 		53DEA6572E03D06F00D6C371 /* UserIdTraitsActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdTraitsActionTests.swift; sourceTree = "<group>"; };
 		53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerAnalyticsTests.swift; sourceTree = "<group>"; };
 		53E112D92E7C4B9E005FEF67 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
+		53E58C272FA1366A002556B9 /* AnalyticsLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsLogger.swift; sourceTree = "<group>"; };
 		53E777572EB4C2BD00564D61 /* CountFlushPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountFlushPolicyTests.swift; sourceTree = "<group>"; };
 		53E7775B2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyFlushPolicyTests.swift; sourceTree = "<group>"; };
 		53E7775D2EB4D21000564D61 /* StartupFlushPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupFlushPolicyTests.swift; sourceTree = "<group>"; };
@@ -945,6 +947,7 @@
 			isa = PBXGroup;
 			children = (
 				53DEA5A52E03D05A00D6C371 /* LoggerAnalytics.swift */,
+				53E58C272FA1366A002556B9 /* AnalyticsLogger.swift */,
 				53DEA5A62E03D05A00D6C371 /* SwiftLogger.swift */,
 			);
 			path = Logger;
@@ -1460,6 +1463,7 @@
 				530F89262E61DC67007A81B2 /* ExponentialBackoffPolicy.swift in Sources */,
 				53DEA5E92E03D05A00D6C371 /* DataStore.swift in Sources */,
 				53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */,
+				53E58C282FA1366A002556B9 /* AnalyticsLogger.swift in Sources */,
 				53DEA5EA2E03D05A00D6C371 /* TrackEvent.swift in Sources */,
 				85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */,
 				53DEA5EB2E03D05A00D6C371 /* RudderOption.swift in Sources */,
