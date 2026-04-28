@@ -13,27 +13,27 @@ import Foundation
  */
 @objc(RSSConfiguration)
 public class Configuration: NSObject {
-
+    
     /**
      The write key used to authenticate with the analytics service.
      */
     var writeKey: String
-
+    
     /**
      The URL for the data plane where analytics events are sent.
      */
     var dataPlaneUrl: String
-
+    
     /**
      The URL for the control plane to fetch configuration data.
      */
     var controlPlaneUrl: String
-
+    
     /**
      A boolean flag to enable GZip compression for network requests. Defaults to `false`.
      */
     var gzipEnabled: Bool
-
+    
     /**
      The storage mechanism used to persist data. Defaults to in-built storage system.
      */
@@ -43,12 +43,12 @@ public class Configuration: NSObject {
      The storage mode used to store events data. Defaults to `disk` storage system.
      */
     var storageMode: StorageMode
-
+    
     /**
      An array of flush policies defining how and when events are flushed to the data plane.
      */
     var flushPolicies: [FlushPolicy]
-
+    
     /**
      A boolean flag indicating whether the SDK should automatically collect the device ID. Defaults to `true`.
      */
@@ -63,9 +63,19 @@ public class Configuration: NSObject {
      A configuration instance for managing session settings.
      */
     var sessionConfiguration: SessionConfiguration
-
+    
+    /**
+     The logger implementation to use for this Analytics instance.
+     */
+    var logger: Logger
+    
+    /**
+     The log level for this Analytics instance.
+     */
+    var logLevel: LogLevel
+    
     // MARK: - Initialization
-
+    
     /**
      Initializes a `Configuration` object with the specified parameters.
      
@@ -78,7 +88,9 @@ public class Configuration: NSObject {
        - collectDeviceId: A flag to enable automatic collection of the device ID. Defaults to `true`.
        - trackApplicationLifecycleEvents: A flag to enable automatic tracking of the application lifecycle events. Defaults to `true`.
        - sessionConfiguration: A configuration instance for managing session settings.
- 
+       - logger: The logger implementation to use for this Analytics instance.
+       - logLevel: The log level for this Analytics instance.
+
      - Returns: An instance of `Configuration` with the specified settings.
      */
     public init(
@@ -89,7 +101,9 @@ public class Configuration: NSObject {
         flushPolicies: [FlushPolicy] = Constants.defaultConfig.flushPolicies,
         collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId,
         trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents,
-        sessionConfiguration: SessionConfiguration = SessionConfiguration()
+        sessionConfiguration: SessionConfiguration = SessionConfiguration(),
+        logger: Logger? = nil,
+        logLevel: LogLevel = Constants.log.defaultLevel
     ) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
@@ -101,6 +115,8 @@ public class Configuration: NSObject {
         self.collectDeviceId = collectDeviceId
         self.trackApplicationLifecycleEvents = trackApplicationLifecycleEvents
         self.sessionConfiguration = sessionConfiguration
+        self.logger = logger ?? SwiftLogger()
+        self.logLevel = logLevel
     }
 }
 
