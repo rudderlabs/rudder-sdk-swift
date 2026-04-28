@@ -80,6 +80,13 @@ public protocol Plugin: AnyObject {
  */
 public extension Plugin {
     /**
+     Convenience accessor for the per-instance logger from the associated `Analytics` instance.
+     */
+    var logger: Logger {
+        analytics?.logger ?? AnalyticsLogger(logger: SwiftLogger(), logLevel: .none)
+    }
+
+    /**
      Sets up the plugin with the provided `Analytics` instance.
      */
     func setup(analytics: Analytics) {
