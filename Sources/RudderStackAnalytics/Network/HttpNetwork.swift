@@ -55,6 +55,8 @@ final class HttpNetwork: TypeIdentifiable {
             
             return .success(data)
         } catch {
+            LoggerAnalytics.error("\(HttpNetwork.className): Network error for \(request.url?.absoluteString ?? "unknown URL"): \(error.localizedDescription)", cause: error)
+
             // Check if the error is network-related
             if let urlError = error as? URLError {
                 switch urlError.code {
