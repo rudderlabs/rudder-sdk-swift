@@ -35,14 +35,15 @@ final class EventWriter {
             do {
                 let processingEvent = ProcessingEvent(type: .message, event: event)
                 try self.writeChannel.send(processingEvent)
+                LoggerAnalytics.verbose("EventWriter: Event queued for writing (messageId=\(event.messageId))")
             } catch {
                 LoggerAnalytics.error("Failed to send event to writeChannel", cause: error)
             }
         }
     }
-    
+
     func flush() {
-        LoggerAnalytics.info("Flush triggered...")
+        LoggerAnalytics.debug("EventWriter: Flush signal sent to upload channel")
         Task {
             do {
                 try self.writeChannel.send(self.flushEvent)
@@ -64,7 +65,7 @@ final class EventWriter {
                     await self.updateAnonymousIdAndRolloverIfNeeded(processingEvent: event)
 
                     if let json = event.event?.jsonString {
-                        LoggerAnalytics.debug("Processing event: \(json)")
+                        LoggerAnalytics.verbose("EventWriter: Storing event (messageId=\(event.event?.messageId ?? "")): \(json)")
                         await self.storage.write(event: json)
                         self.flushPolicyFacade.updateCount()
                     }
@@ -106,6 +107,7 @@ final class EventWriter {
               currentEventAnonymousId != lastEventAnonymousId else { return }
         
         // Rollover when last and current anonymousId are different
+        LoggerAnalytics.debug("EventWriter: AnonymousId changed, triggering file rollover")
         await self.storage.rollover()
         self.lastEventAnonymousId = currentEventAnonymousId
         self.storage.write(value: self.lastEventAnonymousId, key: Constants.storageKeys.lastEventAnonymousId)
