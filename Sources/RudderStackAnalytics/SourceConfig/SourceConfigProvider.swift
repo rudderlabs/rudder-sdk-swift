@@ -49,7 +49,7 @@ class SourceConfigProvider: TypeIdentifiable {
     }
     
     private func notifyObservers(config: SourceConfig) {
-        LoggerAnalytics.debug("\(className): Notifying observers with sourceConfig")
+        LoggerAnalytics.verbose("\(className): Notifying observers with sourceConfig")
         self.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: config))
     }
     
@@ -64,13 +64,13 @@ extension SourceConfigProvider {
     private func fetchCachedSourceConfig() -> SourceConfig? {
         guard let storedSourceConfig = self.analytics?.storage.read(key: Constants.storageKeys.sourceConfig) as String?,
               let sourceConfigData = storedSourceConfig.utf8Data else {
-            LoggerAnalytics.info("\(className): SourceConfig not found in storage")
+            LoggerAnalytics.debug("\(className): SourceConfig not found in storage")
             return nil
         }
         
         do {
             let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: sourceConfigData)
-            LoggerAnalytics.info("\(className): SourceConfig fetched from storage: \(sourceConfig)")
+            LoggerAnalytics.debug("\(className): SourceConfig fetched from storage: \(sourceConfig)")
             
             return sourceConfig
         } catch {
@@ -104,7 +104,7 @@ extension SourceConfigProvider {
     private func handleSourceConfigResponse(data: Data) -> SourceConfig? {
         do {
             let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: data)
-            LoggerAnalytics.info("\(className): SourceConfig downloaded: \(sourceConfig)")
+            LoggerAnalytics.debug("\(className): SourceConfig downloaded: \(sourceConfig)")
             
             self.analytics?.storage.write(value: sourceConfig.jsonString, key: Constants.storageKeys.sourceConfig)
             return sourceConfig
@@ -124,7 +124,7 @@ extension SourceConfigProvider {
             
         default:
             guard let backoffPolicy, attemptCount <= Self.maxRetryAttempts else {
-                LoggerAnalytics.info("\(className): All retry attempts for fetching SourceConfig have been exhausted. Returning nil")
+                LoggerAnalytics.warn("\(className): All retry attempts for fetching SourceConfig have been exhausted. Returning nil")
                 return false
             }
     

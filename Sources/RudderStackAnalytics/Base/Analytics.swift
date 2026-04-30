@@ -326,7 +326,7 @@ extension Analytics {
     
         if self.isInvalidWriteKey {
             await self.storage.removeAll()
-            LoggerAnalytics.debug("Analytics: Invalid write key. Storage cleared")
+            LoggerAnalytics.error("Analytics: Invalid write key. Storage cleared")
         }
         
         LoggerAnalytics.debug("Analytics: Shutdown complete")
