@@ -46,7 +46,7 @@ final class EventUploader {
                     // Read the event batch from storage
                     let batch = self.analytics.storage.eventStorageMode == .memory ? item.batch : (FileManager.contentsOf(file: item.reference) ?? .empty)
                     guard !batch.isEmpty else {
-                        LoggerAnalytics.debug("No batch found for reference: \(item.reference)")
+                        LoggerAnalytics.debug("\(className): No batch found for reference: \(item.reference)")
                         
                         // Remove empty batch from storage
                         await self.deleteBatchFile(item.reference)
@@ -76,7 +76,7 @@ extension EventUploader {
         let batchId = self.storage.resolveBatchId(batchReference: reference)
         
         repeat {
-            LoggerAnalytics.debug("Upload started: \(reference)")
+            LoggerAnalytics.debug("\(className): Upload started: \(reference)")
             // Process the batch by replacing timestamp placeholder with current time
             let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
             LoggerAnalytics.debug("Uploading (processed): \(processed)")
@@ -91,7 +91,7 @@ extension EventUploader {
             // Handle the response and determine if retry is needed
             switch responseResult {
             case .success(let data):
-                LoggerAnalytics.debug("Upload response: \(data.jsonString ?? "No response")")
+                LoggerAnalytics.debug("\(className): Upload response: \(data.jsonString ?? "No response")")
                 await self.handleBatchUploadResponse(data, reference: reference)
                 shouldRetry = false
                 
@@ -106,11 +106,11 @@ extension EventUploader {
         // Remove successfully uploaded batch from storage
         await self.resetRetryState()
         await self.deleteBatchFile(reference)
-        LoggerAnalytics.debug("Upload completed: \(reference)")
+        LoggerAnalytics.debug("\(className): Upload completed: \(reference)")
     }
     
     private func handleBatchUploadFailure(_ error: EventUploadError, reference: String, batchId: Int, timestampInMillis: UInt64) async {
-        LoggerAnalytics.error("Upload failed: \(reference)", cause: error)
+        LoggerAnalytics.error("\(className): Upload failed: \(reference)", cause: error)
         
         // Handle non-retryable errors
         if let nonRetryableError = error as? NonRetryableEventUploadError {

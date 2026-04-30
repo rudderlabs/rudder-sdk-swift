@@ -102,7 +102,7 @@ extension Analytics {
         guard self.isAnalyticsActive else { return }
         
         if let sessionId, String(sessionId).count < SessionConstants.minSessionIdLength {
-            LoggerAnalytics.error("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
+            LoggerAnalytics.error("Analytics: Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
             return
         }
         
@@ -306,7 +306,7 @@ extension Analytics {
      */
     public func shutdown() {
         guard self.isAnalyticsActive else { return }
-        LoggerAnalytics.debug("Shutting down analytics.")
+        LoggerAnalytics.debug("Analytics: Shutting down analytics")
         self.isAnalyticsShutdown = true
         self.processEventChannel.close()
     }
@@ -326,10 +326,10 @@ extension Analytics {
     
         if self.isInvalidWriteKey {
             await self.storage.removeAll()
-            LoggerAnalytics.debug("Invalid write key, Storage cleared.")
+            LoggerAnalytics.debug("Analytics: Invalid write key. Storage cleared")
         }
         
-        LoggerAnalytics.debug("Analytics shutdown complete.")
+        LoggerAnalytics.debug("Analytics: Shutdown complete")
     }
 
     /**
@@ -430,7 +430,7 @@ extension Analytics {
         do {
             try self.processEventChannel.send(event)
         } catch {
-            LoggerAnalytics.error("Failed to process event: \(error)")
+            LoggerAnalytics.error("Analytics: Failed to process event: \(error)")
         }
     }
     
@@ -463,7 +463,7 @@ extension Analytics {
      */
     var isSourceEnabled: Bool {
         if !self.sourceConfigState.state.value.source.isSourceEnabled {
-            LoggerAnalytics.error("Source is disabled. This operation is not allowed.")
+            LoggerAnalytics.error("Analytics: Source is disabled. This operation is not allowed")
             return false
         }
         return true
@@ -535,7 +535,7 @@ extension Analytics {
             }
         }
         
-        LoggerAnalytics.debug("Deep Link Opened: \(url.absoluteString)")
+        LoggerAnalytics.debug("Analytics: Deep Link Opened: \(url.absoluteString)")
         
         // Track the event
         self.track(name: "Deep Link Opened", properties: properties)

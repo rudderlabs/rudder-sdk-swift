@@ -18,7 +18,7 @@ enum SessionType {
 /**
  This class handles session management for both manual and automatic types.
  */
-final class SessionHandler {
+final class SessionHandler: TypeIdentifiable {
     
     private var storage: KeyValueStorage
     private var sessionState: StateImpl<SessionInfo>
@@ -157,7 +157,7 @@ extension SessionHandler {
         
         if currentTime <= self.lastActivityTime {
             LoggerAnalytics.warn(
-                "Current system time is less than or equal to last activity time." +
+                "\(className): Current system time is less than or equal to last activity time." +
                 " This indicates potential clock tampering. Resetting the session"
             )
             return true
