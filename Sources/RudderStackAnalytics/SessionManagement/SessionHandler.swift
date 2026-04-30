@@ -37,32 +37,37 @@ final class SessionHandler: TypeIdentifiable {
             self.checkAndStartSessionOnLaunch()
             self.attachSessionTrackingObservers()
         } else if !isSessionManual {
+            LoggerAnalytics.debug("\(className): Ending session — both manual and automatic session tracking is disabled")
             self.endSession()
         }
     }
     
     private func checkAndStartSessionOnLaunch() {
         guard self.sessionId == nil || self.isSessionManual || self.isSessionTimedOut else { return }
-        self.startSession(id: Self.generatedSessionId, type: .automatic)
+        let id = Self.generatedSessionId
+        LoggerAnalytics.debug("\(className): Starting session on launch (id=\(id))")
+        self.startSession(id: id, type: .automatic)
     }
-    
+
     func startSession(id: UInt64, type: SessionType) {
+        LoggerAnalytics.debug("\(className): Starting \(type == .manual ? "manual" : "automatic") session (id=\(id))")
         self.sessionState.dispatch(action: StartSessionAction(sessionId: id, sessionType: type))
-        
+
         self.sessionInstance.storeSessionId(id: id, storage: self.storage)
         self.sessionInstance.storeIsSessionStart(isSessionStart: true, storage: self.storage)
         self.sessionInstance.storeSessionType(type: type, storage: self.storage)
-        
+
         if isSessionManual {
             detachSessionTrackingObservers()
         }
     }
-    
+
     func endSession() {
         self.detachSessionTrackingObservers()
-        
+
         self.sessionState.dispatch(action: EndSessionAction())
         self.sessionInstance.resetSessionState(storage: self.storage)
+        LoggerAnalytics.debug("\(className): Session ended")
     }
     
     func refreshSession() {
