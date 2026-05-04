@@ -34,28 +34,28 @@ final class HttpNetwork: TypeIdentifiable {
         return URLSession(configuration: configuration)
     }()
     
-    static func perform(request: URLRequest) async -> Result<Data, Error> {
-        LoggerAnalytics.debug("\(HttpNetwork.className): Request URL: \(request.url?.absoluteString ?? "No URL")")
-        
+    static func perform(request: URLRequest, logger: Logger) async -> Result<Data, Error> {
+        logger.debug(log: "\(HttpNetwork.className): Request URL: \(request.url?.absoluteString ?? "No URL")")
+
         do {
             let (data, response) = try await session.data(for: request)
-            
+
             guard let httpResponse = response as? HTTPURLResponse else {
                 return .failure(HttpNetworkError.invalidResponse)
             }
-            
+
             let statusCode = httpResponse.statusCode
-            
-            LoggerAnalytics.debug("\(HttpNetwork.className): Response Status Code: \(statusCode)")
-            LoggerAnalytics.debug("\(HttpNetwork.className): Response Data: \(data.jsonString ?? "No Data")")
-            
+
+            logger.debug(log: "\(HttpNetwork.className): Response Status Code: \(statusCode)")
+            logger.debug(log: "\(HttpNetwork.className): Response Data: \(data.jsonString ?? "No Data")")
+
             guard (HttpStateCode.success200...HttpStateCode.success299).contains(statusCode) else {
                 return .failure(HttpNetworkError.requestFailed(statusCode))
             }
-            
+
             return .success(data)
         } catch {
-            LoggerAnalytics.error("\(HttpNetwork.className): Network error for \(request.url?.absoluteString ?? "unknown URL"): \(error.localizedDescription)", cause: error)
+            logger.error(log: "\(HttpNetwork.className): Network error for \(request.url?.absoluteString ?? "unknown URL"): \(error.localizedDescription)", error: error)
 
             // Check if the error is network-related
             if let urlError = error as? URLError {

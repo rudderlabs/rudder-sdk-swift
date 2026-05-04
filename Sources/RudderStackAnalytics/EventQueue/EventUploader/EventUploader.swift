@@ -27,8 +27,8 @@ final class EventUploader {
         self.analytics = analytics
         self.httpClient = HttpClient(analytics: analytics)
         self.uploadChannel = uploadChannel
-        self.backoff = BackoffPolicyHandler()
-        self.retryHeadersProvider = retryHeadersProvider ?? PrimaryRetryHeadersProvider(storage: analytics.storage)
+        self.backoff = BackoffPolicyHandler(logger: analytics.logger)
+        self.retryHeadersProvider = retryHeadersProvider ?? PrimaryRetryHeadersProvider(storage: analytics.storage, logger: analytics.logger)
     }
     
     func start() {

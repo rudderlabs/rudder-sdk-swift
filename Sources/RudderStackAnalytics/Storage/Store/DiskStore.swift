@@ -10,16 +10,18 @@ import Foundation
 /**
  An actor designed to store and retrieve incoming events using file system storage.
  */
-final actor DiskStore {
-    
+final actor DiskStore: TypeIdentifiable {
+
     let writeKey: String
     var fileStorageURL: URL
     private let keyValueStore: KeyValueStore
-    
-    init(writeKey: String) {
+    private let logger: Logger
+
+    init(writeKey: String, logger: Logger) {
         self.writeKey = writeKey
+        self.logger = logger
         self.fileStorageURL = FileManager.eventStorageURL.appendingPathComponent(self.writeKey)
-        self.keyValueStore = KeyValueStore(writeKey: writeKey)
+        self.keyValueStore = KeyValueStore(writeKey: writeKey, logger: logger)
     }
     
     private func store(event: String) {
@@ -37,7 +39,7 @@ final actor DiskStore {
         
         if let fileSize = FileManager.sizeOf(file: currentFilePath), fileSize > DataStoreConstants.maxBatchSize {
             self.finish()
-            LoggerAnalytics.debug("Batch size exceeded. Closing the current batch.")
+            logger.debug(log: "\(className): Batch size exceeded. Closing the current batch.")
             self.store(event: event)
             return
         }
@@ -70,7 +72,7 @@ final actor DiskStore {
     
     private func removeAllItems() {
         let folderPath = self.currentFileURL.deletingLastPathComponent().path
-        FileManager.delete(item: folderPath)
+        FileManager.delete(item: folderPath, logger: self.logger)
     }
 }
 
@@ -146,7 +148,7 @@ extension DiskStore: DataStore {
     
     func remove(reference filePath: String) async -> Bool {
         await withCheckedContinuation { continuation in
-            continuation.resume(returning: FileManager.delete(item: filePath))
+            continuation.resume(returning: FileManager.delete(item: filePath, logger: logger))
         }
     }
     
