@@ -55,7 +55,7 @@ class IntegrationsController {
                 if integrationPlugin.pluginStore?.isDestinationReady == true {
                     integrationPlugin.reset()
                 } else {
-                    LoggerAnalytics.debug("IntegrationsController: Destination \(integrationPlugin.key) is not ready. Reset discarded.")
+                    analytics?.logger.debug(log: "IntegrationsController: Destination \(integrationPlugin.key) is not ready. Reset discarded.")
                 }
             }
         }
@@ -67,7 +67,7 @@ class IntegrationsController {
                 if integrationPlugin.pluginStore?.isDestinationReady == true {
                     integrationPlugin.flush()
                 } else {
-                    LoggerAnalytics.debug("IntegrationsController: Destination \(integrationPlugin.key) is not ready. Flush discarded.")
+                    analytics?.logger.debug(log: "IntegrationsController: Destination \(integrationPlugin.key) is not ready. Flush discarded.")
                 }
             }
         }
@@ -94,7 +94,7 @@ private extension IntegrationsController {
         
         guard let destination = findDestination(sourceConfig: sourceConfig, key: integration.key) else {
             let error = DestinationError.destinationNotFound(integration.key)
-            LoggerAnalytics.warn("IntegrationsController: \(error.errorDescription)")
+            analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
             safelyUpdateOnFailureAndNotify(
                 error: error,
                 integration: integration
@@ -104,7 +104,7 @@ private extension IntegrationsController {
         
         if !destination.isDestinationEnabled {
             let error = DestinationError.destinationDisabled(integration.key)
-            LoggerAnalytics.warn("IntegrationsController: \(error.errorDescription)")
+            analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
             safelyUpdateOnFailureAndNotify(
                 error: error,
                 integration: integration
@@ -126,11 +126,11 @@ private extension IntegrationsController {
     func safelyCreateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
         do {
             try integration.create(destinationConfig: destinationConfig)
-            LoggerAnalytics.debug("IntegrationsController: Destination \(integration.key) created successfully.")
+            analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) created successfully.")
             integration.pluginStore?.isDestinationReady = true
             notifyCallbacks(.success(()), for: integration)
         } catch {
-            LoggerAnalytics.error("IntegrationsController: Error: \(error.localizedDescription) creating destination \(integration.key).")
+            analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) creating destination \(integration.key).", error: error)
             integration.pluginStore?.isDestinationReady = false
             notifyCallbacks(.failure(error), for: integration)
         }
@@ -141,7 +141,7 @@ private extension IntegrationsController {
             destinationConfig: [:],
             integration: integration,
             block: {
-                LoggerAnalytics.debug("IntegrationsController: Destination \(integration.key) updated with empty destinationConfig.")
+                self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with empty destinationConfig.")
                 integration.pluginStore?.isDestinationReady = false
                 self.notifyCallbacks(.failure(error), for: integration)
             }
@@ -153,7 +153,7 @@ private extension IntegrationsController {
             destinationConfig: destinationConfig,
             integration: integration,
             block: {
-                LoggerAnalytics.debug("IntegrationsController: Destination \(integration.key) updated with destinationConfig: \(destinationConfig).")
+                self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with destinationConfig: \(destinationConfig).")
                 integration.pluginStore?.isDestinationReady = true
                 self.notifyCallbacks(.success(()), for: integration)
             }
@@ -170,7 +170,7 @@ private extension IntegrationsController {
                 block()
             }
         } catch {
-            LoggerAnalytics.error("IntegrationsController: Error: \(error.localizedDescription) updating destination \(integration.key).")
+            analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) updating destination \(integration.key).", error: error)
             integration.pluginStore?.isDestinationReady = false
             notifyCallbacks(.failure(error), for: integration)
         }

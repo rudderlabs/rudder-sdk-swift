@@ -46,7 +46,7 @@ final class EventUploader {
                     // Read the event batch from storage
                     let batch = self.analytics.storage.eventStorageMode == .memory ? item.batch : (FileManager.contentsOf(file: item.reference) ?? .empty)
                     guard !batch.isEmpty else {
-                        LoggerAnalytics.debug("\(className): No batch found for reference: \(item.reference)")
+                        analytics.logger.debug(log: "\(className): No batch found for reference: \(item.reference)")
                         
                         // Remove empty batch from storage
                         await self.deleteBatchFile(item.reference)
@@ -76,10 +76,10 @@ extension EventUploader {
         let batchId = self.storage.resolveBatchId(batchReference: reference)
         
         repeat {
-            LoggerAnalytics.debug("\(className): Upload started: \(reference)")
+            analytics.logger.debug(log: "\(className): Upload started: \(reference)")
             // Process the batch by replacing timestamp placeholder with current time
             let processed = batch.replacingOccurrences(of: Constants.payload.sentAtPlaceholder, with: Date().iso8601TimeStamp)
-            LoggerAnalytics.debug("Uploading (processed): \(processed)")
+            analytics.logger.debug(log: "Uploading (processed): \(processed)")
             
             // Prepare retry headers
             let currentTimestampInMillis = self.currentTimeInMillis
@@ -91,7 +91,7 @@ extension EventUploader {
             // Handle the response and determine if retry is needed
             switch responseResult {
             case .success(let data):
-                LoggerAnalytics.debug("\(className): Upload response: \(data.jsonString ?? "No response")")
+                analytics.logger.debug(log: "\(className): Upload response: \(data.jsonString ?? "No response")")
                 await self.handleBatchUploadResponse(data, reference: reference)
                 shouldRetry = false
                 
@@ -106,11 +106,11 @@ extension EventUploader {
         // Remove successfully uploaded batch from storage
         await self.resetRetryState()
         await self.deleteBatchFile(reference)
-        LoggerAnalytics.debug("\(className): Upload completed: \(reference)")
+        analytics.logger.debug(log: "\(className): Upload completed: \(reference)")
     }
     
     private func handleBatchUploadFailure(_ error: EventUploadError, reference: String, batchId: Int, timestampInMillis: UInt64) async {
-        LoggerAnalytics.error("\(className): Upload failed: \(reference)", cause: error)
+        analytics.logger.error(log: "\(className): Upload failed: \(reference)", error: error)
         
         // Handle non-retryable errors
         if let nonRetryableError = error as? NonRetryableEventUploadError {
@@ -136,21 +136,21 @@ extension EventUploader: TypeIdentifiable {
     private func handleNonRetryableError(_ error: NonRetryableEventUploadError, reference: String) async {
         switch error {
         case .error400:
-            LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties.")
+            analytics.logger.error(log: "\(className): \(error.formatStatusCodeMessage). Invalid request: Missing or malformed body. " + "Ensure the payload is a valid JSON and includes either 'anonymousId' or 'userId' properties.", error: nil)
             await self.deleteBatchFile(reference)
             
         case .error401:
-            LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). " + "Invalid write key. Ensure the write key is valid.")
+            analytics.logger.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Invalid write key. Ensure the write key is valid.", error: nil)
             self.stop()
             self.analytics.handleInvalidWriteKey()
             
         case .error404:
-            LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.")
+            analytics.logger.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.", error: nil)
             self.stop()
             self.analytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
             
         case .error413:
-            LoggerAnalytics.error("\(className): \(error.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.")
+            analytics.logger.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Request failed: Payload size exceeds the maximum allowed limit.", error: nil)
             await self.deleteBatchFile(reference)
         }
     }
@@ -185,7 +185,7 @@ extension EventUploader {
             
             return String(batch[anonymousIdRange])
         } catch {
-            LoggerAnalytics.error("Failed to create regex for anonymousId extraction: \(error)")
+            analytics.logger.error(log: "Failed to create regex for anonymousId extraction: \(error)", error: error)
             return nil
         }
     }

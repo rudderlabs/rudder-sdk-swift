@@ -37,7 +37,7 @@ final class SessionHandler: TypeIdentifiable {
             self.checkAndStartSessionOnLaunch()
             self.attachSessionTrackingObservers()
         } else if !isSessionManual {
-            LoggerAnalytics.debug("\(className): Ending session — both manual and automatic session tracking is disabled")
+            analytics.logger.debug(log: "\(className): Ending session — both manual and automatic session tracking is disabled")
             self.endSession()
         }
     }
@@ -45,12 +45,12 @@ final class SessionHandler: TypeIdentifiable {
     private func checkAndStartSessionOnLaunch() {
         guard self.sessionId == nil || self.isSessionManual || self.isSessionTimedOut else { return }
         let id = Self.generatedSessionId
-        LoggerAnalytics.debug("\(className): Starting session on launch (id=\(id))")
+        analytics.logger.debug(log: "\(className): Starting session on launch (id=\(id))")
         self.startSession(id: id, type: .automatic)
     }
 
     func startSession(id: UInt64, type: SessionType) {
-        LoggerAnalytics.debug("\(className): Starting \(type == .manual ? "manual" : "automatic") session (id=\(id))")
+        analytics.logger.debug(log: "\(className): Starting \(type == .manual ? "manual" : "automatic") session (id=\(id))")
         self.sessionState.dispatch(action: StartSessionAction(sessionId: id, sessionType: type))
 
         self.sessionInstance.storeSessionId(id: id, storage: self.storage)
@@ -67,7 +67,7 @@ final class SessionHandler: TypeIdentifiable {
 
         self.sessionState.dispatch(action: EndSessionAction())
         self.sessionInstance.resetSessionState(storage: self.storage)
-        LoggerAnalytics.debug("\(className): Session ended")
+        analytics.logger.debug(log: "\(className): Session ended")
     }
     
     func refreshSession() {
@@ -161,10 +161,8 @@ extension SessionHandler {
         let currentTime = self.systemCurrentTime
         
         if currentTime <= self.lastActivityTime {
-            LoggerAnalytics.warn(
-                "\(className): Current system time is less than or equal to last activity time." +
-                " This indicates potential clock tampering. Resetting the session"
-            )
+            analytics.logger.warn(log: "\(className): Current system time is less than or equal to last activity time." +
+                " This indicates potential clock tampering. Resetting the session")
             return true
         }
         
