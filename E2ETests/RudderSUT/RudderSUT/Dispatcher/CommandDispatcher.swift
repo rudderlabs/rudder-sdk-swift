@@ -9,6 +9,14 @@ import Foundation
 import UIKit
 import RudderStackAnalytics
 
+/**
+ * CommandDispatcher acts as a bridge between incoming test commands and the RudderStack Analytics SDK.
+ * It follows the singleton pattern to provide a centralized point for executing analytics operations
+ * such as initialization, event tracking, user identification, and session management.
+ *
+ * Each command received through the `dispatch` method is routed to a specific handler that
+ * translates test arguments into SDK-compatible calls.
+ */
 class CommandDispatcher {
 
     // MARK: - Shared

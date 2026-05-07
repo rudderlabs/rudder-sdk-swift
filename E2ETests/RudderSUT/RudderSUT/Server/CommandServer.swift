@@ -7,6 +7,14 @@
 
 import Foundation
 
+/**
+ * CommandServer serves as the high-level coordinator for the test app's remote interface.
+ *
+ * It initializes and manages an internal HTTPServer, defining the RESTful API endpoints
+ * and SSE streams used by the test suite. It acts as the primary orchestrator that
+ * routes incoming network requests to the appropriate handlers (like CommandDispatcher
+ * or StateEndpoints) and manages the lifecycle of the communication layer.
+ */
 class CommandServer {
 
     // MARK: - Properties

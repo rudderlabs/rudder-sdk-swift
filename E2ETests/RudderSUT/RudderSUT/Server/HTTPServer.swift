@@ -8,6 +8,14 @@
 import Network
 import Foundation
 
+/**
+ * HTTPServer is a lightweight, custom-built HTTP 1.1 server implementation
+ * using Apple's Network framework (Network.framework).
+ *
+ * It allows the test app to host its own web server to receive commands and
+ * serve state information over a local network. It supports standard HTTP methods,
+ * dynamic path parameter matching (e.g., /state/:key), and long-running SSE connections.
+ */
 class HTTPServer {
 
     // MARK: - Types

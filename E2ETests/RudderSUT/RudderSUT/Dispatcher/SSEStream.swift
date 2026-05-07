@@ -8,6 +8,14 @@
 import Foundation
 import Network
 
+/**
+ * SSEStream manages a collection of active network connections to broadcast real-time updates
+ * using Server-Sent Events (SSE).
+ *
+ * It provides a thread-safe way to manage connections and push JSON-formatted event payloads
+ * to all connected clients. This is primarily used in the test environment to notify external
+ * observers about internal SDK activities and state changes.
+ */
 class SSEStream {
 
     // MARK: - Properties

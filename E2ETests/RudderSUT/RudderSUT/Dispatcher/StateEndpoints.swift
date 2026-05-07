@@ -7,6 +7,15 @@
 
 import RudderStackAnalytics
 
+/**
+ * StateEndpoints provides a utility layer to inspect and manipulate the internal state
+ * of the RudderStack Analytics instance.
+ *
+ * It allows the test suite to query current identifiers (anonymousId, userId),
+ * export the entire state as a dictionary, or restore the SDK state from a provided blob.
+ * This is essential for verifying that the SDK maintains the correct state across
+ * different test scenarios.
+ */
 enum StateEndpoints {
 
     // MARK: - Read
