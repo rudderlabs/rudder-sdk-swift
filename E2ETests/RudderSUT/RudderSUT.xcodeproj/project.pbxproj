@@ -35,6 +35,7 @@
 		53ADFF572FACB78000B1F37A /* SmokePack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF562FACB78000B1F37A /* SmokePack.swift */; };
 		53ADFF5C2FACB84800B1F37A /* PersistencePack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF5B2FACB84800B1F37A /* PersistencePack.swift */; };
 		53ADFF5F2FACB8A400B1F37A /* ScenarioPacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF5E2FACB8A400B1F37A /* ScenarioPacks.swift */; };
+		53ADFF612FACBA3A00B1F37A /* SessionPersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF602FACBA3A00B1F37A /* SessionPersistenceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		53ADFF562FACB78000B1F37A /* SmokePack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokePack.swift; sourceTree = "<group>"; };
 		53ADFF5B2FACB84800B1F37A /* PersistencePack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePack.swift; sourceTree = "<group>"; };
 		53ADFF5E2FACB8A400B1F37A /* ScenarioPacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioPacks.swift; sourceTree = "<group>"; };
+		53ADFF602FACBA3A00B1F37A /* SessionPersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPersistenceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 				53ADFF4B2FACAF0B00B1F37A /* Helpers */,
 				53ADFF532FACB54F00B1F37A /* MCP */,
 				53ADFF5A2FACB79D00B1F37A /* Scenarios */,
+				53ADFF602FACBA3A00B1F37A /* SessionPersistenceTests.swift */,
 			);
 			path = RudderUITests;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 				53ADFF452FACAB5600B1F37A /* ScenarioTestCase.swift in Sources */,
 				53ADFF5F2FACB8A400B1F37A /* ScenarioPacks.swift in Sources */,
 				53ADFF312FACA14800B1F37A /* RudderUITestsLaunchTests.swift in Sources */,
+				53ADFF612FACBA3A00B1F37A /* SessionPersistenceTests.swift in Sources */,
 				53ADFF3E2FACA71E00B1F37A /* Step.swift in Sources */,
 				53ADFF5C2FACB84800B1F37A /* PersistencePack.swift in Sources */,
 				53ADFF572FACB78000B1F37A /* SmokePack.swift in Sources */,
