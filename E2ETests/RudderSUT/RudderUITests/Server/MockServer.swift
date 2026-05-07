@@ -84,7 +84,7 @@ extension MockServer {
     }
 
     func simulateOffline() {
-        install(path: "/v1/batch", statusCode: 200, body: "", delay: 120)
+        install(path: "/v1/batch", statusCode: 503, body: "Service Unavailable")
     }
 
     func simulateOnline() {

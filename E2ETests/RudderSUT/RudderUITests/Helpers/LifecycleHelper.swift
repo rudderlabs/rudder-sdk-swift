@@ -43,6 +43,7 @@ extension LifecycleHelper {
         app.terminate()
         Thread.sleep(forTimeInterval: 0.5)
         if let locale {
+            app.launchArguments.removeAll { $0.hasPrefix("-Apple") }
             app.launchArguments += ["-AppleLanguages", "(\(locale))", "-AppleLocale", locale]
         }
         app.launch()

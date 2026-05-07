@@ -18,7 +18,7 @@ enum StateEndpoints {
         case "userId":      return analytics?.userId
         case "session":
             return [
-                "sessionId": analytics?.sessionId as Any,
+                "sessionId": analytics?.sessionId.map { "\($0)" } as Any,
                 "active":    analytics?.sessionId != nil
             ]
         default: return nil
@@ -34,7 +34,7 @@ enum StateEndpoints {
             "anonymousId": analytics?.anonymousId ?? "",
             "userId":      analytics?.userId ?? "",
             "traits":      analytics?.traits ?? [:],
-            "sessionId":   analytics?.sessionId ?? UInt64(0)
+            "sessionId":   analytics?.sessionId.map { "\($0)" } ?? ""
         ]
     }
 

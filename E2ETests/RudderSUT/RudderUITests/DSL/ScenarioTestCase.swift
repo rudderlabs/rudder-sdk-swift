@@ -19,7 +19,6 @@ class ScenarioTestCase: XCTestCase {
 
 extension ScenarioTestCase {
 
-    @discardableResult
     func rudderScenario(
         initAnalytics: Bool = true,
         writeKey: String = "test-key",
@@ -27,12 +26,11 @@ extension ScenarioTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         body: (ScenarioContext) throws -> Void
-    ) -> ScenarioResult {
+    ) {
         let app        = XCUIApplication()
         let mockServer = MockServer()
         mockServer.start()
 
-        app.launchEnvironment["MOCK_SERVER_URL"] = mockServer.baseURL
         app.launch()
 
         let portElement = app.otherElements.matching(identifier: "sut_port").firstMatch
@@ -40,7 +38,7 @@ extension ScenarioTestCase {
               let sutPort = UInt16(portElement.label)
         else {
             XCTFail("SUT did not publish its port within 5 seconds", file: file, line: line)
-            return .failed("port discovery timeout")
+            return
         }
 
         let interpreter = Interpreter(app: app, sutPort: sutPort, mockServer: mockServer)
@@ -56,20 +54,10 @@ extension ScenarioTestCase {
                                                     options: options))
             }
             try body(ctx)
-            return .passed
         } catch let ScenarioError.assertionFailed(msg) {
             XCTFail("Scenario failed: \(msg)", file: file, line: line)
-            return .failed(msg)
         } catch {
             XCTFail("Scenario error: \(error)", file: file, line: line)
-            return .failed(error.localizedDescription)
         }
     }
-}
-
-// MARK: - Result
-
-enum ScenarioResult {
-    case passed
-    case failed(String)
 }

@@ -15,7 +15,6 @@ class Interpreter {
     var sutClient: any SUTClientProtocol
     let mockServer: MockServer
     let lifecycle: LifecycleHelper
-    let simctl: SimctlHelper
     var savedStateBlob: [String: Any]?
     private(set) var executedSteps: [Step] = []
 
@@ -26,7 +25,6 @@ class Interpreter {
         self.sutClient  = sutClient
         self.mockServer = mockServer
         self.lifecycle  = LifecycleHelper(app: app)
-        self.simctl     = SimctlHelper()
     }
 }
 
@@ -132,9 +130,7 @@ extension Interpreter {
             try sutClient.post("/command", body: ["cmd": "openURL", "args": ["url": url]])
 
         case let .localeChange(locale):
-            simctl.setLocale(locale)
             lifecycle.coldStart(locale: locale)
-            simctl.clearPendingLocale()
 
         case let .crash(kind):
             let cmd = kind == .native ? "nativeCrash" : "crash"

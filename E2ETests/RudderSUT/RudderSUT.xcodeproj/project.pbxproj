@@ -28,7 +28,6 @@
 		53ADFF452FACAB5600B1F37A /* ScenarioTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF442FACAB5600B1F37A /* ScenarioTestCase.swift */; };
 		53ADFF482FACAC2000B1F37A /* ScenarioContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF472FACAC2000B1F37A /* ScenarioContext.swift */; };
 		53ADFF4A2FACAF0400B1F37A /* LifecycleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF492FACAF0400B1F37A /* LifecycleHelper.swift */; };
-		53ADFF4D2FACAF4B00B1F37A /* SimctlHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF4C2FACAF4B00B1F37A /* SimctlHelper.swift */; };
 		53ADFF502FACB0C200B1F37A /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = 53ADFF4F2FACB0C200B1F37A /* MCP */; };
 		53ADFF522FACB54900B1F37A /* PackRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF512FACB54900B1F37A /* PackRegistry.swift */; };
 		53ADFF552FACB5B200B1F37A /* MCPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF542FACB5B200B1F37A /* MCPServer.swift */; };
@@ -72,7 +71,6 @@
 		53ADFF442FACAB5600B1F37A /* ScenarioTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioTestCase.swift; sourceTree = "<group>"; };
 		53ADFF472FACAC2000B1F37A /* ScenarioContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioContext.swift; sourceTree = "<group>"; };
 		53ADFF492FACAF0400B1F37A /* LifecycleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleHelper.swift; sourceTree = "<group>"; };
-		53ADFF4C2FACAF4B00B1F37A /* SimctlHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimctlHelper.swift; sourceTree = "<group>"; };
 		53ADFF512FACB54900B1F37A /* PackRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackRegistry.swift; sourceTree = "<group>"; };
 		53ADFF542FACB5B200B1F37A /* MCPServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPServer.swift; sourceTree = "<group>"; };
 		53ADFF562FACB78000B1F37A /* SmokePack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokePack.swift; sourceTree = "<group>"; };
@@ -203,7 +201,6 @@
 			isa = PBXGroup;
 			children = (
 				53ADFF492FACAF0400B1F37A /* LifecycleHelper.swift */,
-				53ADFF4C2FACAF4B00B1F37A /* SimctlHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -394,7 +391,6 @@
 				53ADFF332FACA16600B1F37A /* HTTPServer.swift in Sources */,
 				53ADFF412FACA8F300B1F37A /* SUTClient.swift in Sources */,
 				53ADFF4A2FACAF0400B1F37A /* LifecycleHelper.swift in Sources */,
-				53ADFF4D2FACAF4B00B1F37A /* SimctlHelper.swift in Sources */,
 				53ADFF432FACA97200B1F37A /* Interpreter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

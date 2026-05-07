@@ -7,7 +7,7 @@
 
 import Foundation
 
-indirect enum Step {
+enum Step {
 
     // MARK: - Init / Teardown
     case initialize(writeKey: String, dataPlaneUrl: String, options: [String: Any] = [:])

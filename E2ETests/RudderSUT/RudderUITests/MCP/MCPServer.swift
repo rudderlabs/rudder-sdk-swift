@@ -16,9 +16,9 @@ class MCPServer: @unchecked Sendable {
     let interpreter: Interpreter
     private var listener: NWListener?
     private var serverTasks: [Task<Void, Never>] = []
-    private(set) var recordedSteps: [Step] = []
     private let lock = NSLock()
-    
+    private let executeQueue = DispatchQueue(label: "com.rudderstack.mcp-execute")
+
     init(interpreter: Interpreter) {
         self.interpreter = interpreter
     }
@@ -109,32 +109,45 @@ extension MCPServer {
             Tool(name: "rudder.track",
                  description: "Send a track event to the SDK.",
                  inputSchema: schema(["name": strProp("Event name"),
-                                      "properties": objProp("Event properties")],
+                                      "properties": objProp("Event properties"),
+                                      "options": objProp("RudderOption: integrations, customContext, externalIds")],
                                      required: ["name"])),
 
             Tool(name: "rudder.identify",
                  description: "Identify a user.",
                  inputSchema: schema(["userId": strProp("User ID"),
-                                      "traits": objProp("User traits")],
-                                     required: ["userId"])),
+                                      "traits": objProp("User traits"),
+                                      "options": objProp("RudderOption: integrations, customContext, externalIds")])),
 
             Tool(name: "rudder.screen",
                  description: "Send a screen event to the SDK.",
                  inputSchema: schema(["name": strProp("Screen name"),
                                       "category": strProp("Screen category"),
-                                      "properties": objProp("Screen properties")],
+                                      "properties": objProp("Screen properties"),
+                                      "options": objProp("RudderOption: integrations, customContext, externalIds")],
                                      required: ["name"])),
 
             Tool(name: "rudder.group",
                  description: "Associate user with a group.",
                  inputSchema: schema(["groupId": strProp("Group ID"),
-                                      "traits": objProp("Group traits")],
+                                      "traits": objProp("Group traits"),
+                                      "options": objProp("RudderOption: integrations, customContext, externalIds")],
                                      required: ["groupId"])),
 
             Tool(name: "rudder.alias",
                  description: "Alias a user identity.",
-                 inputSchema: schema(["newId": strProp("New user ID")],
+                 inputSchema: schema(["newId": strProp("New user ID"),
+                                      "previousId": strProp("Previous user ID"),
+                                      "options": objProp("RudderOption: integrations, customContext, externalIds")],
                                      required: ["newId"])),
+
+            Tool(name: "rudder.flush",
+                 description: "Flush all pending events to the data plane.",
+                 inputSchema: schema()),
+
+            Tool(name: "rudder.reset",
+                 description: "Reset the SDK state.",
+                 inputSchema: schema(["options": objProp("Reset options: anonymousId, userId, traits, session (booleans)")])),
 
             Tool(name: "rudder.background",
                  description: "Send the app to the background.",
@@ -211,23 +224,43 @@ extension MCPServer {
 
             case "rudder.track":
                 return callAndRecord(.track(name: args?["name"]?.stringValue ?? "",
-                                            properties: toDict(args?["properties"])))
+                                            properties: toDict(args?["properties"]),
+                                            options: toDict(args?["options"])))
 
             case "rudder.identify":
-                return callAndRecord(.identify(userId: args?["userId"]?.stringValue ?? "",
-                                               traits: toDict(args?["traits"])))
+                return callAndRecord(.identify(userId: args?["userId"]?.stringValue,
+                                               traits: toDict(args?["traits"]),
+                                               options: toDict(args?["options"])))
 
             case "rudder.screen":
                 return callAndRecord(.screen(name: args?["name"]?.stringValue ?? "",
                                              category: args?["category"]?.stringValue,
-                                             properties: toDict(args?["properties"])))
+                                             properties: toDict(args?["properties"]),
+                                             options: toDict(args?["options"])))
 
             case "rudder.group":
                 return callAndRecord(.group(groupId: args?["groupId"]?.stringValue ?? "",
-                                            traits: toDict(args?["traits"])))
+                                            traits: toDict(args?["traits"]),
+                                            options: toDict(args?["options"])))
 
             case "rudder.alias":
-                return callAndRecord(.alias(newId: args?["newId"]?.stringValue ?? ""))
+                return callAndRecord(.alias(newId: args?["newId"]?.stringValue ?? "",
+                                            previousId: args?["previousId"]?.stringValue,
+                                            options: toDict(args?["options"])))
+
+            case "rudder.flush":
+                return callAndRecord(.flush)
+
+            case "rudder.reset":
+                let resetOptions: [String: Bool]? = {
+                    guard let obj = args?["options"]?.objectValue else { return nil }
+                    var result: [String: Bool] = [:]
+                    for key in ["anonymousId", "userId", "traits", "session"] {
+                        if case .bool(let b) = obj[key] { result[key] = b }
+                    }
+                    return result.isEmpty ? nil : result
+                }()
+                return callAndRecord(.reset(options: resetOptions))
 
             case "rudder.background":     return callAndRecord(.background)
             case "rudder.foreground":     return callAndRecord(.foreground)
@@ -244,9 +277,15 @@ extension MCPServer {
                                                     window: args?["window"]?.doubleValue ?? 3))
 
             case "rudder.readState":
-                let key      = args?["key"]?.stringValue ?? ""
-                let response = try interpreter.sutClient.get("/state/\(key)")
-                let value    = response["value"].map { "\($0)" } ?? ""
+                let key = args?["key"]?.stringValue ?? ""
+                var response: [String: Any?]?
+                var readError: Error?
+                executeQueue.sync {
+                    do { response = try interpreter.sutClient.get("/state/\(key)") }
+                    catch { readError = error }
+                }
+                if let error = readError { throw error }
+                let value = response?["value"].map { "\($0 as Any)" } ?? ""
                 return CallTool.Result(content: [.text(text: value, annotations: nil, _meta: nil)])
 
             case "rudder.list_scenarios":
@@ -258,13 +297,23 @@ extension MCPServer {
             case "rudder.run_scenario":
                 let scenarioName = args?["name"]?.stringValue ?? ""
                 let steps        = try PackRegistry.shared.load(name: scenarioName)
-                try interpreter.run(steps)
+                var runError: Error?
+                executeQueue.sync {
+                    do { try interpreter.run(steps) }
+                    catch { runError = error }
+                }
+                if let error = runError { throw error }
                 return ok()
 
             case "rudder.run_steps":
                 let stepDicts = args?["steps"]?.arrayValue?.compactMap { toDict($0) } ?? []
                 let steps     = stepDicts.compactMap { Step.decode($0) }
-                try interpreter.run(steps)
+                var runError: Error?
+                executeQueue.sync {
+                    do { try interpreter.run(steps) }
+                    catch { runError = error }
+                }
+                if let error = runError { throw error }
                 return CallTool.Result(
                     content: [.text(text: "{\"status\":\"ok\",\"ran\":\(steps.count)}",
                                     annotations: nil, _meta: nil)]
@@ -290,21 +339,24 @@ extension MCPServer {
     }
 
     private func callAndRecord(_ step: Step) -> CallTool.Result {
-        do {
-            try interpreter.execute(step)
-            lock.withLock { recordedSteps.append(step) }
-            return ok()
-        } catch ScenarioError.assertionFailed(let msg) {
-            return CallTool.Result(
-                content: [.text(text: msg, annotations: nil, _meta: nil)],
-                isError: true
-            )
-        } catch {
+        var executeError: Error?
+        executeQueue.sync {
+            do { try interpreter.execute(step) }
+            catch { executeError = error }
+        }
+        if let error = executeError {
+            if case ScenarioError.assertionFailed(let msg) = error {
+                return CallTool.Result(
+                    content: [.text(text: msg, annotations: nil, _meta: nil)],
+                    isError: true
+                )
+            }
             return CallTool.Result(
                 content: [.text(text: error.localizedDescription, annotations: nil, _meta: nil)],
                 isError: true
             )
         }
+        return ok()
     }
 
     private func ok() -> CallTool.Result {
