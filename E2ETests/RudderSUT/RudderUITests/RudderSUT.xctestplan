@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "64654C95-3487-4A36-A1D4-2FFE7C3407CB",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:RudderSUT.xcodeproj",
+      "identifier" : "53ADFEE42FAC834300B1F37A",
+      "name" : "RudderSUT"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:RudderSUT.xcodeproj",
+        "identifier" : "53ADFEFC2FAC846A00B1F37A",
+        "name" : "RudderUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

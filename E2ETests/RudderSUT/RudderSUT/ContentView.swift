@@ -19,9 +19,11 @@ struct ContentView: View {
     @EnvironmentObject var serverState: ServerState
 
     var body: some View {
-        Color.clear
-            .accessibilityElement()
+        // Color.clear can be stripped from the accessibility tree on newer iOS.
+        // Text always survives because it has content — its text IS its accessibility label.
+        Text(serverState.port.map { String($0) } ?? "")
             .accessibilityIdentifier("sut_port")
-            .accessibilityLabel(serverState.port.map { "\($0)" } ?? "")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .opacity(0.001)
     }
 }

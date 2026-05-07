@@ -192,11 +192,13 @@ extension Interpreter {
 extension Interpreter {
 
     func rediscoverPort() throws {
-        let portElement = app.otherElements.matching(identifier: "sut_port").firstMatch
-        guard portElement.waitForExistence(timeout: 5),
+        let portElement = app.staticTexts.matching(identifier: "sut_port").firstMatch
+        let portReady   = NSPredicate { _, _ in UInt16(portElement.label) != nil }
+        let expectation = XCTNSPredicateExpectation(predicate: portReady, object: nil)
+        guard XCTWaiter().wait(for: [expectation], timeout: 10) == .completed,
               let newPort = UInt16(portElement.label)
         else {
-            throw ScenarioError.assertionFailed("SUT did not publish its port after relaunch within 5s")
+            throw ScenarioError.assertionFailed("SUT did not publish its port after relaunch within 10s")
         }
         sutClient = SUTClient(baseURL: "http://127.0.0.1:\(newPort)")
     }

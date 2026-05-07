@@ -42,11 +42,15 @@ extension ScenarioTestCase {
 
         app.launch()
 
-        let portElement = app.otherElements.matching(identifier: "sut_port").firstMatch
-        guard portElement.waitForExistence(timeout: 5),
+        // Poll until the sut_port Text element has a valid port number as its label.
+        // staticTexts covers SwiftUI Text views; the label equals the text content.
+        let portElement = app.staticTexts.matching(identifier: "sut_port").firstMatch
+        let portReady   = NSPredicate { _, _ in UInt16(portElement.label) != nil }
+        let expectation = XCTNSPredicateExpectation(predicate: portReady, object: nil)
+        guard XCTWaiter().wait(for: [expectation], timeout: 10) == .completed,
               let sutPort = UInt16(portElement.label)
         else {
-            XCTFail("SUT did not publish its port within 5 seconds", file: file, line: line)
+            XCTFail("SUT did not publish its port within 10 seconds", file: file, line: line)
             return
         }
 
