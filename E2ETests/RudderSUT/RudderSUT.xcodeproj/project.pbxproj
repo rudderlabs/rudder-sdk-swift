@@ -23,6 +23,8 @@
 		53ADFF392FACA36800B1F37A /* ObserverPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF382FACA36800B1F37A /* ObserverPlugin.swift */; };
 		53ADFF3B2FACA51500B1F37A /* MockServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF3A2FACA51500B1F37A /* MockServer.swift */; };
 		53ADFF3E2FACA71E00B1F37A /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF3D2FACA71E00B1F37A /* Step.swift */; };
+		53ADFF412FACA8F300B1F37A /* SUTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF402FACA8F300B1F37A /* SUTClient.swift */; };
+		53ADFF432FACA97200B1F37A /* Interpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF422FACA97200B1F37A /* Interpreter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,8 @@
 		53ADFF382FACA36800B1F37A /* ObserverPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserverPlugin.swift; sourceTree = "<group>"; };
 		53ADFF3A2FACA51500B1F37A /* MockServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServer.swift; sourceTree = "<group>"; };
 		53ADFF3D2FACA71E00B1F37A /* Step.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
+		53ADFF402FACA8F300B1F37A /* SUTClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SUTClient.swift; sourceTree = "<group>"; };
+		53ADFF422FACA97200B1F37A /* Interpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interpreter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +151,8 @@
 			isa = PBXGroup;
 			children = (
 				53ADFF3D2FACA71E00B1F37A /* Step.swift */,
+				53ADFF402FACA8F300B1F37A /* SUTClient.swift */,
+				53ADFF422FACA97200B1F37A /* Interpreter.swift */,
 			);
 			path = Engine;
 			sourceTree = "<group>";
@@ -280,6 +286,8 @@
 				53ADFF3E2FACA71E00B1F37A /* Step.swift in Sources */,
 				53ADFF322FACA14800B1F37A /* RudderUITests.swift in Sources */,
 				53ADFF332FACA16600B1F37A /* HTTPServer.swift in Sources */,
+				53ADFF412FACA8F300B1F37A /* SUTClient.swift in Sources */,
+				53ADFF432FACA97200B1F37A /* Interpreter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
