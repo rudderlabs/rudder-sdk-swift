@@ -22,6 +22,7 @@
 		53ADFF372FACA2EE00B1F37A /* SSEStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF362FACA2EE00B1F37A /* SSEStream.swift */; };
 		53ADFF392FACA36800B1F37A /* ObserverPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF382FACA36800B1F37A /* ObserverPlugin.swift */; };
 		53ADFF3B2FACA51500B1F37A /* MockServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF3A2FACA51500B1F37A /* MockServer.swift */; };
+		53ADFF3E2FACA71E00B1F37A /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF3D2FACA71E00B1F37A /* Step.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		53ADFF362FACA2EE00B1F37A /* SSEStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSEStream.swift; sourceTree = "<group>"; };
 		53ADFF382FACA36800B1F37A /* ObserverPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserverPlugin.swift; sourceTree = "<group>"; };
 		53ADFF3A2FACA51500B1F37A /* MockServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServer.swift; sourceTree = "<group>"; };
+		53ADFF3D2FACA71E00B1F37A /* Step.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 			children = (
 				53ADFF2E2FACA14800B1F37A /* RudderUITests.swift */,
 				53ADFF2F2FACA14800B1F37A /* RudderUITestsLaunchTests.swift */,
+				53ADFF3F2FACA72500B1F37A /* Engine */,
 				53ADFF3C2FACA51A00B1F37A /* Server */,
 			);
 			path = RudderUITests;
@@ -138,6 +141,14 @@
 				53ADFF3A2FACA51500B1F37A /* MockServer.swift */,
 			);
 			path = Server;
+			sourceTree = "<group>";
+		};
+		53ADFF3F2FACA72500B1F37A /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF3D2FACA71E00B1F37A /* Step.swift */,
+			);
+			path = Engine;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,6 +277,7 @@
 			files = (
 				53ADFF3B2FACA51500B1F37A /* MockServer.swift in Sources */,
 				53ADFF312FACA14800B1F37A /* RudderUITestsLaunchTests.swift in Sources */,
+				53ADFF3E2FACA71E00B1F37A /* Step.swift in Sources */,
 				53ADFF322FACA14800B1F37A /* RudderUITests.swift in Sources */,
 				53ADFF332FACA16600B1F37A /* HTTPServer.swift in Sources */,
 			);
