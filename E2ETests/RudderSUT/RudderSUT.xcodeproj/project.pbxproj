@@ -29,7 +29,7 @@
 		53ADFF102FAC877E00B1F37A /* Exceptions for "RudderSUT" folder in "RudderUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				HTTPServer.swift,
+				Server/HTTPServer.swift,
 			);
 			target = 53ADFEFC2FAC846A00B1F37A /* RudderUITests */;
 		};
