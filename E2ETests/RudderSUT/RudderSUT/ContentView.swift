@@ -8,17 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+    @EnvironmentObject var serverState: ServerState
 
-#Preview {
-    ContentView()
+    var body: some View {
+        Color.clear
+            .accessibilityElement()
+            .accessibilityIdentifier("sut_port")
+            .accessibilityLabel(serverState.port.map { "\($0)" } ?? "")
+    }
 }
