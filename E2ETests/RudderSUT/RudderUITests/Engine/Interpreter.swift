@@ -18,17 +18,8 @@ class Interpreter {
     let simctl: SimctlHelper
     var savedStateBlob: [String: Any]?
     private(set) var executedSteps: [Step] = []
-}
 
-// MARK: - Init
-
-extension Interpreter {
-
-    convenience init(app: XCUIApplication, sutPort: UInt16, mockServer: MockServer) {
-        self.init(app: app,
-                  sutClient: SUTClient(baseURL: "http://127.0.0.1:\(sutPort)"),
-                  mockServer: mockServer)
-    }
+    // MARK: - Init
 
     init(app: XCUIApplication, sutClient: any SUTClientProtocol, mockServer: MockServer) {
         self.app        = app
@@ -36,6 +27,17 @@ extension Interpreter {
         self.mockServer = mockServer
         self.lifecycle  = LifecycleHelper(app: app)
         self.simctl     = SimctlHelper()
+    }
+}
+
+// MARK: - Init (Convenience)
+
+extension Interpreter {
+
+    convenience init(app: XCUIApplication, sutPort: UInt16, mockServer: MockServer) {
+        self.init(app: app,
+                  sutClient: SUTClient(baseURL: "http://127.0.0.1:\(sutPort)"),
+                  mockServer: mockServer)
     }
 }
 
@@ -114,11 +116,12 @@ extension Interpreter {
             mockServer.simulateOnline()
 
         case let .deepLink(url):
-            try simctl.openURL(url)
+            try sutClient.post("/command", body: ["cmd": "openURL", "args": ["url": url]])
 
         case let .localeChange(locale):
-            try simctl.setLocale(locale)
-            lifecycle.coldStart()
+            simctl.setLocale(locale)
+            lifecycle.coldStart(locale: locale)
+            simctl.clearPendingLocale()
 
         case let .crash(kind):
             let cmd = kind == .native ? "nativeCrash" : "crash"

@@ -11,7 +11,7 @@ class InterpreterUnitTests: XCTestCase {
 
     // MARK: - Properties
 
-    var fakeSUT: FakeSUTClient!
+    private var fakeSUT: FakeSUTClient!
     var mockServer: MockServer!
     var interpreter: Interpreter!
 }

@@ -12,13 +12,14 @@ enum StateEndpoints {
     // MARK: - Read
 
     static func read(key: String) -> Any? {
+        let analytics = CommandDispatcher.shared.analytics
         switch key {
-        case "anonymousId": return Analytics.shared.anonymousId
-        case "userId":      return Analytics.shared.userId
+        case "anonymousId": return analytics?.anonymousId
+        case "userId":      return analytics?.userId
         case "session":
             return [
-                "sessionId": Analytics.shared.sessionId as Any,
-                "active":    Analytics.shared.sessionId != nil
+                "sessionId": analytics?.sessionId as Any,
+                "active":    analytics?.sessionId != nil
             ]
         default: return nil
         }
@@ -27,12 +28,13 @@ enum StateEndpoints {
     // MARK: - Export
 
     static func export() -> [String: Any] {
-        [
+        let analytics = CommandDispatcher.shared.analytics
+        return [
             "version":     1,
-            "anonymousId": Analytics.shared.anonymousId ?? "",
-            "userId":      Analytics.shared.userId ?? "",
-            "traits":      Analytics.shared.traits ?? [:],
-            "sessionId":   Analytics.shared.sessionId ?? 0
+            "anonymousId": analytics?.anonymousId ?? "",
+            "userId":      analytics?.userId ?? "",
+            "traits":      analytics?.traits ?? [:],
+            "sessionId":   analytics?.sessionId ?? UInt64(0)
         ]
     }
 
@@ -44,8 +46,8 @@ enum StateEndpoints {
             return
         }
         if let userId = blob["userId"] as? String, !userId.isEmpty {
-            Analytics.shared.identify(userId: userId,
-                                      traits: blob["traits"] as? [String: Any])
+            CommandDispatcher.shared.analytics?.identify(userId: userId,
+                                                         traits: blob["traits"] as? [String: Any])
         }
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Satheesh Kannan on 07/05/26.
 //
 
+import Foundation
 import Network
 
 class SSEStream {

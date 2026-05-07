@@ -5,6 +5,8 @@
 //  Created by Satheesh Kannan on 07/05/26.
 //
 
+import Foundation
+import UIKit
 import RudderStackAnalytics
 
 class CommandDispatcher {
@@ -13,6 +15,20 @@ class CommandDispatcher {
 
     static let shared = CommandDispatcher()
     private init() {}
+
+    // MARK: - Properties
+
+    private(set) var analytics: Analytics?
+    private var sseStream: SSEStream?
+}
+
+// MARK: - Configuration
+
+extension CommandDispatcher {
+
+    func configure(sseStream: SSEStream) {
+        self.sseStream = sseStream
+    }
 }
 
 // MARK: - Dispatch
@@ -27,11 +43,12 @@ extension CommandDispatcher {
         case "screen":       return handleScreen(args)
         case "group":        return handleGroup(args)
         case "alias":        return handleAlias(args)
-        case "flush":        Analytics.shared.flush();       return ["status": "ok"]
-        case "reset":        Analytics.shared.reset();       return ["status": "ok"]
-        case "shutdown":     Analytics.shared.shutdown();    return ["status": "ok"]
+        case "flush":        analytics?.flush();       return ["status": "ok"]
+        case "reset":        analytics?.reset();       return ["status": "ok"]
+        case "shutdown":     analytics?.shutdown();    return ["status": "ok"]
         case "startSession": return handleStartSession(args)
-        case "endSession":   Analytics.shared.endSession(); return ["status": "ok"]
+        case "endSession":   analytics?.endSession(); return ["status": "ok"]
+        case "openURL":      return handleOpenURL(args)
         case "crash":        return handleCrash()
         case "nativeCrash":  return handleNativeCrash()
         default:             return ["error": "unknown command: \(cmd)"]
@@ -44,34 +61,40 @@ extension CommandDispatcher {
 extension CommandDispatcher {
 
     private func handleInit(_ args: [String: Any]) -> [String: Any] {
-        let writeKey     = args["writeKey"] as? String ?? "test-key"
-        let dataPlaneUrl = args["dataPlaneUrl"] as? String ?? "http://localhost:9090"
+        let writeKey       = args["writeKey"] as? String ?? "test-key"
+        let dataPlaneUrl   = args["dataPlaneUrl"] as? String ?? "http://localhost:9090"
+        let trackLifecycle = args["trackLifecycleEvents"] as? Bool ?? false
 
-        let config = Configuration(writeKey: writeKey)
-            .dataPlaneURL(dataPlaneUrl)
-
-        if let trackLifecycle = args["trackLifecycleEvents"] as? Bool {
-            config.trackLifecycleEvents(trackLifecycle)
-        }
+        var sessionConfig = SessionConfiguration()
         if let sessionTimeout = args["sessionTimeout"] as? Int {
-            config.sessionTimeout(sessionTimeout)
+            sessionConfig = SessionConfiguration(sessionTimeoutInMillis: UInt64(sessionTimeout))
         }
 
-        Analytics.initialize(configuration: config)
+        let config = Configuration(
+            writeKey: writeKey,
+            dataPlaneUrl: dataPlaneUrl,
+            trackApplicationLifecycleEvents: trackLifecycle,
+            sessionConfiguration: sessionConfig
+        )
+
+        analytics = Analytics(configuration: config)
+        if let stream = sseStream {
+            analytics?.add(plugin: ObserverPlugin(stream: stream))
+        }
         return ["status": "ok"]
     }
 
     private func handleTrack(_ args: [String: Any]) -> [String: Any] {
         let name  = args["name"] as? String ?? ""
         let props = args["properties"] as? [String: Any]
-        Analytics.shared.track(name: name, properties: props)
+        analytics?.track(name: name, properties: props)
         return ["status": "ok"]
     }
 
     private func handleIdentify(_ args: [String: Any]) -> [String: Any] {
         let userId = args["userId"] as? String ?? ""
         let traits = args["traits"] as? [String: Any]
-        Analytics.shared.identify(userId: userId, traits: traits)
+        analytics?.identify(userId: userId, traits: traits)
         return ["status": "ok"]
     }
 
@@ -79,26 +102,37 @@ extension CommandDispatcher {
         let name     = args["name"] as? String ?? ""
         let category = args["category"] as? String
         let props    = args["properties"] as? [String: Any]
-        Analytics.shared.screen(screenName: name, category: category, properties: props)
+        analytics?.screen(screenName: name, category: category, properties: props)
         return ["status": "ok"]
     }
 
     private func handleGroup(_ args: [String: Any]) -> [String: Any] {
         let groupId = args["groupId"] as? String ?? ""
         let traits  = args["traits"] as? [String: Any]
-        Analytics.shared.group(groupId: groupId, traits: traits)
+        analytics?.group(groupId: groupId, traits: traits)
         return ["status": "ok"]
     }
 
     private func handleAlias(_ args: [String: Any]) -> [String: Any] {
         let newId = args["newId"] as? String ?? ""
-        Analytics.shared.alias(newId: newId)
+        analytics?.alias(newId: newId)
         return ["status": "ok"]
     }
 
     private func handleStartSession(_ args: [String: Any]) -> [String: Any] {
-        let id = args["sessionId"] as? Int64
-        Analytics.shared.startSession(sessionId: id)
+        let id = (args["sessionId"] as? Int).map { UInt64($0) }
+        analytics?.startSession(sessionId: id)
+        return ["status": "ok"]
+    }
+
+    private func handleOpenURL(_ args: [String: Any]) -> [String: Any] {
+        guard let urlString = args["url"] as? String,
+              let url = URL(string: urlString) else {
+            return ["error": "invalid url"]
+        }
+        DispatchQueue.main.async {
+            UIApplication.shared.open(url)
+        }
         return ["status": "ok"]
     }
 

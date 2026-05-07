@@ -27,20 +27,10 @@ extension ScenarioTestCase {
         try? FileManager.default.createDirectory(at: bundleDir,
                                                  withIntermediateDirectories: true)
 
-        collectSimulatorLogs(into: bundleDir)
         attachScreenshot()
         collectMockServerLog(into: bundleDir)
         collectStepLog(into: bundleDir)
-        attachZip(of: bundleDir)
-    }
-
-    private func collectSimulatorLogs(into dir: URL) {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
-        process.arguments = ["simctl", "spawn", "booted", "log", "collect",
-                             "--output", "\(dir.path)/device.logarchive"]
-        try? process.run()
-        process.waitUntilExit()
+        attachDebugFiles(from: bundleDir)
     }
 
     private func attachScreenshot() {
@@ -68,13 +58,14 @@ extension ScenarioTestCase {
         )
     }
 
-    private func attachZip(of dir: URL) {
-        let zipPath = dir.path + ".zip"
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/zip")
-        process.arguments     = ["-r", zipPath, dir.path]
-        try? process.run()
-        process.waitUntilExit()
-        add(XCTAttachment(contentsOfFile: zipPath))
+    private func attachDebugFiles(from dir: URL) {
+        guard let files = try? FileManager.default.contentsOfDirectory(
+            at: dir, includingPropertiesForKeys: nil) else { return }
+        for file in files {
+            let attachment = XCTAttachment(contentsOfFile: file)
+            attachment.name = file.lastPathComponent
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
     }
 }

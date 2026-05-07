@@ -39,9 +39,12 @@ extension LifecycleHelper {
         Thread.sleep(forTimeInterval: 0.3)
     }
 
-    func coldStart() {
+    func coldStart(locale: String? = nil) {
         app.terminate()
         Thread.sleep(forTimeInterval: 0.5)
+        if let locale {
+            app.launchArguments += ["-AppleLanguages", "(\(locale))", "-AppleLocale", locale]
+        }
         app.launch()
         Thread.sleep(forTimeInterval: 0.5)
     }

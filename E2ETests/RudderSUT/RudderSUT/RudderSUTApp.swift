@@ -27,9 +27,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         commandServer = CommandServer()
+        CommandDispatcher.shared.configure(sseStream: commandServer.sseStream)
         commandServer.start()
         ServerState.shared.port = commandServer.port
-        Analytics.shared.add(plugin: ObserverPlugin(stream: commandServer.sseStream))
         return true
     }
 }
