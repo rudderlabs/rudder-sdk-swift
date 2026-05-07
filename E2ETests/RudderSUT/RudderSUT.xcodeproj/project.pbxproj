@@ -37,6 +37,7 @@
 		53ADFF5F2FACB8A400B1F37A /* ScenarioPacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF5E2FACB8A400B1F37A /* ScenarioPacks.swift */; };
 		53ADFF612FACBA3A00B1F37A /* SessionPersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF602FACBA3A00B1F37A /* SessionPersistenceTests.swift */; };
 		53ADFF632FACBD4500B1F37A /* InterpreterUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF622FACBD4500B1F37A /* InterpreterUnitTests.swift */; };
+		53ADFF652FACBE0B00B1F37A /* DebugBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF642FACBE0B00B1F37A /* DebugBundle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		53ADFF5E2FACB8A400B1F37A /* ScenarioPacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioPacks.swift; sourceTree = "<group>"; };
 		53ADFF602FACBA3A00B1F37A /* SessionPersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPersistenceTests.swift; sourceTree = "<group>"; };
 		53ADFF622FACBD4500B1F37A /* InterpreterUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterpreterUnitTests.swift; sourceTree = "<group>"; };
+		53ADFF642FACBE0B00B1F37A /* DebugBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugBundle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +194,7 @@
 			children = (
 				53ADFF442FACAB5600B1F37A /* ScenarioTestCase.swift */,
 				53ADFF472FACAC2000B1F37A /* ScenarioContext.swift */,
+				53ADFF642FACBE0B00B1F37A /* DebugBundle.swift */,
 			);
 			path = DSL;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				53ADFF612FACBA3A00B1F37A /* SessionPersistenceTests.swift in Sources */,
 				53ADFF3E2FACA71E00B1F37A /* Step.swift in Sources */,
 				53ADFF5C2FACB84800B1F37A /* PersistencePack.swift in Sources */,
+				53ADFF652FACBE0B00B1F37A /* DebugBundle.swift in Sources */,
 				53ADFF572FACB78000B1F37A /* SmokePack.swift in Sources */,
 				53ADFF522FACB54900B1F37A /* PackRegistry.swift in Sources */,
 				53ADFF322FACA14800B1F37A /* RudderUITests.swift in Sources */,
