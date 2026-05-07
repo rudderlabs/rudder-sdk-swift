@@ -12,7 +12,7 @@ class Interpreter {
     // MARK: - Properties
 
     let app: XCUIApplication
-    var sutClient: SUTClient
+    var sutClient: any SUTClientProtocol
     let mockServer: MockServer
     let lifecycle: LifecycleHelper
     let simctl: SimctlHelper
@@ -30,7 +30,7 @@ extension Interpreter {
                   mockServer: mockServer)
     }
 
-    init(app: XCUIApplication, sutClient: SUTClient, mockServer: MockServer) {
+    init(app: XCUIApplication, sutClient: any SUTClientProtocol, mockServer: MockServer) {
         self.app        = app
         self.sutClient  = sutClient
         self.mockServer = mockServer

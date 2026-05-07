@@ -7,7 +7,13 @@
 
 import Foundation
 
-class SUTClient {
+protocol SUTClientProtocol: AnyObject {
+    @discardableResult
+    func post(_ path: String, body: [String: Any]) throws -> [String: Any]
+    func get(_ path: String) throws -> [String: Any]
+}
+
+class SUTClient: SUTClientProtocol {
 
     // MARK: - Properties
 
