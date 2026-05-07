@@ -7,6 +7,14 @@
 
 import XCTest
 
+/**
+ * Interpreter is the core engine responsible for executing test sequences.
+ *
+ * It acts as the orchestrator between the test environment and the System Under Test (SUT).
+ * For every `Step` in a scenario, the Interpreter determines the appropriate action—
+ * whether it's sending a command to the app via SUTClient, manipulating the app
+ * lifecycle (background, kill, restart), or performing assertions against the MockServer.
+ */
 class Interpreter {
 
     // MARK: - Properties

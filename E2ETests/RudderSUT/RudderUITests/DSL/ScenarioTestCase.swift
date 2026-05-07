@@ -7,6 +7,15 @@
 
 import XCTest
 
+/**
+ * ScenarioTestCase is the base class for all end-to-end (E2E) UI tests in the
+ * RudderStack SDK test suite.
+ *
+ * It provides the foundational setup required to execute analytics scenarios,
+ * including launching the application, discovering the communication port,
+ * and initializing the MockServer and Interpreter. The `rudderScenario` helper
+ * method serves as the entry point for writing clean, DSL-driven test cases.
+ */
 class ScenarioTestCase: XCTestCase {
 
     // MARK: - Properties

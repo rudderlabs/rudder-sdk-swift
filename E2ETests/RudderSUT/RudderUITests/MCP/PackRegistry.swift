@@ -7,6 +7,14 @@
 
 import Foundation
 
+/**
+ * PackRegistry acts as a central repository for pre-defined "scenario packs"—collections
+ * of test steps that can be executed as a single unit.
+ *
+ * It allows different parts of the test suite to register reusable test sequences,
+ * provides a catalog of available scenarios, and facilitates the retrieval of
+ * step sequences by name for execution by the Interpreter.
+ */
 class PackRegistry {
 
     // MARK: - Properties

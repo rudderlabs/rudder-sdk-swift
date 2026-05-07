@@ -7,6 +7,15 @@
 
 import XCTest
 
+/**
+ * DebugBundle is an extension for ScenarioTestCase that automatically collects
+ * diagnostic information whenever a test fails.
+ *
+ * It acts as a "black box recorder" for the test suite, capturing screenshots,
+ * mock server network logs, and the sequence of executed test steps. These
+ * artifacts are attached to the XCTest result, providing developers with
+ * critical context to debug failures in CI/CD environments.
+ */
 extension ScenarioTestCase {
 
     override func tearDown() {

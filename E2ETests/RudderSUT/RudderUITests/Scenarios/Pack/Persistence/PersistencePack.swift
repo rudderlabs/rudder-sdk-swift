@@ -7,6 +7,14 @@
 
 import XCTest
 
+/**
+ * PersistencePack defines scenarios that test the SDK's ability to persist and
+ * reliably deliver events under adverse conditions.
+ *
+ * This includes verifying that events tracked while offline are correctly queued
+ * and replayed once connectivity is restored, and ensuring that events survive
+ * application termination and process restarts (cold starts).
+ */
 class PersistencePack: ScenarioTestCase {
 
     // MARK: - Registration

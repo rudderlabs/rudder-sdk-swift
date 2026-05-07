@@ -7,6 +7,14 @@
 
 import XCTest
 
+/**
+ * SessionPersistenceTests focuses on verifying that the SDK maintains consistent
+ * session data and state across different application lifecycle events.
+ *
+ * This includes checking if identifiers like anonymousId persist through app restarts,
+ * ensuring that events are flushed correctly when the app moves to the background,
+ * and validating privacy-related behaviors like event suppression after a user opts out.
+ */
 class SessionPersistenceTests: ScenarioTestCase {
 
     func test_anonymousId_persistsAcrossColdStart() {

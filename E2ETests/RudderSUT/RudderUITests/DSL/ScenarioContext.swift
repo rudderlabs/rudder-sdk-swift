@@ -7,6 +7,14 @@
 
 import XCTest
 
+/**
+ * ScenarioContext provides a Domain-Specific Language (DSL) for writing test scenarios.
+ *
+ * It acts as a user-friendly wrapper around the Interpreter, offering a clean API
+ * for tracking events, controlling the app lifecycle, and performing assertions.
+ * By hiding the complexity of the underlying execution engine, it allows test
+ * authors to focus on the behavioral logic of their test cases.
+ */
 class ScenarioContext {
 
     // MARK: - Properties

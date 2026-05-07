@@ -9,6 +9,15 @@ import MCP
 import Network
 import Foundation
 
+/**
+ * MCPServer implements a Model Context Protocol (MCP) server that exposes
+ * the SDK testing capabilities as a set of callable tools.
+ *
+ * It allows external agents (such as LLMs or test runners) to interact with
+ * the System Under Test (SUT) by providing a standardized interface for
+ * executing SDK commands, simulating network conditions, and verifying state.
+ * It translates incoming MCP tool calls into executable steps for the Interpreter.
+ */
 class MCPServer: @unchecked Sendable {
 
     // MARK: - Properties

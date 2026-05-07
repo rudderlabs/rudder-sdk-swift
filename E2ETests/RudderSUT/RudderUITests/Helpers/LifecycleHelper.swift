@@ -7,6 +7,15 @@
 
 import XCTest
 
+/**
+ * LifecycleHelper provides a simplified interface for manipulating the application's
+ * execution state during UI tests.
+ *
+ * It wraps Apple's XCTest framework commands to provide reliable ways to move the
+ * app to the background, return it to the foreground, terminate the process,
+ * or perform a cold start—optionally with specific launch arguments like
+ * localization settings.
+ */
 class LifecycleHelper {
 
     // MARK: - Properties

@@ -7,6 +7,14 @@
 
 import XCTest
 
+/**
+ * SmokePack contains a set of basic "smoke tests" designed to verify that the
+ * SDK's core functionality (Track, Identify) is operational.
+ *
+ * It registers these sequences in the PackRegistry for reuse and provides
+ * standard XCTest methods to execute them as part of the CI/CD pipeline.
+ * These tests act as an early warning system for major regressions.
+ */
 class SmokePack: ScenarioTestCase {
 
     // MARK: - Registration

@@ -7,6 +7,15 @@
 
 import Foundation
 
+/**
+ * Step defines the exhaustive list of discrete actions or assertions that
+ * can be performed during a test scenario.
+ *
+ * It acts as the intermediate language (IR) of the test engine, representing
+ * everything from SDK commands (track, identify) to lifecycle events (kill, coldStart)
+ * and validation checks (waitForBatch, assertNoEvent). It includes a decoding
+ * mechanism to translate external JSON-based commands into these strongly-typed cases.
+ */
 enum Step {
 
     // MARK: - Init / Teardown

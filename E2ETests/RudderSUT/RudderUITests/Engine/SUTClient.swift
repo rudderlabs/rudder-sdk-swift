@@ -7,12 +7,24 @@
 
 import Foundation
 
+/**
+ * SUTClientProtocol defines the interface for communicating with the
+ * System Under Test (SUT) via HTTP requests.
+ */
 protocol SUTClientProtocol: AnyObject {
     @discardableResult
     func post(_ path: String, body: [String: Any]) throws -> [String: Any]
     func get(_ path: String) throws -> [String: Any]
 }
 
+/**
+ * SUTClient is a synchronous HTTP client used to communicate with the internal
+ * server of the System Under Test (SUT).
+ *
+ * It provides methods to send commands (POST) and query state (GET) from the test app.
+ * By using semaphores to block until a response is received, it allows UI tests to
+ * interact with the app in a sequential, deterministic manner.
+ */
 class SUTClient: SUTClientProtocol {
 
     // MARK: - Properties

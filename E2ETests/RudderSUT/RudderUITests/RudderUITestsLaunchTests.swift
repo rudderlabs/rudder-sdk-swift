@@ -7,6 +7,14 @@
 
 import XCTest
 
+/**
+ * RudderUITestsLaunchTests is a basic UI test class focused on verifying the application's
+ * ability to launch successfully across different configurations.
+ *
+ * It serves as a smoke test that performs a standard launch sequence and captures a
+ * screenshot of the initial UI state. This ensures the app environment is stable before
+ * more complex end-to-end scenarios are executed.
+ */
 final class RudderUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {

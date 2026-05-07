@@ -7,6 +7,14 @@
 
 import XCTest
 
+/**
+ * InterpreterUnitTests provides a suite of fast-executing unit tests for the Interpreter class.
+ *
+ * By using a FakeSUTClient, it verifies that the Interpreter correctly translates
+ * abstract test Steps into the expected network commands for the System Under Test (SUT).
+ * This ensures the command-routing logic is sound without requiring a full UI test run
+ * or a physical network connection.
+ */
 class InterpreterUnitTests: XCTestCase {
 
     // MARK: - Properties

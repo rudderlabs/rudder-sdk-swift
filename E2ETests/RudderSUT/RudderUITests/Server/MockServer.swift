@@ -7,6 +7,15 @@
 
 import Foundation
 
+/**
+ * MockServer is a local HTTP server used during UI tests to simulate the RudderStack backend.
+ *
+ * It allows tests to intercept and record analytics batches sent by the SDK,
+ * providing mechanisms to verify the content of those batches. Additionally, it
+ * supports "response overrides," enabling tests to simulate various network conditions
+ * like offline status, server errors (5xx), or high latency to verify the SDK's
+ * robustness and retry logic.
+ */
 class MockServer {
 
     // MARK: - Types
