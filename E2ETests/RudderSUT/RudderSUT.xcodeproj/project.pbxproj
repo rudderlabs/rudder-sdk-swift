@@ -32,6 +32,9 @@
 		53ADFF502FACB0C200B1F37A /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = 53ADFF4F2FACB0C200B1F37A /* MCP */; };
 		53ADFF522FACB54900B1F37A /* PackRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF512FACB54900B1F37A /* PackRegistry.swift */; };
 		53ADFF552FACB5B200B1F37A /* MCPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF542FACB5B200B1F37A /* MCPServer.swift */; };
+		53ADFF572FACB78000B1F37A /* SmokePack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF562FACB78000B1F37A /* SmokePack.swift */; };
+		53ADFF5C2FACB84800B1F37A /* PersistencePack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF5B2FACB84800B1F37A /* PersistencePack.swift */; };
+		53ADFF5F2FACB8A400B1F37A /* ScenarioPacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF5E2FACB8A400B1F37A /* ScenarioPacks.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +72,9 @@
 		53ADFF4C2FACAF4B00B1F37A /* SimctlHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimctlHelper.swift; sourceTree = "<group>"; };
 		53ADFF512FACB54900B1F37A /* PackRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackRegistry.swift; sourceTree = "<group>"; };
 		53ADFF542FACB5B200B1F37A /* MCPServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPServer.swift; sourceTree = "<group>"; };
+		53ADFF562FACB78000B1F37A /* SmokePack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokePack.swift; sourceTree = "<group>"; };
+		53ADFF5B2FACB84800B1F37A /* PersistencePack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePack.swift; sourceTree = "<group>"; };
+		53ADFF5E2FACB8A400B1F37A /* ScenarioPacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioPacks.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +158,7 @@
 				53ADFF462FACAB5E00B1F37A /* DSL */,
 				53ADFF4B2FACAF0B00B1F37A /* Helpers */,
 				53ADFF532FACB54F00B1F37A /* MCP */,
+				53ADFF5A2FACB79D00B1F37A /* Scenarios */,
 			);
 			path = RudderUITests;
 			sourceTree = "<group>";
@@ -199,6 +206,40 @@
 				53ADFF542FACB5B200B1F37A /* MCPServer.swift */,
 			);
 			path = MCP;
+			sourceTree = "<group>";
+		};
+		53ADFF582FACB78800B1F37A /* Smoke */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF562FACB78000B1F37A /* SmokePack.swift */,
+			);
+			path = Smoke;
+			sourceTree = "<group>";
+		};
+		53ADFF592FACB79300B1F37A /* Pack */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF582FACB78800B1F37A /* Smoke */,
+				53ADFF5D2FACB84D00B1F37A /* Persistence */,
+			);
+			path = Pack;
+			sourceTree = "<group>";
+		};
+		53ADFF5A2FACB79D00B1F37A /* Scenarios */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF592FACB79300B1F37A /* Pack */,
+				53ADFF5E2FACB8A400B1F37A /* ScenarioPacks.swift */,
+			);
+			path = Scenarios;
+			sourceTree = "<group>";
+		};
+		53ADFF5D2FACB84D00B1F37A /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF5B2FACB84800B1F37A /* PersistencePack.swift */,
+			);
+			path = Persistence;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -331,8 +372,11 @@
 				53ADFF3B2FACA51500B1F37A /* MockServer.swift in Sources */,
 				53ADFF482FACAC2000B1F37A /* ScenarioContext.swift in Sources */,
 				53ADFF452FACAB5600B1F37A /* ScenarioTestCase.swift in Sources */,
+				53ADFF5F2FACB8A400B1F37A /* ScenarioPacks.swift in Sources */,
 				53ADFF312FACA14800B1F37A /* RudderUITestsLaunchTests.swift in Sources */,
 				53ADFF3E2FACA71E00B1F37A /* Step.swift in Sources */,
+				53ADFF5C2FACB84800B1F37A /* PersistencePack.swift in Sources */,
+				53ADFF572FACB78000B1F37A /* SmokePack.swift in Sources */,
 				53ADFF522FACB54900B1F37A /* PackRegistry.swift in Sources */,
 				53ADFF322FACA14800B1F37A /* RudderUITests.swift in Sources */,
 				53ADFF332FACA16600B1F37A /* HTTPServer.swift in Sources */,
