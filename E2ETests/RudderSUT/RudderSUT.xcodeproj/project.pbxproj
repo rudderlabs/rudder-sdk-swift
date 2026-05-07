@@ -18,6 +18,7 @@
 		53ADFF312FACA14800B1F37A /* RudderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF2F2FACA14800B1F37A /* RudderUITestsLaunchTests.swift */; };
 		53ADFF322FACA14800B1F37A /* RudderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF2E2FACA14800B1F37A /* RudderUITests.swift */; };
 		53ADFF332FACA16600B1F37A /* HTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF202FACA13400B1F37A /* HTTPServer.swift */; };
+		53ADFF352FACA1E600B1F37A /* StateEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF342FACA1E600B1F37A /* StateEndpoints.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		53ADFF252FACA13400B1F37A /* RudderSUTApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderSUTApp.swift; sourceTree = "<group>"; };
 		53ADFF2E2FACA14800B1F37A /* RudderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderUITests.swift; sourceTree = "<group>"; };
 		53ADFF2F2FACA14800B1F37A /* RudderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		53ADFF342FACA1E600B1F37A /* StateEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateEndpoints.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				53ADFF1D2FACA13400B1F37A /* CommandDispatcher.swift */,
+				53ADFF342FACA1E600B1F37A /* StateEndpoints.swift */,
 			);
 			path = Dispatcher;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 				53ADFF272FACA13400B1F37A /* HTTPServer.swift in Sources */,
 				53ADFF282FACA13400B1F37A /* ContentView.swift in Sources */,
 				53ADFF292FACA13400B1F37A /* CommandServer.swift in Sources */,
+				53ADFF352FACA1E600B1F37A /* StateEndpoints.swift in Sources */,
 				53ADFF2A2FACA13400B1F37A /* RudderSUTApp.swift in Sources */,
 				53ADFF2B2FACA13400B1F37A /* ServerState.swift in Sources */,
 				53ADFF2C2FACA13400B1F37A /* CommandDispatcher.swift in Sources */,
