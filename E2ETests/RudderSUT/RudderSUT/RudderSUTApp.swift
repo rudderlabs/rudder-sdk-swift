@@ -29,6 +29,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         commandServer = CommandServer()
         commandServer.start()
         ServerState.shared.port = commandServer.port
+        Analytics.shared.add(plugin: ObserverPlugin(stream: commandServer.sseStream))
         return true
     }
 }
