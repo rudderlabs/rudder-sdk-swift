@@ -58,35 +58,48 @@ extension Interpreter {
             args.merge(options) { _, new in new }
             try sutClient.post("/command", body: ["cmd": "init", "args": args])
 
-        case .reset:
-            try sutClient.post("/command", body: ["cmd": "reset"])
+        case let .reset(options):
+            var body: [String: Any] = ["cmd": "reset"]
+            if let opts = options { body["args"] = opts }
+            try sutClient.post("/command", body: body)
+
+        case .flush:
+            try sutClient.post("/command", body: ["cmd": "flush"])
 
         case .shutdown:
             try sutClient.post("/command", body: ["cmd": "shutdown"])
 
-        case let .track(name, properties):
+        case let .track(name, properties, options):
             var args: [String: Any] = ["name": name]
             if let p = properties { args["properties"] = p }
+            if let o = options    { args["options"] = o }
             try sutClient.post("/command", body: ["cmd": "track", "args": args])
 
-        case let .identify(userId, traits):
-            var args: [String: Any] = ["userId": userId]
-            if let t = traits { args["traits"] = t }
+        case let .identify(userId, traits, options):
+            var args: [String: Any] = [:]
+            if let u = userId  { args["userId"] = u }
+            if let t = traits  { args["traits"] = t }
+            if let o = options { args["options"] = o }
             try sutClient.post("/command", body: ["cmd": "identify", "args": args])
 
-        case let .screen(name, category, properties):
+        case let .screen(name, category, properties, options):
             var args: [String: Any] = ["name": name]
             if let c = category   { args["category"] = c }
             if let p = properties { args["properties"] = p }
+            if let o = options    { args["options"] = o }
             try sutClient.post("/command", body: ["cmd": "screen", "args": args])
 
-        case let .group(groupId, traits):
+        case let .group(groupId, traits, options):
             var args: [String: Any] = ["groupId": groupId]
-            if let t = traits { args["traits"] = t }
+            if let t = traits  { args["traits"] = t }
+            if let o = options { args["options"] = o }
             try sutClient.post("/command", body: ["cmd": "group", "args": args])
 
-        case let .alias(newId):
-            try sutClient.post("/command", body: ["cmd": "alias", "args": ["newId": newId]])
+        case let .alias(newId, previousId, options):
+            var args: [String: Any] = ["newId": newId]
+            if let p = previousId { args["previousId"] = p }
+            if let o = options    { args["options"] = o }
+            try sutClient.post("/command", body: ["cmd": "alias", "args": args])
 
         case let .startSession(id):
             var args: [String: Any] = [:]

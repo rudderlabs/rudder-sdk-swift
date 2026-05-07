@@ -11,18 +11,19 @@ indirect enum Step {
 
     // MARK: - Init / Teardown
     case initialize(writeKey: String, dataPlaneUrl: String, options: [String: Any] = [:])
-    case reset
+    case reset(options: [String: Bool]? = nil)
+    case flush
     case shutdown
 
     // MARK: - Events
-    case track(name: String, properties: [String: Any]? = nil)
-    case screen(name: String, category: String? = nil, properties: [String: Any]? = nil)
-    case identify(userId: String, traits: [String: Any]? = nil)
-    case group(groupId: String, traits: [String: Any]? = nil)
-    case alias(newId: String)
+    case track(name: String, properties: [String: Any]? = nil, options: [String: Any]? = nil)
+    case screen(name: String, category: String? = nil, properties: [String: Any]? = nil, options: [String: Any]? = nil)
+    case identify(userId: String? = nil, traits: [String: Any]? = nil, options: [String: Any]? = nil)
+    case group(groupId: String, traits: [String: Any]? = nil, options: [String: Any]? = nil)
+    case alias(newId: String, previousId: String? = nil, options: [String: Any]? = nil)
 
     // MARK: - Session
-    case startSession(id: Int64? = nil)
+    case startSession(id: UInt64? = nil)
     case endSession
 
     // MARK: - Lifecycle
@@ -61,26 +62,34 @@ extension Step {
         switch type {
         case "track":
             return .track(name: dict["name"] as? String ?? "",
-                          properties: dict["properties"] as? [String: Any])
+                          properties: dict["properties"] as? [String: Any],
+                          options: dict["options"] as? [String: Any])
         case "identify":
-            return .identify(userId: dict["userId"] as? String ?? "",
-                             traits: dict["traits"] as? [String: Any])
+            return .identify(userId: dict["userId"] as? String,
+                             traits: dict["traits"] as? [String: Any],
+                             options: dict["options"] as? [String: Any])
         case "screen":
             return .screen(name: dict["name"] as? String ?? "",
                            category: dict["category"] as? String,
-                           properties: dict["properties"] as? [String: Any])
+                           properties: dict["properties"] as? [String: Any],
+                           options: dict["options"] as? [String: Any])
         case "group":
             return .group(groupId: dict["groupId"] as? String ?? "",
-                          traits: dict["traits"] as? [String: Any])
+                          traits: dict["traits"] as? [String: Any],
+                          options: dict["options"] as? [String: Any])
         case "alias":
-            return .alias(newId: dict["newId"] as? String ?? "")
+            return .alias(newId: dict["newId"] as? String ?? "",
+                          previousId: dict["previousId"] as? String,
+                          options: dict["options"] as? [String: Any])
+        case "reset":
+            return .reset(options: dict["options"] as? [String: Bool])
+        case "flush":          return .flush
         case "background":     return .background
         case "foreground":     return .foreground
         case "kill":           return .kill
         case "coldStart":      return .coldStart
         case "networkOffline": return .networkOffline
         case "networkOnline":  return .networkOnline
-        case "flush":          return .shutdown
         case "waitForBatch":
             return .waitForBatch(timeout: dict["timeout"] as? TimeInterval ?? 5)
         case "assertNoEvent":

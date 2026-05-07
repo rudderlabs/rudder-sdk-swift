@@ -26,25 +26,36 @@ class ScenarioContext {
 
 extension ScenarioContext {
 
-    func track(_ name: String, properties: [String: Any]? = nil) throws {
-        try interpreter.execute(.track(name: name, properties: properties))
+    func track(_ name: String, properties: [String: Any]? = nil, options: [String: Any]? = nil) throws {
+        try interpreter.execute(.track(name: name, properties: properties, options: options))
     }
 
-    func identify(_ userId: String, traits: [String: Any]? = nil) throws {
-        try interpreter.execute(.identify(userId: userId, traits: traits))
+    func identify(_ userId: String? = nil, traits: [String: Any]? = nil, options: [String: Any]? = nil) throws {
+        try interpreter.execute(.identify(userId: userId, traits: traits, options: options))
     }
 
-    func screen(_ name: String, category: String? = nil, properties: [String: Any]? = nil) throws {
-        try interpreter.execute(.screen(name: name, category: category, properties: properties))
+    func screen(_ name: String, category: String? = nil, properties: [String: Any]? = nil, options: [String: Any]? = nil) throws {
+        try interpreter.execute(.screen(name: name, category: category, properties: properties, options: options))
     }
 
-    func group(_ groupId: String, traits: [String: Any]? = nil) throws {
-        try interpreter.execute(.group(groupId: groupId, traits: traits))
+    func group(_ groupId: String, traits: [String: Any]? = nil, options: [String: Any]? = nil) throws {
+        try interpreter.execute(.group(groupId: groupId, traits: traits, options: options))
     }
 
-    func alias(_ newId: String) throws {
-        try interpreter.execute(.alias(newId: newId))
+    func alias(_ newId: String, previousId: String? = nil, options: [String: Any]? = nil) throws {
+        try interpreter.execute(.alias(newId: newId, previousId: previousId, options: options))
     }
+}
+
+// MARK: - SDK Control
+
+extension ScenarioContext {
+
+    func reset(options: [String: Bool]? = nil) throws {
+        try interpreter.execute(.reset(options: options))
+    }
+
+    func flush() throws { try interpreter.execute(.flush) }
 }
 
 // MARK: - Lifecycle

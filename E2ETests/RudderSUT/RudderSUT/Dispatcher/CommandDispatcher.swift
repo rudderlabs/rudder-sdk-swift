@@ -43,8 +43,8 @@ extension CommandDispatcher {
         case "screen":       return handleScreen(args)
         case "group":        return handleGroup(args)
         case "alias":        return handleAlias(args)
-        case "flush":        analytics?.flush();       return ["status": "ok"]
-        case "reset":        analytics?.reset();       return ["status": "ok"]
+        case "flush":        analytics?.flush();     return ["status": "ok"]
+        case "reset":        return handleReset(args)
         case "shutdown":     analytics?.shutdown();    return ["status": "ok"]
         case "startSession": return handleStartSession(args)
         case "endSession":   analytics?.endSession(); return ["status": "ok"]
@@ -87,14 +87,14 @@ extension CommandDispatcher {
     private func handleTrack(_ args: [String: Any]) -> [String: Any] {
         let name  = args["name"] as? String ?? ""
         let props = args["properties"] as? [String: Any]
-        analytics?.track(name: name, properties: props)
+        analytics?.track(name: name, properties: props, options: buildOption(args))
         return ["status": "ok"]
     }
 
     private func handleIdentify(_ args: [String: Any]) -> [String: Any] {
-        let userId = args["userId"] as? String ?? ""
+        let userId = args["userId"] as? String
         let traits = args["traits"] as? [String: Any]
-        analytics?.identify(userId: userId, traits: traits)
+        analytics?.identify(userId: userId, traits: traits, options: buildOption(args))
         return ["status": "ok"]
     }
 
@@ -102,21 +102,44 @@ extension CommandDispatcher {
         let name     = args["name"] as? String ?? ""
         let category = args["category"] as? String
         let props    = args["properties"] as? [String: Any]
-        analytics?.screen(screenName: name, category: category, properties: props)
+        analytics?.screen(screenName: name, category: category, properties: props, options: buildOption(args))
         return ["status": "ok"]
     }
 
     private func handleGroup(_ args: [String: Any]) -> [String: Any] {
         let groupId = args["groupId"] as? String ?? ""
         let traits  = args["traits"] as? [String: Any]
-        analytics?.group(groupId: groupId, traits: traits)
+        analytics?.group(groupId: groupId, traits: traits, options: buildOption(args))
         return ["status": "ok"]
     }
 
     private func handleAlias(_ args: [String: Any]) -> [String: Any] {
-        let newId = args["newId"] as? String ?? ""
-        analytics?.alias(newId: newId)
+        let newId      = args["newId"] as? String ?? ""
+        let previousId = args["previousId"] as? String
+        analytics?.alias(newId: newId, previousId: previousId, options: buildOption(args))
         return ["status": "ok"]
+    }
+
+    private func handleReset(_ args: [String: Any]) -> [String: Any] {
+        let entries = ResetEntries(
+            anonymousId: args["anonymousId"] as? Bool ?? true,
+            userId:      args["userId"]      as? Bool ?? true,
+            traits:      args["traits"]      as? Bool ?? true,
+            session:     args["session"]     as? Bool ?? true
+        )
+        analytics?.reset(options: ResetOptions(entries: entries))
+        return ["status": "ok"]
+    }
+
+    private func buildOption(_ args: [String: Any]) -> RudderOption? {
+        guard let dict = args["options"] as? [String: Any] else { return nil }
+        let integrations = dict["integrations"] as? [String: Any]
+        let customContext = dict["customContext"] as? [String: Any]
+        let externalIds = (dict["externalIds"] as? [[String: String]])?.compactMap { d -> ExternalId? in
+            guard let type = d["type"], let id = d["id"] else { return nil }
+            return ExternalId(type: type, id: id)
+        }
+        return RudderOption(integrations: integrations, customContext: customContext, externalIds: externalIds)
     }
 
     private func handleStartSession(_ args: [String: Any]) -> [String: Any] {

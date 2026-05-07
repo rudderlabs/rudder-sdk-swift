@@ -54,7 +54,7 @@ extension InterpreterUnitTests {
     }
 
     func test_resetStep_sendsCorrectCommand() throws {
-        try interpreter.execute(.reset)
+        try interpreter.execute(.reset())
 
         XCTAssertEqual(fakeSUT.lastPost?.path, "/command")
         XCTAssertEqual(fakeSUT.lastPost?.body["cmd"] as? String, "reset")
@@ -68,7 +68,7 @@ extension InterpreterUnitTests {
     func test_executedSteps_recordedInOrder() throws {
         try interpreter.execute(.track(name: "Event A"))
         try interpreter.execute(.identify(userId: "user_1"))
-        try interpreter.execute(.reset)
+        try interpreter.execute(.reset())
 
         XCTAssertEqual(interpreter.executedSteps.count, 3)
     }
