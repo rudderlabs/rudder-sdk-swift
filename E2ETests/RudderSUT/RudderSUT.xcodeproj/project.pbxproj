@@ -8,6 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		53ADFF0A2FAC850A00B1F37A /* RudderStackAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 53ADFF092FAC850A00B1F37A /* RudderStackAnalytics */; };
+		53ADFF272FACA13400B1F37A /* HTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF202FACA13400B1F37A /* HTTPServer.swift */; };
+		53ADFF282FACA13400B1F37A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF242FACA13400B1F37A /* ContentView.swift */; };
+		53ADFF292FACA13400B1F37A /* CommandServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF1F2FACA13400B1F37A /* CommandServer.swift */; };
+		53ADFF2A2FACA13400B1F37A /* RudderSUTApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF252FACA13400B1F37A /* RudderSUTApp.swift */; };
+		53ADFF2B2FACA13400B1F37A /* ServerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF212FACA13400B1F37A /* ServerState.swift */; };
+		53ADFF2C2FACA13400B1F37A /* CommandDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF1D2FACA13400B1F37A /* CommandDispatcher.swift */; };
+		53ADFF2D2FACA13400B1F37A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53ADFF232FACA13400B1F37A /* Assets.xcassets */; };
+		53ADFF312FACA14800B1F37A /* RudderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF2F2FACA14800B1F37A /* RudderUITestsLaunchTests.swift */; };
+		53ADFF322FACA14800B1F37A /* RudderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF2E2FACA14800B1F37A /* RudderUITests.swift */; };
+		53ADFF332FACA16600B1F37A /* HTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF202FACA13400B1F37A /* HTTPServer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,33 +33,16 @@
 /* Begin PBXFileReference section */
 		53ADFEE52FAC834300B1F37A /* RudderSUT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RudderSUT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53ADFEFD2FAC846A00B1F37A /* RudderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		53ADFF1D2FACA13400B1F37A /* CommandDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandDispatcher.swift; sourceTree = "<group>"; };
+		53ADFF1F2FACA13400B1F37A /* CommandServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandServer.swift; sourceTree = "<group>"; };
+		53ADFF202FACA13400B1F37A /* HTTPServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPServer.swift; sourceTree = "<group>"; };
+		53ADFF212FACA13400B1F37A /* ServerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerState.swift; sourceTree = "<group>"; };
+		53ADFF232FACA13400B1F37A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		53ADFF242FACA13400B1F37A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		53ADFF252FACA13400B1F37A /* RudderSUTApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderSUTApp.swift; sourceTree = "<group>"; };
+		53ADFF2E2FACA14800B1F37A /* RudderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderUITests.swift; sourceTree = "<group>"; };
+		53ADFF2F2FACA14800B1F37A /* RudderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		53ADFF102FAC877E00B1F37A /* Exceptions for "RudderSUT" folder in "RudderUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Server/HTTPServer.swift,
-			);
-			target = 53ADFEFC2FAC846A00B1F37A /* RudderUITests */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		53ADFEE72FAC834300B1F37A /* RudderSUT */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				53ADFF102FAC877E00B1F37A /* Exceptions for "RudderSUT" folder in "RudderUITests" target */,
-			);
-			path = RudderSUT;
-			sourceTree = "<group>";
-		};
-		53ADFEFE2FAC846A00B1F37A /* RudderUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = RudderUITests;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		53ADFEE22FAC834300B1F37A /* Frameworks */ = {
@@ -73,8 +66,8 @@
 		53ADFEDC2FAC834300B1F37A = {
 			isa = PBXGroup;
 			children = (
-				53ADFEE72FAC834300B1F37A /* RudderSUT */,
-				53ADFEFE2FAC846A00B1F37A /* RudderUITests */,
+				53ADFF262FACA13400B1F37A /* RudderSUT */,
+				53ADFF302FACA14800B1F37A /* RudderUITests */,
 				53ADFEE62FAC834300B1F37A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,6 +79,45 @@
 				53ADFEFD2FAC846A00B1F37A /* RudderUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		53ADFF1E2FACA13400B1F37A /* Dispatcher */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF1D2FACA13400B1F37A /* CommandDispatcher.swift */,
+			);
+			path = Dispatcher;
+			sourceTree = "<group>";
+		};
+		53ADFF222FACA13400B1F37A /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF1F2FACA13400B1F37A /* CommandServer.swift */,
+				53ADFF202FACA13400B1F37A /* HTTPServer.swift */,
+				53ADFF212FACA13400B1F37A /* ServerState.swift */,
+			);
+			path = Server;
+			sourceTree = "<group>";
+		};
+		53ADFF262FACA13400B1F37A /* RudderSUT */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF1E2FACA13400B1F37A /* Dispatcher */,
+				53ADFF222FACA13400B1F37A /* Server */,
+				53ADFF232FACA13400B1F37A /* Assets.xcassets */,
+				53ADFF242FACA13400B1F37A /* ContentView.swift */,
+				53ADFF252FACA13400B1F37A /* RudderSUTApp.swift */,
+			);
+			path = RudderSUT;
+			sourceTree = "<group>";
+		};
+		53ADFF302FACA14800B1F37A /* RudderUITests */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF2E2FACA14800B1F37A /* RudderUITests.swift */,
+				53ADFF2F2FACA14800B1F37A /* RudderUITestsLaunchTests.swift */,
+			);
+			path = RudderUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -102,9 +134,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				53ADFEE72FAC834300B1F37A /* RudderSUT */,
 			);
 			name = RudderSUT;
 			packageProductDependencies = (
@@ -126,9 +155,6 @@
 			);
 			dependencies = (
 				53ADFF042FAC846A00B1F37A /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				53ADFEFE2FAC846A00B1F37A /* RudderUITests */,
 			);
 			name = RudderUITests;
 			packageProductDependencies = (
@@ -184,6 +210,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53ADFF2D2FACA13400B1F37A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,6 +228,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53ADFF272FACA13400B1F37A /* HTTPServer.swift in Sources */,
+				53ADFF282FACA13400B1F37A /* ContentView.swift in Sources */,
+				53ADFF292FACA13400B1F37A /* CommandServer.swift in Sources */,
+				53ADFF2A2FACA13400B1F37A /* RudderSUTApp.swift in Sources */,
+				53ADFF2B2FACA13400B1F37A /* ServerState.swift in Sources */,
+				53ADFF2C2FACA13400B1F37A /* CommandDispatcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,6 +241,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53ADFF312FACA14800B1F37A /* RudderUITestsLaunchTests.swift in Sources */,
+				53ADFF322FACA14800B1F37A /* RudderUITests.swift in Sources */,
+				53ADFF332FACA16600B1F37A /* HTTPServer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
