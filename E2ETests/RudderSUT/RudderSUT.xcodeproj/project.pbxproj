@@ -29,6 +29,9 @@
 		53ADFF482FACAC2000B1F37A /* ScenarioContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF472FACAC2000B1F37A /* ScenarioContext.swift */; };
 		53ADFF4A2FACAF0400B1F37A /* LifecycleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF492FACAF0400B1F37A /* LifecycleHelper.swift */; };
 		53ADFF4D2FACAF4B00B1F37A /* SimctlHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF4C2FACAF4B00B1F37A /* SimctlHelper.swift */; };
+		53ADFF502FACB0C200B1F37A /* MCP in Frameworks */ = {isa = PBXBuildFile; productRef = 53ADFF4F2FACB0C200B1F37A /* MCP */; };
+		53ADFF522FACB54900B1F37A /* PackRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF512FACB54900B1F37A /* PackRegistry.swift */; };
+		53ADFF552FACB5B200B1F37A /* MCPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF542FACB5B200B1F37A /* MCPServer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +67,8 @@
 		53ADFF472FACAC2000B1F37A /* ScenarioContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioContext.swift; sourceTree = "<group>"; };
 		53ADFF492FACAF0400B1F37A /* LifecycleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleHelper.swift; sourceTree = "<group>"; };
 		53ADFF4C2FACAF4B00B1F37A /* SimctlHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimctlHelper.swift; sourceTree = "<group>"; };
+		53ADFF512FACB54900B1F37A /* PackRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackRegistry.swift; sourceTree = "<group>"; };
+		53ADFF542FACB5B200B1F37A /* MCPServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPServer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53ADFF502FACB0C200B1F37A /* MCP in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +151,7 @@
 				53ADFF3C2FACA51A00B1F37A /* Server */,
 				53ADFF462FACAB5E00B1F37A /* DSL */,
 				53ADFF4B2FACAF0B00B1F37A /* Helpers */,
+				53ADFF532FACB54F00B1F37A /* MCP */,
 			);
 			path = RudderUITests;
 			sourceTree = "<group>";
@@ -185,6 +192,15 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		53ADFF532FACB54F00B1F37A /* MCP */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF512FACB54900B1F37A /* PackRegistry.swift */,
+				53ADFF542FACB5B200B1F37A /* MCPServer.swift */,
+			);
+			path = MCP;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -223,6 +239,7 @@
 			);
 			name = RudderUITests;
 			packageProductDependencies = (
+				53ADFF4F2FACB0C200B1F37A /* MCP */,
 			);
 			productName = RudderUITests;
 			productReference = 53ADFEFD2FAC846A00B1F37A /* RudderUITests.xctest */;
@@ -258,6 +275,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				53ADFF082FAC850A00B1F37A /* XCLocalSwiftPackageReference "../../../rudder-sdk-swift" */,
+				53ADFF4E2FACB0C200B1F37A /* XCRemoteSwiftPackageReference "swift-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 53ADFEE62FAC834300B1F37A /* Products */;
@@ -309,11 +327,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53ADFF552FACB5B200B1F37A /* MCPServer.swift in Sources */,
 				53ADFF3B2FACA51500B1F37A /* MockServer.swift in Sources */,
 				53ADFF482FACAC2000B1F37A /* ScenarioContext.swift in Sources */,
 				53ADFF452FACAB5600B1F37A /* ScenarioTestCase.swift in Sources */,
 				53ADFF312FACA14800B1F37A /* RudderUITestsLaunchTests.swift in Sources */,
 				53ADFF3E2FACA71E00B1F37A /* Step.swift in Sources */,
+				53ADFF522FACB54900B1F37A /* PackRegistry.swift in Sources */,
 				53ADFF322FACA14800B1F37A /* RudderUITests.swift in Sources */,
 				53ADFF332FACA16600B1F37A /* HTTPServer.swift in Sources */,
 				53ADFF412FACA8F300B1F37A /* SUTClient.swift in Sources */,
@@ -614,10 +634,26 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		53ADFF4E2FACB0C200B1F37A /* XCRemoteSwiftPackageReference "swift-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/modelcontextprotocol/swift-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.12.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		53ADFF092FAC850A00B1F37A /* RudderStackAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RudderStackAnalytics;
+		};
+		53ADFF4F2FACB0C200B1F37A /* MCP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 53ADFF4E2FACB0C200B1F37A /* XCRemoteSwiftPackageReference "swift-sdk" */;
+			productName = MCP;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
