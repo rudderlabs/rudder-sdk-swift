@@ -7,4 +7,7 @@
    <FileRef
       location = "group:Examples/Main/SwiftUIExample/SwiftUIExample.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:E2ETests/RudderSUT/RudderSUT.xcodeproj">
+   </FileRef>
 </Workspace>
