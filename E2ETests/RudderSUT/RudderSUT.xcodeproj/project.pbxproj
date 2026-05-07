@@ -25,9 +25,22 @@
 		53ADFEFD2FAC846A00B1F37A /* RudderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RudderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		53ADFF102FAC877E00B1F37A /* Exceptions for "RudderSUT" folder in "RudderUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				HTTPServer.swift,
+			);
+			target = 53ADFEFC2FAC846A00B1F37A /* RudderUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		53ADFEE72FAC834300B1F37A /* RudderSUT */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				53ADFF102FAC877E00B1F37A /* Exceptions for "RudderSUT" folder in "RudderUITests" target */,
+			);
 			path = RudderSUT;
 			sourceTree = "<group>";
 		};
