@@ -8,12 +8,8 @@
 import XCTest
 
 /**
- * PersistencePack defines scenarios that test the SDK's ability to persist and
- * reliably deliver events under adverse conditions.
- *
- * This includes verifying that events tracked while offline are correctly queued
- * and replayed once connectivity is restored, and ensuring that events survive
- * application termination and process restarts (cold starts).
+ * PersistencePack verifies that the SDK reliably persists and delivers events
+ * across different conditions — background transitions, identity changes, and resets.
  */
 class PersistencePack: ScenarioTestCase {
 
@@ -21,21 +17,19 @@ class PersistencePack: ScenarioTestCase {
 
     static func register() {
         PackRegistry.shared.register(
-            name: "persistence.offline_queue_replay",
+            name: "persistence.flush_on_background",
             steps: [
-                .networkOffline,
-                .track(name: "Offline Event 1"),
-                .track(name: "Offline Event 2"),
-                .networkOnline,
-                .waitForBatch(timeout: 10)
+                .track(name: "Background Flush Event"),
+                .background,
+                .waitForBatch(timeout: 5)
             ]
         )
         PackRegistry.shared.register(
-            name: "persistence.kill_and_relaunch",
+            name: "persistence.user_id_in_events",
             steps: [
-                .track(name: "Before Kill"),
-                .kill,
-                .coldStart,
+                .identify(userId: "persistent_user"),
+                .track(name: "Post-Identify Event"),
+                .background,
                 .waitForBatch(timeout: 5)
             ]
         )
@@ -46,27 +40,45 @@ class PersistencePack: ScenarioTestCase {
 
 extension PersistencePack {
 
-    func test_offline_queue_replay() {
+    func test_flush_on_background() {
         rudderScenario { ctx in
-            try ctx.networkOffline()
-            try ctx.track("Offline Event 1")
-            try ctx.track("Offline Event 2")
-            try ctx.networkOnline()
-            try ctx.waitForBatch(timeout: 10)
+            try ctx.track("Background Flush Event")
+            try ctx.background()
+            try ctx.waitForBatch(timeout: 5)
 
-            let events = ctx.mockServer.lastBatch()?["batch"] as? [[String: Any]] ?? []
-            let names  = events.compactMap { $0["event"] as? String }
-            XCTAssertTrue(names.contains("Offline Event 1"))
-            XCTAssertTrue(names.contains("Offline Event 2"))
+            guard let event = ctx.lastEvent(named: "Background Flush Event")
+            else { XCTFail("Event not found after background flush"); return }
+
+            XCTAssertEqual(event["type"] as? String, "track")
         }
     }
 
-    func test_kill_and_relaunch_delivers_queued_events() {
+    func test_anonymous_id_matches_state() {
         rudderScenario { ctx in
-            try ctx.track("Before Kill")
-            try ctx.kill()
-            try ctx.coldStart()
+            let stateAnonId = try ctx.readState("anonymousId")
+            XCTAssertFalse(stateAnonId.isEmpty)
+
+            try ctx.track("AnonId Check")
             try ctx.waitForBatch(timeout: 5)
+
+            guard let event = ctx.lastEvent(named: "AnonId Check")
+            else { XCTFail("Event not found in batch"); return }
+
+            XCTAssertEqual(event["anonymousId"] as? String, stateAnonId,
+                           "anonymousId in event must match SDK state")
+        }
+    }
+
+    func test_reset_generates_new_anonymous_id() {
+        rudderScenario { ctx in
+            let originalId = try ctx.readState("anonymousId")
+            XCTAssertFalse(originalId.isEmpty)
+
+            try ctx.reset()
+
+            let newId = try ctx.readState("anonymousId")
+            XCTAssertFalse(newId.isEmpty)
+            XCTAssertNotEqual(originalId, newId, "Reset should generate a new anonymousId")
         }
     }
 }

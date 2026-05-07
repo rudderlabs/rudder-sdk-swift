@@ -58,7 +58,8 @@ extension ScenarioTestCase {
         self.mockServer  = mockServer
         self.interpreter = interpreter
 
-        let ctx = ScenarioContext(interpreter: interpreter, mockServer: mockServer)
+        let ctx = ScenarioContext(interpreter: interpreter, mockServer: mockServer,
+                                  writeKey: writeKey, dataPlaneUrl: mockServer.baseURL)
 
         do {
             if initAnalytics {

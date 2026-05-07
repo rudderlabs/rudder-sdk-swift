@@ -21,12 +21,16 @@ class ScenarioContext {
 
     let mockServer: MockServer
     private let interpreter: Interpreter
+    let writeKey: String
+    let dataPlaneUrl: String
 
     // MARK: - Init
 
-    init(interpreter: Interpreter, mockServer: MockServer) {
-        self.interpreter = interpreter
-        self.mockServer  = mockServer
+    init(interpreter: Interpreter, mockServer: MockServer, writeKey: String, dataPlaneUrl: String) {
+        self.interpreter  = interpreter
+        self.mockServer   = mockServer
+        self.writeKey     = writeKey
+        self.dataPlaneUrl = dataPlaneUrl
     }
 }
 
@@ -58,6 +62,10 @@ extension ScenarioContext {
 // MARK: - SDK Control
 
 extension ScenarioContext {
+
+    func initialize(options: [String: Any] = [:]) throws {
+        try interpreter.execute(.initialize(writeKey: writeKey, dataPlaneUrl: dataPlaneUrl, options: options))
+    }
 
     func reset(options: [String: Bool]? = nil) throws {
         try interpreter.execute(.reset(options: options))
@@ -103,6 +111,27 @@ extension ScenarioContext {
     func readState(_ key: String) throws -> String {
         let response = try interpreter.sutClient.get("/state/\(key)")
         return response["value"].map { "\($0)" } ?? ""
+    }
+}
+
+// MARK: - Batch Inspection
+
+extension ScenarioContext {
+
+    /// Returns the first event in the last received batch matching the given predicate.
+    func lastEvent(where predicate: ([String: Any]) -> Bool) -> [String: Any]? {
+        guard let events = mockServer.lastBatch()?["batch"] as? [[String: Any]] else { return nil }
+        return events.first(where: predicate)
+    }
+
+    /// Returns the first event in the last batch whose `event` field equals `name` (track / screen).
+    func lastEvent(named name: String) -> [String: Any]? {
+        lastEvent(where: { $0["event"] as? String == name })
+    }
+
+    /// Returns the first event in the last batch whose `type` field equals `type`.
+    func lastEvent(ofType type: String) -> [String: Any]? {
+        lastEvent(where: { $0["type"] as? String == type })
     }
 }
 

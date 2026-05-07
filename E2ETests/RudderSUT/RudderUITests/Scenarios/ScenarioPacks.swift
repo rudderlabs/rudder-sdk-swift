@@ -21,5 +21,6 @@ enum ScenarioPacks {
     static func registerAll() {
         SmokePack.register()
         PersistencePack.register()
+        LifeCyclePack.register()
     }
 }

@@ -15,7 +15,6 @@
 		53ADFF2B2FACA13400B1F37A /* ServerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF212FACA13400B1F37A /* ServerState.swift */; };
 		53ADFF2C2FACA13400B1F37A /* CommandDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF1D2FACA13400B1F37A /* CommandDispatcher.swift */; };
 		53ADFF2D2FACA13400B1F37A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53ADFF232FACA13400B1F37A /* Assets.xcassets */; };
-		53ADFF312FACA14800B1F37A /* RudderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF2F2FACA14800B1F37A /* RudderUITestsLaunchTests.swift */; };
 		53ADFF322FACA14800B1F37A /* RudderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF2E2FACA14800B1F37A /* RudderUITests.swift */; };
 		53ADFF332FACA16600B1F37A /* HTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF202FACA13400B1F37A /* HTTPServer.swift */; };
 		53ADFF352FACA1E600B1F37A /* StateEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF342FACA1E600B1F37A /* StateEndpoints.swift */; };
@@ -34,10 +33,10 @@
 		53ADFF572FACB78000B1F37A /* SmokePack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF562FACB78000B1F37A /* SmokePack.swift */; };
 		53ADFF5C2FACB84800B1F37A /* PersistencePack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF5B2FACB84800B1F37A /* PersistencePack.swift */; };
 		53ADFF5F2FACB8A400B1F37A /* ScenarioPacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF5E2FACB8A400B1F37A /* ScenarioPacks.swift */; };
-		53ADFF612FACBA3A00B1F37A /* SessionPersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF602FACBA3A00B1F37A /* SessionPersistenceTests.swift */; };
 		53ADFF632FACBD4500B1F37A /* InterpreterUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF622FACBD4500B1F37A /* InterpreterUnitTests.swift */; };
 		53ADFF652FACBE0B00B1F37A /* DebugBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF642FACBE0B00B1F37A /* DebugBundle.swift */; };
 		53ADFF672FACF73C00B1F37A /* RudderSUT.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 53ADFF662FACF73C00B1F37A /* RudderSUT.xctestplan */; };
+		53ADFF6A2FAD17A200B1F37A /* LifeCyclePack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF692FAD17A200B1F37A /* LifeCyclePack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,7 +60,6 @@
 		53ADFF242FACA13400B1F37A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		53ADFF252FACA13400B1F37A /* RudderSUTApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderSUTApp.swift; sourceTree = "<group>"; };
 		53ADFF2E2FACA14800B1F37A /* RudderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderUITests.swift; sourceTree = "<group>"; };
-		53ADFF2F2FACA14800B1F37A /* RudderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		53ADFF342FACA1E600B1F37A /* StateEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateEndpoints.swift; sourceTree = "<group>"; };
 		53ADFF362FACA2EE00B1F37A /* SSEStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSEStream.swift; sourceTree = "<group>"; };
 		53ADFF382FACA36800B1F37A /* ObserverPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserverPlugin.swift; sourceTree = "<group>"; };
@@ -77,10 +75,10 @@
 		53ADFF562FACB78000B1F37A /* SmokePack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokePack.swift; sourceTree = "<group>"; };
 		53ADFF5B2FACB84800B1F37A /* PersistencePack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistencePack.swift; sourceTree = "<group>"; };
 		53ADFF5E2FACB8A400B1F37A /* ScenarioPacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioPacks.swift; sourceTree = "<group>"; };
-		53ADFF602FACBA3A00B1F37A /* SessionPersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPersistenceTests.swift; sourceTree = "<group>"; };
 		53ADFF622FACBD4500B1F37A /* InterpreterUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterpreterUnitTests.swift; sourceTree = "<group>"; };
 		53ADFF642FACBE0B00B1F37A /* DebugBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugBundle.swift; sourceTree = "<group>"; };
 		53ADFF662FACF73C00B1F37A /* RudderSUT.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RudderSUT.xctestplan; sourceTree = "<group>"; };
+		53ADFF692FAD17A200B1F37A /* LifeCyclePack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeCyclePack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,15 +157,13 @@
 			children = (
 				53ADFF662FACF73C00B1F37A /* RudderSUT.xctestplan */,
 				53ADFF2E2FACA14800B1F37A /* RudderUITests.swift */,
-				53ADFF2F2FACA14800B1F37A /* RudderUITestsLaunchTests.swift */,
 				53ADFF3F2FACA72500B1F37A /* Engine */,
 				53ADFF3C2FACA51A00B1F37A /* Server */,
 				53ADFF462FACAB5E00B1F37A /* DSL */,
 				53ADFF4B2FACAF0B00B1F37A /* Helpers */,
 				53ADFF532FACB54F00B1F37A /* MCP */,
 				53ADFF5A2FACB79D00B1F37A /* Scenarios */,
-				53ADFF602FACBA3A00B1F37A /* SessionPersistenceTests.swift */,
-				53ADFF622FACBD4500B1F37A /* InterpreterUnitTests.swift */,
+				53ADFF682FAD10C700B1F37A /* InternalUnitTests */,
 			);
 			path = RudderUITests;
 			sourceTree = "<group>";
@@ -230,6 +226,7 @@
 			children = (
 				53ADFF582FACB78800B1F37A /* Smoke */,
 				53ADFF5D2FACB84D00B1F37A /* Persistence */,
+				53ADFF6B2FAD17CF00B1F37A /* LifeCycle */,
 			);
 			path = Pack;
 			sourceTree = "<group>";
@@ -249,6 +246,22 @@
 				53ADFF5B2FACB84800B1F37A /* PersistencePack.swift */,
 			);
 			path = Persistence;
+			sourceTree = "<group>";
+		};
+		53ADFF682FAD10C700B1F37A /* InternalUnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF622FACBD4500B1F37A /* InterpreterUnitTests.swift */,
+			);
+			path = InternalUnitTests;
+			sourceTree = "<group>";
+		};
+		53ADFF6B2FAD17CF00B1F37A /* LifeCycle */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF692FAD17A200B1F37A /* LifeCyclePack.swift */,
+			);
+			path = LifeCycle;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -383,11 +396,10 @@
 				53ADFF482FACAC2000B1F37A /* ScenarioContext.swift in Sources */,
 				53ADFF452FACAB5600B1F37A /* ScenarioTestCase.swift in Sources */,
 				53ADFF5F2FACB8A400B1F37A /* ScenarioPacks.swift in Sources */,
-				53ADFF312FACA14800B1F37A /* RudderUITestsLaunchTests.swift in Sources */,
 				53ADFF632FACBD4500B1F37A /* InterpreterUnitTests.swift in Sources */,
-				53ADFF612FACBA3A00B1F37A /* SessionPersistenceTests.swift in Sources */,
 				53ADFF3E2FACA71E00B1F37A /* Step.swift in Sources */,
 				53ADFF5C2FACB84800B1F37A /* PersistencePack.swift in Sources */,
+				53ADFF6A2FAD17A200B1F37A /* LifeCyclePack.swift in Sources */,
 				53ADFF652FACBE0B00B1F37A /* DebugBundle.swift in Sources */,
 				53ADFF572FACB78000B1F37A /* SmokePack.swift in Sources */,
 				53ADFF522FACB54900B1F37A /* PackRegistry.swift in Sources */,
