@@ -27,6 +27,8 @@
 		53ADFF432FACA97200B1F37A /* Interpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF422FACA97200B1F37A /* Interpreter.swift */; };
 		53ADFF452FACAB5600B1F37A /* ScenarioTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF442FACAB5600B1F37A /* ScenarioTestCase.swift */; };
 		53ADFF482FACAC2000B1F37A /* ScenarioContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF472FACAC2000B1F37A /* ScenarioContext.swift */; };
+		53ADFF4A2FACAF0400B1F37A /* LifecycleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF492FACAF0400B1F37A /* LifecycleHelper.swift */; };
+		53ADFF4D2FACAF4B00B1F37A /* SimctlHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ADFF4C2FACAF4B00B1F37A /* SimctlHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +62,8 @@
 		53ADFF422FACA97200B1F37A /* Interpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interpreter.swift; sourceTree = "<group>"; };
 		53ADFF442FACAB5600B1F37A /* ScenarioTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioTestCase.swift; sourceTree = "<group>"; };
 		53ADFF472FACAC2000B1F37A /* ScenarioContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioContext.swift; sourceTree = "<group>"; };
+		53ADFF492FACAF0400B1F37A /* LifecycleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleHelper.swift; sourceTree = "<group>"; };
+		53ADFF4C2FACAF4B00B1F37A /* SimctlHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimctlHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +144,7 @@
 				53ADFF3F2FACA72500B1F37A /* Engine */,
 				53ADFF3C2FACA51A00B1F37A /* Server */,
 				53ADFF462FACAB5E00B1F37A /* DSL */,
+				53ADFF4B2FACAF0B00B1F37A /* Helpers */,
 			);
 			path = RudderUITests;
 			sourceTree = "<group>";
@@ -169,6 +174,15 @@
 				53ADFF472FACAC2000B1F37A /* ScenarioContext.swift */,
 			);
 			path = DSL;
+			sourceTree = "<group>";
+		};
+		53ADFF4B2FACAF0B00B1F37A /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				53ADFF492FACAF0400B1F37A /* LifecycleHelper.swift */,
+				53ADFF4C2FACAF4B00B1F37A /* SimctlHelper.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -303,6 +317,8 @@
 				53ADFF322FACA14800B1F37A /* RudderUITests.swift in Sources */,
 				53ADFF332FACA16600B1F37A /* HTTPServer.swift in Sources */,
 				53ADFF412FACA8F300B1F37A /* SUTClient.swift in Sources */,
+				53ADFF4A2FACAF0400B1F37A /* LifecycleHelper.swift in Sources */,
+				53ADFF4D2FACAF4B00B1F37A /* SimctlHelper.swift in Sources */,
 				53ADFF432FACA97200B1F37A /* Interpreter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
