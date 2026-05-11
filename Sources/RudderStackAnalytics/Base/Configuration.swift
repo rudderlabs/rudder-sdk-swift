@@ -110,8 +110,8 @@ public class Configuration: NSObject {
         self.controlPlaneUrl = controlPlaneUrl
         self.gzipEnabled = gzipEnabled
         self.storageMode = Constants.defaultConfig.storageMode
-        self.logger = logger ?? SwiftLogger()
         self.logLevel = logLevel
+        self.logger = AnalyticsLogger(logger: logger ?? SwiftLogger(), logLevel: logLevel)
         self.storage = BasicStorage(writeKey: writeKey, logger: self.logger, storageMode: storageMode)
         self.flushPolicies = flushPolicies
         self.collectDeviceId = collectDeviceId

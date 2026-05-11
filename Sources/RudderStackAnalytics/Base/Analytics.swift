@@ -81,7 +81,7 @@ public class Analytics {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
-        self.logger = AnalyticsLogger(logger: configuration.logger, logLevel: configuration.logLevel)
+        self.logger = configuration.logger
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())
