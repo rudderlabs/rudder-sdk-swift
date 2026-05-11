@@ -119,16 +119,23 @@ public class SessionConfiguration: NSObject {
      The timeout duration for a session, in milliseconds.
      */
     var sessionTimeoutInMillis: UInt64
-    
+
+    /**
+     When `true`, background events update the session's last activity timestamp, extending the session timeout. Defaults to `false`. Only applicable when automatic session tracking is enabled.
+     */
+    public let updateSessionOnBackgroundEvents: Bool
+
     /**
      Initializes a new session configuration instance.
-     
+
      - Parameters:
         - automaticSessionTracking: A boolean indicating whether session tracking should be automatic. Default is `true`.
         - sessionTimeoutInMillis: The session timeout duration in milliseconds. Default is `300_000` (5 minutes).
+        - updateSessionOnBackgroundEvents: When `true`, background events update the session's last activity timestamp, extending the session timeout. Defaults to `false`. Only applicable when automatic session tracking is enabled.
      */
-    public init(automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.defaultConfig.sessionTimeoutInMillis) {
+    public init(automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.defaultConfig.sessionTimeoutInMillis, updateSessionOnBackgroundEvents: Bool = Constants.defaultConfig.updateSessionOnBackgroundEvents) {
         self.automaticSessionTracking = automaticSessionTracking
         self.sessionTimeoutInMillis = sessionTimeoutInMillis
+        self.updateSessionOnBackgroundEvents = updateSessionOnBackgroundEvents
     }
 }

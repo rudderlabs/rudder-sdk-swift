@@ -196,6 +196,9 @@ public struct _DefaultConfig {
     /// Default session timeout duration in milliseconds (5 minutes).
     public let sessionTimeoutInMillis: UInt64 = 300_000
 
+    /// Whether to update the session on background events by default.
+    public let updateSessionOnBackgroundEvents: Bool = false
+
     /// Default storage mode used for persisting data.
     let storageMode: StorageMode = .disk
     
