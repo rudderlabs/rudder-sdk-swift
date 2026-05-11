@@ -148,9 +148,9 @@ extension AnalyticsManager {
         sampleCustomIntegrationPlugin.onDestinationReady { _, result in
             switch result {
             case .success:
-                LoggerAnalytics.debug("AnalyticsManager: destination \(pluginKey) created successfully")
+                print("AnalyticsManager: destination \(pluginKey) created successfully")
             case .failure(let error):
-                LoggerAnalytics.debug("AnalyticsManager: destination failed with error : \(error.localizedDescription)")
+                print("AnalyticsManager: destination failed with error : \(error.localizedDescription)")
             }
         }
     }

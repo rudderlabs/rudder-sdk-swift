@@ -86,42 +86,42 @@ class SampleDestinationSdk {
     }
     
     func track(event: String, properties: [String: Any]) {
-        LoggerAnalytics.debug("SampleDestinationSdk: track event \(event) with properties \(properties)")
+        print("SampleDestinationSdk: track event \(event) with properties \(properties)")
     }
     
     func screen(screenName: String, properties: [String: Any]) {
-        LoggerAnalytics.debug("SampleDestinationSdk: screen event \(screenName) with properties \(properties)")
+        print("SampleDestinationSdk: screen event \(screenName) with properties \(properties)")
     }
     
     func group(groupId: String, traits: [String: Any]) {
-        LoggerAnalytics.debug("SampleDestinationSdk: group event \(groupId) with traits \(traits)")
+        print("SampleDestinationSdk: group event \(groupId) with traits \(traits)")
     }
     
     func identifyUser(userId: String, traits: [String: Any]) {
-        LoggerAnalytics.debug("SampleDestinationSdk: identify user \(userId) with traits \(traits)")
+        print("SampleDestinationSdk: identify user \(userId) with traits \(traits)")
     }
     
     func aliasUser(userId: String, previousId: String) {
-        LoggerAnalytics.debug("SampleDestinationSdk: alias user \(userId) with previous ID \(previousId)")
+        print("SampleDestinationSdk: alias user \(userId) with previous ID \(previousId)")
     }
     
     func flush() {
-        LoggerAnalytics.debug("SampleDestinationSdk: flush")
+        print("SampleDestinationSdk: flush")
     }
     
     func reset() {
-        LoggerAnalytics.debug("SampleDestinationSdk: reset")
+        print("SampleDestinationSdk: reset")
     }
     
     func update() {
-        LoggerAnalytics.debug("SampleDestinationSdk: update")
+        print("SampleDestinationSdk: update")
     }
     
     static func create(apiKey: String) -> SampleDestinationSdk {
         // Create SampleDestinationSdk SDK instance
         // Simulate a delay in creation if needed
         Thread.sleep(forTimeInterval: 1.0)
-        LoggerAnalytics.debug("SampleDestinationSdk: SDK created with API key \(apiKey)")
+        print("SampleDestinationSdk: SDK created with API key \(apiKey)")
         return SampleDestinationSdk(key: apiKey)
     }
 }
