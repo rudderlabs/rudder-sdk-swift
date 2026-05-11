@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "rudder-scenario-engine"
+  ],
+  "enableAllProjectMcpServers": true
+}

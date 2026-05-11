@@ -1,8 +1,9 @@
 {
   "mcpServers": {
     "rudder-scenario-engine": {
-      "type": "http",
-      "url": "http://127.0.0.1:7777"
+      "type": "stdio",
+      "command": "python3",
+      "args": ["scripts/start_mcp_gateway.py"]
     }
   }
 }

@@ -20,9 +20,11 @@ final class MCPGatewayTest: ScenarioTestCase {
         }
         rudderScenario(initAnalytics: false) { [unowned self] _ in
             guard let interpreter = self.interpreter else { return }
+            let port = ProcessInfo.processInfo.environment["MCP_GATEWAY_PORT"]
+                .flatMap { UInt16($0) } ?? 7777
             let mcp = MCPServer(interpreter: interpreter)
-            mcp.start(port: 7777)
-            print("[MCPGateway] Ready — connect Claude Code at http://127.0.0.1:7777")
+            mcp.start(port: port)
+            print("[MCPGateway] Ready on port \(port)")
             let timeout = ProcessInfo.processInfo.environment["MCP_GATEWAY_TIMEOUT"]
                 .flatMap(TimeInterval.init) ?? 600
             Thread.sleep(forTimeInterval: timeout)
