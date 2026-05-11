@@ -48,8 +48,7 @@ class AnalyticsManager {
     private var analytics: Analytics?
     
     func initializeAnalyticsSDK() {
-        LoggerAnalytics.logLevel = .verbose // Set the log level for analytics
-        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
+        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logLevel: .verbose)
         self.analytics = Analytics(configuration: config)
     }
 }
