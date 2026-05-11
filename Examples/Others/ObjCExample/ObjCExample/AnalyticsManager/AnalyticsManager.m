@@ -14,6 +14,7 @@
 @interface AnalyticsManager()
 
 @property(nonatomic, retain) RSSAnalytics *client;
+@property(nonatomic, retain) NSObject<RSSLogger> *logger;
 
 @end
 
@@ -45,9 +46,9 @@
     [builder setSessionConfiguration: [sessionBuilder build]];
     
     // Adding custom Logger..
-    [RSSLoggerAnalytics setLogLevel: RSSLogLevelVerbose];
-    CustomLogger *logger = [CustomLogger new];
-    [RSSLoggerAnalytics setLogger:logger];
+    [builder setLogLevel:RSSLogLevelVerbose];
+    self.logger = [CustomLogger new];
+    [builder setLogger: self.logger];
     
     self.client = [[RSSAnalytics alloc] initWithConfiguration:[builder build]];
     
@@ -67,8 +68,8 @@
     [self.client addPlugin:pushPlugin destinationKey:deviceModeIntegration.key];
     
     [self.client onDestinationReadyForKey:deviceModeIntegration.key :^(id _Nullable destination, NSError * _Nullable error) {
-        [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"Destination: %@", destination]];
-        [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"Error: %@", [error localizedDescription]]];
+        [self.logger debug:[NSString stringWithFormat:@"Destination: %@", destination]];
+        [self.logger debug:[NSString stringWithFormat:@"Error: %@", [error localizedDescription]]];
     }];
 }
 

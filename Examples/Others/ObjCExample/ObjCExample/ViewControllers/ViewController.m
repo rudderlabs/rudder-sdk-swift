@@ -173,7 +173,7 @@
             
         case ActionTypeReadAnonymousId: {
             NSString *anonymousId = [[AnalyticsManager sharedManager] anonymousId];
-            [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"Current Anonymous Id: %@", (anonymousId == Nil) ? @"Nil" : anonymousId]];
+            NSLog(@"%@", [NSString stringWithFormat:@"Current Anonymous Id: %@", (anonymousId == Nil) ? @"Nil" : anonymousId]);
             break;
         }
             
@@ -200,9 +200,9 @@
         case ActionTypeReadSessionId: {
             NSNumber *sessionId = [[AnalyticsManager sharedManager] sessionId];
             if (sessionId) {
-                [RSSLoggerAnalytics debug:[NSString stringWithFormat:@"Current Session Id: %llu", sessionId.unsignedLongLongValue]];
+                NSLog(@"%@", [NSString stringWithFormat:@"Current Session Id: %llu", sessionId.unsignedLongLongValue]);
             } else {
-                [RSSLoggerAnalytics debug:@"No active session found."];
+                NSLog(@"No active session found.");
             }
             break;
         }
