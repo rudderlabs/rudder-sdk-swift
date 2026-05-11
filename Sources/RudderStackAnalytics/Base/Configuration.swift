@@ -112,7 +112,7 @@ public class Configuration: NSObject {
         self.storageMode = Constants.defaultConfig.storageMode
         self.logger = logger ?? SwiftLogger()
         self.logLevel = logLevel
-        self.storage = BasicStorage(writeKey: writeKey, storageMode: storageMode, logger: self.logger)
+        self.storage = BasicStorage(writeKey: writeKey, logger: self.logger, storageMode: storageMode)
         self.flushPolicies = flushPolicies
         self.collectDeviceId = collectDeviceId
         self.trackApplicationLifecycleEvents = trackApplicationLifecycleEvents

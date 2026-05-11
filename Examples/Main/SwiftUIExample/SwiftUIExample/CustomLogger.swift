@@ -16,9 +16,6 @@ import RudderStackAnalytics
  ```swift
  // 1. Set an instance of this class as the logger for Analytics
  analytics.setLogger(logger: CustomLogger())
-
- // 2. Use `LoggerAnalytics` to log messages
- LoggerAnalytics.info("Custom logger initialized.")
  */
 
 class CustomLogger: Logger {

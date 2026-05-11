@@ -18,7 +18,7 @@ final actor BackoffPolicyHandler: TypeIdentifiable {
     private var policy: BackoffPolicy
     private let logger: Logger
 
-    init(policy: BackoffPolicy = ExponentialBackoffPolicy(), coolOffPeriodMillis: Int = BackoffPolicyConstants.coolOffPeriodInMilliseconds, logger: Logger) {
+    init(logger: Logger, policy: BackoffPolicy = ExponentialBackoffPolicy(), coolOffPeriodMillis: Int = BackoffPolicyConstants.coolOffPeriodInMilliseconds) {
         self.maxAttempts = BackoffPolicyConstants.maxAttempts
         self.coolOffPeriodMillis = coolOffPeriodMillis
         self.policy = policy

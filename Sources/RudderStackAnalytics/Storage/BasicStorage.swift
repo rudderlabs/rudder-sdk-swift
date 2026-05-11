@@ -19,7 +19,7 @@ final class BasicStorage: Storage, TypeIdentifiable {
     private let keyValueStore: KeyValueStore
     private let dataStore: any DataStore
 
-    init(writeKey: String, storageMode: StorageMode = Constants.defaultConfig.storageMode, logger: Logger) {
+    init(writeKey: String, logger: Logger, storageMode: StorageMode = Constants.defaultConfig.storageMode) {
         self.writeKey = writeKey
         self.storageMode = storageMode
 
