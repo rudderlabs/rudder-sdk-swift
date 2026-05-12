@@ -53,10 +53,7 @@ final class DynamicUserAgentPlugin: Plugin {
      */
     init() {
         Task { @MainActor [weak self] in
-            guard let self else {
-                self?.logger.debug(log:"Plugin deallocated before reading user agent")
-                return
-            }
+            guard let self else { return }
             self.userAgent = await Self.readUserAgent()
         }
     }

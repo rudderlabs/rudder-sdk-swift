@@ -94,10 +94,7 @@ extension EventFilteringPlugin {
      Sets up a listener for source configuration changes to update filtering configuration.
      */
     private func setupConfigurationListener() {
-        guard let analytics = analytics else {
-            logger.error(log: "EventFilteringPlugin: Analytics instance not available for destination: \(destinationKey)", error: nil)
-            return
-        }
+        guard let analytics = analytics else { return }
         
         analytics.sourceConfigState.state
             .dropFirst() // Skip the initial empty state
