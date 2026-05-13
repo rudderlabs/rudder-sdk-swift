@@ -8,11 +8,15 @@
 import Foundation
 
 // MARK: - ObjCLoggerAnalytics
+
 /**
  A static utility class to enable logging from Objective-C using the native Swift `LoggerAnalytics` system.
-
- This class provides Objective-C accessible static methods for logging at various levels.
+ 
+ **DEPRECATED**: Use `RSSConfigurationBuilder` to pass a logger and log level per Analytics instance instead.
+ 
+ This class remains available for backward compatibility but should not be used in new code.
  */
+@available(*, deprecated, message: "Pass logger and logLevel via RSSConfigurationBuilder instead. Inside a custom plugin, use analytics.logger.")
 @objc(RSSLoggerAnalytics)
 public final class ObjCLoggerAnalytics: NSObject {
     
@@ -21,83 +25,49 @@ public final class ObjCLoggerAnalytics: NSObject {
         /* Default implementation (no-op) */
     }
     
-    /**
-     Sets the logger implementation to be used for all logging operations.
-     
-     - Parameter logger: The `RSSLogger` implementation to be used.
-     */
+    @available(*, deprecated, message: "Pass the logger instance via RSSConfigurationBuilder.setLogger(_:) instead for per-instance logging.")
     @objc
     public static func setLogger(_ logger: ObjCLogger) {
         LoggerAnalytics.setLogger(ObjCLoggerAdapter(logger: logger))
     }
     
-    /**
-     Sets the log level that determines which logs will be processed.
-     
-     - Parameter level: The log level to set `RSSLogLevel`.
-     */
+    @available(*, deprecated, message: "Pass logLevel via RSSConfigurationBuilder.setLogLevel(_:) instead for per-instance logging.")
     @objc
     public static func setLogLevel(_ level: LogLevel) {
         LoggerAnalytics.logLevel = level
     }
     
-    /**
-     Gets the current log level.
-     
-     - Returns: The current log level as an `RSSLogLevel`.
-     */
+    @available(*, deprecated, message: "Pass logLevel via RSSConfigurationBuilder.setLogLevel(_:) instead for per-instance logging.")
     @objc
     public static func getLogLevel() -> LogLevel {
         return LoggerAnalytics.logLevel
     }
     
-    /**
-     Logs a verbose-level message using the underlying Swift logger.
-
-     - Parameter log: The verbose message to log.
-     */
+    @available(*, deprecated, message: "Use instance-based logging instead. Configure logger and logLevel via RSSConfigurationBuilder, then inside a custom plugin, call analytics.logger.verbose(_:).")
     @objc
     public static func verbose(_ log: String) {
         LoggerAnalytics.verbose(log)
     }
     
-    /**
-     Logs a debug-level message using the underlying Swift logger.
-
-     - Parameter log: The debug message to log.
-     */
+    @available(*, deprecated, message: "Use instance-based logging instead. Configure logger and logLevel via RSSConfigurationBuilder, then inside a custom plugin, call analytics.logger.debug(_:).")
     @objc
     public static func debug(_ log: String) {
         LoggerAnalytics.debug(log)
     }
     
-    /**
-     Logs an informational message using the underlying Swift logger.
-
-     - Parameter log: The info message to log.
-     */
+    @available(*, deprecated, message: "Use instance-based logging instead. Configure logger and logLevel via RSSConfigurationBuilder, then inside a custom plugin, call analytics.logger.info(_:).")
     @objc
     public static func info(_ log: String) {
         LoggerAnalytics.info(log)
     }
     
-    /**
-     Logs a warning-level message using the underlying Swift logger.
-
-     - Parameter log: The warning message to log.
-     */
+    @available(*, deprecated, message: "Use instance-based logging instead. Configure logger and logLevel via RSSConfigurationBuilder, then inside a custom plugin, call analytics.logger.warn(_:).")
     @objc
     public static func warn(_ log: String) {
         LoggerAnalytics.warn(log)
     }
     
-    /**
-     Logs an error message using the underlying Swift logger.
-
-     - Parameters:
-       - log: The error message to log.
-       - error: An optional `NSError` providing error details.
-     */
+    @available(*, deprecated, message: "Use instance-based logging instead. Configure logger and logLevel via RSSConfigurationBuilder, then inside a custom plugin, call analytics.logger.error(_:error:).")
     @objc
     public static func error(_ log: String, error: NSError?) {
         LoggerAnalytics.error(log, cause: error)

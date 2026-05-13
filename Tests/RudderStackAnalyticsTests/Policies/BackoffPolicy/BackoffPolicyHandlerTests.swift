@@ -20,7 +20,7 @@ class BackoffPolicyHandlerTests {
     
     @Test("given backoff policy handler with mock policy, when calling reset, then resets underlying policy")
     func testReset() async {
-        let handler = BackoffPolicyHandler(policy: mockPolicy)
+        let handler = BackoffPolicyHandler(logger: MockConstant.noOpLogger, policy: mockPolicy)
         
         await handler.reset()
         
@@ -30,7 +30,7 @@ class BackoffPolicyHandlerTests {
     @Test("given handler with attempts below max, when calling wait with backoff, then applies backoff delay")
     func testWaitWithBackoffBelowMaxAttempts() async {
         mockPolicy.delayToReturn = 50 // Short delay for testing
-        let handler = BackoffPolicyHandler(policy: mockPolicy)
+        let handler = BackoffPolicyHandler(logger: MockConstant.noOpLogger, policy: mockPolicy)
         
         let startTime = Date()
         await handler.waitWithBackoff()
@@ -44,7 +44,7 @@ class BackoffPolicyHandlerTests {
     @Test("given handler exceeding max attempts, when calling wait with backoff, then enters cool-off period")
     func testWaitWithBackoffExceedsMaxAttempts() async {
         mockPolicy.delayToReturn = 10 // Very short delay for testing
-        let handler = BackoffPolicyHandler(policy: mockPolicy, coolOffPeriodMillis: 10)
+        let handler = BackoffPolicyHandler(logger: MockConstant.noOpLogger, policy: mockPolicy, coolOffPeriodMillis: 10)
         
         // Call waitWithBackoff 5 times to reach max attempts
         for _ in 1...BackoffPolicyConstants.maxAttempts {
@@ -62,7 +62,7 @@ class BackoffPolicyHandlerTests {
     
     @Test("given backoff policy handler, when calling reset multiple times, then resets policy each time")
     func testMultipleResets() async {
-        let handler = BackoffPolicyHandler(policy: mockPolicy)
+        let handler = BackoffPolicyHandler(logger: MockConstant.noOpLogger, policy: mockPolicy)
         
         await handler.reset()
         await handler.reset()
@@ -74,7 +74,7 @@ class BackoffPolicyHandlerTests {
     @Test("given handler with real policy, when calling wait and reset, then operations complete successfully")
     func testIntegrationWithRealPolicy() async {
         let policy = ExponentialBackoffPolicy(minDelayInMillis: 10) // Very short for testing
-        let handler = BackoffPolicyHandler(policy: policy)
+        let handler = BackoffPolicyHandler(logger: MockConstant.noOpLogger, policy: policy)
         
         let startTime = Date()
         await handler.waitWithBackoff()

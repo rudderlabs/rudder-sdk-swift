@@ -35,19 +35,20 @@ final class EventWriter {
             do {
                 let processingEvent = ProcessingEvent(type: .message, event: event)
                 try self.writeChannel.send(processingEvent)
+                self.analytics.logger.verbose(log: "EventWriter: Event queued for writing (messageId=\(event.messageId))")
             } catch {
-                LoggerAnalytics.error("Failed to send event to writeChannel", cause: error)
+                self.analytics.logger.error(log: "Failed to send event to writeChannel", error: error)
             }
         }
     }
-    
+
     func flush() {
-        LoggerAnalytics.info("Flush triggered...")
+        self.analytics.logger.debug(log: "EventWriter: Flush signal sent to upload channel")
         Task {
             do {
                 try self.writeChannel.send(self.flushEvent)
             } catch {
-                LoggerAnalytics.error("Failed to send flush signal to writeChannel", cause: error)
+                self.analytics.logger.error(log: "Failed to send flush signal to writeChannel", error: error)
             }
         }
     }
@@ -64,9 +65,11 @@ final class EventWriter {
                     await self.updateAnonymousIdAndRolloverIfNeeded(processingEvent: event)
 
                     if let json = event.event?.jsonString {
-                        LoggerAnalytics.debug("Processing event: \(json)")
+                        self.analytics.logger.verbose(log: "EventWriter: Storing event (messageId=\(event.event?.messageId ?? "")): \(json)")
                         await self.storage.write(event: json)
                         self.flushPolicyFacade.updateCount()
+                    } else {
+                        self.analytics.logger.error(log: "EventWriter: Failed to encode event (messageId=\(event.event?.messageId ?? "")); dropping it.", error: nil)
                     }
                 }
                 
@@ -81,7 +84,7 @@ final class EventWriter {
                             try self.uploadChannel.send(Constants.defaultConfig.uploadSignal)
                         }
                     } catch {
-                        LoggerAnalytics.error("Error on upload signal", cause: error)
+                        self.analytics.logger.error(log: "Error on upload signal", error: error)
                     }
                 }
             }
@@ -106,6 +109,7 @@ final class EventWriter {
               currentEventAnonymousId != lastEventAnonymousId else { return }
         
         // Rollover when last and current anonymousId are different
+        self.analytics.logger.debug(log: "EventWriter: AnonymousId changed, triggering file rollover")
         await self.storage.rollover()
         self.lastEventAnonymousId = currentEventAnonymousId
         self.storage.write(value: self.lastEventAnonymousId, key: Constants.storageKeys.lastEventAnonymousId)

@@ -81,7 +81,7 @@ public class Analytics {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
-        self.logger = AnalyticsLogger(logger: configuration.logger, logLevel: configuration.logLevel)
+        self.logger = configuration.logger
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())
@@ -102,7 +102,7 @@ extension Analytics {
         guard self.isAnalyticsActive else { return }
         
         if let sessionId, String(sessionId).count < SessionConstants.minSessionIdLength {
-            LoggerAnalytics.error("Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.")
+            logger.error(log: "Analytics: Session ID should be at least \(SessionConstants.minSessionIdLength) characters long.", error: nil)
             return
         }
         
@@ -306,7 +306,7 @@ extension Analytics {
      */
     public func shutdown() {
         guard self.isAnalyticsActive else { return }
-        LoggerAnalytics.debug("Shutting down analytics.")
+        logger.debug(log: "Analytics: Shutting down analytics")
         self.isAnalyticsShutdown = true
         self.processEventChannel.close()
     }
@@ -326,10 +326,10 @@ extension Analytics {
     
         if self.isInvalidWriteKey {
             await self.storage.removeAll()
-            LoggerAnalytics.debug("Invalid write key, Storage cleared.")
+            logger.error(log: "Analytics: Invalid write key. Storage cleared", error: nil)
         }
         
-        LoggerAnalytics.debug("Analytics shutdown complete.")
+        logger.debug(log: "Analytics: Shutdown complete")
     }
 
     /**
@@ -358,7 +358,7 @@ extension Analytics {
     var isAnalyticsActive: Bool {
         get {
             if isAnalyticsShutdown {
-                LoggerAnalytics.error(Constants.log.shutdownMessage)
+                logger.error(log: Constants.log.shutdownMessage, error: nil)
             }
             return !isAnalyticsShutdown
         }
@@ -430,7 +430,7 @@ extension Analytics {
         do {
             try self.processEventChannel.send(event)
         } catch {
-            LoggerAnalytics.error("Failed to process event: \(error)")
+            logger.error(log: "Analytics: Failed to process event: \(error)", error: error)
         }
     }
     
@@ -463,7 +463,7 @@ extension Analytics {
      */
     var isSourceEnabled: Bool {
         if !self.sourceConfigState.state.value.source.isSourceEnabled {
-            LoggerAnalytics.error("Source is disabled. This operation is not allowed.")
+            logger.error(log: "Analytics: Source is disabled. This operation is not allowed", error: nil)
             return false
         }
         return true
@@ -535,7 +535,7 @@ extension Analytics {
             }
         }
         
-        LoggerAnalytics.debug("Deep Link Opened: \(url.absoluteString)")
+        logger.debug(log: "Analytics: Deep Link Opened: \(url.absoluteString)")
         
         // Track the event
         self.track(name: "Deep Link Opened", properties: properties)

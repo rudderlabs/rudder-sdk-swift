@@ -123,7 +123,7 @@ extension HttpNetworkTests {
         }
         
         guard let request = makeRequest(urlString: urlString) else { return nil }
-        return await HttpNetwork.perform(request: request)
+        return await HttpNetwork.perform(request: request, logger: MockConstant.noOpLogger)
     }
     
     private func expectHttpFailure(_ result: Result<Data, Error>?, expectedError: HttpNetworkError, context: String) {

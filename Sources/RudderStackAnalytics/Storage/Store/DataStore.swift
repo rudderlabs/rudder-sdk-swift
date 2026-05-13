@@ -30,8 +30,8 @@ final class StoreProvider {
         /* Prevent instantiation (no-op) */
     }
     
-    static func prepareProvider(for storageMode: StorageMode, writeKey: String) -> any DataStore {
-        return storageMode == .disk ? DiskStore(writeKey: writeKey) : MemoryStore(writeKey: writeKey)
+    static func prepareProvider(for storageMode: StorageMode, writeKey: String, logger: Logger) -> any DataStore {
+        return storageMode == .disk ? DiskStore(writeKey: writeKey, logger: logger) : MemoryStore(writeKey: writeKey, logger: logger)
     }
 }
 

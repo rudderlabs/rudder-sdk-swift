@@ -11,20 +11,20 @@ import Foundation
 /**
  The interface of the storage module, capable of handling both `KeyValueStore` and `DataStore` objects.
  */
-final class BasicStorage: Storage {
-    
+final class BasicStorage: Storage, TypeIdentifiable {
+
     let writeKey: String
     let storageMode: StorageMode
-    
+
     private let keyValueStore: KeyValueStore
     private let dataStore: any DataStore
-    
-    init(writeKey: String, storageMode: StorageMode = Constants.defaultConfig.storageMode) {
+
+    init(writeKey: String, logger: Logger, storageMode: StorageMode = Constants.defaultConfig.storageMode) {
         self.writeKey = writeKey
         self.storageMode = storageMode
-        
-        self.dataStore = StoreProvider.prepareProvider(for: storageMode, writeKey: writeKey)
-        self.keyValueStore = KeyValueStore(writeKey: writeKey)
+
+        self.dataStore = StoreProvider.prepareProvider(for: storageMode, writeKey: writeKey, logger: logger)
+        self.keyValueStore = KeyValueStore(writeKey: writeKey, logger: logger)
     }
     
     var eventStorageMode: StorageMode {

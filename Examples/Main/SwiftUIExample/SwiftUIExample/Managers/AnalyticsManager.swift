@@ -54,9 +54,7 @@ final class AnalyticsManager {
     }
 
     func initializeAnalyticsSDK() {
-        LoggerAnalytics.logLevel = .verbose // Set the log level for analytics
-        
-        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com")
+        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logger: CustomLogger(), logLevel: .verbose)
         self.analytics = Analytics(configuration: config)
         
         self.analytics?.add(plugin: payloadPlugin)
@@ -148,9 +146,9 @@ extension AnalyticsManager {
         sampleCustomIntegrationPlugin.onDestinationReady { _, result in
             switch result {
             case .success:
-                LoggerAnalytics.debug("AnalyticsManager: destination \(pluginKey) created successfully")
+                print("AnalyticsManager: destination \(pluginKey) created successfully")
             case .failure(let error):
-                LoggerAnalytics.debug("AnalyticsManager: destination failed with error : \(error.localizedDescription)")
+                print("AnalyticsManager: destination failed with error : \(error.localizedDescription)")
             }
         }
     }

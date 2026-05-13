@@ -23,7 +23,7 @@ enum HttpNetworkError: Error, Equatable {
 /**
  This class handles all network calls, returning either response data or an error.
  */
-final class HttpNetwork {
+final class HttpNetwork: TypeIdentifiable {
     
     private init() {
         /* Prevent instantiation (no-op) */
@@ -34,27 +34,29 @@ final class HttpNetwork {
         return URLSession(configuration: configuration)
     }()
     
-    static func perform(request: URLRequest) async -> Result<Data, Error> {
-        LoggerAnalytics.debug("Request URL: \(request.url?.absoluteString ?? "No URL")")
-        
+    static func perform(request: URLRequest, logger: Logger) async -> Result<Data, Error> {
+        logger.debug(log: "\(HttpNetwork.className): Request URL: \(request.url?.absoluteString ?? "No URL")")
+
         do {
             let (data, response) = try await session.data(for: request)
-            
+
             guard let httpResponse = response as? HTTPURLResponse else {
                 return .failure(HttpNetworkError.invalidResponse)
             }
-            
+
             let statusCode = httpResponse.statusCode
-            
-            LoggerAnalytics.debug("Response Status Code: \(statusCode)")
-            LoggerAnalytics.debug("Response Data: \(data.jsonString ?? "No Data")")
-            
+
+            logger.debug(log: "\(HttpNetwork.className): Response Status Code: \(statusCode)")
+            logger.debug(log: "\(HttpNetwork.className): Response Data: \(data.jsonString ?? "No Data")")
+
             guard (HttpStateCode.success200...HttpStateCode.success299).contains(statusCode) else {
                 return .failure(HttpNetworkError.requestFailed(statusCode))
             }
-            
+
             return .success(data)
         } catch {
+            logger.error(log: "\(HttpNetwork.className): Network error for \(request.url?.absoluteString ?? "unknown URL"): \(error.localizedDescription)", error: error)
+
             // Check if the error is network-related
             if let urlError = error as? URLError {
                 switch urlError.code {

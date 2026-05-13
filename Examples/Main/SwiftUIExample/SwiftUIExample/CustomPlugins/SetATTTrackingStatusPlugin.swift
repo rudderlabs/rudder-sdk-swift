@@ -33,7 +33,7 @@ class SetATTTrackingStatusPlugin: Plugin {
     
     init(attTrackingStatus: UInt) {
         if attTrackingStatus > 3 {
-            LoggerAnalytics.error("SetATTTrackingStatusPlugin: Invalid attTrackingStatus value: \(attTrackingStatus). Defaulting to 0.")
+            print("SetATTTrackingStatusPlugin: Invalid attTrackingStatus value: \(attTrackingStatus). Defaulting to 0.")
             self.attTrackingStatus = 0
         } else {
             self.attTrackingStatus = attTrackingStatus
@@ -50,7 +50,7 @@ class SetATTTrackingStatusPlugin: Plugin {
     
     /// Applies attTrackingStatus inside context.device
     private func replaceATTStatus(event: any Event) -> any Event {
-        LoggerAnalytics.debug("SetATTTrackingStatusPlugin: Setting attTrackingStatus: \(attTrackingStatus) in event context.device")
+        logger.debug(log:"SetATTTrackingStatusPlugin: Setting attTrackingStatus: \(attTrackingStatus) in event context.device")
         var updatedEvent = event
         var contextDict = updatedEvent.context?.rawDictionary ?? [:]
         

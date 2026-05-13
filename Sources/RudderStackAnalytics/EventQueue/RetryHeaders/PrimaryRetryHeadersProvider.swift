@@ -10,15 +10,17 @@ import Foundation
 /**
  Default implementation of `RetryHeadersProvider` protocol.
  */
-final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
-    
+final class PrimaryRetryHeadersProvider: RetryHeadersProvider, TypeIdentifiable {
+
     private let storage: KeyValueStorage
-    
+    private let logger: Logger
+
     private static let minSinceLastAttemptInMillis: UInt64 = 0
     private static let firstAttempt = 1
-    
-    init(storage: KeyValueStorage) {
+
+    init(storage: KeyValueStorage, logger: Logger) {
         self.storage = storage
+        self.logger = logger
     }
     
     func prepareHeaders(batchId: Int, currentTimestampInMillis: UInt64) -> [String: String] {
@@ -28,7 +30,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
         ? currentTimestampInMillis - metadata.lastAttemptTimestampInMillis
         : Self.minSinceLastAttemptInMillis
         
-        LoggerAnalytics.verbose("Adding retry headers: attempt=\(metadata.attempt), sinceLastAttempt=\(sinceLastAttemptInMillis)ms, reason=\(metadata.reason)")
+        logger.verbose(log: "\(className): Adding retry headers: attempt=\(metadata.attempt), sinceLastAttempt=\(sinceLastAttemptInMillis)ms, reason=\(metadata.reason)")
         
         return [
             RetryHeaderKeys.rsaRetryAttempt: "\(metadata.attempt)",
@@ -47,7 +49,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
         let newMetadata = RetryMetadata(batchId: batchId, attempt: attempt, lastAttemptTimestampInMillis: timestampInMillis, reason: reason)
         
         guard let json = newMetadata.toJson() else {
-            LoggerAnalytics.error("Failed to serialize RetryMetadata to JSON.")
+            logger.error(log: "\(className): Failed to serialize RetryMetadata to JSON.", error: nil)
             return
         }
         
@@ -55,7 +57,7 @@ final class PrimaryRetryHeadersProvider: RetryHeadersProvider {
     }
     
     func clear() {
-        LoggerAnalytics.verbose("Clearing retry metadata from storage")
+        logger.verbose(log: "\(className): Clearing retry metadata from storage")
         self.storage.remove(key: Constants.storageKeys.retryMetadata)
     }
 }
@@ -65,12 +67,12 @@ private extension PrimaryRetryHeadersProvider {
         guard let json: String = self.storage.read(key: Constants.storageKeys.retryMetadata), !json.isEmpty else { return nil }
         
         guard let metadata = RetryMetadata.fromJson(json) else {
-            LoggerAnalytics.warn("Failed to parse retry metadata from JSON.")
+            logger.warn(log: "\(className): Failed to parse retry metadata from JSON.")
             return nil
         }
         
         guard metadata.batchId == batchId else {
-            LoggerAnalytics.verbose("Discarding stale retry metadata: batchId mismatch")
+            logger.verbose(log: "\(className): Discarding stale retry metadata: batchId mismatch")
             return nil
         }
         

@@ -10,15 +10,13 @@ import RudderStackAnalytics
 
 /**
  A basic implementation of the `Logger` protocol that prints analytics logs to the console.
- 
+
  ## Usage:
-
  ```swift
- // 1. Set an instance of this class as the logger for Analytics
- analytics.setLogger(logger: CustomLogger())
-
- // 2. Use `LoggerAnalytics` to log messages
- LoggerAnalytics.info("Custom logger initialized.")
+ // Pass an instance as the logger when configuring the SDK
+ let config = Configuration(writeKey: "WRITE_KEY", dataPlaneUrl: "DATA_PLANE_URL", logger: CustomLogger(), logLevel: .verbose)
+ let analytics = Analytics(configuration: config)
+ ```
  */
 
 class CustomLogger: Logger {

@@ -57,9 +57,9 @@ extension Date {
 
 // MARK: - UserDefaults
 extension UserDefaults {
-    static func rudder(_ writeKey: String) -> UserDefaults? {
+    static func rudder(key writeKey: String, logger: Logger) -> UserDefaults? {
         guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
-            LoggerAnalytics.debug("Bundle.main.bundleIdentifier is nil. UserDefaults suite cannot be created. Key-value storage will be disabled and data may be lost.")
+            logger.debug(log: "UserDefaults: Bundle.main.bundleIdentifier is nil. UserDefaults suite cannot be created. Key-value storage will be disabled and data may be lost.")
             return nil
         }
         let suiteName = bundleIdentifier + ".analytics." + writeKey
@@ -128,14 +128,14 @@ extension FileManager {
     }
     
     @discardableResult
-    static func delete(item path: String) -> Bool {
+    static func delete(item path: String, logger: Logger) -> Bool {
         let fileUrl = URL(fileURLWithPath: path)
         do {
             try FileManager.default.removeItem(at: fileUrl)
-            LoggerAnalytics.debug("Removed item at path: \(path)")
+            logger.debug(log: "FileManager: Removed item at path: \(path)")
             return true
         } catch {
-            LoggerAnalytics.error("Failed to remove item at path: \(path)", cause: error)
+            logger.error(log: "FileManager: Failed to remove item at path: \(path)", error: error)
             return false
         }
     }
@@ -166,7 +166,6 @@ extension Encodable {
             let jsonData = try encoder.encode(self)
             return jsonData.jsonString
         } catch {
-            LoggerAnalytics.error("Encoding JSON Error", cause: error)
             return nil
         }
     }

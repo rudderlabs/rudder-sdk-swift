@@ -11,17 +11,19 @@ import Foundation
 /**
  Actor is responsible for managing the backoff policy for retrying operations.
  */
-final actor BackoffPolicyHandler {
+final actor BackoffPolicyHandler: TypeIdentifiable {
     private let maxAttempts: Int
     private let coolOffPeriodMillis: Int
     private var currentAttempt: Int
     private var policy: BackoffPolicy
-    
-    init(policy: BackoffPolicy = ExponentialBackoffPolicy(), coolOffPeriodMillis: Int = BackoffPolicyConstants.coolOffPeriodInMilliseconds) {
+    private let logger: Logger
+
+    init(logger: Logger, policy: BackoffPolicy = ExponentialBackoffPolicy(), coolOffPeriodMillis: Int = BackoffPolicyConstants.coolOffPeriodInMilliseconds) {
         self.maxAttempts = BackoffPolicyConstants.maxAttempts
         self.coolOffPeriodMillis = coolOffPeriodMillis
         self.policy = policy
         self.currentAttempt = 0
+        self.logger = logger
     }
 
     /**
@@ -36,9 +38,9 @@ final actor BackoffPolicyHandler {
      Applies the cool-off period before the next retry attempt.
      */
     private func applyCoolOffPeriod() async {
-        LoggerAnalytics.verbose("Max attempts reached. Entering cool-off period.")
+        logger.verbose(log: "\(className): Max attempts reached. Entering cool-off period.")
         self.reset()
-        LoggerAnalytics.verbose("Next attempt will be after \(BackoffPolicyHelper.formatMilliseconds(coolOffPeriodMillis)).")
+        logger.verbose(log: "\(className): Next attempt will be after \(BackoffPolicyHelper.formatMilliseconds(coolOffPeriodMillis)).")
         try? await BackoffPolicyHelper.sleep(milliseconds: coolOffPeriodMillis)
     }
 
@@ -47,7 +49,7 @@ final actor BackoffPolicyHandler {
      */
     private func applyBackoff() async {
         let delay = self.policy.nextDelayInMilliseconds()
-        LoggerAnalytics.verbose("Sleeping for \(BackoffPolicyHelper.formatMilliseconds(delay)) (attempt \(currentAttempt) of \(maxAttempts)).")
+        logger.verbose(log: "\(className): Sleeping for \(BackoffPolicyHelper.formatMilliseconds(delay)) (attempt \(currentAttempt) of \(maxAttempts)).")
         try? await BackoffPolicyHelper.sleep(milliseconds: delay)
     }
 
@@ -56,7 +58,7 @@ final actor BackoffPolicyHandler {
      This method should be called when the backoff policy needs to be restarted.
      */
     func reset() {
-        LoggerAnalytics.verbose("Resetting retry attempts and backoff policy.")
+        logger.verbose(log: "\(className): Resetting retry attempts and backoff policy.")
         self.currentAttempt = 0
         self.policy.resetBackoff()
     }

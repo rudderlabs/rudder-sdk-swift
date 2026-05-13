@@ -18,7 +18,7 @@ enum SessionType {
 /**
  This class handles session management for both manual and automatic types.
  */
-final class SessionHandler {
+final class SessionHandler: TypeIdentifiable {
     
     private var storage: KeyValueStorage
     private var sessionState: StateImpl<SessionInfo>
@@ -37,32 +37,37 @@ final class SessionHandler {
             self.checkAndStartSessionOnLaunch()
             self.attachSessionTrackingObservers()
         } else if !isSessionManual {
+            analytics.logger.debug(log: "\(className): Ending session — both manual and automatic session tracking is disabled")
             self.endSession()
         }
     }
     
     private func checkAndStartSessionOnLaunch() {
         guard self.sessionId == nil || self.isSessionManual || self.isSessionTimedOut else { return }
-        self.startSession(id: Self.generatedSessionId, type: .automatic)
+        let id = Self.generatedSessionId
+        analytics.logger.debug(log: "\(className): Starting session on launch (id=\(id))")
+        self.startSession(id: id, type: .automatic)
     }
-    
+
     func startSession(id: UInt64, type: SessionType) {
+        analytics.logger.debug(log: "\(className): Starting \(type == .manual ? "manual" : "automatic") session (id=\(id))")
         self.sessionState.dispatch(action: StartSessionAction(sessionId: id, sessionType: type))
-        
+
         self.sessionInstance.storeSessionId(id: id, storage: self.storage)
         self.sessionInstance.storeIsSessionStart(isSessionStart: true, storage: self.storage)
         self.sessionInstance.storeSessionType(type: type, storage: self.storage)
-        
+
         if isSessionManual {
             detachSessionTrackingObservers()
         }
     }
-    
+
     func endSession() {
         self.detachSessionTrackingObservers()
-        
+
         self.sessionState.dispatch(action: EndSessionAction())
         self.sessionInstance.resetSessionState(storage: self.storage)
+        analytics.logger.debug(log: "\(className): Session ended")
     }
     
     func refreshSession() {
@@ -156,10 +161,8 @@ extension SessionHandler {
         let currentTime = self.systemCurrentTime
         
         if currentTime <= self.lastActivityTime {
-            LoggerAnalytics.warn(
-                "Current system time is less than or equal to last activity time." +
-                " This indicates potential clock tampering. Resetting the session"
-            )
+            analytics.logger.warn(log: "\(className): Current system time is less than or equal to last activity time." +
+                " This indicates potential clock tampering. Resetting the session")
             return true
         }
         

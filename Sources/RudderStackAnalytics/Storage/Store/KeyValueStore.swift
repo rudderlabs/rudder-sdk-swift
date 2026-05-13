@@ -13,10 +13,10 @@ import Foundation
 final class KeyValueStore {
     private let writeKey: String
     private let userDefaults: UserDefaults?
-    
-    init(writeKey: String) {
+
+    init(writeKey: String, logger: Logger) {
         self.writeKey = writeKey
-        self.userDefaults = UserDefaults.rudder(self.writeKey)
+        self.userDefaults = UserDefaults.rudder(key: self.writeKey, logger: logger)
     }
 }
 

@@ -11,15 +11,17 @@ import Foundation
 /**
  An actor designed to store and retrieve events using memory storage.
  */
-final actor MemoryStore {
-    
+final actor MemoryStore: TypeIdentifiable {
+
     let writeKey: String
     var dataItems: [EventDataItem] = []
     private let keyValueStore: KeyValueStore
-    
-    init(writeKey: String) {
+    private let logger: Logger
+
+    init(writeKey: String, logger: Logger) {
         self.writeKey = writeKey
-        self.keyValueStore = KeyValueStore(writeKey: writeKey)
+        self.logger = logger
+        self.keyValueStore = KeyValueStore(writeKey: writeKey, logger: logger)
     }
     
     private func store(event: String) {
@@ -30,7 +32,7 @@ final actor MemoryStore {
         
         if let existingData = dataItem.batch.utf8Data, existingData.count > DataStoreConstants.maxBatchSize {
             self.finish()
-            LoggerAnalytics.info("Batch size exceeded. Closing the current batch..")
+            logger.debug(log: "\(className): Batch size exceeded. Closing the current batch.")
             self.store(event: event)
             return
         }
@@ -74,13 +76,13 @@ final actor MemoryStore {
     private func removeItem(using id: String) -> Bool {
         guard let firstIndex = self.dataItems.firstIndex(where: { $0.reference == id }) else { return false }
         self.dataItems.remove(at: firstIndex)
-        LoggerAnalytics.debug("Item removed: \(id)")
+        logger.debug(log: "\(className): Item removed: \(id)")
         return true
     }
     
     private func removeAllItems() {
         self.dataItems.removeAll { $0.reference.hasPrefix(writeKey + DataStoreConstants.referenceSeparator) }
-        LoggerAnalytics.debug("Items removed related to reference: \(writeKey)")
+        logger.debug(log: "\(className): Items removed related to reference: \(writeKey)")
     }
 }
 
