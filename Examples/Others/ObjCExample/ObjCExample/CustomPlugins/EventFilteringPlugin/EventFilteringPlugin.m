@@ -56,7 +56,7 @@
     if ([event isKindOfClass:[RSSTrackEvent class]]) {
         RSSTrackEvent *trackEvent = (RSSTrackEvent *)event;
         if ([self shouldFilterEvent:trackEvent]) {
-            [RSSLoggerAnalytics verbose:[NSString stringWithFormat:@"EventFilteringPlugin: Event \"%@\" is filtered out.", trackEvent.eventName]];
+            [self.client.logger verbose:[NSString stringWithFormat:@"EventFilteringPlugin: Event \"%@\" is filtered out.", trackEvent.eventName]];
             return nil; // Filter out this event
         }
     }

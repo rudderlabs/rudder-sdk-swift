@@ -35,11 +35,13 @@
 
     NSString *writeKey = @"sample-write-key";
     NSString *dataPlaneUrl = @"https://data-plane.analytics.com";
-    
-    [RSSLoggerAnalytics setLogLevel: RSSLogLevelVerbose];
-    
+
     RSSConfigurationBuilder *builder = [[RSSConfigurationBuilder alloc] initWithWriteKey:writeKey dataPlaneUrl:dataPlaneUrl];
     [builder setGzipEnabled: YES];
+    
+    CustomLogger *logger = [CustomLogger new];
+    [builder setLogger: logger];
+    [builder setLogLevel:RSSLogLevelVerbose];
     
     NSArray *flushPolicies = @[[RSSStartupFlushPolicy new], [RSSFrequencyFlushPolicy new], [RSSCountFlushPolicy new]];
     [builder setFlushPolicies: flushPolicies];
@@ -172,11 +174,6 @@
 
 - (NSDictionary * _Nullable)traits {
     return self.client.traits;
-}
-
-- (void)addCustomLogger {
-    CustomLogger *logger = [CustomLogger new];
-    [RSSLoggerAnalytics setLogger: logger];
 }
 
 - (void)trackDeepLinking {

@@ -117,11 +117,8 @@ class ShareViewController: UIViewController {
 
 extension ShareViewController {
     func initializeAnalyticsSDK() {
-        // Set the log level for analytics
-        LoggerAnalytics.logLevel = .verbose
-
         // Initialize the RudderStack Analytics SDK
-        let config = Configuration(writeKey: "<WRITE_KEY>", dataPlaneUrl: "<DATA_PLANE_URL>")
+        let config = Configuration(writeKey: "<WRITE_KEY>", dataPlaneUrl: "<DATA_PLANE_URL>", logLevel: .verbose)
         self.analytics = Analytics(configuration: config)
     }
 }

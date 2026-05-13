@@ -42,7 +42,7 @@
  @param event The event to modify
  */
 - (void)replaceAnonymousIdInEvent:(RSSEvent *)event {
-    [RSSLoggerAnalytics verbose:[NSString stringWithFormat:@"SetAnonymousIdPlugin: Replacing anonymousId: %@ in the event payload", self.anonymousId]];
+    [self.client.logger verbose:[NSString stringWithFormat:@"SetAnonymousIdPlugin: Replacing anonymousId: %@ in the event payload", self.anonymousId]];
     
     event.anonymousId = self.anonymousId;
 }
