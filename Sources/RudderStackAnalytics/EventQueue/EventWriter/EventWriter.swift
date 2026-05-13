@@ -68,6 +68,8 @@ final class EventWriter {
                         self.analytics.logger.verbose(log: "EventWriter: Storing event (messageId=\(event.event?.messageId ?? "")): \(json)")
                         await self.storage.write(event: json)
                         self.flushPolicyFacade.updateCount()
+                    } else {
+                        self.analytics.logger.error(log: "EventWriter: Failed to encode event (messageId=\(event.event?.messageId ?? "")); dropping it.", error: nil)
                     }
                 }
                 

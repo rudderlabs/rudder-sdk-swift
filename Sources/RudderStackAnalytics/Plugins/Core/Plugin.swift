@@ -83,7 +83,7 @@ public extension Plugin {
      Convenience accessor for the per-instance logger from the associated `Analytics` instance.
      */
     var logger: Logger {
-        analytics?.logger ?? AnalyticsLogger(logger: SwiftLogger(), logLevel: .none)
+        analytics?.logger ?? NoOpLogger.shared
     }
 
     /**

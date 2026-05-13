@@ -64,6 +64,11 @@ final class PermissionManager: NSObject {
     /// and apps without the push entitlement, where neither success nor failure
     /// delegate methods ever fire.
     private static let pushTokenTimeoutNanos: UInt64 = 5 * NSEC_PER_SEC
+
+    /// Time `UIApplication.didBecomeActiveNotification` has to fire before we
+    /// abandon the wait. Guards against background launches and other edge
+    /// cases where the notification never arrives.
+    private static let didBecomeActiveTimeoutNanos: UInt64 = 5 * NSEC_PER_SEC
     
     // MARK: - State
     
@@ -71,6 +76,42 @@ final class PermissionManager: NSObject {
     private var bluetoothContinuation: CheckedContinuation<Void, Never>?
     private var pushTokenContinuation: CheckedContinuation<Void, Never>?
     private var didBecomeActiveContinuation: CheckedContinuation<Void, Never>?
+    
+    // MARK: - Public API
+    
+    /// Request a sequence of permissions. `completion` is guaranteed to run on
+    /// the main thread after the last permission resolves (or times out).
+    func requestPermissions(_ permissions: [PermissionType], completion: @escaping () -> Void) {
+        // The Task strongly captures `self`, so callers can store the manager
+        // wherever they like — it stays alive until the chain finishes.
+        Task {
+            for permission in permissions {
+                await self.request(permission)
+            }
+            completion()
+        }
+    }
+    
+    /// async/await variant for callers that don't need a closure.
+    func requestPermissions(_ permissions: [PermissionType]) async {
+        for permission in permissions {
+            await request(permission)
+        }
+    }
+    
+    /// Forward from BOTH
+    /// `application(_:didRegisterForRemoteNotificationsWithDeviceToken:)` AND
+    /// `application(_:didFailToRegisterForRemoteNotificationsWithError:)`.
+    func didRegisterForRemoteNotifications() {
+        resumePushToken()
+    }
+    
+    private func request(_ permission: PermissionType) async {
+        switch permission {
+        case .idfa:             await requestIDFA()
+        case .pushNotification: await requestPushNotification()
+        case .bluetooth:        await requestBluetooth()
+        }
     
     // MARK: - Public API
     
@@ -139,6 +180,59 @@ extension PermissionManager {
                 name: UIApplication.didBecomeActiveNotification,
                 object: nil
             )
+            // Safety net for background launches / edge cases where
+            // didBecomeActiveNotification never arrives.
+            Task { [weak self] in
+                try? await Task.sleep(nanoseconds: Self.didBecomeActiveTimeoutNanos)
+                if self?.didBecomeActiveContinuation != nil {
+                    print("didBecomeActive not received within timeout; continuing chain.")
+                }
+                self?.resumeDidBecomeActive()
+            }
+        }
+    }
+
+    @objc private func handleDidBecomeActive() {
+        resumeDidBecomeActive()
+    }
+
+    private func resumeDidBecomeActive() {
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+        let cont = didBecomeActiveContinuation
+        didBecomeActiveContinuation = nil
+        cont?.resume()
+    }
+}
+
+// MARK: - Push Notification
+extension PermissionManager {
+    fileprivate func requestIDFA() async {
+        // ATT only presents the prompt while the app is foreground/active. If
+        // we're called from `didFinishLaunchingWithOptions`, wait for the
+        // didBecomeActive transition first.
+        if UIApplication.shared.applicationState != .active {
+            await waitForActive()
+        }
+        let status = await ATTrackingManager.requestTrackingAuthorization()
+        print("IDFA status: \(status.rawValue)")
+        if status == .authorized {
+            let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString.lowercased()
+            print("IDFA: \(idfa)")
+        }
+    }
+    
+    /// Uses the selector-based observer API so we don't have to capture an
+    /// `NSObjectProtocol` token inside a `@Sendable` notification closure.
+    /// `removeObserver(self, name:)` correspondingly tears it down.
+    private func waitForActive() async {
+        await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+            didBecomeActiveContinuation = cont
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handleDidBecomeActive),
+                name: UIApplication.didBecomeActiveNotification,
+                object: nil
+            )
         }
     }
     
@@ -152,6 +246,16 @@ extension PermissionManager {
 
 // MARK: - Push Notification
 extension PermissionManager {
+    fileprivate func requestPushNotification() async {
+        let center = UNUserNotificationCenter.current()
+        let granted = (try? await center.requestAuthorization(options: [.alert, .sound, .badge])) ?? false
+        print("Push authorization granted: \(granted)")
+        guard granted else { return }
+        
+        UIApplication.shared.registerForRemoteNotifications()
+        await waitForPushToken()
+    }
+    
     fileprivate func requestPushNotification() async {
         let center = UNUserNotificationCenter.current()
         let granted = (try? await center.requestAuthorization(options: [.alert, .sound, .badge])) ?? false

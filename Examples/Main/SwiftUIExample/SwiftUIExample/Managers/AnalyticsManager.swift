@@ -54,7 +54,7 @@ final class AnalyticsManager {
     }
 
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logLevel: .verbose)
+        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logger: CustomLogger(), logLevel: .verbose)
         self.analytics = Analytics(configuration: config)
         
         self.analytics?.add(plugin: payloadPlugin)
