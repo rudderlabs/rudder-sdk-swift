@@ -60,6 +60,11 @@ public class Analytics {
     private(set) var isAnalyticsShutdown: Bool = false
     
     /**
+     The per-instance logger, built from the configuration at init time.
+     */
+    private(set) var logger: Logger
+    
+    /**
      A flag indicating whether the write key provided is invalid.
      */
     var isInvalidWriteKey: Bool = false
@@ -76,6 +81,7 @@ public class Analytics {
      */
     public init(configuration: Configuration) {
         self.configuration = configuration
+        self.logger = AnalyticsLogger(logger: configuration.logger, logLevel: configuration.logLevel)
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())

@@ -475,6 +475,15 @@ extension ObjCAnalytics {
 
 extension ObjCAnalytics {
     /**
+     The per-instance logger for this analytics client.
+
+     Store this in your plugin's `setup(_:)` and use it to log messages at the configured level.
+     */
+    @objc public var logger: ObjCAnalyticsLogger {
+        ObjCAnalyticsLogger(logger: analytics.logger)
+    }
+
+    /**
      The anonymous ID used for tracking unidentified users.
      */
     @objc public var anonymousId: String? {

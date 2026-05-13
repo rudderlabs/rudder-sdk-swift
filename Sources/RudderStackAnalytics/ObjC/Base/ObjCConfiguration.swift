@@ -22,6 +22,8 @@ public final class ObjCConfigurationBuilder: NSObject {
     private var collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId
     private var trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents
     private var sessionConfiguration = SessionConfiguration()
+    private var logger: Logger = SwiftLogger()
+    private var logLevel: LogLevel = Constants.log.defaultLevel
     
     /**
      Initializes a new configuration builder with a write key and data plane URL.
@@ -63,7 +65,9 @@ public final class ObjCConfigurationBuilder: NSObject {
             flushPolicies: swiftFlushPolicies,
             collectDeviceId: collectDeviceId,
             trackApplicationLifecycleEvents: trackApplicationLifecycleEvents,
-            sessionConfiguration: sessionConfiguration
+            sessionConfiguration: sessionConfiguration,
+            logger: logger,
+            logLevel: logLevel
         )
     }
     
@@ -112,6 +116,22 @@ public final class ObjCConfigurationBuilder: NSObject {
     @discardableResult
     public func setSessionConfiguration(_ configuration: SessionConfiguration) -> Self {
         self.sessionConfiguration = configuration
+        return self
+    }
+
+    /** Sets the logger implementation for this Analytics instance. */
+    @objc
+    @discardableResult
+    public func setLogger(_ logger: ObjCLogger) -> Self {
+        self.logger = ObjCLoggerAdapter(logger: logger)
+        return self
+    }
+
+    /** Sets the log level for this Analytics instance. */
+    @objc
+    @discardableResult
+    public func setLogLevel(_ logLevel: LogLevel) -> Self {
+        self.logLevel = logLevel
         return self
     }
 }

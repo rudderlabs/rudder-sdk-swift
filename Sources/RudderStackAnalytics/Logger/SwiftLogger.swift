@@ -182,3 +182,12 @@ final class SwiftLogger: Logger {
         }
     }
 }
+
+// MARK: - NoOpLogger
+
+/**
+ A `Logger` that discards every message. Used as a shared fallback when no per-instance logger is available yet.
+ */
+struct NoOpLogger: Logger {
+    static let shared = NoOpLogger()
+}
