@@ -64,6 +64,11 @@ final class PermissionManager: NSObject {
     /// and apps without the push entitlement, where neither success nor failure
     /// delegate methods ever fire.
     private static let pushTokenTimeoutNanos: UInt64 = 5 * NSEC_PER_SEC
+
+    /// Time `UIApplication.didBecomeActiveNotification` has to fire before we
+    /// abandon the wait. Guards against background launches and other edge
+    /// cases where the notification never arrives.
+    private static let didBecomeActiveTimeoutNanos: UInt64 = 5 * NSEC_PER_SEC
     
     // MARK: - State
     
@@ -139,10 +144,23 @@ extension PermissionManager {
                 name: UIApplication.didBecomeActiveNotification,
                 object: nil
             )
+            // Safety net for background launches / edge cases where
+            // didBecomeActiveNotification never arrives.
+            Task { [weak self] in
+                try? await Task.sleep(nanoseconds: Self.didBecomeActiveTimeoutNanos)
+                if self?.didBecomeActiveContinuation != nil {
+                    print("didBecomeActive not received within timeout; continuing chain.")
+                }
+                self?.resumeDidBecomeActive()
+            }
         }
     }
-    
+
     @objc private func handleDidBecomeActive() {
+        resumeDidBecomeActive()
+    }
+
+    private func resumeDidBecomeActive() {
         NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
         let cont = didBecomeActiveContinuation
         didBecomeActiveContinuation = nil
