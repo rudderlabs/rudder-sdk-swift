@@ -174,7 +174,10 @@ jobs:
         run: xcodebuild build -scheme RudderStackAnalytics -destination 'generic/platform=watchOS' | xcpretty
 
   # Aggregates results from all jobs and sends a Slack notification.
-  # Always runs — even if upstream jobs fail — so the team is always notified.
+  # Runs whenever the should-run gate has passed, regardless of whether upstream
+  # validation jobs succeeded or failed — so the team is always notified for any
+  # validation run that actually executed. Skipped when should-run is skipped
+  # (body-only PR edits) or fails, since there are no validation results to report.
   pr-validation-summary:
     name: PR Validation Summary
     runs-on: ubuntu-latest
