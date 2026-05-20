@@ -1,36 +1,31 @@
 # PR Validation Workflow
 #
-# Triggered on every PR opened, reopened, updated, or edited against:
+# Triggered on every PR opened, reopened, or updated against:
 #   main, develop, feat/*, refactor/*, release/*, ci/*, fix/*
 #
 # Job execution order:
 #
-#                  ┌─→ pr-title-check     ──┐
-#   should-run ──→ ├─→ sonarcloud-analysis ─┤
-#                  ├─→ swiftlint-check    ──┤──→ build-check ──→ pr-validation-summary
-#                  └─→ test-check         ──┘
+#   ┌─→ sonarcloud-analysis ─┐
+#   ├─→ swiftlint-check    ──┤──→ build-check ──→ pr-validation-summary
+#   └─→ test-check         ──┘
 #
-# - should-run is a fast gate that filters `edited` events: it only proceeds when the
-#   edit touches the PR title or base branch (i.e. github.event.changes.title|base is
-#   set). Body-only edits skip the entire pipeline. Other event types (opened,
-#   reopened, synchronize) always pass the gate.
-# - pr-title-check, sonarcloud-analysis, swiftlint-check, and test-check all run in parallel.
+# - sonarcloud-analysis, swiftlint-check, and test-check all run in parallel.
 # - build-check runs only after swiftlint-check and test-check both pass.
-# - pr-validation-summary runs last (always when validation ran), aggregates results,
-#   and sends a Slack notification. It is also skipped on body-only edits.
+# - pr-validation-summary runs last, aggregates results, and sends a Slack notification.
 # - Concurrency: duplicate runs for the same PR are cancelled automatically.
 #
 # Permissions: contents:read only — no jobs write to issues, PRs, or any other resources.
 #
-# Note: CodeQL security scanning is handled by the codeql.yml workflow which triggers
-#       automatically on every PR alongside these checks.
+# Note: PR title validation lives in the dedicated pr-title-validation.yml workflow,
+#       which owns the `edited` trigger so body-only PR edits don't re-run this
+#       heavy pipeline. CodeQL security scanning is handled by codeql.yml.
 
 name: PR Validation
 
 on:
   pull_request:
     branches: [ "main", "develop", "feat/*", "refactor/*", "release/*", "ci/*", "fix/*" ]
-    types: [ "opened", "reopened", "synchronize", "edited" ]
+    types: [ "opened", "reopened", "synchronize" ]
 
 permissions:
   contents: read
@@ -40,48 +35,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Fast gate that filters out PR `edited` events which don't affect validation.
-  # GitHub fires `edited` on title, body, and base-branch changes; only title and
-  # base changes need to retrigger the pipeline. Body-only edits skip everything.
-  # All other event actions (opened, reopened, synchronize) pass through.
-  should-run:
-    name: Should Run Validation
-    runs-on: ubuntu-latest
-    if: >-
-      github.event.action != 'edited' ||
-      github.event.changes.title != null ||
-      github.event.changes.base != null
-    steps:
-      - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
-        with:
-          egress-policy: audit
-
-      - name: Report gate result
-        run: echo "Validation will run for event action '${{ github.event.action }}'."
-
-  # Validates the PR title follows RudderLabs conventional commit standards.
-  # Delegates to the shared rudderlabs/github-action-check-pr-title action.
-  pr-title-check:
-    name: PR Title Check
-    runs-on: ubuntu-latest
-    needs: [ should-run ]
-    steps:
-      - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
-        with:
-          egress-policy: audit
-
-      - name: Validate PR title
-        uses: rudderlabs/github-action-check-pr-title@0a83071336f7d6417249629f67a64530fcecda2e # v1.0.11
-
   # Runs SonarCloud code quality analysis on the codebase.
   # Runs in parallel with other checks — independent of all other jobs.
   sonarcloud-analysis:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
     environment: sonarcloud
-    needs: [ should-run ]
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
@@ -104,7 +63,6 @@ jobs:
   swiftlint-check:
     name: SwiftLint Check
     runs-on: macos-latest
-    needs: [ should-run ]
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
@@ -128,7 +86,6 @@ jobs:
   test-check:
     name: Unit Tests
     runs-on: macos-latest
-    needs: [ should-run ]
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
@@ -174,16 +131,14 @@ jobs:
         run: xcodebuild build -scheme RudderStackAnalytics -destination 'generic/platform=watchOS' | xcpretty
 
   # Aggregates results from all jobs and sends a Slack notification.
-  # Runs whenever the should-run gate has passed, regardless of whether upstream
-  # validation jobs succeeded or failed — so the team is always notified for any
-  # validation run that actually executed. Skipped when should-run is skipped
-  # (body-only PR edits) or fails, since there are no validation results to report.
+  # Runs regardless of whether upstream validation jobs succeeded or failed, so the
+  # team is always notified for every validation run.
   pr-validation-summary:
     name: PR Validation Summary
     runs-on: ubuntu-latest
     environment: notifications
-    needs: [ should-run, pr-title-check, sonarcloud-analysis, swiftlint-check, test-check, build-check ]
-    if: always() && needs.should-run.result == 'success'
+    needs: [ sonarcloud-analysis, swiftlint-check, test-check, build-check ]
+    if: always()
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
@@ -199,7 +154,6 @@ jobs:
         id: summary
         run: |
           echo "=== PR Validation Summary ==="
-          echo "PR Title Check:      ${{ needs.pr-title-check.result }}"
           echo "SonarCloud Analysis: ${{ needs.sonarcloud-analysis.result }}"
           echo "SwiftLint Check:     ${{ needs.swiftlint-check.result }}"
           echo "Unit Tests:          ${{ needs.test-check.result }}"
@@ -208,11 +162,6 @@ jobs:
 
           FAILED_CHECKS=""
           OVERALL_STATUS="passed"
-
-          if [[ "${{ needs.pr-title-check.result }}" != "success" ]]; then
-            FAILED_CHECKS="${FAILED_CHECKS}• PR Title Check (${{ needs.pr-title-check.result }}) - Check title format follows conventional commits\n"
-            OVERALL_STATUS="failed"
-          fi
 
           if [[ "${{ needs.sonarcloud-analysis.result }}" != "success" ]]; then
             FAILED_CHECKS="${FAILED_CHECKS}• SonarCloud Analysis (${{ needs.sonarcloud-analysis.result }}) - Code quality issues detected\n"
