@@ -3,23 +3,30 @@ name: onboard-swift-integration
 description: Generates a Swift integration repo (integration-swift-<name>) from an existing Objective-C iOS integration, including source code, tests, ObjC bridge, and a SwiftUI sample app.
 when_to_use: Use when the user wants to create a new Swift device-mode integration from an existing Objective-C iOS integration. Trigger phrases - "onboard swift integration", "generate swift integration", "convert objc integration to swift", "new swift integration for <name>".
 argument-hint: "[integration-name] [closest-example] [--auto]"
-allowed-tools: Bash, Read, Write, Edit, Glob, Grep, Agent, AskUserQuestion
+arguments: [integration-name, closest-example]
+allowed-tools: Bash Read Write Edit Glob Grep Agent AskUserQuestion
+disable-model-invocation: true
+model: opus
+effort: high
 ---
 
 You are an expert iOS/Swift developer that creates RudderStack Swift integrations by converting Objective-C iOS integrations to Swift equivalents using the IntegrationPlugin protocol.
 
 Your goal is to generate a new `integration-swift-<name>` repo by analyzing the corresponding Objective-C integration and creating the Swift equivalent in a step-by-step manner.
 
+## Existing Swift Integrations (local)
+!`ls -d ../integration-swift-* 2>/dev/null | sed 's|.*/||' || echo "(none found locally)"`
+
 ## Input
 
 Parse the following user input for:
-- **integration_name** (required): The name of the integration to generate (e.g., 'firebase', 'braze', 'appsflyer')
-- **closest_example** (optional): Name of an existing Swift integration most similar to the one being generated (e.g., 'firebase', 'braze')
-- **auto_mode** (optional flag): If `--auto` is present, run in auto mode (see Execution Mode below)
+- **integration_name** (required): `$integration-name` — e.g., 'firebase', 'braze', 'appsflyer'
+- **closest_example** (optional): `$closest-example` — name of an existing Swift integration most similar to the one being generated
+- **auto_mode** (optional flag): If `--auto` appears anywhere in `$ARGUMENTS`, run in auto mode (see Execution Mode below)
 
-User input: $ARGUMENTS
+Full arguments: $ARGUMENTS
 
-If integration_name is not provided, use AskUserQuestion to ask the user for it before proceeding.
+If integration_name is not provided or blank, use AskUserQuestion to ask the user for it before proceeding.
 
 ## Naming Conventions
 
@@ -55,13 +62,13 @@ The agent runs end-to-end with **no** `AskUserQuestion` calls except:
 
 ## Reference Material (read on demand)
 
-Load each reference file with `Read` only when the corresponding step needs it. Do not paste their contents into responses.
+Load each reference file with `Read` only when the corresponding step needs it. Use `${CLAUDE_SKILL_DIR}` to resolve absolute paths. Do not paste their contents into responses.
 
-- **`references/api-mapping.md`** — ObjC iOS v1 to Swift method mapping. Read before Step 1; consult during Steps 5-7.
-- **`references/integration-plugin.md`** — `IntegrationPlugin` and `StandardIntegration` protocol signatures. Read before Step 3.
-- **`references/test-scaffold.md`** — Swift Testing framework patterns, mock adapter templates, test data providers. Read before Step 10.
-- **`references/sample-app.md`** — SwiftUI sample app templates (App entry, ContentView, AnalyticsManager, pbxproj template, asset catalogs). Read before Step 12.
-- **`references/supporting-files.md`** — Templates for .gitignore, LICENSE.md, CONTRIBUTING.md, CODEOWNERS, PR template, README. Read during Step 2.
+- **`${CLAUDE_SKILL_DIR}/references/api-mapping.md`** — ObjC iOS v1 to Swift method mapping. Read before Step 1; consult during Steps 5-7.
+- **`${CLAUDE_SKILL_DIR}/references/integration-plugin.md`** — `IntegrationPlugin` and `StandardIntegration` protocol signatures. Read before Step 3.
+- **`${CLAUDE_SKILL_DIR}/references/test-scaffold.md`** — Swift Testing framework patterns, mock adapter templates, test data providers. Read before Step 10.
+- **`${CLAUDE_SKILL_DIR}/references/sample-app.md`** — SwiftUI sample app templates (App entry, ContentView, AnalyticsManager, pbxproj template, asset catalogs). Read before Step 12.
+- **`${CLAUDE_SKILL_DIR}/references/supporting-files.md`** — Templates for .gitignore, LICENSE.md, CONTRIBUTING.md, CODEOWNERS, PR template, README. Read during Step 2.
 
 ## Locating the ObjC Integration Repo
 
@@ -119,7 +126,7 @@ If `OUTPUT_DIR` already exists, ask the user whether to overwrite or abort.
 
 ### Step 1: Analyze the ObjC Integration
 
-Read `references/api-mapping.md` before this step.
+Read `${CLAUDE_SKILL_DIR}/references/api-mapping.md` before this step.
 
 Analyze the ObjC integration source files:
 1. Find the factory class (e.g., `RudderXxxFactory`) and integration class (e.g., `RudderXxxIntegration`)
@@ -146,7 +153,7 @@ Format the checkpoint using `AskUserQuestion`:
 
 ### Step 2: Scaffold the Repo
 
-Read `references/supporting-files.md` before this step.
+Read `${CLAUDE_SKILL_DIR}/references/supporting-files.md` before this step.
 
 Create the repo directory structure:
 ```
@@ -172,7 +179,7 @@ integration-swift-<name>/
    - Library target depending on the third-party product(s) + `RudderStackAnalytics`
    - Test target depending on the library target
 
-2. Write supporting files using templates from `references/supporting-files.md`, replacing `<name>` and `<Name>` placeholders.
+2. Write supporting files using templates from `${CLAUDE_SKILL_DIR}/references/supporting-files.md`, replacing `<name>` and `<Name>` placeholders.
 
 3. Initialize git:
 ```bash
@@ -181,7 +188,7 @@ cd $OUTPUT_DIR && git init && git add -A && git commit -m "chore: initial scaffo
 
 ### Step 3: Generate the Adapter Protocol
 
-Read `references/integration-plugin.md` before this step.
+Read `${CLAUDE_SKILL_DIR}/references/integration-plugin.md` before this step.
 
 Create `Sources/RudderIntegration<Name>/<Name>Adapter.swift`:
 
@@ -351,11 +358,11 @@ public class ObjC<Name>Integration: NSObject, ObjCIntegrationPlugin, ObjCStandar
 }
 ```
 
-For each event method, convert `ObjC<Event>Event` to the Swift event type and forward to the integration. See `references/integration-plugin.md` for the ObjC bridge event conversion patterns.
+For each event method, convert `ObjC<Event>Event` to the Swift event type and forward to the integration. See `${CLAUDE_SKILL_DIR}/references/integration-plugin.md` for the ObjC bridge event conversion patterns.
 
 ### Step 10: Generate Tests
 
-Read `references/test-scaffold.md` before this step.
+Read `${CLAUDE_SKILL_DIR}/references/test-scaffold.md` before this step.
 
 Create test files:
 1. `Tests/RudderIntegration<Name>Tests/<Name>IntegrationTests.swift` — tests for `create`, each event method, `reset`, `flush`, edge cases
@@ -391,7 +398,7 @@ If failures persist after 3 attempts, present at **Checkpoint 3** with the error
 
 ### Step 12: Generate the Sample App
 
-Read `references/sample-app.md` before this step.
+Read `${CLAUDE_SKILL_DIR}/references/sample-app.md` before this step.
 
 Create the Example directory:
 ```
@@ -417,8 +424,8 @@ Example/
    - `PrimaryButtonStyle` and `SecondaryButtonStyle` structs
    - `#Preview { ContentView() }`
 
-3. **`project.pbxproj`**: Use the parameterized template from `references/sample-app.md`:
-   - Generate 17 unique 24-character hex IDs
+3. **`project.pbxproj`**: Use the parameterized template from `${CLAUDE_SKILL_DIR}/references/sample-app.md`:
+   - Generate 23 unique 24-character hex IDs
    - Replace all `{{PLACEHOLDER}}` values
    - Local SPM package reference: `../../integration-swift-<name>`
    - Product dependency: `RudderIntegration<Name>`
