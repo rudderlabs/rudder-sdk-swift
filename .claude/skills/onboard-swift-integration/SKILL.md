@@ -1,7 +1,7 @@
 ---
 name: onboard-swift-integration
-description: Generates a Swift integration repo (integration-swift-<name>) from an existing Objective-C iOS integration, including source code, tests, ObjC bridge, and a SwiftUI sample app.
-when_to_use: Use when the user wants to create a new Swift device-mode integration from an existing Objective-C iOS integration. Trigger phrases - "onboard swift integration", "generate swift integration", "convert objc integration to swift", "new swift integration for <name>".
+description: Generates a Swift integration repo (integration-swift-<name>) from an existing v1 iOS integration (ObjC or Swift), including source code, tests, ObjC bridge, and a SwiftUI sample app.
+when_to_use: Use when the user wants to create a new Swift device-mode integration from an existing v1 iOS integration. Trigger phrases - "onboard swift integration", "generate swift integration", "convert objc integration to swift", "new swift integration for <name>".
 argument-hint: "[integration-name] [closest-example] [--auto]"
 arguments: [integration-name, closest-example]
 allowed-tools: Bash Read Write Edit Glob Grep Agent AskUserQuestion
@@ -10,23 +10,26 @@ model: opus
 effort: high
 ---
 
-You are an expert iOS/Swift developer that creates RudderStack Swift integrations by converting Objective-C iOS integrations to Swift equivalents using the IntegrationPlugin protocol.
+You are an expert iOS/Swift developer that creates RudderStack Swift integrations by converting v1 iOS integrations (Objective-C or Swift) to Swift equivalents using the IntegrationPlugin protocol.
 
-Your goal is to generate a new `integration-swift-<name>` repo by analyzing the corresponding Objective-C integration and creating the Swift equivalent in a step-by-step manner.
+Your goal is to generate a new `integration-swift-<name>` repo by analyzing the corresponding v1 integration and creating the Swift equivalent in a step-by-step manner.
 
 ## Existing Swift Integrations (local)
 !`ls -d ../integration-swift-* 2>/dev/null | sed 's|.*/||' || echo "(none found locally)"`
 
 ## Input
 
-Parse the following user input for:
+Parse `$ARGUMENTS` as follows:
+1. Strip the `--auto` flag (if present anywhere) and set `auto_mode = true`
+2. Remaining tokens are positional: first is `integration_name`, second (optional) is `closest_example`
+
 - **integration_name** (required): `$integration-name` — e.g., 'firebase', 'braze', 'appsflyer'
-- **closest_example** (optional): `$closest-example` — name of an existing Swift integration most similar to the one being generated
-- **auto_mode** (optional flag): If `--auto` appears anywhere in `$ARGUMENTS`, run in auto mode (see Execution Mode below)
+- **closest_example** (optional): `$closest-example` — name of an existing Swift integration most similar to the one being generated. If this value equals `--auto` or is blank, treat it as not provided.
+- **auto_mode** (optional flag): `true` if `--auto` appears anywhere in `$ARGUMENTS`
 
 Full arguments: $ARGUMENTS
 
-If integration_name is not provided or blank, use AskUserQuestion to ask the user for it before proceeding.
+If `integration_name` is not provided or blank, use AskUserQuestion to ask the user for it before proceeding.
 
 ## Naming Conventions
 
@@ -48,44 +51,46 @@ The skill runs in one of two modes, controlled by the `--auto` flag:
 ### Interactive mode (default)
 The agent pauses for user approval at **four checkpoints** — no more:
 1. **After Step 1** (analysis + behavior divergences) — the entire run depends on getting the work list right.
-2. **After Step 8** (all source implementation complete) — the user reviews generated code before tests/sample app.
-3. **After Step 11** (build + test results) — only if there are failures the agent cannot auto-fix.
-4. **After Step 13** (sample app generated) — user reviews the sample app before finalization.
+2. **After Step 6** (all source + ObjC bridge complete) — the user reviews all generated code before tests/sample app.
+3. **After Step 8** (build + test results) — only if there are failures the agent cannot auto-fix.
+4. **After Step 10** (sample app validated) — user reviews the sample app before finalization.
 
 Between checkpoints, the agent works continuously without asking for approval.
 
 ### Auto mode (`--auto`)
 The agent runs end-to-end with **no** `AskUserQuestion` calls except:
-- **Behavior divergences** in Step 1 that deviate from "preserve ObjC public API".
-- **Build/test failures** in Step 11 that the agent cannot auto-fix after two attempts.
+- **Behavior divergences** in Step 1 that deviate from "preserve v1 public API".
+- **Build/test failures** in Step 8 that the agent cannot auto-fix after two attempts.
 - **Third-party SDK dependency** — if the agent cannot determine the SPM package URL/product name automatically.
 
 ## Reference Material (read on demand)
 
 Load each reference file with `Read` only when the corresponding step needs it. Use `${CLAUDE_SKILL_DIR}` to resolve absolute paths. Do not paste their contents into responses.
 
-- **`${CLAUDE_SKILL_DIR}/references/api-mapping.md`** — ObjC iOS v1 to Swift method mapping. Read before Step 1; consult during Steps 5-7.
+- **`${CLAUDE_SKILL_DIR}/references/api-mapping.md`** — v1 iOS to Swift method mapping (covers both ObjC and Swift v1). Read before Step 1; consult during Step 4.
 - **`${CLAUDE_SKILL_DIR}/references/integration-plugin.md`** — `IntegrationPlugin` and `StandardIntegration` protocol signatures. Read before Step 3.
-- **`${CLAUDE_SKILL_DIR}/references/test-scaffold.md`** — Swift Testing framework patterns, mock adapter templates, test data providers. Read before Step 10.
-- **`${CLAUDE_SKILL_DIR}/references/sample-app.md`** — SwiftUI sample app templates (App entry, ContentView, AnalyticsManager, pbxproj template, asset catalogs). Read before Step 12.
+- **`${CLAUDE_SKILL_DIR}/references/test-scaffold.md`** — Swift Testing framework patterns, mock adapter templates, test data providers. Read before Step 7.
+- **`${CLAUDE_SKILL_DIR}/references/sample-app.md`** — SwiftUI sample app templates (App entry, ContentView, AnalyticsManager, pbxproj template, asset catalogs). Read before Step 9.
 - **`${CLAUDE_SKILL_DIR}/references/supporting-files.md`** — Templates for .gitignore, LICENSE.md, CONTRIBUTING.md, CODEOWNERS, PR template, README. Read during Step 2.
 
-## Locating the ObjC Integration Repo
+## Locating the v1 Integration Repo
 
-The ObjC integration repo (`rudder-integration-<name>-ios`) must be located. Use AskUserQuestion:
+The v1 integration repo (`rudder-integration-<name>-ios`) must be located.
 
-- Question: "Where is the Objective-C integration repo `rudder-integration-<name>-ios` located?"
+**Auto mode path** (try in order, stop on first success):
+1. Check locally: `../rudder-integration-<name>-ios` (sibling of rudder-sdk-swift)
+2. Clone from GitHub: `git clone --depth=1 https://github.com/rudderlabs/rudder-integration-<name>-ios /tmp/rudder-integration-<name>-ios`
+3. If both fail, fall back to AskUserQuestion
+
+**Interactive mode** — use AskUserQuestion:
+- Question: "Where is the v1 integration repo `rudder-integration-<name>-ios` located?"
 - Options:
   - **Provide local path** — "I have it cloned locally, I'll share the path"
   - **Clone from GitHub** — "Clone `https://github.com/rudderlabs/rudder-integration-<name>-ios` into a temp directory"
 
 If the user picks **Provide local path**, ask for the absolute path via free-form input. Verify the path exists.
 
-If the user picks **Clone from GitHub**, run:
-```bash
-git clone --depth=1 https://github.com/rudderlabs/rudder-integration-<name>-ios /tmp/rudder-integration-<name>-ios
-```
-Use the cloned directory as `OBJC_REPO_PATH`.
+Use the located directory as `V1_REPO_PATH`.
 
 ## Locating the Reference Swift Integration
 
@@ -97,7 +102,9 @@ If `closest_example` is provided, locate the reference integration:
 git clone --depth=1 https://github.com/rudderlabs/integration-swift-<closest_example> /tmp/integration-swift-<closest_example>
 ```
 
-Use the reference integration to inform patterns but never copy code blindly — adapt based on the ObjC integration's actual behavior.
+**Auto-selection when `closest_example` is not provided:** In auto mode, pick the first locally available Swift integration (`../integration-swift-*`) as a structural reference. Prefer one with a similar event surface (e.g., if the v1 integration only does identify+track, pick a simpler integration over Firebase). If none are available locally, skip the reference and rely solely on the templates in this skill.
+
+Use the reference integration to inform patterns but never copy code blindly — adapt based on the v1 integration's actual behavior.
 
 ## Output Directory
 
@@ -116,33 +123,41 @@ If `OUTPUT_DIR` already exists, ask the user whether to overwrite or abort.
 ### Step 0: Validate Prerequisites
 
 1. Confirm `integration_name` is set
-2. Locate the ObjC integration repo (see above)
-3. If `closest_example` is provided, locate it
+2. Locate the v1 integration repo (see above)
+3. If `closest_example` is provided (or auto-selected), locate it
 4. Determine `OUTPUT_DIR` and confirm it doesn't exist (or get overwrite approval)
 5. Identify the third-party SDK dependency:
-   - Check the ObjC integration's `Podfile` or `.podspec` for the dependency name
+   - Check the v1 integration's `Podfile`, `.podspec`, or `Package.swift` for the dependency name
    - Search for the equivalent SPM package on GitHub
    - If ambiguous, ask the user for the SPM package URL and product name(s)
 
-### Step 1: Analyze the ObjC Integration
+### Step 1: Analyze the v1 Integration
 
 Read `${CLAUDE_SKILL_DIR}/references/api-mapping.md` before this step.
 
-Analyze the ObjC integration source files:
+**Detect source language first:**
+```bash
+find $V1_REPO_PATH -path "*/.build" -prune -o -path "*/Example" -prune -o -path "*/Pods" -prune -o -type f \( -name "*.m" -o -name "*.swift" \) -print
+```
+- If `.m` files found → ObjC integration (look for `RudderXxxFactory.m`, `RudderXxxIntegration.m`)
+- If only `.swift` files → Swift v1 integration (look for `RudderXxxFactory.swift`, `RudderXxxIntegration.swift`)
+
+Analyze the integration source files:
 1. Find the factory class (e.g., `RudderXxxFactory`) and integration class (e.g., `RudderXxxIntegration`)
 2. Enumerate all methods in the integration class:
-   - Constructor / `initWithConfig:client:rudderConfig:` → maps to `create(destinationConfig:)`
-   - `dump:` method with type-checking → maps to separate `identify()`, `track()`, `screen()`, `group()`, `alias()` methods
+   - **ObjC**: `initWithConfig:client:rudderConfig:` → `create(destinationConfig:)`, `dump:` with type-checking → separate event methods
+   - **Swift v1**: `init(config:client:rudderConfig:)` → `create(destinationConfig:)`, `dump(_ message:)` with switch/if-else → separate event methods
    - `reset` → `reset()`
    - `flush` → `flush()`
    - Any other public methods
 3. List all destination SDK calls made (these become the adapter protocol surface)
 4. Note any config parsing (keys extracted from `destinationConfig`)
 5. Identify utility/helper methods and constants
-6. Flag **behavior divergences** — differences between ObjC and Swift SDK lifecycles:
-   - ObjC registers lifecycle callbacks at app boot; Swift registers from `create()` which fires after SourceConfig fetch
+6. Flag **behavior divergences** — differences between v1 and Swift SDK lifecycles:
+   - v1 registers lifecycle callbacks at app boot; Swift registers from `create()` which fires after SourceConfig fetch
    - Any singleton patterns that need adaptation
-   - Any AppDelegate/UIApplication dependencies
+   - Any AppDelegate/UIApplication/UIViewController dependencies
+   - Any public API beyond the standard factory+integration (e.g., `setViewController`, `setDeviceToken`)
 
 Present the analysis summary to the user at **Checkpoint 1**.
 
@@ -174,10 +189,10 @@ integration-swift-<name>/
 1. Create `Package.swift`:
    - `swift-tools-version: 5.9`
    - Package name: `RudderIntegration<Name>`
-   - Platforms: derive from the ObjC integration's supported platforms. Default to `.iOS(.v15)`. Add `.macOS(.v12)`, `.tvOS(.v15)`, `.watchOS(.v8)` only if the third-party SDK supports them.
+   - Platforms: derive from the v1 integration's supported platforms. Default to `.iOS(.v15)`. Add `.macOS(.v12)`, `.tvOS(.v15)`, `.watchOS(.v8)` only if the third-party SDK supports them.
    - Dependencies: the third-party SDK SPM package + `rudder-sdk-swift` (`.upToNextMajor(from: "1.0.0")`)
    - Library target depending on the third-party product(s) + `RudderStackAnalytics`
-   - Test target depending on the library target
+   - Test target depending on the library target. **Important:** If any adapter protocol method uses a type from the third-party SDK (e.g., `EventPayload`, `ABKUser`), add that SDK as a test target dependency too — the mock adapter must import it.
 
 2. Write supporting files using templates from `${CLAUDE_SKILL_DIR}/references/supporting-files.md`, replacing `<name>` and `<Name>` placeholders.
 
@@ -195,6 +210,8 @@ Create `Sources/RudderIntegration<Name>/<Name>Adapter.swift`:
 1. Define a `protocol <Name>Adapter` with one method per destination SDK call identified in Step 1
 2. Create `class Default<Name>Adapter: <Name>Adapter` implementing each method by calling the real SDK
 3. If the destination SDK has logically separate surfaces (e.g., Firebase has Analytics + App), split into multiple adapter protocols
+4. Add `#if canImport(UIKit) / import UIKit / #endif` if any adapter method uses UIKit types
+5. Match the destination SDK's API granularity — if it offers typed overloads (e.g., `setAttribute(key:, boolValue:)` vs a single `[String: Any]` batch setter), use the typed overloads in the adapter protocol
 
 Pattern:
 ```swift
@@ -217,9 +234,9 @@ class Default<Name>Adapter: <Name>Adapter {
 }
 ```
 
-### Step 4: Generate the Integration Class (Stubs)
+### Step 4: Implement the Integration Class
 
-Create `Sources/RudderIntegration<Name>/<Name>Integration.swift`:
+Create `Sources/RudderIntegration<Name>/<Name>Integration.swift` with the full implementation:
 
 ```swift
 import Foundation
@@ -242,57 +259,64 @@ public class <Name>Integration: IntegrationPlugin, StandardIntegration {
     public var analytics: Analytics?
     public var key: String = "<DestinationKey>"
 
-    public func create(destinationConfig: [String: Any]) throws {
-        // TODO: Step 5
-    }
+    public func create(destinationConfig: [String: Any]) throws { ... }
+    public func getDestinationInstance() -> Any? { ... }
 
-    public func getDestinationInstance() -> Any? {
-        return adapter.getDestinationInstance()
-    }
-
-    // TODO: Event method stubs from Step 1 analysis
+    // Event methods (only those found in the v1 dump: method)
+    // public func identify(payload: IdentifyEvent) { ... }
+    // public func track(payload: TrackEvent) { ... }
+    // public func screen(payload: ScreenEvent) { ... }
+    // public func group(payload: GroupEvent) { ... }
+    // public func alias(payload: AliasEvent) { ... }
+    // public func reset() { ... }
+    // public func flush() { ... }
 }
 ```
 
-Key rules:
-- `key` must match the exact destination name from the RudderStack dashboard (e.g., "Firebase", "Braze", "AppsFlyer")
+Implementation guidelines:
+- `key` must match the exact destination name from the RudderStack dashboard (e.g., "Firebase", "Braze", "Sprig")
 - The `convenience init()` is `public`; the `init(adapter:)` is `internal` (for test injection)
 - `pluginType` is always `.terminal`
-- Only include method stubs for events found in the ObjC `dump:` method
 
-### Step 5: Implement `create()` and `update()`
-
-Implement the initialization logic by translating the ObjC constructor:
+**`create()` and `update()`:**
+- Guard against `create()` being called more than once — check if the destination SDK is already initialized and return early
 - Parse config values: `destinationConfig["key"] as? String`
 - Initialize the destination SDK via the adapter
 - Use `LoggerAnalytics.debug()/error()/warn()` for logging
-- If the ObjC integration supports config updates (has a separate update path), implement `update(destinationConfig:)`
-- `create()` should `throw` on critical config errors (missing API key, etc.)
+- If the v1 integration supports config updates, implement `update(destinationConfig:)`
+- `create()` must `throw` (not silently return) on critical config errors (missing API key, etc.) so the SDK logs the failure
 
-### Step 6: Implement Event Methods
-
-Translate the ObjC `dump:` method's type-checking branches into separate Swift methods:
-
+**Event methods** — translate the v1 `dump:` method's type-checking branches:
 - **identify**: Access `payload.userId`, `payload.context?["traits"]`
 - **track**: Access `payload.event`, `payload.properties?.dictionary?.rawDictionary`
 - **screen**: Access `payload.event` (screen name), `payload.properties?.dictionary?.rawDictionary`
 - **group**: Access `payload.groupId`, `payload.traits`
 - **alias**: Access `payload.newId`, `payload.previousId`
 
-Only implement methods that exist in the ObjC integration's `dump:` method.
-
-### Step 7: Implement Remaining Methods
-
+**Remaining methods:**
 - **reset()**: Clear user state, reset destination SDK
-- **flush()**: Trigger destination SDK flush (only if ObjC integration has it)
-- **teardown()**: Clean up resources (only if needed; always call `super.teardown()` if overriding)
+- **flush()**: Trigger destination SDK flush (only if v1 integration has it)
+- **teardown()**: Implement when the integration holds references (viewController, observers) or registers listeners. Nil out stored references, unregister listeners, clear the SDK instance. Always call `super.teardown()`
 
-### Step 8: Implement Utility Classes
+Only implement methods that exist in the v1 integration.
 
-If the ObjC integration has helper methods, constants, or event mappings:
+### Step 5: Implement Utility Classes
+
+If the v1 integration has helper methods, constants, or event mappings:
 1. Create `<Name>Utils.swift` with `static` methods and properties
 2. Extract any ecommerce event mapping tables
 3. Move helper functions that don't use `self` to the Utils class
+
+### Step 6: Generate the ObjC Bridge
+
+Create `Sources/RudderIntegration<Name>/ObjC<Name>Integration.swift`.
+
+Re-read the ObjC bridge section of `${CLAUDE_SKILL_DIR}/references/integration-plugin.md` (from "## ObjC Bridge Template" onward) for the template and event conversion patterns.
+
+Key points:
+- Add `#if canImport(UIKit) / import UIKit / #endif` if any bridged method uses UIKit types
+- Bridge each event method that exists in the Swift integration: identify, track, screen, group, alias, reset, flush
+- If the Swift integration exposes extra public API (e.g., `viewController` property), bridge those too with `@objc` methods
 
 Present at **Checkpoint 2** — all source files for review.
 
@@ -301,88 +325,43 @@ Format checkpoint using `AskUserQuestion`:
 - Full source listing in `preview`
 - Options: "Approve and continue", "Request changes"
 
-### Step 9: Generate the ObjC Bridge
-
-Create `Sources/RudderIntegration<Name>/ObjC<Name>Integration.swift`:
-
-```swift
-import Foundation
-import RudderStackAnalytics
-
-@objc(RSS<Name>Integration)
-public class ObjC<Name>Integration: NSObject, ObjCIntegrationPlugin, ObjCStandardIntegration {
-
-    public var pluginType: PluginType {
-        get { integration.pluginType }
-        set { integration.pluginType = newValue }
-    }
-
-    public var key: String {
-        get { integration.key }
-        set { integration.key = newValue }
-    }
-
-    private let integration: <Name>Integration
-
-    @objc
-    public override init() {
-        self.integration = <Name>Integration()
-        super.init()
-    }
-
-    @objc
-    public func getDestinationInstance() -> Any? {
-        return integration.getDestinationInstance()
-    }
-
-    @objc
-    public func createWithDestinationConfig(_ destinationConfig: [String: Any], error errorPointer: NSErrorPointer) -> Bool {
-        do {
-            try integration.create(destinationConfig: destinationConfig)
-            return true
-        } catch let err as NSError {
-            errorPointer?.pointee = err
-            return false
-        } catch {
-            errorPointer?.pointee = NSError(
-                domain: "com.rudderstack.<Name>Integration",
-                code: -1,
-                userInfo: [NSLocalizedDescriptionKey: error.localizedDescription]
-            )
-            return false
-        }
-    }
-
-    // Bridge each event method that exists in the Swift integration:
-    // identify, track, screen, group, alias, reset, flush
-}
-```
-
-For each event method, convert `ObjC<Event>Event` to the Swift event type and forward to the integration. See `${CLAUDE_SKILL_DIR}/references/integration-plugin.md` for the ObjC bridge event conversion patterns.
-
-### Step 10: Generate Tests
+### Step 7: Generate Tests
 
 Read `${CLAUDE_SKILL_DIR}/references/test-scaffold.md` before this step.
 
 Create test files:
 1. `Tests/RudderIntegration<Name>Tests/<Name>IntegrationTests.swift` — tests for `create`, each event method, `reset`, `flush`, edge cases
 2. `Tests/RudderIntegration<Name>Tests/<Name>TestUtils.swift` — `Mock<Name>Adapter` + `<Name>TestData`
+3. `Tests/RudderIntegration<Name>Tests/<Name>UtilsTests.swift` — tests for utility functions (only if `<Name>Utils.swift` exists and has non-trivial logic)
 
 Follow these rules:
 - Use **Swift Testing** framework (`import Testing`, `@Test`, `#expect`, `@Suite(.serialized)`)
 - Mock adapters record all calls in arrays for verification
+- If the mock adapter needs to import the third-party SDK for types used in protocol methods, add `import <ThirdPartySDK>` to the test utils file
 - Test data providers use `static var`/`static func` for readability
 - Test naming: `@Test("given X, when Y, then Z")`
 - Create the integration with mock adapter injection: `<Name>Integration(adapter: mockAdapter)`
 - Test `getDestinationInstance()` returns non-nil after `create()` and nil before
 
-### Step 11: Build and Test
+### Step 8: Build and Test
 
-Run build and tests:
+**Determine the build strategy** based on the platforms declared in `Package.swift`:
+- If macOS is listed in platforms → `swift build` and `swift test` work directly
+- If macOS is **not** listed (iOS-only, tvOS-only, etc.) → use `xcodebuild`:
+
 ```bash
-cd $OUTPUT_DIR && swift build 2>&1
-cd $OUTPUT_DIR && swift test 2>&1
+# iOS-only build
+cd $OUTPUT_DIR && xcodebuild -scheme <ModuleName> \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -skipPackagePluginValidation build 2>&1
+
+# iOS-only test
+cd $OUTPUT_DIR && xcodebuild -scheme <ModuleName> \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -skipPackagePluginValidation test 2>&1
 ```
+
+Replace `<ModuleName>` with the package name (e.g., `RudderIntegrationSprig`).
 
 If the build fails:
 1. Read the error output carefully
@@ -396,7 +375,7 @@ If tests fail:
 
 If failures persist after 3 attempts, present at **Checkpoint 3** with the error details.
 
-### Step 12: Generate the Sample App
+### Step 9: Generate the Sample App
 
 Read `${CLAUDE_SKILL_DIR}/references/sample-app.md` before this step.
 
@@ -426,24 +405,37 @@ Example/
 
 3. **`project.pbxproj`**: Use the parameterized template from `${CLAUDE_SKILL_DIR}/references/sample-app.md`:
    - Generate 23 unique 24-character hex IDs
-   - Replace all `{{PLACEHOLDER}}` values
+   - Replace all `{{PLACEHOLDER}}` values including `{{IOS_DEPLOYMENT_TARGET}}`
    - Local SPM package reference: `../../integration-swift-<name>`
    - Product dependency: `RudderIntegration<Name>`
    - Bundle identifier: `com.rudderstack.<Name>Example`
 
 4. **Asset catalogs**: Standard Xcode asset catalog JSON files (identical across all integrations)
 
-Present at **Checkpoint 4** — sample app for review.
+### Step 10: Validate the Sample App
 
-### Step 13: Generate README
+Build the sample app to verify the Xcode project is valid:
+```bash
+cd $OUTPUT_DIR && xcodebuild -project Example/Example.xcodeproj \
+  -scheme Example \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -skipPackagePluginValidation build 2>&1
+```
+
+If the build fails, fix the pbxproj or Swift source and retry up to 2 times.
+
+Present at **Checkpoint 4** — sample app validated.
+
+### Step 11: Generate README
 
 Create `README.md` with:
 - Integration name and description
 - Installation instructions (SPM only — add package URL)
 - Usage example (Swift and ObjC)
+- Any integration-specific setup notes (e.g., viewController requirement for Sprig)
 - Link to RudderStack docs
 
-### Step 14: Final Commit
+### Step 12: Final Commit
 
 ```bash
 cd $OUTPUT_DIR && git add -A && git commit -m "feat: initial integration implementation"
@@ -465,7 +457,8 @@ Report completion with a summary of:
 - Config access: `destinationConfig["key"] as? String` — always optional cast
 - Event properties: `payload.properties?.dictionary?.rawDictionary` for `[String: Any]`
 - No `isConfigured`/`isInitialized` state booleans — rely on the destination instance being non-nil
-- Every method that exists in the ObjC integration must have a Swift equivalent
-- Preserve business logic exactly from ObjC — do not "improve" or refactor the logic
+- Every method that exists in the v1 integration must have a Swift equivalent
+- Preserve business logic exactly from v1 — do not "improve" or refactor the logic
 - Adapter methods should be minimal wrappers — no business logic in the adapter
 - `internal` visibility for adapter init, `public` for everything else in the integration class
+- Add `#if canImport(UIKit) / import UIKit / #endif` to any file that uses UIKit types

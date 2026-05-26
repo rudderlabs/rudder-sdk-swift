@@ -24,7 +24,7 @@ The pbxproj file requires unique 24-character uppercase hex IDs. Generate them d
 
 ```bash
 # Generate 17 unique IDs using openssl
-for i in $(seq 1 17); do
+for i in $(seq 1 23); do
   openssl rand -hex 12 | tr 'a-f' 'A-F'
 done
 ```
@@ -68,6 +68,9 @@ Replace all `{{PLACEHOLDER}}` values:
 - `{{Name}}` — PascalCase integration name (e.g., `Firebase`)
 - `{{name}}` — lowercase integration name (e.g., `firebase`)
 - `{{MODULE_NAME}}` — `RudderIntegration<Name>` (e.g., `RudderIntegrationFirebase`)
+- `{{IOS_DEPLOYMENT_TARGET}}` — iOS deployment target matching Package.swift (e.g., `15.0`, `16.0`). Use the major.minor form Xcode expects.
+- `{{MACOS_DEPLOYMENT_TARGET}}` — macOS deployment target. Use `15.0` as a reasonable default for the Example app even if the library doesn't support macOS.
+- `{{XROS_DEPLOYMENT_TARGET}}` — visionOS deployment target. Use `2.0` as default.
 
 ```
 // !$*UTF8*$!
@@ -342,10 +345,10 @@ Replace all `{{PLACEHOLDER}}` values:
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = {{IOS_DEPLOYMENT_TARGET}};
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = {{MACOS_DEPLOYMENT_TARGET}};
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rudderstack.{{Name}}Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -359,7 +362,7 @@ Replace all `{{PLACEHOLDER}}` values:
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				XROS_DEPLOYMENT_TARGET = 26.0;
+				XROS_DEPLOYMENT_TARGET = {{XROS_DEPLOYMENT_TARGET}};
 			};
 			name = Debug;
 		};
@@ -385,10 +388,10 @@ Replace all `{{PLACEHOLDER}}` values:
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = {{IOS_DEPLOYMENT_TARGET}};
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = {{MACOS_DEPLOYMENT_TARGET}};
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rudderstack.{{Name}}Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -402,7 +405,7 @@ Replace all `{{PLACEHOLDER}}` values:
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				XROS_DEPLOYMENT_TARGET = 26.0;
+				XROS_DEPLOYMENT_TARGET = {{XROS_DEPLOYMENT_TARGET}};
 			};
 			name = Release;
 		};
