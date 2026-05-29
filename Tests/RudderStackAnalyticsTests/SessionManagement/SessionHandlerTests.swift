@@ -330,6 +330,48 @@ struct SessionHandlerTests {
         #expect(sessionHandler.lastActivityTime >= beforeTime)
         #expect(sessionHandler.lastActivityTime <= afterTime)
     }
+
+    // MARK: - Background/Foreground Activity Guard Tests
+
+    @Test("given session handler is freshly created, when shouldUpdateActivityTimeForEvent is called, then it returns true")
+    func givenSessionHandlerIsFreshlyCreated_whenShouldUpdateActivityTimeForEventIsCalled_thenItReturnsTrue() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let sessionHandler = SessionHandler(analytics: analytics)
+
+        #expect(sessionHandler.shouldUpdateActivityTimeForEvent())
+    }
+
+    @Test("given app is backgrounded and updateSessionOnBackgroundEvents is false, when shouldUpdateActivityTimeForEvent is called, then it returns false")
+    func givenAppIsBackgroundedAndUpdateSessionOnBackgroundEventsIsFalse_whenShouldUpdateActivityTimeForEventIsCalled_thenItReturnsFalse() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let sessionHandler = SessionHandler(analytics: analytics)
+        sessionHandler.onBackground()
+
+        #expect(!sessionHandler.shouldUpdateActivityTimeForEvent())
+    }
+
+    @Test("given app is backgrounded and updateSessionOnBackgroundEvents is true, when shouldUpdateActivityTimeForEvent is called, then it returns true")
+    func givenAppIsBackgroundedAndUpdateSessionOnBackgroundEventsIsTrue_whenShouldUpdateActivityTimeForEventIsCalled_thenItReturnsTrue() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true, updateSessionOnBackgroundEvents: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let sessionHandler = SessionHandler(analytics: analytics)
+        sessionHandler.onBackground()
+
+        #expect(sessionHandler.shouldUpdateActivityTimeForEvent())
+    }
+
+    @Test("given app is backgrounded then foregrounded, when shouldUpdateActivityTimeForEvent is called, then it returns true")
+    func givenAppIsBackgroundedThenForegrounded_whenShouldUpdateActivityTimeForEventIsCalled_thenItReturnsTrue() {
+        let configuration = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let sessionHandler = SessionHandler(analytics: analytics)
+        sessionHandler.onBackground()
+        sessionHandler.onForeground()
+
+        #expect(sessionHandler.shouldUpdateActivityTimeForEvent())
+    }
     
     // MARK: - Foreground Tests
     
