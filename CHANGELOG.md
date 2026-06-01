@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0] - 2026-06-01
+
+### Features
+
+- implement per-instance logging via `AnalyticsLogger` (#232)
+- add option to skip session activity updates for background events (#234)
+
 ## [1.2.1] - 2026-03-10
 
 ### Bug Fixes
@@ -7,7 +14,7 @@
 - resolve data race crash in network monitor during network path changes (#217)
 
 ## [1.2.0] - 2026-03-03
-
+  
 ### Features
 
 - add dedicated timeout error handling and improve SSL error categorization (#205)

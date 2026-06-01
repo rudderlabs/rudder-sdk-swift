@@ -221,5 +221,5 @@ public struct _DefaultConfig {
  **Important:**
  Do not edit this value unless performing a manual release.
  */
-let RSVersion: String = "1.2.1"
+let RSVersion: String = "1.3.0"
 let RSLibraryName: String = "rudder-sdk-swift"
