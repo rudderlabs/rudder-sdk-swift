@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# ──────────────────────────────────────────────────────────────
+# pre-push hook
+# Validates branch name, builds the project, and runs tests
+# before allowing a push to the remote.
+#
+# NOTE: Build and test steps are skipped when running from a GUI
+# git client (e.g. SourceTree) due to a macOS Gatekeeper
+# restriction that blocks Swift Package Manager from parsing
+# Package.swift in non-interactive contexts. CI enforces these
+# checks for all pushes regardless.
+# ──────────────────────────────────────────────────────────────
+
+# ──────────────────────────────────────────────────────────────
+# Run global hooks first (Gitleaks, etc.) — DO NOT REMOVE
+# Our local core.hooksPath overrides the global one, so we must
+# manually invoke it to keep Gitleaks and other global hooks alive.
+# ──────────────────────────────────────────────────────────────
+GLOBAL_HOOKS_PATH=$(git config --global --get core.hooksPath 2>/dev/null)
+if [ -n "$GLOBAL_HOOKS_PATH" ] && [ -x "$GLOBAL_HOOKS_PATH/pre-push" ]; then
+    "$GLOBAL_HOOKS_PATH/pre-push" "$@" || exit $?
+fi
+
+echo "Running pre-push checks..."
+echo ""
+
+# ── 1. Validate branch name ──────────────────────────────────
+
+# git passes each pushed ref on stdin as:
+#   <local-ref> <local-sha> <remote-ref> <remote-sha>
+# Read all lines upfront so stdin is available for later commands.
+valid_branch_regex="^(feat|fix|hotfix|refactor|release|docs|chore|test|ci)\/[a-zA-Z0-9._-]+$|^(main|develop)$"
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+    # Skip non-branch refs (tags, delete operations, etc.)
+    if [[ "$local_ref" != refs/heads/* ]]; then
+        continue
+    fi
+
+    branch="${local_ref#refs/heads/}"
+
+    if [[ ! $branch =~ $valid_branch_regex ]]; then
+        echo "[ERROR] Invalid branch name: '$branch'"
+        echo ""
+        echo "  Branch names must follow this format:"
+        echo "    <type>/<description>"
+        echo ""
+        echo "  Allowed types: feat | fix | hotfix | refactor | release | docs | chore | test | ci"
+        echo "  Allowed as-is: main | develop"
+        echo ""
+        echo "  Examples:"
+        echo "    feat/sdk-4614-implement-local-hooks"
+        echo "    fix/session-timeout-crash"
+        echo ""
+        exit 1
+    fi
+
+    echo "[SUCCESS] Branch name validation passed: '$branch'"
+done
+
+# ── 2. Build & test (Terminal only) ──────────────────────────
+
+# [ -t 1 ] checks if stdout is connected to an interactive terminal.
+# GUI git clients (SourceTree, Fork, etc.) are non-interactive, and
+# macOS Gatekeeper blocks Swift Package Manager in that context.
+# CI (GitHub Actions) always runs in a terminal and enforces these checks.
+if [ ! -t 1 ]; then
+    echo "[INFO] Non-interactive context detected (GUI git client)."
+    echo "       Skipping build and test checks — CI will enforce them."
+    echo ""
+    echo "All pre-push checks passed. Ready to push."
+    exit 0
+fi
+
+echo ""
+echo "[INFO] Building project (swift build --build-tests)..."
+if ! swift build --build-tests; then
+    echo ""
+    echo "[ERROR] Build failed. Please fix build errors before pushing."
+    exit 1
+fi
+echo "[SUCCESS] Build passed."
+
+echo ""
+echo "[INFO] Running tests (swift test --skip-build --no-parallel)..."
+if ! swift test --skip-build --no-parallel; then
+    echo ""
+    echo "[ERROR] Tests failed. Please fix failing tests before pushing."
+    exit 1
+fi
+echo "[SUCCESS] All tests passed."
+
+echo ""
+echo "All pre-push checks passed. Ready to push."

@@ -16,7 +16,7 @@ struct PrimaryRetryHeadersProviderTests {
     private let provider: PrimaryRetryHeadersProvider
     
     init() {
-        provider = PrimaryRetryHeadersProvider(storage: mockStorage)
+        provider = PrimaryRetryHeadersProvider(storage: mockStorage, logger: MockConstant.noOpLogger)
     }
     
     // MARK: - prepareHeaders Tests

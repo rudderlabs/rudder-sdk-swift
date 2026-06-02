@@ -20,7 +20,7 @@ protocol HttpClientRequests {
 /**
  This class provides the implementation for the `HttpClientRequests` protocol.
  */
-final class HttpClient {
+final class HttpClient: TypeIdentifiable {
     let analytics: Analytics
     private var anonymousIdHeader: String
 
@@ -56,7 +56,7 @@ final class HttpClient {
 extension HttpClient: HttpClientRequests {
     func getConfigurationData() async -> SourceConfigResult {
         guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { return .failure(SourceConfigError.unknown) }
-        return await HttpNetwork.perform(request: urlRequest).sourceConfigResult
+        return await HttpNetwork.perform(request: urlRequest, logger: analytics.logger).sourceConfigResult
     }
     
     func postBatchEvents(_ batch: String, additionalHeaders: [String: String] = [:]) async -> EventUploadResult {
@@ -72,7 +72,7 @@ extension HttpClient: HttpClientRequests {
             urlRequest.httpBody = gzipped
         }
         
-        return await HttpNetwork.perform(request: urlRequest).eventUploadResult
+        return await HttpNetwork.perform(request: urlRequest, logger: analytics.logger).eventUploadResult
     }
 }
 

@@ -13,6 +13,7 @@ import Foundation
 enum MockConstant {
     static var mockDataPlaneUrl: String = "https://test.dataplane.com"
     static var mockWriteKey: String { "test-write-key-\(UUID().uuidString)" }
+    static var noOpLogger: Logger { AnalyticsLogger(logger: SwiftLogger(), logLevel: .none) }
 }
 
 // MARK: - MockProvider

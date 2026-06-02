@@ -77,6 +77,6 @@ class IntegrationOptionsPlugin: Plugin {
      * - Parameter event: The event that was dropped
      */
     private func logDroppedEvent(_ event: Event) {
-        LoggerAnalytics.debug("IntegrationOptionsPlugin: Dropped event \(event) for destination: \(destinationKey)")
+        logger.debug(log: "IntegrationOptionsPlugin: Dropped event \(event) for destination: \(destinationKey)")
     }
 }

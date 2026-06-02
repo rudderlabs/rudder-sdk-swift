@@ -60,6 +60,7 @@
 		53A83F9C2E9F750400DDA0CC /* MockStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A83F9B2E9F750400DDA0CC /* MockStorage.swift */; };
 		53AC39722E1533F300B8E16C /* RudderOptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AC39712E1533F300B8E16C /* RudderOptionTests.swift */; };
 		53AC39B42E16FA6E00B8E16C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */; };
+		53C8B38B2FCEC7AE00337763 /* ConfigurationLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C8B38A2FCEC7AE00337763 /* ConfigurationLoggerTests.swift */; };
 		53DB9D3C2F4392AF004FB1A4 /* RetryMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D3B2F4392AF004FB1A4 /* RetryMetadata.swift */; };
 		53DB9D752F44515A004FB1A4 /* RetryHeadersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D742F44515A004FB1A4 /* RetryHeadersProvider.swift */; };
 		53DB9D7A2F4454DD004FB1A4 /* PrimaryRetryHeadersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53DB9D792F4454DD004FB1A4 /* PrimaryRetryHeadersProvider.swift */; };
@@ -176,6 +177,9 @@
 		53DEA68F2E03D06F00D6C371 /* group_with_all_values.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA62D2E03D06F00D6C371 /* group_with_all_values.json */; };
 		53DEA6902E03D06F00D6C371 /* screen_with_default_arguments.json in Resources */ = {isa = PBXBuildFile; fileRef = 53DEA6392E03D06F00D6C371 /* screen_with_default_arguments.json */; };
 		53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E112D92E7C4B9E005FEF67 /* Connectivity.swift */; };
+		53E58C282FA1366A002556B9 /* AnalyticsLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E58C272FA1366A002556B9 /* AnalyticsLogger.swift */; };
+		53E58C2C2FA13CE5002556B9 /* ObjCAnalyticsLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E58C2B2FA13CE5002556B9 /* ObjCAnalyticsLogger.swift */; };
+		53E58C2E2FA141AC002556B9 /* AnalyticsLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E58C2D2FA141AC002556B9 /* AnalyticsLoggerTests.swift */; };
 		53E777582EB4C2BD00564D61 /* CountFlushPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E777572EB4C2BD00564D61 /* CountFlushPolicyTests.swift */; };
 		53E7775C2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E7775B2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift */; };
 		53E7775E2EB4D21000564D61 /* StartupFlushPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E7775D2EB4D21000564D61 /* StartupFlushPolicyTests.swift */; };
@@ -272,6 +276,7 @@
 		53A83F9B2E9F750400DDA0CC /* MockStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStorage.swift; sourceTree = "<group>"; };
 		53AC39712E1533F300B8E16C /* RudderOptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RudderOptionTests.swift; sourceTree = "<group>"; };
 		53AC39B32E16FA6E00B8E16C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		53C8B38A2FCEC7AE00337763 /* ConfigurationLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationLoggerTests.swift; sourceTree = "<group>"; };
 		53DB9D3B2F4392AF004FB1A4 /* RetryMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryMetadata.swift; sourceTree = "<group>"; };
 		53DB9D742F44515A004FB1A4 /* RetryHeadersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryHeadersProvider.swift; sourceTree = "<group>"; };
 		53DB9D792F4454DD004FB1A4 /* PrimaryRetryHeadersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryRetryHeadersProvider.swift; sourceTree = "<group>"; };
@@ -388,6 +393,9 @@
 		53DEA6572E03D06F00D6C371 /* UserIdTraitsActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdTraitsActionTests.swift; sourceTree = "<group>"; };
 		53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerAnalyticsTests.swift; sourceTree = "<group>"; };
 		53E112D92E7C4B9E005FEF67 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
+		53E58C272FA1366A002556B9 /* AnalyticsLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsLogger.swift; sourceTree = "<group>"; };
+		53E58C2B2FA13CE5002556B9 /* ObjCAnalyticsLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCAnalyticsLogger.swift; sourceTree = "<group>"; };
+		53E58C2D2FA141AC002556B9 /* AnalyticsLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsLoggerTests.swift; sourceTree = "<group>"; };
 		53E777572EB4C2BD00564D61 /* CountFlushPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountFlushPolicyTests.swift; sourceTree = "<group>"; };
 		53E7775B2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyFlushPolicyTests.swift; sourceTree = "<group>"; };
 		53E7775D2EB4D21000564D61 /* StartupFlushPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupFlushPolicyTests.swift; sourceTree = "<group>"; };
@@ -634,6 +642,7 @@
 			children = (
 				53DEA5AF2E03D05A00D6C371 /* ObjCLogger.swift */,
 				53DEA5B02E03D05A00D6C371 /* ObjCLoggerAnalytics.swift */,
+				53E58C2B2FA13CE5002556B9 /* ObjCAnalyticsLogger.swift */,
 			);
 			path = Logger;
 			sourceTree = "<group>";
@@ -723,6 +732,8 @@
 			children = (
 				53DEA65C2E03D06F00D6C371 /* LoggerAnalyticsTests.swift */,
 				539001052EA11A7400DAC164 /* AnalyticsTests.swift */,
+				53C8B38A2FCEC7AE00337763 /* ConfigurationLoggerTests.swift */,
+				53E58C2D2FA141AC002556B9 /* AnalyticsLoggerTests.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -945,6 +956,7 @@
 			isa = PBXGroup;
 			children = (
 				53DEA5A52E03D05A00D6C371 /* LoggerAnalytics.swift */,
+				53E58C272FA1366A002556B9 /* AnalyticsLogger.swift */,
 				53DEA5A62E03D05A00D6C371 /* SwiftLogger.swift */,
 			);
 			path = Logger;
@@ -1287,6 +1299,7 @@
 			buildConfigurationList = 5351AA6D2C6BE95D003C3C47 /* Build configuration list for PBXNativeTarget "RudderStackAnalytics" */;
 			buildPhases = (
 				5351AA612C6BE95D003C3C47 /* Headers */,
+				5348DB662F617E4000DB7FAC /* Setup Git Hooks */,
 				531744862D5618E000E98C03 /* SwiftLint */,
 				5351AA622C6BE95D003C3C47 /* Sources */,
 				5351AA632C6BE95D003C3C47 /* Frameworks */,
@@ -1419,6 +1432,25 @@
 			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint --config \"${PROJECT_DIR}/.swiftlint.yml\"\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		5348DB662F617E4000DB7FAC /* Setup Git Hooks */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Setup Git Hooks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if ! git -C \"${SRCROOT}\" rev-parse --is-inside-work-tree > /dev/null 2>&1; then\n    echo \"info: Not inside a git repository. Skipping git hooks setup.\"\n    exit 0\nfi\nif [ -z \"$(git config --local core.hooksPath 2>/dev/null)\" ]; then\n    echo \"Setting up git hooks for the first time...\"\n    sh \"${SRCROOT}/scripts/setup-hooks.sh\"\nfi\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1440,6 +1472,7 @@
 				530F89262E61DC67007A81B2 /* ExponentialBackoffPolicy.swift in Sources */,
 				53DEA5E92E03D05A00D6C371 /* DataStore.swift in Sources */,
 				53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */,
+				53E58C282FA1366A002556B9 /* AnalyticsLogger.swift in Sources */,
 				53DEA5EA2E03D05A00D6C371 /* TrackEvent.swift in Sources */,
 				85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */,
 				53DEA5EB2E03D05A00D6C371 /* RudderOption.swift in Sources */,
@@ -1507,6 +1540,7 @@
 				53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */,
 				5328B8792E3B817B0051A202 /* ObjCTrackEvent.swift in Sources */,
 				53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */,
+				53E58C2C2FA13CE5002556B9 /* ObjCAnalyticsLogger.swift in Sources */,
 				53074DB02E7DEC240062703A /* StateManagement.swift in Sources */,
 				53DEA6152E03D05A00D6C371 /* BasicStorage.swift in Sources */,
 				53DEA6162E03D05A00D6C371 /* ObjCOption.swift in Sources */,
@@ -1567,6 +1601,7 @@
 				53DEA6672E03D06F00D6C371 /* UserIdActionTests.swift in Sources */,
 				859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */,
 				53DEA6692E03D06F00D6C371 /* IdentifyEventTests.swift in Sources */,
+				53E58C2E2FA141AC002556B9 /* AnalyticsLoggerTests.swift in Sources */,
 				53DEA66A2E03D06F00D6C371 /* UserIdentityTests.swift in Sources */,
 				53DEA66B2E03D06F00D6C371 /* SessionHandlerTests.swift in Sources */,
 				53078F152EAFE796006F5847 /* HttpNetworkTests.swift in Sources */,
@@ -1600,6 +1635,7 @@
 				85A10BC12EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift in Sources */,
 				539001012EA110C300DAC164 /* BasicStorageTests.swift in Sources */,
 				53E777652EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift in Sources */,
+				53C8B38B2FCEC7AE00337763 /* ConfigurationLoggerTests.swift in Sources */,
 				53DEA67A2E03D06F00D6C371 /* ScreenEventTests.swift in Sources */,
 				53A83F9C2E9F750400DDA0CC /* MockStorage.swift in Sources */,
 				53DEA67B2E03D06F00D6C371 /* TrackEventTests.swift in Sources */,
@@ -1748,7 +1784,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;

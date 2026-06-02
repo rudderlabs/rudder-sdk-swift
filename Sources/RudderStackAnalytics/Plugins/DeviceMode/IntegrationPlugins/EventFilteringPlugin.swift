@@ -56,7 +56,7 @@ final class EventFilteringPlugin: Plugin {
         let eventName = trackEvent.event.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if shouldDropEvent(eventName: eventName) {
-            LoggerAnalytics.debug("EventFilteringPlugin: Dropped event '\(eventName)' for destination: \(destinationKey)")
+            logger.debug(log: "EventFilteringPlugin: Dropped event '\(eventName)' for destination: \(destinationKey)")
             return nil
         }
         
@@ -94,10 +94,7 @@ extension EventFilteringPlugin {
      Sets up a listener for source configuration changes to update filtering configuration.
      */
     private func setupConfigurationListener() {
-        guard let analytics = analytics else {
-            LoggerAnalytics.error("EventFilteringPlugin: Analytics instance not available for destination: \(destinationKey)")
-            return
-        }
+        guard let analytics else { return }
         
         analytics.sourceConfigState.state
             .dropFirst() // Skip the initial empty state
@@ -110,12 +107,12 @@ extension EventFilteringPlugin {
                 
                 // Find the destination configuration for this plugin
                 if let destination = self.findDestination(sourceConfig: sourceConfig, key: self.destinationKey) {
-                    LoggerAnalytics.debug("EventFilteringPlugin: Updating configuration for destination: \(self.destinationKey)")
+                    logger.debug(log: "EventFilteringPlugin: Updating configuration for destination: \(self.destinationKey)")
                     // Convert AnyCodable values to regular dictionary
                     let configDict = destination.destinationConfig.mapValues { $0.value }
                     self.updateFilteringConfiguration(destinationConfig: configDict)
                 } else {
-                    LoggerAnalytics.debug("EventFilteringPlugin: No configuration found for destination: \(self.destinationKey), clearing filters")
+                    logger.debug(log: "EventFilteringPlugin: No configuration found for destination: \(self.destinationKey), clearing filters")
                     self.updateFilteringConfiguration(destinationConfig: nil)
                 }
             }
@@ -129,14 +126,14 @@ extension EventFilteringPlugin {
      */
     private func updateFilteringConfiguration(destinationConfig: [String: Any]?) {
         guard let destinationConfig = destinationConfig else {
-            LoggerAnalytics.debug("EventFilteringPlugin: No destination config found for: \(destinationKey)")
+            logger.debug(log: "EventFilteringPlugin: No destination config found for: \(destinationKey)")
             return
         }
         
         let newFilteringOption = destinationConfig[EventFilteringPluginConstants.eventFilteringOptionKey] as? String ?? ""
         
         if newFilteringOption.isEmpty {
-            LoggerAnalytics.debug("EventFilteringPlugin: Missing event filtering option for destination: \(destinationKey)")
+            logger.debug(log: "EventFilteringPlugin: Missing event filtering option for destination: \(destinationKey)")
             filteringOption = ""
             filteringList.removeAll()
             return
@@ -144,7 +141,7 @@ extension EventFilteringPlugin {
         
         // Check if the configuration has a valid structure
         if !hasValidFilteringArray(filteringOption: newFilteringOption, destinationConfig: destinationConfig) {
-            LoggerAnalytics.debug("EventFilteringPlugin: Malformed configuration detected for destination: \(destinationKey), disabling filtering")
+            logger.debug(log: "EventFilteringPlugin: Malformed configuration detected for destination: \(destinationKey), disabling filtering")
             filteringOption = ""
             filteringList.removeAll()
             return
@@ -198,7 +195,7 @@ extension EventFilteringPlugin {
         }
         
         guard let eventsArray = destinationConfig[listKey] as? [[String: Any]] else {
-            LoggerAnalytics.error("EventFilteringPlugin: Missing \(listKey) in destination config for: \(destinationKey)")
+            logger.error(log: "EventFilteringPlugin: Missing \(listKey) in destination config for: \(destinationKey)", error: nil)
             return []
         }
         

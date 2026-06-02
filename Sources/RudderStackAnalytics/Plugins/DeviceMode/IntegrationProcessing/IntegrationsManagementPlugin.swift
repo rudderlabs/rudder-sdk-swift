@@ -53,20 +53,20 @@ class IntegrationsManagementPlugin: Plugin {
     }
     
     func intercept(event: any Event) -> (any Event)? {
-        LoggerAnalytics.debug("IntegrationsManagementPlugin: queueing event")
+        logger.debug(log: "IntegrationsManagementPlugin: queueing event")
         
         do {
             try queuedEventsChannel.send(event)
         } catch {
             // Channel is closed or other error, return event as-is
-            LoggerAnalytics.error("IntegrationsManagementPlugin: Failed to queue event: \(error)")
+            logger.error(log: "IntegrationsManagementPlugin: Failed to queue event: \(error)", error: error)
         }
         
         return event
     }
     
     private func processEvents() {
-        LoggerAnalytics.debug("IntegrationsManagementPlugin: Starting to process queued events")
+        logger.debug(log: "IntegrationsManagementPlugin: Starting to process queued events")
         
         processingTask = Task { [weak self] in
             guard let channel = self?.queuedEventsChannel else { return }

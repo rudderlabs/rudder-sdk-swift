@@ -1,0 +1,222 @@
+# PR Validation Workflow
+#
+# Triggered on every PR opened, reopened, or updated against:
+#   main, develop, feat/*, refactor/*, release/*, ci/*, fix/*
+#
+# Job execution order:
+#
+#   ┌─→ sonarcloud-analysis ─┐
+#   ├─→ swiftlint-check    ──┤──→ build-check ──→ pr-validation-summary
+#   └─→ test-check         ──┘
+#
+# - sonarcloud-analysis, swiftlint-check, and test-check all run in parallel.
+# - build-check runs only after swiftlint-check and test-check both pass.
+# - pr-validation-summary runs last, aggregates results, and sends a Slack notification.
+# - Concurrency: duplicate runs for the same PR are cancelled automatically.
+#
+# Permissions: contents:read only — no jobs write to issues, PRs, or any other resources.
+#
+# Note: PR title validation lives in the dedicated pr-title-validation.yml workflow,
+#       which owns the `edited` trigger so body-only PR edits don't re-run this
+#       heavy pipeline. CodeQL security scanning is handled by codeql.yml.
+
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [ "main", "develop", "feat/*", "refactor/*", "release/*", "ci/*", "fix/*" ]
+    types: [ "opened", "reopened", "synchronize" ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Runs SonarCloud code quality analysis on the codebase.
+  # Runs in parallel with other checks — independent of all other jobs.
+  sonarcloud-analysis:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    environment: sonarcloud
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0 # Shallow clones should be disabled for better analysis
+
+      - name: Run SonarCloud Analysis
+        uses: ./.github/actions/sonarcloud-analysis
+        with:
+          sonar_token: ${{ secrets.SONAR_TOKEN }}
+
+  # Runs SwiftLint against all Swift source files using the repo's .swiftlint.yml config.
+  # Violations appear as inline annotations on the PR diff.
+  swiftlint-check:
+    name: SwiftLint Check
+    runs-on: macos-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
+      - name: Run SwiftLint
+        run: swiftlint lint --reporter github-actions-logging
+
+  # Builds the package with test targets and runs all unit tests.
+  # --no-parallel is intentional to avoid async test race conditions
+  # (matches the existing run_tests.yml setup).
+  test-check:
+    name: Unit Tests
+    runs-on: macos-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build for testing
+        run: swift build --build-tests
+
+      - name: Run tests
+        run: swift test --skip-build --no-parallel
+
+  # Verifies the Swift package builds cleanly for iOS, tvOS, and watchOS via xcodebuild.
+  # macOS is already covered by the test-check job.
+  # Runs only after swiftlint-check and test-check both pass.
+  build-check:
+    name: Build Check
+    runs-on: macos-latest
+    needs: [ swiftlint-check, test-check ]
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build for iOS
+        run: xcodebuild build -scheme RudderStackAnalytics -destination 'generic/platform=iOS' | xcpretty
+
+      - name: Build for tvOS
+        run: xcodebuild build -scheme RudderStackAnalytics -destination 'generic/platform=tvOS' | xcpretty
+
+      - name: Build for watchOS
+        run: xcodebuild build -scheme RudderStackAnalytics -destination 'generic/platform=watchOS' | xcpretty
+
+  # Aggregates results from all jobs and sends a Slack notification.
+  # Runs regardless of whether upstream validation jobs succeeded or failed, so the
+  # team is always notified for every validation run.
+  pr-validation-summary:
+    name: PR Validation Summary
+    runs-on: ubuntu-latest
+    environment: notifications
+    needs: [ sonarcloud-analysis, swiftlint-check, test-check, build-check ]
+    if: always()
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check all required jobs
+        id: summary
+        run: |
+          echo "=== PR Validation Summary ==="
+          echo "SonarCloud Analysis: ${{ needs.sonarcloud-analysis.result }}"
+          echo "SwiftLint Check:     ${{ needs.swiftlint-check.result }}"
+          echo "Unit Tests:          ${{ needs.test-check.result }}"
+          echo "Build Check:         ${{ needs.build-check.result }}"
+          echo "============================="
+
+          FAILED_CHECKS=""
+          OVERALL_STATUS="passed"
+
+          if [[ "${{ needs.sonarcloud-analysis.result }}" != "success" ]]; then
+            FAILED_CHECKS="${FAILED_CHECKS}• SonarCloud Analysis (${{ needs.sonarcloud-analysis.result }}) - Code quality issues detected\n"
+            OVERALL_STATUS="failed"
+          fi
+
+          if [[ "${{ needs.swiftlint-check.result }}" != "success" ]]; then
+            FAILED_CHECKS="${FAILED_CHECKS}• SwiftLint Check (${{ needs.swiftlint-check.result }}) - Lint violations detected\n"
+            OVERALL_STATUS="failed"
+          fi
+
+          if [[ "${{ needs.test-check.result }}" != "success" ]]; then
+            FAILED_CHECKS="${FAILED_CHECKS}• Unit Tests (${{ needs.test-check.result }}) - Unit tests failed\n"
+            OVERALL_STATUS="failed"
+          fi
+
+          if [[ "${{ needs.build-check.result }}" != "success" ]]; then
+            FAILED_CHECKS="${FAILED_CHECKS}• Build Check (${{ needs.build-check.result }}) - Build failed for one or more platforms\n"
+            OVERALL_STATUS="failed"
+          fi
+
+          echo "Overall Status: $OVERALL_STATUS"
+          if [[ "$OVERALL_STATUS" == "failed" ]]; then
+            echo -e "Failed Checks:\n$FAILED_CHECKS"
+          fi
+
+          FAILED_CHECKS_CLEAN=$(echo -e "$FAILED_CHECKS" | sed 's/\\n$//')
+          echo "overall_status=$OVERALL_STATUS" >> $GITHUB_OUTPUT
+          echo "failed_checks=$FAILED_CHECKS_CLEAN" >> $GITHUB_OUTPUT
+
+          if [[ "$OVERALL_STATUS" == "failed" ]]; then
+            echo "❌ PR validation failed — one or more required checks failed"
+            exit 1
+          fi
+
+          echo "✅ All PR validation checks passed successfully"
+
+      # Runs after the summary check regardless of outcome.
+      # continue-on-error: true ensures a Slack failure never fails the job.
+      - name: Send Slack notification
+        if: always()
+        continue-on-error: true
+        run: |
+          chmod +x scripts/send-slack-notification.sh
+          ./scripts/send-slack-notification.sh \
+            "pr" \
+            "${{ steps.summary.outputs.overall_status }}" \
+            "${{ steps.summary.outputs.failed_checks }}"
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_NUMBER: ${{ github.event.number }}
+          GITHUB_EVENT_PR_TITLE: ${{ github.event.pull_request.title }}
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_EVENT_PR_HTML_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

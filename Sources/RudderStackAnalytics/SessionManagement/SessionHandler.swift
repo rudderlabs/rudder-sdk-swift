@@ -18,13 +18,15 @@ enum SessionType {
 /**
  This class handles session management for both manual and automatic types.
  */
-final class SessionHandler {
+final class SessionHandler: TypeIdentifiable {
     
     private var storage: KeyValueStorage
     private var sessionState: StateImpl<SessionInfo>
     private var sessionInstance: SessionInfo { self.sessionState.state.value }
     private var sessionCofiguration: SessionConfiguration { analytics.configuration.sessionConfiguration }
     private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
+    // Setting it to "true" by default, as lifecycle callback is not being fired, when the app is launched for the first time.
+    @Synchronized private var isInForeground: Bool = true
     
     var analytics: Analytics
     
@@ -37,32 +39,37 @@ final class SessionHandler {
             self.checkAndStartSessionOnLaunch()
             self.attachSessionTrackingObservers()
         } else if !isSessionManual {
+            analytics.logger.debug(log: "\(className): Ending session — both manual and automatic session tracking is disabled")
             self.endSession()
         }
     }
     
     private func checkAndStartSessionOnLaunch() {
         guard self.sessionId == nil || self.isSessionManual || self.isSessionTimedOut else { return }
-        self.startSession(id: Self.generatedSessionId, type: .automatic)
+        let id = Self.generatedSessionId
+        analytics.logger.debug(log: "\(className): Starting session on launch (id=\(id))")
+        self.startSession(id: id, type: .automatic)
     }
-    
+
     func startSession(id: UInt64, type: SessionType) {
+        analytics.logger.debug(log: "\(className): Starting \(type == .manual ? "manual" : "automatic") session (id=\(id))")
         self.sessionState.dispatch(action: StartSessionAction(sessionId: id, sessionType: type))
-        
+
         self.sessionInstance.storeSessionId(id: id, storage: self.storage)
         self.sessionInstance.storeIsSessionStart(isSessionStart: true, storage: self.storage)
         self.sessionInstance.storeSessionType(type: type, storage: self.storage)
-        
+
         if isSessionManual {
             detachSessionTrackingObservers()
         }
     }
-    
+
     func endSession() {
         self.detachSessionTrackingObservers()
-        
+
         self.sessionState.dispatch(action: EndSessionAction())
         self.sessionInstance.resetSessionState(storage: self.storage)
+        analytics.logger.debug(log: "\(className): Session ended")
     }
     
     func refreshSession() {
@@ -89,10 +96,12 @@ extension SessionHandler: LifecycleEventListener {
     // MARK: - Lifecycle Event Handlers
     
     func onBackground() {
+        self.isInForeground = false
         self.updateSessionLastActivityTime()
     }
     
     func onForeground() {
+        self.isInForeground = true
         guard self.sessionId != nil, self.sessionType == .automatic, self.isSessionTimedOut else { return }
         self.startSession(id: Self.generatedSessionId, type: .automatic)
     }
@@ -140,6 +149,10 @@ extension SessionHandler {
         return interval > 0 ? UInt64(interval * millisecondsInSecond) : 0
     }
     
+    func shouldUpdateActivityTimeForEvent() -> Bool {
+        return sessionCofiguration.updateSessionOnBackgroundEvents || isInForeground
+    }
+    
     /**
      Determines if the current session has timed out.
      
@@ -156,10 +169,8 @@ extension SessionHandler {
         let currentTime = self.systemCurrentTime
         
         if currentTime <= self.lastActivityTime {
-            LoggerAnalytics.warn(
-                "Current system time is less than or equal to last activity time." +
-                " This indicates potential clock tampering. Resetting the session"
-            )
+            analytics.logger.warn(log: "\(className): Current system time is less than or equal to last activity time." +
+                " This indicates potential clock tampering. Resetting the session")
             return true
         }
         
