@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.0] - 2026-06-02
+
+### Features
+
+- implement per-instance logging via `AnalyticsLogger` (#232)
+- add option to skip session activity updates for background events (#234)
+
+### Bug Fixes
+
+- correct logLevel filtering and clean up PermissionManager corruption (#241)
+
 ## [1.2.1] - 2026-03-10
 
 ### Bug Fixes
