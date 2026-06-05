@@ -72,4 +72,48 @@ class SessionTrackingPluginTests {
         #expect(sessionTrackingPlugin.analytics != nil)
         #expect(sessionTrackingPlugin.pluginType == .preProcess)
     }
+
+    @Test("given app is backgrounded and updateSessionOnBackgroundEvents is false, when intercepting an automatic session event, then last activity time is not updated")
+    func testInterceptDoesNotUpdateActivityTimeForBackgroundEvent() {
+        let sessionConfig = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
+        sessionTrackingPlugin.setup(analytics: analytics)
+        let sessionHandler = analytics.sessionHandler
+        sessionHandler?.onBackground()
+        let activityTimeBeforeEvent = sessionHandler?.lastActivityTime
+
+        _ = sessionTrackingPlugin.intercept(event: MockProvider.mockTrackEvent)
+
+        #expect(sessionHandler?.lastActivityTime == activityTimeBeforeEvent)
+    }
+
+    @Test("given app is backgrounded and updateSessionOnBackgroundEvents is true, when intercepting an automatic session event, then last activity time is updated")
+    func testInterceptUpdatesActivityTimeForBackgroundEventWhenEnabled() {
+        let sessionConfig = SessionConfiguration(automaticSessionTracking: true, updateSessionOnBackgroundEvents: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
+        sessionTrackingPlugin.setup(analytics: analytics)
+        let sessionHandler = analytics.sessionHandler
+        sessionHandler?.onBackground()
+        // Reset to a known past value so the update produces a strictly different result
+        sessionHandler?.updateSessionLastActivityTime(0)
+        let activityTimeBeforeEvent = sessionHandler?.lastActivityTime
+
+        _ = sessionTrackingPlugin.intercept(event: MockProvider.mockTrackEvent)
+
+        #expect(sessionHandler?.lastActivityTime != activityTimeBeforeEvent)
+    }
+
+    @Test("given app is in foreground, when intercepting an automatic session event, then last activity time is updated")
+    func testInterceptUpdatesActivityTimeForForegroundEvent() {
+        let sessionConfig = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
+        sessionTrackingPlugin.setup(analytics: analytics)
+        let sessionHandler = analytics.sessionHandler
+        sessionHandler?.onForeground()
+        let activityTimeBeforeEvent = sessionHandler?.lastActivityTime
+
+        _ = sessionTrackingPlugin.intercept(event: MockProvider.mockTrackEvent)
+
+        #expect(sessionHandler?.lastActivityTime != activityTimeBeforeEvent)
+    }
 }

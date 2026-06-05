@@ -196,6 +196,9 @@ public struct _DefaultConfig {
     /// Default session timeout duration in milliseconds (5 minutes).
     public let sessionTimeoutInMillis: UInt64 = 300_000
 
+    /// Whether to update the session on background events by default.
+    public let updateSessionOnBackgroundEvents: Bool = false
+
     /// Default storage mode used for persisting data.
     let storageMode: StorageMode = .disk
     
@@ -218,5 +221,5 @@ public struct _DefaultConfig {
  **Important:**
  Do not edit this value unless performing a manual release.
  */
-let RSVersion: String = "1.2.1"
+let RSVersion: String = "1.3.0"
 let RSLibraryName: String = "rudder-sdk-swift"

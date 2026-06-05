@@ -16,6 +16,7 @@ public final class ObjCSessionConfigurationBuilder: NSObject {
 
     private var automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus
     private var sessionTimeoutInMillis: UInt64 = Constants.defaultConfig.sessionTimeoutInMillis
+    private var updateSessionOnBackgroundEvents: Bool = Constants.defaultConfig.updateSessionOnBackgroundEvents
 
     /**
      Initializes a new builder.
@@ -30,7 +31,7 @@ public final class ObjCSessionConfigurationBuilder: NSObject {
      */
     @objc
     public func build() -> SessionConfiguration {
-        return SessionConfiguration(automaticSessionTracking: automaticSessionTracking, sessionTimeoutInMillis: sessionTimeoutInMillis)
+        return SessionConfiguration(automaticSessionTracking: automaticSessionTracking, sessionTimeoutInMillis: sessionTimeoutInMillis, updateSessionOnBackgroundEvents: updateSessionOnBackgroundEvents)
     }
 
     /**
@@ -58,6 +59,19 @@ public final class ObjCSessionConfigurationBuilder: NSObject {
         if timeoutInMillis.int64Value >= 0 {
             self.sessionTimeoutInMillis = timeoutInMillis.uint64Value
         }
+        return self
+    }
+
+    /**
+     Sets whether background events should update the session's last activity timestamp. Only applies when automatic session tracking is enabled.
+
+     - Parameter updateSessionOnBackgroundEvents: When `true`, background events update the session's last activity timestamp, extending the session timeout.
+     - Returns: The builder instance for chaining.
+     */
+    @objc
+    @discardableResult
+    public func setUpdateSessionOnBackgroundEvents(_ updateSessionOnBackgroundEvents: Bool) -> Self {
+        self.updateSessionOnBackgroundEvents = updateSessionOnBackgroundEvents
         return self
     }
 }

@@ -36,8 +36,10 @@ final class SessionTrackingPlugin: Plugin {
             sessionHandler.updateSessionStart(isSessionStart: false)
         }
         
-        if sessionSnapshot.type == .automatic {
+        if sessionSnapshot.type == .automatic && sessionHandler.shouldUpdateActivityTimeForEvent() {
             sessionHandler.updateSessionLastActivityTime()
+        } else if sessionSnapshot.type == .automatic {
+            LoggerAnalytics.debug("SessionTrackingPlugin: Not updating activity time for event - app is in the background and background event updates are disabled.")
         }
         
         return info
