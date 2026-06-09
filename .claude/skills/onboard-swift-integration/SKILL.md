@@ -137,7 +137,7 @@ Read `${CLAUDE_SKILL_DIR}/references/api-mapping.md` before this step.
 
 **Detect source language first:**
 ```bash
-find $V1_REPO_PATH -path "*/.build" -prune -o -path "*/Example" -prune -o -path "*/Pods" -prune -o -type f \( -name "*.m" -o -name "*.swift" \) -print
+find "$V1_REPO_PATH" -path "*/.build" -prune -o -path "*/Example" -prune -o -path "*/Pods" -prune -o -type f \( -name "*.m" -o -name "*.swift" \) -print
 ```
 - If `.m` files found → ObjC integration (look for `RudderXxxFactory.m`, `RudderXxxIntegration.m`)
 - If only `.swift` files → Swift v1 integration (look for `RudderXxxFactory.swift`, `RudderXxxIntegration.swift`)
@@ -352,12 +352,12 @@ Follow these rules:
 ```bash
 # iOS-only build
 cd $OUTPUT_DIR && xcodebuild -scheme <ModuleName> \
-  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -destination 'generic/platform=iOS Simulator' \
   -skipPackagePluginValidation build 2>&1
 
 # iOS-only test
 cd $OUTPUT_DIR && xcodebuild -scheme <ModuleName> \
-  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -destination 'generic/platform=iOS Simulator' \
   -skipPackagePluginValidation test 2>&1
 ```
 
@@ -366,14 +366,14 @@ Replace `<ModuleName>` with the package name (e.g., `RudderIntegrationSprig`).
 If the build fails:
 1. Read the error output carefully
 2. Fix the issue (usually import paths, type mismatches, or missing adapter methods)
-3. Rebuild — repeat up to 3 times
+3. Rebuild — repeat up to 2 times
 
 If tests fail:
 1. Analyze the failures
 2. Fix test logic or implementation bugs
-3. Re-run — repeat up to 3 times
+3. Re-run — repeat up to 2 times
 
-If failures persist after 3 attempts, present at **Checkpoint 3** with the error details.
+If failures persist after 2 attempts, present at **Checkpoint 3** with the error details.
 
 ### Step 9: Generate the Sample App
 
@@ -418,7 +418,7 @@ Build the sample app to verify the Xcode project is valid:
 ```bash
 cd $OUTPUT_DIR && xcodebuild -project Example/Example.xcodeproj \
   -scheme Example \
-  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -destination 'generic/platform=iOS Simulator' \
   -skipPackagePluginValidation build 2>&1
 ```
 

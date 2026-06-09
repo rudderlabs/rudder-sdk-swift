@@ -11,11 +11,14 @@ Tests/
 
 ## Dependencies
 
-The test target in `Package.swift` only needs to depend on the library target:
+The test target in `Package.swift` depends on the library target, and may also need the third-party SDK when adapter protocol methods use SDK-owned types (so the mock adapter compiles):
 ```swift
 .testTarget(
     name: "RudderIntegration<Name>Tests",
-    dependencies: ["RudderIntegration<Name>"]
+    dependencies: [
+        "RudderIntegration<Name>",
+        // "<ThirdPartySDKProduct>" // add only when adapter signatures reference SDK types
+    ]
 )
 ```
 

@@ -20,10 +20,10 @@ Example/
 
 ## Generating Unique PBX IDs
 
-The pbxproj file requires unique 24-character uppercase hex IDs. Generate them deterministically from a seed:
+The pbxproj file requires unique 24-character uppercase hex IDs. Generate 23 unique IDs randomly:
 
 ```bash
-# Generate 17 unique IDs using openssl
+# Generate 23 unique IDs using openssl
 for i in $(seq 1 23); do
   openssl rand -hex 12 | tr 'a-f' 'A-F'
 done
@@ -463,8 +463,8 @@ TARGETED_DEVICE_FAMILY = "1,2,3";
 
 **iOS + macOS + tvOS + watchOS (like Firebase):**
 ```
-SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-TARGETED_DEVICE_FAMILY = "1,2,7";
+SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator macosx";
+TARGETED_DEVICE_FAMILY = "1,2,3,4";
 ```
 
 ## App Entry Point: `<Name>ExampleApp.swift`
