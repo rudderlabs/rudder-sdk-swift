@@ -79,6 +79,10 @@ class NetworkMonitor: NetworkMonitorProtocol {
         monitor.start(queue: queue)
     }
     
+    deinit {
+        monitor.cancel()
+    }
+
     func cancel() {
         monitor.cancel()
     }
