@@ -36,7 +36,7 @@ For interactive development, open `RudderStackAnalytics.xcworkspace` — it bund
 
 Event pipeline (everything pivots around this):
 
-```
+```text
 public API (track/screen/identify/group/alias)
         │
         ▼
