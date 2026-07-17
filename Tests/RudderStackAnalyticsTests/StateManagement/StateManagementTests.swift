@@ -7,6 +7,7 @@
 
 import Testing
 import Combine
+import Foundation
 @testable import RudderStackAnalytics
 
 @Suite("State Management Framework Tests")
@@ -267,6 +268,91 @@ struct StateManagementTests {
         #expect(state1.value == 15)
         #expect(state2.value == 20)
         #expect(state1.value != state2.value)
+    }
+
+    // MARK: - observeDispatched Tests
+
+    @Test("Given a state with no dispatch, When observeDispatched is subscribed, Then the initial value should not be emitted")
+    func testObserveDispatchedSkipsInitialValue() {
+        let state = createState(initialState: 0)
+        var received: [Int] = []
+        let cancellable = state.observeDispatched().sink { received.append($0) }
+        defer { cancellable.cancel() }
+
+        #expect(received.isEmpty)
+    }
+
+    @Test("Given an early subscriber, When values are dispatched, Then only the dispatched values should be emitted")
+    func testObserveDispatchedEarlySubscriberReceivesDispatchedValues() {
+        let state = createState(initialState: 0)
+        var received: [Int] = []
+        let cancellable = state.observeDispatched().sink { received.append($0) }
+        defer { cancellable.cancel() }
+
+        state.dispatch(action: MockStateAction<Int> { _ in 1 })
+        state.dispatch(action: MockStateAction<Int> { _ in 2 })
+
+        #expect(received == [1, 2])
+    }
+
+    @Test("Given a value dispatched before subscription, When observeDispatched is subscribed late, Then the current value should be emitted immediately")
+    func testObserveDispatchedLateSubscriberReceivesCurrentValue() {
+        let state = createState(initialState: 0)
+        state.dispatch(action: MockStateAction<Int> { _ in 1 })
+
+        var received: [Int] = []
+        let cancellable = state.observeDispatched().sink { received.append($0) }
+        defer { cancellable.cancel() }
+
+        state.dispatch(action: MockStateAction<Int> { _ in 2 })
+
+        #expect(received == [1, 2], "a late subscriber must receive the already dispatched value, not lose it")
+    }
+
+    @Test("Given a state, When publisher is subscribed, Then the initial value should be emitted")
+    func testPublisherEmitsInitialValue() {
+        let state = createState(initialState: 7)
+        var received: [Int] = []
+        let cancellable = state.publisher.sink { received.append($0) }
+        defer { cancellable.cancel() }
+
+        #expect(received == [7], "publisher must still replay the current value, including the initial one")
+    }
+
+    @Test("Given subscribers attaching while dispatches are in flight, When they observe, Then the initial value should never be emitted")
+    func testObserveDispatchedNeverLeaksInitialValue() {
+        let seed = -1
+        let state = createState(initialState: seed)
+        let leaked = Synchronized(wrappedValue: false)
+
+        // Subscribers attach concurrently with dispatches, so some land mid-dispatch. None of them
+        // may ever observe the initial value, whatever the interleaving.
+        DispatchQueue.concurrentPerform(iterations: 200) { index in
+            if index.isMultiple(of: 2) {
+                state.dispatch(action: MockStateAction<Int> { _ in index })
+            } else {
+                let cancellable = state.observeDispatched().sink { value in
+                    if value == seed { leaked.wrappedValue = true }
+                }
+                cancellable.cancel()
+            }
+        }
+
+        #expect(leaked.wrappedValue == false, "observeDispatched must never emit the initial value")
+    }
+
+    // MARK: - Dispatch Atomicity Tests
+
+    @Test("Given concurrent dispatches, When they all complete, Then no update should be lost")
+    func testConcurrentDispatchesDoNotLoseUpdates() {
+        let state = createState(initialState: 0)
+        let iterations = 500
+
+        DispatchQueue.concurrentPerform(iterations: iterations) { _ in
+            state.dispatch(action: MockStateAction<Int> { $0 + 1 })
+        }
+
+        #expect(state.value == iterations, "read-reduce-write must be atomic; got \(state.value) of \(iterations)")
     }
 }
 
