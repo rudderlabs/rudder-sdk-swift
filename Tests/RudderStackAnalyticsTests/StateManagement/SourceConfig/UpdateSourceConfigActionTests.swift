@@ -53,7 +53,7 @@ struct UpdateSourceConfigActionTests {
         let action = UpdateSourceConfigAction(updatedSourceConfig: newConfig)
         stateInstance.dispatch(action: action)
         
-        let currentState = stateInstance.state.value
+        let currentState = stateInstance.value
         #expect(currentState.source.sourceId == "updated")
         #expect(currentState.source.isSourceEnabled)
     }

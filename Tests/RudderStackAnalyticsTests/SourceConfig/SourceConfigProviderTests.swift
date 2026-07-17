@@ -35,7 +35,7 @@ class SourceConfigProviderTests {
     @Test("when fetching cached config and no config exists, then does not notify observers")
     func testFetchCachedConfigNoConfig() {
         var receivedConfigs: [SourceConfig] = []
-        let cancellable = analytics.sourceConfigState.state
+        let cancellable = analytics.sourceConfigState.publisher
             .sink { config in
                 receivedConfigs.append(config)
             }
@@ -54,7 +54,7 @@ class SourceConfigProviderTests {
         mockStorage.write(value: storedConfig.jsonString, key: Constants.storageKeys.sourceConfig)
         
         var receivedConfigs: [SourceConfig] = []
-        let cancellable = analytics.sourceConfigState.state
+        let cancellable = analytics.sourceConfigState.publisher
             .sink { config in
                 receivedConfigs.append(config)
             }
@@ -83,7 +83,7 @@ class SourceConfigProviderTests {
         let provider = SourceConfigProvider(analytics: analytics)
         
         var receivedConfigs: [SourceConfig] = []
-        let cancellable = analytics.sourceConfigState.state
+        let cancellable = analytics.sourceConfigState.publisher
             .sink { config in
                 receivedConfigs.append(config)
             }
@@ -107,17 +107,17 @@ class SourceConfigProviderTests {
         var cancellables = Set<AnyCancellable>()
         
         // Observer 1
-        analytics.sourceConfigState.state
+        analytics.sourceConfigState.publisher
             .sink { config in observer1Configs.append(config) }
             .store(in: &cancellables)
         
         // Observer 2
-        analytics.sourceConfigState.state
+        analytics.sourceConfigState.publisher
             .sink { config in observer2Configs.append(config) }
             .store(in: &cancellables)
         
         // Observer 3
-        analytics.sourceConfigState.state
+        analytics.sourceConfigState.publisher
             .sink { config in observer3Configs.append(config) }
             .store(in: &cancellables)
         
@@ -144,7 +144,7 @@ class SourceConfigProviderTests {
         MockProvider.setupMockURLSession()
         HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 400)
         
-        let initialConfig = analytics.sourceConfigState.state.value
+        let initialConfig = analytics.sourceConfigState.value
         var receivedConfig: SourceConfig?
         var configUpdateCount = 0
         var cancellables = Set<AnyCancellable>()
@@ -154,7 +154,7 @@ class SourceConfigProviderTests {
             MockProvider.teardownMockURLSession()
         }
         
-        analytics.sourceConfigState.state
+        analytics.sourceConfigState.publisher
             .sink { config in
                 receivedConfig = config
                 configUpdateCount += 1
@@ -207,7 +207,7 @@ class SourceConfigProviderTests {
             MockProvider.teardownMockURLSession()
         }
         
-        analytics.sourceConfigState.state
+        analytics.sourceConfigState.publisher
             .sink { config in
                 receivedConfig = config
                 configUpdateCount += 1
@@ -238,7 +238,7 @@ class SourceConfigProviderTests {
             MockProvider.teardownMockURLSession()
         }
         
-        analytics.sourceConfigState.state
+        analytics.sourceConfigState.publisher
             .sink { config in
                 receivedConfigs.append(config)
             }
@@ -262,7 +262,7 @@ class SourceConfigProviderTests {
         MockProvider.setupMockURLSession()
         HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 500)
         
-        let initialConfig = analytics.sourceConfigState.state.value
+        let initialConfig = analytics.sourceConfigState.value
         var receivedConfig: SourceConfig?
         var configUpdateCount = 0
         var cancellables = Set<AnyCancellable>()
@@ -272,7 +272,7 @@ class SourceConfigProviderTests {
             MockProvider.teardownMockURLSession()
         }
         
-        analytics.sourceConfigState.state
+        analytics.sourceConfigState.publisher
             .sink { config in
                 receivedConfig = config
                 configUpdateCount += 1

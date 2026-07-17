@@ -18,8 +18,8 @@ struct StateManagementTests {
         
         let stateInstance = createState(initialState: value)
         
-        #expect(type(of: value) == type(of: stateInstance.state.value))
-        #expect(stateInstance.state.value == value)
+        #expect(type(of: value) == type(of: stateInstance.value))
+        #expect(stateInstance.value == value)
     }
     
     @Test("given string values, when creating states, then values are preserved", 
@@ -27,7 +27,7 @@ struct StateManagementTests {
     func testCreateStateWithStringTypes(value: String) {
         let stringState = createState(initialState: value)
         
-        #expect(stringState.state.value == value)
+        #expect(stringState.value == value)
     }
     
     @Test("given integer values, when creating states, then values are preserved",
@@ -35,7 +35,7 @@ struct StateManagementTests {
     func testCreateStateWithIntegerTypes(value: Int) {
         let intState = createState(initialState: value)
         
-        #expect(intState.state.value == value)
+        #expect(intState.value == value)
     }
     
     @Test("given boolean values, when creating states, then values are preserved",
@@ -43,16 +43,16 @@ struct StateManagementTests {
     func testCreateStateWithBooleanTypes(value: Bool) {
         let boolState = createState(initialState: value)
         
-        #expect(boolState.state.value == value)
+        #expect(boolState.value == value)
     }
     
     @Test("given optional values, when creating states, then values are preserved")
     func testCreateStateWithOptionalTypes() {
         let nilOptionalState = createState(initialState: Optional<String>.none)
-        #expect(nilOptionalState.state.value == nil)
+        #expect(nilOptionalState.value == nil)
         
         let someOptionalState = createState(initialState: Optional<String>.some("test"))
-        #expect(someOptionalState.state.value == "test")
+        #expect(someOptionalState.value == "test")
     }
     
     @Test("given array values, when creating states, then values are preserved",
@@ -60,7 +60,7 @@ struct StateManagementTests {
     func testCreateStateWithArrayTypes(value: [Int]) {
         let arrayState = createState(initialState: value)
         
-        #expect(arrayState.state.value == value)
+        #expect(arrayState.value == value)
     }
     
     @Test("given custom struct values, when creating states, then values are preserved")
@@ -79,7 +79,7 @@ struct StateManagementTests {
         for testValue in testValues {
             let structState = createState(initialState: testValue)
             
-            #expect(structState.state.value == testValue)
+            #expect(structState.value == testValue)
         }
     }
     
@@ -92,7 +92,7 @@ struct StateManagementTests {
         }
         stateInstance.dispatch(action: mockAction)
         
-        #expect(stateInstance.state.value == 5)
+        #expect(stateInstance.value == 5)
     }
     
     @Test("given initial state, when dispatching multiple sequential actions, then state updates correctly")
@@ -115,7 +115,7 @@ struct StateManagementTests {
         stateInstance.dispatch(action: mockAction2)  // 5 + 15 = 20
         stateInstance.dispatch(action: mockAction3)  // 20 - 8 = 12
         
-        #expect(stateInstance.state.value == 12)
+        #expect(stateInstance.value == 12)
     }
     
     @Test("given subscribed state, when dispatching actions, then subscription receives all updates")
@@ -124,7 +124,7 @@ struct StateManagementTests {
         var cancellables = Set<AnyCancellable>()
         var updatedValue = 0
         
-        stateInstance.state.sink { newValue in
+        stateInstance.publisher.sink { newValue in
             updatedValue = newValue
         }.store(in: &cancellables)
         
@@ -156,7 +156,7 @@ struct StateManagementTests {
         stateInstance.dispatch(action: modifyAction)
         
         #expect(initialArray == [1, 2, 3]) // Original unchanged
-        #expect(stateInstance.state.value == [1, 2, 3, 4]) // State updated
+        #expect(stateInstance.value == [1, 2, 3, 4]) // State updated
     }
     
     @Test("given multiple subscribers, when dispatching actions, then all subscribers receive same updates")
@@ -166,11 +166,11 @@ struct StateManagementTests {
         var subscriber2Values: [Int] = []
         var cancellables = Set<AnyCancellable>()
         
-        stateInstance.state.sink { value in
+        stateInstance.publisher.sink { value in
             subscriber1Values.append(value)
         }.store(in: &cancellables)
         
-        stateInstance.state.sink { value in
+        stateInstance.publisher.sink { value in
             subscriber2Values.append(value)
         }.store(in: &cancellables)
         
@@ -208,7 +208,7 @@ struct StateManagementTests {
         
         stateInstance.dispatch(action: complexAction)
         
-        let finalState = stateInstance.state.value
+        let finalState = stateInstance.value
         #expect(finalState.counter == 1)
         #expect(finalState.isEnabled)
         #expect(finalState.items == ["new_item"])
@@ -235,7 +235,7 @@ struct StateManagementTests {
         
         actions.forEach { stateInstance.dispatch(action: $0) }
         
-        #expect(stateInstance.state.value.count == 3)
+        #expect(stateInstance.value.count == 3)
     }
     
     @Test("given different state types, when applying matching actions, then type safety is enforced")
@@ -249,8 +249,8 @@ struct StateManagementTests {
         intState.dispatch(action: intAction)
         stringState.dispatch(action: stringAction)
         
-        #expect(intState.state.value == 1)
-        #expect(stringState.state.value == "hello world")
+        #expect(intState.value == 1)
+        #expect(stringState.value == "hello world")
     }
     
     @Test("given same initial values, when creating multiple states, then instances are independent")
@@ -264,9 +264,9 @@ struct StateManagementTests {
         state1.dispatch(action: action1)
         state2.dispatch(action: action2)
         
-        #expect(state1.state.value == 15)
-        #expect(state2.state.value == 20)
-        #expect(state1.state.value != state2.state.value)
+        #expect(state1.value == 15)
+        #expect(state2.value == 20)
+        #expect(state1.value != state2.value)
     }
 }
 

@@ -22,7 +22,7 @@ final class SessionHandler: TypeIdentifiable {
     
     private var storage: KeyValueStorage
     private var sessionState: StateImpl<SessionInfo>
-    private var sessionInstance: SessionInfo { self.sessionState.state.value }
+    private var sessionInstance: SessionInfo { self.sessionState.value }
     private var sessionCofiguration: SessionConfiguration { analytics.configuration.sessionConfiguration }
     private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
     // Setting it to "true" by default, as lifecycle callback is not being fired, when the app is launched for the first time.
@@ -120,7 +120,7 @@ extension SessionHandler {
     }
     
     var sessionSnapshot: SessionInfo {
-        return self.sessionState.state.value
+        return self.sessionState.value
     }
     
     var sessionId: UInt64? {
