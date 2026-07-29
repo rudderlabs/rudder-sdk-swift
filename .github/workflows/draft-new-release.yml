@@ -1,28 +1,15 @@
-# Draft New Release Workflow                                                                                                                                                                     
-#                                                                                                                                                                                                
-# Triggered manually (workflow_dispatch) from:
-#   - develop        → creates release/x.y.z branch
-#   - hotfix/*       → creates hotfix-release/x.y.z branch
+# Promote Release Candidate Workflow
 #
-# What it does:
-#   1. Generates a GitHub App token (needed to push to protected branches and open PRs)
-#   2. Reads current version from Constants.swift
-#   3. Scans commits since the last git tag (or all commits if no tags exist) — highest bump wins:
-#        BREAKING CHANGE / !:        → major (X.0.0)
-#        feat:                       → minor (x.Y.0)
-#        fix: / refactor: / chore:   → patch (x.y.Z)
-#        docs: / test: / ci:         → no release triggered
-#   4. Creates release branch via GitHub API (cut from HEAD of triggered branch)
-#   5. Updates RSVersion in Constants.swift
-#   6. Generates updated CHANGELOG.md
-#   7. Creates a verified commit on the release branch
-#   8. Raises a PR from release branch into main
+# The Swift SDK intentionally keeps a two-branch release model:
+#   - develop: active integration branch
+#   - main: release branch
 #
-# Fails if no releasable commits (feat/fix/refactor/chore) are found since the last tag (or in the entire history if no tags exist).
-# Permissions: contents:read at workflow level — elevated access via GitHub App token only.
-# Requires: RELEASE_APP_ID (variable) + RELEASE_PRIVATE_KEY (secret)
+# This workflow promotes the selected develop/hotfix state to main without
+# changing versions or generating a changelog. Once that PR is merged,
+# release-please observes the push to main and creates the version/changelog
+# release PR. Merging the release-please PR creates the tag and GitHub release.
 
-name: Draft New Release
+name: Promote Release Candidate
 
 on: workflow_dispatch
 
@@ -30,238 +17,96 @@ permissions:
   contents: read
 
 jobs:
-  draft-new-release:
-      name: Draft a new release
-      runs-on: ubuntu-latest
-      environment: release
-      if: startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/')
-      permissions:
-        contents: read
-      steps:
-        # Audits all outbound network calls made during the job for supply-chain security.
-        - name: Harden the runner (Audit all outbound calls)
-          uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
-          with:
-            egress-policy: audit
+  promote-release-candidate:
+    name: Promote release candidate to main
+    runs-on: ubuntu-latest
+    environment: release
+    if: startsWith(github.ref, 'refs/heads/develop') || startsWith(github.ref, 'refs/heads/hotfix/')
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
 
-        # GITHUB_TOKEN cannot push to protected branches or trigger downstream workflows.
-        # A GitHub App token is used instead — scoped to contents:write and pull-requests:write,
-        # auto-expires after 1 hour, and is not tied to any personal account.
-        - name: Generate GitHub App Token
-          id: generate-token
-          uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
-          with:
-            app-id: ${{ vars.RELEASE_APP_ID }}
-            private-key: ${{ secrets.RELEASE_PRIVATE_KEY }}
-            repositories: ${{ github.event.repository.name }}
-            permission-contents: write
-            permission-pull-requests: write
+      - name: Generate GitHub App token
+        id: generate-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
 
-        # fetch-depth: 0 fetches full history and all tags — required for
-        # git describe and git log range commands in the version calculation step.
-        - name: Checkout source branch
-          uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
-          with:
-            token: ${{ steps.generate-token.outputs.token }}
-            fetch-depth: 0
-            persist-credentials: false
+      - name: Checkout source branch
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          fetch-depth: 0
+          persist-credentials: false
 
-        # Node.js is required to run conventional-changelog-cli for CHANGELOG generation.
-        - name: Set up Node.js
-          uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-          with:
-            node-version: 20
+      - name: Validate releasable changes
+        run: |
+          git fetch --no-tags origin main
+          commit_count=$(git rev-list --count origin/main..HEAD)
 
-        # Reads current version from Constants.swift, scans conventional commits since
-        # the last git tag (or all commits if no tags exist) to determine bump type, and
-        # calculates the new version. Outputs log_range for use in subsequent steps.
-        # Fails the workflow if no releasable conventional commits are found.
-        - name: Calculate release version
-          id: create-release
-          run: |
-            source_branch_name=${GITHUB_REF##*/}
-            release_type=release
-            grep -q "hotfix/" <<< "${GITHUB_REF}" && release_type=hotfix-release
+          if [[ "$commit_count" -eq 0 ]]; then
+            echo "No commits are available to promote from ${GITHUB_REF_NAME} to main."
+            exit 1
+          fi
 
-            # Read current version from Constants.swift
-            current_version=$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' \
-              Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift | head -1)
+          echo "Promoting $commit_count commit(s) from ${GITHUB_REF_NAME} to main."
 
-            # Get last git tag (repo uses x.y.z format — no v prefix)
-            last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-            # When no tags exist, scan all commits; otherwise scan since the last tag.
-            log_range="${last_tag:+${last_tag}..}HEAD"
+      - name: Create promotion branch
+        id: promotion
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          branch_type=release
+          if [[ "$GITHUB_REF_NAME" == hotfix/* ]]; then
+            branch_type=hotfix
+          fi
 
-            # Scan commits since last tag — determine bump type.
-            # Bump rules (highest wins):
-            #   major → feat! / BREAKING CHANGE
-            #   minor → feat
-            #   patch → fix / refactor / chore
-            #   none  → docs / test / ci (no release triggered)
-            BUMP="none"
-            while IFS= read -r commit; do
-              if echo "$commit" | grep -qE '(BREAKING CHANGE|!:)'; then
-                BUMP="major"; break
-              elif echo "$commit" | grep -qE '^feat(\([^)]+\))?:'; then
-                BUMP="minor"
-              elif [[ "$BUMP" == "none" ]] && echo "$commit" | grep -qE '^(fix|refactor|chore)(\([^)]+\))?:'; then
-                BUMP="patch"
-              fi
-            done <<< "$(git log "$log_range" --pretty=format:"%s %b" --first-parent)"
+          branch_name="${branch_type}/candidate-${GITHUB_RUN_ID}"
+          source_sha=$(git rev-parse HEAD)
 
-            if [[ "$BUMP" == "none" ]]; then
-              since_msg=${last_tag:+"since $last_tag"}${last_tag:-"in the entire history"}
-              echo "❌ No releasable commits found $since_msg."
-              echo "   docs / test / ci commits do not trigger a release."
-              exit 1
-            fi
+          existing_sha=$(gh api \
+            "repos/${GITHUB_REPOSITORY}/git/ref/heads/${branch_name}" \
+            --jq '.object.sha' 2>/dev/null || true)
 
-            # Calculate new version
-            IFS='.' read -r MAJOR MINOR PATCH <<< "$current_version"
-            case "$BUMP" in
-              major) new_version="$((MAJOR+1)).0.0" ;;
-              minor) new_version="${MAJOR}.$((MINOR+1)).0" ;;
-              patch) new_version="${MAJOR}.${MINOR}.$((PATCH+1))" ;;
-            esac
+          if [[ -n "$existing_sha" && "$existing_sha" != "$source_sha" ]]; then
+            echo "Promotion branch $branch_name exists at an unexpected commit."
+            exit 1
+          fi
 
-            branch_name="${release_type}/${new_version}"
-
-            echo "Source branch:    $source_branch_name"
-            echo "Current version:  $current_version"
-            echo "Bump type:        $BUMP"
-            echo "New version:      $new_version"
-            echo "Release branch:   $branch_name"
-
-            echo "source_branch_name=$source_branch_name" >> $GITHUB_OUTPUT
-            echo "branch_name=$branch_name" >> $GITHUB_OUTPUT
-            echo "new_version=$new_version" >> $GITHUB_OUTPUT
-            echo "last_tag=$last_tag" >> $GITHUB_OUTPUT
-            echo "log_range=$log_range" >> $GITHUB_OUTPUT
-            echo "CURRENT_VERSION=$current_version" >> $GITHUB_ENV
-            echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
-
-        # Creates the release branch via GitHub API using the HEAD SHA of the triggered branch.
-        # Using the API (instead of git push) avoids the need for a local checkout on the new branch.
-        - name: Create release branch via GitHub API
-          env:
-            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-          run: |
-            BASE_SHA=$(git rev-parse HEAD)
-            gh api repos/${{ github.repository }}/git/refs \
+          if [[ -z "$existing_sha" ]]; then
+            gh api "repos/${GITHUB_REPOSITORY}/git/refs" \
               --method POST \
-              -f ref="refs/heads/${{ steps.create-release.outputs.branch_name }}" \
-              -f sha="$BASE_SHA"
+              -f ref="refs/heads/${branch_name}" \
+              -f sha="$source_sha"
+          fi
 
-        # Updates RSVersion in Constants.swift (single source of truth for the SDK version),
-        # prepends the new release section to CHANGELOG.md using a custom config that
-        # includes feat, fix, refactor, and chore types, and builds the PR body
-        # from merged PR titles using the log_range from the previous step.
-        - name: Update RSVersion and generate CHANGELOG
-          id: finish-release
-          run: |
-            npm i -g conventional-changelog-cli@2.2.2
-            npm i conventional-changelog-angular@5
+          echo "branch_name=$branch_name" >> "$GITHUB_OUTPUT"
 
-            # Update RSVersion in Constants.swift
-            sed -i "s/let RSVersion: String = \".*\"/let RSVersion: String = \"$NEW_VERSION\"/" \
-              Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift
+      - name: Create promotion pull request
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          BRANCH_NAME: ${{ steps.promotion.outputs.branch_name }}
+        run: |
+          existing_pr=$(gh pr list \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --state open \
+            --json url \
+            --jq '.[0].url // empty')
 
-            # Create a temporary package.json so conventional-changelog can resolve the version.
-            # This is required because the repo has no package.json (Swift project).
-            echo "{\"version\": \"$NEW_VERSION\"}" > package.json
+          if [[ -n "$existing_pr" ]]; then
+            echo "Promotion pull request already exists: $existing_pr"
+            exit 0
+          fi
 
-            # Extract and preserve the existing preamble (everything before the first version header),
-            # so conventional-changelog doesn't bury it below the new entry when prepending.
-            FIRST_VERSION_LINE=$(grep -n "^#\{1,2\} \[" CHANGELOG.md | head -1 | cut -d: -f1)
-            if [[ -n "$FIRST_VERSION_LINE" ]]; then
-              # Capture preamble lines (strip trailing blank lines for clean re-insertion)
-              PREAMBLE=$(head -n "$((FIRST_VERSION_LINE - 1))" CHANGELOG.md | sed 's/[[:space:]]*$//' | sed -e :a -e '/^\n*$/{$d;N;ba}')
-              tail -n +"$FIRST_VERSION_LINE" CHANGELOG.md > /tmp/CHANGELOG_body.md
-            else
-              PREAMBLE=""
-              cp CHANGELOG.md /tmp/CHANGELOG_body.md
-            fi
-            cp /tmp/CHANGELOG_body.md CHANGELOG.md
-
-            # Prepend new release section to CHANGELOG.md.
-            # Uses changelog.config.js to extend the Angular preset with refactor and chore types.
-            conventional-changelog -n ./changelog.config.js -i CHANGELOG.md -s
-
-            # Re-add the preserved preamble at the top (if any).
-            if [[ -n "$PREAMBLE" ]]; then
-              { printf '%s\n\n' "$PREAMBLE"; cat CHANGELOG.md; } > /tmp/CHANGELOG_final.md
-              mv /tmp/CHANGELOG_final.md CHANGELOG.md
-            fi
-
-            # Remove the temporary package.json — it should not be committed.
-            rm package.json
-
-            # Build PR body from merged PR titles since last tag
-            FEATURES=""
-            FIXES=""
-            REFACTORS=""
-            CHORES=""
-
-            while IFS= read -r commit; do
-              if echo "$commit" | grep -qE '^feat(\([^)]+\))?!?:'; then
-                MSG=$(echo "$commit" | sed -E 's/^feat(\([^)]+\))?!?: //')
-                FEATURES="${FEATURES}- ${MSG}\n"
-              elif echo "$commit" | grep -qE '^fix(\([^)]+\))?!?:'; then
-                MSG=$(echo "$commit" | sed -E 's/^fix(\([^)]+\))?!?: //')
-                FIXES="${FIXES}- ${MSG}\n"
-              elif echo "$commit" | grep -qE '^refactor(\([^)]+\))?!?:'; then
-                MSG=$(echo "$commit" | sed -E 's/^refactor(\([^)]+\))?!?: //')
-                REFACTORS="${REFACTORS}- ${MSG}\n"
-              elif echo "$commit" | grep -qE '^chore(\([^)]+\))?!?:'; then
-                MSG=$(echo "$commit" | sed -E 's/^chore(\([^)]+\))?!?: //')
-                CHORES="${CHORES}- ${MSG}\n"
-              fi
-            done <<< "$(git log "${{ steps.create-release.outputs.log_range }}" --pretty=format:"%s" --first-parent)"
-
-            PR_BODY="# RudderStack Swift SDK $NEW_VERSION"
-            if [[ -n "$FEATURES" ]]; then
-              PR_BODY="${PR_BODY}\n\n## Features\n${FEATURES}"
-            fi
-            if [[ -n "$FIXES" ]]; then
-              PR_BODY="${PR_BODY}\n\n## Bug Fixes\n${FIXES}"
-            fi
-            if [[ -n "$REFACTORS" ]]; then
-              PR_BODY="${PR_BODY}\n\n## Refactors\n${REFACTORS}"
-            fi
-            if [[ -n "$CHORES" ]]; then
-              PR_BODY="${PR_BODY}\n\n## Chores\n${CHORES}"
-            fi
-
-            echo "pr_body<<EOF" >> $GITHUB_OUTPUT
-            echo -e "$PR_BODY" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-
-        # Creates a GPG-verified commit on the release branch using the GitHub App token.
-        # A verified commit is required so the commit shows as "Verified" on GitHub,
-        # satisfying branch protection rules that require signed commits.
-        - name: Create verified commit on release branch
-          uses: ryancyq/github-signed-commit@e9f3b28c80da7be66d24b8f501a5abe82a6b855f # v1.2.0
-          env:
-            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-          with:
-            branch-name: ${{ steps.create-release.outputs.branch_name }}
-            commit-message: 'chore(release): ${{ steps.create-release.outputs.new_version }}'
-            files: |
-              CHANGELOG.md
-              Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift
-
-        # Raises a PR from the release branch into main.
-        # PR title and body are populated with the new version and features/fixes summary.
-        # Reviewers are auto-assigned via CODEOWNERS.
-        # Uses gh CLI instead of the archived repo-sync/pull-request action.
-        - name: Create pull request into main
-          env:
-            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-            BRANCH_NAME: ${{ steps.create-release.outputs.branch_name }}
-            PR_BODY: ${{ steps.finish-release.outputs.pr_body }}
-          run: |
-            gh pr create \
-              --base main \
-              --head "$BRANCH_NAME" \
-              --title "chore(release): pulling ${BRANCH_NAME} into main" \
-              --body "$PR_BODY"
+          gh pr create \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --title "chore(release): promote ${GITHUB_REF_NAME} to main" \
+            --body "Promotes the releasable state from \`${GITHUB_REF_NAME}\` to \`main\`. After this PR is merged, release-please will create or update the version and changelog release PR."

@@ -1,163 +1,105 @@
-# Publish New Release Workflow
+# Post-release Workflow
 #
-# Triggered automatically when a PR is closed (merged) into main.
-# Only runs if the merged PR's source branch starts with:
-#   - release/*
-#   - hotfix-release/*
-#
-# All other merges into main (back-merges, hotfixes, regular PRs) are skipped.
-#
-# What it does:
-#   1. Reads RSVersion from Constants.swift on main (single source of truth)
-#   2. Creates and pushes a git tag (x.y.z — no v prefix)
-#   3. Creates a GitHub Release with auto-generated release notes
-#   4. Sends a Slack notification with version, tag, and release link
-#   5. Raises a back-merge PR from main → develop
-#
-# Permissions:
-#   contents: read at workflow level — elevated access via GitHub App token only.
-#
-# Requires: RELEASE_APP_ID (variable) + RELEASE_PRIVATE_KEY (secret) + SLACK_WEBHOOK_URL (secret)
+# release-please creates the non-v-prefixed tag and GitHub release from main.
+# This workflow preserves the repository-specific post-release behavior:
+# notify Slack and back-merge main into develop.
 
-name: Publish New Release
+name: Post Release
 
 on:
-  pull_request:
-    branches: [ main ]
-    types: [ closed ]
+  release:
+    types: [published]
 
 permissions:
   contents: read
 
 jobs:
-  publish-release:
-      name: Publish Release
-      runs-on: ubuntu-latest
-      environment: release
-      # Only run when a release/* or hotfix-release/* PR is merged — skip everything else.
-      if: |
-        github.event.pull_request.merged == true &&
-        (startsWith(github.event.pull_request.head.ref, 'release/') ||
-         startsWith(github.event.pull_request.head.ref, 'hotfix-release/'))
-      steps:
-        # Audits all outbound network calls made during the job for supply-chain security.
-        - name: Harden the runner (Audit all outbound calls)
-          uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
-          with:
-            egress-policy: audit
+  post-release:
+    name: Notify and back-merge
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
 
-        # GITHUB_TOKEN cannot push to protected branches or trigger downstream workflows.
-        # A GitHub App token is used instead — scoped to contents:write and pull-requests:write,
-        # auto-expires after 1 hour, and is not tied to any personal account.
-        - name: Generate GitHub App Token
-          id: generate-token
-          uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
-          with:
-            app-id: ${{ vars.RELEASE_APP_ID }}
-            private-key: ${{ secrets.RELEASE_PRIVATE_KEY }}
-            repositories: ${{ github.event.repository.name }}
-            permission-contents: write
-            permission-pull-requests: write
+      - name: Generate GitHub App token
+        id: generate-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
 
-        # fetch-depth: 0 is required to push a new tag against full git history.
-        - name: Checkout main
-          uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
-          with:
-            token: ${{ steps.generate-token.outputs.token }}
-            ref: main
-            fetch-depth: 0
-            persist-credentials: false
+      - name: Checkout main
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
 
-        # Constants.swift is the single source of truth for the SDK version.
-        # The version was already bumped on the release branch by draft-release.yml.
-        - name: Read RSVersion from main
-          id: read_version
-          run: |
-            VERSION=$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' \
-              Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift | head -1)
-            if [[ -z "$VERSION" ]]; then
-              echo "❌ Could not read a valid version from Constants.swift — aborting."
-              exit 1
-            fi
-            echo "version=$VERSION" >> $GITHUB_OUTPUT
-            echo "tag=$VERSION" >> $GITHUB_OUTPUT
+      - name: Validate release branch and tag
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          if [[ ! "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tag $TAG does not follow the Swift SDK tag convention."
+            exit 1
+          fi
 
-        # Tags use x.y.z format — no v prefix, consistent with Constants.swift and branch names.
-        # Idempotent: if the tag already points to HEAD (e.g. workflow re-run), the step is a no-op.
-        # Fails with a clear remediation message if the tag exists but points to a different commit.
-        - name: Create and push Git tag
-          env:
-            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-            TAG: ${{ steps.read_version.outputs.tag }}
-          run: |
-            HEAD=$(git rev-parse HEAD)
+          git fetch --force origin "refs/tags/${TAG}:refs/tags/${TAG}"
 
-            EXISTING_SHA=$(gh api repos/${{ github.repository }}/git/ref/tags/$TAG \
-              --jq '.object.sha' 2>/dev/null || echo "")
+          if ! git merge-base --is-ancestor "${TAG}^{commit}" HEAD; then
+            echo "Release tag $TAG does not point to a commit on main."
+            exit 1
+          fi
 
-            if [[ -n "$EXISTING_SHA" ]]; then
-              if [[ "$EXISTING_SHA" == "$HEAD" ]]; then
-                echo "ℹ️ Tag $TAG already exists on HEAD — skipping tag creation."
-              else
-                echo "❌ Tag $TAG already exists but points to $EXISTING_SHA, not HEAD ($HEAD)."
-                echo "   To remediate: delete the existing tag and re-run."
-                exit 1
-              fi
-            else
-              gh api repos/${{ github.repository }}/git/refs \
-                --method POST \
-                -f ref="refs/tags/$TAG" \
-                -f sha="$HEAD"
-            fi
-
-        # Creates a GitHub Release with auto-generated notes from merged PRs since last tag.
-        - name: Create GitHub Release
-          id: create_release
-          env:
-            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-            TAG: ${{ steps.read_version.outputs.tag }}
-            VERSION: ${{ steps.read_version.outputs.version }}
-          run: |
-            RELEASE_URL=$(gh release create "$TAG" \
-              --title "$VERSION" \
-              --generate-notes \
-              --latest \
-              --verify-tag)
-            echo "release_url=$RELEASE_URL" >> $GITHUB_OUTPUT
-
-        # Sends a Slack message to notify the team of the new release.
-        - name: Send Slack notification
-          if: success()
-          env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-            VERSION: ${{ steps.read_version.outputs.version }}
-            TAG: ${{ steps.read_version.outputs.tag }}
-            RELEASE_URL: ${{ steps.create_release.outputs.release_url }}
-            ACTOR: ${{ github.actor }}
-          run: |
-            curl -s -X POST "$SLACK_WEBHOOK_URL" \
-              -H 'Content-type: application/json' \
-              --data "{
-                \"text\": \"🚀 *RudderStackAnalytics (Swift) SDK $VERSION* has been released!\",
-                \"blocks\": [
-                  {
-                    \"type\": \"section\",
-                    \"text\": {
-                      \"type\": \"mrkdwn\",
-                      \"text\": \"🚀 *RudderStackAnalytics (Swift) SDK $VERSION* has been released!\n*Tag:* \`$TAG\`\n*Release:* $RELEASE_URL\n*Released by:* $ACTOR\"
-                    }
+      - name: Send Slack notification
+        continue-on-error: true
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          VERSION: ${{ github.event.release.tag_name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          curl -sS --fail-with-body -X POST "$SLACK_WEBHOOK_URL" \
+            -H 'Content-type: application/json' \
+            --data "{
+              \"text\": \"🚀 *RudderStackAnalytics (Swift) SDK $VERSION* has been released!\",
+              \"blocks\": [
+                {
+                  \"type\": \"section\",
+                  \"text\": {
+                    \"type\": \"mrkdwn\",
+                    \"text\": \"🚀 *RudderStackAnalytics (Swift) SDK $VERSION* has been released!\n*Tag:* \`$VERSION\`\n*Release:* $RELEASE_URL\n*Released by:* $ACTOR\"
                   }
-                ]
-              }"
+                }
+              ]
+            }"
 
-        # Raises an automated PR to sync the release changes back into develop.
-        - name: Raise back-merge PR (main → develop)
-          env:
-            GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-            VERSION: ${{ steps.read_version.outputs.version }}
-          run: |
-            gh pr create \
-              --base develop \
-              --head main \
-              --title "chore(release): pulling main into develop post release $VERSION" \
-              --body "Automated back-merge of release $VERSION from \`main\` into \`develop\`."
+      - name: Raise back-merge pull request
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
+          existing_pr=$(gh pr list \
+            --base develop \
+            --head main \
+            --state open \
+            --json url \
+            --jq '.[0].url // empty')
+
+          if [[ -n "$existing_pr" ]]; then
+            echo "Back-merge pull request already exists: $existing_pr"
+            exit 0
+          fi
+
+          gh pr create \
+            --base develop \
+            --head main \
+            --title "chore(release): pulling main into develop post release $VERSION" \
+            --body "Automated back-merge of release $VERSION from \`main\` into \`develop\`."

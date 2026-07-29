@@ -219,7 +219,7 @@ public struct _DefaultConfig {
  The version number of the Swift SDK.
  
  **Important:**
- Do not edit this value unless performing a manual release.
+ This value is updated automatically by release-please.
  */
-let RSVersion: String = "1.3.0"
+let RSVersion: String = "1.3.0" // x-release-please-version
 let RSLibraryName: String = "rudder-sdk-swift"

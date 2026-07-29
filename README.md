@@ -279,6 +279,23 @@ Examples:
   chore(release): v1.3.0
 ```
 
+### Release Process
+
+The repository intentionally uses two long-lived branches:
+
+- `develop` is the active integration branch for regular changes.
+- `main` is the release branch consumed by release-please.
+
+To prepare a release, run the **Promote Release Candidate** workflow from
+`develop` or a `hotfix/*` branch. It opens a promotion PR into `main` without
+changing the version. After that PR is merged, release-please creates or updates
+the version and changelog release PR on `main`.
+
+Merging the release-please PR creates the non-`v`-prefixed git tag and GitHub
+release. The post-release workflow then sends the release notification and
+opens the `main` → `develop` back-merge PR. Registry publication is not part of
+release-please; Swift Package Manager consumes the tagged GitHub release.
+
 ---
 
 ## Example Apps
