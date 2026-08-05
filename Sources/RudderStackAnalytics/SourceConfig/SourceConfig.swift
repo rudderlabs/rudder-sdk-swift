@@ -11,7 +11,7 @@ import Foundation
 /**
  Represents the configuration for a source in the RudderStack server.
  */
-struct SourceConfig: Codable {
+struct SourceConfig: Codable, Equatable {
     let source: RudderServerConfigSource
     
     /**
@@ -37,7 +37,7 @@ struct SourceConfig: Codable {
 /**
  Represents the configuration of a source from the RudderStack server.
  */
-struct RudderServerConfigSource: Codable {
+struct RudderServerConfigSource: Codable, Equatable {
     let sourceId: String
     let sourceName: String
     let writeKey: String
@@ -63,7 +63,7 @@ struct RudderServerConfigSource: Codable {
 /**
  Represents the configuration for metrics collection.
  */
-struct MetricsConfig: Codable {
+struct MetricsConfig: Codable, Equatable {
     let statsCollection: StatsCollection
     
     init() {
@@ -75,7 +75,7 @@ struct MetricsConfig: Codable {
 /**
  Represents the configuration for statistics collection.
  */
-struct StatsCollection: Codable {
+struct StatsCollection: Codable, Equatable {
     let errors: Errors
     let metrics: Metrics
     
@@ -89,7 +89,7 @@ struct StatsCollection: Codable {
 /**
  Configuration for error and metrics collection.
  */
-struct Errors: Codable {
+struct Errors: Codable, Equatable {
     let enabled: Bool
     
     init(enabled: Bool = false) {
@@ -97,7 +97,7 @@ struct Errors: Codable {
     }
 }
 
-struct Metrics: Codable {
+struct Metrics: Codable, Equatable {
     let enabled: Bool
     
     init(enabled: Bool = false) {
@@ -109,7 +109,7 @@ struct Metrics: Codable {
 /**
  Represents the configuration of a destination in RudderStack.
  */
-struct Destination: Codable {
+struct Destination: Codable, Equatable {
     let destinationId: String
     let destinationName: String
     let isDestinationEnabled: Bool
@@ -137,7 +137,7 @@ struct Destination: Codable {
 /**
  Represents the definition of a destination in RudderStack.
  */
-struct DestinationDefinition: Codable {
+struct DestinationDefinition: Codable, Equatable {
     let name: String
     let displayName: String
 }

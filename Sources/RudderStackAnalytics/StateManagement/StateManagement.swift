@@ -16,7 +16,7 @@ import Foundation
  */
 protocol State: AnyObject {
 
-    associatedtype T
+    associatedtype T: Equatable
 
     /**
      The current value of the state.
@@ -24,7 +24,7 @@ protocol State: AnyObject {
     var value: T { get }
 
     /**
-     A read-only publisher used to observe the state. It emits the current value immediately on subscription, followed by every subsequent value.
+     A read-only publisher used to observe the state. It emits the current value immediately on subscription, followed by every subsequent *distinct* value.
      */
     var publisher: AnyPublisher<T, Never> { get }
 
@@ -44,7 +44,7 @@ protocol State: AnyObject {
 
  This function provides a convenient way to create a `StateImpl` instance with the given initial state.
  */
-func createState<T>(initialState: T) -> StateImpl<T> {
+func createState<T: Equatable>(initialState: T) -> StateImpl<T> {
     return StateImpl(initialState: initialState)
 }
 
@@ -69,7 +69,7 @@ protocol StateAction {
 
  `StateImpl` is a generic class that manages a reactive state container backed by Combine's `CurrentValueSubject`. The subject is kept private so that `dispatch(action:)` remains the single entry point for mutation and the reducer can never be bypassed.
  */
-final class StateImpl<T>: State {
+final class StateImpl<T: Equatable>: State {
     typealias T = T
 
     /**
@@ -102,14 +102,19 @@ final class StateImpl<T>: State {
         return self.subject.value.value
     }
 
+    /// Deduped here, not per subscriber, matching Kotlin's `StateFlow` conflation.
     var publisher: AnyPublisher<T, Never> {
-        return self.subject.map(\.value).eraseToAnyPublisher()
+        return self.subject
+            .map(\.value)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     func observeDispatched() -> AnyPublisher<T, Never> {
         return self.subject
             .filter(\.isDispatched)
             .map(\.value)
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 

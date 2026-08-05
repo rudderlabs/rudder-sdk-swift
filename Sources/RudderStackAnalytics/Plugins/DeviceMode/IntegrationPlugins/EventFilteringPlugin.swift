@@ -100,9 +100,6 @@ extension EventFilteringPlugin {
         // subscribes. An integration can be added long after the source config has been dispatched,
         // in which case the current config is delivered immediately on subscription.
         analytics.sourceConfigState.observeDispatched()
-            .removeDuplicates { (previous: SourceConfig, current: SourceConfig) -> Bool in
-                previous.source.updatedAt == current.source.updatedAt
-            }
             .receive(on: DispatchQueue.global(qos: .default))
             .sink { [weak self] sourceConfig in
                 guard let self = self, sourceConfig.source.isSourceEnabled else { return }

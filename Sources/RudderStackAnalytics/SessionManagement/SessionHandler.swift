@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - SessionType
 
-enum SessionType {
+enum SessionType: Equatable {
     case manual
     case automatic
 }

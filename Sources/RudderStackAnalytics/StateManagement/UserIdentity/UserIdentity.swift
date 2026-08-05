@@ -21,7 +21,14 @@ import Foundation
  - Methods:
    - `initializeState(_:)`: Creates and initializes a `UserIdentity` instance by reading stored data from a key-value storage.
  */
-public struct UserIdentity {
+public struct UserIdentity: Equatable {
+    /// Not synthesised: `traits` is `[String: Any]`.
+    public static func == (lhs: UserIdentity, rhs: UserIdentity) -> Bool {
+        return lhs.anonymousId == rhs.anonymousId
+            && lhs.userId == rhs.userId
+            && isEqualAnyValue(lhs.traits, rhs.traits)
+    }
+
     /// A unique identifier for the user when they are not logged in. Defaults to an empty string.
     public var anonymousId = String.empty
     
