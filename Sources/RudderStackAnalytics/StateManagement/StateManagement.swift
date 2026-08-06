@@ -70,7 +70,6 @@ protocol StateAction {
  `StateImpl` is a generic class that manages a reactive state container backed by Combine's `CurrentValueSubject`. The subject is kept private so that `dispatch(action:)` remains the single entry point for mutation and the reducer can never be bypassed.
  */
 final class StateImpl<T: Equatable>: State {
-    typealias T = T
 
     /**
      Pairs a value with whether it originated from a `dispatch(action:)` rather than from the initial state.

@@ -168,6 +168,8 @@ func isEqualAnyValue(_ lhs: Any, _ rhs: Any) -> Bool {
         return lhs == rhs
     case let (lhs as Double, rhs as Double):
         return lhs == rhs
+    case let (lhs as CGFloat, rhs as CGFloat):
+        return lhs == rhs
     case let (lhs as String, rhs as String):
         return lhs == rhs
     case let (lhs as URL, rhs as URL):
