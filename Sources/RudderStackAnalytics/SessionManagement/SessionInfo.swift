@@ -11,7 +11,7 @@ import Foundation
 /**
  A struct encapsulates session-related information.
  */
-struct SessionInfo {
+struct SessionInfo: Equatable {
     var id: UInt64 = SessionConstants.defaultSessionId
     var type: SessionType = SessionConstants.defaultSessionType
     var isStart: Bool = SessionConstants.defaultIsSessionStart

@@ -32,8 +32,8 @@ struct UserIdTraitsActionTests {
         let action = SetUserIdAndTraitsAction(userId: expectedUserId, traits: expectedTraits, storage: storage)
         processingState.dispatch(action: action)
         
-        #expect(processingState.state.value.userId == expectedUserId, "The userId should be updated to the new value.")
-        #expect(processingState.state.value.traits.count == expectedTraits.count, "The traits should be updated to the new values.")
+        #expect(processingState.value.userId == expectedUserId, "The userId should be updated to the new value.")
+        #expect(processingState.value.traits.count == expectedTraits.count, "The traits should be updated to the new values.")
     }
     
     @Test("given user identity with existing traits, when setting same user ID with new traits, then traits are merged")
@@ -47,9 +47,9 @@ struct UserIdTraitsActionTests {
         let newAction = SetUserIdAndTraitsAction(userId: firstUserId, traits: secondTraits, storage: storage)
         processingState.dispatch(action: newAction)
         
-        let resultTraits = processingState.state.value.traits
+        let resultTraits = processingState.value.traits
         #expect(resultTraits.count == 3, "Should have merged traits from both sets")
-        #expect(processingState.state.value.userId == firstUserId, "User ID should remain the same")
+        #expect(processingState.value.userId == firstUserId, "User ID should remain the same")
     }
     
     @Test("given user identity, when setting empty user ID and empty traits, then values are updated to empty")
@@ -62,8 +62,8 @@ struct UserIdTraitsActionTests {
         let action = SetUserIdAndTraitsAction(userId: "", traits: [:], storage: storage)
         processingState.dispatch(action: action)
         
-        #expect(processingState.state.value.userId.isEmpty, "User ID should be empty")
-        #expect(processingState.state.value.traits.isEmpty, "Traits should be empty")
+        #expect(processingState.value.userId.isEmpty, "User ID should be empty")
+        #expect(processingState.value.traits.isEmpty, "Traits should be empty")
     }
     
     @Test("given user identity with anonymous ID, when setting user ID and traits, then anonymous ID is preserved")
@@ -82,7 +82,7 @@ struct UserIdTraitsActionTests {
         let action = SetUserIdAndTraitsAction(userId: newUserId, traits: newTraits, storage: storage)
         processingState.dispatch(action: action)
         
-        let result = processingState.state.value
+        let result = processingState.value
         #expect(result.anonymousId == originalAnonymousId, "Anonymous ID should be preserved")
         #expect(result.userId == newUserId, "User ID should be updated")
         #expect(result.traits.count == newTraits.count, "Traits should be updated")
@@ -100,7 +100,7 @@ struct UserIdTraitsActionTests {
         let action = SetUserIdAndTraitsAction(userId: newUserId, traits: newTraits, storage: storage)
         state.dispatch(action: action)
         
-        let currentState = state.state.value
+        let currentState = state.value
         #expect(currentState.userId == newUserId, "State should reflect the updated user ID")
         #expect(currentState.traits.count == newTraits.count, "State should reflect the updated traits")
     }

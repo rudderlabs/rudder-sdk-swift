@@ -79,7 +79,9 @@ extension EventQueue {
     }
     
     func observeConfigAndUpdateSchedule() {
-        self.analytics.sourceConfigState.state
+        // Observes the raw publisher (initial value included) so that the flush schedule starts
+        // from the default enabled state before any source config has been dispatched.
+        self.analytics.sourceConfigState.publisher
             .map { (config: SourceConfig) -> Bool in
                 config.source.isSourceEnabled
             }
@@ -91,6 +93,7 @@ extension EventQueue {
                 
                 if isSourceEnabled {
                     self.eventWriter?.startSchedule()
+                    // swiftlint:disable:next todo
                     // TODO: Uncomment after dynamic update of source config is implemented
                     // self.eventUploader?.start()
                 } else {

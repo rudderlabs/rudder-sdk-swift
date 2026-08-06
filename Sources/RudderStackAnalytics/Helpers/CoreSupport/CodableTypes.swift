@@ -153,3 +153,44 @@ public struct AnyCodable: Codable {
         }
     }
 }
+
+// MARK: - Heterogeneous value equality
+/// Unrecognised type pairs compare as not-equal, which is the safe direction.
+func isEqualAnyValue(_ lhs: Any, _ rhs: Any) -> Bool {
+    switch (lhs, rhs) {
+    case (is NSNull, is NSNull):
+        return true
+    case let (lhs as Bool, rhs as Bool):
+        return lhs == rhs
+    case let (lhs as Int, rhs as Int):
+        return lhs == rhs
+    case let (lhs as UInt64, rhs as UInt64):
+        return lhs == rhs
+    case let (lhs as Double, rhs as Double):
+        return lhs == rhs
+    case let (lhs as CGFloat, rhs as CGFloat):
+        return lhs == rhs
+    case let (lhs as String, rhs as String):
+        return lhs == rhs
+    case let (lhs as URL, rhs as URL):
+        return lhs == rhs
+    case let (lhs as Date, rhs as Date):
+        return lhs == rhs
+    case let (lhs as [Any], rhs as [Any]):
+        return lhs.count == rhs.count && zip(lhs, rhs).allSatisfy { isEqualAnyValue($0, $1) }
+    case let (lhs as [String: Any], rhs as [String: Any]):
+        return lhs.count == rhs.count && lhs.allSatisfy { key, value in
+            guard let counterpart = rhs[key] else { return false }
+            return isEqualAnyValue(value, counterpart)
+        }
+    default:
+        return false
+    }
+}
+
+// MARK: - AnyCodable + Equatable
+extension AnyCodable: Equatable {
+    public static func == (lhs: AnyCodable, rhs: AnyCodable) -> Bool {
+        return isEqualAnyValue(lhs.value, rhs.value)
+    }
+}
