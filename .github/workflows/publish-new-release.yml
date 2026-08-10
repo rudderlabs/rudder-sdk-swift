@@ -83,8 +83,8 @@ jobs:
             echo "tag=$VERSION" >> $GITHUB_OUTPUT
 
         # Tags use x.y.z format — no v prefix, consistent with Constants.swift and branch names.
-        # Idempotent: if the tag already points to HEAD (e.g. workflow re-run), the step is a no-op.
-        # Fails with a clear remediation message if the tag exists but points to a different commit.
+        # Idempotent: if the tag already resolves to HEAD (e.g. workflow re-run), the step is a no-op.
+        # Fails with a clear remediation message if the tag exists but resolves to a different commit.
         - name: Create and push Git tag
           env:
             GH_TOKEN: ${{ steps.generate-token.outputs.token }}
@@ -92,19 +92,41 @@ jobs:
           run: |
             HEAD=$(git rev-parse HEAD)
 
-            EXISTING_SHA=$(gh api repos/${{ github.repository }}/git/ref/tags/$TAG \
-              --jq '.object.sha' 2>/dev/null || echo "")
+            TAG_REF_JSON=$(mktemp)
+            trap 'rm -f "$TAG_REF_JSON"' EXIT
 
-            if [[ -n "$EXISTING_SHA" ]]; then
+            if gh api "repos/${{ github.repository }}/git/ref/tags/$TAG" > "$TAG_REF_JSON" 2>/dev/null; then
+              TAG_OBJECT_TYPE=$(jq -r '.object.type' "$TAG_REF_JSON")
+              TAG_OBJECT_SHA=$(jq -r '.object.sha' "$TAG_REF_JSON")
+
+              case "$TAG_OBJECT_TYPE" in
+                commit)
+                  EXISTING_SHA="$TAG_OBJECT_SHA"
+                  TAG_KIND="lightweight"
+                  ;;
+                tag)
+                  if ! EXISTING_SHA=$(gh api "repos/${{ github.repository }}/git/tags/$TAG_OBJECT_SHA" \
+                    --jq '.object.sha'); then
+                    echo "❌ Could not dereference annotated tag $TAG ($TAG_OBJECT_SHA)."
+                    exit 1
+                  fi
+                  TAG_KIND="annotated"
+                  ;;
+                *)
+                  echo "❌ Tag $TAG exists but has unsupported object type '$TAG_OBJECT_TYPE'."
+                  exit 1
+                  ;;
+              esac
+
               if [[ "$EXISTING_SHA" == "$HEAD" ]]; then
-                echo "ℹ️ Tag $TAG already exists on HEAD — skipping tag creation."
+                echo "ℹ️ $TAG_KIND tag $TAG already resolves to HEAD — skipping tag creation."
               else
-                echo "❌ Tag $TAG already exists but points to $EXISTING_SHA, not HEAD ($HEAD)."
+                echo "❌ Tag $TAG already exists but resolves to $EXISTING_SHA, not HEAD ($HEAD)."
                 echo "   To remediate: delete the existing tag and re-run."
                 exit 1
               fi
             else
-              gh api repos/${{ github.repository }}/git/refs \
+              gh api "repos/${{ github.repository }}/git/refs" \
                 --method POST \
                 -f ref="refs/tags/$TAG" \
                 -f sha="$HEAD"
