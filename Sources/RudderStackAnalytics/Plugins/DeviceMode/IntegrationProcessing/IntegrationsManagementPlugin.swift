@@ -27,11 +27,9 @@ class IntegrationsManagementPlugin: Plugin {
     
         // observing the sourceConfig
         var configIndex = 0
-        self.analytics?.sourceConfigState.state
-            .dropFirst()
-            .removeDuplicates { (previous: SourceConfig, current: SourceConfig) -> Bool in
-                previous.source.updatedAt == current.source.updatedAt
-            }
+        // `observeDispatched()` skips the initial empty state without depending on when this plugin
+        // subscribes, so a cached source config dispatched before setup is still delivered here.
+        self.analytics?.sourceConfigState.observeDispatched()
             .receive(on: processingQueue)
             .sink { [weak self] sourceConfig in
                 guard let self, sourceConfig.source.isSourceEnabled else { return }

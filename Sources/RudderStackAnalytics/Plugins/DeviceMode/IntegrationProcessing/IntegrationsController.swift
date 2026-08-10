@@ -36,7 +36,7 @@ class IntegrationsController {
         
         // If the source config is already fetched once and enabled, then initialise the destination
         // since it is added after fetching of source config.
-        if isSourceEnabledFetchedAtLeastOnce, let sourceConfig = self.analytics?.sourceConfigState.state.value {
+        if isSourceEnabledFetchedAtLeastOnce, let sourceConfig = self.analytics?.sourceConfigState.value {
             self.initDestination(sourceConfig: sourceConfig, integration: integration)
         }
     }

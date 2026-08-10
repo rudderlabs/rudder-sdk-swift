@@ -22,7 +22,7 @@ struct ResetUserIdentityActionTests {
         let action = ResetUserIdentityAction(entries: ResetEntries())
         state.dispatch(action: action)
         
-        let result = state.state.value
+        let result = state.value
         #expect(result.anonymousId != testAnonymousId, "\(anonymousIdRegeneratedMessage)")
         #expect(result.anonymousId.isValidUUID, "New anonymous ID should be a valid UUID")
         #expect(result.userId.isEmpty, "User ID should be reset to empty")
@@ -38,7 +38,7 @@ struct ResetUserIdentityActionTests {
         let action = ResetUserIdentityAction(entries: ResetEntries(anonymousId: false))
         state.dispatch(action: action)
         
-        let result = state.state.value
+        let result = state.value
         #expect(result.anonymousId == testAnonymousId, "Anonymous ID should be preserved")
         #expect(result.userId.isEmpty, "User ID should be reset")
         #expect(result.traits.isEmpty, "\(traitsResetMessage)")
@@ -51,7 +51,7 @@ struct ResetUserIdentityActionTests {
         let action = ResetUserIdentityAction(entries: ResetEntries(userId: false))
         state.dispatch(action: action)
         
-        let result = state.state.value
+        let result = state.value
         #expect(result.anonymousId != testAnonymousId, "\(anonymousIdRegeneratedMessage)")
         #expect(result.userId == testUserId, "\(userIdPreservedMessage)")
         #expect(result.traits.isEmpty, "\(traitsResetMessage)")
@@ -64,7 +64,7 @@ struct ResetUserIdentityActionTests {
         let action = ResetUserIdentityAction(entries: ResetEntries(traits: false))
         state.dispatch(action: action)
         
-        let result = state.state.value
+        let result = state.value
         #expect(result.anonymousId != testAnonymousId, "\(anonymousIdRegeneratedMessage)")
         #expect(result.userId.isEmpty, "User ID should be reset")
         #expect(areTraitsEqual(result.traits, testTraits), "Traits should be preserved")
@@ -79,7 +79,7 @@ struct ResetUserIdentityActionTests {
         let action = ResetUserIdentityAction(entries: ResetEntries(anonymousId: false, userId: false, traits: true, session: true))
         state.dispatch(action: action)
         
-        let result = state.state.value
+        let result = state.value
         #expect(result.anonymousId == testAnonymousId, "Anonymous ID should be preserved")
         #expect(result.userId == testUserId, "\(userIdPreservedMessage)")
         #expect(result.traits.isEmpty, "\(traitsResetMessage)")
@@ -92,7 +92,7 @@ struct ResetUserIdentityActionTests {
         let action = ResetUserIdentityAction(entries: ResetEntries(anonymousId: true, userId: false, traits: false, session: true))
         state.dispatch(action: action)
         
-        let result = state.state.value
+        let result = state.value
         #expect(result.anonymousId != testAnonymousId, "\(anonymousIdRegeneratedMessage)")
         #expect(result.userId == testUserId, "\(userIdPreservedMessage)")
         #expect(areTraitsEqual(result.traits, testTraits), "Traits should be preserved")
@@ -108,7 +108,7 @@ struct ResetUserIdentityActionTests {
         var receivedIdentities: [UserIdentity] = []
         var cancellables = Set<AnyCancellable>()
         
-        state.state.sink { identity in
+        state.publisher.sink { identity in
             receivedIdentities.append(identity)
         }.store(in: &cancellables)
         

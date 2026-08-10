@@ -57,7 +57,7 @@ struct IntegrationsControllerTests {
         
         // Simulate source config being fetched
         controller.isSourceEnabledFetchedAtLeastOnce = true
-        analytics.sourceConfigState.state.value = sourceConfig
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
         
         controller.add(integration: mockPlugin)
         mockPlugin.setup(analytics: analytics)

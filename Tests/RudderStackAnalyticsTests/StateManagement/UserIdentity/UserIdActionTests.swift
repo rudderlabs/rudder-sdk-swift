@@ -21,7 +21,7 @@ struct UserIdActionTests {
         let action = SetUserIdAction(userId: newUserId)
         state.dispatch(action: action)
         
-        #expect(state.state.value.userId == newUserId, "The user ID should be updated to the new value.")
+        #expect(state.value.userId == newUserId, "The user ID should be updated to the new value.")
     }
     
     @Test("given user identity, when setting empty user ID, then user ID becomes empty")
@@ -31,7 +31,7 @@ struct UserIdActionTests {
         let action = SetUserIdAction(userId: "")
         state.dispatch(action: action)
         
-        #expect(state.state.value.userId.isEmpty, "User ID should be set to empty string")
+        #expect(state.value.userId.isEmpty, "User ID should be set to empty string")
     }
     
     @Test("given user identity with all properties, when setting user ID, then other properties are preserved")
@@ -49,7 +49,7 @@ struct UserIdActionTests {
         let action = SetUserIdAction(userId: newUserId)
         state.dispatch(action: action)
         
-        let result = state.state.value
+        let result = state.value
         #expect(result.userId == newUserId, "User ID should be updated")
         #expect(result.anonymousId == originalAnonymousId, "Anonymous ID should be preserved")
         #expect(result.traits.count == originalTraits.count, "Traits should be preserved")
@@ -64,7 +64,7 @@ struct UserIdActionTests {
         let action = SetUserIdAction(userId: newUserId)
         state.dispatch(action: action)
         
-        let currentState = state.state.value
+        let currentState = state.value
         #expect(currentState.userId == newUserId, "State should reflect the updated user ID")
     }
     
