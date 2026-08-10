@@ -1,24 +1,12 @@
 # Changelog
 
-## [1.3.1](https://github.com/rudderlabs/rudder-sdk-swift/compare/1.3.0...1.3.1) (2026-08-10)
-
+## [1.3.1] - 2026-08-10
 
 ### Bug Fixes
 
-* **ci:** make publish release tag creation idempotent ([#251](https://github.com/rudderlabs/rudder-sdk-swift/issues/251)) ([1a86a53](https://github.com/rudderlabs/rudder-sdk-swift/commit/1a86a535d8eafe812092d4f395d0f9a77f671e09))
-* **device-mode:** apply event filtering for late-subscribing plugins ([#249](https://github.com/rudderlabs/rudder-sdk-swift/issues/249)) ([99aa91a](https://github.com/rudderlabs/rudder-sdk-swift/commit/99aa91a62079a08a99541aa17d5503cc9b993a7f)), closes [rudder-sdk-kotlin#325](https://github.com/rudder-sdk-kotlin/issues/325)
-* **NetworkMonitor:** cancel NWPathMonitor in deinit to prevent resource leak ([b6c30ae](https://github.com/rudderlabs/rudder-sdk-swift/commit/b6c30aeef38d784d240bc95f8361e1138b68e64b))
-
-
-### Chores
-
-* address PR review comments ([](https://github.com/rudderlabs/rudder-sdk-swift/commit/c0e3f6fa0f2f70543628dbc4fbe952e5f7ce3041))
-* **claude:** add CLAUDE.md ([](https://github.com/rudderlabs/rudder-sdk-swift/commit/f594052f98d4417bae5213728e0ac69aa8704008))
-* **claude:** add objc-bridge-sync skill ([](https://github.com/rudderlabs/rudder-sdk-swift/commit/85cc2e2aa25adc99fcef606104a61273ad85c20a))
-* **codeowners:** set sdk_team as code owners (#246) ([](https://github.com/rudderlabs/rudder-sdk-swift/commit/b547562f4f5a0001a3264b90cbe50a8b471ac291)), closes [#246](https://github.com/rudderlabs/rudder-sdk-swift/issues/246) [rudderlabs/rudder-sdk-react-native#656](https://github.com/rudderlabs/rudder-sdk-react-native/issues/656) [rudderlabs/rudder-sdk-ruby#49](https://github.com/rudderlabs/rudder-sdk-ruby/issues/49) [rudderlabs/rudder-sdk-node#449](https://github.com/rudderlabs/rudder-sdk-node/issues/449) [rudderlabs/rudder-sdk-flutter#313](https://github.com/rudderlabs/rudder-sdk-flutter/issues/313) [rudderlabs/rudder-sdk-kotlin#327](https://github.com/rudderlabs/rudder-sdk-kotlin/issues/327) [rudderlabs/rudder-sdk-.net#38](https://github.com/rudderlabs/rudder-sdk-.net/issues/38)
-* **skills:** add onboard-swift-integration skill for team use (#238) ([](https://github.com/rudderlabs/rudder-sdk-swift/commit/863be8cb21210bda5899af3eafaffc0983b42a0f)), closes [#238](https://github.com/rudderlabs/rudder-sdk-swift/issues/238) [#318](https://github.com/rudderlabs/rudder-sdk-swift/issues/318) [#318](https://github.com/rudderlabs/rudder-sdk-swift/issues/318)
-
-
+- apply event filtering for late-subscribing plugins (#249)
+- cancel NWPathMonitor in deinit to prevent resource leak (#244)
+- make publish release tag creation idempotent (#251)
 
 ## [1.3.0] - 2026-06-02
 
