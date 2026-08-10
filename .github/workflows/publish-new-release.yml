@@ -93,9 +93,10 @@ jobs:
             HEAD=$(git rev-parse HEAD)
 
             TAG_REF_JSON=$(mktemp)
-            trap 'rm -f "$TAG_REF_JSON"' EXIT
+            TAG_REF_ERROR=$(mktemp)
+            trap 'rm -f "$TAG_REF_JSON" "$TAG_REF_ERROR"' EXIT
 
-            if gh api "repos/${{ github.repository }}/git/ref/tags/$TAG" > "$TAG_REF_JSON" 2>/dev/null; then
+            if gh api "repos/${{ github.repository }}/git/ref/tags/$TAG" > "$TAG_REF_JSON" 2> "$TAG_REF_ERROR"; then
               TAG_OBJECT_TYPE=$(jq -r '.object.type' "$TAG_REF_JSON")
               TAG_OBJECT_SHA=$(jq -r '.object.sha' "$TAG_REF_JSON")
 
@@ -125,11 +126,22 @@ jobs:
                 echo "   To remediate: delete the existing tag and re-run."
                 exit 1
               fi
-            else
+            elif grep -q "HTTP 404" "$TAG_REF_ERROR" || \
+              jq -e '(.status? | tostring) == "404"' "$TAG_REF_JSON" >/dev/null 2>&1; then
               gh api "repos/${{ github.repository }}/git/refs" \
                 --method POST \
                 -f ref="refs/tags/$TAG" \
                 -f sha="$HEAD"
+            else
+              echo "❌ Could not determine whether tag $TAG exists."
+              echo "   GitHub API lookup failed before tag creation."
+              if [[ -s "$TAG_REF_ERROR" ]]; then
+                sed 's/^/   /' "$TAG_REF_ERROR"
+              fi
+              if [[ -s "$TAG_REF_JSON" ]]; then
+                sed 's/^/   /' "$TAG_REF_JSON"
+              fi
+              exit 1
             fi
 
         # Creates a GitHub Release with auto-generated notes from merged PRs since last tag.
