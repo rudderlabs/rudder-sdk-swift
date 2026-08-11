@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.1] - 2026-08-10
+
+### Bug Fixes
+
+- apply event filtering for late-subscribing plugins (#249)
+- cancel NWPathMonitor in deinit to prevent resource leak (#244)
+- make publish release tag creation idempotent (#251)
+
 ## [1.3.0] - 2026-06-02
 
 ### Features
