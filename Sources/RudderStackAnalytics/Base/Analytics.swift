@@ -141,7 +141,7 @@ extension Analytics {
     public func track(name: String, properties: Properties? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
-        let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
+        let event = TrackEvent(event: name, properties: properties, options: options, userIdentity: self.userIdentityState.value)
         self.process(event: event)
     }
     
@@ -157,7 +157,7 @@ extension Analytics {
     public func screen(screenName: String, category: String? = nil, properties: Properties? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
-        let event = ScreenEvent(screenName: screenName, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.state.value)
+        let event = ScreenEvent(screenName: screenName, category: category, properties: properties, options: options, userIdentity: self.userIdentityState.value)
         self.process(event: event)
     }
     
@@ -172,7 +172,7 @@ extension Analytics {
     public func group(groupId: String, traits: Traits? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive, self.isSourceEnabled else { return }
         
-        let event = GroupEvent(groupId: groupId, traits: traits, options: options, userIdentity: self.userIdentityState.state.value)
+        let event = GroupEvent(groupId: groupId, traits: traits, options: options, userIdentity: self.userIdentityState.value)
         self.process(event: event)
     }
     
@@ -194,11 +194,11 @@ extension Analytics {
         }
         
         self.userIdentityState.dispatch(action: SetUserIdAndTraitsAction(userId: userId ?? "", traits: traits ?? Traits(), storage: self.storage))
-        self.userIdentityState.state.value.storeUserIdAndTraits(self.storage)
+        self.userIdentityState.value.storeUserIdAndTraits(self.storage)
         
         guard self.isSourceEnabled else { return }
         
-        let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.state.value)
+        let event = IdentifyEvent(options: options, userIdentity: self.userIdentityState.value)
         self.process(event: event)
     }
     
@@ -213,13 +213,13 @@ extension Analytics {
     public func alias(newId: String, previousId: String? = nil, options: RudderOption? = nil) {
         guard self.isAnalyticsActive else { return }
         
-        let preferedPreviousId = self.userIdentityState.state.value.resolvePreferredPreviousId(previousId ?? String.empty)
+        let preferedPreviousId = self.userIdentityState.value.resolvePreferredPreviousId(previousId ?? String.empty)
         self.userIdentityState.dispatch(action: SetUserIdAction(userId: newId))
-        self.userIdentityState.state.value.storeUserId(self.storage)
+        self.userIdentityState.value.storeUserId(self.storage)
         
         guard self.isSourceEnabled else { return }
         
-        let event = AliasEvent(previousId: preferedPreviousId, options: options, userIdentity: self.userIdentityState.state.value)
+        let event = AliasEvent(previousId: preferedPreviousId, options: options, userIdentity: self.userIdentityState.value)
         self.process(event: event)
     }
     
@@ -248,7 +248,7 @@ extension Analytics {
         guard self.isAnalyticsActive else { return }
         
         self.userIdentityState.dispatch(action: ResetUserIdentityAction(entries: options.entries))
-        self.userIdentityState.state.value.resetUserIdentity(storage: self.storage, entries: options.entries)
+        self.userIdentityState.value.resetUserIdentity(storage: self.storage, entries: options.entries)
         
         if options.entries.session {
             self.sessionHandler?.refreshSession()
@@ -440,7 +440,7 @@ extension Analytics {
      This method retrieves the current value of `anonymousId` from the `userIdentityState` and stores it in the configured storage.
      */
     private func storeAnonymousId() {
-        self.userIdentityState.state.value.storeAnonymousId(self.storage)
+        self.userIdentityState.value.storeAnonymousId(self.storage)
     }
 }
 
@@ -462,7 +462,7 @@ extension Analytics {
      Checks if the source is enabled.
      */
     var isSourceEnabled: Bool {
-        if !self.sourceConfigState.state.value.source.isSourceEnabled {
+        if !self.sourceConfigState.value.source.isSourceEnabled {
             logger.error(log: "Analytics: Source is disabled. This operation is not allowed", error: nil)
             return false
         }
@@ -481,21 +481,21 @@ extension Analytics {
      Retrieves the current `anonymousId` value from the `userIdentityState`.
      */
     public var anonymousId: String? {
-        return self.isAnalyticsActive ? self.userIdentityState.state.value.anonymousId : nil
+        return self.isAnalyticsActive ? self.userIdentityState.value.anonymousId : nil
     }
     
     /**
      A computed property for accessing the `userId` in the current user identity state.
      */
     public var userId: String? {
-        return self.isAnalyticsActive ? self.userIdentityState.state.value.userId : nil
+        return self.isAnalyticsActive ? self.userIdentityState.value.userId : nil
     }
     
     /**
      A computed property for accessing the `traits` in the current user identity state.
      */
     public var traits: Traits? {
-        return self.isAnalyticsActive ? self.userIdentityState.state.value.traits : nil
+        return self.isAnalyticsActive ? self.userIdentityState.value.traits : nil
     }
     
     /**

@@ -50,4 +50,19 @@ class CodableTypesTests {
         #expect(json.contains("\"null\":null"))
         #expect(json.contains("test.com"))
     }
+
+    // MARK: - AnyCodable Equality Test
+
+    @Test("when AnyCodable wraps CGFloat, then identical values compare equal and differing values compare unequal")
+    func testAnyCodableCGFloatEquality() {
+        // CGFloat is an encodable value type but was missing from the equality switch, so identical
+        // values fell through to the default not-equal branch.
+        #expect(AnyCodable(CGFloat(1.5)) == AnyCodable(CGFloat(1.5)))
+        #expect(AnyCodable(CGFloat(1.5)) != AnyCodable(CGFloat(2.5)))
+
+        // Nested inside a dictionary, mirroring how a destination config value would appear.
+        let lhs = AnyCodable(["scale": CGFloat(2.0)])
+        let rhs = AnyCodable(["scale": CGFloat(2.0)])
+        #expect(lhs == rhs)
+    }
 }

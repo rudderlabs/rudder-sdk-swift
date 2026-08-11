@@ -72,7 +72,7 @@ struct DisableSourceConfigActionTests {
         let action = DisableSourceConfigAction()
         stateInstance.dispatch(action: action)
         
-        let currentState = stateInstance.state.value
+        let currentState = stateInstance.value
         #expect(!currentState.source.isSourceEnabled)
         #expect(currentState.source.sourceId == enabledConfig.source.sourceId)
     }
