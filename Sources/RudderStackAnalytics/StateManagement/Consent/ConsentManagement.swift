@@ -31,7 +31,7 @@ extension ConsentManagement {
      Consent IDs are trimmed and empties dropped. The state is considered
      initialized only when enabled and at least one non-empty list was supplied.
      */
-    static func initialState(from configuration: ConsentManagementConfiguration) -> ConsentManagement {
+    static func initialState(_ configuration: ConsentManagementConfiguration) -> ConsentManagement {
         let allowed = Self.normalized(configuration.allowedConsentIds)
         let denied = Self.normalized(configuration.deniedConsentIds)
         return ConsentManagement(
