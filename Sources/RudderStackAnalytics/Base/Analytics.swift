@@ -50,6 +50,11 @@ public class Analytics {
     private(set) var sourceConfigState: StateImpl<SourceConfig>
     
     /**
+     The state container for consent management within the analytics system.
+     */
+    private(set) var consentManagementState: StateImpl<ConsentManagement>
+    
+    /**
      The manager responsible for SourceConfig operations.
      */
     private(set) var sourceConfigProvider: SourceConfigProvider?
@@ -85,6 +90,7 @@ public class Analytics {
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())
+        self.consentManagementState = createState(initialState: ConsentManagement.initialState(configuration.consentManagement))
         self.setup()
     }
 }
