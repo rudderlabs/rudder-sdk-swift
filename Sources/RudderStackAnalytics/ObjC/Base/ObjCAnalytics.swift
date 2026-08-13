@@ -561,3 +561,16 @@ extension ObjCAnalytics {
         self.analytics.open(url: url, options: nil)
     }
 }
+
+// MARK: - Consent
+
+extension ObjCAnalytics {
+    /**
+     Updates the current consent state with the supplied values. No effect while
+     consent management is disabled in the configuration.
+     */
+    @objc
+    public func setConsent(_ options: ConsentManagementOptions) {
+        self.analytics.setConsent(options)
+    }
+}

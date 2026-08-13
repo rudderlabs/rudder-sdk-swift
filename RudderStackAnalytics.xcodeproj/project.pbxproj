@@ -54,6 +54,7 @@
 		53965810302D98D9008A8845 /* ConsentManagementOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396580F302D98D9008A8845 /* ConsentManagementOptions.swift */; };
 		53965812302D99B6008A8845 /* ConsentManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965811302D99B6008A8845 /* ConsentManagement.swift */; };
 		53965815302D9B9A008A8845 /* SetConsentAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965814302D9B9A008A8845 /* SetConsentAction.swift */; };
+		53965817302DB578008A8845 /* ObjCConsentManagementConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965816302DB578008A8845 /* ObjCConsentManagementConfiguration.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
 		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
 		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
@@ -274,6 +275,7 @@
 		5396580F302D98D9008A8845 /* ConsentManagementOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementOptions.swift; sourceTree = "<group>"; };
 		53965811302D99B6008A8845 /* ConsentManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagement.swift; sourceTree = "<group>"; };
 		53965814302D9B9A008A8845 /* SetConsentAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetConsentAction.swift; sourceTree = "<group>"; };
+		53965816302DB578008A8845 /* ObjCConsentManagementConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCConsentManagementConfiguration.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
 		539D86F82E5439E7009FC144 /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
@@ -634,6 +636,7 @@
 				53DEA5AB2E03D05A00D6C371 /* ObjCAnalytics.swift */,
 				53DEA5AC2E03D05A00D6C371 /* ObjCConfiguration.swift */,
 				53DEA5B32E03D05A00D6C371 /* ObjCSessionConfiguration.swift */,
+				53965816302DB578008A8845 /* ObjCConsentManagementConfiguration.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -1502,6 +1505,7 @@
 				53DEA5E92E03D05A00D6C371 /* DataStore.swift in Sources */,
 				53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */,
 				53E58C282FA1366A002556B9 /* AnalyticsLogger.swift in Sources */,
+				53965817302DB578008A8845 /* ObjCConsentManagementConfiguration.swift in Sources */,
 				53DEA5EA2E03D05A00D6C371 /* TrackEvent.swift in Sources */,
 				85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */,
 				53DEA5EB2E03D05A00D6C371 /* RudderOption.swift in Sources */,
