@@ -1,5 +1,5 @@
 //
-//   UpdateConsentAction.swift
+//  SetConsentAction.swift
 //  RudderStackAnalytics
 //
 //  Created by Satheesh Kannan on 13/08/26.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - UpdateConsentAction
+// MARK: - SetConsentAction
 /**
  An action that replaces the consent lists in `ConsentManagement`.
  
@@ -16,12 +16,11 @@ import Foundation
  uninitialized (fail-open), matching the JS SDK behavior. `enabled` and
  `provider` are load-time settings and are never modified at runtime.
  */
-
-struct UpdateConsentAction: StateAction {
+struct SetConsentAction: StateAction {
     typealias T = ConsentManagement
-    private let options: ConsentManagementUpdateOptions
+    private let options: ConsentManagementOptions
     
-    init(options: ConsentManagementUpdateOptions) {
+    init(options: ConsentManagementOptions) {
         self.options = options
     }
     
