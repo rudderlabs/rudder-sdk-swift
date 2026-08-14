@@ -27,12 +27,22 @@ public class ConsentManagementOptions: NSObject {
     var deniedConsentIds: [String]
 
     /**
+     Initializes an empty options instance. Both lists default to empty, which
+     clears the current consent state when passed to `Analytics.setConsent(_:)`.
+     */
+    @objc
+    public convenience override init() {
+        self.init(allowedConsentIds: [], deniedConsentIds: [])
+    }
+
+    /**
      Initializes a new consent update options instance.
 
      - Parameters:
         - allowedConsentIds: Consent category IDs the user has granted. Defaults to empty.
         - deniedConsentIds: Consent category IDs the user has denied. Defaults to empty.
      */
+    @objc
     public init(
         allowedConsentIds: [String] = [],
         deniedConsentIds: [String] = []
