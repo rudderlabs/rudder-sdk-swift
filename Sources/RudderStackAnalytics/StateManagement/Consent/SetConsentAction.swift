@@ -25,6 +25,8 @@ struct SetConsentAction: StateAction {
     }
     
     func reduce(currentState: ConsentManagement) -> ConsentManagement {
+        guard currentState.enabled else { return currentState }
+
         var newState = currentState
         newState.allowedConsentIds = ConsentManagement.normalized(options.allowedConsentIds)
         newState.deniedConsentIds = ConsentManagement.normalized(options.deniedConsentIds)

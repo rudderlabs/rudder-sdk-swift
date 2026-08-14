@@ -66,6 +66,16 @@ struct SetConsentActionTests {
         #expect(state.value.deniedConsentIds == ["ads"])
     }
 
+    @Test("given a disabled state, when dispatching options with consent data, then the state is completely unchanged")
+    func testDisabledStateIsNeverModified() {
+        let initial = ConsentManagement(enabled: false, initialized: false)
+        let state = createState(initialState: initial)
+
+        state.dispatch(action: SetConsentAction(options: ConsentManagementOptions(allowedConsentIds: ["marketing"])))
+
+        #expect(state.value == initial, "The reducer must be a no-op while disabled — no half-applied state.")
+    }
+
     @Test("given an enabled state, when dispatching any options, then enabled and provider are untouched")
     func testEnabledAndProviderAreNeverModified() {
         let initial = ConsentManagement(enabled: true, provider: .custom, initialized: false)

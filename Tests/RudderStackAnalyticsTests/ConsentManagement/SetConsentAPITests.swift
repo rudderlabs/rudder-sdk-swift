@@ -97,4 +97,17 @@ struct SetConsentAPITests {
         #expect(state.allowedConsentIds == ["marketing"], "The ObjC mirror must delegate to the wrapped setConsent.")
         #expect(state.initialized == true)
     }
+
+    @Test("given empty options through the ObjC wrapper, when setConsent is called, then the lists are cleared")
+    func testObjCSetConsentWithEmptyOptionsClears() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let objcAnalytics = ObjCAnalytics(analytics: analytics)
+
+        objcAnalytics.setConsent(ConsentManagementOptions())
+
+        let state = analytics.consentManagementState.value
+        #expect(state.allowedConsentIds.isEmpty)
+        #expect(state.deniedConsentIds.isEmpty)
+        #expect(state.initialized == false, "Clearing both lists must revert consent to uninitialized.")
+    }
 }
