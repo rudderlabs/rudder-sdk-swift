@@ -60,6 +60,8 @@
 		53965822302DC8DF008A8845 /* SetConsentActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965821302DC8DF008A8845 /* SetConsentActionTests.swift */; };
 		53965824302DC8F9008A8845 /* SetConsentAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965823302DC8F9008A8845 /* SetConsentAPITests.swift */; };
 		53965829302F32A0008A8845 /* ConsentManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */; };
+		5396582B302F7EF0008A8845 /* track_with_consent_management.json in Resources */ = {isa = PBXBuildFile; fileRef = 5396582A302F7EF0008A8845 /* track_with_consent_management.json */; };
+		5396582D302F7F28008A8845 /* ConsentManagementPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396582C302F7F28008A8845 /* ConsentManagementPluginTests.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
 		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
 		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
@@ -286,6 +288,8 @@
 		53965821302DC8DF008A8845 /* SetConsentActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetConsentActionTests.swift; sourceTree = "<group>"; };
 		53965823302DC8F9008A8845 /* SetConsentAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetConsentAPITests.swift; sourceTree = "<group>"; };
 		53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementPlugin.swift; sourceTree = "<group>"; };
+		5396582A302F7EF0008A8845 /* track_with_consent_management.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_consent_management.json; sourceTree = "<group>"; };
+		5396582C302F7F28008A8845 /* ConsentManagementPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementPluginTests.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
 		539D86F82E5439E7009FC144 /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
@@ -632,12 +636,12 @@
 				53DEA5BC2E03D05A00D6C371 /* LifecycleTrackingPlugin.swift */,
 				53DEA5BD2E03D05A00D6C371 /* LocaleInfoPlugin.swift */,
 				53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */,
+				53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */,
 				53DEA5BF2E03D05A00D6C371 /* OSInfoPlugin.swift */,
 				53DEA5C02E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift */,
 				53DEA5C12E03D05A00D6C371 /* ScreenInfoPlugin.swift */,
 				53DEA5C22E03D05A00D6C371 /* SessionTrackingPlugin.swift */,
 				53DEA5C32E03D05A00D6C371 /* TimeZoneInfoPlugin.swift */,
-				53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */,
 			);
 			path = Standard;
 			sourceTree = "<group>";
@@ -778,6 +782,7 @@
 				53DEA6452E03D06F00D6C371 /* DeviceInfoPluginTests.swift */,
 				53DEA6462E03D06F00D6C371 /* LibraryInfoPluginTests.swift */,
 				53DEA6472E03D06F00D6C371 /* LifecycleTrackingPluginTests.swift */,
+				5396582C302F7F28008A8845 /* ConsentManagementPluginTests.swift */,
 				53DEA6482E03D06F00D6C371 /* LocaleInfoPluginTests.swift */,
 				53DEA6492E03D06F00D6C371 /* NetworkInfoPluginTests.swift */,
 				53DEA64A2E03D06F00D6C371 /* OSInfoPluginTests.swift */,
@@ -1206,6 +1211,7 @@
 				53DEA63E2E03D06F00D6C371 /* track_with_options.json */,
 				53DEA63F2E03D06F00D6C371 /* track_with_properties.json */,
 				53DEA6402E03D06F00D6C371 /* track_with_properties_options.json */,
+				5396582A302F7EF0008A8845 /* track_with_consent_management.json */,
 			);
 			path = Track;
 			sourceTree = "<group>";
@@ -1448,6 +1454,7 @@
 				53DEA67E2E03D06F00D6C371 /* screen_with_properties.json in Resources */,
 				53DEA67F2E03D06F00D6C371 /* track_with_default_arguments.json in Resources */,
 				53DEA6802E03D06F00D6C371 /* group_with_default_arguments.json in Resources */,
+				5396582B302F7EF0008A8845 /* track_with_consent_management.json in Resources */,
 				53DEA6812E03D06F00D6C371 /* track_with_options.json in Resources */,
 				53DEA6822E03D06F00D6C371 /* identify_with_options.json in Resources */,
 				53DEA6832E03D06F00D6C371 /* identify_with_traits.json in Resources */,
@@ -1671,6 +1678,7 @@
 				53DEA6672E03D06F00D6C371 /* UserIdActionTests.swift in Sources */,
 				859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */,
 				53DEA6692E03D06F00D6C371 /* IdentifyEventTests.swift in Sources */,
+				5396582D302F7F28008A8845 /* ConsentManagementPluginTests.swift in Sources */,
 				53965819302DC4E3008A8845 /* ConsentManagementConfigurationTests.swift in Sources */,
 				53E58C2E2FA141AC002556B9 /* AnalyticsLoggerTests.swift in Sources */,
 				53DEA66A2E03D06F00D6C371 /* UserIdentityTests.swift in Sources */,
