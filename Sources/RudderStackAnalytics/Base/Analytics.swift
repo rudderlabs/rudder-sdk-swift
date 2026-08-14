@@ -50,6 +50,11 @@ public class Analytics {
     private(set) var sourceConfigState: StateImpl<SourceConfig>
     
     /**
+     The state container for consent management within the analytics system.
+     */
+    private(set) var consentManagementState: StateImpl<ConsentManagement>
+    
+    /**
      The manager responsible for SourceConfig operations.
      */
     private(set) var sourceConfigProvider: SourceConfigProvider?
@@ -85,6 +90,7 @@ public class Analytics {
         self.processEventChannel = AsyncChannel()
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())
+        self.consentManagementState = createState(initialState: ConsentManagement.initialState(configuration.consentManagement))
         self.setup()
     }
 }
@@ -467,6 +473,36 @@ extension Analytics {
             return false
         }
         return true
+    }
+}
+
+// MARK: - Consent
+
+extension Analytics {
+    
+    /**
+     Updates the current consent state with the supplied values.
+     
+     The supplied lists fully replace the existing consent state — callers always
+     pass the complete current state, not a delta. Passing an empty
+     `ConsentManagementOptions()` clears both lists and reverts consent evaluation
+     to the uninitialized fail-open state.
+     
+     This method has no effect while consent management is disabled in
+     `Configuration`; enabling consent management is a load-time decision.
+     
+     - Parameter options: The consent values to apply.
+     */
+    
+    public func setConsent(_ options: ConsentManagementOptions) {
+        guard self.isAnalyticsActive else { return }
+        
+        guard self.consentManagementState.value.enabled else {
+            self.logger.warn(log: "Analytics: Consent management is disabled; setConsent has no effect. Enable it via Configuration's consentManagement.")
+            return
+        }
+        
+        self.consentManagementState.dispatch(action: SetConsentAction(options: options))
     }
 }
 
