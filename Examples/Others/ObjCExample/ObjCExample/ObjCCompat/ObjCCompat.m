@@ -187,9 +187,10 @@
 - (void)updateConsent {
     RSSConsentManagementOptions *options = [[RSSConsentManagementOptions alloc] initWithAllowedConsentIds:@[@"marketing"] deniedConsentIds:@[@"advertising"]];
     [self.client setConsent: options];
+}
 
-    RSSConsentManagementOptions *clearOptions = [RSSConsentManagementOptions new];
-    [self.client setConsent: clearOptions];
+- (void)resetConsent {
+    [self.client setConsent: [RSSConsentManagementOptions new]];
 }
 
 - (void)trackDeepLinking {
