@@ -59,6 +59,7 @@
 		5396581F302DC6B8008A8845 /* ConsentManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396581E302DC6B8008A8845 /* ConsentManagementTests.swift */; };
 		53965822302DC8DF008A8845 /* SetConsentActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965821302DC8DF008A8845 /* SetConsentActionTests.swift */; };
 		53965824302DC8F9008A8845 /* SetConsentAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965823302DC8F9008A8845 /* SetConsentAPITests.swift */; };
+		53965829302F32A0008A8845 /* ConsentManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
 		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
 		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
@@ -284,6 +285,7 @@
 		5396581E302DC6B8008A8845 /* ConsentManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementTests.swift; sourceTree = "<group>"; };
 		53965821302DC8DF008A8845 /* SetConsentActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetConsentActionTests.swift; sourceTree = "<group>"; };
 		53965823302DC8F9008A8845 /* SetConsentAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetConsentAPITests.swift; sourceTree = "<group>"; };
+		53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementPlugin.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
 		539D86F82E5439E7009FC144 /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
@@ -635,6 +637,7 @@
 				53DEA5C12E03D05A00D6C371 /* ScreenInfoPlugin.swift */,
 				53DEA5C22E03D05A00D6C371 /* SessionTrackingPlugin.swift */,
 				53DEA5C32E03D05A00D6C371 /* TimeZoneInfoPlugin.swift */,
+				53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */,
 			);
 			path = Standard;
 			sourceTree = "<group>";
@@ -1583,6 +1586,7 @@
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
 				85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */,
+				53965829302F32A0008A8845 /* ConsentManagementPlugin.swift in Sources */,
 				53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */,
 				5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */,
 				53DEA6092E03D05A00D6C371 /* HttpClient.swift in Sources */,
