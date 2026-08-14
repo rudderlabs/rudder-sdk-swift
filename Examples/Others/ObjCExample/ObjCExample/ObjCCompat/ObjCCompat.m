@@ -52,7 +52,15 @@
     [sessionBuilder setSessionTimeoutInMillis: @1000];
     
     [builder setSessionConfiguration: [sessionBuilder build]];
-    
+
+    RSSConsentConfigurationBuilder *consentBuilder = [RSSConsentConfigurationBuilder new];
+    [consentBuilder setEnabled: YES];
+    [consentBuilder setProvider: RSSConsentManagementProviderCustom];
+    [consentBuilder setAllowedConsentIds: @[@"marketing"]];
+    [consentBuilder setDeniedConsentIds: @[@"advertising"]];
+
+    [builder setConsentManagement: [consentBuilder build]];
+
     self.client = [[RSSAnalytics alloc] initWithConfiguration:[builder build]];
 }
 
@@ -174,6 +182,14 @@
 
 - (NSDictionary * _Nullable)traits {
     return self.client.traits;
+}
+
+- (void)updateConsent {
+    RSSConsentManagementOptions *options = [[RSSConsentManagementOptions alloc] initWithAllowedConsentIds:@[@"marketing"] deniedConsentIds:@[@"advertising"]];
+    [self.client setConsent: options];
+
+    RSSConsentManagementOptions *clearOptions = [RSSConsentManagementOptions new];
+    [self.client setConsent: clearOptions];
 }
 
 - (void)trackDeepLinking {
