@@ -30,6 +30,12 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     var lastDestinationConfig: [String: Any]?
     var createThrowsError: Error?
     var updateThrowsError: Error?
+
+    // Invoked at the start of create — lets tests simulate events arriving while creation is in flight
+    var onCreate: (() -> Void)?
+
+    // Ordered names of all track events delivered to this destination
+    var receivedTrackEventNames: [String] = []
     
     // Event tracking
     var identifyEventReceived: IdentifyEvent?
@@ -50,7 +56,8 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     func create(destinationConfig: [String: Any]) throws {
         createCalled = true
         lastDestinationConfig = destinationConfig
-        
+        onCreate?()
+
         if let error = createThrowsError {
             throw error
         }
@@ -84,6 +91,7 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     
     func track(payload: TrackEvent) {
         trackEventReceived = payload
+        receivedTrackEventNames.append(payload.event)
     }
     
     func screen(payload: ScreenEvent) {
@@ -110,6 +118,8 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
         resetCalled = false
         getDestinationInstanceCalled = false
         lastDestinationConfig = nil
+        onCreate = nil
+        receivedTrackEventNames = []
         identifyEventReceived = nil
         trackEventReceived = nil
         screenEventReceived = nil
