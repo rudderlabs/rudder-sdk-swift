@@ -28,6 +28,6 @@ struct DisableSourceConfigAction: StateAction {
             destinations: updatedSource.destinations
         )
         
-        return SourceConfig(source: updatedSource)
+        return SourceConfig(source: updatedSource, consentManagementMetadata: currentState.consentManagementMetadata)
     }
 }
