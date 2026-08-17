@@ -53,6 +53,7 @@ class IntegrationsController {
         $integrationPluginStores.modify { stores in
             stores.removeValue(forKey: key)
         }
+        self.reinitBuffer.close(for: key)
         self.integrationPluginChain?.remove(plugin: integration)
     }
     
@@ -84,6 +85,7 @@ class IntegrationsController {
         $integrationPluginStores.modify { stores in
             stores.removeAll()
         }
+        self.reinitBuffer.removeAll()
         self.integrationPluginChain?.removeAll()
         self.analytics = nil
         self.integrationPluginChain = nil
