@@ -185,6 +185,7 @@ extension IntegrationPlugin {
     }
     
     private func applyDefaultPlugins() {
+        self.add(plugin: ConsentGatePlugin(key: self.key))
         self.add(plugin: EventFilteringPlugin(key: self.key))
         self.add(plugin: IntegrationOptionsPlugin(key: self.key))
     }
