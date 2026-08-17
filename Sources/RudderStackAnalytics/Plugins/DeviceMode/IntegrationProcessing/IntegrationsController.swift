@@ -112,7 +112,20 @@ private extension IntegrationsController {
             return nil
         }
         
-        return destination.destinationConfig.rawDictionary
+        let destinationConfig = destination.destinationConfig.rawDictionary
+        
+        if let consentState = analytics?.consentManagementState.value, !ConsentResolver.resolve(state: consentState, destinationConfig: destinationConfig) {
+            let error = DestinationError.destinationConsentDenied(integration.key)
+            analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
+            
+            safelyUpdateOnFailureAndNotify(
+                error: error,
+                integration: integration
+            )
+            return nil
+        }
+        
+        return destinationConfig
     }
     
     func safelyInitOrUpdateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
