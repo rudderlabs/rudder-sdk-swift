@@ -63,6 +63,7 @@
 		5396582B302F7EF0008A8845 /* track_with_consent_management.json in Resources */ = {isa = PBXBuildFile; fileRef = 5396582A302F7EF0008A8845 /* track_with_consent_management.json */; };
 		5396582D302F7F28008A8845 /* ConsentManagementPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396582C302F7F28008A8845 /* ConsentManagementPluginTests.swift */; };
 		5396582F3032D7B5008A8845 /* ConsentResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396582E3032D7B5008A8845 /* ConsentResolver.swift */; };
+		53965831303305B0008A8845 /* ConsentGatePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965830303305B0008A8845 /* ConsentGatePlugin.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
 		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
 		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
@@ -292,6 +293,7 @@
 		5396582A302F7EF0008A8845 /* track_with_consent_management.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_consent_management.json; sourceTree = "<group>"; };
 		5396582C302F7F28008A8845 /* ConsentManagementPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementPluginTests.swift; sourceTree = "<group>"; };
 		5396582E3032D7B5008A8845 /* ConsentResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentResolver.swift; sourceTree = "<group>"; };
+		53965830303305B0008A8845 /* ConsentGatePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentGatePlugin.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
 		539D86F82E5439E7009FC144 /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
@@ -1323,6 +1325,7 @@
 			children = (
 				85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */,
 				85F2AC012EA78EF200BE93AF /* EventFilteringPlugin.swift */,
+				53965830303305B0008A8845 /* ConsentGatePlugin.swift */,
 			);
 			path = IntegrationPlugins;
 			sourceTree = "<group>";
@@ -1574,6 +1577,7 @@
 				53DB9D752F44515A004FB1A4 /* RetryHeadersProvider.swift in Sources */,
 				85F2AC102EAA300800BE93AF /* IntegrationOptionsPlugin.swift in Sources */,
 				53DEA5F92E03D05A00D6C371 /* MemoryStore.swift in Sources */,
+				53965831303305B0008A8845 /* ConsentGatePlugin.swift in Sources */,
 				53DEA5FA2E03D05A00D6C371 /* DiskStore.swift in Sources */,
 				53DEA5FB2E03D05A00D6C371 /* ObjCSessionConfiguration.swift in Sources */,
 				53DEA5FC2E03D05A00D6C371 /* ScreenEvent.swift in Sources */,
