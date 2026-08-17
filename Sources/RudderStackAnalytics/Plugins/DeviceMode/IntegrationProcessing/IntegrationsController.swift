@@ -18,6 +18,8 @@ class IntegrationsController {
     @Synchronized var isSourceEnabledFetchedAtLeastOnce = false
     @Synchronized var integrationPluginStores: [String: IntegrationPluginStore] = [:]
     
+    private let reinitBuffer = DestinationReinitBuffer()
+    
     init(analytics: Analytics) {
         self.analytics = analytics
         self.integrationPluginChain = PluginChain(analytics: analytics)
@@ -29,6 +31,11 @@ class IntegrationsController {
         }
         
         safelyInitOrUpdateAndNotify(destinationConfig: destinationConfig, integration: integration)
+    }
+    
+    // Buffers an event for a destination whose re-initialization window is open; no-op otherwise.
+    func bufferIfReinitializing(event: Event, key: String) {
+        reinitBuffer.append(event: event, for: key)
     }
     
     func add(integration: IntegrationPlugin) {
@@ -137,15 +144,18 @@ private extension IntegrationsController {
     }
     
     func safelyCreateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
+        reinitBuffer.open(for: integration.key)
         do {
             try integration.create(destinationConfig: destinationConfig)
             analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) created successfully.")
             integration.pluginStore?.isDestinationReady = true
             notifyCallbacks(.success(()), for: integration)
+            replayReinitBuffer(for: integration)
         } catch {
             analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) creating destination \(integration.key).", error: error)
             integration.pluginStore?.isDestinationReady = false
             notifyCallbacks(.failure(error), for: integration)
+            discardReinitBuffer(for: integration)
         }
     }
     
@@ -203,5 +213,22 @@ private extension IntegrationsController {
     
     func findDestination(sourceConfig: SourceConfig, key: String) -> Destination? {
         return sourceConfig.source.destinations.first { $0.destinationDefinition.displayName == key }
+    }
+}
+
+private extension IntegrationsController {
+    private func replayReinitBuffer(for integration: IntegrationPlugin) {
+        let events = reinitBuffer.close(for: integration.key)
+        guard !events.isEmpty else { return }
+        
+        analytics?.logger.debug(log: "IntegrationsController: Replaying \(events.count) buffered event(s) for destination \(integration.key).")
+        events.forEach { _ = integration.intercept(event: $0) }
+    }
+    
+    private func discardReinitBuffer(for integration: IntegrationPlugin) {
+        let events = reinitBuffer.close(for: integration.key)
+        guard !events.isEmpty else { return }
+        
+        analytics?.logger.warn(log: "IntegrationsController: Discarded \(events.count) buffered event(s) for destination \(integration.key) after failed initialization.")
     }
 }

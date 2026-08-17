@@ -214,6 +214,9 @@ public struct _DefaultConfig {
     
     /// Special signal string used to trigger uploads.
     let uploadSignal = "#!upload"
+    
+    /// Max events held per destination during consent re-init; oldest dropped when full.
+    let destinationReinitBufferSize: Int = 1000
 }
 // swiftlint:enable type_name
 
