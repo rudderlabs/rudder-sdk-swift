@@ -62,6 +62,7 @@
 		53965829302F32A0008A8845 /* ConsentManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */; };
 		5396582B302F7EF0008A8845 /* track_with_consent_management.json in Resources */ = {isa = PBXBuildFile; fileRef = 5396582A302F7EF0008A8845 /* track_with_consent_management.json */; };
 		5396582D302F7F28008A8845 /* ConsentManagementPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396582C302F7F28008A8845 /* ConsentManagementPluginTests.swift */; };
+		5396582F3032D7B5008A8845 /* ConsentResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396582E3032D7B5008A8845 /* ConsentResolver.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
 		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
 		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
@@ -290,6 +291,7 @@
 		53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementPlugin.swift; sourceTree = "<group>"; };
 		5396582A302F7EF0008A8845 /* track_with_consent_management.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_consent_management.json; sourceTree = "<group>"; };
 		5396582C302F7F28008A8845 /* ConsentManagementPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementPluginTests.swift; sourceTree = "<group>"; };
+		5396582E3032D7B5008A8845 /* ConsentResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentResolver.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
 		539D86F82E5439E7009FC144 /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
@@ -857,6 +859,7 @@
 			children = (
 				5396580C302D955D008A8845 /* ConsentManagementConfiguration.swift */,
 				5396580F302D98D9008A8845 /* ConsentManagementOptions.swift */,
+				5396582E3032D7B5008A8845 /* ConsentResolver.swift */,
 			);
 			path = ConsentManagement;
 			sourceTree = "<group>";
@@ -1533,6 +1536,7 @@
 				53DEA5E42E03D05A00D6C371 /* ScreenInfoPlugin.swift in Sources */,
 				531B80662ED9836B000B1D6A /* ObjCStandardIntegration.swift in Sources */,
 				53DEA5E52E03D05A00D6C371 /* LocaleInfoPlugin.swift in Sources */,
+				5396582F3032D7B5008A8845 /* ConsentResolver.swift in Sources */,
 				53DEA5E62E03D05A00D6C371 /* AliasEvent.swift in Sources */,
 				530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */,
 				53DEA5E72E03D05A00D6C371 /* LifecycleObserver.swift in Sources */,
