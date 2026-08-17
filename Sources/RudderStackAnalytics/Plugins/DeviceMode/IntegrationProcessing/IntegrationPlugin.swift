@@ -147,6 +147,10 @@ public extension IntegrationPlugin {
             if let finalEvent = onProcessedEvent {
                 self.handleEvent(event: finalEvent)
             }
+        } else {
+            // Hold events that arrive while this destination is re-initializing after a consent
+            // grant; no-op when no re-init window is open (existing skip behavior applies).
+            analytics?.integrationsController?.bufferIfReinitializing(event: event, key: key)
         }
         return event
     }
