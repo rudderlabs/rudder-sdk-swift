@@ -218,6 +218,22 @@ public struct _DefaultConfig {
     /// Max events held per destination during consent re-init; oldest dropped when full.
     let destinationReinitBufferSize: Int = 1000
 }
+
+// MARK: - SDKManagedContextKey
+/**
+ Context keys the SDK stamps on every event.
+ */
+enum SDKManagedContextKey: String, CaseIterable {
+    case app, device, library, locale, network, screen, timezone, sessionId
+    case operatingSystem = "os"
+    case consentManagement
+
+    /// Keys re-asserted at the terminal boundary.
+    static var reservedKeys: [SDKManagedContextKey] { [.consentManagement] }
+
+    /// Overridable SDK-stamped keys — a customer override triggers a deprecation warning.
+    static var baseKeys: [SDKManagedContextKey] { allCases.filter { !reservedKeys.contains($0) } }
+}
 // swiftlint:enable type_name
 
 // MARK: - RSVersion
