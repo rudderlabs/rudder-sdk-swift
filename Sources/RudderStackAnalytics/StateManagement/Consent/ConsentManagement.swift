@@ -53,7 +53,7 @@ extension ConsentManagement {
 // MARK: - Context Stamp
 extension ConsentManagement {
     /// The context key the SDK stamps this state under.
-    static let contextKey = "consentManagement"
+    static let contextKey = SDKManagedContextKey.consentManagement.rawValue
 
     /**
      The `context.consentManagement` block for this state — `provider`,
