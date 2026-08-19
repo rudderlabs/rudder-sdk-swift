@@ -11,10 +11,7 @@ import Foundation
 /**
  A plugin that stamps the current consent state into `context.consentManagement` on every event.
  
- While consent management is enabled, the complete block — `provider`, `allowedConsentIds` and
- `deniedConsentIds` — is written on each event, replacing any value injected via custom context.
- While disabled, events pass through untouched, so a legacy customContext injection keeps working.
- The stamp reflects the state at event creation; events already in the pipeline are not restamped.
+ While consent management is enabled, the complete block — `provider`, `allowedConsentIds` and `deniedConsentIds` — is written on each event, replacing any value injected via custom context. While disabled, events pass through untouched, so a legacy customContext injection keeps working. The stamp reflects the state at event creation; `ContextGuardPlugin` re-asserts it at the terminal boundary, and device-mode delivery refreshes it before each destination handoff.
  */
 
 final class ConsentManagementPlugin: Plugin {
