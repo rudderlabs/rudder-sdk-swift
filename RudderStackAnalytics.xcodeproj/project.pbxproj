@@ -72,6 +72,7 @@
 		539658403035E566008A8845 /* ContextSnapshotPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396583F3035E566008A8845 /* ContextSnapshotPlugin.swift */; };
 		539658423035EB4F008A8845 /* ContextGuardPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539658413035EB4F008A8845 /* ContextGuardPlugin.swift */; };
 		5396584430361E3F008A8845 /* ContextGuardPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396584330361E3F008A8845 /* ContextGuardPluginTests.swift */; };
+		53965846303622F6008A8845 /* DeviceModeConsentRestampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965845303622F6008A8845 /* DeviceModeConsentRestampTests.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
 		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
 		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
@@ -310,6 +311,7 @@
 		5396583F3035E566008A8845 /* ContextSnapshotPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextSnapshotPlugin.swift; sourceTree = "<group>"; };
 		539658413035EB4F008A8845 /* ContextGuardPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextGuardPlugin.swift; sourceTree = "<group>"; };
 		5396584330361E3F008A8845 /* ContextGuardPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextGuardPluginTests.swift; sourceTree = "<group>"; };
+		53965845303622F6008A8845 /* DeviceModeConsentRestampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModeConsentRestampTests.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
 		539D86F82E5439E7009FC144 /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
@@ -832,6 +834,7 @@
 				85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */,
 				53965839303326B2008A8845 /* DestinationReinitBufferTests.swift */,
 				5396583B30332814008A8845 /* ConsentGatingTests.swift */,
+				53965845303622F6008A8845 /* DeviceModeConsentRestampTests.swift */,
 			);
 			path = DeviceMode;
 			sourceTree = "<group>";
@@ -1755,6 +1758,7 @@
 				53E777652EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift in Sources */,
 				539658383033256F008A8845 /* SourceConfigConsentParsingTests.swift in Sources */,
 				53C8B38B2FCEC7AE00337763 /* ConfigurationLoggerTests.swift in Sources */,
+				53965846303622F6008A8845 /* DeviceModeConsentRestampTests.swift in Sources */,
 				53DEA67A2E03D06F00D6C371 /* ScreenEventTests.swift in Sources */,
 				53A83F9C2E9F750400DDA0CC /* MockStorage.swift in Sources */,
 				53DEA67B2E03D06F00D6C371 /* TrackEventTests.swift in Sources */,
