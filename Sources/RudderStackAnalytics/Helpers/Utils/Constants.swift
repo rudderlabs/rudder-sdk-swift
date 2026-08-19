@@ -225,8 +225,9 @@ public struct _DefaultConfig {
  */
 enum SDKManagedContextKey: String, CaseIterable {
     case app, device, library, locale, network, screen, timezone, sessionId
-    case operatingSystem = "os"
     case consentManagement
+    // swiftlint:disable:next identifier_name
+    case os
 
     /// Keys re-asserted at the terminal boundary.
     static var reservedKeys: [SDKManagedContextKey] { [.consentManagement] }
