@@ -148,8 +148,9 @@ public extension IntegrationPlugin {
                 self.handleEvent(event: finalEvent)
             }
         } else {
-            // Hold events that arrive while this destination is re-initializing after a consent
-            // grant; no-op when no re-init window is open (existing skip behavior applies).
+            // Hold events that arrive while this destination's `create()` is in flight — the init
+            // window opens on every creation attempt, not only consent-driven re-inits; no-op
+            // when no window is open (existing skip behavior applies).
             analytics?.integrationsController?.bufferIfReinitializing(event: event, key: key)
         }
         return event
