@@ -71,6 +71,7 @@
 		5396583C30332814008A8845 /* ConsentGatingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396583B30332814008A8845 /* ConsentGatingTests.swift */; };
 		539658403035E566008A8845 /* ContextSnapshotPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396583F3035E566008A8845 /* ContextSnapshotPlugin.swift */; };
 		539658423035EB4F008A8845 /* ContextGuardPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539658413035EB4F008A8845 /* ContextGuardPlugin.swift */; };
+		5396584430361E3F008A8845 /* ContextGuardPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396584330361E3F008A8845 /* ContextGuardPluginTests.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
 		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
 		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
@@ -308,6 +309,7 @@
 		5396583B30332814008A8845 /* ConsentGatingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentGatingTests.swift; sourceTree = "<group>"; };
 		5396583F3035E566008A8845 /* ContextSnapshotPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextSnapshotPlugin.swift; sourceTree = "<group>"; };
 		539658413035EB4F008A8845 /* ContextGuardPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextGuardPlugin.swift; sourceTree = "<group>"; };
+		5396584330361E3F008A8845 /* ContextGuardPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextGuardPluginTests.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
 		539D86F82E5439E7009FC144 /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
@@ -813,6 +815,7 @@
 				53DEA64D2E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift */,
 				537B96432EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift */,
 				537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */,
+				5396584330361E3F008A8845 /* ContextGuardPluginTests.swift */,
 			);
 			path = Basic;
 			sourceTree = "<group>";
@@ -1707,6 +1710,7 @@
 				53E7775E2EB4D21000564D61 /* StartupFlushPolicyTests.swift in Sources */,
 				53DEA6662E03D06F00D6C371 /* GroupEventTests.swift in Sources */,
 				53DB9D952F448B8A004FB1A4 /* RetryMetadataTests.swift in Sources */,
+				5396584430361E3F008A8845 /* ContextGuardPluginTests.swift in Sources */,
 				85A10BBF2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift in Sources */,
 				539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */,
 				53DEA6672E03D06F00D6C371 /* UserIdActionTests.swift in Sources */,
