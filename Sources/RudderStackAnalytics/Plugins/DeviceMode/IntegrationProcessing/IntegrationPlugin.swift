@@ -175,7 +175,7 @@ extension IntegrationPlugin {
         let onProcessedEvent = pluginChain?.applyPlugins(pluginType: .onProcess, event: preProcessedEvent)
         
         if let finalEvent = onProcessedEvent {
-            self.handleEvent(event: finalEvent)
+            self.handleEvent(event: self.consentRestampedEvent(finalEvent))
         }
     }
     
@@ -191,6 +191,23 @@ extension IntegrationPlugin {
         self.add(plugin: ConsentGatePlugin(key: self.key))
         self.add(plugin: EventFilteringPlugin(key: self.key))
         self.add(plugin: IntegrationOptionsPlugin(key: self.key))
+    }
+    
+    /**
+     Re-asserts `context.consentManagement` from the current consent state before the event is
+     handed to the destination — the destination's own plugin chain runs after the main-chain
+     guard, so a value written there would otherwise survive. Drift is corrected silently: the
+     fan-out drains asynchronously, so a state change since the terminal stamp is expected,
+     not a customer override.
+     */
+    private func consentRestampedEvent(_ event: any Event) -> any Event {
+        guard let state = analytics?.consentManagementState.value, state.enabled else { return event }
+        
+        let stampKey = SDKManagedContextKey.consentManagement.rawValue
+        guard event.context?[stampKey] != AnyCodable(state.contextStamp) else { return event }
+        
+        analytics?.logger.debug(log: "IntegrationPlugin: Refreshed the consent stamp before delivery to destination \(key).")
+        return event.addToContext(info: [stampKey: state.contextStamp])
     }
 }
 
