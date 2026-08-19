@@ -398,6 +398,7 @@ extension Analytics {
         self.integrationsController = IntegrationsController(analytics: self)
         
         // Add default plugins
+        self.pluginChain?.add(plugin: ContextGuardPlugin())
         self.pluginChain?.add(plugin: IntegrationsManagementPlugin())
         self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())
         self.pluginChain?.add(plugin: DeviceInfoPlugin())
