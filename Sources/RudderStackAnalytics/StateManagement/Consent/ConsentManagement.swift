@@ -52,3 +52,18 @@ extension ConsentManagement {
             .filter { !$0.isEmpty }
     }
 }
+
+// MARK: - Context Stamp
+extension ConsentManagement {
+    /**
+     The `context.consentManagement` block for this state — `provider`,
+     `allowedConsentIds` and `deniedConsentIds`, arrays always present.
+     */
+    var contextStamp: [String: Any] {
+        return [
+            "provider": provider.value,
+            "allowedConsentIds": allowedConsentIds,
+            "deniedConsentIds": deniedConsentIds
+        ]
+    }
+}
