@@ -85,13 +85,15 @@ extension ContextGuardPlugin {
      Compares two context values by canonical JSON, so representation changes from a
      customer plugin rebuilding the context (Swift number or bool types vs `NSNumber`)
      never register as overrides. Values that cannot be encoded compare as equal —
-     the fail-safe direction for a detection-only warning.
+     the fail-safe direction for a detection-only warning. Plain equality short-circuits
+     first, so the common no-override case never pays for the encoding.
      */
     private func isSameValue(_ lhs: AnyCodable?, _ rhs: AnyCodable?) -> Bool {
         switch (lhs, rhs) {
         case (nil, nil):
             return true
         case let (lhs?, rhs?):
+            if lhs == rhs { return true }
             guard let left = canonicalJson(of: lhs), let right = canonicalJson(of: rhs) else { return true }
             return left == right
         default:
