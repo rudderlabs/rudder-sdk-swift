@@ -71,13 +71,37 @@ extension ContextGuardPlugin {
         }
         
         if let snapshot = self.snapshotPlugin.consumeSnapshot(for: event.messageId) {
-            for key in SDKManagedContextKey.baseKeys where event.context?[key.rawValue] != snapshot[key.rawValue] {
+            for key in SDKManagedContextKey.baseKeys where !isSameValue(event.context?[key.rawValue], snapshot[key.rawValue]) {
                 overriddenKeys.insert(key.rawValue)
             }
         }
-        
+
         for key in SDKManagedContextKey.baseKeys where overriddenKeys.contains(key.rawValue) {
             self.analytics?.logger.warn(log: "ContextGuardPlugin: Detected a custom value for the SDK-managed context key \"\(key.rawValue)\"; overriding SDK-managed context keys is deprecated and will be unsupported in a future major version.")
         }
+    }
+
+    /**
+     Compares two context values by canonical JSON, so representation changes from a
+     customer plugin rebuilding the context (Swift number or bool types vs `NSNumber`)
+     never register as overrides. Values that cannot be encoded compare as equal —
+     the fail-safe direction for a detection-only warning.
+     */
+    private func isSameValue(_ lhs: AnyCodable?, _ rhs: AnyCodable?) -> Bool {
+        switch (lhs, rhs) {
+        case (nil, nil):
+            return true
+        case let (lhs?, rhs?):
+            guard let left = canonicalJson(of: lhs), let right = canonicalJson(of: rhs) else { return true }
+            return left == right
+        default:
+            return false
+        }
+    }
+
+    private func canonicalJson(of value: AnyCodable) -> String? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        return (try? encoder.encode(value)).flatMap { String(data: $0, encoding: .utf8) }
     }
 }

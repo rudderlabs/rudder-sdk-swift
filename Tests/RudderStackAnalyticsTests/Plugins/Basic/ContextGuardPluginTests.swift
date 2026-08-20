@@ -196,6 +196,24 @@ struct ContextGuardPluginTests {
         #expect(warnMessages(in: mockLogger).isEmpty, "Non-stamped keys are the customer's — never warn.")
     }
 
+    @Test("given a plugin that rewraps the whole context, when values are unchanged, then no deprecation warning fires")
+    func testContextRewrapDoesNotWarn() {
+        let mockLogger = MockLogger()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: false), logger: mockLogger)
+        let (snapshot, guardPlugin) = makeGuard(for: analytics)
+
+        var event = makeTrackEvent()
+        event = event.addToContext(info: ["network": ["wifi": true, "cellular": false], "screen": ["density": 3], "sessionId": 1787206641])
+        event = snapshot.intercept(event: event) ?? event
+        // A customer plugin rebuilding the context via rawDictionary changes number
+        // representations without changing values — the ATT sample plugin pattern.
+        event.context = (event.context?.rawDictionary ?? [:]).codableWrapped
+
+        _ = guardPlugin.intercept(event: event)
+
+        #expect(warnMessages(in: mockLogger).isEmpty, "Representation changes are not overrides.")
+    }
+
     @Test("given a stale snapshot from another event, when the guard runs, then no plugin-path warning fires")
     func testStaleSnapshotStaysSilent() {
         let mockLogger = MockLogger()
