@@ -200,6 +200,7 @@ jobs:
               --body "Automated back-merge of release $VERSION from \`main\` into \`develop\`."
 
   # Advisory: the sanity suite reports its verdict and never blocks or fails the release.
+  # The release is complete when publish-release succeeds; this only keeps the run in progress.
   release-sanity:
       needs: publish-release
       uses: ./.github/workflows/release-sanity.yml

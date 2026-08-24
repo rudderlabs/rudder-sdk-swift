@@ -32,7 +32,8 @@ on:
     secrets:
       RELEASE_PRIVATE_KEY:
         description: "Private key of the release GitHub App, used to reach the test repository."
-        required: true
+        # Not required: a missing secret must degrade to a warning inside the job, never fail the caller.
+        required: false
 
 permissions:
   contents: read
@@ -130,13 +131,14 @@ jobs:
             --input dispatch.json \
             "/repos/${TARGET_REPO}/actions/workflows/${TARGET_WORKFLOW}/dispatches"
           rm -f dispatch.json
+          echo "dispatched=true" >> "$GITHUB_OUTPUT"
           echo "dispatched $SDK_VERSION ($PHASE) as $CORRELATION_ID"
 
           # The dispatch API returns no run id. The suite echoes the correlation id into its
           # run-name for exactly this lookup, so no timestamp or branch heuristic is needed.
           run_id=""
-          for _ in $(seq 1 20); do
-            sleep 3
+          for _ in $(seq 1 40); do
+            sleep 6
             run_id=$(gh api \
               -H "Accept: application/vnd.github+json" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
@@ -149,7 +151,7 @@ jobs:
           done
 
           if [ -z "$run_id" ]; then
-            echo "::warning::dispatched $CORRELATION_ID but no run carried it back within 60s"
+            echo "::warning::dispatched $CORRELATION_ID but no run carried it back within 4m"
             exit 1
           fi
 
@@ -214,6 +216,18 @@ jobs:
           echo "::warning::stopped waiting after $((MAX_WAIT / 60))m - the suite is still running at $RUN_URL and will report itself"
           echo "conclusion=timed-out" >> "$GITHUB_OUTPUT"
 
+      # Backstop for the wait step's trap: it covers a cancel that lands outside that step too.
+      - name: Cancel the suite if this job was cancelled
+        if: ${{ cancelled() && steps.dispatch.outputs.run_id != '' }}
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          RUN_ID: ${{ steps.dispatch.outputs.run_id }}
+        run: |
+          gh api --method POST "/repos/${TARGET_REPO}/actions/runs/${RUN_ID}/cancel" >/dev/null 2>&1 || true
+          echo "asked ${TARGET_REPO} to cancel run ${RUN_ID}"
+
       - name: Read the suite outputs
         id: outputs
         if: ${{ !cancelled() && steps.dispatch.outputs.run_id != '' }}
@@ -251,7 +265,8 @@ jobs:
             give_up "could not download the job-outputs artifact of run $RUN_ID"
           fi
           unzip -q -o outputs.zip -d outputs_dir 2>/dev/null || give_up "job-outputs was not a readable zip"
-          json=$(find outputs_dir -name '*.json' -type f 2>/dev/null | head -1) || json=""
+          # `sed -n 1p`, not `head -1`: head closing the pipe early would fail this under pipefail.
+          json=$(find outputs_dir -name '*.json' -type f 2>/dev/null | sed -n 1p) || json=""
 
           if [ -z "$json" ] || ! jq empty "$json" 2>/dev/null; then
             give_up "job-outputs held no readable JSON"
@@ -277,11 +292,13 @@ jobs:
           PHASE: ${{ inputs.phase }}
           SDK_VERSION: ${{ inputs.sdk_version }}
           RUN_URL: ${{ steps.dispatch.outputs.run_url }}
+          DISPATCHED: ${{ steps.dispatch.outputs.dispatched }}
           CONCLUSION: ${{ steps.wait.outputs.conclusion }}
           HAS_OUTPUTS: ${{ steps.outputs.outputs.has_outputs }}
           SUCCESS: ${{ steps.outputs.outputs.success }}
           SUMMARY: ${{ steps.outputs.outputs.summary }}
           REPORT_URL: ${{ steps.outputs.outputs.report_url }}
+          SLACK_URL: ${{ steps.outputs.outputs.slack_message_url }}
         run: |
           set -euo pipefail
 
@@ -294,6 +311,9 @@ jobs:
           elif [ "$HAS_OUTPUTS" = "true" ]; then
             icon=":x:"; headline="$PHASE sanity failed"
             detail="$SUMMARY"
+          elif [ -z "$RUN_URL" ] && [ "$DISPATCHED" = "true" ]; then
+            icon=":warning:"; headline="$PHASE sanity started but could not be tracked"
+            detail="The suite was dispatched but no run carried the correlation id back. Find it in ${TARGET_REPO}'s Actions; it will report itself."
           elif [ -z "$RUN_URL" ]; then
             icon=":warning:"; headline="$PHASE sanity could not be started"
             detail="The suite was never dispatched. Check the Release Sanity job in this run."
@@ -311,6 +331,7 @@ jobs:
             [ -z "$SDK_VERSION" ] || echo "- **Version:** \`${SDK_VERSION}\`"
             echo "- **Result:** ${detail}"
             [ -z "$REPORT_URL" ] || echo "- **Report:** ${REPORT_URL}"
+            [ -z "$SLACK_URL" ] || echo "- **Slack:** ${SLACK_URL}"
             [ -z "$RUN_URL" ] || echo "- **Suite run:** ${RUN_URL}"
           } >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
 

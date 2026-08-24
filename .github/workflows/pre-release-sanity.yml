@@ -2,6 +2,8 @@
 #
 # The SDK has no snapshot artifact — the release branch itself is what a pre-release run can
 # test, so this triggers on the release PR instead of a publish step.
+#
+# Advisory: never add this check to main's required status checks — it must not gate a merge.
 name: Pre-Release Sanity
 
 on:
