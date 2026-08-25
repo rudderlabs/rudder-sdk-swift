@@ -1,0 +1,34 @@
+# Runs the release sanity suite against the release branch while the release PR is open.
+#
+# The SDK has no snapshot artifact — the release branch itself is what a pre-release run can
+# test, so this triggers on the release PR instead of a publish step.
+#
+# Advisory: never add this check to main's required status checks — it must not gate a merge.
+name: Pre-Release Sanity
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ opened, reopened, synchronize ]
+
+permissions:
+  contents: read
+
+# A newer push supersedes the run. The cancel trap inside release-sanity.yml then cancels the
+# suite run in the test repo too, instead of leaving four macOS runners busy.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  release-sanity:
+    if: |
+      startsWith(github.event.pull_request.head.ref, 'release/') ||
+      startsWith(github.event.pull_request.head.ref, 'hotfix-release/')
+    uses: ./.github/workflows/release-sanity.yml
+    with:
+      phase: pre-release
+      sdk_version: ${{ github.event.pull_request.head.ref }}
+      release_pr: ${{ github.event.pull_request.html_url }}
+    secrets:
+      RELEASE_PRIVATE_KEY: ${{ secrets.RELEASE_PRIVATE_KEY }}
