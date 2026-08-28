@@ -65,11 +65,6 @@ public class Configuration: NSObject {
     var sessionConfiguration: SessionConfiguration
     
     /**
-     A configuration instance for managing consent settings. Defaults to disabled.
-     */
-    var consentManagement: ConsentManagementConfiguration
-    
-    /**
      The logger implementation to use for this Analytics instance.
      */
     var logger: Logger
@@ -78,6 +73,11 @@ public class Configuration: NSObject {
      The log level for this Analytics instance.
      */
     var logLevel: LogLevel
+    
+    /**
+     A configuration instance for managing consent settings. Defaults to disabled.
+     */
+    var consentManagement: ConsentManagementConfiguration
     
     // MARK: - Initialization
     
@@ -93,9 +93,9 @@ public class Configuration: NSObject {
        - collectDeviceId: A flag to enable automatic collection of the device ID. Defaults to `true`.
        - trackApplicationLifecycleEvents: A flag to enable automatic tracking of the application lifecycle events. Defaults to `true`.
        - sessionConfiguration: A configuration instance for managing session settings.
-       - consentManagement: A configuration instance for managing consent settings. Defaults to disabled.
        - logger: The logger implementation to use for this Analytics instance.
        - logLevel: The log level for this Analytics instance.
+       - consentManagement: A configuration instance for managing consent settings. Defaults to disabled.
 
      - Returns: An instance of `Configuration` with the specified settings.
      */
@@ -108,9 +108,9 @@ public class Configuration: NSObject {
         collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId,
         trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents,
         sessionConfiguration: SessionConfiguration = SessionConfiguration(),
-        consentManagement: ConsentManagementConfiguration = ConsentManagementConfiguration(),
         logger: Logger? = nil,
-        logLevel: LogLevel = Constants.log.defaultLevel
+        logLevel: LogLevel = Constants.log.defaultLevel,
+        consentManagement: ConsentManagementConfiguration = ConsentManagementConfiguration()
     ) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
