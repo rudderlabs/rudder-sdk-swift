@@ -67,9 +67,9 @@ public final class ObjCConfigurationBuilder: NSObject {
             collectDeviceId: collectDeviceId,
             trackApplicationLifecycleEvents: trackApplicationLifecycleEvents,
             sessionConfiguration: sessionConfiguration,
-            consentManagement: consentManagement,
             logger: logger,
-            logLevel: logLevel
+            logLevel: logLevel,
+            consentManagement: consentManagement
         )
     }
     
