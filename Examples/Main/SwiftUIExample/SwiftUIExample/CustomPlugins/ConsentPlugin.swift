@@ -21,6 +21,7 @@ import RudderStackAnalytics
  ```swift
  let plugin = ConsentPlugin(provider: myCmpAdapter)
  analytics.add(plugin: plugin)
+ ```
  Adding the plugin pushes whatever the CMP already knows, then keeps the SDK in sync as the
  user changes their choices.
  */

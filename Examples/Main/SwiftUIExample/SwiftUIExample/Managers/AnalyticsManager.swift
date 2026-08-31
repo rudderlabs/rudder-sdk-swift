@@ -53,6 +53,12 @@ final class AnalyticsManager {
         get { payloadPlugin.onPayloadCaptured }
         set { payloadPlugin.onPayloadCaptured = newValue }
     }
+    
+    var consentSummary: String {
+        let allowed = self.consentProvider.allowedConsentIds.joined(separator: ", ")
+        let denied = self.consentProvider.deniedConsentIds.joined(separator: ", ")
+        return "Allowed: \(allowed)\nDenied: \(denied)"
+    }
 
     func initializeAnalyticsSDK() {
         let config = Configuration(
