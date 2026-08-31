@@ -35,6 +35,14 @@ struct ContentView: View {
                         ActionButton(title: "End Session")  { viewModel.endSession() }
                         ActionButton(title: "Reset")    { viewModel.reset() }
                     }
+                    
+                    // MARK: - Consent Section
+                    SectionHeader(title: "Consent")
+                    
+                    Text(viewModel.consentSummary).font(.footnote).foregroundColor(.secondary)
+                    ActionButton(title: "Update Consent") { viewModel.updateConsent() }
+                    
+                    // MARK: - Shutdown
                     ActionButton(title: "Shutdown") { viewModel.shutdown() }
                     
                     // MARK: - Advertising ID Toggle
