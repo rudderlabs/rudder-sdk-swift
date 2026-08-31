@@ -51,4 +51,12 @@ final class MainViewModel: ObservableObject {
             self.advertisingPlugin = nil
         }
     }
+    
+    // MARK: - Consent
+    @Published var consentSummary: String = AnalyticsManager.shared.consentSummary
+    
+    func updateConsent() {
+        AnalyticsManager.shared.toggleConsent()
+        self.consentSummary = AnalyticsManager.shared.consentSummary
+    }
 }
