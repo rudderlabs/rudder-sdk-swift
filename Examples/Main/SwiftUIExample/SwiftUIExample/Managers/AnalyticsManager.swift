@@ -47,6 +47,7 @@ final class AnalyticsManager {
     
     private var analytics: Analytics?
     private let payloadPlugin = PayloadCapturePlugin()
+    private let consentProvider = DemoConsentProvider()
 
     var onPayloadCaptured: ((String) -> Void)? {
         get { payloadPlugin.onPayloadCaptured }
@@ -54,8 +55,22 @@ final class AnalyticsManager {
     }
 
     func initializeAnalyticsSDK() {
-        let config = Configuration(writeKey: "sample-write-key", dataPlaneUrl: "https://data-plane.analytics.com", logger: CustomLogger(), logLevel: .verbose)
+        let config = Configuration(
+            writeKey: "sample-write-key",
+            dataPlaneUrl: "https://data-plane.analytics.com",
+            logger: CustomLogger(),
+            logLevel: .verbose,
+            consentManagement: ConsentManagementConfiguration(
+                enabled: true,
+                provider: .custom,
+                allowedConsentIds: consentProvider.allowedConsentIds,
+                deniedConsentIds: consentProvider.deniedConsentIds
+            )
+        )
+        
         self.analytics = Analytics(configuration: config)
+        
+        self.analytics?.add(plugin: ConsentPlugin(provider: consentProvider))
         
         self.analytics?.add(plugin: payloadPlugin)
 
@@ -137,6 +152,10 @@ extension AnalyticsManager {
         self.analytics?.open(url: url, options: options)
     }
     
+    func toggleConsent() {
+        self.consentProvider.toggleConsent()
+    }
+    
     func addCustomIntegrationPlugin() {
         let sampleCustomIntegrationPlugin = SampleCustomIntegrationPlugin()
         
@@ -154,3 +173,24 @@ extension AnalyticsManager {
     }
 }
 
+// MARK: - DemoConsentProvider
+/**
+ Stands in for a real CMP in this sample. A production app would back these lists with its
+ Consent Management Platform's current state and call `onConsentChanged` from its callback.
+ */
+final class DemoConsentProvider: ConsentCategoryProvider {
+    private(set) var allowedConsentIds: [String] = ["marketing", "analytics"]
+    private(set) var deniedConsentIds: [String] = ["advertising"]
+    
+    var onConsentChanged: (() -> Void)?
+    
+    /** Flips the demo consent set, as if the user changed their choices in the CMP. */
+    func toggleConsent() {
+        let previouslyAllowed = self.allowedConsentIds
+        
+        self.allowedConsentIds = self.deniedConsentIds
+        self.deniedConsentIds = previouslyAllowed
+        
+        self.onConsentChanged?()
+    }
+}
