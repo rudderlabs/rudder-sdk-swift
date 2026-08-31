@@ -283,3 +283,22 @@ func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
     // Execute the block after the delay
     await block()
 }
+
+/**
+ Waits for asynchronously published state to satisfy a condition.
+
+ - Parameters:
+    - timeout: Maximum time to wait in seconds
+    - condition: The condition to poll
+ - Returns: True if the condition held within the timeout, false otherwise
+ */
+@discardableResult
+func waitUntil(timeout: TimeInterval = 2.0, condition: () -> Bool) async -> Bool {
+    let start = Date()
+
+    while Date().timeIntervalSince(start) < timeout {
+        if condition() { return true }
+        try? await Task.sleep(nanoseconds: MockStorage.pollInterval)
+    }
+    return condition()
+}
