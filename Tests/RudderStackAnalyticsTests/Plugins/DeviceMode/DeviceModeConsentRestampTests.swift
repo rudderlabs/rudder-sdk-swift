@@ -76,7 +76,7 @@ struct DeviceModeConsentRestampTests {
     }
 
     @Test("given a consent flip without reinitialization, when the event gate drops the event, then the restamp is bypassed harmlessly")
-    func testDroppedEventBypassesRestamp() {
+    func testDroppedEventBypassesRestamp() async throws {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
         let plugin = makeIntegration(for: analytics)
         let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
@@ -84,6 +84,12 @@ struct DeviceModeConsentRestampTests {
         analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
         analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
         #expect(plugin.pluginStore?.isDestinationReady == true, "Precondition: the destination starts consented.")
+
+        // That cache is populated on a background queue. Without waiting, the gate still holds a
+        // nil config and resolves fail-open, so the event would be delivered rather than dropped.
+        let gate = try #require(plugin.pluginChain?.find(type: ConsentGatePlugin.self), "The destination chain must carry a consent gate.")
+        let cached = await waitUntil { gate.destinationConfig != nil }
+        #expect(cached, "Precondition: the gate must cache its destination config before the flip.")
 
         // The live event gate reads current state; no re-initialization happens here.
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["something-else"]))
