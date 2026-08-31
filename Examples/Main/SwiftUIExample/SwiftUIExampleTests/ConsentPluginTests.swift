@@ -103,8 +103,8 @@ struct ConsentPluginTests {
 // MARK: - SpyConsentProvider
 /**
  A stand-in Consent Management Platform that records how many times the plugin read its
- consent lists. Reads stand in for pushes: `setConsent` writes into SDK state the example
- target cannot read back, so the provider is the observable seam.
+ allowed-consent list. Reads stand in for pushes: `setConsent` writes into SDK state the
+ example target cannot read back, so the provider is the observable seam.
  */
 final class SpyConsentProvider: ConsentCategoryProvider {
     private(set) var pushCount = 0
