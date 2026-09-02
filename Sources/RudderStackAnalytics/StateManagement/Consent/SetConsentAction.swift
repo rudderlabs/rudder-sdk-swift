@@ -12,9 +12,9 @@ import Foundation
  An action that replaces the consent lists in `ConsentManagement`.
  
  This is a full replacement, not a merge: the supplied lists overwrite both
- existing lists. Empty options clear everything and revert the state to
- uninitialized (fail-open), matching the JS SDK behavior. `enabled` and
- `provider` are load-time settings and are never modified at runtime.
+ existing lists. An update carrying no consent IDs at all is rejected — the
+ current state is returned unchanged. `enabled` and `provider` are load-time
+ settings and are never modified at runtime.
  */
 struct SetConsentAction: StateAction {
     typealias T = ConsentManagement
@@ -27,10 +27,15 @@ struct SetConsentAction: StateAction {
     func reduce(currentState: ConsentManagement) -> ConsentManagement {
         guard currentState.enabled else { return currentState }
 
+        let allowed = ConsentManagement.normalized(options.allowedConsentIds)
+        let denied = ConsentManagement.normalized(options.deniedConsentIds)
+        
+        guard !(allowed.isEmpty && denied.isEmpty) else { return currentState }
+
         var newState = currentState
-        newState.allowedConsentIds = ConsentManagement.normalized(options.allowedConsentIds)
-        newState.deniedConsentIds = ConsentManagement.normalized(options.deniedConsentIds)
-        newState.initialized = !(newState.allowedConsentIds.isEmpty && newState.deniedConsentIds.isEmpty)
+        newState.allowedConsentIds = allowed
+        newState.deniedConsentIds = denied
+        newState.initialized = true
         return newState
     }
 }

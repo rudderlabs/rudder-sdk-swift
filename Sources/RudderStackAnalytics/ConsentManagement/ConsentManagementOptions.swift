@@ -12,8 +12,9 @@ import Foundation
  Options for updating consent at runtime via `Analytics.setConsent(_:)`.
 
  The supplied lists fully replace the current consent state. Omitted lists default
- to empty, which clears the corresponding values. Updates apply only while consent
- management is enabled; otherwise the existing state is preserved.
+ to empty, which clears the corresponding values. An instance with both lists empty
+ is rejected and leaves the current consent state unchanged. Updates apply only
+ while consent management is enabled; otherwise the existing state is preserved.
  */
 @objc(RSSConsentManagementOptions)
 public class ConsentManagementOptions: NSObject {
@@ -28,9 +29,8 @@ public class ConsentManagementOptions: NSObject {
     var deniedConsentIds: [String]
 
     /**
-     Initializes an empty options instance. When consent management is enabled,
-     passing this to `Analytics.setConsent(_:)` clears the current consent state.
-     While disabled, the existing state is preserved.
+     Initializes an empty options instance. Passing this to `Analytics.setConsent(_:)`
+     is refused: the call warns and leaves the current consent state unchanged.
      */
     @objc
     public convenience override init() {
