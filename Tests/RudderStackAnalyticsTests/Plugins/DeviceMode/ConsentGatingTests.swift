@@ -158,6 +158,24 @@ struct ConsentGatingTests {
         #expect((result as? TrackEvent)?.event == "cloud-bound-event", "Device-mode gating must return the event unchanged — cloud delivery is unaffected.")
         #expect(plugin.receivedTrackEventNames.isEmpty, "The denied destination itself must receive nothing.")
     }
+    @Test("given a torn-down gate, when the source config changes, then the cached destination config is no longer updated")
+    func testTeardownCancelsTheConfigSubscription() async {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
+        let plugin = ConsentGatePlugin(key: destinationKey)
+        plugin.setup(analytics: analytics)
+
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: makeSourceConfig(consentEntries: [gatedEntry()])))
+        await runAfter(0.2) {
+            #expect(plugin.intercept(event: makeTrackEvent(named: "before")) == nil, "Precondition: the gate drops events while the destination is consent-denied.")
+        }
+
+        plugin.teardown()
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: makeSourceConfig(consentEntries: nil)))
+
+        await runAfter(0.2) {
+            #expect(plugin.intercept(event: makeTrackEvent(named: "after")) == nil, "After teardown the subscription must be cancelled, so the ungated config never lands and the stale denial still applies.")
+        }
+    }
 }
 
 // MARK: - Helpers

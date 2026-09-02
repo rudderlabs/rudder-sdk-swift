@@ -49,7 +49,9 @@ final class ConsentGatePlugin: Plugin {
         return event
     }
     
-    deinit {
+    // The chain calls this on removal, which is the deterministic point to drop the source-config
+    // subscription — it must not depend on when this plugin happens to be deallocated.
+    func teardown() {
         cancellables.removeAll()
     }
 }
