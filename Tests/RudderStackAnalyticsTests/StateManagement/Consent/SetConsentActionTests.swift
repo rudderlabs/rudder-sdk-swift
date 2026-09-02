@@ -34,16 +34,24 @@ struct SetConsentActionTests {
         #expect(state.value.deniedConsentIds.isEmpty, "An omitted list defaults to empty and must clear the previous value — callers always pass the complete state.")
     }
 
-    @Test("given a populated consent state, when dispatching empty options, then the state reverts to uninitialized")
-    func testEmptyOptionsClearAndRevertToUninitialized() {
+    @Test("given a populated consent state, when dispatching empty options, then the state is unchanged")
+    func testEmptyOptionsAreRejected() {
         let initial = ConsentManagement(enabled: true, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"], initialized: true)
         let state = createState(initialState: initial)
 
         state.dispatch(action: SetConsentAction(options: ConsentManagementOptions()))
 
-        #expect(state.value.allowedConsentIds.isEmpty)
-        #expect(state.value.deniedConsentIds.isEmpty)
-        #expect(state.value.initialized == false, "An empty update must revert to the fail-open uninitialized state (JS parity).")
+        #expect(state.value == initial, "An update carrying no consent IDs is a contract violation; the reducer must leave the state untouched.")
+    }
+
+    @Test("given options carrying only whitespace consent IDs, when dispatched, then the state is unchanged")
+    func testWhitespaceOnlyOptionsAreRejected() {
+        let initial = ConsentManagement(enabled: true, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"], initialized: true)
+        let state = createState(initialState: initial)
+
+        state.dispatch(action: SetConsentAction(options: ConsentManagementOptions(allowedConsentIds: ["  "], deniedConsentIds: [""])))
+
+        #expect(state.value == initial, "Normalization runs before the emptiness check, so whitespace-only IDs are rejected too.")
     }
 
     @Test("given an uninitialized state, when dispatching options with consent data, then the state becomes initialized")

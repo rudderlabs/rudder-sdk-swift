@@ -490,9 +490,10 @@ extension Analytics {
      Updates the current consent state with the supplied values.
      
      The supplied lists fully replace the existing consent state — callers always
-     pass the complete current state, not a delta. Passing an empty
-     `ConsentManagementOptions()` clears both lists and reverts consent evaluation
-     to the uninitialized fail-open state.
+     pass the complete current state, not a delta. An empty
+     `ConsentManagementOptions()` is rejected: a warning is logged and the current
+     consent state is left unchanged. To record that the user refused everything,
+     pass the refused categories in `deniedConsentIds`.
      
      This method has no effect while consent management is disabled in
      `Configuration`; enabling consent management is a load-time decision.
@@ -505,6 +506,13 @@ extension Analytics {
         
         guard self.consentManagementState.value.enabled else {
             self.logger.warn(log: "Analytics: Consent management is disabled; setConsent has no effect. Enable it via Configuration's consentManagement.")
+            return
+        }
+        
+        let allowed = ConsentManagement.normalized(options.allowedConsentIds)
+        let denied = ConsentManagement.normalized(options.deniedConsentIds)
+        guard !(allowed.isEmpty && denied.isEmpty) else {
+            self.logger.warn(log: "Analytics: setConsent requires at least one consent ID; the call has no effect. To deny every category, pass them in deniedConsentIds.")
             return
         }
         

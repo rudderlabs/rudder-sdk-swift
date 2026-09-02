@@ -12,11 +12,12 @@ import Foundation
 @Suite("SetConsent API Tests")
 struct SetConsentAPITests {
 
-    private func makeAnalytics(consent: ConsentManagementConfiguration) -> Analytics {
+    private func makeAnalytics(consent: ConsentManagementConfiguration, logger: Logger? = nil) -> Analytics {
         let config = MockProvider.createMockConfiguration(storage: MockStorage())
         config.trackApplicationLifecycleEvents = false
         config.sessionConfiguration.automaticSessionTracking = false
         config.consentManagement = consent
+        if let logger { config.logger = logger }
 
         let analytics = Analytics(configuration: config)
         analytics.isAnalyticsActive = true
@@ -51,19 +52,25 @@ struct SetConsentAPITests {
     @Test("given consent management enabled with no consent IDs, when analytics is initialized, then the inactive configuration is logged")
     func testEnabledWithoutConsentIdsLogsInactive() {
         let mockLogger = MockLogger()
-        let config = MockProvider.createMockConfiguration(storage: MockStorage())
-        config.trackApplicationLifecycleEvents = false
-        config.sessionConfiguration.automaticSessionTracking = false
-        config.consentManagement = ConsentManagementConfiguration(enabled: true)
-        config.logger = mockLogger
-
-        let analytics = Analytics(configuration: config)
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true), logger: mockLogger)
 
         #expect(analytics.consentManagementState.value.enabled == false)
         #expect(
             mockLogger.hasLog(level: "INFO", containing: "inactive for this session"),
             "A misconfigured consent setup must tell the developer why the feature is doing nothing."
         )
+    }
+
+    @Test("given consent management enabled, when setConsent is called with no consent IDs, then the call is refused with a warning")
+    func testSetConsentWithoutConsentIdsIsRefused() {
+        let mockLogger = MockLogger()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]), logger: mockLogger)
+        let stateBefore = analytics.consentManagementState.value
+
+        analytics.setConsent(ConsentManagementOptions())
+
+        #expect(analytics.consentManagementState.value == stateBefore, "A setConsent call carrying no consent IDs must leave the state untouched.")
+        #expect(mockLogger.hasLog(level: "WARN", containing: "requires at least one consent ID"))
     }
 
     @Test("given a consent state set at runtime, when reset is called, then the consent state is identical before and after")
@@ -116,16 +123,15 @@ struct SetConsentAPITests {
         #expect(state.initialized == true)
     }
 
-    @Test("given empty options through the ObjC wrapper, when setConsent is called, then the lists are cleared")
-    func testObjCSetConsentWithEmptyOptionsClears() {
+    @Test("given empty options through the ObjC wrapper, when setConsent is called, then the call is refused")
+    func testObjCSetConsentWithEmptyOptionsIsRefused() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
         let objcAnalytics = ObjCAnalytics(analytics: analytics)
 
         objcAnalytics.setConsent(ConsentManagementOptions())
 
         let state = analytics.consentManagementState.value
-        #expect(state.allowedConsentIds.isEmpty)
-        #expect(state.deniedConsentIds.isEmpty)
-        #expect(state.initialized == false, "Clearing both lists must revert consent to uninitialized.")
+        #expect(state.allowedConsentIds == ["marketing"], "The ObjC mirror must inherit the refusal, not clear the lists.")
+        #expect(state.initialized == true)
     }
 }
