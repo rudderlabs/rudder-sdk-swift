@@ -36,6 +36,23 @@ struct ConsentGatingTests {
         #expect(warnings.allSatisfy { !$0.message.contains("marketing") }, "Warnings must never contain consent ID values.")
     }
 
+    @Test("given a denied destination whose update rejects an empty config, when initialized, then the consent reason still reaches the callback")
+    func testDeniedDestinationReportsConsentReasonNotUpdateError() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
+        let plugin = makeIntegration(for: analytics)
+        plugin.updateThrowsError = MockIntegrationError.configurationMissing
+        var receivedResult: DestinationResult?
+        plugin.onDestinationReady { _, result in receivedResult = result }
+
+        analytics.integrationsController?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
+
+        #expect(plugin.updateCalled == false, "A destination being declared failed must never be updated.")
+        guard case .failure(let error) = receivedResult, case DestinationError.destinationConsentDenied = error else {
+            Issue.record("The denial reason must survive; an update failure must not replace it.")
+            return
+        }
+    }
+
     @Test("given consent management disabled, when a gated destination is initialized, then behavior is identical to the current release")
     func testDisabledBehavesAsCurrentRelease() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: false))
