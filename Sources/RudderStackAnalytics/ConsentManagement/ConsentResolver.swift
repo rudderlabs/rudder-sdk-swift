@@ -60,20 +60,17 @@ struct ConsentResolver {
         // Rule 1: disabled -> consented.
         guard state.enabled else { return true }
         
-        // Rule 2: no consent data supplied yet -> consented.
-        guard state.initialized else { return true }
-        
-        // Rule 3: first entry matching the active provider; none (or no array) -> consented.
+        // Rule 2: first entry matching the active provider; none (or no array) -> consented.
         let entries = destinationConfig?[ConsentResolverConstants.consentManagementKey] as? [[String: Any]] ?? []
         guard let entry = entries.first(where: { ($0[ConsentResolverConstants.providerKey] as? String) == state.provider.value }) else { return true }
         
-        // Rule 4: configured consent IDs, trimmed with empties dropped; empty -> consented.
+        // Rule 3: configured consent IDs, trimmed with empties dropped; empty -> consented.
         let configuredIds = ((entry[ConsentResolverConstants.consentsKey] as? [[String: Any]]) ?? [])
             .compactMap { $0[ConsentResolverConstants.consentKey] as? String }
         let cleanedIds = ConsentManagement.normalized(configuredIds)
         guard !cleanedIds.isEmpty else { return true }
         
-        // Rules 5 & 6: normalize the strategy, match against the allowed IDs only.
+        // Rules 4 & 5: normalize the strategy, match against the allowed IDs only.
         switch ConsentResolutionStrategy(rawValue: entry[ConsentResolverConstants.resolutionStrategyKey] as? String) {
         case .all:
             return cleanedIds.allSatisfy { state.allowedConsentIds.contains($0) }
