@@ -11,9 +11,7 @@ import Foundation
 /**
  A reactive state model holding the current consent values.
  
- `initialized` is `false` until consent values have actually been supplied
- (via configuration or `setConsent(_:)`). While uninitialized, consent
- evaluation fails open — no destination is blocked.
+ The two consent ID lists are never both empty while `enabled` is `true`: a configuration that enables consent management without supplying either list is a configuration error, and the state is built inactive so the feature behaves as if it had never been enabled.
  */
 struct ConsentManagement: Equatable {
     var enabled: Bool = false
@@ -28,18 +26,19 @@ extension ConsentManagement {
     /**
      Builds the initial consent state from the load-time configuration.
      
-     Consent IDs are trimmed and empties dropped. The state is considered
-     initialized only when enabled and at least one non-empty list was supplied.
+     Consent IDs are trimmed and empties dropped. Enabling consent management without supplying either list is a configuration error: the state is built inactive, so the feature behaves exactly as if it had never been enabled.
      */
     static func initialState(_ configuration: ConsentManagementConfiguration) -> ConsentManagement {
         let allowed = Self.normalized(configuration.allowedConsentIds)
         let denied = Self.normalized(configuration.deniedConsentIds)
+        let active = configuration.enabled && !(allowed.isEmpty && denied.isEmpty)
+        
         return ConsentManagement(
-            enabled: configuration.enabled,
+            enabled: active,
             provider: configuration.provider,
             allowedConsentIds: allowed,
             deniedConsentIds: denied,
-            initialized: configuration.enabled && !(allowed.isEmpty && denied.isEmpty)
+            initialized: active
         )
     }
     

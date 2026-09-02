@@ -40,14 +40,14 @@ struct ConsentManagementTests {
         #expect(state.initialized == true, "Enabled with supplied consent data should mark the state initialized.")
     }
 
-    @Test("given an enabled configuration with both lists empty, when the initial state is built, then it stays uninitialized")
-    func testInitialStateEnabledWithoutDataIsUninitialized() {
+    @Test("given an enabled configuration with both lists empty, when the initial state is built, then it is inactive")
+    func testInitialStateEnabledWithoutDataIsInactive() {
         let configuration = ConsentManagementConfiguration(enabled: true)
 
         let state = ConsentManagement.initialState(configuration)
 
-        #expect(state.enabled == true)
-        #expect(state.initialized == false, "No consent data supplied means the fail-open uninitialized state.")
+        #expect(state.enabled == false, "Enabling consent management without any consent IDs is a configuration error; the state must be built inactive.")
+        #expect(state.initialized == false)
     }
 
     @Test("given a disabled configuration carrying consent lists, when the initial state is built, then it stays uninitialized")

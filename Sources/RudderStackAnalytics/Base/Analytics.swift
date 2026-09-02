@@ -88,9 +88,15 @@ public class Analytics {
         self.configuration = configuration
         self.logger = configuration.logger
         self.processEventChannel = AsyncChannel()
+
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())
+
         self.consentManagementState = createState(initialState: ConsentManagement.initialState(configuration.consentManagement))
+        if configuration.consentManagement.enabled, !self.consentManagementState.value.enabled {
+            self.logger.info(log: "Analytics: Consent management is enabled but no consent IDs were supplied; consent management is inactive for this session. Supply allowedConsentIds or deniedConsentIds in Configuration.")
+        }
+        
         self.setup()
     }
 }

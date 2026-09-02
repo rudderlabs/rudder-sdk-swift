@@ -38,7 +38,7 @@ struct SetConsentAPITests {
 
     @Test("given consent management enabled, when setConsent is called, then the state carries the new lists")
     func testSetConsentWhileEnabledUpdatesState() {
-        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true))
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]))
 
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"]))
 
@@ -48,9 +48,27 @@ struct SetConsentAPITests {
         #expect(state.initialized == true)
     }
 
+    @Test("given consent management enabled with no consent IDs, when analytics is initialized, then the inactive configuration is logged")
+    func testEnabledWithoutConsentIdsLogsInactive() {
+        let mockLogger = MockLogger()
+        let config = MockProvider.createMockConfiguration(storage: MockStorage())
+        config.trackApplicationLifecycleEvents = false
+        config.sessionConfiguration.automaticSessionTracking = false
+        config.consentManagement = ConsentManagementConfiguration(enabled: true)
+        config.logger = mockLogger
+
+        let analytics = Analytics(configuration: config)
+
+        #expect(analytics.consentManagementState.value.enabled == false)
+        #expect(
+            mockLogger.hasLog(level: "INFO", containing: "inactive for this session"),
+            "A misconfigured consent setup must tell the developer why the feature is doing nothing."
+        )
+    }
+
     @Test("given a consent state set at runtime, when reset is called, then the consent state is identical before and after")
     func testResetLeavesConsentStateUntouched() {
-        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true))
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]))
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"]))
         let stateBefore = analytics.consentManagementState.value
 
@@ -88,7 +106,7 @@ struct SetConsentAPITests {
 
     @Test("given an ObjC analytics wrapper, when setConsent is called through it, then the wrapped state is updated")
     func testObjCSetConsentDelegates() {
-        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true))
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]))
         let objcAnalytics = ObjCAnalytics(analytics: analytics)
 
         objcAnalytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
