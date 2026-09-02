@@ -12,7 +12,7 @@ import Combine
 /**
  A per-destination plugin that drops events while its destination resolves consent-denied.
  
- The destination's `consentManagement` entries are cached from the source config stream; the consent state is read live on every event so a `setConsent` update applies to the next event immediately. Resolution is fail-open — while consent management is disabled or uninitialized, every event passes.
+ The destination's `consentManagement` entries are cached from the source config stream; the consent state is read live on every event so a `setConsent` update applies to the next event immediately. Resolution is fail-open — while consent management is disabled, every event passes.
  */
 
 final class ConsentGatePlugin: Plugin {
