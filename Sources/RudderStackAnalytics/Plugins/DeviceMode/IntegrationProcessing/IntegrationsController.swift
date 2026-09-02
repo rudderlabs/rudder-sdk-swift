@@ -104,7 +104,7 @@ private extension IntegrationsController {
         guard let destination = findDestination(sourceConfig: sourceConfig, key: integration.key) else {
             let error = DestinationError.destinationNotFound(integration.key)
             analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
-            safelyUpdateOnFailureAndNotify(
+            notifyFailureAndMarkNotReady(
                 error: error,
                 integration: integration
             )
@@ -114,7 +114,7 @@ private extension IntegrationsController {
         if !destination.isDestinationEnabled {
             let error = DestinationError.destinationDisabled(integration.key)
             analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
-            safelyUpdateOnFailureAndNotify(
+            notifyFailureAndMarkNotReady(
                 error: error,
                 integration: integration
             )
@@ -127,7 +127,7 @@ private extension IntegrationsController {
             let error = DestinationError.destinationConsentDenied(integration.key)
             analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
             
-            safelyUpdateOnFailureAndNotify(
+            notifyFailureAndMarkNotReady(
                 error: error,
                 integration: integration
             )
@@ -161,16 +161,11 @@ private extension IntegrationsController {
         }
     }
     
-    func safelyUpdateOnFailureAndNotify(error: Error, integration: IntegrationPlugin) {
-        safelyUpdateAndApplyBlock(
-            destinationConfig: [:],
-            integration: integration,
-            block: {
-                self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with empty destinationConfig.")
-                integration.pluginStore?.isDestinationReady = false
-                self.notifyCallbacks(.failure(error), for: integration)
-            }
-        )
+    // A destination we are declaring failed must not be updated: pushing an empty config can throw,
+    // which would replace the real reason with a parse error, and can reset a live destination's state.
+    func notifyFailureAndMarkNotReady(error: Error, integration: IntegrationPlugin) {
+        integration.pluginStore?.isDestinationReady = false
+        notifyCallbacks(.failure(error), for: integration)
     }
     
     func safelyUpdateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
