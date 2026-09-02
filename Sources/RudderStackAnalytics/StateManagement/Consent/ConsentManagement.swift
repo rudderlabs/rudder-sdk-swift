@@ -18,7 +18,6 @@ struct ConsentManagement: Equatable {
     var provider: ConsentManagementProvider = .custom
     var allowedConsentIds: [String] = []
     var deniedConsentIds: [String] = []
-    var initialized: Bool = false
 }
 
 // MARK: - Normalization
@@ -37,8 +36,7 @@ extension ConsentManagement {
             enabled: active,
             provider: configuration.provider,
             allowedConsentIds: allowed,
-            deniedConsentIds: denied,
-            initialized: active
+            deniedConsentIds: denied
         )
     }
     

@@ -35,7 +35,6 @@ struct SetConsentAction: StateAction {
         var newState = currentState
         newState.allowedConsentIds = allowed
         newState.deniedConsentIds = denied
-        newState.initialized = true
         return newState
     }
 }

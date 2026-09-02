@@ -30,14 +30,13 @@ struct ConsentManagementTests {
 
     // MARK: - Initial State
 
-    @Test("given an enabled configuration with a non-empty list, when the initial state is built, then it is initialized")
-    func testInitialStateEnabledWithDataIsInitialized() {
+    @Test("given an enabled configuration with a non-empty list, when the initial state is built, then it is active")
+    func testInitialStateEnabledWithDataIsActive() {
         let configuration = ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"])
 
         let state = ConsentManagement.initialState(configuration)
 
-        #expect(state.enabled == true)
-        #expect(state.initialized == true, "Enabled with supplied consent data should mark the state initialized.")
+        #expect(state.enabled == true, "Enabled with supplied consent data should produce an active state.")
     }
 
     @Test("given an enabled configuration with both lists empty, when the initial state is built, then it is inactive")
@@ -47,17 +46,15 @@ struct ConsentManagementTests {
         let state = ConsentManagement.initialState(configuration)
 
         #expect(state.enabled == false, "Enabling consent management without any consent IDs is a configuration error; the state must be built inactive.")
-        #expect(state.initialized == false)
     }
 
-    @Test("given a disabled configuration carrying consent lists, when the initial state is built, then it stays uninitialized")
-    func testInitialStateDisabledIsUninitialized() {
+    @Test("given a disabled configuration carrying consent lists, when the initial state is built, then it is inactive")
+    func testInitialStateDisabledIsInactive() {
         let configuration = ConsentManagementConfiguration(enabled: false, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"])
 
         let state = ConsentManagement.initialState(configuration)
 
-        #expect(state.enabled == false)
-        #expect(state.initialized == false, "A disabled configuration can never produce an initialized state.")
+        #expect(state.enabled == false, "A disabled configuration can never produce an active state, whatever lists it carries.")
     }
 
     @Test("given a configuration with messy consent IDs, when the initial state is built, then the lists are normalized")
