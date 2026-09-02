@@ -34,7 +34,6 @@ struct SetConsentAPITests {
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"]))
 
         #expect(analytics.consentManagementState.value == stateBefore, "setConsent must warn and no-op while consent management is disabled.")
-        #expect(analytics.consentManagementState.value.initialized == false)
     }
 
     @Test("given consent management enabled, when setConsent is called, then the state carries the new lists")
@@ -46,7 +45,6 @@ struct SetConsentAPITests {
         let state = analytics.consentManagementState.value
         #expect(state.allowedConsentIds == ["marketing"])
         #expect(state.deniedConsentIds == ["ads"])
-        #expect(state.initialized == true)
     }
 
     @Test("given consent management enabled with no consent IDs, when analytics is initialized, then the inactive configuration is logged")
@@ -120,7 +118,6 @@ struct SetConsentAPITests {
 
         let state = analytics.consentManagementState.value
         #expect(state.allowedConsentIds == ["marketing"], "The ObjC mirror must delegate to the wrapped setConsent.")
-        #expect(state.initialized == true)
     }
 
     @Test("given empty options through the ObjC wrapper, when setConsent is called, then the call is refused")
@@ -132,6 +129,5 @@ struct SetConsentAPITests {
 
         let state = analytics.consentManagementState.value
         #expect(state.allowedConsentIds == ["marketing"], "The ObjC mirror must inherit the refusal, not clear the lists.")
-        #expect(state.initialized == true)
     }
 }
