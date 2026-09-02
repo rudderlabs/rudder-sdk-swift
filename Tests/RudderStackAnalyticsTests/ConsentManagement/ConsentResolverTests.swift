@@ -12,25 +12,17 @@ import Foundation
 @Suite("ConsentResolver Tests")
 struct ConsentResolverTests {
 
-    // MARK: - Rules 1 & 2: disabled / uninitialized fail open
+    // MARK: - Rule 1: disabled fails open
 
     @Test("given consent management disabled, when resolving a gated destination, then it is consented")
     func testDisabledIsConsented() {
-        let state = makeState(enabled: false, allowed: [], initialized: false)
+        let state = makeState(enabled: false, allowed: [])
         let config = makeConfig(entries: [makeEntry(consents: ["marketing"])])
 
         #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 1: disabled must always resolve consented.")
     }
 
-    @Test("given no consent data supplied yet, when resolving a gated destination, then it is consented")
-    func testUninitializedIsConsented() {
-        let state = makeState(enabled: true, allowed: [], initialized: false)
-        let config = makeConfig(entries: [makeEntry(consents: ["marketing"])])
-
-        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 2: not-initialized must resolve consented (JS parity).")
-    }
-
-    // MARK: - Rule 3: entry selection
+    // MARK: - Rule 2: entry selection
 
     @Test("given no consentManagement key, when resolving, then the destination is not gated")
     func testAbsentKeyIsConsented() {
@@ -55,7 +47,7 @@ struct ConsentResolverTests {
             makeEntry(provider: "ketch", consents: ["some-purpose"])
         ])
 
-        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 3: entries for other providers are never consulted.")
+        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 2: entries for other providers are never consulted.")
     }
 
     @Test("given duplicate custom entries, when resolving, then the first match wins")
@@ -66,17 +58,17 @@ struct ConsentResolverTests {
             makeEntry(consents: ["marketing"])
         ])
 
-        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == false, "Rule 3: first-match semantics — the second, satisfiable entry must never be consulted.")
+        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == false, "Rule 2: first-match semantics — the second, satisfiable entry must never be consulted.")
     }
 
-    // MARK: - Rule 4: configured consent IDs
+    // MARK: - Rule 3: configured consent IDs
 
     @Test("given an entry with no consents, when resolving, then it is consented")
     func testEmptyConsentsIsConsented() {
         let state = makeState(allowed: [])
         let config = makeConfig(entries: [makeEntry(consents: [])])
 
-        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 4: an empty ID list after cleanup must resolve consented.")
+        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 3: an empty ID list after cleanup must resolve consented.")
     }
 
     @Test("given consents that normalize to empty, when resolving, then it is consented")
@@ -84,7 +76,7 @@ struct ConsentResolverTests {
         let state = makeState(allowed: [])
         let config = makeConfig(entries: [makeEntry(consents: ["   ", ""])])
 
-        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 4: IDs are trimmed and empties dropped before the emptiness check.")
+        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 3: IDs are trimmed and empties dropped before the emptiness check.")
     }
 
     @Test("given messy configured IDs, when resolving, then they are normalized before matching")
@@ -95,7 +87,7 @@ struct ConsentResolverTests {
         #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Configured IDs pass through the same normalizer as state IDs.")
     }
 
-    // MARK: - Rules 5 & 6: strategy matching
+    // MARK: - Rules 4 & 5: strategy matching
 
     @Test("given the and strategy, when every configured ID is allowed, then it is consented")
     func testAndStrategyAllPresent() {
@@ -144,7 +136,7 @@ struct ConsentResolverTests {
         let state = makeState(allowed: ["marketing"])
         let config = makeConfig(entries: [makeEntry(consents: ["marketing", "analytics"], strategy: strategy)])
 
-        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == expected, "Rule 5: 'or'/'any' select or-matching (trimmed, case-insensitive); everything else selects and-matching.")
+        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == expected, "Rule 4: 'or'/'any' select or-matching (trimmed, case-insensitive); everything else selects and-matching.")
     }
 
     @Test("given no resolutionStrategy field, when resolving, then and-matching applies")
@@ -152,7 +144,7 @@ struct ConsentResolverTests {
         let state = makeState(allowed: ["marketing"])
         let config = makeConfig(entries: [makeEntry(consents: ["marketing", "analytics"])])
 
-        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == false, "Rule 5: a missing strategy selects and-matching.")
+        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == false, "Rule 4: a missing strategy selects and-matching.")
     }
 
     // MARK: - Denied list is never consulted
@@ -165,7 +157,7 @@ struct ConsentResolverTests {
         #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Only allowedConsentIds participate in matching — deniedConsentIds are stamp-only.")
     }
 
-    // MARK: - Rule 7: malformed shapes fail open
+    // MARK: - Rule 6: malformed shapes fail open
 
     @Test("given malformed consentManagement shapes, when resolving, then every one fails open", arguments: [
         ["consentManagement": "not-an-array"] as [String: Any],
@@ -177,7 +169,7 @@ struct ConsentResolverTests {
     func testMalformedShapesFailOpen(_ config: [String: Any]) {
         let state = makeState(allowed: [])
 
-        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 7: malformed configuration must resolve consented, never break delivery.")
+        #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 6: malformed configuration must resolve consented, never break delivery.")
     }
 
     @Test("given legacy provider fields beside the generic array, when resolving, then they are ignored")
@@ -193,8 +185,8 @@ struct ConsentResolverTests {
 // MARK: - Helpers
 extension ConsentResolverTests {
     
-    private func makeState(enabled: Bool = true, allowed: [String] = [], denied: [String] = [], initialized: Bool = true) -> ConsentManagement {
-        ConsentManagement(enabled: enabled, provider: .custom, allowedConsentIds: allowed, deniedConsentIds: denied, initialized: initialized)
+    private func makeState(enabled: Bool = true, allowed: [String] = [], denied: [String] = []) -> ConsentManagement {
+        ConsentManagement(enabled: enabled, provider: .custom, allowedConsentIds: allowed, deniedConsentIds: denied)
     }
 
     private func makeConfig(entries: [[String: Any]]) -> [String: Any] {
