@@ -147,6 +147,11 @@ public extension IntegrationPlugin {
             if let finalEvent = onProcessedEvent {
                 self.handleEvent(event: finalEvent)
             }
+        } else {
+            // Hold events that arrive while this destination's `create()` is in flight — the init
+            // window opens on every creation attempt, not only consent-driven re-inits; no-op
+            // when no window is open (existing skip behavior applies).
+            analytics?.integrationsController?.bufferIfReinitializing(event: event, key: key)
         }
         return event
     }
@@ -185,6 +190,7 @@ extension IntegrationPlugin {
     }
     
     private func applyDefaultPlugins() {
+        self.add(plugin: ConsentGatePlugin(key: self.key))
         self.add(plugin: EventFilteringPlugin(key: self.key))
         self.add(plugin: IntegrationOptionsPlugin(key: self.key))
     }

@@ -13,6 +13,18 @@ import Foundation
  */
 struct SourceConfig: Codable, Equatable {
     let source: RudderServerConfigSource
+    let consentManagementMetadata: ConsentManagementMetadata?
+    
+    init(source: RudderServerConfigSource, consentManagementMetadata: ConsentManagementMetadata? = nil) {
+        self.source = source
+        self.consentManagementMetadata = consentManagementMetadata
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.source = try container.decode(RudderServerConfigSource.self, forKey: .source)
+        self.consentManagementMetadata = try? container.decodeIfPresent(ConsentManagementMetadata.self, forKey: .consentManagementMetadata)
+    }
     
     /**
      Creates an initial state of the source configuration.
@@ -57,6 +69,23 @@ struct RudderServerConfigSource: Codable, Equatable {
         case metricConfig = "config"
         case destinations
     }
+}
+
+// MARK: - ConsentManagementMetadata
+/**
+ Workspace-level consent provider metadata, decoded from the source config response root — a sibling of `source` on the wire, not part of `source.config`.
+ */
+struct ConsentManagementMetadata: Codable, Equatable {
+    let providers: [ConsentProviderEntry]
+}
+
+// MARK: - ConsentProviderEntry
+/**
+ A single provider entry. Fields are optional and free-form so unknown providers, strategies, or extra fields never fail parsing; an empty `resolutionStrategy` on named-provider entries is tolerated and resolved downstream.
+ */
+struct ConsentProviderEntry: Codable, Equatable {
+    let provider: String?
+    let resolutionStrategy: String?
 }
 
 // MARK: - MetricsConfig
