@@ -34,8 +34,10 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     // Invoked at the start of create — lets tests simulate events arriving while creation is in flight
     var onCreate: (() -> Void)?
 
-    // Ordered names of all track events delivered to this destination
-    var receivedTrackEventNames: [String] = []
+    // Ordered names of all track events delivered to this destination. Synchronized because a
+    // destination can receive events from more than one processing task at a time; an unguarded
+    // Array.append reallocates and frees its buffer under a concurrent reader.
+    @Synchronized var receivedTrackEventNames: [String] = []
     
     // Event tracking
     var identifyEventReceived: IdentifyEvent?
@@ -91,7 +93,7 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     
     func track(payload: TrackEvent) {
         trackEventReceived = payload
-        receivedTrackEventNames.append(payload.event)
+        $receivedTrackEventNames.modify { $0.append(payload.event) }
     }
     
     func screen(payload: ScreenEvent) {
