@@ -398,8 +398,13 @@ extension Analytics {
         self.integrationsController = IntegrationsController(analytics: self)
         
         // Add default plugins
+        let contextSnapshotPlugin = ContextSnapshotPlugin()
+        // Registered first so its re-stamped event feeds both terminal consumers below.
+        self.pluginChain?.add(plugin: ContextGuardPlugin(snapshotPlugin: contextSnapshotPlugin))
         self.pluginChain?.add(plugin: IntegrationsManagementPlugin())
         self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())
+        
+        // Add standard plugins
         self.pluginChain?.add(plugin: DeviceInfoPlugin())
         self.pluginChain?.add(plugin: LocaleInfoPlugin())
         self.pluginChain?.add(plugin: OSInfoPlugin())
@@ -410,6 +415,7 @@ extension Analytics {
         self.pluginChain?.add(plugin: NetworkInfoPlugin())
         self.pluginChain?.add(plugin: ConsentManagementPlugin())
         self.pluginChain?.add(plugin: SessionTrackingPlugin())
+        self.pluginChain?.add(plugin: contextSnapshotPlugin)
         self.pluginChain?.add(plugin: LifecycleTrackingPlugin())
     }
     
