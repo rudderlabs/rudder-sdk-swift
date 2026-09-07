@@ -41,6 +41,19 @@ class IntegrationsController {
         }
     }
     
+    // Begins holding for every destination that is not yet delivering, ahead of initializing any of
+    // them. Destinations are initialized one at a time, so a hold opened inside that loop would only
+    // begin once the destinations ahead of it had finished creating — losing everything sent in the
+    // meantime. Destinations already delivering are left alone: they have nothing to hold, and
+    // putting one on hold here would leave it holding forever whenever initialization is a no-op.
+    func beginBufferingForPendingDestinations() {
+        self.integrationPluginChain?.apply { plugin in
+            guard let integration = plugin as? IntegrationPlugin,
+                  integration.pluginStore?.isDestinationReady == false else { return }
+            self.deliveryControl.beginBuffering(for: integration.key)
+        }
+    }
+    
     func add(integration: IntegrationPlugin) {
         self.integrationPluginChain?.add(plugin: integration)
         
