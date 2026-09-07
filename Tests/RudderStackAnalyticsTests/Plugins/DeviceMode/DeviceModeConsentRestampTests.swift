@@ -52,8 +52,9 @@ struct DeviceModeConsentRestampTests {
         #expect(plugin.createCalled == false, "Precondition: the destination starts denied.")
 
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
-        plugin.onCreate = { [weak analytics] in
-            analytics?.integrationsController?.bufferIfReinitializing(event: self.makeTrackEvent(named: "during-init"), key: self.destinationKey)
+        plugin.onCreate = { [weak analytics, weak plugin] in
+            guard let plugin else { return }
+            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-init"), to: plugin)
         }
         analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
 
