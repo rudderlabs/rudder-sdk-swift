@@ -186,6 +186,54 @@ struct ConsentGatingTests {
         #expect(plugin.trackEventReceived?.event == "after-reevaluation", "Re-initializing a created custom integration is a no-op, so a hold opened for it would never be released.")
     }
 
+    // MARK: - Consent inactive
+
+    @Test("given consent management disabled, when an event arrives during create, then it is skipped as before")
+    func testConsentDisabledDoesNotHoldEventsDuringCreate() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: false))
+        let plugin = makeIntegration(for: analytics)
+        let controller = analytics.integrationsController
+        plugin.onCreate = { [weak controller, weak plugin] in
+            guard let plugin else { return }
+            controller?.deliver(event: self.makeTrackEvent(named: "during-create"), to: plugin)
+        }
+
+        controller?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
+
+        #expect(plugin.createCalled == true, "Precondition: with consent off the destination is created normally.")
+        #expect(plugin.receivedTrackEventNames.isEmpty, "A customer who never enabled consent management must see the delivery behaviour they had before it existed.")
+    }
+
+    @Test("given consent management active, when an event arrives during create, then it is held and delivered")
+    func testConsentEnabledHoldsEventsDuringCreate() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let plugin = makeIntegration(for: analytics)
+        let controller = analytics.integrationsController
+        plugin.onCreate = { [weak controller, weak plugin] in
+            guard let plugin else { return }
+            controller?.deliver(event: self.makeTrackEvent(named: "during-create"), to: plugin)
+        }
+
+        controller?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
+
+        #expect(plugin.receivedTrackEventNames == ["during-create"], "With consent active the hold must still cover start-up; narrowing it must not reach the consent path.")
+    }
+
+    @Test("given consent enabled without any consent IDs, when an event arrives during create, then it is skipped like a disabled session")
+    func testInactiveConsentBehavesLikeConsentDisabled() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true))
+        let plugin = makeIntegration(for: analytics)
+        let controller = analytics.integrationsController
+        plugin.onCreate = { [weak controller, weak plugin] in
+            guard let plugin else { return }
+            controller?.deliver(event: self.makeTrackEvent(named: "during-create"), to: plugin)
+        }
+
+        controller?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "Enabled with no consent IDs is inactive for the session, so it must be indistinguishable from never having enabled consent — reading the supplied configuration instead of the resolved state would diverge here.")
+    }
+
     // MARK: - Revoke mid-session
 
     @Test("given a revoke mid-session, when re-evaluated, then zero further events reach the destination")
