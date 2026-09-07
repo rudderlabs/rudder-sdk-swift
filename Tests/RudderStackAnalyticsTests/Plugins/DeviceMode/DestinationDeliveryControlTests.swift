@@ -127,7 +127,7 @@ struct DestinationDeliveryControlTests {
     func testBufferDropsOldestWhenFull() {
         let control = DestinationDeliveryControl()
         let recorder = Recorder()
-        let maxSize = Constants.defaultConfig.destinationReinitBufferSize
+        let maxSize = Constants.defaultConfig.maxHeldEventsPerDestination
         control.beginBuffering(for: destinationKey)
 
         for index in 1...(maxSize + 1) {

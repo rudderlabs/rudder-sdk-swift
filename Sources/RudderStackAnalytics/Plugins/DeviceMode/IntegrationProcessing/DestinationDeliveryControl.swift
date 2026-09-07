@@ -53,7 +53,7 @@ final class DestinationDeliveryControl {
         }
     }
 
-    private static let maxBufferSize = Constants.defaultConfig.destinationReinitBufferSize
+    private static let maxBufferSize = Constants.defaultConfig.maxHeldEventsPerDestination
     @Synchronized private var destinations: [String: DestinationState] = [:]
 
     /**
