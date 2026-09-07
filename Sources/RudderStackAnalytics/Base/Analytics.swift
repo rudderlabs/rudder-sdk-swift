@@ -517,6 +517,9 @@ extension Analytics {
             return
         }
         
+        // Ahead of the state change, so a destination that is about to be re-evaluated starts
+        // holding before any event can arrive against the new consent.
+        self.integrationsController?.noteConsentChange()
         self.consentManagementState.dispatch(action: SetConsentAction(options: options))
     }
 }
