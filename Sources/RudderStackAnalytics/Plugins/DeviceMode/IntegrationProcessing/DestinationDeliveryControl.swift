@@ -42,6 +42,8 @@ final class DestinationDeliveryControl {
         let lock = NSRecursiveLock()
         /// Events held while initialization is in flight; `nil` when not buffering.
         var buffered: [Event]?
+        /// Events created before this instant belong to an earlier consent decision and are skipped.
+        var heldFrom: String?
         var isReady = false
 
         func withLock(_ block: (DestinationState) -> Void) {
@@ -60,12 +62,19 @@ final class DestinationDeliveryControl {
      Idempotent: a single re-initialization begins buffering from more than one call site, so a
      repeat call must keep whatever is already held.
 
-     - Parameter key: The destination key.
+     - Parameters:
+        - key: The destination key.
+        - cutoff: The instant the current consent decision was taken, as an ISO 8601 timestamp.
+                  Events created before it are skipped rather than held, so a decision never
+                  reaches back and delivers events that happened under the previous one.
      */
-    func beginBuffering(for key: String) {
+    func beginBuffering(for key: String, notBefore cutoff: String? = nil) {
         let state = self.state(for: key, creatingIfNeeded: true)
         state?.withLock { destination in
-            if destination.buffered == nil { destination.buffered = [] }
+            if destination.buffered == nil {
+                destination.buffered = []
+                destination.heldFrom = cutoff
+            }
         }
     }
 
@@ -86,6 +95,10 @@ final class DestinationDeliveryControl {
         var verdict = Verdict.skipped
         state.withLock { destination in
             if var buffered = destination.buffered {
+                if let heldFrom = destination.heldFrom, event.originalTimestamp < heldFrom {
+                    verdict = .skipped
+                    return
+                }
                 if buffered.count >= Self.maxBufferSize { buffered.removeFirst() }
                 buffered.append(event)
                 destination.buffered = buffered
@@ -111,6 +124,7 @@ final class DestinationDeliveryControl {
         state?.withLock { destination in
             let buffered = destination.buffered ?? []
             destination.buffered = nil
+            destination.heldFrom = nil
             destination.isReady = true
             deliver(buffered)
         }
@@ -130,6 +144,7 @@ final class DestinationDeliveryControl {
         state.withLock { destination in
             discarded = destination.buffered?.count ?? 0
             destination.buffered = nil
+            destination.heldFrom = nil
             destination.isReady = false
         }
         $destinations.modify { $0.removeValue(forKey: key) }
