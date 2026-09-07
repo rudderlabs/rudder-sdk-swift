@@ -15,6 +15,8 @@ class IntegrationPluginStore {
     var pluginChain: PluginChain?
     @Synchronized var destinationReadyCallbacks: [IntegrationCallback] = []
     var isStandardIntegration: Bool = true
+    /// Lifecycle state for flush, reset and readiness callbacks. Delivery is not gated on this —
+    /// `DestinationDeliveryControl` decides that, so readiness and any hold cannot disagree.
     var isDestinationReady = false
     
     init(analytics: Analytics) {

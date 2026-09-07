@@ -187,6 +187,47 @@ struct DestinationDeliveryControlTests {
         #expect(recorder.names == ["buffered-1", "buffered-2", "buffered-3", "live-4"], "A live event admitted mid-hand-off must wait behind the buffered events; admitting it first is the reported live-3-before-buffered-1 defect.")
     }
 
+    @Test("given a destination already marked ready, when marked ready again, then nothing is delivered twice")
+    func testBufferedEventsAreDeliveredExactlyOnce() {
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+        control.beginBuffering(for: destinationKey)
+        _ = control.admit(makeEvent(named: "event-1"), for: destinationKey) { recorder.append($0) }
+
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+
+        #expect(recorder.names == ["event-1"], "A source-config refresh marks an already-ready destination ready again; that must not redeliver what it once held.")
+    }
+
+    @Test("given a destination slow to accept an event, when another destination admits one, then it is not held up")
+    func testSlowDestinationDoesNotBlockAnother() {
+        let control = DestinationDeliveryControl()
+        let slowKey = "SlowDestination"
+        let fastKey = "FastDestination"
+        control.markReady(for: slowKey) { _ in }
+        control.markReady(for: fastKey) { _ in }
+
+        let slowStarted = DispatchSemaphore(value: 0)
+        let fastFinished = DispatchSemaphore(value: 0)
+
+        DispatchQueue.global().async {
+            _ = control.admit(self.makeEvent(named: "slow"), for: slowKey) { _ in
+                slowStarted.signal()
+                _ = fastFinished.wait(timeout: .now() + 1.0)
+            }
+        }
+
+        slowStarted.wait()
+        let start = Date()
+        let verdict = control.admit(makeEvent(named: "fast"), for: fastKey) { _ in }
+        let elapsed = Date().timeIntervalSince(start)
+        fastFinished.signal()
+
+        #expect(verdict == .delivered)
+        #expect(elapsed < 0.5, "Locking is per destination, so one destination being slow to accept an event must not stall another's delivery.")
+    }
+
     @Test("given buffering destinations, when everything is removed, then no state survives")
     func testRemoveAllClearsEveryDestination() {
         let control = DestinationDeliveryControl()
