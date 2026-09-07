@@ -30,6 +30,8 @@
 		532904EF2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */; };
 		532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */; };
 		532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */; };
+		533A9963304EFE3E00B05110 /* DestinationDeliveryControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9962304EFE3E00B05110 /* DestinationDeliveryControl.swift */; };
+		533A9965304EFE5C00B05110 /* DestinationDeliveryControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9964304EFE5C00B05110 /* DestinationDeliveryControlTests.swift */; };
 		5358C58D2E702FCC0058E117 /* ResetEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C58C2E702FCC0058E117 /* ResetEntries.swift */; };
 		5358C5912E7092FD0058E117 /* ObjCResetOptionsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */; };
 		5358C59B2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */; };
@@ -264,6 +266,8 @@
 		532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RudderStackAnalytics.xctestplan; sourceTree = "<group>"; };
 		532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftExampleApp.xctestplan; sourceTree = "<group>"; };
 		532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUIExampleApp.xctestplan; sourceTree = "<group>"; };
+		533A9962304EFE3E00B05110 /* DestinationDeliveryControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationDeliveryControl.swift; sourceTree = "<group>"; };
+		533A9964304EFE5C00B05110 /* DestinationDeliveryControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationDeliveryControlTests.swift; sourceTree = "<group>"; };
 		5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5358C58C2E702FCC0058E117 /* ResetEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetEntries.swift; sourceTree = "<group>"; };
 		5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCResetOptionsBuilder.swift; sourceTree = "<group>"; };
@@ -638,6 +642,7 @@
 				85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */,
 				85CE839B2EB0859C00249576 /* DestinationError.swift */,
 				5396583230331402008A8845 /* DestinationReinitBuffer.swift */,
+				533A9962304EFE3E00B05110 /* DestinationDeliveryControl.swift */,
 			);
 			path = IntegrationProcessing;
 			sourceTree = "<group>";
@@ -823,6 +828,7 @@
 				85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */,
 				53965839303326B2008A8845 /* DestinationReinitBufferTests.swift */,
 				5396583B30332814008A8845 /* ConsentGatingTests.swift */,
+				533A9964304EFE5C00B05110 /* DestinationDeliveryControlTests.swift */,
 			);
 			path = DeviceMode;
 			sourceTree = "<group>";
@@ -1616,6 +1622,7 @@
 				539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */,
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
+				533A9963304EFE3E00B05110 /* DestinationDeliveryControl.swift in Sources */,
 				85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */,
 				53965829302F32A0008A8845 /* ConsentManagementPlugin.swift in Sources */,
 				53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */,
@@ -1718,6 +1725,7 @@
 				53DEA66E2E03D06F00D6C371 /* LoggerAnalyticsTests.swift in Sources */,
 				53DEA66F2E03D06F00D6C371 /* LocaleInfoPluginTests.swift in Sources */,
 				53DB9D992F448F17004FB1A4 /* MockRetryHeadersProvider.swift in Sources */,
+				533A9965304EFE5C00B05110 /* DestinationDeliveryControlTests.swift in Sources */,
 				53DEA6702E03D06F00D6C371 /* AppInfoPluginTests.swift in Sources */,
 				537B96442EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift in Sources */,
 				8C047DA22EF078060019659F /* ExtensionsTests.swift in Sources */,
