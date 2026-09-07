@@ -186,6 +186,65 @@ struct ConsentGatingTests {
         #expect(plugin.trackEventReceived?.event == "after-reevaluation", "Re-initializing a created custom integration is a no-op, so a hold opened for it would never be released.")
     }
 
+    // MARK: - The setConsent gap
+
+    @Test("given a grant, when an event arrives before re-initialization is scheduled, then it is still delivered")
+    func testEventBetweenSetConsentAndReinitIsDelivered() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
+        let plugin = makeIntegration(for: analytics)
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        let controller = analytics.integrationsController
+        controller?.add(integration: plugin)
+        controller?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+        #expect(plugin.createCalled == false, "Precondition: the destination starts denied.")
+
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
+        // Re-initialization is scheduled asynchronously; this event lands before it runs.
+        controller?.deliver(event: makeTrackEvent(named: "right-after-grant"), to: plugin)
+        controller?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        #expect(plugin.receivedTrackEventNames == ["right-after-grant"], "An event created after consent was granted must not be lost to the gap before re-initialization is scheduled.")
+    }
+
+    @Test("given events created before a grant, when they drain after it, then they are never held")
+    func testEventsCreatedBeforeTheGrantAreNeverHeld() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
+        let plugin = makeIntegration(for: analytics)
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        let controller = analytics.integrationsController
+        controller?.add(integration: plugin)
+        controller?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        // Created while the destination was denied, still queued upstream when consent is granted.
+        let queuedBeforeGrant = makeTrackEvent(named: "queued-before-grant")
+        Thread.sleep(forTimeInterval: 0.01)
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
+
+        controller?.deliver(event: queuedBeforeGrant, to: plugin)
+        controller?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        #expect(plugin.createCalled == true, "Precondition: the grant late-initializes the destination.")
+        #expect(plugin.receivedTrackEventNames.isEmpty, "An event's consent verdict is fixed when it happens; holding from the grant onward must not reach back and deliver events that occurred while consent was denied.")
+    }
+
+    @Test("given consent supplied at launch, when an event arrives before the destination is created, then it is held")
+    func testColdStartHoldsEventsCreatedAfterLaunch() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let plugin = makeIntegration(for: analytics)
+        let controller = analytics.integrationsController
+        // Created after launch but before the destination exists — the ordinary cold-start case.
+        let earlyEvent = makeTrackEvent(named: "early-event")
+        Thread.sleep(forTimeInterval: 0.01)
+
+        plugin.onCreate = { [weak controller, weak plugin] in
+            guard let plugin else { return }
+            controller?.deliver(event: earlyEvent, to: plugin)
+        }
+        controller?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
+
+        #expect(plugin.receivedTrackEventNames == ["early-event"], "Consent from the configuration is decided at launch, so the cutoff is launch — not the moment the hold happens to open, which would discard everything sent while the SDK was starting up.")
+    }
+
     // MARK: - Consent inactive
 
     @Test("given consent management disabled, when an event arrives during create, then it is skipped as before")

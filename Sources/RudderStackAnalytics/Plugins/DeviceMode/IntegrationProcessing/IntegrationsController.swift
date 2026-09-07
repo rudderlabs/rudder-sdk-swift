@@ -19,6 +19,9 @@ class IntegrationsController {
     @Synchronized var integrationPluginStores: [String: IntegrationPluginStore] = [:]
     
     private let deliveryControl = DestinationDeliveryControl()
+    // When the consent in force was decided. Seeded at launch, because consent supplied in the
+    // configuration is decided then, and moved forward by every accepted `setConsent`.
+    @Synchronized private var consentDecidedAt: String = .currentTimeStamp
     
     init(analytics: Analytics) {
         self.analytics = analytics
@@ -46,6 +49,15 @@ class IntegrationsController {
     // begin once the destinations ahead of it had finished creating — losing everything sent in the
     // meantime. Destinations already delivering are left alone: they have nothing to hold, and
     // putting one on hold here would leave it holding forever whenever initialization is a no-op.
+    // Called as `setConsent` is accepted, before the new state is dispatched. Re-initialization is
+    // scheduled asynchronously, so without this the events arriving in between would reach a
+    // destination that is neither holding nor ready, and be dropped despite consent having been
+    // granted for them.
+    func noteConsentChange() {
+        $consentDecidedAt.modify { $0 = .currentTimeStamp }
+        beginBufferingForPendingDestinations()
+    }
+    
     func beginBufferingForPendingDestinations() {
         self.integrationPluginChain?.apply { plugin in
             guard let integration = plugin as? IntegrationPlugin,
@@ -240,7 +252,7 @@ private extension IntegrationsController {
     // the empty-list rule — is indistinguishable from one that never enabled it.
     private func beginBufferingIfConsentIsActive(for key: String) {
         guard analytics?.consentManagementState.value.enabled == true else { return }
-        deliveryControl.beginBuffering(for: key)
+        deliveryControl.beginBuffering(for: key, notBefore: consentDecidedAt)
     }
     
     private func markReadyAndReplay(for integration: IntegrationPlugin) {
