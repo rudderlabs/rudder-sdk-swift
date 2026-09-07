@@ -44,11 +44,6 @@ class IntegrationsController {
         }
     }
     
-    // Begins holding for every destination that is not yet delivering, ahead of initializing any of
-    // them. Destinations are initialized one at a time, so a hold opened inside that loop would only
-    // begin once the destinations ahead of it had finished creating — losing everything sent in the
-    // meantime. Destinations already delivering are left alone: they have nothing to hold, and
-    // putting one on hold here would leave it holding forever whenever initialization is a no-op.
     // Called as `setConsent` is accepted, before the new state is dispatched. Re-initialization is
     // scheduled asynchronously, so without this the events arriving in between would reach a
     // destination that is neither holding nor ready, and be dropped despite consent having been
@@ -58,6 +53,11 @@ class IntegrationsController {
         beginBufferingForPendingDestinations()
     }
     
+    // Begins holding for every destination that is not yet delivering, ahead of initializing any of
+    // them. Destinations are initialized one at a time, so a hold opened inside that loop would only
+    // begin once the destinations ahead of it had finished creating — losing everything sent in the
+    // meantime. Destinations already delivering are left alone: they have nothing to hold, and
+    // putting one on hold here would leave it holding forever whenever initialization is a no-op.
     func beginBufferingForPendingDestinations() {
         self.integrationPluginChain?.apply { plugin in
             guard let integration = plugin as? IntegrationPlugin,
@@ -260,8 +260,8 @@ private extension IntegrationsController {
             guard !events.isEmpty else { return }
             
             analytics?.logger.debug(log: "IntegrationsController: Replaying \(events.count) buffered event(s) for destination \(integration.key).")
-            // Handed straight to the destination rather than re-admitted: admitting would put these
-            // events back into the hold they are being released from.
+            // Handed straight to the destination rather than re-admitted, so releasing a hold never
+            // depends on the state this call has just changed.
             events.forEach { integration.process(event: $0) }
         }
     }
