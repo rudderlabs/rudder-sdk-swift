@@ -50,7 +50,7 @@ class IntegrationsController {
         self.integrationPluginChain?.apply { plugin in
             guard let integration = plugin as? IntegrationPlugin,
                   integration.pluginStore?.isDestinationReady == false else { return }
-            self.deliveryControl.beginBuffering(for: integration.key)
+            self.beginBufferingIfConsentIsActive(for: integration.key)
         }
     }
     
@@ -162,7 +162,7 @@ private extension IntegrationsController {
     }
     
     func safelyCreateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
-        deliveryControl.beginBuffering(for: integration.key)
+        beginBufferingIfConsentIsActive(for: integration.key)
         do {
             try integration.create(destinationConfig: destinationConfig)
             analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) created successfully.")
@@ -233,6 +233,16 @@ private extension IntegrationsController {
 }
 
 private extension IntegrationsController {
+    // The hold exists to cover a destination starting up after a consent decision. With consent
+    // management inactive there is nothing to cover, so no hold opens and delivery behaves exactly
+    // as it did before consent existed. This reads the resolved state rather than the supplied
+    // configuration, so a session that enabled consent without naming any consent IDs — inactive by
+    // the empty-list rule — is indistinguishable from one that never enabled it.
+    private func beginBufferingIfConsentIsActive(for key: String) {
+        guard analytics?.consentManagementState.value.enabled == true else { return }
+        deliveryControl.beginBuffering(for: key)
+    }
+    
     private func markReadyAndReplay(for integration: IntegrationPlugin) {
         deliveryControl.markReady(for: integration.key) { events in
             guard !events.isEmpty else { return }
