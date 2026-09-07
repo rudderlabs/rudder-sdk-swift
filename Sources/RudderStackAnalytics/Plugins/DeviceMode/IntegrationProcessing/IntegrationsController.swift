@@ -18,7 +18,7 @@ class IntegrationsController {
     @Synchronized var isSourceEnabledFetchedAtLeastOnce = false
     @Synchronized var integrationPluginStores: [String: IntegrationPluginStore] = [:]
     
-    private let reinitBuffer = DestinationReinitBuffer()
+    private let deliveryControl = DestinationDeliveryControl()
     
     init(analytics: Analytics) {
         self.analytics = analytics
@@ -33,9 +33,12 @@ class IntegrationsController {
         safelyInitOrUpdateAndNotify(destinationConfig: destinationConfig, integration: integration)
     }
     
-    // Buffers an event for a destination whose re-initialization window is open; no-op otherwise.
-    func bufferIfReinitializing(event: Event, key: String) {
-        reinitBuffer.append(event: event, for: key)
+    // Delivers an event to a destination, holds it while that destination is initializing, or
+    // skips it when the destination is neither.
+    func deliver(event: Event, to integration: IntegrationPlugin) {
+        deliveryControl.admit(event, for: integration.key) { admitted in
+            integration.process(event: admitted)
+        }
     }
     
     func add(integration: IntegrationPlugin) {
@@ -53,7 +56,7 @@ class IntegrationsController {
         $integrationPluginStores.modify { stores in
             stores.removeValue(forKey: key)
         }
-        self.reinitBuffer.close(for: key)
+        self.deliveryControl.markNotReady(for: key)
         self.integrationPluginChain?.remove(plugin: integration)
     }
     
@@ -85,7 +88,7 @@ class IntegrationsController {
         $integrationPluginStores.modify { stores in
             stores.removeAll()
         }
-        self.reinitBuffer.removeAll()
+        self.deliveryControl.removeAll()
         self.integrationPluginChain?.removeAll()
         self.analytics = nil
         self.integrationPluginChain = nil
@@ -146,18 +149,18 @@ private extension IntegrationsController {
     }
     
     func safelyCreateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
-        reinitBuffer.open(for: integration.key)
+        deliveryControl.beginBuffering(for: integration.key)
         do {
             try integration.create(destinationConfig: destinationConfig)
             analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) created successfully.")
             integration.pluginStore?.isDestinationReady = true
-            replayReinitBuffer(for: integration)
+            markReadyAndReplay(for: integration)
             notifyCallbacks(.success(()), for: integration)
         } catch {
             analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) creating destination \(integration.key).", error: error)
             integration.pluginStore?.isDestinationReady = false
             notifyCallbacks(.failure(error), for: integration)
-            discardReinitBuffer(for: integration)
+            discardBufferedEvents(for: integration)
         }
     }
     
@@ -165,6 +168,7 @@ private extension IntegrationsController {
     // which would replace the real reason with a parse error, and can reset a live destination's state.
     func notifyFailureAndMarkNotReady(error: Error, integration: IntegrationPlugin) {
         integration.pluginStore?.isDestinationReady = false
+        deliveryControl.markNotReady(for: integration.key)
         notifyCallbacks(.failure(error), for: integration)
     }
     
@@ -175,6 +179,7 @@ private extension IntegrationsController {
             block: {
                 self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with destinationConfig: \(destinationConfig).")
                 integration.pluginStore?.isDestinationReady = true
+                self.markReadyAndReplay(for: integration)
                 self.notifyCallbacks(.success(()), for: integration)
             }
         )
@@ -192,6 +197,7 @@ private extension IntegrationsController {
         } catch {
             analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) updating destination \(integration.key).", error: error)
             integration.pluginStore?.isDestinationReady = false
+            deliveryControl.markNotReady(for: integration.key)
             notifyCallbacks(.failure(error), for: integration)
         }
     }
@@ -214,18 +220,21 @@ private extension IntegrationsController {
 }
 
 private extension IntegrationsController {
-    private func replayReinitBuffer(for integration: IntegrationPlugin) {
-        let events = reinitBuffer.close(for: integration.key)
-        guard !events.isEmpty else { return }
-        
-        analytics?.logger.debug(log: "IntegrationsController: Replaying \(events.count) buffered event(s) for destination \(integration.key).")
-        events.forEach { _ = integration.intercept(event: $0) }
+    private func markReadyAndReplay(for integration: IntegrationPlugin) {
+        deliveryControl.markReady(for: integration.key) { events in
+            guard !events.isEmpty else { return }
+            
+            analytics?.logger.debug(log: "IntegrationsController: Replaying \(events.count) buffered event(s) for destination \(integration.key).")
+            // Handed straight to the destination rather than re-admitted: admitting would put these
+            // events back into the hold they are being released from.
+            events.forEach { integration.process(event: $0) }
+        }
     }
     
-    private func discardReinitBuffer(for integration: IntegrationPlugin) {
-        let events = reinitBuffer.close(for: integration.key)
-        guard !events.isEmpty else { return }
+    private func discardBufferedEvents(for integration: IntegrationPlugin) {
+        let discarded = deliveryControl.markNotReady(for: integration.key)
+        guard discarded > 0 else { return }
         
-        analytics?.logger.warn(log: "IntegrationsController: Discarded \(events.count) buffered event(s) for destination \(integration.key) after failed initialization.")
+        analytics?.logger.warn(log: "IntegrationsController: Discarded \(discarded) buffered event(s) for destination \(integration.key) after failed initialization.")
     }
 }

@@ -77,9 +77,10 @@ struct ConsentGatingTests {
         #expect(plugin.createCalled == false, "Precondition: the destination starts denied.")
 
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
-        plugin.onCreate = { [weak analytics] in
-            analytics?.integrationsController?.bufferIfReinitializing(event: self.makeTrackEvent(named: "during-init-1"), key: self.destinationKey)
-            analytics?.integrationsController?.bufferIfReinitializing(event: self.makeTrackEvent(named: "during-init-2"), key: self.destinationKey)
+        plugin.onCreate = { [weak analytics, weak plugin] in
+            guard let plugin else { return }
+            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-init-1"), to: plugin)
+            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-init-2"), to: plugin)
         }
         analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
 
@@ -110,8 +111,9 @@ struct ConsentGatingTests {
         let plugin = makeIntegration(for: analytics)
         let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
         plugin.createThrowsError = MockIntegrationError.createFailed
-        plugin.onCreate = { [weak analytics] in
-            analytics?.integrationsController?.bufferIfReinitializing(event: self.makeTrackEvent(named: "during-failed-init"), key: self.destinationKey)
+        plugin.onCreate = { [weak analytics, weak plugin] in
+            guard let plugin else { return }
+            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-failed-init"), to: plugin)
         }
 
         analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
