@@ -1,5 +1,5 @@
 //
-//  ContextGuardPluginTests.swift
+//  SchemaGuardPluginTests.swift
 //  RudderStackAnalyticsTests
 //
 //  Created by Satheesh Kannan on 19/08/26.
@@ -9,8 +9,8 @@ import Testing
 import Foundation
 @testable import RudderStackAnalytics
 
-@Suite("ContextGuardPlugin Tests")
-struct ContextGuardPluginTests {
+@Suite("SchemaGuardPlugin Tests")
+struct SchemaGuardPluginTests {
 
     static let sentinel = "sentinel-value-123"
 
@@ -244,7 +244,7 @@ struct ContextGuardPluginTests {
 }
 
 // MARK: - Helpers
-extension ContextGuardPluginTests {
+extension SchemaGuardPluginTests {
 
     private func makeAnalytics(consent: ConsentManagementConfiguration, logger: Logger? = nil) -> Analytics {
         let config = MockProvider.createMockConfiguration(storage: MockStorage())
@@ -258,10 +258,10 @@ extension ContextGuardPluginTests {
         return analytics
     }
 
-    private func makeGuard(for analytics: Analytics) -> (snapshot: ContextSnapshotPlugin, guardPlugin: ContextGuardPlugin) {
+    private func makeGuard(for analytics: Analytics) -> (snapshot: ContextSnapshotPlugin, guardPlugin: SchemaGuardPlugin) {
         let snapshot = ContextSnapshotPlugin()
         snapshot.setup(analytics: analytics)
-        let guardPlugin = ContextGuardPlugin(snapshotPlugin: snapshot)
+        let guardPlugin = SchemaGuardPlugin(snapshotPlugin: snapshot)
         guardPlugin.setup(analytics: analytics)
         return (snapshot, guardPlugin)
     }
