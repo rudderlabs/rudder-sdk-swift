@@ -35,6 +35,7 @@ final class ConsentGatePlugin: Plugin {
     
     func setup(analytics: Analytics) {
         self.analytics = analytics
+        self.seedDestinationConfig()
         self.setupConfigurationListener()
     }
     
@@ -68,11 +69,27 @@ extension ConsentGatePlugin {
         analytics.sourceConfigState.observeDispatched()
             .receive(on: DispatchQueue.global(qos: .default))
             .sink { [weak self] sourceConfig in
-                guard let self else { return }
-                self.destinationConfig = self.findDestination(sourceConfig: sourceConfig, key: self.destinationKey)?
-                    .destinationConfig.mapValues { $0.value }
+                self?.updateDestinationConfig(from: sourceConfig)
             }
             .store(in: &cancellables)
+    }
+    
+    /**
+     Reads the config already held in state, synchronously.
+     
+     The stream above delivers on a background queue, so without this the gate is blind between
+     `setup` and the first delivery — and a destination registered after the source config arrived
+     is created inside that window, where an unresolvable config fails open.
+     */
+    private func seedDestinationConfig() {
+        guard let analytics else { return }
+        self.updateDestinationConfig(from: analytics.sourceConfigState.value)
+    }
+    
+    /// Shared by the seed and the stream, so the two can never disagree on what the cache holds.
+    private func updateDestinationConfig(from sourceConfig: SourceConfig) {
+        self.destinationConfig = self.findDestination(sourceConfig: sourceConfig, key: self.destinationKey)?
+            .destinationConfig.mapValues { $0.value }
     }
     
     /**

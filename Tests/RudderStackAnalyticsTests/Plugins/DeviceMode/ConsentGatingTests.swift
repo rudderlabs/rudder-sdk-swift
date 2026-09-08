@@ -343,6 +343,51 @@ struct ConsentGatingTests {
             #expect(plugin.intercept(event: makeTrackEvent(named: "after")) == nil, "After teardown the subscription must be cancelled, so the ungated config never lands and the stale denial still applies.")
         }
     }
+
+    // MARK: - Gate configuration seeding
+
+    // The gate caches its destination config from a stream that delivers on a background queue, so
+    // whether it is ready for its first event is a race. Only the gate is rebuilt per iteration —
+    // rebuilding the SDK too would give that background delivery time to land and hide the race.
+    @Test("given the source config already arrived, when a gate is set up, then its first event is gated")
+    func testGateDropsFirstEventWithoutWaiting() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: makeSourceConfig(consentEntries: [gatedEntry()])))
+
+        for iteration in 0..<50 {
+            // Built before setup: constructing an event is enough work to let the background
+            // delivery land, which would close the very window this test exists to hold open.
+            let event = makeTrackEvent(named: "first")
+
+            let gate = ConsentGatePlugin(key: destinationKey)
+            gate.setup(analytics: analytics)
+
+            #expect(gate.intercept(event: event) == nil, "A consent-denied destination must gate its very first event with no wait (iteration \(iteration)).")
+        }
+    }
+
+    // Covers the late-registration path itself, which had no coverage. It does not pin the seeding
+    // race: `add` and `setConsent` take long enough that the background delivery has landed by the
+    // time the event is sent, so this passes with or without the synchronous seed.
+    @Test("given a destination registered after the source config, when consent is revoked, then it stops receiving events")
+    func testLateRegisteredDestinationIsGatedAfterRevoke() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let controller = analytics.integrationsController
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: makeSourceConfig(consentEntries: [gatedEntry()])))
+        controller?.isSourceEnabledFetchedAtLeastOnce = true
+
+        // add(plugin:) after the source config arrived — the controller creates it right here.
+        let plugin = makeIntegration(for: analytics)
+        controller?.add(integration: plugin)
+        #expect(plugin.createCalled == true, "Precondition: a late-added destination is created immediately.")
+
+        analytics.setConsent(ConsentManagementOptions(deniedConsentIds: ["marketing"]))
+
+        _ = plugin.intercept(event: makeTrackEvent(named: "after-revoke", for: analytics))
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "A revoked destination must gate its events even when it was registered late.")
+    }
+
 }
 
 // MARK: - Helpers
