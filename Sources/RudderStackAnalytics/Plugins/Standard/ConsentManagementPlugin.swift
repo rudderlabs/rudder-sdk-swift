@@ -24,8 +24,6 @@ final class ConsentManagementPlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: Analytics?
     
-    private static let consentManagementKey = "consentManagement"
-    
     // Events are intercepted concurrently, so the first-warning check has to be atomic - a plain
     // flag would let two events both warn.
     @Synchronized private var hasWarnedAboutInjectedKey = false
@@ -39,11 +37,11 @@ final class ConsentManagementPlugin: Plugin {
             return event
         }
         
-        if event.context?[Self.consentManagementKey] != nil, self.claimFirstWarning() {
+        if event.context?[ConsentManagement.contextKey] != nil, self.claimFirstWarning() {
             self.analytics?.logger.warn(log: "ConsentManagementPlugin: Replacing the \"consentManagement\" key found in the event context; the SDK owns this key while consent management is enabled. Migrate to setConsent(_:).")
         }
         
-        return event.addToContext(info: [Self.consentManagementKey: self.preparedConsentBlock(from: state)])
+        return event.addToContext(info: [ConsentManagement.contextKey: state.contextStamp])
     }
     
     /// Claims the single warning, returning `true` exactly once per instance.
@@ -54,13 +52,5 @@ final class ConsentManagementPlugin: Plugin {
             warned = true
         }
         return claimed
-    }
-    
-    private func preparedConsentBlock(from state: ConsentManagement) -> [String: Any] {
-        return [
-            "provider": state.provider.value,
-            "allowedConsentIds": state.allowedConsentIds,
-            "deniedConsentIds": state.deniedConsentIds
-        ]
     }
 }
