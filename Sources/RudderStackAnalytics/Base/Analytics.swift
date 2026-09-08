@@ -518,9 +518,12 @@ extension Analytics {
         }
         
         // Ahead of the state change, so a destination that is about to be re-evaluated starts
-        // holding before any event can arrive against the new consent.
-        self.integrationsController?.noteConsentChange()
-        self.consentManagementState.dispatch(action: SetConsentAction(options: options))
+        // holding before any event can arrive against the new consent. The reducer is pure, so the
+        // resulting block is computed here rather than restating its rules.
+        let action = SetConsentAction(options: options)
+        let nextStamp = action.reduce(currentState: self.consentManagementState.value).contextStamp
+        self.integrationsController?.noteConsentChange(matching: nextStamp)
+        self.consentManagementState.dispatch(action: action)
     }
 }
 
