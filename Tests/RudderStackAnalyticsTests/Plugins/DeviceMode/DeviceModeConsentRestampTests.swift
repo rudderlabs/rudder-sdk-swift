@@ -54,7 +54,7 @@ struct DeviceModeConsentRestampTests {
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
         plugin.onCreate = { [weak analytics, weak plugin] in
             guard let plugin else { return }
-            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-init"), to: plugin)
+            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-init", for: analytics), to: plugin)
         }
         analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
 
@@ -122,9 +122,14 @@ extension DeviceModeConsentRestampTests {
         return plugin
     }
 
-    private func makeTrackEvent(named name: String, options: RudderOption? = nil) -> Event {
+    private func makeTrackEvent(named name: String, options: RudderOption? = nil, for analytics: Analytics? = nil) -> Event {
         let event: Event = TrackEvent(event: name, options: options)
-        return event.updateEventData()
+        // Mirrors ConsentManagementPlugin: while consent management is active every event carries
+        // the decision it was created under, which is what the device-mode hold compares against.
+        guard let state = analytics?.consentManagementState.value, state.enabled else {
+            return event.updateEventData()
+        }
+        return event.updateEventData().addToContext(info: [ConsentManagement.contextKey: state.contextStamp])
     }
 
     private func gatedEntry(consents: [String] = ["marketing"], strategy: String = "and") -> [String: Any] {
