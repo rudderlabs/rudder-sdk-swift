@@ -79,8 +79,8 @@ struct ConsentGatingTests {
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
         plugin.onCreate = { [weak analytics, weak plugin] in
             guard let plugin else { return }
-            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-init-1"), to: plugin)
-            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-init-2"), to: plugin)
+            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-init-1", for: analytics), to: plugin)
+            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-init-2", for: analytics), to: plugin)
         }
         analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
 
@@ -113,7 +113,7 @@ struct ConsentGatingTests {
         plugin.createThrowsError = MockIntegrationError.createFailed
         plugin.onCreate = { [weak analytics, weak plugin] in
             guard let plugin else { return }
-            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-failed-init"), to: plugin)
+            analytics?.integrationsController?.deliver(event: self.makeTrackEvent(named: "during-failed-init", for: analytics), to: plugin)
         }
 
         analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
@@ -150,7 +150,7 @@ struct ConsentGatingTests {
         // An event bound for the second destination arrives while the first is still inside create().
         first.onCreate = { [weak controller, weak second] in
             guard let second else { return }
-            controller?.deliver(event: self.makeTrackEvent(named: "during-first-create"), to: second)
+            controller?.deliver(event: self.makeTrackEvent(named: "during-first-create", for: analytics), to: second)
         }
 
         controller?.beginBufferingForPendingDestinations()
@@ -200,7 +200,7 @@ struct ConsentGatingTests {
 
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
         // Re-initialization is scheduled asynchronously; this event lands before it runs.
-        controller?.deliver(event: makeTrackEvent(named: "right-after-grant"), to: plugin)
+        controller?.deliver(event: makeTrackEvent(named: "right-after-grant", for: analytics), to: plugin)
         controller?.initDestination(sourceConfig: sourceConfig, integration: plugin)
 
         #expect(plugin.receivedTrackEventNames == ["right-after-grant"], "An event created after consent was granted must not be lost to the gap before re-initialization is scheduled.")
@@ -233,7 +233,7 @@ struct ConsentGatingTests {
         let plugin = makeIntegration(for: analytics)
         let controller = analytics.integrationsController
         // Created after launch but before the destination exists — the ordinary cold-start case.
-        let earlyEvent = makeTrackEvent(named: "early-event")
+        let earlyEvent = makeTrackEvent(named: "early-event", for: analytics)
         Thread.sleep(forTimeInterval: 0.01)
 
         plugin.onCreate = { [weak controller, weak plugin] in
@@ -270,7 +270,7 @@ struct ConsentGatingTests {
         let controller = analytics.integrationsController
         plugin.onCreate = { [weak controller, weak plugin] in
             guard let plugin else { return }
-            controller?.deliver(event: self.makeTrackEvent(named: "during-create"), to: plugin)
+            controller?.deliver(event: self.makeTrackEvent(named: "during-create", for: analytics), to: plugin)
         }
 
         controller?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
@@ -372,9 +372,14 @@ extension ConsentGatingTests {
         return plugin
     }
 
-    private func makeTrackEvent(named name: String) -> Event {
+    private func makeTrackEvent(named name: String, for analytics: Analytics? = nil) -> Event {
         var event: Event = TrackEvent(event: name)
         event = event.updateEventData()
+        // Mirrors ConsentManagementPlugin: while consent management is active every event carries
+        // the decision it was created under, which is what the device-mode hold compares against.
+        if let state = analytics?.consentManagementState.value, state.enabled {
+            event = event.addToContext(info: [ConsentManagement.contextKey: state.contextStamp])
+        }
         return event
     }
 

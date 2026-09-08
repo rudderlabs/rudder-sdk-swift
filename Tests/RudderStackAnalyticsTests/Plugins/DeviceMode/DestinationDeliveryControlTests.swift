@@ -241,10 +241,112 @@ struct DestinationDeliveryControlTests {
         #expect(verdict == .skipped)
         #expect(recorder.names.isEmpty)
     }
+
+    // MARK: - Consent Decision Boundary
+
+    @Test("given an event created in the same instant as the decision, when replayed, then it is not delivered")
+    func testEventAtTheDecisionBoundaryIsNotReplayed() {
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+        let previous = stamp(allowing: [])
+        let current = stamp(allowing: ["marketing"])
+
+        control.beginBuffering(for: destinationKey, matching: current)
+        control.admit(event(named: "before-grant", stampedWith: previous), for: destinationKey) { recorder.append($0) }
+
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+
+        #expect(recorder.names.isEmpty, "An event from before the decision must never be replayed.")
+    }
+
+    @Test("given a second consent decision during initialization, when replayed, then events from the first are not delivered")
+    func testEventsFromAnEarlierDecisionAreNotReplayed() {
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+        let denied = stamp(allowing: [])
+        let granted = stamp(allowing: ["marketing"])
+
+        control.beginBuffering(for: destinationKey, matching: denied)
+        control.admit(event(named: "during-denial", stampedWith: denied), for: destinationKey) { recorder.append($0) }
+
+        control.beginBuffering(for: destinationKey, matching: granted)
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+
+        #expect(recorder.names.isEmpty, "Events admitted under an earlier decision must not survive a later one.")
+    }
+
+    @Test("given an event stamped with the current decision, when replayed, then it is delivered")
+    func testEventFromTheCurrentDecisionIsReplayed() {
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+        let current = stamp(allowing: ["marketing"])
+
+        control.beginBuffering(for: destinationKey, matching: current)
+        control.admit(event(named: "post-grant", stampedWith: current), for: destinationKey) { recorder.append($0) }
+
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+
+        #expect(recorder.names == ["post-grant"], "An event stamped with the decision in force must still be delivered.")
+    }
+
+    @Test("given no consent decision, when events are held, then all of them are replayed")
+    func testHoldWithoutADecisionKeepsEverything() {
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+
+        control.beginBuffering(for: destinationKey)
+        control.admit(event(named: "stamped", stampedWith: stamp(allowing: ["marketing"])), for: destinationKey) { recorder.append($0) }
+        control.admit(makeEvent(named: "unstamped"), for: destinationKey) { recorder.append($0) }
+
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+
+        #expect(recorder.names == ["stamped", "unstamped"], "With no decision to compare against, a hold filters nothing.")
+    }
+
+    @Test("given the same consent decision, when buffering begins again, then held events are retained")
+    func testRepeatBufferingForTheSameDecisionKeepsHeldEvents() {
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+        let current = stamp(allowing: ["marketing"])
+
+        control.beginBuffering(for: destinationKey, matching: current)
+        control.admit(event(named: "held", stampedWith: current), for: destinationKey) { recorder.append($0) }
+
+        control.beginBuffering(for: destinationKey, matching: current)
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+
+        #expect(recorder.names == ["held"], "One re-initialization opens the hold from several call sites; a repeat must not discard.")
+    }
+
+    @Test("given consent granted, revoked, then granted again, when replayed, then nothing from the first grant arrives")
+    func testEventsDoNotSurviveAReturnToAnEarlierDecision() {
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+        let granted = stamp(allowing: ["marketing"])
+        let denied = stamp(allowing: [])
+
+        control.beginBuffering(for: destinationKey, matching: granted)
+        control.admit(event(named: "first-grant", stampedWith: granted), for: destinationKey) { recorder.append($0) }
+
+        control.beginBuffering(for: destinationKey, matching: denied)
+        control.beginBuffering(for: destinationKey, matching: granted)
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+
+        #expect(recorder.names.isEmpty, "An identical block from a later decision must not resurrect events the revoke discarded.")
+    }
 }
 
 // MARK: - Helpers
 extension DestinationDeliveryControlTests {
+
+    private func stamp(allowing allowed: [String]) -> [String: Any] {
+        ["provider": "custom", "allowedConsentIds": allowed, "deniedConsentIds": []]
+    }
+
+    private func event(named name: String, stampedWith block: [String: Any]) -> Event {
+        let event: Event = TrackEvent(event: name)
+        return event.addToContext(info: [ConsentManagement.contextKey: block])
+    }
 
     private func makeEvent(named name: String) -> Event {
         TrackEvent(event: name)

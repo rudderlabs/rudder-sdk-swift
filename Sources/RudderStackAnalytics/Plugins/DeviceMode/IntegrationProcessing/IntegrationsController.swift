@@ -19,10 +19,6 @@ class IntegrationsController {
     @Synchronized var integrationPluginStores: [String: IntegrationPluginStore] = [:]
     
     private let deliveryControl = DestinationDeliveryControl()
-    // When the consent in force was decided. Seeded at launch, because consent supplied in the
-    // configuration is decided then, and moved forward by every accepted `setConsent`.
-    @Synchronized private var consentDecidedAt: String = .currentTimeStamp
-    
     init(analytics: Analytics) {
         self.analytics = analytics
         self.integrationPluginChain = PluginChain(analytics: analytics)
@@ -48,9 +44,8 @@ class IntegrationsController {
     // scheduled asynchronously, so without this the events arriving in between would reach a
     // destination that is neither holding nor ready, and be dropped despite consent having been
     // granted for them.
-    func noteConsentChange() {
-        $consentDecidedAt.modify { $0 = .currentTimeStamp }
-        beginBufferingForPendingDestinations()
+    func noteConsentChange(matching stamp: [String: Any]) {
+        beginBufferingForPendingDestinations(matching: stamp)
     }
     
     // Begins holding for every destination that is not yet delivering, ahead of initializing any of
@@ -58,11 +53,11 @@ class IntegrationsController {
     // begin once the destinations ahead of it had finished creating — losing everything sent in the
     // meantime. Destinations already delivering are left alone: they have nothing to hold, and
     // putting one on hold here would leave it holding forever whenever initialization is a no-op.
-    func beginBufferingForPendingDestinations() {
+    func beginBufferingForPendingDestinations(matching stamp: [String: Any]? = nil) {
         self.integrationPluginChain?.apply { plugin in
             guard let integration = plugin as? IntegrationPlugin,
                   integration.pluginStore?.isDestinationReady == false else { return }
-            self.beginBufferingIfConsentIsActive(for: integration.key)
+            self.beginBufferingIfConsentIsActive(for: integration.key, matching: stamp)
         }
     }
     
@@ -174,7 +169,7 @@ private extension IntegrationsController {
     }
     
     func safelyCreateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
-        beginBufferingIfConsentIsActive(for: integration.key)
+        beginBufferingIfConsentIsActive(for: integration.key, matching: nil)
         do {
             try integration.create(destinationConfig: destinationConfig)
             analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) created successfully.")
@@ -250,9 +245,9 @@ private extension IntegrationsController {
     // as it did before consent existed. This reads the resolved state rather than the supplied
     // configuration, so a session that enabled consent without naming any consent IDs — inactive by
     // the empty-list rule — is indistinguishable from one that never enabled it.
-    private func beginBufferingIfConsentIsActive(for key: String) {
-        guard analytics?.consentManagementState.value.enabled == true else { return }
-        deliveryControl.beginBuffering(for: key, notBefore: consentDecidedAt)
+    private func beginBufferingIfConsentIsActive(for key: String, matching stamp: [String: Any]?) {
+        guard let state = analytics?.consentManagementState.value, state.enabled else { return }
+        deliveryControl.beginBuffering(for: key, matching: stamp ?? state.contextStamp)
     }
     
     private func markReadyAndReplay(for integration: IntegrationPlugin) {

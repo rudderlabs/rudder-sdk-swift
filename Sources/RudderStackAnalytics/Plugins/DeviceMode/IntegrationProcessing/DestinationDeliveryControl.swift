@@ -42,8 +42,9 @@ final class DestinationDeliveryControl {
         let lock = NSRecursiveLock()
         /// Events held while initialization is in flight; `nil` when not buffering.
         var buffered: [Event]?
-        /// Events created before this instant belong to an earlier consent decision and are skipped.
-        var heldFrom: String?
+        /// The `consentManagement` block in force for this hold. An event carrying anything else
+        /// was stamped under a different consent decision and is skipped.
+        var heldStamp: AnyCodable?
         var isReady = false
 
         func withLock(_ block: (DestinationState) -> Void) {
@@ -54,27 +55,29 @@ final class DestinationDeliveryControl {
     }
 
     private static let maxBufferSize = Constants.defaultConfig.maxHeldEventsPerDestination
+    private static let consentKey = ConsentManagement.contextKey
     @Synchronized private var destinations: [String: DestinationState] = [:]
 
     /**
      Starts holding events for a destination that is initializing.
 
-     Idempotent: a single re-initialization begins buffering from more than one call site, so a
-     repeat call must keep whatever is already held.
+     Repeat calls carrying the same consent decision are idempotent: one re-initialization begins
+     buffering from more than one call site, so whatever is already held must survive. A call
+     carrying a different decision replaces the hold — everything buffered was admitted under the
+     previous decision and must not be replayed against this one.
 
      - Parameters:
         - key: The destination key.
-        - cutoff: The instant the current consent decision was taken, as an ISO 8601 timestamp.
-                  Events created before it are skipped rather than held, so a decision never
-                  reaches back and delivers events that happened under the previous one.
+        - stamp: The `consentManagement` block in force, or `nil` to hold every event regardless of
+                 what it was stamped with.
      */
-    func beginBuffering(for key: String, notBefore cutoff: String? = nil) {
+    func beginBuffering(for key: String, matching stamp: [String: Any]? = nil) {
         let state = self.state(for: key, creatingIfNeeded: true)
+        let incoming = stamp.map { AnyCodable($0) }
         state?.withLock { destination in
-            if destination.buffered == nil {
-                destination.buffered = []
-                destination.heldFrom = cutoff
-            }
+            guard destination.buffered == nil || destination.heldStamp != incoming else { return }
+            destination.buffered = []
+            destination.heldStamp = incoming
         }
     }
 
@@ -95,7 +98,7 @@ final class DestinationDeliveryControl {
         var verdict = Verdict.skipped
         state.withLock { destination in
             if var buffered = destination.buffered {
-                if let heldFrom = destination.heldFrom, event.originalTimestamp < heldFrom {
+                if let expected = destination.heldStamp, event.context?[Self.consentKey] != expected {
                     verdict = .skipped
                     return
                 }
@@ -124,7 +127,7 @@ final class DestinationDeliveryControl {
         state?.withLock { destination in
             let buffered = destination.buffered ?? []
             destination.buffered = nil
-            destination.heldFrom = nil
+            destination.heldStamp = nil
             destination.isReady = true
             deliver(buffered)
         }
@@ -144,7 +147,7 @@ final class DestinationDeliveryControl {
         state.withLock { destination in
             discarded = destination.buffered?.count ?? 0
             destination.buffered = nil
-            destination.heldFrom = nil
+            destination.heldStamp = nil
             destination.isReady = false
         }
         $destinations.modify { $0.removeValue(forKey: key) }
