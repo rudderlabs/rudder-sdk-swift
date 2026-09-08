@@ -30,24 +30,44 @@ final class ContextGuardPlugin: Plugin {
     
     func intercept(event: any Event) -> (any Event)? {
         self.warnOnBaseKeyOverrides(on: event)
-        return self.enforceConsentStamp(on: event)
+        return self.enforceReservedKeys(on: event)
+    }
+}
+
+// MARK: - Reserved Keys
+
+extension ContextGuardPlugin {
+    /**
+     Re-asserts every reserved context key from its current SDK-owned value.
+     
+     A key is enforced only while the SDK holds a value for it — otherwise it is not
+     reserved for this session and the event passes through untouched.
+     */
+    private func enforceReservedKeys(on event: any Event) -> any Event {
+        var result = event
+        
+        for key in SDKManagedContextKey.reservedKeys {
+            guard let reserved = self.reservedStamp(for: key) else { continue }
+            guard result.context?[key.rawValue] != AnyCodable(reserved.value) else { continue }
+            
+            self.analytics?.logger.warn(log: "ContextGuardPlugin: Replacing the \"\(key.rawValue)\" key found in the event context; \(reserved.advice)")
+            result = result.addToContext(info: [key.rawValue: reserved.value])
+        }
+        
+        return result
     }
     
-    // MARK: - Consent Stamp
     /**
-     Re-asserts `context.consentManagement` from the current consent state.
-     
-     Active only while consent management is enabled — while disabled the key is not
-     reserved and the event passes through untouched.
+     The value the SDK currently asserts for `key`, or `nil` while it asserts none.
      */
-    private func enforceConsentStamp(on event: any Event) -> any Event {
-        guard let state = self.analytics?.consentManagementState.value, state.enabled else { return event }
-        
-        let key = SDKManagedContextKey.consentManagement.rawValue
-        guard event.context?[key] != AnyCodable(state.contextStamp) else { return event }
-        
-        self.analytics?.logger.warn(log: "ContextGuardPlugin: Replacing the \"consentManagement\" key found in the event context; the SDK owns this key while consent management is enabled. Migrate to setConsent(_:).")
-        return event.addToContext(info: [key: state.contextStamp])
+    private func reservedStamp(for key: SDKManagedContextKey) -> (value: Any, advice: String)? {
+        switch key {
+        case .consentManagement:
+            guard let state = self.analytics?.consentManagementState.value, state.enabled else { return nil }
+            return (state.contextStamp, "the SDK owns this key while consent management is enabled. Migrate to setConsent(_:).")
+        default:
+            return nil
+        }
     }
 }
 
