@@ -24,6 +24,18 @@ struct ContextGuardPluginTests {
         #expect(guardPlugin.pluginType == .terminal)
     }
 
+    // MARK: - Managed Key Sets
+
+    @Test("given the managed key sets, then reserved and base keys partition every case")
+    func testManagedKeyPartition() {
+        #expect(SDKManagedContextKey.reservedKeys.contains(.consentManagement))
+        #expect(!SDKManagedContextKey.baseKeys.contains(.consentManagement))
+        #expect(
+            Set(SDKManagedContextKey.baseKeys).union(SDKManagedContextKey.reservedKeys)
+                == Set(SDKManagedContextKey.allCases)
+        )
+    }
+
     // MARK: - Consent Stamp Enforcement
 
     @Test("given a plugin-written consent block while enabled, when the guard runs, then the block is restored with a warning")
