@@ -1,5 +1,5 @@
 //
-//  ContextGuardPlugin.swift
+//  SchemaGuardPlugin.swift
 //  RudderStackAnalytics
 //
 //  Created by Satheesh Kannan on 19/08/26.
@@ -7,14 +7,14 @@
 
 import Foundation
 
-// MARK: - ContextGuardPlugin
+// MARK: - SchemaGuardPlugin
 /**
  A terminal plugin that re-asserts SDK-owned context keys after all customer plugins have run.
  
  Registered first in the `terminal` phase, so its re-stamped event flows into both delivery
  paths — the device-mode fan-out queue plus cloud-mode storage.
  */
-final class ContextGuardPlugin: Plugin {
+final class SchemaGuardPlugin: Plugin {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
     
@@ -36,7 +36,7 @@ final class ContextGuardPlugin: Plugin {
 
 // MARK: - Reserved Keys
 
-extension ContextGuardPlugin {
+extension SchemaGuardPlugin {
     /**
      Re-asserts every reserved context key from its current SDK-owned value.
      
@@ -50,7 +50,7 @@ extension ContextGuardPlugin {
             guard let reserved = self.reservedStamp(for: key) else { continue }
             guard result.context?[key.rawValue] != AnyCodable(reserved.value) else { continue }
             
-            self.analytics?.logger.warn(log: "ContextGuardPlugin: Replacing the \"\(key.rawValue)\" key found in the event context; \(reserved.advice)")
+            self.analytics?.logger.warn(log: "SchemaGuardPlugin: Replacing the \"\(key.rawValue)\" key found in the event context; \(reserved.advice)")
             result = result.addToContext(info: [key.rawValue: reserved.value])
         }
         
@@ -73,7 +73,7 @@ extension ContextGuardPlugin {
 
 // MARK: - Base Key Detection
 
-extension ContextGuardPlugin {
+extension SchemaGuardPlugin {
     /**
      Logs a value-free deprecation warning for each SDK-stamped base key carrying a
      customer-supplied value — injected via `RudderOption.customContext` or written by a
@@ -97,7 +97,7 @@ extension ContextGuardPlugin {
         }
 
         for key in SDKManagedContextKey.baseKeys where overriddenKeys.contains(key.rawValue) {
-            self.analytics?.logger.warn(log: "ContextGuardPlugin: Detected a custom value for the SDK-managed context key \"\(key.rawValue)\"; overriding SDK-managed context keys is deprecated and will be unsupported in a future major version.")
+            self.analytics?.logger.warn(log: "SchemaGuardPlugin: Detected a custom value for the SDK-managed context key \"\(key.rawValue)\"; overriding SDK-managed context keys is deprecated and will be unsupported in a future major version.")
         }
     }
 

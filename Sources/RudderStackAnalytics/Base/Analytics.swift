@@ -408,7 +408,7 @@ extension Analytics {
         // Add default plugins
         let contextSnapshotPlugin = ContextSnapshotPlugin()
         // Registered first so its re-stamped event feeds both terminal consumers below.
-        self.pluginChain?.add(plugin: ContextGuardPlugin(snapshotPlugin: contextSnapshotPlugin))
+        self.pluginChain?.add(plugin: SchemaGuardPlugin(snapshotPlugin: contextSnapshotPlugin))
         self.pluginChain?.add(plugin: IntegrationsManagementPlugin())
         self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())
         
