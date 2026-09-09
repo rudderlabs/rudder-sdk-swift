@@ -55,6 +55,14 @@ public class Analytics {
     private(set) var consentManagementState: StateImpl<ConsentManagement>
     
     /**
+     Ticks once per accepted consent decision, and is stamped on every event at creation.
+     
+     The consent block on an event is re-asserted at the terminal boundary, so it cannot say which
+     decision the event belongs to. This can.
+     */
+    @Synchronized private(set) var consentEpoch: UInt64 = 0
+    
+    /**
      The manager responsible for SourceConfig operations.
      */
     private(set) var sourceConfigProvider: SourceConfigProvider?
@@ -440,6 +448,13 @@ extension Analytics {
      - Parameter event: The event to be processed.
      */
     private func process(event: Event) {
+        // Stamped here rather than in the plugin chain: this runs synchronously on the caller's thread, so it records the decision in force when the event was created, not when it was later dequeued.
+        var event = event
+        if var carrier = event as? ConsentEpochCarrying {
+            carrier.consentEpoch = self.consentEpoch
+            event = carrier
+        }
+        
         do {
             try self.processEventChannel.send(event)
         } catch {
@@ -517,13 +532,12 @@ extension Analytics {
             return
         }
         
-        // Ahead of the state change, so a destination that is about to be re-evaluated starts
-        // holding before any event can arrive against the new consent. The reducer is pure, so the
-        // resulting block is computed here rather than restating its rules.
-        let action = SetConsentAction(options: options)
-        let nextStamp = action.reduce(currentState: self.consentManagementState.value).contextStamp
-        self.integrationsController?.noteConsentChange(matching: nextStamp)
-        self.consentManagementState.dispatch(action: action)
+        // Advanced only once the call is accepted, so a refused setConsent never moves the boundary
+        // and strands events already held. Ahead of the state change, so a destination about to be
+        // re-evaluated starts holding before any event can arrive against the new consent.
+        $consentEpoch.modify { $0 &+= 1 }
+        self.integrationsController?.noteConsentChange()
+        self.consentManagementState.dispatch(action: SetConsentAction(options: options))
     }
 }
 
