@@ -99,6 +99,40 @@ struct DeviceModeConsentRestampTests {
         #expect(plugin.receivedTrackEventNames.isEmpty, "The gate must drop the event before delivery.")
         #expect((result as? TrackEvent)?.event == "dropped", "The event must still pass through unchanged for cloud delivery.")
     }
+
+    // MARK: - Restamp vs the device-mode hold
+
+    @Test("given an event created before the grant, when the terminal guard has re-stamped it, then it is still not replayed")
+    func testReStampedPreGrantEventIsNotReplayed() {
+        // Consent now grants marketing; the hold opens under that decision.
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+
+        // An event created under the previous decision, carrying the consent block of that time.
+        let deniedState = ConsentManagement(enabled: true, provider: .custom, allowedConsentIds: [], deniedConsentIds: ["marketing"])
+        var stale = TrackEvent(event: "denied-before-grant")
+        stale.consentEpoch = 0
+        let staleEvent: Event = stale.updateEventData()
+            .addToContext(info: [ConsentManagement.contextKey: deniedState.contextStamp])
+
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+        control.beginBuffering(for: destinationKey, notBefore: 1)
+
+        // The terminal guard runs ahead of device-mode fan-out and re-asserts the consent block, so
+        // by the time the hold sees this event its denied block has been replaced by the granted one.
+        // Ordering must not depend on a field something else rewrites in flight.
+        let snapshot = ContextSnapshotPlugin()
+        snapshot.setup(analytics: analytics)
+        let schemaGuard = SchemaGuardPlugin(snapshotPlugin: snapshot)
+        schemaGuard.setup(analytics: analytics)
+        let guarded = schemaGuard.intercept(event: staleEvent) ?? staleEvent
+
+        let verdict = control.admit(guarded, for: destinationKey) { recorder.append($0) }
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+
+        #expect(verdict == .skipped, "An event created under the previous decision must not be admitted, however its consent block was re-stamped on the way.")
+        #expect(recorder.names.isEmpty, "HLD 10: events from the denied period must never be replayed.")
+    }
 }
 
 // MARK: - Helpers
@@ -123,13 +157,15 @@ extension DeviceModeConsentRestampTests {
     }
 
     private func makeTrackEvent(named name: String, options: RudderOption? = nil, for analytics: Analytics? = nil) -> Event {
-        let event: Event = TrackEvent(event: name, options: options)
-        // Mirrors ConsentManagementPlugin: while consent management is active every event carries
-        // the decision it was created under, which is what the device-mode hold compares against.
-        guard let state = analytics?.consentManagementState.value, state.enabled else {
-            return event.updateEventData()
-        }
-        return event.updateEventData().addToContext(info: [ConsentManagement.contextKey: state.contextStamp])
+        // Mirrors what Analytics.process does at creation: the event carries the consent decision in
+        // force. These tests hand events to the controller directly, so without this they would all
+        // sit at epoch zero and be skipped by the hold.
+        var track = TrackEvent(event: name, options: options)
+        track.consentEpoch = analytics?.consentEpoch ?? 0
+
+        let event: Event = track.updateEventData()
+        guard let state = analytics?.consentManagementState.value, state.enabled else { return event }
+        return event.addToContext(info: [ConsentManagement.contextKey: state.contextStamp])
     }
 
     private func gatedEntry(consents: [String] = ["marketing"], strategy: String = "and") -> [String: Any] {
