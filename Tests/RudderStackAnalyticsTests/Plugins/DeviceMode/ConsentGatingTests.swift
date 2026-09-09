@@ -418,10 +418,13 @@ extension ConsentGatingTests {
     }
 
     private func makeTrackEvent(named name: String, for analytics: Analytics? = nil) -> Event {
-        var event: Event = TrackEvent(event: name)
-        event = event.updateEventData()
-        // Mirrors ConsentManagementPlugin: while consent management is active every event carries
-        // the decision it was created under, which is what the device-mode hold compares against.
+        // Mirrors what Analytics.process does at creation: the event carries the consent decision in
+        // force, which is what the device-mode hold compares against. These tests hand events to the
+        // controller directly, so without this they would all sit at epoch zero and be skipped.
+        var track = TrackEvent(event: name)
+        track.consentEpoch = analytics?.consentEpoch ?? 0
+
+        var event: Event = track.updateEventData()
         if let state = analytics?.consentManagementState.value, state.enabled {
             event = event.addToContext(info: [ConsentManagement.contextKey: state.contextStamp])
         }
