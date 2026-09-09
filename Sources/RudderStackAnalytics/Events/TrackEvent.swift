@@ -16,7 +16,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct TrackEvent: Event {
+public struct TrackEvent: Event, ConsentEpochCarrying {
     
     /// The type of the event, defaulting to `.track`.
     public var type: EventType = .track
@@ -59,6 +59,9 @@ public struct TrackEvent: Event {
     
     /// The identity values of the user associated with the event.
     public var userIdentity: UserIdentity?
+    
+    /// The consent decision in force when the event was created.
+    var consentEpoch: UInt64 = 0
     
     /**
      Initializes a `TrackEvent` with the specified event name, properties, options and user identity values.
