@@ -207,3 +207,17 @@ public enum EventType: String, CaseIterable, Codable {
         return rawValue.capitalized
     }
 }
+
+// MARK: - ConsentEpochCarrying
+/**
+ An internal ordering marker, stamped when the event is created.
+ 
+ The consent block on an event is re-asserted at the terminal boundary, so it cannot say *when*
+ the event was made. This counter can: it is set once at creation and never rewritten, which is
+ what lets the device-mode hold place an event on one side or the other of a `setConsent` call.
+ 
+ Internal, and absent from every `CodingKeys` — it never reaches the payload.
+ */
+protocol ConsentEpochCarrying: Event {
+    var consentEpoch: UInt64 { get set }
+}

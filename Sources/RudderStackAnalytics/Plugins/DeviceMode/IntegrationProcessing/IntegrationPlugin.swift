@@ -136,18 +136,10 @@ public extension IntegrationPlugin {
      unexpected behavior or break internal logic.
      */
     func intercept(event: any Event) -> (any Event)? {
-        guard let pluginStore else { return event }
-        if pluginStore.isDestinationReady {
-            // Apply plugin chain processing
-                        
-            let preProcessedEvent = pluginChain?.applyPlugins(pluginType: .preProcess, event: event)
-            let onProcessedEvent = pluginChain?.applyPlugins(pluginType: .onProcess, event: preProcessedEvent)
-            
-            // Handle the event after plugin processing
-            if let finalEvent = onProcessedEvent {
-                self.handleEvent(event: finalEvent)
-            }
-        }
+        guard pluginStore != nil else { return event }
+        // Readiness and any hold on this destination are one decision, taken together, so an event
+        // arriving as the destination becomes ready cannot overtake the events held before it.
+        analytics?.integrationsController?.deliver(event: event, to: self)
         return event
     }
     
@@ -176,6 +168,17 @@ public extension IntegrationPlugin {
 }
 
 extension IntegrationPlugin {
+    /// Runs this destination's own plugin chain and hands the event over. Called for live and for
+    /// previously held events alike, so both take exactly the same path.
+    func process(event: Event) {
+        let preProcessedEvent = pluginChain?.applyPlugins(pluginType: .preProcess, event: event)
+        let onProcessedEvent = pluginChain?.applyPlugins(pluginType: .onProcess, event: preProcessedEvent)
+        
+        if let finalEvent = onProcessedEvent {
+            self.handleEvent(event: finalEvent)
+        }
+    }
+    
     var pluginStore: IntegrationPluginStore? {
         return self.analytics?.integrationsController?.integrationPluginStores[self.key]
     }
@@ -185,6 +188,7 @@ extension IntegrationPlugin {
     }
     
     private func applyDefaultPlugins() {
+        self.add(plugin: ConsentGatePlugin(key: self.key))
         self.add(plugin: EventFilteringPlugin(key: self.key))
         self.add(plugin: IntegrationOptionsPlugin(key: self.key))
     }

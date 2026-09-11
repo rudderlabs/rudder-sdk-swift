@@ -14,7 +14,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct AliasEvent: Event {
+public struct AliasEvent: Event, ConsentEpochCarrying {
 
     /// The type of the event, defaulting to `.alias`.
     public var type: EventType = .alias
@@ -54,6 +54,9 @@ public struct AliasEvent: Event {
 
     /// The previous user identifier that the new identifier (`userId`) is linked to.
     public var previousId: String
+    
+    /// The consent decision in force when the event was created.
+    var consentEpoch: UInt64 = 0
 
     /**
      Initializes an `AliasEvent` with the specified previous identifier, options, and user identity.

@@ -18,6 +18,10 @@ class IntegrationsController {
     @Synchronized var isSourceEnabledFetchedAtLeastOnce = false
     @Synchronized var integrationPluginStores: [String: IntegrationPluginStore] = [:]
     
+    private let deliveryControl = DestinationDeliveryControl()
+    // Which consent decision is in force. Zero until the first accepted `setConsent`, so a hold
+    // opened before any decision holds everything.
+    @Synchronized private var consentDecidedEpoch: UInt64 = 0
     init(analytics: Analytics) {
         self.analytics = analytics
         self.integrationPluginChain = PluginChain(analytics: analytics)
@@ -29,6 +33,36 @@ class IntegrationsController {
         }
         
         safelyInitOrUpdateAndNotify(destinationConfig: destinationConfig, integration: integration)
+    }
+    
+    // Delivers an event to a destination, holds it while that destination is initializing, or
+    // skips it when the destination is neither.
+    func deliver(event: Event, to integration: IntegrationPlugin) {
+        deliveryControl.admit(event, for: integration.key) { admitted in
+            integration.process(event: admitted)
+        }
+    }
+    
+    // Called as `setConsent` is accepted, before the new state is dispatched. Re-initialization is
+    // scheduled asynchronously, so without this the events arriving in between would reach a
+    // destination that is neither holding nor ready, and be dropped despite consent having been
+    // granted for them.
+    func noteConsentChange() {
+        $consentDecidedEpoch.modify { $0 = analytics?.consentEpoch ?? $0 }
+        beginBufferingForPendingDestinations()
+    }
+    
+    // Begins holding for every destination that is not yet delivering, ahead of initializing any of
+    // them. Destinations are initialized one at a time, so a hold opened inside that loop would only
+    // begin once the destinations ahead of it had finished creating — losing everything sent in the
+    // meantime. Destinations already delivering are left alone: they have nothing to hold, and
+    // putting one on hold here would leave it holding forever whenever initialization is a no-op.
+    func beginBufferingForPendingDestinations() {
+        self.integrationPluginChain?.apply { plugin in
+            guard let integration = plugin as? IntegrationPlugin,
+                  integration.pluginStore?.isDestinationReady == false else { return }
+            self.beginBufferingIfConsentIsActive(for: integration.key)
+        }
     }
     
     func add(integration: IntegrationPlugin) {
@@ -46,6 +80,7 @@ class IntegrationsController {
         $integrationPluginStores.modify { stores in
             stores.removeValue(forKey: key)
         }
+        self.deliveryControl.markNotReady(for: key)
         self.integrationPluginChain?.remove(plugin: integration)
     }
     
@@ -77,6 +112,7 @@ class IntegrationsController {
         $integrationPluginStores.modify { stores in
             stores.removeAll()
         }
+        self.deliveryControl.removeAll()
         self.integrationPluginChain?.removeAll()
         self.analytics = nil
         self.integrationPluginChain = nil
@@ -95,7 +131,7 @@ private extension IntegrationsController {
         guard let destination = findDestination(sourceConfig: sourceConfig, key: integration.key) else {
             let error = DestinationError.destinationNotFound(integration.key)
             analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
-            safelyUpdateOnFailureAndNotify(
+            notifyFailureAndMarkNotReady(
                 error: error,
                 integration: integration
             )
@@ -105,14 +141,27 @@ private extension IntegrationsController {
         if !destination.isDestinationEnabled {
             let error = DestinationError.destinationDisabled(integration.key)
             analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
-            safelyUpdateOnFailureAndNotify(
+            notifyFailureAndMarkNotReady(
                 error: error,
                 integration: integration
             )
             return nil
         }
         
-        return destination.destinationConfig.rawDictionary
+        let destinationConfig = destination.destinationConfig.rawDictionary
+        
+        if let consentState = analytics?.consentManagementState.value, !ConsentResolver.resolve(state: consentState, destinationConfig: destinationConfig) {
+            let error = DestinationError.destinationConsentDenied(integration.key)
+            analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
+            
+            notifyFailureAndMarkNotReady(
+                error: error,
+                integration: integration
+            )
+            return nil
+        }
+        
+        return destinationConfig
     }
     
     func safelyInitOrUpdateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
@@ -124,28 +173,27 @@ private extension IntegrationsController {
     }
     
     func safelyCreateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
+        beginBufferingIfConsentIsActive(for: integration.key)
         do {
             try integration.create(destinationConfig: destinationConfig)
             analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) created successfully.")
             integration.pluginStore?.isDestinationReady = true
+            markReadyAndReplay(for: integration)
             notifyCallbacks(.success(()), for: integration)
         } catch {
             analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) creating destination \(integration.key).", error: error)
             integration.pluginStore?.isDestinationReady = false
             notifyCallbacks(.failure(error), for: integration)
+            discardBufferedEvents(for: integration)
         }
     }
     
-    func safelyUpdateOnFailureAndNotify(error: Error, integration: IntegrationPlugin) {
-        safelyUpdateAndApplyBlock(
-            destinationConfig: [:],
-            integration: integration,
-            block: {
-                self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with empty destinationConfig.")
-                integration.pluginStore?.isDestinationReady = false
-                self.notifyCallbacks(.failure(error), for: integration)
-            }
-        )
+    // A destination we are declaring failed must not be updated: pushing an empty config can throw,
+    // which would replace the real reason with a parse error, and can reset a live destination's state.
+    func notifyFailureAndMarkNotReady(error: Error, integration: IntegrationPlugin) {
+        integration.pluginStore?.isDestinationReady = false
+        deliveryControl.markNotReady(for: integration.key)
+        notifyCallbacks(.failure(error), for: integration)
     }
     
     func safelyUpdateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
@@ -155,6 +203,7 @@ private extension IntegrationsController {
             block: {
                 self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with destinationConfig: \(destinationConfig).")
                 integration.pluginStore?.isDestinationReady = true
+                self.markReadyAndReplay(for: integration)
                 self.notifyCallbacks(.success(()), for: integration)
             }
         )
@@ -172,6 +221,7 @@ private extension IntegrationsController {
         } catch {
             analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) updating destination \(integration.key).", error: error)
             integration.pluginStore?.isDestinationReady = false
+            deliveryControl.markNotReady(for: integration.key)
             notifyCallbacks(.failure(error), for: integration)
         }
     }
@@ -190,5 +240,35 @@ private extension IntegrationsController {
     
     func findDestination(sourceConfig: SourceConfig, key: String) -> Destination? {
         return sourceConfig.source.destinations.first { $0.destinationDefinition.displayName == key }
+    }
+}
+
+private extension IntegrationsController {
+    // The hold exists to cover a destination starting up after a consent decision. With consent
+    // management inactive there is nothing to cover, so no hold opens and delivery behaves exactly
+    // as it did before consent existed. This reads the resolved state rather than the supplied
+    // configuration, so a session that enabled consent without naming any consent IDs — inactive by
+    // the empty-list rule — is indistinguishable from one that never enabled it.
+    private func beginBufferingIfConsentIsActive(for key: String) {
+        guard analytics?.consentManagementState.value.enabled == true else { return }
+        deliveryControl.beginBuffering(for: key, notBefore: consentDecidedEpoch)
+    }
+    
+    private func markReadyAndReplay(for integration: IntegrationPlugin) {
+        deliveryControl.markReady(for: integration.key) { events in
+            guard !events.isEmpty else { return }
+            
+            analytics?.logger.debug(log: "IntegrationsController: Replaying \(events.count) buffered event(s) for destination \(integration.key).")
+            // Handed straight to the destination rather than re-admitted, so releasing a hold never
+            // depends on the state this call has just changed.
+            events.forEach { integration.process(event: $0) }
+        }
+    }
+    
+    private func discardBufferedEvents(for integration: IntegrationPlugin) {
+        let discarded = deliveryControl.markNotReady(for: integration.key)
+        guard discarded > 0 else { return }
+        
+        analytics?.logger.warn(log: "IntegrationsController: Discarded \(discarded) buffered event(s) for destination \(integration.key) after failed initialization.")
     }
 }
