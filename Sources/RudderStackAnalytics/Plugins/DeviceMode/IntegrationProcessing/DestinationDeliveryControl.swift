@@ -42,8 +42,9 @@ final class DestinationDeliveryControl {
         let lock = NSRecursiveLock()
         /// Events held while initialization is in flight; `nil` when not buffering.
         var buffered: [Event]?
-        /// The consent decision this hold opened under. Events created under an earlier one are
-        /// skipped rather than held.
+        /// The consent decision in force for this destination. Events created under an earlier one
+        /// are never delivered — held or ready makes no difference. It outlives the hold, so it is
+        /// cleared only when the destination stops being ready.
         var heldFromEpoch: UInt64 = 0
         var isReady = false
 
@@ -99,11 +100,14 @@ final class DestinationDeliveryControl {
 
         var verdict = Verdict.skipped
         state.withLock { destination in
+            // Checked ahead of the branch, not inside the hold: a customer plugin can pause an event
+            // and release it after initialization has finished, so the decision it was created under
+            // has to be honoured on the ready path too.
+            if Self.epoch(of: event) < destination.heldFromEpoch {
+                verdict = .skipped
+                return
+            }
             if var buffered = destination.buffered {
-                if Self.epoch(of: event) < destination.heldFromEpoch {
-                    verdict = .skipped
-                    return
-                }
                 if buffered.count >= Self.maxBufferSize { buffered.removeFirst() }
                 buffered.append(event)
                 destination.buffered = buffered
@@ -129,7 +133,8 @@ final class DestinationDeliveryControl {
         state?.withLock { destination in
             let buffered = destination.buffered ?? []
             destination.buffered = nil
-            destination.heldFromEpoch = 0
+            // The boundary is deliberately kept: becoming ready ends the hold, not the consent
+            // decision the hold opened under.
             destination.isReady = true
             deliver(buffered)
         }
