@@ -326,6 +326,46 @@ struct DestinationDeliveryControlTests {
 
         #expect(recorder.names.isEmpty, "Returning to identical consent values is still a later decision; the first grant's events must not come back.")
     }
+
+    @Test("given a destination already delivering, when an event from an earlier decision is admitted, then it is skipped")
+    func testEventFromAnEarlierDecisionIsNotDeliveredOnceReady() {
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+
+        control.beginBuffering(for: destinationKey, notBefore: 2)
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+
+        let verdict = control.admit(event(named: "denied-before-grant", epoch: 1), for: destinationKey) { recorder.append($0) }
+
+        #expect(verdict == .skipped, "Becoming ready ends the hold, not the consent decision the hold opened under.")
+        #expect(recorder.names.isEmpty, "A plugin can release an event after initialization has finished; that must not resurrect it.")
+    }
+
+    // Documents a deliberate conservatism rather than a defect. The boundary is a single global
+    // counter, so it cannot tell "this destination was denied in between" from "the decision moved
+    // on while this destination was still starting up". Replacing the hold is what makes
+    // grant -> revoke -> grant safe, and the cost is that a setConsent landing inside a destination's
+    // create window discards what it had already held. Telling the two apart needs per-destination
+    // consent history; erring towards dropping is the right side for a consent feature.
+    @Test("given a setConsent inside the create window, when the destination becomes ready, then events held under the previous decision are dropped")
+    func testHeldEventsAreDroppedWhenADecisionLandsMidCreate() {
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+
+        // Source config arrives: the destination is consented, the hold opens at epoch 0, create is slow.
+        control.beginBuffering(for: destinationKey, notBefore: 0)
+        control.admit(event(named: "during-create", epoch: 0), for: destinationKey) { recorder.append($0) }
+
+        // An unrelated setConsent lands while create is still in flight. The destination stays
+        // consented, but the global decision advanced.
+        control.beginBuffering(for: destinationKey, notBefore: 1)
+
+        // Create finishes.
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+
+        #expect(recorder.names.isEmpty, "A new consent decision replaces the hold; what the previous one collected is not replayed against it.")
+    }
+
 }
 
 // MARK: - Helpers
