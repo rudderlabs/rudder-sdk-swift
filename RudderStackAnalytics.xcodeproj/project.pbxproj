@@ -69,6 +69,10 @@
 		539658353033253C008A8845 /* ConsentResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539658343033253C008A8845 /* ConsentResolverTests.swift */; };
 		539658383033256F008A8845 /* SourceConfigConsentParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539658373033256F008A8845 /* SourceConfigConsentParsingTests.swift */; };
 		5396583C30332814008A8845 /* ConsentGatingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396583B30332814008A8845 /* ConsentGatingTests.swift */; };
+		539658403035E566008A8845 /* ContextSnapshotPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396583F3035E566008A8845 /* ContextSnapshotPlugin.swift */; };
+		539658423035EB4F008A8845 /* SchemaGuardPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539658413035EB4F008A8845 /* SchemaGuardPlugin.swift */; };
+		5396584430361E3F008A8845 /* SchemaGuardPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396584330361E3F008A8845 /* SchemaGuardPluginTests.swift */; };
+		53965846303622F6008A8845 /* DeviceModeConsentRestampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965845303622F6008A8845 /* DeviceModeConsentRestampTests.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
 		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
 		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
@@ -304,6 +308,10 @@
 		539658343033253C008A8845 /* ConsentResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentResolverTests.swift; sourceTree = "<group>"; };
 		539658373033256F008A8845 /* SourceConfigConsentParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigConsentParsingTests.swift; sourceTree = "<group>"; };
 		5396583B30332814008A8845 /* ConsentGatingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentGatingTests.swift; sourceTree = "<group>"; };
+		5396583F3035E566008A8845 /* ContextSnapshotPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextSnapshotPlugin.swift; sourceTree = "<group>"; };
+		539658413035EB4F008A8845 /* SchemaGuardPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaGuardPlugin.swift; sourceTree = "<group>"; };
+		5396584330361E3F008A8845 /* SchemaGuardPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaGuardPluginTests.swift; sourceTree = "<group>"; };
+		53965845303622F6008A8845 /* DeviceModeConsentRestampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModeConsentRestampTests.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
 		539D86F82E5439E7009FC144 /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
@@ -657,6 +665,8 @@
 				53DEA5C12E03D05A00D6C371 /* ScreenInfoPlugin.swift */,
 				53DEA5C22E03D05A00D6C371 /* SessionTrackingPlugin.swift */,
 				53DEA5C32E03D05A00D6C371 /* TimeZoneInfoPlugin.swift */,
+				5396583F3035E566008A8845 /* ContextSnapshotPlugin.swift */,
+				539658413035EB4F008A8845 /* SchemaGuardPlugin.swift */,
 			);
 			path = Standard;
 			sourceTree = "<group>";
@@ -807,6 +817,7 @@
 				53DEA64D2E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift */,
 				537B96432EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift */,
 				537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */,
+				5396584330361E3F008A8845 /* SchemaGuardPluginTests.swift */,
 			);
 			path = Basic;
 			sourceTree = "<group>";
@@ -823,6 +834,7 @@
 				85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */,
 				5396583B30332814008A8845 /* ConsentGatingTests.swift */,
 				533A9964304EFE5C00B05110 /* DestinationDeliveryControlTests.swift */,
+				53965845303622F6008A8845 /* DeviceModeConsentRestampTests.swift */,
 			);
 			path = DeviceMode;
 			sourceTree = "<group>";
@@ -1569,6 +1581,7 @@
 				53DEA5EA2E03D05A00D6C371 /* TrackEvent.swift in Sources */,
 				85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */,
 				53DEA5EB2E03D05A00D6C371 /* RudderOption.swift in Sources */,
+				539658403035E566008A8845 /* ContextSnapshotPlugin.swift in Sources */,
 				538F82C72E79583900C7ECEB /* UpdateSourceConfigAction.swift in Sources */,
 				5396580D302D955D008A8845 /* ConsentManagementConfiguration.swift in Sources */,
 				53DEA5EC2E03D05A00D6C371 /* HttpNetwork.swift in Sources */,
@@ -1614,6 +1627,7 @@
 				53DEA6062E03D05A00D6C371 /* TimeZoneInfoPlugin.swift in Sources */,
 				539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */,
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
+				539658423035EB4F008A8845 /* SchemaGuardPlugin.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
 				533A9963304EFE3E00B05110 /* DestinationDeliveryControl.swift in Sources */,
 				85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */,
@@ -1699,6 +1713,7 @@
 				53E7775E2EB4D21000564D61 /* StartupFlushPolicyTests.swift in Sources */,
 				53DEA6662E03D06F00D6C371 /* GroupEventTests.swift in Sources */,
 				53DB9D952F448B8A004FB1A4 /* RetryMetadataTests.swift in Sources */,
+				5396584430361E3F008A8845 /* SchemaGuardPluginTests.swift in Sources */,
 				85A10BBF2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift in Sources */,
 				539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */,
 				53DEA6672E03D06F00D6C371 /* UserIdActionTests.swift in Sources */,
@@ -1744,6 +1759,7 @@
 				53E777652EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift in Sources */,
 				539658383033256F008A8845 /* SourceConfigConsentParsingTests.swift in Sources */,
 				53C8B38B2FCEC7AE00337763 /* ConfigurationLoggerTests.swift in Sources */,
+				53965846303622F6008A8845 /* DeviceModeConsentRestampTests.swift in Sources */,
 				53DEA67A2E03D06F00D6C371 /* ScreenEventTests.swift in Sources */,
 				53A83F9C2E9F750400DDA0CC /* MockStorage.swift in Sources */,
 				53DEA67B2E03D06F00D6C371 /* TrackEventTests.swift in Sources */,
