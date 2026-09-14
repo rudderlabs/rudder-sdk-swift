@@ -35,7 +35,7 @@ final class ConsentManagementPlugin: Plugin {
     }
     
     func intercept(event: any Event) -> (any Event)? {
-        guard let state = self.analytics?.consentManagementState.value, state.enabled else {
+        guard let state = self.analytics?.consentManagementState.value, state.active else {
             return event
         }
         
