@@ -61,6 +61,10 @@ struct ConsentResolver {
         guard state.enabled else { return true }
         
         // Rule 2: first entry matching the active provider; none (or no array) -> consented.
+        // The cast below is wholesale: one malformed element voids the entire list, so a single bad
+        // entry leaves the destination ungated rather than partially gated. Fail-open is the
+        // deliberate posture for consent configuration errors - a bad config must never turn into
+        // silent data loss.
         let entries = destinationConfig?[ConsentResolverConstants.consentManagementKey] as? [[String: Any]] ?? []
         guard let entry = entries.first(where: { ($0[ConsentResolverConstants.providerKey] as? String) == state.provider.value }) else { return true }
         
