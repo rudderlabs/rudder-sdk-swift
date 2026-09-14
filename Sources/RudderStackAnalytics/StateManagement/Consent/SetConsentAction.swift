@@ -12,9 +12,13 @@ import Foundation
  An action that replaces the consent lists in `ConsentManagement`.
  
  This is a full replacement, not a merge: the supplied lists overwrite both
- existing lists. An update carrying no consent IDs at all is rejected — the
- current state is returned unchanged. `active` and `provider` are load-time
- settings and are never modified at runtime.
+ existing lists. An inactive state never takes a runtime update. `active` and
+ `provider` are load-time settings and are never modified at runtime.
+
+ Validating the update itself belongs to `Analytics.setConsent`, which refuses one carrying no
+ consent IDs at all and warns. Repeating that check here would leave two copies of one rule free
+ to drift apart — and `setConsent` advances the consent epoch and opens the device-mode holds
+ before dispatching, so a divergence would strand those against a decision that never landed.
  */
 struct SetConsentAction: StateAction {
     typealias T = ConsentManagement
@@ -29,8 +33,6 @@ struct SetConsentAction: StateAction {
 
         let allowed = ConsentManagement.normalized(options.allowedConsentIds)
         let denied = ConsentManagement.normalized(options.deniedConsentIds)
-        
-        guard !(allowed.isEmpty && denied.isEmpty) else { return currentState }
 
         var newState = currentState
         newState.allowedConsentIds = allowed
