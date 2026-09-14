@@ -29,12 +29,13 @@ class IntegrationsManagementPlugin: Plugin {
         var configIndex = 0
         // `observeDispatched()` skips the initial empty state without depending on when this plugin
         // subscribes, so a cached source config dispatched before setup is still delivered here.
-        // The consent state is seeded with its current value so the combined stream fires on the
-        // first source config even when `setConsent` is never called; a runtime consent change
-        // re-runs initialization, which creates destinations that were consent-denied earlier.
+        // The consent arm uses `publisher`, which emits the current value first - so the combined
+        // stream still fires on the first source config when `setConsent` is never called - and
+        // which dedupes, so a setConsent that does not change the state cannot re-run
+        // initialization. A real consent change does, creating destinations denied earlier.
         Publishers.CombineLatest(
             analytics.sourceConfigState.observeDispatched(),
-            analytics.consentManagementState.observeDispatched().prepend(analytics.consentManagementState.value)
+            analytics.consentManagementState.publisher
         )
         .receive(on: processingQueue)
         .sink { [weak self] sourceConfig, _ in
