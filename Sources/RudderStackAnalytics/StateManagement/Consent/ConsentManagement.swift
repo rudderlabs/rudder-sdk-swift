@@ -11,10 +11,10 @@ import Foundation
 /**
  A reactive state model holding the current consent values.
  
- The two consent ID lists are never both empty while `enabled` is `true`: a configuration that enables consent management without supplying either list is a configuration error, and the state is built inactive so the feature behaves as if it had never been enabled.
+ The two consent ID lists are never both empty while `active` is `true`: a configuration that enables consent management without supplying either list is a configuration error, and the state is built inactive so the feature behaves as if it had never been enabled.
  */
 struct ConsentManagement: Equatable {
-    var enabled: Bool = false
+    var active: Bool = false
     var provider: ConsentManagementProvider = .custom
     var allowedConsentIds: [String] = []
     var deniedConsentIds: [String] = []
@@ -30,10 +30,9 @@ extension ConsentManagement {
     static func initialState(_ configuration: ConsentManagementConfiguration) -> ConsentManagement {
         let allowed = Self.normalized(configuration.allowedConsentIds)
         let denied = Self.normalized(configuration.deniedConsentIds)
-        let active = configuration.enabled && !(allowed.isEmpty && denied.isEmpty)
         
         return ConsentManagement(
-            enabled: active,
+            active: configuration.enabled && !(allowed.isEmpty && denied.isEmpty),
             provider: configuration.provider,
             allowedConsentIds: allowed,
             deniedConsentIds: denied

@@ -14,7 +14,7 @@ struct SetConsentActionTests {
 
     @Test("given existing consent lists, when dispatching new options, then both lists are fully replaced")
     func testFullReplacement() {
-        let initial = ConsentManagement(enabled: true, allowedConsentIds: ["old-allowed"], deniedConsentIds: ["old-denied"])
+        let initial = ConsentManagement(active: true, allowedConsentIds: ["old-allowed"], deniedConsentIds: ["old-denied"])
         let state = createState(initialState: initial)
 
         state.dispatch(action: SetConsentAction(options: ConsentManagementOptions(allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"])))
@@ -25,7 +25,7 @@ struct SetConsentActionTests {
 
     @Test("given both lists populated, when dispatching options carrying only an allowed list, then the omitted denied list is cleared")
     func testOmittedFieldClears() {
-        let initial = ConsentManagement(enabled: true, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"])
+        let initial = ConsentManagement(active: true, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"])
         let state = createState(initialState: initial)
 
         state.dispatch(action: SetConsentAction(options: ConsentManagementOptions(allowedConsentIds: ["analytics"])))
@@ -36,7 +36,7 @@ struct SetConsentActionTests {
 
     @Test("given a populated consent state, when dispatching empty options, then the state is unchanged")
     func testEmptyOptionsAreRejected() {
-        let initial = ConsentManagement(enabled: true, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"])
+        let initial = ConsentManagement(active: true, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"])
         let state = createState(initialState: initial)
 
         state.dispatch(action: SetConsentAction(options: ConsentManagementOptions()))
@@ -46,7 +46,7 @@ struct SetConsentActionTests {
 
     @Test("given options carrying only whitespace consent IDs, when dispatched, then the state is unchanged")
     func testWhitespaceOnlyOptionsAreRejected() {
-        let initial = ConsentManagement(enabled: true, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"])
+        let initial = ConsentManagement(active: true, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"])
         let state = createState(initialState: initial)
 
         state.dispatch(action: SetConsentAction(options: ConsentManagementOptions(allowedConsentIds: ["  "], deniedConsentIds: [""])))
@@ -56,7 +56,7 @@ struct SetConsentActionTests {
 
     @Test("given a state with no consent data, when dispatching options carrying consent data, then the lists are populated")
     func testUpdateFromEmptyStatePopulatesLists() {
-        let initial = ConsentManagement(enabled: true)
+        let initial = ConsentManagement(active: true)
         let state = createState(initialState: initial)
 
         state.dispatch(action: SetConsentAction(options: ConsentManagementOptions(deniedConsentIds: ["ads"])))
@@ -67,7 +67,7 @@ struct SetConsentActionTests {
 
     @Test("given options with messy consent IDs, when dispatched, then the lists are normalized")
     func testRuntimeInputIsNormalized() {
-        let state = createState(initialState: ConsentManagement(enabled: true))
+        let state = createState(initialState: ConsentManagement(active: true))
 
         state.dispatch(action: SetConsentAction(options: ConsentManagementOptions(allowedConsentIds: [" marketing ", ""], deniedConsentIds: ["   ", "ads"])))
 
@@ -77,7 +77,7 @@ struct SetConsentActionTests {
 
     @Test("given a disabled state, when dispatching options with consent data, then the state is completely unchanged")
     func testDisabledStateIsNeverModified() {
-        let initial = ConsentManagement(enabled: false)
+        let initial = ConsentManagement(active: false)
         let state = createState(initialState: initial)
 
         state.dispatch(action: SetConsentAction(options: ConsentManagementOptions(allowedConsentIds: ["marketing"])))
@@ -85,14 +85,14 @@ struct SetConsentActionTests {
         #expect(state.value == initial, "The reducer must be a no-op while disabled — no half-applied state.")
     }
 
-    @Test("given an enabled state, when dispatching any options, then enabled and provider are untouched")
+    @Test("given an enabled state, when dispatching any options, then active and provider are untouched")
     func testEnabledAndProviderAreNeverModified() {
-        let initial = ConsentManagement(enabled: true, provider: .custom)
+        let initial = ConsentManagement(active: true, provider: .custom)
         let state = createState(initialState: initial)
 
         state.dispatch(action: SetConsentAction(options: ConsentManagementOptions(allowedConsentIds: ["marketing"])))
 
-        #expect(state.value.enabled == true, "The action must never modify enabled — it is a load-time decision.")
+        #expect(state.value.active == true, "The action must never modify active — it is a load-time decision.")
         #expect(state.value.provider == .custom, "The action must never modify the provider.")
     }
 }

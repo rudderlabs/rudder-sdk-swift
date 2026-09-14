@@ -52,7 +52,7 @@ struct SetConsentAPITests {
         let mockLogger = MockLogger()
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true), logger: mockLogger)
 
-        #expect(analytics.consentManagementState.value.enabled == false)
+        #expect(analytics.consentManagementState.value.active == false)
         #expect(
             mockLogger.hasLog(level: "INFO", containing: "inactive for this session"),
             "A misconfigured consent setup must tell the developer why the feature is doing nothing."

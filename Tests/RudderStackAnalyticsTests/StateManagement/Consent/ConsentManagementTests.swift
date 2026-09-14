@@ -36,7 +36,7 @@ struct ConsentManagementTests {
 
         let state = ConsentManagement.initialState(configuration)
 
-        #expect(state.enabled == true, "Enabled with supplied consent data should produce an active state.")
+        #expect(state.active == true, "Enabled with supplied consent data should produce an active state.")
     }
 
     @Test("given an enabled configuration with both lists empty, when the initial state is built, then it is inactive")
@@ -45,7 +45,7 @@ struct ConsentManagementTests {
 
         let state = ConsentManagement.initialState(configuration)
 
-        #expect(state.enabled == false, "Enabling consent management without any consent IDs is a configuration error; the state must be built inactive.")
+        #expect(state.active == false, "Enabling consent management without any consent IDs is a configuration error; the state must be built inactive.")
     }
 
     @Test("given a disabled configuration carrying consent lists, when the initial state is built, then it is inactive")
@@ -54,7 +54,7 @@ struct ConsentManagementTests {
 
         let state = ConsentManagement.initialState(configuration)
 
-        #expect(state.enabled == false, "A disabled configuration can never produce an active state, whatever lists it carries.")
+        #expect(state.active == false, "A disabled configuration can never produce an active state, whatever lists it carries.")
     }
 
     @Test("given a configuration with messy consent IDs, when the initial state is built, then the lists are normalized")

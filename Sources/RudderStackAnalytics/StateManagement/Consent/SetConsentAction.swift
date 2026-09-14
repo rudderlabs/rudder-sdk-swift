@@ -13,7 +13,7 @@ import Foundation
  
  This is a full replacement, not a merge: the supplied lists overwrite both
  existing lists. An update carrying no consent IDs at all is rejected — the
- current state is returned unchanged. `enabled` and `provider` are load-time
+ current state is returned unchanged. `active` and `provider` are load-time
  settings and are never modified at runtime.
  */
 struct SetConsentAction: StateAction {
@@ -25,7 +25,7 @@ struct SetConsentAction: StateAction {
     }
     
     func reduce(currentState: ConsentManagement) -> ConsentManagement {
-        guard currentState.enabled else { return currentState }
+        guard currentState.active else { return currentState }
 
         let allowed = ConsentManagement.normalized(options.allowedConsentIds)
         let denied = ConsentManagement.normalized(options.deniedConsentIds)

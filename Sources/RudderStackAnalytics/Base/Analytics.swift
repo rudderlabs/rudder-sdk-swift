@@ -93,7 +93,7 @@ public class Analytics {
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())
 
         self.consentManagementState = createState(initialState: ConsentManagement.initialState(configuration.consentManagement))
-        if configuration.consentManagement.enabled, !self.consentManagementState.value.enabled {
+        if configuration.consentManagement.enabled, !self.consentManagementState.value.active {
             self.logger.info(log: "Analytics: Consent management is enabled but no consent IDs were supplied; consent management is inactive for this session. Supply allowedConsentIds or deniedConsentIds in Configuration.")
         }
         
@@ -504,7 +504,7 @@ extension Analytics {
     public func setConsent(_ options: ConsentManagementOptions) {
         guard self.isAnalyticsActive else { return }
         
-        guard self.consentManagementState.value.enabled else {
+        guard self.consentManagementState.value.active else {
             self.logger.warn(log: "Analytics: Consent management is disabled; setConsent has no effect. Enable it via Configuration's consentManagement.")
             return
         }
