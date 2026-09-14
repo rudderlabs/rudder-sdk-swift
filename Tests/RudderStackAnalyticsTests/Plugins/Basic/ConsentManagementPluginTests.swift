@@ -99,6 +99,20 @@ struct ConsentManagementPluginTests {
         #expect(warnings.first?.message.contains("legacy-id") == false, "The warning must stay value-free.")
     }
 
+    @Test("given the key is injected on every event, when several are intercepted, then only the first warns")
+    func testInjectedKeyWarnsOnlyOnce() {
+        let mockLogger = MockLogger()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]), logger: mockLogger)
+        let plugin = makePlugin(for: analytics)
+
+        for _ in 0..<3 {
+            _ = plugin.intercept(event: makeTrackEvent(options: legacyOption))
+        }
+
+        let warnings = mockLogger.logs.filter { $0.level == "WARN" }
+        #expect(warnings.count == 1, "The migration warning must be logged once per instance, not once per event.")
+    }
+
     @Test("given a legacy injected key while disabled, when an event is intercepted, then the key is preserved with no warning")
     func testDisabledPreservesLegacyKeySilently() {
         let mockLogger = MockLogger()
