@@ -551,7 +551,7 @@ extension ConsentGatingTests {
         track.consentEpoch = analytics?.consentEpoch ?? 0
 
         var event: Event = track.updateEventData()
-        if let state = analytics?.consentManagementState.value, state.enabled {
+        if let state = analytics?.consentManagementState.value, state.active {
             event = event.addToContext(info: [ConsentManagement.contextKey: state.contextStamp])
         }
         return event

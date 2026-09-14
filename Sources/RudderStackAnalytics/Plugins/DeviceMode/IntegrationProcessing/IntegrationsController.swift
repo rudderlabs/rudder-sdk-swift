@@ -250,7 +250,7 @@ private extension IntegrationsController {
     // configuration, so a session that enabled consent without naming any consent IDs — inactive by
     // the empty-list rule — is indistinguishable from one that never enabled it.
     private func beginBufferingIfConsentIsActive(for key: String) {
-        guard analytics?.consentManagementState.value.enabled == true else { return }
+        guard analytics?.consentManagementState.value.active == true else { return }
         deliveryControl.beginBuffering(for: key, notBefore: consentDecidedEpoch)
     }
     

@@ -16,7 +16,7 @@ struct ConsentResolverTests {
 
     @Test("given consent management disabled, when resolving a gated destination, then it is consented")
     func testDisabledIsConsented() {
-        let state = makeState(enabled: false, allowed: [])
+        let state = makeState(active: false, allowed: [])
         let config = makeConfig(entries: [makeEntry(consents: ["marketing"])])
 
         #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == true, "Rule 1: disabled must always resolve consented.")
@@ -185,8 +185,8 @@ struct ConsentResolverTests {
 // MARK: - Helpers
 extension ConsentResolverTests {
     
-    private func makeState(enabled: Bool = true, allowed: [String] = [], denied: [String] = []) -> ConsentManagement {
-        ConsentManagement(enabled: enabled, provider: .custom, allowedConsentIds: allowed, deniedConsentIds: denied)
+    private func makeState(active: Bool = true, allowed: [String] = [], denied: [String] = []) -> ConsentManagement {
+        ConsentManagement(active: active, provider: .custom, allowedConsentIds: allowed, deniedConsentIds: denied)
     }
 
     private func makeConfig(entries: [[String: Any]]) -> [String: Any] {
