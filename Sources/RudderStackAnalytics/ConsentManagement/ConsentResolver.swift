@@ -57,8 +57,8 @@ struct ConsentResolver {
         - Returns: `true` when the destination may receive events.
      */
     static func resolve(state: ConsentManagement, destinationConfig: [String: Any]?) -> Bool {
-        // Rule 1: disabled -> consented.
-        guard state.enabled else { return true }
+        // Rule 1: inactive -> consented.
+        guard state.active else { return true }
         
         // Rule 2: first entry matching the active provider; none (or no array) -> consented.
         // The cast below is wholesale: one malformed element voids the entire list, so a single bad
