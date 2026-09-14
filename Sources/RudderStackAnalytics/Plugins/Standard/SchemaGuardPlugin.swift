@@ -63,7 +63,7 @@ extension SchemaGuardPlugin {
     private func reservedStamp(for key: SDKManagedContextKey) -> (value: Any, advice: String)? {
         switch key {
         case .consentManagement:
-            guard let state = self.analytics?.consentManagementState.value, state.enabled else { return nil }
+            guard let state = self.analytics?.consentManagementState.value, state.active else { return nil }
             return (state.contextStamp, "the SDK owns this key while consent management is enabled. Migrate to setConsent(_:).")
         default:
             return nil

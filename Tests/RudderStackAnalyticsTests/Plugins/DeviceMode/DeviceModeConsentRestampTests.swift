@@ -108,7 +108,7 @@ struct DeviceModeConsentRestampTests {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
 
         // An event created under the previous decision, carrying the consent block of that time.
-        let deniedState = ConsentManagement(enabled: true, provider: .custom, allowedConsentIds: [], deniedConsentIds: ["marketing"])
+        let deniedState = ConsentManagement(active: true, provider: .custom, allowedConsentIds: [], deniedConsentIds: ["marketing"])
         var stale = TrackEvent(event: "denied-before-grant")
         stale.consentEpoch = 0
         let staleEvent: Event = stale.updateEventData()
@@ -164,7 +164,7 @@ extension DeviceModeConsentRestampTests {
         track.consentEpoch = analytics?.consentEpoch ?? 0
 
         let event: Event = track.updateEventData()
-        guard let state = analytics?.consentManagementState.value, state.enabled else { return event }
+        guard let state = analytics?.consentManagementState.value, state.active else { return event }
         return event.addToContext(info: [ConsentManagement.contextKey: state.contextStamp])
     }
 
