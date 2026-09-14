@@ -201,7 +201,7 @@ extension IntegrationPlugin {
      not a customer override.
      */
     private func consentRestampedEvent(_ event: any Event) -> any Event {
-        guard let state = analytics?.consentManagementState.value, state.enabled else { return event }
+        guard let state = analytics?.consentManagementState.value, state.active else { return event }
         
         let stampKey = SDKManagedContextKey.consentManagement.rawValue
         guard event.context?[stampKey] != AnyCodable(state.contextStamp) else { return event }
