@@ -16,7 +16,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct GroupEvent: Event {
+public struct GroupEvent: Event, ConsentEpochCarrying {
     
     /// The type of the event, defaulting to `.group`.
     public var type: EventType = .group
@@ -56,6 +56,9 @@ public struct GroupEvent: Event {
     
     /// The identity values of the user associated with the event.
     public var userIdentity: UserIdentity?
+    
+    /// The consent decision in force when the event was created.
+    var consentEpoch: UInt64 = 0
     
     /**
      Initializes a `GroupEvent` with the specified group identifier, traits, and options and user identity values.
