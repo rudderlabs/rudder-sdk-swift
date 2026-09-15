@@ -41,7 +41,7 @@ class IntegrationsManagementPlugin: Plugin {
         .sink { [weak self] sourceConfig, _ in
             guard let self, sourceConfig.source.isSourceEnabled else { return }
 
-            self.beginBufferingForPendingDestinations()
+            self.applyConsentDecisionToDestinations()
 
             self.integrationPluginChain?.apply { plugin in
                 if let integrationPlugin = plugin as? IntegrationPlugin {
@@ -112,8 +112,8 @@ extension IntegrationsManagementPlugin {
         self.analytics?.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: integration)
     }
     
-    func beginBufferingForPendingDestinations() {
-        self.analytics?.integrationsController?.beginBufferingForPendingDestinations()
+    func applyConsentDecisionToDestinations() {
+        self.analytics?.integrationsController?.applyConsentDecisionToDestinations()
     }
 }
 

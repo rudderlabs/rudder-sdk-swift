@@ -141,7 +141,7 @@ struct ConsentGatingTests {
         controller?.add(integration: first)
         controller?.add(integration: second)
 
-        controller?.beginBufferingForPendingDestinations()
+        controller?.applyConsentDecisionToDestinations()
         controller?.initDestination(sourceConfig: sourceConfig, integration: first)
         controller?.initDestination(sourceConfig: sourceConfig, integration: second)
         #expect(first.createCalled == false && second.createCalled == false, "Precondition: both destinations start denied.")
@@ -153,7 +153,7 @@ struct ConsentGatingTests {
             controller?.deliver(event: self.makeTrackEvent(named: "during-first-create", for: analytics), to: second)
         }
 
-        controller?.beginBufferingForPendingDestinations()
+        controller?.applyConsentDecisionToDestinations()
         controller?.initDestination(sourceConfig: sourceConfig, integration: first)
         controller?.initDestination(sourceConfig: sourceConfig, integration: second)
 
@@ -167,7 +167,7 @@ struct ConsentGatingTests {
         analytics.integrationsController?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
         #expect(plugin.pluginStore?.isDestinationReady == true, "Precondition: the destination is already delivering.")
 
-        analytics.integrationsController?.beginBufferingForPendingDestinations()
+        analytics.integrationsController?.applyConsentDecisionToDestinations()
         _ = plugin.intercept(event: makeTrackEvent(named: "after-reevaluation"))
 
         #expect(plugin.receivedTrackEventNames == ["after-reevaluation"], "A re-evaluation must not interrupt a destination that is already delivering.")
@@ -180,7 +180,7 @@ struct ConsentGatingTests {
         analytics.integrationsController?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
         #expect(plugin.pluginStore?.isDestinationReady == true, "Precondition: custom integrations are never gated, so this one is delivering.")
 
-        analytics.integrationsController?.beginBufferingForPendingDestinations()
+        analytics.integrationsController?.applyConsentDecisionToDestinations()
         _ = plugin.intercept(event: makeTrackEvent(named: "after-reevaluation"))
 
         #expect(plugin.trackEventReceived?.event == "after-reevaluation", "Re-initializing a created custom integration is a no-op, so a hold opened for it would never be released.")
@@ -429,7 +429,7 @@ struct ConsentGatingTests {
     // The revoke-then-grant cycle reaches readiness through `safelyUpdateAndNotify`, which never
     // opens a hold itself — the destination instance outlives the revoke, so re-initialization takes
     // the update path. What keeps the boundary is that every re-initialization is preceded by
-    // `beginBufferingForPendingDestinations`. This pins that, because the update path would
+    // `applyConsentDecisionToDestinations`. This pins that, because the update path would
     // otherwise mark a destination ready with no consent boundary at all.
     @Test("given a destination revoked then granted again, when an event from the denied window is released late, then it is not delivered")
     func testEventFromTheDeniedWindowIsNotDeliveredAfterRegrant() async throws {
@@ -469,6 +469,55 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames == ["after-grant"], "An event created while consent was revoked must not be delivered after the destination is granted again.")
     }
 
+    // The ready-path counterpart of the test above. There the revoke drove the destination not
+    // ready, so the re-grant re-initialized it through a path that records the decision. Here the
+    // update that the first change starts is still in flight when consent is revoked and granted
+    // again, so every re-evaluation resolves from the live granted state and the destination never
+    // stops delivering — the denied interval leaves no trace on the destination itself.
+    @Test("given a destination that stays ready across a revoke, when an event from the denied window is released late, then it is not delivered")
+    func testEventFromTheDeniedWindowIsNotDeliveredByADestinationThatStayedReady() async throws {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let holder = EventHoldingPlugin(holding: "denied-window")
+        analytics.add(plugin: holder)
+
+        let plugin = MockStandardIntegrationPlugin(key: destinationKey)
+        analytics.add(plugin: plugin)
+
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: makeSourceConfig(consentEntries: [gatedEntry()])))
+        let configLanded = await waitUntil { analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce == true }
+        #expect(configLanded, "Precondition: the source config must land before events are processed.")
+        #expect(plugin.createCalled == true, "Precondition: the destination is consented at launch, so it is created.")
+
+        // Parks the update that the next consent change starts, so everything after it queues behind
+        // a re-initialization that has not finished and the destination is never torn down.
+        let updateGate = UpdateGate()
+        plugin.onUpdate = { updateGate.park() }
+
+        // Widening the grant starts that update.
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing", "analytics"]))
+        let updateInFlight = await waitUntil { updateGate.isParked }
+        #expect(updateInFlight, "Precondition: the update must be in flight before consent changes again.")
+
+        // Revoked while it is parked, so nothing re-evaluates the destination against this.
+        analytics.setConsent(ConsentManagementOptions(deniedConsentIds: ["marketing"]))
+
+        // Created during the denied window, then parked by the customer plugin.
+        analytics.track(name: "denied-window")
+        let holding = await waitUntil { holder.isHolding }
+        #expect(holding, "Precondition: the customer plugin must be holding the denied-window event.")
+
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
+        #expect(plugin.pluginStore?.isDestinationReady == true, "Precondition: the destination stayed ready across the revoke — this is what separates it from the teardown path.")
+
+        updateGate.resumeUpdate()
+        holder.release()
+        analytics.track(name: "after-grant")
+        let delivered = await waitUntil { plugin.receivedTrackEventNames.contains("after-grant") }
+        #expect(delivered, "Precondition: an event created after the grant must reach the destination, so it is still delivering.")
+
+        #expect(plugin.receivedTrackEventNames == ["after-grant"], "A destination that never stopped delivering must still honour the consent boundary: an event created while consent was revoked is not delivered once consent is granted again.")
+    }
+
 }
 
 // MARK: - EventHoldingPlugin
@@ -502,6 +551,31 @@ private final class EventHoldingPlugin: Plugin {
 
     func release() {
         gate.signal()
+    }
+}
+
+// MARK: - UpdateGate
+/// Parks the first re-initialization until the test lets it finish, so a consent change landing
+/// afterwards queues behind an update that has not completed.
+private final class UpdateGate {
+    @Synchronized private(set) var isParked = false
+
+    private let resume = DispatchSemaphore(value: 0)
+    private var hasParked = false
+
+    /// Called from the destination's update, which always runs on the same serial queue.
+    func park() {
+        guard !hasParked else { return }
+        hasParked = true
+
+        self.isParked = true
+        // Bounded, so a test that never resumes fails on its expectations instead of hanging.
+        _ = resume.wait(timeout: .now() + 5)
+        self.isParked = false
+    }
+
+    func resumeUpdate() {
+        resume.signal()
     }
 }
 
