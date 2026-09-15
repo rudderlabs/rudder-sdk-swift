@@ -39,6 +39,8 @@
 		539301C82E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */; };
 		539301CA2E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */; };
 		539301CC2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */; };
+		53AB296D3045598C007F726C /* ConsentPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AB296C3045598C007F726C /* ConsentPlugin.swift */; };
+		53AB296F30456458007F726C /* ConsentPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AB296E30456458007F726C /* ConsentPluginTests.swift */; };
 		53C361522EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C361512EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift */; };
 		53C361582EF3F3B300E566B8 /* SetATTTrackingStatusPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53C361572EF3F3B300E566B8 /* SetATTTrackingStatusPluginTests.swift */; };
 		53E687542EF9232200DF1FBD /* PersistentMigratorFromV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E687532EF9232200DF1FBD /* PersistentMigratorFromV1.swift */; };
@@ -93,6 +95,8 @@
 		539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicUserAgentPluginTests.swift; sourceTree = "<group>"; };
 		539301C92E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticUserAgentPlugin.swift; sourceTree = "<group>"; };
 		539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticUserAgentPluginTests.swift; sourceTree = "<group>"; };
+		53AB296C3045598C007F726C /* ConsentPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentPlugin.swift; sourceTree = "<group>"; };
+		53AB296E30456458007F726C /* ConsentPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentPluginTests.swift; sourceTree = "<group>"; };
 		53C361512EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetATTTrackingStatusPlugin.swift; sourceTree = "<group>"; };
 		53C361572EF3F3B300E566B8 /* SetATTTrackingStatusPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetATTTrackingStatusPluginTests.swift; sourceTree = "<group>"; };
 		53DEA72C2E03EBB900D6C371 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -170,6 +174,7 @@
 				85A10BC22EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift */,
 				53C361512EF3E5A900E566B8 /* SetATTTrackingStatusPlugin.swift */,
 				533B9DE02F7D8CE2001262EC /* PayloadCapturePlugin.swift */,
+				53AB296C3045598C007F726C /* ConsentPlugin.swift */,
 			);
 			path = CustomPlugins;
 			sourceTree = "<group>";
@@ -224,6 +229,7 @@
 				539301C72E6AF27900DAEAD1 /* DynamicUserAgentPluginTests.swift */,
 				539301CB2E6AFBA000DAEAD1 /* StaticUserAgentPluginTests.swift */,
 				53C361572EF3F3B300E566B8 /* SetATTTrackingStatusPluginTests.swift */,
+				53AB296E30456458007F726C /* ConsentPluginTests.swift */,
 			);
 			path = SwiftUIExampleTests;
 			sourceTree = "<group>";
@@ -364,6 +370,7 @@
 			files = (
 				535BB3E52E04642400E1DAB0 /* SwiftUIExampleApp.swift in Sources */,
 				535BB3E62E04642400E1DAB0 /* AnalyticsManager.swift in Sources */,
+				53AB296D3045598C007F726C /* ConsentPlugin.swift in Sources */,
 				85A10BC32EA0E7C900E47E01 /* SampleCustomIntegrationPlugin.swift in Sources */,
 				539301CA2E6AFAEC00DAEAD1 /* StaticUserAgentPlugin.swift in Sources */,
 				535BB3E72E04642400E1DAB0 /* SetPushTokenPlugin.swift in Sources */,
@@ -396,6 +403,7 @@
 				535BB3F72E04643900E1DAB0 /* SetPushTokenPluginTests.swift in Sources */,
 				535BB3F82E04643900E1DAB0 /* AdvertisingIdPluginTests.swift in Sources */,
 				5328B86E2E3B75B90051A202 /* EventFilteringPluginTests.swift in Sources */,
+				53AB296F30456458007F726C /* ConsentPluginTests.swift in Sources */,
 				535BB3F92E04643900E1DAB0 /* SetAnonymousIdPluginTests.swift in Sources */,
 				535BB3FA2E04643900E1DAB0 /* OptionPluginTests.swift in Sources */,
 				535BB3FB2E04643900E1DAB0 /* BluetoothInfoPluginTests.swift in Sources */,
