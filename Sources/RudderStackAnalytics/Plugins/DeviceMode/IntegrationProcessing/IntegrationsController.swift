@@ -49,19 +49,14 @@ class IntegrationsController {
     // granted for them.
     func noteConsentChange() {
         $consentDecidedEpoch.modify { $0 = analytics?.consentEpoch ?? $0 }
-        beginBufferingForPendingDestinations()
+        applyConsentDecisionToDestinations()
     }
     
-    // Begins holding for every destination that is not yet delivering, ahead of initializing any of
-    // them. Destinations are initialized one at a time, so a hold opened inside that loop would only
-    // begin once the destinations ahead of it had finished creating — losing everything sent in the
-    // meantime. Destinations already delivering are left alone: they have nothing to hold, and
-    // putting one on hold here would leave it holding forever whenever initialization is a no-op.
-    func beginBufferingForPendingDestinations() {
+    // Applies the decision now in force to every destination, ahead of initializing any of them.
+    func applyConsentDecisionToDestinations() {
         self.integrationPluginChain?.apply { plugin in
-            guard let integration = plugin as? IntegrationPlugin,
-                  integration.pluginStore?.isDestinationReady == false else { return }
-            self.beginBufferingIfConsentIsActive(for: integration.key)
+            guard let integration = plugin as? IntegrationPlugin else { return }
+            self.applyConsentDecisionIfActive(to: integration)
         }
     }
     
@@ -252,6 +247,23 @@ private extension IntegrationsController {
     private func beginBufferingIfConsentIsActive(for key: String) {
         guard analytics?.consentManagementState.value.active == true else { return }
         deliveryControl.beginBuffering(for: key, notBefore: consentDecidedEpoch)
+    }
+    
+    // A destination that is not yet delivering starts holding: destinations are initialized one at a
+    // time, so a hold opened inside that loop would only begin once the destinations ahead of it had
+    // finished creating — losing everything sent in the meantime. One already delivering is not
+    // held: it has nothing to hold, and a hold opened here would leave it holding forever whenever
+    // initialization turns out to be a no-op. It still records the decision, though — that is what
+    // stops an event created while consent was revoked from being delivered once a later grant
+    // releases it.
+    private func applyConsentDecisionIfActive(to integration: IntegrationPlugin) {
+        guard analytics?.consentManagementState.value.active == true else { return }
+        
+        if integration.pluginStore?.isDestinationReady == true {
+            deliveryControl.noteDecision(for: integration.key, notBefore: consentDecidedEpoch)
+        } else {
+            deliveryControl.beginBuffering(for: integration.key, notBefore: consentDecidedEpoch)
+        }
     }
     
     private func markReadyAndReplay(for integration: IntegrationPlugin) {

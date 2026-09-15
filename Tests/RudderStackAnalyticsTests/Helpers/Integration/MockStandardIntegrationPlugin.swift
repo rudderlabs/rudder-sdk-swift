@@ -34,6 +34,10 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     // Invoked at the start of create — lets tests simulate events arriving while creation is in flight
     var onCreate: (() -> Void)?
 
+    // Invoked at the start of update — lets tests simulate a consent change landing while a
+    // re-initialization is still in flight
+    var onUpdate: (() -> Void)?
+
     // Ordered names of all track events delivered to this destination. Synchronized because a
     // destination can receive events from more than one processing task at a time; an unguarded
     // Array.append reallocates and frees its buffer under a concurrent reader.
@@ -71,6 +75,8 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     func update(destinationConfig: [String: Any]) throws {
         updateCalled = true
         lastDestinationConfig = destinationConfig
+        onUpdate?()
+
         
         if let error = updateThrowsError {
             throw error
@@ -121,6 +127,7 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
         getDestinationInstanceCalled = false
         lastDestinationConfig = nil
         onCreate = nil
+        onUpdate = nil
         receivedTrackEventNames = []
         identifyEventReceived = nil
         trackEventReceived = nil

@@ -366,6 +366,23 @@ struct DestinationDeliveryControlTests {
         #expect(recorder.names.isEmpty, "A new consent decision replaces the hold; what the previous one collected is not replayed against it.")
     }
 
+    @Test("given a destination already delivering, when a new decision is noted, then events from the previous one are skipped")
+    func testNotingADecisionBoundsADeliveringDestination() {
+        let control = DestinationDeliveryControl()
+        let recorder = Recorder()
+
+        control.beginBuffering(for: destinationKey, notBefore: 1)
+        control.markReady(for: destinationKey) { recorder.append(contentsOf: $0) }
+        control.noteDecision(for: destinationKey, notBefore: 2)
+
+        let stale = control.admit(event(named: "previous-decision", epoch: 1), for: destinationKey) { recorder.append($0) }
+        let current = control.admit(event(named: "current-decision", epoch: 2), for: destinationKey) { recorder.append($0) }
+
+        #expect(stale == .skipped, "A destination that never stops delivering still moves its boundary when the decision changes.")
+        #expect(current == .delivered, "Noting a decision must not interrupt the destination; only what predates the decision is refused.")
+        #expect(recorder.names == ["current-decision"], "Only the event belonging to the decision in force reaches the destination.")
+    }
+
 }
 
 // MARK: - Helpers

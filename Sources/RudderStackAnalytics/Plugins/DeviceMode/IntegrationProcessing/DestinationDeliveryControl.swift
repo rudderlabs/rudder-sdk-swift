@@ -85,6 +85,24 @@ final class DestinationDeliveryControl {
     }
 
     /**
+     Records the consent decision in force for a destination that is already delivering.
+
+     A destination that never stops delivering is never re-held, so `beginBuffering` does not run for
+     it again and its boundary would stay where its first initialization left it. An event created
+     while consent was revoked would then still be delivered, however late it is released.
+
+     - Parameters:
+        - key: The destination key.
+        - epoch: The consent decision in force. Events created under an earlier one are skipped.
+     */
+    func noteDecision(for key: String, notBefore epoch: UInt64) {
+        let state = self.state(for: key, creatingIfNeeded: false)
+        state?.withLock { destination in
+            destination.heldFromEpoch = epoch
+        }
+    }
+
+    /**
      Decides what happens to one event, delivering it when the destination is ready to receive it.
 
      - Parameters:
