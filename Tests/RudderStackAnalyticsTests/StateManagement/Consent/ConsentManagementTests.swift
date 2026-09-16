@@ -95,4 +95,41 @@ struct ConsentManagementTests {
         #expect(state.allowedConsentIds == ["marketing"])
         #expect(state.deniedConsentIds == ["ads"])
     }
+
+    // MARK: - Context Stamp
+
+    @Test("given a state, when stamped and rebuilt, then every gated field round-trips")
+    func testContextStampRoundTrips() {
+        let original = ConsentManagement(active: true, provider: .custom, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"])
+
+        let rebuilt = ConsentManagement.from(contextStamp: original.contextStamp)
+
+        #expect(rebuilt == original, "A stamp must rebuild the state the resolver needs, unchanged.")
+    }
+
+    @Test("given a stamp from an unrecognized provider, when rebuilt, then it is nil")
+    func testForeignProviderStampIsNotRebuilt() {
+        let stamp: [String: Any] = ["provider": "oneTrust", "allowedConsentIds": ["marketing"], "deniedConsentIds": []]
+
+        #expect(ConsentManagement.from(contextStamp: stamp) == nil, "Only the provider the SDK stamps is recognized; anything else must leave the destination ungated.")
+    }
+
+    @Test("given a stamp missing its lists, when rebuilt, then both default to empty")
+    func testStampWithoutListsRebuildsEmpty() {
+        let rebuilt = ConsentManagement.from(contextStamp: ["provider": "custom"])
+
+        #expect(rebuilt?.allowedConsentIds == [], "A malformed stamp must not crash the gate — the lists degrade to empty.")
+        #expect(rebuilt?.deniedConsentIds == [])
+        #expect(rebuilt?.active == true, "A captured stamp only exists while consent management is active.")
+    }
+
+    @Test("given a stamp with messy consent IDs, when rebuilt, then the lists are normalized")
+    func testStampNormalizesLists() {
+        let stamp: [String: Any] = ["provider": "custom", "allowedConsentIds": [" marketing ", ""], "deniedConsentIds": ["  ", "ads"]]
+
+        let rebuilt = ConsentManagement.from(contextStamp: stamp)
+
+        #expect(rebuilt?.allowedConsentIds == ["marketing"], "A stamp should pass through the same normalizer as every other input.")
+        #expect(rebuilt?.deniedConsentIds == ["ads"])
+    }
 }
