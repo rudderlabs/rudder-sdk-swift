@@ -58,7 +58,7 @@ final class DestinationDeliveryControl {
     private static let maxBufferSize = Constants.defaultConfig.maxHeldEventsPerDestination
     /// An event with no marker belongs to no decision, so it is skipped rather than replayed.
     private static func epoch(of event: Event) -> UInt64 {
-        (event as? ConsentEpochCarrying)?.consentEpoch ?? 0
+        (event as? ReservedContextCapturing)?.consentEpoch ?? 0
     }
     @Synchronized private var destinations: [String: DestinationState] = [:]
 

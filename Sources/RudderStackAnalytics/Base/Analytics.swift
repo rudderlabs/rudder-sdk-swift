@@ -454,10 +454,11 @@ extension Analytics {
      - Parameter event: The event to be processed.
      */
     private func process(event: Event) {
-        // Stamped here rather than in the plugin chain: this runs synchronously on the caller's thread, so it records the decision in force when the event was created, not when it was later dequeued.
+        // Captured here rather than in the plugin chain: this runs synchronously on the caller's thread, so it records the decision in force when the event was created, not when it was later dequeued.
         var event = event
-        if var carrier = event as? ConsentEpochCarrying {
+        if var carrier = event as? ReservedContextCapturing {
             carrier.consentEpoch = self.consentEpoch
+            carrier.capturedReservedContext = self.capturedReservedContext()
             event = carrier
         }
         
@@ -475,6 +476,41 @@ extension Analytics {
      */
     private func storeAnonymousId() {
         self.userIdentityState.value.storeAnonymousId(self.storage)
+    }
+}
+
+// MARK: - Reserved Context
+
+extension Analytics {
+
+    /**
+     The value the SDK currently asserts for a reserved context key, with the advice shown when a
+     customer overrides it.
+
+     The single resolution point: `process` reads it to record what the event was created under,
+     and `SchemaGuardPlugin` reads it for the warning text.
+     */
+    func reservedContextValue(for key: SDKManagedContextKey) -> (value: Any, advice: String)? {
+        switch key {
+        case .consentManagement:
+            let state = self.consentManagementState.value
+            guard state.active else { return nil }
+            return (state.contextStamp, "the SDK owns this key while consent management is enabled. Migrate to setConsent(_:).")
+        default:
+            return nil
+        }
+    }
+
+    /**
+     Every reserved value the SDK asserts at this instant, keyed for the event to carry.
+     */
+    func capturedReservedContext() -> [String: Any]? {
+        var captured = [String: Any]()
+        for key in SDKManagedContextKey.reservedKeys {
+            guard let reserved = self.reservedContextValue(for: key) else { continue }
+            captured[key.rawValue] = reserved.value
+        }
+        return captured.isEmpty ? nil : captured
     }
 }
 

@@ -14,7 +14,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct AliasEvent: Event, ConsentEpochCarrying {
+public struct AliasEvent: Event, ReservedContextCapturing {
 
     /// The type of the event, defaulting to `.alias`.
     public var type: EventType = .alias
@@ -57,6 +57,9 @@ public struct AliasEvent: Event, ConsentEpochCarrying {
     
     /// The consent decision in force when the event was created.
     var consentEpoch: UInt64 = 0
+
+    /// The values the SDK asserted for its reserved context keys when the event was created.
+    var capturedReservedContext: [String: Any]?
 
     /**
      Initializes an `AliasEvent` with the specified previous identifier, options, and user identity.

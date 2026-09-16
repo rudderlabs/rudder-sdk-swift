@@ -45,7 +45,7 @@ struct SchemaGuardPluginTests {
         let (snapshot, guardPlugin) = makeGuard(for: analytics)
         let stamper = makeStamper(for: analytics)
 
-        var event = makeTrackEvent()
+        var event = makeTrackEvent(for: analytics)
         event = stamper.intercept(event: event) ?? event
         event = snapshot.intercept(event: event) ?? event
         // A customer plugin spoofing the stamp after the SDK wrote it.
@@ -70,7 +70,7 @@ struct SchemaGuardPluginTests {
         let (snapshot, guardPlugin) = makeGuard(for: analytics)
 
         // Never stamped — equivalent to a customer plugin deleting the key.
-        var event = makeTrackEvent()
+        var event = makeTrackEvent(for: analytics)
         event = snapshot.intercept(event: event) ?? event
 
         let result = guardPlugin.intercept(event: event)
@@ -87,7 +87,7 @@ struct SchemaGuardPluginTests {
         let (snapshot, guardPlugin) = makeGuard(for: analytics)
         let stamper = makeStamper(for: analytics)
 
-        var event = makeTrackEvent(options: RudderOption(customContext: ["consentManagement": ["provider": "legacy"]]))
+        var event = makeTrackEvent(options: RudderOption(customContext: ["consentManagement": ["provider": "legacy"]]), for: analytics)
         event = stamper.intercept(event: event) ?? event
         event = snapshot.intercept(event: event) ?? event
         let before = event.jsonString
@@ -123,7 +123,7 @@ struct SchemaGuardPluginTests {
         let (snapshot, guardPlugin) = makeGuard(for: analytics)
         let stamper = makeStamper(for: analytics)
 
-        var event = makeTrackEvent()
+        var event = makeTrackEvent(for: analytics)
         event = stamper.intercept(event: event) ?? event
         event = snapshot.intercept(event: event) ?? event
         let before = event.jsonString
@@ -132,6 +132,28 @@ struct SchemaGuardPluginTests {
 
         #expect(result?.jsonString == before, "A clean event must pass through byte-identical.")
         #expect(warnMessages(in: mockLogger).isEmpty)
+    }
+
+    @Test("given consent changed after the event was created, when the guard runs, then the event keeps the consent captured at creation")
+    func testGuardRestoresConsentCapturedAtCreation() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let (snapshot, guardPlugin) = makeGuard(for: analytics)
+        let stamper = makeStamper(for: analytics)
+
+        var event = makeTrackEvent(for: analytics)
+        event = stamper.intercept(event: event) ?? event
+        event = snapshot.intercept(event: event) ?? event
+
+        // The user widens consent while the event is still in flight.
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing", "analytics"]))
+
+        let result = guardPlugin.intercept(event: event)
+
+        let block = result?.context?.rawDictionary["consentManagement"] as? [String: Any]
+        #expect(
+            block?["allowedConsentIds"] as? [String] == ["marketing"],
+            "A decision taken after the event was created must not rewrite what the event recorded."
+        )
     }
 
     // MARK: - Base Key Detection
@@ -272,8 +294,14 @@ extension SchemaGuardPluginTests {
         return plugin
     }
 
-    private func makeTrackEvent(options: RudderOption? = nil) -> Event {
-        let event: Event = TrackEvent(event: MockProvider.SampleEventName.track, options: options)
+    /// Mirrors what `Analytics.process` does at creation: passing `analytics` records the reserved
+    /// values in force at that moment, which is what the guard restores from.
+    private func makeTrackEvent(options: RudderOption? = nil, for analytics: Analytics? = nil) -> Event {
+        var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, options: options)
+        if let analytics, var carrier = event as? ReservedContextCapturing {
+            carrier.capturedReservedContext = analytics.capturedReservedContext()
+            event = carrier
+        }
         return event.updateEventData()
     }
 

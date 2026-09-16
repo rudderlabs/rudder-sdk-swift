@@ -38,36 +38,29 @@ final class SchemaGuardPlugin: Plugin {
 
 extension SchemaGuardPlugin {
     /**
-     Re-asserts every reserved context key from its current SDK-owned value.
-     
-     A key is enforced only while the SDK holds a value for it — otherwise it is not
-     reserved for this session and the event passes through untouched.
+     Re-asserts every reserved context key from the value the SDK asserted when the event was created.
+
+     The value written is the one captured at creation, not the state at this instant, so a decision
+     taken while the event was in flight cannot rewrite what the event recorded. Any remaining
+     difference is therefore a customer override, which is what the warning reports.
+
+     A key the SDK asserted no value for at creation is not reserved for this event and passes
+     through untouched.
      */
     private func enforceReservedKeys(on event: any Event) -> any Event {
         var result = event
-        
+        let captured = (event as? ReservedContextCapturing)?.capturedReservedContext
+
         for key in SDKManagedContextKey.reservedKeys {
-            guard let reserved = self.reservedStamp(for: key) else { continue }
-            guard result.context?[key.rawValue] != AnyCodable(reserved.value) else { continue }
-            
-            self.analytics?.logger.warn(log: "SchemaGuardPlugin: Replacing the \"\(key.rawValue)\" key found in the event context; \(reserved.advice)")
-            result = result.addToContext(info: [key.rawValue: reserved.value])
+            guard let advice = self.analytics?.reservedContextValue(for: key)?.advice else { continue }
+            guard let value = captured?[key.rawValue] else { continue }
+            guard result.context?[key.rawValue] != AnyCodable(value) else { continue }
+
+            self.analytics?.logger.warn(log: "SchemaGuardPlugin: Replacing the \"\(key.rawValue)\" key found in the event context; \(advice)")
+            result = result.addToContext(info: [key.rawValue: value])
         }
-        
+
         return result
-    }
-    
-    /**
-     The value the SDK currently asserts for `key`, or `nil` while it asserts none.
-     */
-    private func reservedStamp(for key: SDKManagedContextKey) -> (value: Any, advice: String)? {
-        switch key {
-        case .consentManagement:
-            guard let state = self.analytics?.consentManagementState.value, state.active else { return nil }
-            return (state.contextStamp, "the SDK owns this key while consent management is enabled. Migrate to setConsent(_:).")
-        default:
-            return nil
-        }
     }
 }
 

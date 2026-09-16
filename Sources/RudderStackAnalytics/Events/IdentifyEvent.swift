@@ -14,7 +14,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct IdentifyEvent: Event, ConsentEpochCarrying {
+public struct IdentifyEvent: Event, ReservedContextCapturing {
     
     /// The type of the event, defaulting to `.identify`.
     public var type: EventType = .identify
@@ -57,6 +57,9 @@ public struct IdentifyEvent: Event, ConsentEpochCarrying {
     
     /// The consent decision in force when the event was created.
     var consentEpoch: UInt64 = 0
+
+    /// The values the SDK asserted for its reserved context keys when the event was created.
+    var capturedReservedContext: [String: Any]?
 
     /**
      Initializes an `IdentifyEvent` with the specified traits, options, and user identity values.

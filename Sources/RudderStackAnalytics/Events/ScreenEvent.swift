@@ -16,7 +16,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct ScreenEvent: Event, ConsentEpochCarrying {
+public struct ScreenEvent: Event, ReservedContextCapturing {
     
     /// The type of the event, defaulting to `.screen`.
     public var type: EventType = .screen
@@ -65,6 +65,9 @@ public struct ScreenEvent: Event, ConsentEpochCarrying {
     
     /// The consent decision in force when the event was created.
     var consentEpoch: UInt64 = 0
+
+    /// The values the SDK asserted for its reserved context keys when the event was created.
+    var capturedReservedContext: [String: Any]?
     
     /**
      Initializes a `ScreenEvent` with the specified screen name, category, properties, options and user identity values.
