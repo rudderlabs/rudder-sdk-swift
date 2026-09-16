@@ -63,9 +63,6 @@ public struct ScreenEvent: Event, ReservedContextCapturing {
     /// The identity values of the user associated with the event.
     public var userIdentity: UserIdentity?
     
-    /// The consent decision in force when the event was created.
-    var consentEpoch: UInt64 = 0
-
     /// The values the SDK asserted for its reserved context keys when the event was created.
     var capturedReservedContext: [String: Any]?
     

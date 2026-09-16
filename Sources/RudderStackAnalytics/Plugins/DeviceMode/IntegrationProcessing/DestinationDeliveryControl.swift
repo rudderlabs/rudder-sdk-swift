@@ -42,10 +42,6 @@ final class DestinationDeliveryControl {
         let lock = NSRecursiveLock()
         /// Events held while initialization is in flight; `nil` when not buffering.
         var buffered: [Event]?
-        /// The consent decision in force for this destination. Events created under an earlier one
-        /// are never delivered — held or ready makes no difference. It outlives the hold, so it is
-        /// cleared only when the destination stops being ready.
-        var heldFromEpoch: UInt64 = 0
         var isReady = false
 
         func withLock(_ block: (DestinationState) -> Void) {
@@ -56,49 +52,23 @@ final class DestinationDeliveryControl {
     }
 
     private static let maxBufferSize = Constants.defaultConfig.maxHeldEventsPerDestination
-    /// An event with no marker belongs to no decision, so it is skipped rather than replayed.
-    private static func epoch(of event: Event) -> UInt64 {
-        (event as? ReservedContextCapturing)?.consentEpoch ?? 0
-    }
     @Synchronized private var destinations: [String: DestinationState] = [:]
 
     /**
      Starts holding events for a destination that is initializing.
 
-     Repeat calls carrying the same consent decision are idempotent: one re-initialization begins
-     buffering from more than one call site, so whatever is already held must survive. A call
-     carrying a different decision replaces the hold — everything buffered was admitted under the
-     previous decision and must not be replayed against this one.
+     Repeat calls are idempotent: one re-initialization begins buffering from more than one call
+     site, so whatever is already held must survive. A consent decision landing mid-hold does not
+     discard it either — each held event is judged against the consent it was created under when it
+     is handed to the destination.
 
-     - Parameters:
-        - key: The destination key.
-        - epoch: The consent decision in force. Events created under an earlier one are skipped;
-                 zero means no decision has been taken yet, so everything is held.
+     - Parameter key: The destination key.
      */
-    func beginBuffering(for key: String, notBefore epoch: UInt64 = 0) {
+    func beginBuffering(for key: String) {
         let state = self.state(for: key, creatingIfNeeded: true)
         state?.withLock { destination in
-            guard destination.buffered == nil || destination.heldFromEpoch != epoch else { return }
+            guard destination.buffered == nil else { return }
             destination.buffered = []
-            destination.heldFromEpoch = epoch
-        }
-    }
-
-    /**
-     Records the consent decision in force for a destination that is already delivering.
-
-     A destination that never stops delivering is never re-held, so `beginBuffering` does not run for
-     it again and its boundary would stay where its first initialization left it. An event created
-     while consent was revoked would then still be delivered, however late it is released.
-
-     - Parameters:
-        - key: The destination key.
-        - epoch: The consent decision in force. Events created under an earlier one are skipped.
-     */
-    func noteDecision(for key: String, notBefore epoch: UInt64) {
-        let state = self.state(for: key, creatingIfNeeded: false)
-        state?.withLock { destination in
-            destination.heldFromEpoch = epoch
         }
     }
 
@@ -118,13 +88,6 @@ final class DestinationDeliveryControl {
 
         var verdict = Verdict.skipped
         state.withLock { destination in
-            // Checked ahead of the branch, not inside the hold: a customer plugin can pause an event
-            // and release it after initialization has finished, so the decision it was created under
-            // has to be honoured on the ready path too.
-            if Self.epoch(of: event) < destination.heldFromEpoch {
-                verdict = .skipped
-                return
-            }
             if var buffered = destination.buffered {
                 if buffered.count >= Self.maxBufferSize { buffered.removeFirst() }
                 buffered.append(event)
@@ -151,8 +114,6 @@ final class DestinationDeliveryControl {
         state?.withLock { destination in
             let buffered = destination.buffered ?? []
             destination.buffered = nil
-            // The boundary is deliberately kept: becoming ready ends the hold, not the consent
-            // decision the hold opened under.
             destination.isReady = true
             deliver(buffered)
         }
@@ -172,7 +133,6 @@ final class DestinationDeliveryControl {
         state.withLock { destination in
             discarded = destination.buffered?.count ?? 0
             destination.buffered = nil
-            destination.heldFromEpoch = 0
             destination.isReady = false
         }
         $destinations.modify { $0.removeValue(forKey: key) }

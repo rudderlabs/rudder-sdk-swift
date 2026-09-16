@@ -55,9 +55,6 @@ public struct AliasEvent: Event, ReservedContextCapturing {
     /// The previous user identifier that the new identifier (`userId`) is linked to.
     public var previousId: String
     
-    /// The consent decision in force when the event was created.
-    var consentEpoch: UInt64 = 0
-
     /// The values the SDK asserted for its reserved context keys when the event was created.
     var capturedReservedContext: [String: Any]?
 

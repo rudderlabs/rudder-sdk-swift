@@ -17,8 +17,8 @@ import Foundation
 
  Validating the update itself belongs to `Analytics.setConsent`, which refuses one carrying no
  consent IDs at all and warns. Repeating that check here would leave two copies of one rule free
- to drift apart — and `setConsent` advances the consent epoch and opens the device-mode holds
- before dispatching, so a divergence would strand those against a decision that never landed.
+ to drift apart — and `setConsent` opens the device-mode holds before dispatching, so a divergence
+ would strand those against a decision that never landed.
  */
 struct SetConsentAction: StateAction {
     typealias T = ConsentManagement

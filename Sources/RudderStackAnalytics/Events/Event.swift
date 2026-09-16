@@ -217,12 +217,9 @@ public enum EventType: String, CaseIterable, Codable {
  consent change landing while the event is in flight would rewrite what the event says the user
  agreed to. Capturing at creation is what makes the event its own source of truth.
 
- Internal, and absent from every `CodingKeys` — neither value reaches the payload.
+ Internal, and absent from every `CodingKeys` — it never reaches the payload.
  */
 protocol ReservedContextCapturing: Event {
     /// The values the SDK asserted for its reserved context keys when the event was created.
     var capturedReservedContext: [String: Any]? { get set }
-
-    /// The consent decision in force when the event was created.
-    var consentEpoch: UInt64 { get set }
 }

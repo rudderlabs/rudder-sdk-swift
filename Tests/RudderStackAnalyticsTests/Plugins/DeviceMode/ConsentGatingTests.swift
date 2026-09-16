@@ -224,25 +224,27 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames == ["right-after-grant"], "An event created after consent was granted must not be lost to the gap before re-initialization is scheduled.")
     }
 
-    @Test("given events created before a grant, when they drain after it, then they are never held")
-    func testEventsCreatedBeforeTheGrantAreNeverHeld() {
+    @Test("given events created before a grant, when they drain after it, then they are never delivered")
+    func testEventsCreatedBeforeTheGrantAreNeverDelivered() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
-        let plugin = makeIntegration(for: analytics)
         let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        // The gate seeds its destination config at setup, so the config has to land before the
+        // destination is built.
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
         let controller = analytics.integrationsController
         controller?.add(integration: plugin)
         controller?.initDestination(sourceConfig: sourceConfig, integration: plugin)
 
         // Created while the destination was denied, still queued upstream when consent is granted.
-        let queuedBeforeGrant = makeTrackEvent(named: "queued-before-grant")
-        Thread.sleep(forTimeInterval: 0.01)
+        let queuedBeforeGrant = makeTrackEvent(named: "queued-before-grant", for: analytics)
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
 
         controller?.deliver(event: queuedBeforeGrant, to: plugin)
         controller?.initDestination(sourceConfig: sourceConfig, integration: plugin)
 
         #expect(plugin.createCalled == true, "Precondition: the grant late-initializes the destination.")
-        #expect(plugin.receivedTrackEventNames.isEmpty, "An event's consent verdict is fixed when it happens; holding from the grant onward must not reach back and deliver events that occurred while consent was denied.")
+        #expect(plugin.receivedTrackEventNames.isEmpty, "An event's consent verdict is fixed when it happens; a later grant must not reach back and deliver events that occurred while consent was denied.")
     }
 
     @Test("given consent supplied at launch, when an event arrives before the destination is created, then it is held")
@@ -437,11 +439,9 @@ struct ConsentGatingTests {
         let plugin = makeIntegration(for: analytics)
         analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
 
-        // Captured under a refusal, while live consent grants the destination. The epoch is held at
-        // the current value so the device-mode hold admits it — this exercises the gate, not the hold.
+        // Captured under a refusal, while live consent grants the destination.
         let deniedState = ConsentManagement(active: true, provider: .custom, allowedConsentIds: [], deniedConsentIds: ["marketing"])
         var track = TrackEvent(event: "denied-at-creation")
-        track.consentEpoch = analytics.consentEpoch
         track.capturedReservedContext = [ConsentManagement.contextKey: deniedState.contextStamp]
 
         _ = plugin.intercept(event: track.updateEventData())
@@ -465,7 +465,6 @@ struct ConsentGatingTests {
         // The destination is left ready deliberately: re-initializing would tear it down and the
         // hold would skip the event, so the drop would prove nothing about the gate.
         analytics.setConsent(ConsentManagementOptions(deniedConsentIds: ["marketing"]))
-        track.consentEpoch = analytics.consentEpoch
 
         _ = plugin.intercept(event: track.updateEventData())
 
@@ -703,10 +702,9 @@ extension ConsentGatingTests {
 
     private func makeTrackEvent(named name: String, for analytics: Analytics? = nil) -> Event {
         // Mirrors what Analytics.process does at creation: the event carries the consent decision in
-        // force, which is what the device-mode hold compares against. These tests hand events to the
-        // controller directly, so without this they would all sit at epoch zero and be skipped.
+        // force, which is what the gate judges it against when it reaches the destination.
         var track = TrackEvent(event: name)
-        track.consentEpoch = analytics?.consentEpoch ?? 0
+        track.capturedReservedContext = analytics?.capturedReservedContext()
 
         var event: Event = track.updateEventData()
         if let state = analytics?.consentManagementState.value, state.active {
