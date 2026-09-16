@@ -200,14 +200,17 @@ extension IntegrationPlugin {
      
      The value restored is the one captured at creation, not the state at this instant, so a
      consent decision taken while the event was in flight cannot rewrite what the event recorded.
-     Any difference at this point is therefore a destination plugin overwriting the key.
+     Any difference at this point is therefore a destination plugin overwriting the key, which is
+     warned about once per destination rather than once per event.
      */
     private func consentRestampedEvent(_ event: any Event) -> any Event {
         let stampKey = SDKManagedContextKey.consentManagement.rawValue
         guard let captured = (event as? ReservedContextCapturing)?.capturedReservedContext?[stampKey] else { return event }
         guard event.context?[stampKey] != AnyCodable(captured) else { return event }
 
-        analytics?.logger.debug(log: "IntegrationPlugin: Restored the consent stamp before delivery to destination \(key).")
+        if pluginStore?.claimRestoreWarning() == true {
+            analytics?.logger.warn(log: "IntegrationPlugin: Replacing the \"\(stampKey)\" key rewritten in the destination chain for \(key); the SDK owns this key while consent management is enabled.")
+        }
         return event.addToContext(info: [stampKey: captured])
     }
 }

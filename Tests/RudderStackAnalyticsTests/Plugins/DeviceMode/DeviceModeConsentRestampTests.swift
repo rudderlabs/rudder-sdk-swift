@@ -125,6 +125,22 @@ struct DeviceModeConsentRestampTests {
         )
     }
 
+    @Test("given a destination plugin rewriting the consent key on every event, when several are delivered, then only the first warns")
+    func testDestinationChainOverrideWarnsOnce() {
+        let mockLogger = MockLogger()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]), logger: mockLogger)
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: makeSourceConfig(consentEntries: nil), integration: plugin)
+        plugin.add(plugin: ContextMutatingPlugin(info: ["consentManagement": ["provider": Self.sentinel]]))
+
+        for index in 0..<3 {
+            _ = plugin.intercept(event: makeTrackEvent(named: "spoofed-\(index)", for: analytics))
+        }
+
+        let warnings = mockLogger.logs.filter { $0.level == "WARN" && $0.message.contains("consentManagement") }
+        #expect(warnings.count == 1, "A destination plugin rewriting the key must warn once per destination, not per event.")
+    }
+
     // MARK: - Restamp vs the device-mode hold
 
     @Test("given an event created before the grant, when the terminal guard has re-stamped it, then it is still not replayed")

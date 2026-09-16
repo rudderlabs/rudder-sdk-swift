@@ -18,10 +18,23 @@ class IntegrationPluginStore {
     /// Lifecycle state for flush, reset and readiness callbacks. Delivery is not gated on this —
     /// `DestinationDeliveryControl` decides that, so readiness and any hold cannot disagree.
     var isDestinationReady = false
-    
+    /// Claimed once per destination, so a destination plugin rewriting the consent key warns once
+    /// rather than on every event.
+    @Synchronized private var hasWarnedAboutRestoredStamp = false
+
     init(analytics: Analytics) {
         self.analytics = analytics
         self.pluginChain = PluginChain(analytics: analytics)
+    }
+
+    /// Claims the single restore warning, returning `true` exactly once per destination.
+    func claimRestoreWarning() -> Bool {
+        var claimed = false
+        self.$hasWarnedAboutRestoredStamp.modify { warned in
+            claimed = !warned
+            warned = true
+        }
+        return claimed
     }
     
     deinit {
