@@ -156,6 +156,27 @@ struct SchemaGuardPluginTests {
         )
     }
 
+    // Driven through a real chain: the event's own bookkeeping has to be put back where the chain takes
+    // the plugin's result, or the guard has nothing to restore from.
+    @Test("given a plugin that rebuilds the event with a spoofed consent block, when the chain runs, then the SDK block reaches the terminal consumers")
+    func testRebuiltEventStillReachesTerminalWithTheSdkConsentBlock() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let (snapshot, guardPlugin) = makeGuard(for: analytics)
+        let capture = MockEventCapturePlugin()
+        let chain = PluginChain(analytics: analytics)
+        chain.add(plugin: makeStamper(for: analytics))
+        chain.add(plugin: snapshot)
+        chain.add(plugin: ConsentSpoofingRebuildPlugin())
+        chain.add(plugin: guardPlugin)
+        chain.add(plugin: capture)
+
+        chain.process(event: makeTrackEvent(for: analytics))
+
+        let block = capture.capturedEvents.first?.context?.rawDictionary["consentManagement"] as? [String: Any]
+        #expect(block?["provider"] as? String == "custom", "A rebuilt event must not smuggle a spoofed consent block past the guard.")
+        #expect(block?["allowedConsentIds"] as? [String] == ["marketing"])
+    }
+
     // MARK: - Base Key Detection
 
     @Test("given a base key injected via customContext, when the guard runs, then a value-free deprecation warning names the key", arguments: SDKManagedContextKey.baseKeys)
@@ -307,5 +328,23 @@ extension SchemaGuardPluginTests {
 
     private func warnMessages(in logger: MockLogger) -> [String] {
         logger.logs.filter { $0.level == "WARN" }.map { $0.message }
+    }
+}
+
+// MARK: - ConsentSpoofingRebuildPlugin
+/// A customer plugin that returns a newly built event instead of the one it was handed, copying what it
+/// can see and spoofing the consent block.
+private final class ConsentSpoofingRebuildPlugin: Plugin {
+    var pluginType: PluginType = .preProcess
+    var analytics: Analytics?
+
+    func intercept(event: any Event) -> (any Event)? {
+        guard let track = event as? TrackEvent else { return event }
+        var rebuilt = TrackEvent(event: track.event)
+        rebuilt.anonymousId = track.anonymousId
+        rebuilt.userId = track.userId
+        rebuilt.integrations = track.integrations
+        rebuilt.context = track.context
+        return rebuilt.addToContext(info: ["consentManagement": ["provider": SchemaGuardPluginTests.sentinel]])
     }
 }

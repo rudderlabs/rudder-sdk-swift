@@ -122,6 +122,39 @@ struct MessageModuleTests {
     func testAliasEventPreviousIdOptions() {
         testAliasEvent(previousId: "my_previous_id", options: complexOptions)
     }
+    
+    // MARK: - SDK-Owned State Tests
+    @Test("given a newly built event, when sdk-owned state is restored, then identity, options and captured context come back")
+    func testRestoringSdkOwnedStateOnReplacement() {
+        var original = TrackEvent(event: "original", options: RudderOption(customContext: ["campaign": "spring"]))
+        original.capturedReservedContext = ["consentManagement": ["provider": "custom"]]
+        let replacement: Event = TrackEvent(event: "replaced")
+        
+        let restored = replacement.restoringSdkOwnedState(from: original)
+        
+        #expect(restored.messageId == original.messageId)
+        #expect(restored.options === original.options)
+        #expect(capturedProvider(of: restored) == "custom")
+        #expect((restored as? TrackEvent)?.event == "replaced", "Payload fields belong to the plugin and must be kept.")
+    }
+    
+    @Test("given an edited event with the same identity, when sdk-owned state is restored, then the plugin's options are kept")
+    func testRestoringSdkOwnedStateKeepsEditsToTheSameEvent() {
+        var original = TrackEvent(event: "original", options: RudderOption(customContext: ["campaign": "spring"]))
+        original.capturedReservedContext = ["consentManagement": ["provider": "custom"]]
+        var edited = original
+        edited.options = RudderOption(customContext: ["campaign": "summer"])
+        
+        let restored = edited.restoringSdkOwnedState(from: original)
+        
+        #expect(restored.options === edited.options, "An edit to the event a plugin was handed is the plugin's to make.")
+        #expect(capturedProvider(of: restored) == "custom")
+    }
+    
+    private func capturedProvider(of event: Event) -> String? {
+        let block = (event as? ReservedContextCapturing)?.capturedReservedContext?["consentManagement"] as? [String: Any]
+        return block?["provider"] as? String
+    }
 }
 
 // MARK: - Helper Methods

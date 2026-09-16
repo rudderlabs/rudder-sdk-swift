@@ -68,6 +68,25 @@ class PluginModuleTests {
         let allFoundPlugins = interactor.findAll(TestPlugin.self)
         #expect(allFoundPlugins.count == 2)
     }
+    
+    // The plugin contract lets intercept return a newly built event rather than the one it was handed.
+    // That event cannot carry the SDK's own bookkeeping, so the chain has to put it back, or it is lost
+    // silently.
+    @Test("given a plugin returning a newly built event, when executed, then sdk-owned state survives")
+    func testExecuteRestoresSdkOwnedStateOnReplacement() {
+        let interactor = PluginInteractor()
+        interactor.add(plugin: EventReplacingTestPlugin())
+        var original = TrackEvent(event: "original", options: RudderOption(customContext: ["campaign": "spring"]))
+        original.capturedReservedContext = ["consentManagement": ["provider": "custom"]]
+        
+        let result = interactor.execute(original)
+        
+        let captured = (result as? ReservedContextCapturing)?.capturedReservedContext?["consentManagement"] as? [String: Any]
+        #expect(result?.messageId == original.messageId, "messageId was not preserved")
+        #expect(result?.options === original.options, "options were not preserved")
+        #expect(captured?["provider"] as? String == "custom", "the captured context was not preserved")
+        #expect((result as? TrackEvent)?.event == "replaced", "the plugin's payload must be kept")
+    }
 }
 
 // MARK: - Test Helper Plugins
@@ -107,5 +126,12 @@ class TestTerminalPlugin: TestPlugin {
     override init() {
         super.init()
         pluginType = .terminal
+    }
+}
+
+/// A plugin that returns a newly built event instead of the one it was handed.
+class EventReplacingTestPlugin: TestPlugin {
+    override func intercept(event: Event) -> Event? {
+        TrackEvent(event: "replaced")
     }
 }

@@ -601,6 +601,41 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames == ["after-grant"], "A destination that never stopped delivering must still honour the consent boundary: an event created while consent was revoked is not delivered once consent is granted again.")
     }
 
+    // A customer plugin can return a newly built event rather than the one it was handed. Nothing it can
+    // see on the original carries the consent the event was created under, so this pins that the chain
+    // puts it back — otherwise the gate falls back to live consent and the grant reaches backwards.
+    @Test("given a customer plugin that rebuilds a held event from the denied period, when it releases after the destination is ready, then the rebuilt event is not delivered")
+    func testRebuiltPreGrantEventIsNotDeliveredOnceTheDestinationIsReady() async throws {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]))
+        let holder = EventHoldingPlugin(holding: "denied-before-grant", rebuilding: true)
+        analytics.add(plugin: holder)
+
+        let plugin = MockStandardIntegrationPlugin(key: destinationKey)
+        analytics.add(plugin: plugin)
+
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let configLanded = await waitUntil { analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce == true }
+        #expect(configLanded, "Precondition: the source config must land before events are processed.")
+        #expect(plugin.createCalled == false, "Precondition: the destination is consent-denied at launch.")
+
+        // Created while consent was denied, then held and rebuilt by the customer's plugin.
+        analytics.track(name: "denied-before-grant")
+        let holding = await waitUntil { holder.isHolding }
+        #expect(holding, "Precondition: the customer plugin must be holding the event.")
+
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
+        let ready = await waitUntil { plugin.pluginStore?.isDestinationReady == true }
+        #expect(ready, "Precondition: the grant must re-initialize the destination before the held event resumes.")
+
+        holder.release()
+        analytics.track(name: "after-grant")
+
+        let delivered = await waitUntil { plugin.receivedTrackEventNames.contains("after-grant") }
+        #expect(delivered, "Precondition: an event created after the grant must reach the destination.")
+        #expect(plugin.receivedTrackEventNames == ["after-grant"], "A rebuilt event must still be judged against the consent it was created under.")
+    }
+
 }
 
 // MARK: - EventHoldingPlugin
@@ -612,10 +647,13 @@ private final class EventHoldingPlugin: Plugin {
     @Synchronized private(set) var isHolding = false
 
     private let heldEventName: String
+    private let rebuilds: Bool
     private let gate = DispatchSemaphore(value: 0)
 
-    init(holding eventName: String) {
+    /// `rebuilding` releases a newly built event instead of the one it was handed.
+    init(holding eventName: String, rebuilding: Bool = false) {
         self.heldEventName = eventName
+        self.rebuilds = rebuilding
     }
 
     func setup(analytics: Analytics) {
@@ -623,13 +661,26 @@ private final class EventHoldingPlugin: Plugin {
     }
 
     func intercept(event: Event) -> Event? {
-        guard (event as? TrackEvent)?.event == heldEventName else { return event }
+        guard let track = event as? TrackEvent, track.event == heldEventName else { return event }
 
         self.isHolding = true
         // Bounded, so a test that never releases fails on its expectations instead of hanging.
         _ = gate.wait(timeout: .now() + 5)
         self.isHolding = false
-        return event
+        return rebuilds ? Self.rebuilt(track) : event
+    }
+
+    /// A new event carrying everything a customer's plugin can see on the original. The SDK's own
+    /// bookkeeping is internal, which is exactly what such an event cannot carry.
+    private static func rebuilt(_ track: TrackEvent) -> Event {
+        var rebuilt = TrackEvent(event: track.event)
+        rebuilt.anonymousId = track.anonymousId
+        rebuilt.userId = track.userId
+        rebuilt.channel = track.channel
+        rebuilt.integrations = track.integrations
+        rebuilt.context = track.context
+        rebuilt.properties = track.properties
+        return rebuilt
     }
 
     func release() {
