@@ -425,6 +425,53 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames.isEmpty, "A revoked destination must gate its events even when it was registered late.")
     }
 
+    // MARK: - Consent at creation
+
+    @Test("given an event created while the destination was denied, when it is delivered after a grant, then the gate drops it")
+    func testEventCreatedWhileDeniedIsDroppedAfterGrant() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        // The gate seeds its destination config synchronously at setup, so this has to land before
+        // the destination is built. Without it the gate holds a nil config and resolves fail-open.
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        // Captured under a refusal, while live consent grants the destination. The epoch is held at
+        // the current value so the device-mode hold admits it — this exercises the gate, not the hold.
+        let deniedState = ConsentManagement(active: true, provider: .custom, allowedConsentIds: [], deniedConsentIds: ["marketing"])
+        var track = TrackEvent(event: "denied-at-creation")
+        track.consentEpoch = analytics.consentEpoch
+        track.capturedReservedContext = [ConsentManagement.contextKey: deniedState.contextStamp]
+
+        _ = plugin.intercept(event: track.updateEventData())
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "A grant must not retroactively authorise an event the user had refused when it was created.")
+    }
+
+    @Test("given an event created while consented, when the gate runs under a later revoke, then it is still dropped")
+    func testEventCreatedWhileConsentedIsDroppedAfterRevoke() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        // Captured under the grant that was in force at creation.
+        let grantedState = ConsentManagement(active: true, provider: .custom, allowedConsentIds: ["marketing"], deniedConsentIds: [])
+        var track = TrackEvent(event: "consented-at-creation")
+        track.capturedReservedContext = [ConsentManagement.contextKey: grantedState.contextStamp]
+
+        // The destination is left ready deliberately: re-initializing would tear it down and the
+        // hold would skip the event, so the drop would prove nothing about the gate.
+        analytics.setConsent(ConsentManagementOptions(deniedConsentIds: ["marketing"]))
+        track.consentEpoch = analytics.consentEpoch
+
+        _ = plugin.intercept(event: track.updateEventData())
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "A revoke still stops delivery of everything in flight, whatever the event was created under.")
+    }
+
     // MARK: - Delivery once the destination is ready
 
     // Driven through the public API end to end, because the leak this pins needs three moving parts
