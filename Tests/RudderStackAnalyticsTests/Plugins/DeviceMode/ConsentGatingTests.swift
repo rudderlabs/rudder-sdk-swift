@@ -224,6 +224,25 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames == ["right-after-grant"], "An event created after consent was granted must not be lost to the gap before re-initialization is scheduled.")
     }
 
+    // A refused setConsent must change nothing, and that includes device-mode holds. Opening one would
+    // leave a pending destination holding whatever arrives next, and replay it once it is created.
+    @Test("given a refused setConsent, when a destination is created afterwards, then nothing sent in between is replayed")
+    func testRefusedSetConsentOpensNoHold() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let plugin = makeIntegration(for: analytics)
+        let controller = analytics.integrationsController
+        // Registered, so a consent decision reaches it, but not yet initialized: neither holding nor ready.
+        controller?.add(integration: plugin)
+
+        // Refused, because it carries no consent IDs at all.
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: [], deniedConsentIds: []))
+        controller?.deliver(event: makeTrackEvent(named: "after-refused-call", for: analytics), to: plugin)
+        controller?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
+
+        #expect(plugin.createCalled == true, "Precondition: the destination is created.")
+        #expect(plugin.receivedTrackEventNames.isEmpty, "A refused setConsent must not open a hold that later replays what arrived in between.")
+    }
+
     @Test("given events created before a grant, when they drain after it, then they are never delivered")
     func testEventsCreatedBeforeTheGrantAreNeverDelivered() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
@@ -469,6 +488,35 @@ struct ConsentGatingTests {
         _ = plugin.intercept(event: track.updateEventData())
 
         #expect(plugin.receivedTrackEventNames.isEmpty, "A revoke still stops delivery of everything in flight, whatever the event was created under.")
+    }
+
+    // grant -> revoke -> grant while create() is still in flight. Every event is held until the destination
+    // is ready, so each has to be judged by the consent it was created under, not by whichever decision
+    // landed last. The destination is deliberately not registered with the controller, so the
+    // re-initialization a consent change schedules on another queue cannot reach it mid-create.
+    @Test("given consent granted, revoked, then granted again while a destination is being created, when it becomes ready, then each held event is judged by the consent it was created under")
+    func testHeldEventsAreJudgedByTheirOwnConsentAcrossGrantRevokeGrant() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        // The gate seeds its destination config at setup, so the config has to land first.
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
+
+        plugin.onCreate = { [weak analytics, weak plugin] in
+            guard let plugin else { return }
+            let controller = analytics?.integrationsController
+            controller?.deliver(event: self.makeTrackEvent(named: "first-grant", for: analytics), to: plugin)
+            analytics?.setConsent(ConsentManagementOptions(deniedConsentIds: ["marketing"]))
+            controller?.deliver(event: self.makeTrackEvent(named: "denied-window", for: analytics), to: plugin)
+            analytics?.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing", "analytics"]))
+        }
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        #expect(plugin.createCalled == true, "Precondition: the destination is created.")
+        #expect(
+            plugin.receivedTrackEventNames == ["first-grant"],
+            "An event created while consented is delivered once consent is granted again; one created during the refusal never is, however many decisions land before the destination is ready."
+        )
     }
 
     // MARK: - Delivery once the destination is ready
