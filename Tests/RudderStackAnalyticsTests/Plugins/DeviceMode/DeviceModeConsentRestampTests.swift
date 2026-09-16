@@ -22,7 +22,7 @@ struct DeviceModeConsentRestampTests {
         analytics.integrationsController?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
 
         let options = RudderOption(customContext: ["consentManagement": ["provider": Self.sentinel]])
-        _ = plugin.intercept(event: makeTrackEvent(named: "with-injection", options: options))
+        _ = plugin.intercept(event: makeTrackEvent(named: "with-injection", options: options, for: analytics))
 
         let block = plugin.trackEventReceived?.context?.rawDictionary["consentManagement"] as? [String: Any]
         #expect(block?["provider"] as? String == "custom", "The delivered payload must carry the SDK block.")
@@ -36,7 +36,7 @@ struct DeviceModeConsentRestampTests {
         analytics.integrationsController?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
         plugin.add(plugin: ContextMutatingPlugin(info: ["consentManagement": ["provider": Self.sentinel]]))
 
-        _ = plugin.intercept(event: makeTrackEvent(named: "spoofed"))
+        _ = plugin.intercept(event: makeTrackEvent(named: "spoofed", for: analytics))
 
         let block = plugin.trackEventReceived?.context?.rawDictionary["consentManagement"] as? [String: Any]
         #expect(block?["provider"] as? String == "custom", "The restamp must run after the destination's own plugin chain.")
@@ -60,7 +60,7 @@ struct DeviceModeConsentRestampTests {
 
         #expect(plugin.receivedTrackEventNames == ["during-init"], "Precondition: the buffered event must replay.")
         let block = plugin.trackEventReceived?.context?.rawDictionary["consentManagement"] as? [String: Any]
-        #expect(block?["allowedConsentIds"] as? [String] == ["marketing"], "A replayed event must carry the consent state it is delivered under.")
+        #expect(block?["allowedConsentIds"] as? [String] == ["marketing"], "A replayed event must carry the consent it was created under.")
     }
 
     @Test("given consent management disabled, when a customer block rides the event, then it is delivered untouched")
@@ -98,6 +98,31 @@ struct DeviceModeConsentRestampTests {
 
         #expect(plugin.receivedTrackEventNames.isEmpty, "The gate must drop the event before delivery.")
         #expect((result as? TrackEvent)?.event == "dropped", "The event must still pass through unchanged for cloud delivery.")
+    }
+
+    @Test("given an event whose captured consent differs from the live state, when it is delivered, then the captured block survives")
+    func testDeliveryRestoresCapturedConsentNotLiveState() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: makeSourceConfig(consentEntries: nil), integration: plugin)
+
+        // Created under a different decision from the one now in force. The epoch is held at the
+        // current value deliberately, so the device-mode hold admits the event and this exercises
+        // the restamp rather than the hold.
+        let capturedState = ConsentManagement(active: true, provider: .custom, allowedConsentIds: ["analytics"], deniedConsentIds: [])
+        var track = TrackEvent(event: "pre-change")
+        track.consentEpoch = analytics.consentEpoch
+        track.capturedReservedContext = [ConsentManagement.contextKey: capturedState.contextStamp]
+        let event: Event = track.updateEventData()
+            .addToContext(info: [ConsentManagement.contextKey: capturedState.contextStamp])
+
+        _ = plugin.intercept(event: event)
+
+        let block = plugin.trackEventReceived?.context?.rawDictionary["consentManagement"] as? [String: Any]
+        #expect(
+            block?["allowedConsentIds"] as? [String] == ["analytics"],
+            "Delivery must not rewrite the event's record from live state."
+        )
     }
 
     // MARK: - Restamp vs the device-mode hold
@@ -158,10 +183,11 @@ extension DeviceModeConsentRestampTests {
 
     private func makeTrackEvent(named name: String, options: RudderOption? = nil, for analytics: Analytics? = nil) -> Event {
         // Mirrors what Analytics.process does at creation: the event carries the consent decision in
-        // force. These tests hand events to the controller directly, so without this they would all
-        // sit at epoch zero and be skipped by the hold.
+        // force, which is what delivery restores from. These tests hand events to the controller
+        // directly, so without this they would all sit at epoch zero and be skipped by the hold.
         var track = TrackEvent(event: name, options: options)
         track.consentEpoch = analytics?.consentEpoch ?? 0
+        track.capturedReservedContext = analytics?.capturedReservedContext()
 
         let event: Event = track.updateEventData()
         guard let state = analytics?.consentManagementState.value, state.active else { return event }

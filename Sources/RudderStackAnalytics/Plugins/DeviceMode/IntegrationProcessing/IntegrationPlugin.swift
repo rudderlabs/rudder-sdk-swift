@@ -194,20 +194,21 @@ extension IntegrationPlugin {
     }
     
     /**
-     Re-asserts `context.consentManagement` from the current consent state before the event is
-     handed to the destination — the destination's own plugin chain runs after the main-chain
-     guard, so a value written there would otherwise survive. Drift is corrected silently: the
-     fan-out drains asynchronously, so a state change since the terminal stamp is expected,
-     not a customer override.
+     Re-asserts `context.consentManagement` from the value captured when the event was created,
+     before it is handed to the destination — the destination's own plugin chain runs after the
+     main-chain guard, so a value written there would otherwise survive.
+     
+     The value restored is the one captured at creation, not the state at this instant, so a
+     consent decision taken while the event was in flight cannot rewrite what the event recorded.
+     Any difference at this point is therefore a destination plugin overwriting the key.
      */
     private func consentRestampedEvent(_ event: any Event) -> any Event {
-        guard let state = analytics?.consentManagementState.value, state.active else { return event }
-        
         let stampKey = SDKManagedContextKey.consentManagement.rawValue
-        guard event.context?[stampKey] != AnyCodable(state.contextStamp) else { return event }
-        
-        analytics?.logger.debug(log: "IntegrationPlugin: Refreshed the consent stamp before delivery to destination \(key).")
-        return event.addToContext(info: [stampKey: state.contextStamp])
+        guard let captured = (event as? ReservedContextCapturing)?.capturedReservedContext?[stampKey] else { return event }
+        guard event.context?[stampKey] != AnyCodable(captured) else { return event }
+
+        analytics?.logger.debug(log: "IntegrationPlugin: Restored the consent stamp before delivery to destination \(key).")
+        return event.addToContext(info: [stampKey: captured])
     }
 }
 
