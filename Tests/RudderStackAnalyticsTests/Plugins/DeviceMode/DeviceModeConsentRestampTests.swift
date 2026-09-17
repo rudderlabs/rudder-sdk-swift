@@ -183,6 +183,50 @@ struct DeviceModeConsentRestampTests {
 
         #expect(plugin.trackEventReceived == nil, "A custom integration matching a gated destination must be gated at the handoff too.")
     }
+
+    @Test("given destination plugins that pass the event through a customer-defined event type across phases, when it is delivered, then the consent recorded at creation is delivered")
+    func testCustomerEventTypeInDestinationChainKeepsRecordedConsent() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: makeSourceConfig(consentEntries: nil), integration: plugin)
+        plugin.add(plugin: MockCustomerEventSwappingPlugin(pluginType: .preProcess, contextInfo: ["consentManagement": ["provider": Self.sentinel]]))
+        plugin.add(plugin: MockCustomerEventConvertingPlugin())
+
+        _ = plugin.intercept(event: makeTrackEvent(named: "through-customer-type", for: analytics))
+
+        let block = plugin.trackEventReceived?.context?.rawDictionary["consentManagement"] as? [String: Any]
+        #expect(block?["provider"] as? String == "custom", "A block spoofed through a customer event type must not reach the destination.")
+        #expect(block?["allowedConsentIds"] as? [String] == ["marketing"])
+    }
+
+    // Device-mode delivery is one of the main chain's terminal consumers, so the recorded consent has to
+    // survive a customer-defined event type there too, or the gate can no longer tell the event was created
+    // while its destination was denied.
+    @Test("given an event created while its destination was denied, when a customer plugin passes it through a customer-defined event type and consent is then granted, then it is not delivered")
+    func testCustomerEventTypeInMainChainKeepsRecordedConsentForTheGate() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
+        let capture = MockEventCapturePlugin()
+        let chain = PluginChain(analytics: analytics)
+        chain.add(plugin: MockCustomerEventSwappingPlugin(pluginType: .onProcess, contextInfo: [:]))
+        chain.add(plugin: MockCustomerEventConvertingPlugin())
+        chain.add(plugin: capture)
+        chain.process(event: makeTrackEvent(named: "created-while-denied", for: analytics))
+        guard let processed = capture.capturedEvents.first else {
+            Issue.record("Precondition: the main chain must hand the event to its terminal consumers.")
+            return
+        }
+
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+        #expect(plugin.pluginStore?.isDestinationReady == true, "Precondition: the destination is consented after the grant.")
+
+        _ = plugin.intercept(event: processed)
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "An event created while the destination was denied must not be delivered after a grant.")
+    }
 }
 
 // MARK: - Helpers

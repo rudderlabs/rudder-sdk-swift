@@ -174,7 +174,10 @@ extension IntegrationPlugin {
         let preProcessedEvent = pluginChain?.applyPlugins(pluginType: .preProcess, event: event)
         let onProcessedEvent = pluginChain?.applyPlugins(pluginType: .onProcess, event: preProcessedEvent)
         
-        if let finalEvent = onProcessedEvent, let deliverableEvent = self.gateAndRestoreConsentStamp(finalEvent) {
+        // As in the main chain: the destination's own plugins may have passed the event through a type that
+        // cannot carry the recorded consent, so it is put back from the event handed to this destination.
+        if let finalEvent = onProcessedEvent?.restoringSdkOwnedState(from: event),
+           let deliverableEvent = self.gateAndRestoreConsentStamp(finalEvent) {
             self.handleEvent(event: deliverableEvent)
         }
     }

@@ -177,6 +177,24 @@ struct SchemaGuardPluginTests {
         #expect(block?["allowedConsentIds"] as? [String] == ["marketing"])
     }
 
+    // A customer-defined event type has nowhere to hold the consent recorded at creation, so passing
+    // through one must not lose it: a grant spoofed on the way must not survive to the terminal consumers.
+    @Test("given plugins that pass the event through a customer-defined event type in one phase, when the chain runs, then the consent recorded at creation reaches the terminal consumers")
+    func testCustomerEventTypeInOnePhaseKeepsRecordedConsent() {
+        let block = runChainThroughCustomerEventType(swapPhase: .onProcess)
+
+        #expect(block?["allowedConsentIds"] as? [String] == ["analytics"])
+        #expect(block?["deniedConsentIds"] as? [String] == ["marketing"], "A grant spoofed through a customer event type must not survive.")
+    }
+
+    @Test("given plugins that pass the event through a customer-defined event type across phases, when the chain runs, then the consent recorded at creation reaches the terminal consumers")
+    func testCustomerEventTypeAcrossPhasesKeepsRecordedConsent() {
+        let block = runChainThroughCustomerEventType(swapPhase: .preProcess)
+
+        #expect(block?["allowedConsentIds"] as? [String] == ["analytics"])
+        #expect(block?["deniedConsentIds"] as? [String] == ["marketing"], "A grant spoofed through a customer event type must not survive.")
+    }
+
     // MARK: - Base Key Detection
 
     @Test("given a base key injected via customContext, when the guard runs, then a value-free deprecation warning names the key", arguments: SDKManagedContextKey.baseKeys)
@@ -324,6 +342,27 @@ extension SchemaGuardPluginTests {
             event = carrier
         }
         return event.updateEventData()
+    }
+
+    /// Runs a real chain in which one customer plugin swaps the event for a customer-defined type carrying a
+    /// spoofed grant, and another converts it back to a `TrackEvent`. Returns the consent block the terminal
+    /// consumers receive.
+    private func runChainThroughCustomerEventType(swapPhase: PluginType) -> [String: Any]? {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"], deniedConsentIds: ["marketing"]))
+        let (snapshot, guardPlugin) = makeGuard(for: analytics)
+        let capture = MockEventCapturePlugin()
+        let spoofedGrant: [String: Any] = ["consentManagement": ["provider": "custom", "allowedConsentIds": ["marketing"], "deniedConsentIds": [String]()]]
+        let chain = PluginChain(analytics: analytics)
+        chain.add(plugin: makeStamper(for: analytics))
+        chain.add(plugin: snapshot)
+        chain.add(plugin: MockCustomerEventSwappingPlugin(pluginType: swapPhase, contextInfo: spoofedGrant))
+        chain.add(plugin: MockCustomerEventConvertingPlugin())
+        chain.add(plugin: guardPlugin)
+        chain.add(plugin: capture)
+
+        chain.process(event: makeTrackEvent(for: analytics))
+
+        return capture.capturedEvents.first?.context?.rawDictionary["consentManagement"] as? [String: Any]
     }
 
     private func warnMessages(in logger: MockLogger) -> [String] {
