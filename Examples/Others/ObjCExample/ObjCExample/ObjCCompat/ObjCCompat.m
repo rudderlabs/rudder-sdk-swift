@@ -189,10 +189,6 @@
     [self.client setConsent: options];
 }
 
-- (void)resetConsent {
-    [self.client setConsent: [RSSConsentManagementOptions new]];
-}
-
 - (void)trackDeepLinking {
     [self.client openURL: [NSURL URLWithString:@"https://www.example-test.com"]];
     [self.client openURL: [NSURL URLWithString:@"https://www.example-test.com"] options: @{@"another_property": @"another_value"}];
