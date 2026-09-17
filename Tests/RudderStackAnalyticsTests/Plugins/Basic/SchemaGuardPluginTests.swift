@@ -329,13 +329,41 @@ struct SchemaGuardPluginTests {
         #expect(result?.context?.rawDictionary["library"] as? String == Self.sentinel)
         #expect(warnMessages(in: mockLogger).isEmpty, "A mismatched snapshot must fail safe — silence, never a false warning.")
     }
+    // MARK: - Cloud path, end to end
+
+    // Analytics.setup registers the guard ahead of cloud delivery, and every other guard test builds its own
+    // chain. Only a test that runs the real pipeline fails if that wiring changes.
+    @Test("given a plugin that spoofs the consent block, when the event reaches storage, then the SDK's block is stored")
+    func testSpoofedConsentBlockNeverReachesStorage() async {
+        let storage = MockStorage()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]), storage: storage)
+        analytics.add(plugin: ConsentSpoofingRebuildPlugin())
+
+        analytics.track(name: "cloud-spoofed-event")
+
+        let block = await storedConsentBlock(in: storage, forEventNamed: "cloud-spoofed-event")
+        #expect(block?["provider"] as? String == "custom", "The SDK's own block must reach the data plane.")
+        #expect(block?["allowedConsentIds"] as? [String] == ["marketing"])
+    }
+
+    @Test("given consent changed after the event was created, when it reaches storage, then the stored block carries the consent captured at creation")
+    func testStoredBlockCarriesConsentCapturedAtCreation() async {
+        let storage = MockStorage()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]), storage: storage)
+
+        analytics.track(name: "cloud-pre-change-event")
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing", "analytics"]))
+
+        let block = await storedConsentBlock(in: storage, forEventNamed: "cloud-pre-change-event")
+        #expect(block?["allowedConsentIds"] as? [String] == ["marketing"], "The stored block must record what the user had agreed to when the event was created.")
+    }
 }
 
 // MARK: - Helpers
 extension SchemaGuardPluginTests {
 
-    private func makeAnalytics(consent: ConsentManagementConfiguration, logger: Logger? = nil) -> Analytics {
-        let config = MockProvider.createMockConfiguration(storage: MockStorage())
+    private func makeAnalytics(consent: ConsentManagementConfiguration, logger: Logger? = nil, storage: MockStorage = MockStorage()) -> Analytics {
+        let config = MockProvider.createMockConfiguration(storage: storage)
         config.trackApplicationLifecycleEvents = false
         config.sessionConfiguration.automaticSessionTracking = false
         config.consentManagement = consent
@@ -344,6 +372,16 @@ extension SchemaGuardPluginTests {
         let analytics = Analytics(configuration: config)
         analytics.isAnalyticsActive = true
         return analytics
+    }
+
+    /// Waits for the named event to reach storage, then returns the consent block it was stored with.
+    private func storedConsentBlock(in storage: MockStorage, forEventNamed name: String) async -> [String: Any]? {
+        await storage.waitForEventsContaining(name)
+        let batch = await storage.read().dataItems.map { $0.batch }.joined()
+        let root = try? JSONSerialization.jsonObject(with: Data(batch.utf8)) as? [String: Any]
+        let events = root?["batch"] as? [[String: Any]]
+        let event = events?.first { $0["event"] as? String == name }
+        return (event?["context"] as? [String: Any])?["consentManagement"] as? [String: Any]
     }
 
     private func makeGuard(for analytics: Analytics) -> (snapshot: ContextSnapshotPlugin, guardPlugin: SchemaGuardPlugin) {
