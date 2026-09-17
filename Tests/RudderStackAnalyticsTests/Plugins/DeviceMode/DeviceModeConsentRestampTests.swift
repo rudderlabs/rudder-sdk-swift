@@ -43,7 +43,7 @@ struct DeviceModeConsentRestampTests {
         #expect(block?["allowedConsentIds"] as? [String] == ["marketing"])
     }
 
-    @Test("given buffered events replayed after a grant, when delivered, then each carries the current consent stamp")
+    @Test("given buffered events replayed after a grant, when delivered, then each carries the consent recorded at creation")
     func testReplayedEventsCarryCurrentStamp() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
         let plugin = makeIntegration(for: analytics)
