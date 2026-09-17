@@ -88,6 +88,18 @@ struct SetConsentAPITests {
         #expect(mockLogger.hasLog(level: "WARN", containing: "requires at least one consent ID"))
     }
 
+    @Test("given consent management enabled, when setConsent is called with IDs that are only whitespace, then the call is refused with a warning")
+    func testSetConsentWithWhitespaceOnlyIdsIsRefused() {
+        let mockLogger = MockLogger()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]), logger: mockLogger)
+        let stateBefore = analytics.consentManagementState.value
+
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["  ", ""], deniedConsentIds: [" "]))
+
+        #expect(analytics.consentManagementState.value == stateBefore, "IDs that trim to nothing must count as no consent IDs.")
+        #expect(mockLogger.hasLog(level: "WARN", containing: "requires at least one consent ID"))
+    }
+
     @Test("given a consent state set at runtime, when reset is called, then the consent state is identical before and after")
     func testResetLeavesConsentStateUntouched() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]))
