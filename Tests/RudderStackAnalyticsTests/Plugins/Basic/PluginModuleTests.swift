@@ -70,9 +70,9 @@ class PluginModuleTests {
     }
     
     // The plugin contract lets intercept return a newly built event rather than the one it was handed.
-    // That event cannot carry the SDK's own bookkeeping, so the chain has to put it back, or it is lost
-    // silently.
-    @Test("given a plugin returning a newly built event, when executed, then sdk-owned state survives")
+    // That event cannot carry the consent the SDK recorded, so the chain puts that back; everything the
+    // plugin chose, its own messageId and options included, is left as the plugin returned it.
+    @Test("given a plugin returning a newly built event, when executed, then the captured context survives and the plugin's identity and options are kept")
     func testExecuteRestoresSdkOwnedStateOnReplacement() {
         let interactor = PluginInteractor()
         interactor.add(plugin: EventReplacingTestPlugin())
@@ -82,8 +82,8 @@ class PluginModuleTests {
         let result = interactor.execute(original)
         
         let captured = (result as? ReservedContextCapturing)?.capturedReservedContext?["consentManagement"] as? [String: Any]
-        #expect(result?.messageId == original.messageId, "messageId was not preserved")
-        #expect(result?.options === original.options, "options were not preserved")
+        #expect(result?.messageId == EventReplacingTestPlugin.messageId, "the plugin's messageId was replaced")
+        #expect(result?.options?.customContext?["campaign"] as? String == "plugin", "the plugin's options were replaced")
         #expect(captured?["provider"] as? String == "custom", "the captured context was not preserved")
         #expect((result as? TrackEvent)?.event == "replaced", "the plugin's payload must be kept")
     }
@@ -129,9 +129,13 @@ class TestTerminalPlugin: TestPlugin {
     }
 }
 
-/// A plugin that returns a newly built event instead of the one it was handed.
+/// A plugin that returns a newly built event, with its own messageId and options, instead of the one it was handed.
 class EventReplacingTestPlugin: TestPlugin {
+    static let messageId = "plugin-message-id"
+
     override func intercept(event: Event) -> Event? {
-        TrackEvent(event: "replaced")
+        var replacement = TrackEvent(event: "replaced", options: RudderOption(customContext: ["campaign": "plugin"]))
+        replacement.messageId = Self.messageId
+        return replacement
     }
 }

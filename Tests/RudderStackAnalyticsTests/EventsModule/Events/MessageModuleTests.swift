@@ -124,16 +124,16 @@ struct MessageModuleTests {
     }
     
     // MARK: - SDK-Owned State Tests
-    @Test("given a newly built event, when sdk-owned state is restored, then identity, options and captured context come back")
+    @Test("given a newly built event, when sdk-owned state is restored, then the captured context comes back and the plugin's identity and options are kept")
     func testRestoringSdkOwnedStateOnReplacement() {
         var original = TrackEvent(event: "original", options: RudderOption(customContext: ["campaign": "spring"]))
         original.capturedReservedContext = ["consentManagement": ["provider": "custom"]]
-        let replacement: Event = TrackEvent(event: "replaced")
+        let replacement: Event = TrackEvent(event: "replaced", options: RudderOption(customContext: ["campaign": "plugin"]))
         
         let restored = replacement.restoringSdkOwnedState(from: original)
         
-        #expect(restored.messageId == original.messageId)
-        #expect(restored.options === original.options)
+        #expect(restored.messageId == replacement.messageId, "A plugin's own messageId must be kept.")
+        #expect(restored.options === replacement.options, "A plugin's own options must be kept.")
         #expect(capturedProvider(of: restored) == "custom")
         #expect((restored as? TrackEvent)?.event == "replaced", "Payload fields belong to the plugin and must be kept.")
     }

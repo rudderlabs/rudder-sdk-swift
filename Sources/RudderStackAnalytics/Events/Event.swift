@@ -228,22 +228,16 @@ protocol ReservedContextCapturing: Event {
 extension Event {
 
     /**
-     This event with the state the SDK owns put back from `original`: its identity, the options it was
-     created with, and the values the SDK asserted for its reserved context keys. Payload fields are
-     deliberately left alone — reshaping those is what a plugin is for.
+     This event with the state the SDK owns put back from `original`: the values the SDK asserted for
+     its reserved context keys when the event was created.
 
      A plugin may return a newly constructed event rather than the one it was handed. Such an event
-     carries none of the SDK's own bookkeeping, and the loss is silent. Events are values, so a
-     replacement cannot be told apart by identity: the captured context is internal and no plugin can
-     change it, so it is always put back, while identity and options are put back only when the event
-     carries a different `messageId` — which a newly constructed event always does.
+     carries none of that recorded state, and the loss is silent. The captured context is internal and
+     no plugin can set it, so it is always put back. Everything a plugin can set — the payload, its own
+     `messageId` and `options` included — is left exactly as the plugin returned it.
      */
     func restoringSdkOwnedState(from original: Event) -> Event {
         var restored: Event = self
-        if restored.messageId != original.messageId {
-            restored.messageId = original.messageId
-            restored.options = original.options
-        }
         if var carrier = restored as? ReservedContextCapturing {
             carrier.capturedReservedContext = (original as? ReservedContextCapturing)?.capturedReservedContext
             restored = carrier
