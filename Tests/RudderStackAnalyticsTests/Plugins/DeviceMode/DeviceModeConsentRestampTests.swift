@@ -137,6 +137,52 @@ struct DeviceModeConsentRestampTests {
         let warnings = mockLogger.logs.filter { $0.level == "WARN" && $0.message.contains("consentManagement") }
         #expect(warnings.count == 1, "A destination plugin rewriting the key must warn once per destination, not per event.")
     }
+
+    @Test("given a destination plugin revoking consent mid chain, when the event reaches the handoff, then it is not delivered")
+    func testRevocationInsideDestinationChainStopsHandoff() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        // The event gate seeds its destination config from state at setup, so the config must be there first.
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+        #expect(plugin.pluginStore?.isDestinationReady == true, "Precondition: the destination starts consented.")
+        plugin.add(plugin: ConsentRevokingPlugin(options: ConsentManagementOptions(deniedConsentIds: ["marketing"])))
+
+        _ = plugin.intercept(event: makeTrackEvent(named: "in-flight", for: analytics))
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "A revocation landing after the event gate must still stop the handoff.")
+    }
+
+    @Test("given a destination with no consent rules, when consent is revoked mid chain, then the event is still delivered")
+    func testRevocationInsideDestinationChainLeavesUngatedDestinationDelivering() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: nil)
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+        plugin.add(plugin: ConsentRevokingPlugin(options: ConsentManagementOptions(deniedConsentIds: ["marketing"])))
+
+        _ = plugin.intercept(event: makeTrackEvent(named: "ungated", for: analytics))
+
+        #expect(plugin.receivedTrackEventNames == ["ungated"], "A destination with no consent rules is never gated.")
+    }
+
+    @Test("given a custom integration with consent rules, when consent is revoked while an event is mid chain, then it is not delivered")
+    func testRevocationInsideCustomIntegrationChainStopsHandoff() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = MockCustomIntegrationPlugin(key: destinationKey)
+        plugin.setup(analytics: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+        #expect(plugin.pluginStore?.isDestinationReady == true, "Precondition: the custom destination starts ready.")
+        plugin.add(plugin: ConsentRevokingPlugin(options: ConsentManagementOptions(deniedConsentIds: ["marketing"])))
+
+        _ = plugin.intercept(event: makeTrackEvent(named: "custom-in-flight", for: analytics))
+
+        #expect(plugin.trackEventReceived == nil, "A custom integration matching a gated destination must be gated at the handoff too.")
+    }
 }
 
 // MARK: - Helpers
@@ -234,5 +280,28 @@ private final class ContextMutatingPlugin: Plugin {
 
     func intercept(event: any Event) -> (any Event)? {
         event.addToContext(info: info)
+    }
+}
+
+// MARK: - ConsentRevokingPlugin
+/**
+ A customer-style destination plugin that replaces the consent state while an event is inside the chain.
+ */
+private final class ConsentRevokingPlugin: Plugin {
+    var pluginType: PluginType = .onProcess
+    var analytics: Analytics?
+    private let options: ConsentManagementOptions
+
+    init(options: ConsentManagementOptions) {
+        self.options = options
+    }
+
+    func setup(analytics: Analytics) {
+        self.analytics = analytics
+    }
+
+    func intercept(event: any Event) -> (any Event)? {
+        analytics?.setConsent(options)
+        return event
     }
 }

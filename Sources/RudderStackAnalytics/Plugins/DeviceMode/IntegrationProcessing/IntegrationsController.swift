@@ -107,6 +107,11 @@ private extension IntegrationsController {
     func isDestinationConfigured(sourceConfig: SourceConfig, integration: IntegrationPlugin) -> [String: Any]? {
         guard let pluginStore = integration.pluginStore else { return nil }
         
+        // Recorded for every integration, whatever the outcome below: the handoff gate needs the
+        // destination's current consent rules — the same ones ConsentGatePlugin resolves by key —
+        // and a rejected update still changes what those rules are.
+        pluginStore.destinationConfig = findDestination(sourceConfig: sourceConfig, key: integration.key)?.destinationConfig.rawDictionary
+        
         if !pluginStore.isStandardIntegration {
             return [:]
         }

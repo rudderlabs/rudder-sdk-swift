@@ -174,8 +174,8 @@ extension IntegrationPlugin {
         let preProcessedEvent = pluginChain?.applyPlugins(pluginType: .preProcess, event: event)
         let onProcessedEvent = pluginChain?.applyPlugins(pluginType: .onProcess, event: preProcessedEvent)
         
-        if let finalEvent = onProcessedEvent {
-            self.handleEvent(event: self.consentRestampedEvent(finalEvent))
+        if let finalEvent = onProcessedEvent, let deliverableEvent = self.gateAndRestoreConsentStamp(finalEvent) {
+            self.handleEvent(event: deliverableEvent)
         }
     }
     
@@ -191,6 +191,25 @@ extension IntegrationPlugin {
         self.add(plugin: ConsentGatePlugin(key: self.key))
         self.add(plugin: EventFilteringPlugin(key: self.key))
         self.add(plugin: IntegrationOptionsPlugin(key: self.key))
+    }
+    
+    /**
+     Applies the live consent decision at the handoff boundary, then restores
+     `context.consentManagement` to the value the event was created under.
+     
+     The destination's own plugins run after `ConsentGatePlugin`, so consent can be revoked after the
+     gate has already passed the event. Gating here too makes that guarantee hold all the way to
+     delivery rather than only at chain entry. The gate reads live state, because a revocation must
+     stop delivery now; the stamp is restored from the value captured at creation.
+     */
+    private func gateAndRestoreConsentStamp(_ event: any Event) -> (any Event)? {
+        guard let state = analytics?.consentManagementState.value, state.active else { return event }
+        
+        guard ConsentResolver.resolve(state: state, destinationConfig: pluginStore?.destinationConfig) else {
+            analytics?.logger.debug(log: "IntegrationPlugin: Dropped event for destination: \(key) — consent was revoked while the event was in the destination chain.")
+            return nil
+        }
+        return self.consentRestampedEvent(event)
     }
     
     /**
