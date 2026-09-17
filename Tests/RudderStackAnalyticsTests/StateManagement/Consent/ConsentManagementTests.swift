@@ -48,6 +48,15 @@ struct ConsentManagementTests {
         #expect(state.active == false, "Enabling consent management without any consent IDs is a configuration error; the state must be built inactive.")
     }
 
+    @Test("given an enabled configuration whose consent IDs are only whitespace, when the initial state is built, then it is inactive")
+    func testInitialStateEnabledWithWhitespaceOnlyIdsIsInactive() {
+        let configuration = ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["   ", ""], deniedConsentIds: [" "])
+
+        let state = ConsentManagement.initialState(configuration)
+
+        #expect(state.active == false, "IDs that trim to nothing must count as no consent IDs, so the state is built inactive.")
+    }
+
     @Test("given a disabled configuration carrying consent lists, when the initial state is built, then it is inactive")
     func testInitialStateDisabledIsInactive() {
         let configuration = ConsentManagementConfiguration(enabled: false, allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"])
