@@ -505,7 +505,7 @@ extension Analytics {
         guard self.isAnalyticsActive else { return }
         
         guard self.consentManagementState.value.active else {
-            self.logger.warn(log: "Analytics: Consent management is disabled; setConsent has no effect. Enable it via Configuration's consentManagement.")
+            self.logger.warn(log: "Analytics: Consent management is not active; setConsent has no effect. Enable it in Configuration's consentManagement and provide at least one consent ID.")
             return
         }
         

@@ -26,14 +26,31 @@ struct SetConsentAPITests {
 
     // MARK: - setConsent
 
-    @Test("given consent management disabled, when setConsent is called, then the state is unchanged")
+    @Test("given consent management disabled, when setConsent is called, then it warns that consent management is not active and the state is unchanged")
     func testSetConsentWhileDisabledIsNoOp() {
-        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: false))
+        let mockLogger = MockLogger()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: false), logger: mockLogger)
         let stateBefore = analytics.consentManagementState.value
 
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"]))
 
         #expect(analytics.consentManagementState.value == stateBefore, "setConsent must warn and no-op while consent management is disabled.")
+        #expect(mockLogger.hasLog(level: "WARN", containing: "Consent management is not active"))
+    }
+
+    // Enabled with no consent IDs leaves consent management inactive for the session. The warning must
+    // point at the missing IDs, not tell a developer who already enabled the feature to enable it.
+    @Test("given consent management enabled without consent IDs, when setConsent is called, then it warns that at least one consent ID is needed")
+    func testSetConsentWhileInactiveNamesTheMissingIds() {
+        let mockLogger = MockLogger()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true), logger: mockLogger)
+        let stateBefore = analytics.consentManagementState.value
+
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"]))
+
+        #expect(analytics.consentManagementState.value == stateBefore, "setConsent must no-op while consent management is inactive.")
+        #expect(mockLogger.hasLog(level: "WARN", containing: "Consent management is not active"))
+        #expect(mockLogger.hasLog(level: "WARN", containing: "provide at least one consent ID"))
     }
 
     @Test("given consent management enabled, when setConsent is called, then the state carries the new lists")
