@@ -126,7 +126,7 @@ private extension IntegrationsController {
         guard let destination = findDestination(sourceConfig: sourceConfig, key: integration.key) else {
             let error = DestinationError.destinationNotFound(integration.key)
             analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
-            notifyFailureAndMarkNotReady(
+            safelyUpdateOnFailureAndNotify(
                 error: error,
                 integration: integration
             )
@@ -136,7 +136,7 @@ private extension IntegrationsController {
         if !destination.isDestinationEnabled {
             let error = DestinationError.destinationDisabled(integration.key)
             analytics?.logger.warn(log: "IntegrationsController: \(error.errorDescription)")
-            notifyFailureAndMarkNotReady(
+            safelyUpdateOnFailureAndNotify(
                 error: error,
                 integration: integration
             )
@@ -183,8 +183,23 @@ private extension IntegrationsController {
         }
     }
     
-    // A destination we are declaring failed must not be updated: pushing an empty config can throw,
-    // which would replace the real reason with a parse error, and can reset a live destination's state.
+    // A destination missing from, or disabled in, the dashboard keeps its long-standing handling: it is
+    // updated with an empty config before the failure is reported.
+    func safelyUpdateOnFailureAndNotify(error: Error, integration: IntegrationPlugin) {
+        safelyUpdateAndApplyBlock(
+            destinationConfig: [:],
+            integration: integration,
+            block: {
+                self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with empty destinationConfig.")
+                integration.pluginStore?.isDestinationReady = false
+                self.deliveryControl.markNotReady(for: integration.key)
+                self.notifyCallbacks(.failure(error), for: integration)
+            }
+        )
+    }
+
+    // A destination denied by consent must not be updated: pushing an empty config can throw, which would
+    // replace the consent reason with a parse error, and can reset a live destination's state.
     func notifyFailureAndMarkNotReady(error: Error, integration: IntegrationPlugin) {
         integration.pluginStore?.isDestinationReady = false
         deliveryControl.markNotReady(for: integration.key)

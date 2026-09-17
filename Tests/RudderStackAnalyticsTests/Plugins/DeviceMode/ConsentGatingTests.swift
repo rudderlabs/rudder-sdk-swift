@@ -66,6 +66,24 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames == ["regular-event"], "Delivery must be untouched while disabled.")
     }
 
+    // Consent management decides only on consent: a destination missing from, or disabled in, the dashboard
+    // keeps the handling it has always had, including the empty update before its failure is reported.
+    @Test("given consent management disabled, when a destination is missing or disabled in the dashboard, then it is still updated with an empty config", arguments: [false, true])
+    func testMissingOrDisabledDestinationKeepsEmptyUpdate(listedButDisabled: Bool) {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: false))
+        let plugin = makeIntegration(for: analytics)
+        let sourceConfig = listedButDisabled
+            ? makeSourceConfig(for: [destinationKey], consentEntries: nil, isDestinationEnabled: false)
+            : makeSourceConfig(for: ["AnotherDestination"], consentEntries: nil)
+
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        #expect(plugin.createCalled == false)
+        #expect(plugin.updateCalled == true, "A destination missing or disabled in the dashboard must still receive the empty update.")
+        #expect(plugin.lastDestinationConfig?.isEmpty == true)
+        #expect(plugin.pluginStore?.isDestinationReady == false)
+    }
+
     // MARK: - Grant mid-session
 
     @Test("given a grant mid-session, when the destination late-initializes, then events arriving during the init window are replayed in order")
@@ -643,7 +661,7 @@ extension ConsentGatingTests {
         makeSourceConfig(for: [destinationKey], consentEntries: consentEntries)
     }
 
-    private func makeSourceConfig(for keys: [String], consentEntries: [[String: Any]]?) -> SourceConfig {
+    private func makeSourceConfig(for keys: [String], consentEntries: [[String: Any]]?, isDestinationEnabled: Bool = true) -> SourceConfig {
         var destinationConfig: [String: AnyCodable] = ["apiKey": AnyCodable("mock-api-key")]
         if let consentEntries {
             destinationConfig["consentManagement"] = AnyCodable(consentEntries)
@@ -653,7 +671,7 @@ extension ConsentGatingTests {
             Destination(
                 destinationId: "dest-\(index + 1)",
                 destinationName: key,
-                isDestinationEnabled: true,
+                isDestinationEnabled: isDestinationEnabled,
                 destinationConfig: destinationConfig,
                 destinationDefinitionId: "def-\(index + 1)",
                 destinationDefinition: DestinationDefinition(
