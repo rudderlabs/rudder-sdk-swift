@@ -35,6 +35,24 @@ struct ConsentPluginTests {
     }
 
     @Test
+    func test_whenPluginIsAddedThenCmpIsSubscribedBeforeTheFirstPush() {
+        given("A ConsentPlugin backed by a CMP that records the order it is used in") {
+            let provider = OrderRecordingConsentProvider()
+            let plugin = ConsentPlugin(provider: provider)
+
+            when("The plugin is set up") {
+                plugin.setup(analytics: Analytics(configuration: self.testConfiguration))
+
+                then("It subscribes before reading the current consent") {
+                    // A CMP change landing between the read and the subscription would be dropped.
+                    #expect(provider.order.first == "subscribed")
+                    #expect(provider.order.contains("read"))
+                }
+            }
+        }
+    }
+
+    @Test
     func test_whenCmpChangesThenConsentIsPushedAgain() {
         given("A ConsentPlugin already set up") {
             let provider = SpyConsentProvider()
@@ -96,6 +114,29 @@ struct ConsentPluginTests {
                     #expect(context["existing"] != nil)
                 }
             }
+        }
+    }
+}
+
+// MARK: - OrderRecordingConsentProvider
+/**
+ A stand-in CMP that records the order of the two things the plugin does at setup: subscribing for
+ changes, and reading the current consent.
+ */
+final class OrderRecordingConsentProvider: ConsentCategoryProvider {
+    private(set) var order: [String] = []
+
+    var allowedConsentIds: [String] {
+        order.append("read")
+        return ["marketing"]
+    }
+
+    var deniedConsentIds: [String] { [] }
+
+    var onConsentChanged: (() -> Void)? {
+        didSet {
+            guard onConsentChanged != nil else { return }
+            order.append("subscribed")
         }
     }
 }
