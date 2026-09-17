@@ -83,6 +83,20 @@ struct ConsentManagementPluginTests {
         #expect(result?.jsonString == event.jsonString, "A disabled plugin must pass the event through untouched.")
     }
 
+    // Enabling consent management without any consent IDs leaves it inactive for the session, so it must
+    // behave exactly as if it had never been enabled.
+    @Test("given consent management enabled without consent IDs, when an event is intercepted, then the consentManagement key is absent")
+    func testInactiveLeavesKeyAbsent() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true))
+        let plugin = makePlugin(for: analytics)
+        let event = makeTrackEvent(for: analytics)
+
+        let result = plugin.intercept(event: event)
+
+        #expect(result?.context?["consentManagement"] == nil, "Inactive must mean no block at all — not an empty one.")
+        #expect(result?.jsonString == event.jsonString, "An inactive plugin must pass the event through untouched.")
+    }
+
     @Test("given a legacy injected key while enabled, when an event is intercepted, then the SDK block wins and a warning is logged")
     func testOverrideWinsWithWarningOnLegacyInjection() {
         let mockLogger = MockLogger()
