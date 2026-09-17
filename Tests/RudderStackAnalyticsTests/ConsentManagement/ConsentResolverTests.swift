@@ -121,7 +121,7 @@ struct ConsentResolverTests {
         #expect(ConsentResolver.resolve(state: state, destinationConfig: config) == false)
     }
 
-    @Test("given strategy aliases and garbage values, when resolving, then they normalize per the HLD", arguments: [
+    @Test("given strategy aliases and garbage values, when resolving, then they normalize to and-matching or or-matching", arguments: [
         ("all", false),
         ("any", true),
         ("or", true),
