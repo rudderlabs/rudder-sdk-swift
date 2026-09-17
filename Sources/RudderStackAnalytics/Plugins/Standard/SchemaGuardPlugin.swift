@@ -91,7 +91,8 @@ extension SchemaGuardPlugin {
         }
         
         if let snapshot = self.snapshotPlugin.consumeSnapshot(for: event.messageId) {
-            for key in SDKManagedContextKey.baseKeys where !isSameValue(event.context?[key.rawValue], snapshot[key.rawValue]) {
+            // Only a key the SDK stamped can be overridden; one it left unset holds the customer's own value.
+            for key in SDKManagedContextKey.baseKeys where snapshot[key.rawValue] != nil && !isSameValue(event.context?[key.rawValue], snapshot[key.rawValue]) {
                 overriddenKeys.insert(key.rawValue)
             }
         }

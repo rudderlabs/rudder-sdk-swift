@@ -225,13 +225,14 @@ struct SchemaGuardPluginTests {
         #expect(warnings.first?.contains(Self.sentinel) == false, "The warning must stay value-free.")
     }
 
-    @Test("given a base key written by a customer plugin, when the guard runs, then the value is delivered with a deprecation warning", arguments: SDKManagedContextKey.baseKeys)
+    @Test("given a base key the SDK stamped, when a customer plugin changes it, then the value is delivered with a deprecation warning", arguments: SDKManagedContextKey.baseKeys)
     func testBaseKeyPluginWriteWarns(key: SDKManagedContextKey) {
         let mockLogger = MockLogger()
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: false), logger: mockLogger)
         let (snapshot, guardPlugin) = makeGuard(for: analytics)
 
-        var event = makeTrackEvent()
+        // The SDK's own value, stamped before the snapshot is taken.
+        var event = makeTrackEvent().addToContext(info: [key.rawValue: "sdk-value"])
         event = snapshot.intercept(event: event) ?? event
         // A customer plugin writing the key after the SDK stampers ran.
         event = event.addToContext(info: [key.rawValue: Self.sentinel])
@@ -243,6 +244,24 @@ struct SchemaGuardPluginTests {
         #expect(warnings.count == 1)
         #expect(warnings.first?.contains("\"\(key.rawValue)\"") == true)
         #expect(warnings.first?.contains(Self.sentinel) == false)
+    }
+
+    // The deprecation covers overriding what the SDK stamps. A key the SDK left unset, such as sessionId while
+    // session tracking is off, holds the customer's own value and must not warn.
+    @Test("given a base key the SDK did not stamp, when a customer plugin writes it, then no deprecation warning is logged", arguments: SDKManagedContextKey.baseKeys)
+    func testUnstampedBaseKeyPluginWriteDoesNotWarn(key: SDKManagedContextKey) {
+        let mockLogger = MockLogger()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: false), logger: mockLogger)
+        let (snapshot, guardPlugin) = makeGuard(for: analytics)
+
+        var event = makeTrackEvent()
+        event = snapshot.intercept(event: event) ?? event
+        event = event.addToContext(info: [key.rawValue: Self.sentinel])
+
+        let result = guardPlugin.intercept(event: event)
+
+        #expect(result?.context?.rawDictionary[key.rawValue] as? String == Self.sentinel, "Detection only — the customer value must still be delivered.")
+        #expect(warnMessages(in: mockLogger).isEmpty, "A key the SDK never stamped is not an override.")
     }
 
     @Test("given a base key overridden via customContext plus a plugin, when the guard runs, then the key warns exactly once")
