@@ -20,7 +20,7 @@ final class ConsentGatePlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: Analytics?
     
-    /// Cached from the source-config stream, asynchronously — `nil` until the first config arrives, which resolves fail-open.
+    /// Seeded at setup from the source config already in state, then kept current by the source-config stream; `nil` while no config has arrived, which resolves fail-open.
     @Synchronized private(set) var destinationConfig: [String: Any]?
     private let destinationKey: String
     private var cancellables = Set<AnyCancellable>()
