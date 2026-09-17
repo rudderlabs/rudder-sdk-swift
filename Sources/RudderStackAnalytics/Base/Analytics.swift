@@ -565,6 +565,11 @@ extension Analytics {
             return
         }
         
+        // The consent already in force changes no state, so no destination would be re-evaluated to end a
+        // hold opened below; it would stay open for the rest of the session.
+        let current = self.consentManagementState.value
+        guard allowed != current.allowedConsentIds || denied != current.deniedConsentIds else { return }
+        
         // Ahead of the state change, and only once the call is accepted: re-initialization is
         // scheduled asynchronously, so a destination about to be re-evaluated has to start holding
         // before any event can arrive against the new consent, or that event would be dropped.

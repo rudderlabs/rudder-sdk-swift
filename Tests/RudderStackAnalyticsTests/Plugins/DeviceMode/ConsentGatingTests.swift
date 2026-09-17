@@ -243,6 +243,25 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames.isEmpty, "A refused setConsent must not open a hold that later replays what arrived in between.")
     }
 
+    // Sending the consent already in force changes no state, so nothing re-evaluates the destinations to end
+    // a hold. Opening one would leave a pending destination holding what arrives next for the whole session.
+    @Test("given the consent already in force, when setConsent sends it again, then nothing sent afterwards is replayed")
+    func testUnchangedSetConsentOpensNoHold() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let plugin = makeIntegration(for: analytics)
+        let controller = analytics.integrationsController
+        // Registered, so a consent decision reaches it, but not yet initialized: neither holding nor ready.
+        controller?.add(integration: plugin)
+
+        // Accepted, and once trimmed identical to the consent already in force.
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: [" marketing "]))
+        controller?.deliver(event: makeTrackEvent(named: "after-unchanged-call", for: analytics), to: plugin)
+        controller?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
+
+        #expect(plugin.createCalled == true, "Precondition: the destination is created.")
+        #expect(plugin.receivedTrackEventNames.isEmpty, "Sending unchanged consent must not open a hold that later replays what arrived in between.")
+    }
+
     @Test("given events created before a grant, when they drain after it, then they are never delivered")
     func testEventsCreatedBeforeTheGrantAreNeverDelivered() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
