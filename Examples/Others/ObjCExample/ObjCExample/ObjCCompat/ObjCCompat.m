@@ -53,7 +53,7 @@
     
     [builder setSessionConfiguration: [sessionBuilder build]];
 
-    RSSConsentConfigurationBuilder *consentBuilder = [RSSConsentConfigurationBuilder new];
+    RSSConsentManagementConfigurationBuilder *consentBuilder = [RSSConsentManagementConfigurationBuilder new];
     [consentBuilder setEnabled: YES];
     [consentBuilder setProvider: RSSConsentManagementProviderCustom];
     [consentBuilder setAllowedConsentIds: @[@"marketing"]];

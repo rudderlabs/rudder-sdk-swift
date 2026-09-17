@@ -86,7 +86,7 @@ struct SetConsentAPITests {
 
     @Test("given every field set through the ObjC builder, when built, then all fields round-trip")
     func testObjCBuilderRoundTripsAllFields() {
-        let consent = ObjCConsentConfigurationBuilder()
+        let consent = ObjCConsentManagementConfigurationBuilder()
             .setEnabled(true)
             .setProvider(.custom)
             .setAllowedConsentIds(["marketing", "analytics"])
@@ -101,7 +101,7 @@ struct SetConsentAPITests {
 
     @Test("given no setters called on the ObjC builder, when built, then the disabled defaults apply")
     func testObjCBuilderDefaults() {
-        let consent = ObjCConsentConfigurationBuilder().build()
+        let consent = ObjCConsentManagementConfigurationBuilder().build()
 
         #expect(consent.enabled == false)
         #expect(consent.provider == .custom)

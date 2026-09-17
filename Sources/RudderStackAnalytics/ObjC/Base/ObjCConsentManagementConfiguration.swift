@@ -7,13 +7,13 @@
 
 import Foundation
 
-// MARK: - ObjCConsentConfigurationBuilder
+// MARK: - ObjCConsentManagementConfigurationBuilder
 /**
  A builder class for constructing `ConsentManagementConfiguration` instances for Objective-C usage.
  */
 
-@objc(RSSConsentConfigurationBuilder)
-public final class ObjCConsentConfigurationBuilder: NSObject {
+@objc(RSSConsentManagementConfigurationBuilder)
+public final class ObjCConsentManagementConfigurationBuilder: NSObject { // swiftlint:disable:this type_name
     private var enabled: Bool = Constants.defaultConfig.consentManagementEnabled
     private var provider: ConsentManagementProvider = .custom
     private var allowedConsentIds: [String] = []
