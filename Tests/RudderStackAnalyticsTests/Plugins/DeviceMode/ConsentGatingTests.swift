@@ -362,6 +362,25 @@ struct ConsentGatingTests {
         }
     }
 
+    // Decoding the source config turns a URL-like string into a URL value. The gate has to read consent IDs
+    // the way the initialization gate does, or it skips such an ID and lets the event through.
+    @Test("given a denied consent ID that looks like a URL, when the gate intercepts an event, then the event is dropped")
+    func testGateReadsUrlLikeConsentIds() throws {
+        let deniedId = "https://cmp.example/ads"
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"], deniedConsentIds: [deniedId]))
+        let entriesJson = #"[{"provider": "custom", "resolutionStrategy": "and", "consents": [{"consent": "https://cmp.example/ads"}]}]"#
+        let decodedEntries = try JSONDecoder().decode(AnyCodable.self, from: Data(entriesJson.utf8)).value as? [[String: Any]]
+        let sourceConfig = makeSourceConfig(consentEntries: decodedEntries)
+        let initGateConfig = sourceConfig.source.destinations.first?.destinationConfig.rawDictionary
+        #expect(ConsentResolver.resolve(state: analytics.consentManagementState.value, destinationConfig: initGateConfig) == false, "Precondition: the initialization gate denies this destination.")
+
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let gate = ConsentGatePlugin(key: destinationKey)
+        gate.setup(analytics: analytics)
+
+        #expect(gate.intercept(event: makeTrackEvent(named: "gated")) == nil, "The event gate must reach the same verdict as the initialization gate.")
+    }
+
     // MARK: - Gate configuration seeding
 
     // The gate caches its destination config from a stream that delivers on a background queue, so

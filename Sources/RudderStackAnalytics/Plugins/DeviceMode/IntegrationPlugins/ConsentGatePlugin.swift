@@ -88,8 +88,9 @@ extension ConsentGatePlugin {
     
     /// Shared by the seed and the stream, so the two can never disagree on what the cache holds.
     private func updateDestinationConfig(from sourceConfig: SourceConfig) {
+        // Read as the initialization gate reads it, so both resolve the same consent IDs.
         self.destinationConfig = self.findDestination(sourceConfig: sourceConfig, key: self.destinationKey)?
-            .destinationConfig.mapValues { $0.value }
+            .destinationConfig.rawDictionary
     }
     
     /**
