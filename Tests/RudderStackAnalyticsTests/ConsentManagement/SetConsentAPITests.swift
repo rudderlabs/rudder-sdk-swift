@@ -100,6 +100,19 @@ struct SetConsentAPITests {
         #expect(mockLogger.hasLog(level: "WARN", containing: "requires at least one consent ID"))
     }
 
+    @Test("given a shut down analytics instance, when setConsent is called, then the state is unchanged")
+    func testSetConsentAfterShutdownIsNoOp() {
+        let mockLogger = MockLogger()
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]), logger: mockLogger)
+        let stateBefore = analytics.consentManagementState.value
+        analytics.shutdown()
+
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"], deniedConsentIds: ["ads"]))
+
+        #expect(analytics.consentManagementState.value == stateBefore, "setConsent must not change consent once the instance is shut down.")
+        #expect(mockLogger.hasLog(level: "ERROR", containing: "has been shut down"))
+    }
+
     @Test("given a consent state set at runtime, when reset is called, then the consent state is identical before and after")
     func testResetLeavesConsentStateUntouched() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]))
