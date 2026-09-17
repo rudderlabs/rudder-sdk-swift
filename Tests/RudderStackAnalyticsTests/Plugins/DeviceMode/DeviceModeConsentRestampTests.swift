@@ -156,6 +156,23 @@ struct DeviceModeConsentRestampTests {
         #expect(plugin.receivedTrackEventNames.isEmpty, "A revocation landing after the event gate must still stop the handoff.")
     }
 
+    @Test("given the source config tightens consent while an event is in the destination chain, when it reaches the handoff, then it is not delivered")
+    func testTightenedSourceConfigInsideDestinationChainStopsHandoff() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+        #expect(plugin.pluginStore?.isDestinationReady == true, "Precondition: the destination starts consented.")
+        // The dashboard now demands a second consent the user has never granted.
+        let tightened = makeSourceConfig(consentEntries: [gatedEntry(consents: ["marketing", "analytics"])])
+        plugin.add(plugin: ConfigTighteningPlugin(sourceConfig: tightened, integration: plugin))
+
+        _ = plugin.intercept(event: makeTrackEvent(named: "in-flight", for: analytics))
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "The handoff must judge the event against the rules in force when it is handed over.")
+    }
+
     @Test("given a destination with no consent rules, when consent is revoked mid chain, then the event is still delivered")
     func testRevocationInsideDestinationChainLeavesUngatedDestinationDelivering() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
@@ -348,6 +365,29 @@ private final class ConsentRevokingPlugin: Plugin {
 
     func intercept(event: any Event) -> (any Event)? {
         analytics?.setConsent(options)
+        return event
+    }
+}
+
+// MARK: - ConfigTighteningPlugin
+/// Stands in for a source-config refresh landing while the event is inside the destination's own chain.
+private final class ConfigTighteningPlugin: Plugin {
+    var pluginType: PluginType = .onProcess
+    var analytics: Analytics?
+    private let sourceConfig: SourceConfig
+    private let integration: IntegrationPlugin
+
+    init(sourceConfig: SourceConfig, integration: IntegrationPlugin) {
+        self.sourceConfig = sourceConfig
+        self.integration = integration
+    }
+
+    func setup(analytics: Analytics) {
+        self.analytics = analytics
+    }
+
+    func intercept(event: any Event) -> (any Event)? {
+        analytics?.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: integration)
         return event
     }
 }
