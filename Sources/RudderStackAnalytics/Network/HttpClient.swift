@@ -23,12 +23,17 @@ protocol HttpClientRequests {
 final class HttpClient: TypeIdentifiable {
     let analytics: Analytics
     private var anonymousIdHeader: String
+    private let gzipCompressor: (Data) throws -> Data
 
-    init(analytics: Analytics) {
+    init(
+        analytics: Analytics,
+        gzipCompressor: @escaping (Data) throws -> Data = { try $0.gzipped() }
+    ) {
         self.analytics = analytics
         self.anonymousIdHeader = analytics.anonymousId ?? String.empty
+        self.gzipCompressor = gzipCompressor
     }
-    
+
     private func prepareGenericUrlRequest(for requestType: HttpClientRequestType) -> URLRequest? {
         guard let url = self.prepareRequestUrl(for: requestType) else { return nil }
         var urlRequest = URLRequest(url: url)
@@ -36,11 +41,11 @@ final class HttpClient: TypeIdentifiable {
         urlRequest.allHTTPHeaderFields = requestType.headers(analytics, anonymousIdHeader: self.anonymousIdHeader)
         return urlRequest
     }
-    
+
     func prepareRequestUrl(for requestType: HttpClientRequestType) -> URL? {
         guard var url = URL(string: requestType.url(analytics).trimmedUrlString) else { return nil }
         url = url.appendingPathComponent(requestType.endpoint)
-        
+
         if requestType == .configuration {
             url = url.appendQueryParameters(Constants.defaultConfig.queryParams + ["writeKey": analytics.configuration.writeKey])
         }
@@ -58,20 +63,28 @@ extension HttpClient: HttpClientRequests {
         guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { return .failure(SourceConfigError.unknown) }
         return await HttpNetwork.perform(request: urlRequest, logger: analytics.logger).sourceConfigResult
     }
-    
+
     func postBatchEvents(_ batch: String, additionalHeaders: [String: String] = [:]) async -> EventUploadResult {
         guard var urlRequest = self.prepareGenericUrlRequest(for: .events) else {
             return .failure(RetryableEventUploadError.unknown)
         }
-        
+
         additionalHeaders.forEach { urlRequest.setValue($1, forHTTPHeaderField: $0) }
-        
-        urlRequest.httpBody = batch.utf8Data
-        
-        if self.analytics.configuration.gzipEnabled, let gzipped = try? urlRequest.httpBody?.gzipped() as? Data {
-            urlRequest.httpBody = gzipped
+        urlRequest.setValue(nil, forHTTPHeaderField: "Content-Encoding")
+
+        let rawBody = Data(batch.utf8)
+        urlRequest.httpBody = rawBody
+
+        if self.analytics.configuration.gzipEnabled {
+            do {
+                urlRequest.httpBody = try gzipCompressor(rawBody)
+                urlRequest.setValue("gzip", forHTTPHeaderField: "Content-Encoding")
+            } catch {
+                analytics.logger.error(log: "HttpClient: gzip compression failed, sending uncompressed batch", error: error)
+                urlRequest.httpBody = rawBody
+            }
         }
-        
+
         return await HttpNetwork.perform(request: urlRequest, logger: analytics.logger).eventUploadResult
     }
 }
@@ -83,35 +96,34 @@ extension HttpClient: HttpClientRequests {
 enum HttpClientRequestType {
     case configuration
     case events
-    
+
     func url(_ analytics: Analytics) -> String {
         return switch self {
         case .configuration: analytics.configuration.controlPlaneUrl
         case .events: analytics.configuration.dataPlaneUrl
         }
     }
-    
+
     var endpoint: String {
         return switch self {
         case .configuration: "sourceConfig"
         case .events: "v1/batch"
         }
     }
-    
+
     var httpMethod: String {
         return switch self {
         case .configuration: "GET"
         case .events: "POST"
         }
     }
-    
+
     func headers(_ analytics: Analytics, anonymousIdHeader: String) -> [String: String] {
         let encodedAuthString = (analytics.configuration.writeKey + ":").base64Encoded ?? .empty
         var defaultHeaders = ["Content-Type": "application/json", "Authorization": "Basic \(encodedAuthString)"]
 
         if self == .events {
-            var specialHeaders = ["AnonymousId": anonymousIdHeader]
-            if analytics.configuration.gzipEnabled { specialHeaders["Content-Encoding"] = "gzip" }
+            let specialHeaders = ["AnonymousId": anonymousIdHeader]
             specialHeaders.forEach { defaultHeaders[$0] = $1 }
         }
 
