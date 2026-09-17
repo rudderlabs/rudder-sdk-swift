@@ -46,14 +46,21 @@ extension SchemaGuardPlugin {
 
      A key the SDK asserted no value for at creation is not reserved for this event and passes
      through untouched.
+
+     An event of a type the SDK does not own cannot carry that value at all, so the value in force
+     now is re-asserted on it instead.
      */
     private func enforceReservedKeys(on event: any Event) -> any Event {
         var result = event
-        let captured = (event as? ReservedContextCapturing)?.capturedReservedContext
+        let carrier = event as? ReservedContextCapturing
 
         for key in SDKManagedContextKey.reservedKeys {
-            guard let advice = self.analytics?.reservedContextValue(for: key)?.advice else { continue }
-            guard let value = captured?[key.rawValue] else { continue }
+            guard let reserved = self.analytics?.reservedContextValue(for: key) else { continue }
+            let advice = reserved.advice
+            // An event type the SDK does not own cannot carry the recorded value, so the value in force now
+            // stands in for it; an SDK event carries what it recorded at creation.
+            let recorded: Any? = carrier == nil ? reserved.value : carrier?.capturedReservedContext?[key.rawValue]
+            guard let value = recorded else { continue }
             guard result.context?[key.rawValue] != AnyCodable(value) else { continue }
 
             self.analytics?.logger.warn(log: "SchemaGuardPlugin: Replacing the \"\(key.rawValue)\" key found in the event context; \(advice)")

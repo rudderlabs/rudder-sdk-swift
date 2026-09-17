@@ -195,6 +195,14 @@ struct SchemaGuardPluginTests {
         #expect(block?["deniedConsentIds"] as? [String] == ["marketing"], "A grant spoofed through a customer event type must not survive.")
     }
 
+    @Test("given a plugin that swaps the event for a customer-defined event type, when it reaches the terminal consumers as that type, then the consent in force is re-asserted")
+    func testCustomerEventTypeReachingTerminalGetsConsentReasserted() {
+        let block = runChainThroughCustomerEventType(swapPhase: .onProcess, convertBack: false)
+
+        #expect(block?["allowedConsentIds"] as? [String] == ["analytics"])
+        #expect(block?["deniedConsentIds"] as? [String] == ["marketing"], "A grant spoofed on a customer event type must not survive.")
+    }
+
     // MARK: - Base Key Detection
 
     @Test("given a base key injected via customContext, when the guard runs, then a value-free deprecation warning names the key", arguments: SDKManagedContextKey.baseKeys)
@@ -347,7 +355,7 @@ extension SchemaGuardPluginTests {
     /// Runs a real chain in which one customer plugin swaps the event for a customer-defined type carrying a
     /// spoofed grant, and another converts it back to a `TrackEvent`. Returns the consent block the terminal
     /// consumers receive.
-    private func runChainThroughCustomerEventType(swapPhase: PluginType) -> [String: Any]? {
+    private func runChainThroughCustomerEventType(swapPhase: PluginType, convertBack: Bool = true) -> [String: Any]? {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"], deniedConsentIds: ["marketing"]))
         let (snapshot, guardPlugin) = makeGuard(for: analytics)
         let capture = MockEventCapturePlugin()
@@ -356,7 +364,7 @@ extension SchemaGuardPluginTests {
         chain.add(plugin: makeStamper(for: analytics))
         chain.add(plugin: snapshot)
         chain.add(plugin: MockCustomerEventSwappingPlugin(pluginType: swapPhase, contextInfo: spoofedGrant))
-        chain.add(plugin: MockCustomerEventConvertingPlugin())
+        if convertBack { chain.add(plugin: MockCustomerEventConvertingPlugin()) }
         chain.add(plugin: guardPlugin)
         chain.add(plugin: capture)
 
