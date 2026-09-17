@@ -136,6 +136,8 @@ struct DeviceModeConsentRestampTests {
 
         let warnings = mockLogger.logs.filter { $0.level == "WARN" && $0.message.contains("consentManagement") }
         #expect(warnings.count == 1, "A destination plugin rewriting the key must warn once per destination, not per event.")
+        #expect(warnings.first?.message.contains("written by a plugin on destination \(plugin.key)") == true, "The warning must name the destination whose plugin wrote the key.")
+        #expect(warnings.first?.message.contains("Migrate to setConsent(_:).") == true, "The warning must point at the supported way to supply consent.")
     }
 
     @Test("given a destination plugin revoking consent mid chain, when the event reaches the handoff, then it is not delivered")

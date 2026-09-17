@@ -231,7 +231,7 @@ extension IntegrationPlugin {
         guard event.context?[stampKey] != AnyCodable(captured) else { return event }
 
         if pluginStore?.claimRestoreWarning() == true {
-            analytics?.logger.warn(log: "IntegrationPlugin: Replacing the \"\(stampKey)\" key rewritten in the destination chain for \(key); the SDK owns this key while consent management is enabled.")
+            analytics?.logger.warn(log: "IntegrationPlugin: Replacing the \"\(stampKey)\" key written by a plugin on destination \(key); the SDK owns this key while consent management is enabled. Migrate to setConsent(_:).")
         }
         return event.addToContext(info: [stampKey: captured])
     }
