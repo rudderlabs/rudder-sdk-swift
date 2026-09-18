@@ -156,10 +156,11 @@ struct SetConsentAPITests {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]))
         let objcAnalytics = ObjCAnalytics(analytics: analytics)
 
-        objcAnalytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
+        objcAnalytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"], deniedConsentIds: ["advertising"]))
 
         let state = analytics.consentManagementState.value
         #expect(state.allowedConsentIds == ["marketing"], "The ObjC mirror must delegate to the wrapped setConsent.")
+        #expect(state.deniedConsentIds == ["advertising"], "Both lists must survive the ObjC hop \u{2014} the denied list travels to the data plane.")
     }
 
     @Test("given empty options through the ObjC wrapper, when setConsent is called, then the call is refused")
