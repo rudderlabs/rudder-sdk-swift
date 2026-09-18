@@ -78,6 +78,31 @@ struct SourceConfigConsentParsingTests {
         #expect(sourceConfig.source.sourceId == "source-id", "The rest of the source config must decode normally.")
     }
 
+    @Test("given a destination carrying legacy consent fields, when resolving, then only consentManagement decides")
+    func testLegacyConsentFieldsAreIgnored() throws {
+        // C0004 is deliberately absent from the granted list: a resolver that read the legacy
+        // categories would deny this destination.
+        let destination = """
+        { "id": "d1", "name": "Mock", "enabled": true,
+          "config": {
+            "oneTrustCookieCategories": [ { "oneTrustCookieCategory": "C0004" } ],
+            "consentManagement": [ { "provider": "custom", "consents": [ { "consent": "marketing" } ], "resolutionStrategy": "and" } ]
+          },
+          "destinationDefinitionId": "dd1",
+          "destinationDefinition": { "name": "MOCK", "displayName": "Mock" },
+          "updatedAt": "2026-01-01T00:00:00.000Z",
+          "shouldApplyDeviceModeTransformation": false,
+          "propagateEventsUntransformedOnError": false }
+        """
+
+        let sourceConfig = try decodeSourceConfig(from: makeResponseJson(destinationsFragment: destination))
+        let config = sourceConfig.source.destinations.first?.destinationConfig.rawDictionary
+        let granted = ConsentManagement(active: true, provider: .custom, allowedConsentIds: ["marketing"], deniedConsentIds: [])
+
+        #expect(config?["oneTrustCookieCategories"] != nil, "The legacy field must survive parsing untouched.")
+        #expect(ConsentResolver.resolve(state: granted, destinationConfig: config) == true, "Only consentManagement may gate; the legacy categories must be ignored.")
+    }
+
     // MARK: - Model defaults
 
     @Test("given the initial state, when created, then the metadata is nil")
@@ -123,8 +148,9 @@ extension SourceConfigConsentParsingTests {
      Builds a minimal valid source-config response, optionally injecting a raw
      `consentManagementMetadata` JSON fragment at the response root.
      */
-    private func makeResponseJson(metadataFragment: String? = nil) -> String {
+    private func makeResponseJson(metadataFragment: String? = nil, destinationsFragment: String? = nil) -> String {
         let metadata = metadataFragment.map { ", \"consentManagementMetadata\": \($0)" } ?? ""
+        let destinations = destinationsFragment ?? ""
         return """
         {
           "source": {
@@ -135,7 +161,7 @@ extension SourceConfigConsentParsingTests {
             "workspaceId": "workspace-id",
             "updatedAt": "2026-01-01T00:00:00.000Z",
             "config": { "statsCollection": { "errors": { "enabled": false }, "metrics": { "enabled": false } } },
-            "destinations": []
+            "destinations": [\(destinations)]
           }\(metadata)
         }
         """
