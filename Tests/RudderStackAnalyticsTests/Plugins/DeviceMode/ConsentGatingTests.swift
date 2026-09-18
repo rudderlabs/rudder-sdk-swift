@@ -487,6 +487,27 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames.isEmpty, "A grant must not retroactively authorise an event the user had refused when it was created.")
     }
 
+    // The same refusal, but with the gate holding no config — the state a destination registered
+    // before the first source config is in, since the gate's listener delivers on another queue.
+    // Both of the gate's halves then fail open, so the handoff is the only thing left that can
+    // judge the event, and it is the only place that already holds the destination's config.
+    @Test("given a destination configured before the gate's cache fills, when an event created while denied arrives, then it is not delivered")
+    func testEventCreatedWhileDeniedIsDroppedWhenTheGateHoldsNoConfig() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        // Deliberately not dispatched before the destination is built, unlike the test above.
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        let deniedState = ConsentManagement(active: true, provider: .custom, allowedConsentIds: [], deniedConsentIds: ["marketing"])
+        var track = TrackEvent(event: "denied-at-creation")
+        track.capturedReservedContext = [ConsentManagement.contextKey: deniedState.contextStamp]
+
+        _ = plugin.intercept(event: track.updateEventData())
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "An event refused at creation must not be delivered just because the gate had not yet cached the destination's config.")
+    }
+
     @Test("given an event created while consented, when the gate runs under a later revoke, then it is still dropped")
     func testEventCreatedWhileConsentedIsDroppedAfterRevoke() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))

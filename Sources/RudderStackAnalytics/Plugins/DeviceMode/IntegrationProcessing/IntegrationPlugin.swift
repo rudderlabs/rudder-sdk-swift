@@ -197,22 +197,51 @@ extension IntegrationPlugin {
     }
     
     /**
-     Applies the live consent decision at the handoff boundary, then restores
+     Applies the consent decision at the handoff boundary, then restores
      `context.consentManagement` to the value the event was created under.
-     
+
      The destination's own plugins run after `ConsentGatePlugin`, so consent can be revoked after the
      gate has already passed the event. Gating here too makes that guarantee hold all the way to
-     delivery rather than only at chain entry. The gate reads live state, because a revocation must
-     stop delivery now; the stamp is restored from the value captured at creation.
+     delivery rather than only at chain entry.
+
+     Both the live decision and the one recorded at creation are applied, exactly as `ConsentGatePlugin`
+     applies them. The gate resolves against a config cache filled by a listener that delivers on
+     another queue, so a destination registered before the first source config arrives is built while
+     that cache is still `nil`, and every event it sees fails open. This boundary resolves against the
+     config the destination was configured with, so it is the first point that can judge those events
+     at all — and without the creation-time half, a later grant would deliver an event recorded while
+     this destination was denied.
+
+     The stamp is a separate question from the gate: it is restored from the value captured at creation.
      */
     private func gateAndRestoreConsentStamp(_ event: any Event) -> (any Event)? {
         guard let state = analytics?.consentManagementState.value, state.active else { return event }
-        
-        guard ConsentResolver.resolve(state: state, destinationConfig: pluginStore?.destinationConfig) else {
+
+        let destinationConfig = pluginStore?.destinationConfig
+        guard ConsentResolver.resolve(state: state, destinationConfig: destinationConfig) else {
             analytics?.logger.debug(log: "IntegrationPlugin: Dropped event for destination: \(key) — consent was revoked while the event was in the destination chain.")
             return nil
         }
+
+        let allowedWhenCreated = self.capturedConsent(of: event)
+            .map { ConsentResolver.resolve(state: $0, destinationConfig: destinationConfig) } ?? true
+        guard allowedWhenCreated else {
+            analytics?.logger.debug(log: "IntegrationPlugin: Dropped event for destination: \(key) — it was created while this destination was denied.")
+            return nil
+        }
+
         return self.consentRestampedEvent(event)
+    }
+
+    /**
+     The consent this event was created under, or `nil` when it carries none — an event created while
+     consent management was inactive, which the caller treats as consented.
+     */
+    private func capturedConsent(of event: any Event) -> ConsentManagement? {
+        guard let stamp = (event as? ReservedContextCapturing)?
+            .capturedReservedContext?[ConsentManagement.contextKey] as? [String: Any] else { return nil }
+
+        return ConsentManagement.from(contextStamp: stamp)
     }
     
     /**
