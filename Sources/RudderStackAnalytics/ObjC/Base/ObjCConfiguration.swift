@@ -22,6 +22,7 @@ public final class ObjCConfigurationBuilder: NSObject {
     private var collectDeviceId: Bool = Constants.defaultConfig.willCollectDeviceId
     private var trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents
     private var sessionConfiguration = SessionConfiguration()
+    private var consentManagement = ConsentManagementConfiguration()
     private var logger: Logger = SwiftLogger()
     private var logLevel: LogLevel = Constants.log.defaultLevel
     
@@ -67,7 +68,8 @@ public final class ObjCConfigurationBuilder: NSObject {
             trackApplicationLifecycleEvents: trackApplicationLifecycleEvents,
             sessionConfiguration: sessionConfiguration,
             logger: logger,
-            logLevel: logLevel
+            logLevel: logLevel,
+            consentManagement: consentManagement
         )
     }
     
@@ -116,6 +118,14 @@ public final class ObjCConfigurationBuilder: NSObject {
     @discardableResult
     public func setSessionConfiguration(_ configuration: SessionConfiguration) -> Self {
         self.sessionConfiguration = configuration
+        return self
+    }
+    
+    /** Sets the consent management configuration for this Analytics instance. */
+    @objc
+    @discardableResult
+    public func setConsentManagement(_ configuration: ConsentManagementConfiguration) -> Self {
+        self.consentManagement = configuration
         return self
     }
 

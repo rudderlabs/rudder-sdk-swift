@@ -199,6 +199,9 @@ public struct _DefaultConfig {
     /// Whether to update the session on background events by default.
     public let updateSessionOnBackgroundEvents: Bool = false
 
+    /// Whether consent management is enabled by default.
+    public let consentManagementEnabled: Bool = false
+    
     /// Default storage mode used for persisting data.
     let storageMode: StorageMode = .disk
     
