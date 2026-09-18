@@ -29,25 +29,34 @@ class IntegrationsManagementPlugin: Plugin {
         var configIndex = 0
         // `observeDispatched()` skips the initial empty state without depending on when this plugin
         // subscribes, so a cached source config dispatched before setup is still delivered here.
-        self.analytics?.sourceConfigState.observeDispatched()
-            .receive(on: processingQueue)
-            .sink { [weak self] sourceConfig in
-                guard let self, sourceConfig.source.isSourceEnabled else { return }
-                
-                self.integrationPluginChain?.apply { plugin in
-                    if let integrationPlugin = plugin as? IntegrationPlugin {
-                        self.initDestination(sourceConfig: sourceConfig, integration: integrationPlugin)
-                    }
+        // The consent arm uses `publisher`, which emits the current value first - so the combined
+        // stream still fires on the first source config when `setConsent` is never called - and
+        // which dedupes, so a setConsent that does not change the state cannot re-run
+        // initialization. A real consent change does, creating destinations denied earlier.
+        Publishers.CombineLatest(
+            analytics.sourceConfigState.observeDispatched(),
+            analytics.consentManagementState.publisher
+        )
+        .receive(on: processingQueue)
+        .sink { [weak self] sourceConfig, _ in
+            guard let self, sourceConfig.source.isSourceEnabled else { return }
+
+            self.applyConsentDecisionToDestinations()
+
+            self.integrationPluginChain?.apply { plugin in
+                if let integrationPlugin = plugin as? IntegrationPlugin {
+                    self.initDestination(sourceConfig: sourceConfig, integration: integrationPlugin)
                 }
-                
-                // Start processing queued events when SourceConfig is fetched for the first time
-                if configIndex == IntegrationsManagementConstants.firstIndex {
-                    self.setIsSourceEnabledFetchedAtLeastOnce(true)
-                    self.processEvents()
-                }
-                configIndex += 1
             }
-            .store(in: &cancellables)
+
+            // Start processing queued events when SourceConfig is fetched for the first time
+            if configIndex == IntegrationsManagementConstants.firstIndex {
+                self.setIsSourceEnabledFetchedAtLeastOnce(true)
+                self.processEvents()
+            }
+            configIndex += 1
+        }
+        .store(in: &cancellables)
     }
     
     func intercept(event: any Event) -> (any Event)? {
@@ -101,6 +110,10 @@ extension IntegrationsManagementPlugin {
     
     func initDestination(sourceConfig: SourceConfig, integration: IntegrationPlugin) {
         self.analytics?.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: integration)
+    }
+    
+    func applyConsentDecisionToDestinations() {
+        self.analytics?.integrationsController?.applyConsentDecisionToDestinations()
     }
 }
 
