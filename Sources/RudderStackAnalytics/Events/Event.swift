@@ -208,16 +208,40 @@ public enum EventType: String, CaseIterable, Codable {
     }
 }
 
-// MARK: - ConsentEpochCarrying
+// MARK: - ReservedContextCapturing
 /**
- An internal ordering marker, stamped when the event is created.
- 
- The consent block on an event is re-asserted at the terminal boundary, so it cannot say *when*
- the event was made. This counter can: it is set once at creation and never rewritten, which is
- what lets the device-mode hold place an event on one side or the other of a `setConsent` call.
- 
+ The SDK-owned state recorded when the event was created.
+
+ Reserved context keys are re-asserted at the terminal boundary and again before device-mode
+ handoff. Read live at either point they would record the decision in force at *delivery*, so a
+ consent change landing while the event is in flight would rewrite what the event says the user
+ agreed to. Capturing at creation is what makes the event its own source of truth.
+
  Internal, and absent from every `CodingKeys` — it never reaches the payload.
  */
-protocol ConsentEpochCarrying: Event {
-    var consentEpoch: UInt64 { get set }
+protocol ReservedContextCapturing: Event {
+    /// The values the SDK asserted for its reserved context keys when the event was created.
+    var capturedReservedContext: [String: Any]? { get set }
+}
+
+// MARK: - SDK-Owned State
+extension Event {
+
+    /**
+     This event with the state the SDK owns put back from `original`: the values the SDK asserted for
+     its reserved context keys when the event was created.
+
+     A plugin may return a newly constructed event rather than the one it was handed. Such an event
+     carries none of that recorded state, and the loss is silent. The captured context is internal and
+     no plugin can set it, so it is always put back. Everything a plugin can set — the payload, its own
+     `messageId` and `options` included — is left exactly as the plugin returned it.
+     */
+    func restoringSdkOwnedState(from original: Event) -> Event {
+        var restored: Event = self
+        if var carrier = restored as? ReservedContextCapturing {
+            carrier.capturedReservedContext = (original as? ReservedContextCapturing)?.capturedReservedContext
+            restored = carrier
+        }
+        return restored
+    }
 }

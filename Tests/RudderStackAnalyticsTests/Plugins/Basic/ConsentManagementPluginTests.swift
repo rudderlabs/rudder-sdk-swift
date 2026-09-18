@@ -30,8 +30,14 @@ struct ConsentManagementPluginTests {
         return plugin
     }
 
-    private func makeTrackEvent(options: RudderOption? = nil) -> Event {
+    /// Mirrors what `Analytics.process` does at creation: passing `analytics` records the reserved
+    /// values in force at that moment, which is what the stamper writes from.
+    private func makeTrackEvent(options: RudderOption? = nil, for analytics: Analytics? = nil) -> Event {
         var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, options: options)
+        if let analytics, var carrier = event as? ReservedContextCapturing {
+            carrier.capturedReservedContext = analytics.capturedReservedContext()
+            event = carrier
+        }
         event = event.updateEventData()
         MockProvider.resetDynamicValues(&event)
         return event
@@ -54,7 +60,7 @@ struct ConsentManagementPluginTests {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"], deniedConsentIds: ["advertising"]))
         let plugin = makePlugin(for: analytics)
 
-        guard let stamped = plugin.intercept(event: makeTrackEvent()) else {
+        guard let stamped = plugin.intercept(event: makeTrackEvent(for: analytics)) else {
             Issue.record("The plugin must never drop an event.")
             return
         }
@@ -77,13 +83,27 @@ struct ConsentManagementPluginTests {
         #expect(result?.jsonString == event.jsonString, "A disabled plugin must pass the event through untouched.")
     }
 
+    // Enabling consent management without any consent IDs leaves it inactive for the session, so it must
+    // behave exactly as if it had never been enabled.
+    @Test("given consent management enabled without consent IDs, when an event is intercepted, then the consentManagement key is absent")
+    func testInactiveLeavesKeyAbsent() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true))
+        let plugin = makePlugin(for: analytics)
+        let event = makeTrackEvent(for: analytics)
+
+        let result = plugin.intercept(event: event)
+
+        #expect(result?.context?["consentManagement"] == nil, "Inactive must mean no block at all — not an empty one.")
+        #expect(result?.jsonString == event.jsonString, "An inactive plugin must pass the event through untouched.")
+    }
+
     @Test("given a legacy injected key while enabled, when an event is intercepted, then the SDK block wins and a warning is logged")
     func testOverrideWinsWithWarningOnLegacyInjection() {
         let mockLogger = MockLogger()
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]), logger: mockLogger)
         let plugin = makePlugin(for: analytics)
 
-        let result = plugin.intercept(event: makeTrackEvent(options: legacyOption))
+        let result = plugin.intercept(event: makeTrackEvent(options: legacyOption, for: analytics))
 
         guard let context = result?.context?.rawDictionary, let block = context["consentManagement"] as? [String: Any] else {
             Issue.record("The consentManagement block was not stamped.")
@@ -106,7 +126,7 @@ struct ConsentManagementPluginTests {
         let plugin = makePlugin(for: analytics)
 
         for _ in 0..<3 {
-            _ = plugin.intercept(event: makeTrackEvent(options: legacyOption))
+            _ = plugin.intercept(event: makeTrackEvent(options: legacyOption, for: analytics))
         }
 
         let warnings = mockLogger.logs.filter { $0.level == "WARN" }
@@ -129,14 +149,32 @@ struct ConsentManagementPluginTests {
         #expect(mockLogger.logs.allSatisfy { $0.level != "WARN" }, "No warning while disabled — the SDK is not claiming the key.")
     }
 
+    @Test("given consent changed after the event was created, when it is stamped, then the block carries the consent captured at creation")
+    func testStampUsesConsentCapturedAtCreation() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let plugin = makePlugin(for: analytics)
+
+        // Created under the original decision, stamped only after the user widens it.
+        let event = makeTrackEvent(for: analytics)
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing", "analytics"]))
+
+        let result = plugin.intercept(event: event)
+
+        let block = result?.context?.rawDictionary["consentManagement"] as? [String: Any]
+        #expect(
+            block?["allowedConsentIds"] as? [String] == ["marketing"],
+            "The stamp must record what the user had agreed to when the event was created."
+        )
+    }
+
     @Test("given the state is updated between events, when a second event is intercepted, then it carries the new lists")
     func testStateUpdateReflectsOnNextEvent() {
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
         let plugin = makePlugin(for: analytics)
 
-        let first = plugin.intercept(event: makeTrackEvent())
+        let first = plugin.intercept(event: makeTrackEvent(for: analytics))
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["analytics"], deniedConsentIds: ["advertising"]))
-        let second = plugin.intercept(event: makeTrackEvent())
+        let second = plugin.intercept(event: makeTrackEvent(for: analytics))
 
         let firstBlock = first?.context?.rawDictionary["consentManagement"] as? [String: Any]
         let secondBlock = second?.context?.rawDictionary["consentManagement"] as? [String: Any]

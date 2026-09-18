@@ -52,7 +52,7 @@ extension ConsentManagement {
 // MARK: - Context Stamp
 extension ConsentManagement {
     /// The context key the SDK stamps this state under.
-    static let contextKey = "consentManagement"
+    static let contextKey = SDKManagedContextKey.consentManagement.rawValue
 
     /**
      The `context.consentManagement` block for this state — `provider`,
@@ -64,5 +64,24 @@ extension ConsentManagement {
             "allowedConsentIds": allowedConsentIds,
             "deniedConsentIds": deniedConsentIds
         ]
+    }
+
+    /**
+     Rebuilds the state from a stamp captured when an event was created — the inverse of `contextStamp`.
+
+     `active` is `true` because the SDK only captures a value while consent management is active; an
+     event carrying no stamp is not gated on one at all. Only the provider the SDK stamps is
+     recognised, so a stamp carrying any other resolves to `nil` and leaves the destination ungated —
+     the same fail-open posture `ConsentResolver` takes for an unrecognised provider.
+     */
+    static func from(contextStamp stamp: [String: Any]) -> ConsentManagement? {
+        guard (stamp["provider"] as? String) == ConsentManagementProvider.custom.value else { return nil }
+
+        return ConsentManagement(
+            active: true,
+            provider: .custom,
+            allowedConsentIds: normalized(stamp["allowedConsentIds"] as? [String] ?? []),
+            deniedConsentIds: normalized(stamp["deniedConsentIds"] as? [String] ?? [])
+        )
     }
 }

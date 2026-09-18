@@ -224,25 +224,65 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames == ["right-after-grant"], "An event created after consent was granted must not be lost to the gap before re-initialization is scheduled.")
     }
 
-    @Test("given events created before a grant, when they drain after it, then they are never held")
-    func testEventsCreatedBeforeTheGrantAreNeverHeld() {
-        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
+    // A refused setConsent must change nothing, and that includes device-mode holds. Opening one would
+    // leave a pending destination holding whatever arrives next, and replay it once it is created.
+    @Test("given a refused setConsent, when a destination is created afterwards, then nothing sent in between is replayed")
+    func testRefusedSetConsentOpensNoHold() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
         let plugin = makeIntegration(for: analytics)
+        let controller = analytics.integrationsController
+        // Registered, so a consent decision reaches it, but not yet initialized: neither holding nor ready.
+        controller?.add(integration: plugin)
+
+        // Refused, because it carries no consent IDs at all.
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: [], deniedConsentIds: []))
+        controller?.deliver(event: makeTrackEvent(named: "after-refused-call", for: analytics), to: plugin)
+        controller?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
+
+        #expect(plugin.createCalled == true, "Precondition: the destination is created.")
+        #expect(plugin.receivedTrackEventNames.isEmpty, "A refused setConsent must not open a hold that later replays what arrived in between.")
+    }
+
+    // Sending the consent already in force changes no state, so nothing re-evaluates the destinations to end
+    // a hold. Opening one would leave a pending destination holding what arrives next for the whole session.
+    @Test("given the consent already in force, when setConsent sends it again, then nothing sent afterwards is replayed")
+    func testUnchangedSetConsentOpensNoHold() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let plugin = makeIntegration(for: analytics)
+        let controller = analytics.integrationsController
+        // Registered, so a consent decision reaches it, but not yet initialized: neither holding nor ready.
+        controller?.add(integration: plugin)
+
+        // Accepted, and once trimmed identical to the consent already in force.
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: [" marketing "]))
+        controller?.deliver(event: makeTrackEvent(named: "after-unchanged-call", for: analytics), to: plugin)
+        controller?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
+
+        #expect(plugin.createCalled == true, "Precondition: the destination is created.")
+        #expect(plugin.receivedTrackEventNames.isEmpty, "Sending unchanged consent must not open a hold that later replays what arrived in between.")
+    }
+
+    @Test("given events created before a grant, when they drain after it, then they are never delivered")
+    func testEventsCreatedBeforeTheGrantAreNeverDelivered() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]))
         let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        // The gate seeds its destination config at setup, so the config has to land before the
+        // destination is built.
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
         let controller = analytics.integrationsController
         controller?.add(integration: plugin)
         controller?.initDestination(sourceConfig: sourceConfig, integration: plugin)
 
         // Created while the destination was denied, still queued upstream when consent is granted.
-        let queuedBeforeGrant = makeTrackEvent(named: "queued-before-grant")
-        Thread.sleep(forTimeInterval: 0.01)
+        let queuedBeforeGrant = makeTrackEvent(named: "queued-before-grant", for: analytics)
         analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
 
         controller?.deliver(event: queuedBeforeGrant, to: plugin)
         controller?.initDestination(sourceConfig: sourceConfig, integration: plugin)
 
         #expect(plugin.createCalled == true, "Precondition: the grant late-initializes the destination.")
-        #expect(plugin.receivedTrackEventNames.isEmpty, "An event's consent verdict is fixed when it happens; holding from the grant onward must not reach back and deliver events that occurred while consent was denied.")
+        #expect(plugin.receivedTrackEventNames.isEmpty, "An event's consent verdict is fixed when it happens; a later grant must not reach back and deliver events that occurred while consent was denied.")
     }
 
     @Test("given consent supplied at launch, when an event arrives before the destination is created, then it is held")
@@ -425,6 +465,100 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames.isEmpty, "A revoked destination must gate its events even when it was registered late.")
     }
 
+    // MARK: - Consent at creation
+
+    @Test("given an event created while the destination was denied, when it is delivered after a grant, then the gate drops it")
+    func testEventCreatedWhileDeniedIsDroppedAfterGrant() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        // The gate seeds its destination config synchronously at setup, so this has to land before
+        // the destination is built. Without it the gate holds a nil config and resolves fail-open.
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        // Captured under a refusal, while live consent grants the destination.
+        let deniedState = ConsentManagement(active: true, provider: .custom, allowedConsentIds: [], deniedConsentIds: ["marketing"])
+        var track = TrackEvent(event: "denied-at-creation")
+        track.capturedReservedContext = [ConsentManagement.contextKey: deniedState.contextStamp]
+
+        _ = plugin.intercept(event: track.updateEventData())
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "A grant must not retroactively authorise an event the user had refused when it was created.")
+    }
+
+    // The same refusal, but with the gate holding no config — the state a destination registered
+    // before the first source config is in, since the gate's listener delivers on another queue.
+    // Both of the gate's halves then fail open, so the handoff is the only thing left that can
+    // judge the event, and it is the only place that already holds the destination's config.
+    @Test("given a destination configured before the gate's cache fills, when an event created while denied arrives, then it is not delivered")
+    func testEventCreatedWhileDeniedIsDroppedWhenTheGateHoldsNoConfig() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        // Deliberately not dispatched before the destination is built, unlike the test above.
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        let deniedState = ConsentManagement(active: true, provider: .custom, allowedConsentIds: [], deniedConsentIds: ["marketing"])
+        var track = TrackEvent(event: "denied-at-creation")
+        track.capturedReservedContext = [ConsentManagement.contextKey: deniedState.contextStamp]
+
+        _ = plugin.intercept(event: track.updateEventData())
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "An event refused at creation must not be delivered just because the gate had not yet cached the destination's config.")
+    }
+
+    @Test("given an event created while consented, when the gate runs under a later revoke, then it is still dropped")
+    func testEventCreatedWhileConsentedIsDroppedAfterRevoke() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        // Captured under the grant that was in force at creation.
+        let grantedState = ConsentManagement(active: true, provider: .custom, allowedConsentIds: ["marketing"], deniedConsentIds: [])
+        var track = TrackEvent(event: "consented-at-creation")
+        track.capturedReservedContext = [ConsentManagement.contextKey: grantedState.contextStamp]
+
+        // The destination is left ready deliberately: re-initializing would tear it down and the
+        // hold would skip the event, so the drop would prove nothing about the gate.
+        analytics.setConsent(ConsentManagementOptions(deniedConsentIds: ["marketing"]))
+
+        _ = plugin.intercept(event: track.updateEventData())
+
+        #expect(plugin.receivedTrackEventNames.isEmpty, "A revoke still stops delivery of everything in flight, whatever the event was created under.")
+    }
+
+    // grant -> revoke -> grant while create() is still in flight. Every event is held until the destination
+    // is ready, so each has to be judged by the consent it was created under, not by whichever decision
+    // landed last. The destination is deliberately not registered with the controller, so the
+    // re-initialization a consent change schedules on another queue cannot reach it mid-create.
+    @Test("given consent granted, revoked, then granted again while a destination is being created, when it becomes ready, then each held event is judged by the consent it was created under")
+    func testHeldEventsAreJudgedByTheirOwnConsentAcrossGrantRevokeGrant() {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["marketing"]))
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        // The gate seeds its destination config at setup, so the config has to land first.
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let plugin = makeIntegration(for: analytics)
+
+        plugin.onCreate = { [weak analytics, weak plugin] in
+            guard let plugin else { return }
+            let controller = analytics?.integrationsController
+            controller?.deliver(event: self.makeTrackEvent(named: "first-grant", for: analytics), to: plugin)
+            analytics?.setConsent(ConsentManagementOptions(deniedConsentIds: ["marketing"]))
+            controller?.deliver(event: self.makeTrackEvent(named: "denied-window", for: analytics), to: plugin)
+            analytics?.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing", "analytics"]))
+        }
+        analytics.integrationsController?.initDestination(sourceConfig: sourceConfig, integration: plugin)
+
+        #expect(plugin.createCalled == true, "Precondition: the destination is created.")
+        #expect(
+            plugin.receivedTrackEventNames == ["first-grant"],
+            "An event created while consented is delivered once consent is granted again; one created during the refusal never is, however many decisions land before the destination is ready."
+        )
+    }
+
     // MARK: - Delivery once the destination is ready
 
     // Driven through the public API end to end, because the leak this pins needs three moving parts
@@ -555,6 +689,41 @@ struct ConsentGatingTests {
         #expect(plugin.receivedTrackEventNames == ["after-grant"], "A destination that never stopped delivering must still honour the consent boundary: an event created while consent was revoked is not delivered once consent is granted again.")
     }
 
+    // A customer plugin can return a newly built event rather than the one it was handed. Nothing it can
+    // see on the original carries the consent the event was created under, so this pins that the chain
+    // puts it back — otherwise the gate falls back to live consent and the grant reaches backwards.
+    @Test("given a customer plugin that rebuilds a held event from the denied period, when it releases after the destination is ready, then the rebuilt event is not delivered")
+    func testRebuiltPreGrantEventIsNotDeliveredOnceTheDestinationIsReady() async throws {
+        let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"]))
+        let holder = EventHoldingPlugin(holding: "denied-before-grant", rebuilding: true)
+        analytics.add(plugin: holder)
+
+        let plugin = MockStandardIntegrationPlugin(key: destinationKey)
+        analytics.add(plugin: plugin)
+
+        let sourceConfig = makeSourceConfig(consentEntries: [gatedEntry()])
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        let configLanded = await waitUntil { analytics.integrationsController?.isSourceEnabledFetchedAtLeastOnce == true }
+        #expect(configLanded, "Precondition: the source config must land before events are processed.")
+        #expect(plugin.createCalled == false, "Precondition: the destination is consent-denied at launch.")
+
+        // Created while consent was denied, then held and rebuilt by the customer's plugin.
+        analytics.track(name: "denied-before-grant")
+        let holding = await waitUntil { holder.isHolding }
+        #expect(holding, "Precondition: the customer plugin must be holding the event.")
+
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
+        let ready = await waitUntil { plugin.pluginStore?.isDestinationReady == true }
+        #expect(ready, "Precondition: the grant must re-initialize the destination before the held event resumes.")
+
+        holder.release()
+        analytics.track(name: "after-grant")
+
+        let delivered = await waitUntil { plugin.receivedTrackEventNames.contains("after-grant") }
+        #expect(delivered, "Precondition: an event created after the grant must reach the destination.")
+        #expect(plugin.receivedTrackEventNames == ["after-grant"], "A rebuilt event must still be judged against the consent it was created under.")
+    }
+
 }
 
 // MARK: - EventHoldingPlugin
@@ -566,10 +735,13 @@ private final class EventHoldingPlugin: Plugin {
     @Synchronized private(set) var isHolding = false
 
     private let heldEventName: String
+    private let rebuilds: Bool
     private let gate = DispatchSemaphore(value: 0)
 
-    init(holding eventName: String) {
+    /// `rebuilding` releases a newly built event instead of the one it was handed.
+    init(holding eventName: String, rebuilding: Bool = false) {
         self.heldEventName = eventName
+        self.rebuilds = rebuilding
     }
 
     func setup(analytics: Analytics) {
@@ -577,13 +749,26 @@ private final class EventHoldingPlugin: Plugin {
     }
 
     func intercept(event: Event) -> Event? {
-        guard (event as? TrackEvent)?.event == heldEventName else { return event }
+        guard let track = event as? TrackEvent, track.event == heldEventName else { return event }
 
         self.isHolding = true
         // Bounded, so a test that never releases fails on its expectations instead of hanging.
         _ = gate.wait(timeout: .now() + 5)
         self.isHolding = false
-        return event
+        return rebuilds ? Self.rebuilt(track) : event
+    }
+
+    /// A new event carrying everything a customer's plugin can see on the original. The SDK's own
+    /// bookkeeping is internal, which is exactly what such an event cannot carry.
+    private static func rebuilt(_ track: TrackEvent) -> Event {
+        var rebuilt = TrackEvent(event: track.event)
+        rebuilt.anonymousId = track.anonymousId
+        rebuilt.userId = track.userId
+        rebuilt.channel = track.channel
+        rebuilt.integrations = track.integrations
+        rebuilt.context = track.context
+        rebuilt.properties = track.properties
+        return rebuilt
     }
 
     func release() {
@@ -656,10 +841,9 @@ extension ConsentGatingTests {
 
     private func makeTrackEvent(named name: String, for analytics: Analytics? = nil) -> Event {
         // Mirrors what Analytics.process does at creation: the event carries the consent decision in
-        // force, which is what the device-mode hold compares against. These tests hand events to the
-        // controller directly, so without this they would all sit at epoch zero and be skipped.
+        // force, which is what the gate judges it against when it reaches the destination.
         var track = TrackEvent(event: name)
-        track.consentEpoch = analytics?.consentEpoch ?? 0
+        track.capturedReservedContext = analytics?.capturedReservedContext()
 
         var event: Event = track.updateEventData()
         if let state = analytics?.consentManagementState.value, state.active {

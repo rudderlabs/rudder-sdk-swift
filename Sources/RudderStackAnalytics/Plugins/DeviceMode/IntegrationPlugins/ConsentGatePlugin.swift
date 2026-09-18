@@ -20,7 +20,8 @@ final class ConsentGatePlugin: Plugin {
     var pluginType: PluginType = .preProcess
     var analytics: Analytics?
     
-    @Synchronized private var destinationConfig: [String: Any]?
+    /// Seeded at setup from the source config already in state, then kept current by the source-config stream; `nil` while no config has arrived, which resolves fail-open.
+    @Synchronized private(set) var destinationConfig: [String: Any]?
     private let destinationKey: String
     private var cancellables = Set<AnyCancellable>()
     
@@ -41,13 +42,33 @@ final class ConsentGatePlugin: Plugin {
     
     func intercept(event: any Event) -> (any Event)? {
         guard let state = analytics?.consentManagementState.value else { return event }
+
+        // An event must be consented twice: under the decision in force now, and under the one it
+        // was created with. A grant never reaches backwards to authorise data the user had refused;
+        // a revoke still stops delivery of everything already in flight.
+        let allowedNow = ConsentResolver.resolve(state: state, destinationConfig: destinationConfig)
+        let allowedWhenCreated = self.capturedConsent(of: event)
+            .map { ConsentResolver.resolve(state: $0, destinationConfig: destinationConfig) } ?? true
         
-        guard ConsentResolver.resolve(state: state, destinationConfig: destinationConfig) else {
+        guard allowedNow, allowedWhenCreated else {
             logger.debug(log: "ConsentGatePlugin: Dropped event for destination: \(destinationKey) — consent denied.")
             return nil
         }
         
         return event
+    }
+
+    /**
+     The consent the event was created under, or `nil` when it carries none.
+
+     An event that never passed through `Analytics.process` records no decision, so it is gated on
+     the live state alone — the same fail-open posture the resolver takes for missing configuration.
+     */
+    private func capturedConsent(of event: any Event) -> ConsentManagement? {
+        guard let stamp = (event as? ReservedContextCapturing)?
+            .capturedReservedContext?[ConsentManagement.contextKey] as? [String: Any] else { return nil }
+        
+        return ConsentManagement.from(contextStamp: stamp)
     }
     
     // The chain calls this on removal, which is the deterministic point to drop the source-config

@@ -19,9 +19,6 @@ class IntegrationsController {
     @Synchronized var integrationPluginStores: [String: IntegrationPluginStore] = [:]
     
     private let deliveryControl = DestinationDeliveryControl()
-    // Which consent decision is in force. Zero until the first accepted `setConsent`, so a hold
-    // opened before any decision holds everything.
-    @Synchronized private var consentDecidedEpoch: UInt64 = 0
     init(analytics: Analytics) {
         self.analytics = analytics
         self.integrationPluginChain = PluginChain(analytics: analytics)
@@ -41,15 +38,6 @@ class IntegrationsController {
         deliveryControl.admit(event, for: integration.key) { admitted in
             integration.process(event: admitted)
         }
-    }
-    
-    // Called as `setConsent` is accepted, before the new state is dispatched. Re-initialization is
-    // scheduled asynchronously, so without this the events arriving in between would reach a
-    // destination that is neither holding nor ready, and be dropped despite consent having been
-    // granted for them.
-    func noteConsentChange() {
-        $consentDecidedEpoch.modify { $0 = analytics?.consentEpoch ?? $0 }
-        applyConsentDecisionToDestinations()
     }
     
     // Applies the decision now in force to every destination, ahead of initializing any of them.
@@ -118,6 +106,11 @@ private extension IntegrationsController {
     
     func isDestinationConfigured(sourceConfig: SourceConfig, integration: IntegrationPlugin) -> [String: Any]? {
         guard let pluginStore = integration.pluginStore else { return nil }
+        
+        // Recorded for every integration, whatever the outcome below: the handoff gate needs the
+        // destination's current consent rules — the same ones ConsentGatePlugin resolves by key —
+        // and a rejected update still changes what those rules are.
+        pluginStore.destinationConfig = findDestination(sourceConfig: sourceConfig, key: integration.key)?.destinationConfig.rawDictionary
         
         if !pluginStore.isStandardIntegration {
             return [:]
@@ -261,23 +254,19 @@ private extension IntegrationsController {
     // the empty-list rule — is indistinguishable from one that never enabled it.
     private func beginBufferingIfConsentIsActive(for key: String) {
         guard analytics?.consentManagementState.value.active == true else { return }
-        deliveryControl.beginBuffering(for: key, notBefore: consentDecidedEpoch)
+        deliveryControl.beginBuffering(for: key)
     }
     
     // A destination that is not yet delivering starts holding: destinations are initialized one at a
     // time, so a hold opened inside that loop would only begin once the destinations ahead of it had
     // finished creating — losing everything sent in the meantime. One already delivering is not
     // held: it has nothing to hold, and a hold opened here would leave it holding forever whenever
-    // initialization turns out to be a no-op. It still records the decision, though — that is what
-    // stops an event created while consent was revoked from being delivered once a later grant
-    // releases it.
+    // initialization turns out to be a no-op.
     private func applyConsentDecisionIfActive(to integration: IntegrationPlugin) {
         guard analytics?.consentManagementState.value.active == true else { return }
         
-        if integration.pluginStore?.isDestinationReady == true {
-            deliveryControl.noteDecision(for: integration.key, notBefore: consentDecidedEpoch)
-        } else {
-            deliveryControl.beginBuffering(for: integration.key, notBefore: consentDecidedEpoch)
+        if integration.pluginStore?.isDestinationReady != true {
+            deliveryControl.beginBuffering(for: integration.key)
         }
     }
     

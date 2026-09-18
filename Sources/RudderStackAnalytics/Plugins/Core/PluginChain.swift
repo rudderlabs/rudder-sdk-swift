@@ -25,7 +25,10 @@ class PluginChain {
         let preProcessedResult = self.applyPlugins(pluginType: .preProcess, event: event)
         let onProcessedResult = self.applyPlugins(pluginType: .onProcess, event: preProcessedResult)
         
-        self.applyPlugins(pluginType: .terminal, event: onProcessedResult)
+        // A customer plugin may pass the event through an event type the SDK does not own, which cannot carry
+        // the consent recorded at creation. Put it back from the event that entered the chain before the
+        // terminal consumers read it.
+        self.applyPlugins(pluginType: .terminal, event: onProcessedResult?.restoringSdkOwnedState(from: event))
     }
     
     func add(plugin: Plugin) {

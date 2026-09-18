@@ -283,3 +283,89 @@ func runAfter(_ seconds: Double, block: @escaping () async -> Void) async {
     // Execute the block after the delay
     await block()
 }
+
+/**
+ Waits for asynchronously published state to satisfy a condition.
+
+ - Parameters:
+    - timeout: Maximum time to wait in seconds
+    - condition: The condition to poll
+ - Returns: True if the condition held within the timeout, false otherwise
+ */
+@discardableResult
+func waitUntil(timeout: TimeInterval = 2.0, condition: () -> Bool) async -> Bool {
+    let start = Date()
+
+    while Date().timeIntervalSince(start) < timeout {
+        if condition() { return true }
+        try? await Task.sleep(nanoseconds: MockStorage.pollInterval)
+    }
+    return condition()
+}
+
+// MARK: - Customer-Defined Event Helpers
+
+/**
+ An event type defined outside the SDK. It conforms to the public `Event` protocol but, unlike the SDK's own
+ event types, has nowhere to hold the consent the SDK recorded when the event was created.
+ */
+struct MockCustomerEvent: Event {
+    var anonymousId: String?
+    var userId: String?
+    var channel: String?
+    var integrations: [String: AnyCodable]?
+    var sentAt: String?
+    var context: [String: AnyCodable]?
+    var traits: CodableCollection?
+    var type: EventType = .track
+    var messageId: String = UUID().uuidString
+    var originalTimestamp: String = ""
+    var options: RudderOption?
+    var userIdentity: UserIdentity?
+
+    enum CodingKeys: String, CodingKey {
+        case anonymousId, userId, channel, integrations, sentAt, context, traits, type, messageId, originalTimestamp
+    }
+}
+
+/**
+ A customer plugin that swaps the event for a `MockCustomerEvent`, writing the given values into its context.
+ */
+final class MockCustomerEventSwappingPlugin: Plugin {
+    var pluginType: PluginType
+    var analytics: Analytics?
+    private let contextInfo: [String: Any]
+
+    init(pluginType: PluginType, contextInfo: [String: Any]) {
+        self.pluginType = pluginType
+        self.contextInfo = contextInfo
+    }
+
+    func intercept(event: any Event) -> (any Event)? {
+        var customerEvent = MockCustomerEvent()
+        customerEvent.messageId = event.messageId
+        customerEvent.anonymousId = event.anonymousId
+        customerEvent.integrations = event.integrations
+        customerEvent.context = event.context
+        return customerEvent.addToContext(info: contextInfo)
+    }
+}
+
+/**
+ A customer plugin that converts a `MockCustomerEvent` back into a `TrackEvent`, carrying its context across.
+ */
+final class MockCustomerEventConvertingPlugin: Plugin {
+    var pluginType: PluginType = .onProcess
+    var analytics: Analytics?
+
+    func intercept(event: any Event) -> (any Event)? {
+        guard let customerEvent = event as? MockCustomerEvent else { return event }
+
+        var track = TrackEvent(event: "converted")
+        track.messageId = customerEvent.messageId
+        track.anonymousId = customerEvent.anonymousId
+        track.integrations = customerEvent.integrations
+        track.context = customerEvent.context
+        return track
+    }
+}
