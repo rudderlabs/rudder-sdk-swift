@@ -1,5 +1,28 @@
 # Changelog
 
+# [1.4.0](https://github.com/rudderlabs/rudder-sdk-swift/compare/1.3.1...1.4.0) (2026-09-22)
+
+
+### Bug Fixes
+
+* address release-blocking CI failures ([#264](https://github.com/rudderlabs/rudder-sdk-swift/issues/264)) ([254be85](https://github.com/rudderlabs/rudder-sdk-swift/commit/254be85d93eedaeaa05d8c6c84efc1d52d4887d8))
+
+
+### Chores
+
+* **readme:** update branding logo with dark-mode support (#260) ([](https://github.com/rudderlabs/rudder-sdk-swift/commit/1ec884c7e80464badb0bb4fb7eed81eb0cb6a3f5)), closes [#260](https://github.com/rudderlabs/rudder-sdk-swift/issues/260)
+
+
+### Features
+
+* **consent:** add consent configuration and runtime setConsent API ([#254](https://github.com/rudderlabs/rudder-sdk-swift/issues/254)) ([52dcf81](https://github.com/rudderlabs/rudder-sdk-swift/commit/52dcf812d6fb371f14e52d2f39429e43d7c5ecb5))
+* **consent:** guard sdk-managed context keys and restamp consent at delivery ([#258](https://github.com/rudderlabs/rudder-sdk-swift/issues/258)) ([6e3e66b](https://github.com/rudderlabs/rudder-sdk-swift/commit/6e3e66b025a7c7a021060316b13e162a0e854957))
+* **device-mode:** gate device-mode destinations on user consent ([#257](https://github.com/rudderlabs/rudder-sdk-swift/issues/257)) ([fd06fcb](https://github.com/rudderlabs/rudder-sdk-swift/commit/fd06fcb3c19fc10e0b36acf415ea871b6ea9a107))
+* **examples:** add sample consent plugins to swiftui and objc examples ([#261](https://github.com/rudderlabs/rudder-sdk-swift/issues/261)) ([e52649a](https://github.com/rudderlabs/rudder-sdk-swift/commit/e52649a972ef35060582c80f1bb4c3b8df27c19d))
+* **plugins:** add consent management stamping plugin ([#255](https://github.com/rudderlabs/rudder-sdk-swift/issues/255)) ([11884d4](https://github.com/rudderlabs/rudder-sdk-swift/commit/11884d43cbdad26c808251b698537775facf3b3a))
+
+
+
 ## [1.3.1] - 2026-08-10
 
 ### Bug Fixes
