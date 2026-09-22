@@ -28,7 +28,7 @@ class PluginInteractor {
         var result: Event? = event
         self.pluginList.forEach {
             if let processing = result {
-                result = $0.intercept(event: processing)
+                result = $0.intercept(event: processing)?.restoringSdkOwnedState(from: processing)
             }
         }
         return result

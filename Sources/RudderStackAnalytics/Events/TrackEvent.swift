@@ -16,7 +16,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct TrackEvent: Event {
+public struct TrackEvent: Event, ReservedContextCapturing {
     
     /// The type of the event, defaulting to `.track`.
     public var type: EventType = .track
@@ -59,6 +59,9 @@ public struct TrackEvent: Event {
     
     /// The identity values of the user associated with the event.
     public var userIdentity: UserIdentity?
+    
+    /// The values the SDK asserted for its reserved context keys when the event was created.
+    var capturedReservedContext: [String: Any]?
     
     /**
      Initializes a `TrackEvent` with the specified event name, properties, options and user identity values.

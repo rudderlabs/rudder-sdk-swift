@@ -82,35 +82,53 @@ class LoggerAnalyticsTests {
 }
 
 // MARK: - MockLogger
+
+/**
+ Captures log lines for assertions, from any thread.
+
+ Tests that use this logger build a live `Analytics`, which keeps logging from its own background
+ queues — the network client, the session handler, the source config provider — while the test body
+ reads `logs`. Appending to a Swift array from two threads at once can reallocate its buffer under
+ the other thread, so every access is held behind `logLock`.
+ */
 final class MockLogger: Logger {
-    var logs: [(level: String, message: String)] = []
+    private var capturedLogs: [(level: String, message: String)] = []
+    private let logLock = NSLock()
+    
+    var logs: [(level: String, message: String)] {
+        logLock.lock()
+        defer { logLock.unlock() }
+        return capturedLogs
+    }
     
     func verbose(log: String) {
-        logs.append(("VERBOSE", log))
+        capture("VERBOSE", log)
     }
     
     func debug(log: String) {
-        logs.append(("DEBUG", log))
+        capture("DEBUG", log)
     }
     
     func info(log: String) {
-        logs.append(("INFO", log))
+        capture("INFO", log)
     }
     
     func warn(log: String) {
-        logs.append(("WARN", log))
+        capture("WARN", log)
     }
     
     func error(log: String, error: Error?) {
         if let error {
-            logs.append(("ERROR", "\(log) - \(error.localizedDescription)"))
+            capture("ERROR", "\(log) - \(error.localizedDescription)")
         } else {
-            logs.append(("ERROR", log))
+            capture("ERROR", log)
         }
     }
     
     func clearLogs() {
-        logs.removeAll()
+        logLock.lock()
+        capturedLogs.removeAll()
+        logLock.unlock()
     }
     
     func hasLog(level: String, containing message: String) -> Bool {
@@ -119,5 +137,11 @@ final class MockLogger: Logger {
     
     func logCount(for level: String) -> Int {
         return logs.filter { $0.level == level }.count
+    }
+    
+    private func capture(_ level: String, _ message: String) {
+        logLock.lock()
+        defer { logLock.unlock() }
+        capturedLogs.append((level, message))
     }
 }

@@ -39,7 +39,7 @@ class SourceConfigProvider: TypeIdentifiable {
         self.connectivityMonitor?.connectivityState
             .filter { $0 } // Proceed only when connected
             .first() // Take only the first true value
-            .sink { _ in
+            .sink { [weak self] _ in
                 Task { [weak self] in
                     guard let self, let downloadedSourceConfig = await self.downloadSourceConfig() else { return }
                     self.notifyObservers(config: downloadedSourceConfig)

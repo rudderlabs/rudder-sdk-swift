@@ -16,7 +16,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct ScreenEvent: Event {
+public struct ScreenEvent: Event, ReservedContextCapturing {
     
     /// The type of the event, defaulting to `.screen`.
     public var type: EventType = .screen
@@ -62,6 +62,9 @@ public struct ScreenEvent: Event {
     
     /// The identity values of the user associated with the event.
     public var userIdentity: UserIdentity?
+    
+    /// The values the SDK asserted for its reserved context keys when the event was created.
+    var capturedReservedContext: [String: Any]?
     
     /**
      Initializes a `ScreenEvent` with the specified screen name, category, properties, options and user identity values.

@@ -30,6 +30,18 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     var lastDestinationConfig: [String: Any]?
     var createThrowsError: Error?
     var updateThrowsError: Error?
+
+    // Invoked at the start of create — lets tests simulate events arriving while creation is in flight
+    var onCreate: (() -> Void)?
+
+    // Invoked at the start of update — lets tests simulate a consent change landing while a
+    // re-initialization is still in flight
+    var onUpdate: (() -> Void)?
+
+    // Ordered names of all track events delivered to this destination. Synchronized because a
+    // destination can receive events from more than one processing task at a time; an unguarded
+    // Array.append reallocates and frees its buffer under a concurrent reader.
+    @Synchronized var receivedTrackEventNames: [String] = []
     
     // Event tracking
     var identifyEventReceived: IdentifyEvent?
@@ -50,7 +62,8 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     func create(destinationConfig: [String: Any]) throws {
         createCalled = true
         lastDestinationConfig = destinationConfig
-        
+        onCreate?()
+
         if let error = createThrowsError {
             throw error
         }
@@ -62,6 +75,8 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     func update(destinationConfig: [String: Any]) throws {
         updateCalled = true
         lastDestinationConfig = destinationConfig
+        onUpdate?()
+
         
         if let error = updateThrowsError {
             throw error
@@ -84,6 +99,7 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     
     func track(payload: TrackEvent) {
         trackEventReceived = payload
+        $receivedTrackEventNames.modify { $0.append(payload.event) }
     }
     
     func screen(payload: ScreenEvent) {
@@ -110,6 +126,9 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
         resetCalled = false
         getDestinationInstanceCalled = false
         lastDestinationConfig = nil
+        onCreate = nil
+        onUpdate = nil
+        receivedTrackEventNames = []
         identifyEventReceived = nil
         trackEventReceived = nil
         screenEventReceived = nil

@@ -199,6 +199,9 @@ public struct _DefaultConfig {
     /// Whether to update the session on background events by default.
     public let updateSessionOnBackgroundEvents: Bool = false
 
+    /// Whether consent management is enabled by default.
+    public let consentManagementEnabled: Bool = false
+    
     /// Default storage mode used for persisting data.
     let storageMode: StorageMode = .disk
     
@@ -211,6 +214,26 @@ public struct _DefaultConfig {
     
     /// Special signal string used to trigger uploads.
     let uploadSignal = "#!upload"
+    
+    /// Max events held per destination while it initializes; oldest dropped when full.
+    let maxHeldEventsPerDestination: Int = 1000
+}
+
+// MARK: - SDKManagedContextKey
+/**
+ Context keys the SDK stamps on every event.
+ */
+enum SDKManagedContextKey: String, CaseIterable {
+    case app, device, library, locale, network, screen, timezone, sessionId
+    case consentManagement
+    // swiftlint:disable:next identifier_name
+    case os
+
+    /// Keys re-asserted at the terminal boundary.
+    static var reservedKeys: [SDKManagedContextKey] { [.consentManagement] }
+
+    /// Overridable SDK-stamped keys — a customer override triggers a deprecation warning.
+    static var baseKeys: [SDKManagedContextKey] { allCases.filter { !reservedKeys.contains($0) } }
 }
 // swiftlint:enable type_name
 
@@ -221,5 +244,5 @@ public struct _DefaultConfig {
  **Important:**
  Do not edit this value unless performing a manual release.
  */
-let RSVersion: String = "1.3.1"
+let RSVersion: String = "1.4.0"
 let RSLibraryName: String = "rudder-sdk-swift"

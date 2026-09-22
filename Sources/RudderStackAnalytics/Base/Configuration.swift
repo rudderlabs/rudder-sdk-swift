@@ -74,6 +74,11 @@ public class Configuration: NSObject {
      */
     var logLevel: LogLevel
     
+    /**
+     A configuration instance for managing consent settings. Defaults to disabled.
+     */
+    var consentManagement: ConsentManagementConfiguration
+    
     // MARK: - Initialization
     
     /**
@@ -90,6 +95,7 @@ public class Configuration: NSObject {
        - sessionConfiguration: A configuration instance for managing session settings.
        - logger: The logger implementation to use for this Analytics instance.
        - logLevel: The log level for this Analytics instance.
+       - consentManagement: A configuration instance for managing consent settings. Defaults to disabled.
 
      - Returns: An instance of `Configuration` with the specified settings.
      */
@@ -103,7 +109,8 @@ public class Configuration: NSObject {
         trackApplicationLifecycleEvents: Bool = Constants.defaultConfig.willTrackLifecycleEvents,
         sessionConfiguration: SessionConfiguration = SessionConfiguration(),
         logger: Logger? = nil,
-        logLevel: LogLevel = Constants.log.defaultLevel
+        logLevel: LogLevel = Constants.log.defaultLevel,
+        consentManagement: ConsentManagementConfiguration = ConsentManagementConfiguration()
     ) {
         self.writeKey = writeKey
         self.dataPlaneUrl = dataPlaneUrl
@@ -117,6 +124,7 @@ public class Configuration: NSObject {
         self.collectDeviceId = collectDeviceId
         self.trackApplicationLifecycleEvents = trackApplicationLifecycleEvents
         self.sessionConfiguration = sessionConfiguration
+        self.consentManagement = consentManagement
     }
 }
 

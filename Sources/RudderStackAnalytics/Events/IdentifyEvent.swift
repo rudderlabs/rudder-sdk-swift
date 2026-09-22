@@ -14,7 +14,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct IdentifyEvent: Event {
+public struct IdentifyEvent: Event, ReservedContextCapturing {
     
     /// The type of the event, defaulting to `.identify`.
     public var type: EventType = .identify
@@ -54,6 +54,9 @@ public struct IdentifyEvent: Event {
     
     /// The identity values of the user associated with the event.
     public var userIdentity: UserIdentity?
+    
+    /// The values the SDK asserted for its reserved context keys when the event was created.
+    var capturedReservedContext: [String: Any]?
 
     /**
      Initializes an `IdentifyEvent` with the specified traits, options, and user identity values.

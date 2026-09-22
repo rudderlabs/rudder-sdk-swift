@@ -34,6 +34,9 @@ jobs:
       name: Publish Release
       runs-on: ubuntu-latest
       environment: release
+      # The tag release-sanity tests, read from Constants.swift by the Read RSVersion step.
+      outputs:
+        version: ${{ steps.read_version.outputs.version }}
       # Only run when a release/* or hotfix-release/* PR is merged — skip everything else.
       if: |
         github.event.pull_request.merged == true &&
@@ -195,3 +198,15 @@ jobs:
               --head main \
               --title "chore(release): pulling main into develop post release $VERSION" \
               --body "Automated back-merge of release $VERSION from \`main\` into \`develop\`."
+
+  # Advisory: the sanity suite reports its verdict and never blocks or fails the release.
+  # The release is complete when publish-release succeeds; this only keeps the run in progress.
+  release-sanity:
+      needs: publish-release
+      uses: ./.github/workflows/release-sanity.yml
+      with:
+        phase: post-release
+        sdk_version: ${{ needs.publish-release.outputs.version }}
+        release_pr: ${{ github.event.pull_request.html_url }}
+      secrets:
+        RELEASE_PRIVATE_KEY: ${{ secrets.RELEASE_PRIVATE_KEY }}

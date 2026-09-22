@@ -50,6 +50,11 @@ public class Analytics {
     private(set) var sourceConfigState: StateImpl<SourceConfig>
     
     /**
+     The state container for consent management within the analytics system.
+     */
+    private(set) var consentManagementState: StateImpl<ConsentManagement>
+    
+    /**
      The manager responsible for SourceConfig operations.
      */
     private(set) var sourceConfigProvider: SourceConfigProvider?
@@ -83,8 +88,15 @@ public class Analytics {
         self.configuration = configuration
         self.logger = configuration.logger
         self.processEventChannel = AsyncChannel()
+
         self.userIdentityState = createState(initialState: UserIdentity.initializeState(configuration.storage))
         self.sourceConfigState = createState(initialState: SourceConfig.initialState())
+
+        self.consentManagementState = createState(initialState: ConsentManagement.initialState(configuration.consentManagement))
+        if configuration.consentManagement.enabled, !self.consentManagementState.value.active {
+            self.logger.info(log: "Analytics: Consent management is enabled but no consent IDs were supplied; consent management is inactive for this session. Supply allowedConsentIds or deniedConsentIds in Configuration.")
+        }
+        
         self.setup()
     }
 }
@@ -386,8 +398,13 @@ extension Analytics {
         self.integrationsController = IntegrationsController(analytics: self)
         
         // Add default plugins
+        let contextSnapshotPlugin = ContextSnapshotPlugin()
+        // Registered first so its re-stamped event feeds both terminal consumers below.
+        self.pluginChain?.add(plugin: SchemaGuardPlugin(snapshotPlugin: contextSnapshotPlugin))
         self.pluginChain?.add(plugin: IntegrationsManagementPlugin())
         self.pluginChain?.add(plugin: RudderStackDataPlanePlugin())
+        
+        // Add standard plugins
         self.pluginChain?.add(plugin: DeviceInfoPlugin())
         self.pluginChain?.add(plugin: LocaleInfoPlugin())
         self.pluginChain?.add(plugin: OSInfoPlugin())
@@ -396,7 +413,9 @@ extension Analytics {
         self.pluginChain?.add(plugin: AppInfoPlugin())
         self.pluginChain?.add(plugin: LibraryInfoPlugin())
         self.pluginChain?.add(plugin: NetworkInfoPlugin())
+        self.pluginChain?.add(plugin: ConsentManagementPlugin())
         self.pluginChain?.add(plugin: SessionTrackingPlugin())
+        self.pluginChain?.add(plugin: contextSnapshotPlugin)
         self.pluginChain?.add(plugin: LifecycleTrackingPlugin())
     }
     
@@ -427,6 +446,13 @@ extension Analytics {
      - Parameter event: The event to be processed.
      */
     private func process(event: Event) {
+        // Captured here rather than in the plugin chain: this runs synchronously on the caller's thread, so it records the decision in force when the event was created, not when it was later dequeued.
+        var event = event
+        if var carrier = event as? ReservedContextCapturing {
+            carrier.capturedReservedContext = self.capturedReservedContext()
+            event = carrier
+        }
+        
         do {
             try self.processEventChannel.send(event)
         } catch {
@@ -441,6 +467,41 @@ extension Analytics {
      */
     private func storeAnonymousId() {
         self.userIdentityState.value.storeAnonymousId(self.storage)
+    }
+}
+
+// MARK: - Reserved Context
+
+extension Analytics {
+
+    /**
+     The value the SDK currently asserts for a reserved context key, with the advice shown when a
+     customer overrides it.
+
+     The single resolution point: `process` reads it to record what the event was created under,
+     and `SchemaGuardPlugin` reads it for the warning text.
+     */
+    func reservedContextValue(for key: SDKManagedContextKey) -> (value: Any, advice: String)? {
+        switch key {
+        case .consentManagement:
+            let state = self.consentManagementState.value
+            guard state.active else { return nil }
+            return (state.contextStamp, "the SDK owns this key while consent management is enabled. Migrate to setConsent(_:).")
+        default:
+            return nil
+        }
+    }
+
+    /**
+     Every reserved value the SDK asserts at this instant, keyed for the event to carry.
+     */
+    func capturedReservedContext() -> [String: Any]? {
+        var captured = [String: Any]()
+        for key in SDKManagedContextKey.reservedKeys {
+            guard let reserved = self.reservedContextValue(for: key) else { continue }
+            captured[key.rawValue] = reserved.value
+        }
+        return captured.isEmpty ? nil : captured
     }
 }
 
@@ -467,6 +528,53 @@ extension Analytics {
             return false
         }
         return true
+    }
+}
+
+// MARK: - Consent
+
+extension Analytics {
+    
+    /**
+     Updates the current consent state with the supplied values.
+     
+     The supplied lists fully replace the existing consent state — callers always
+     pass the complete current state, not a delta. An empty
+     `ConsentManagementOptions()` is rejected: a warning is logged and the current
+     consent state is left unchanged. To record that the user refused everything,
+     pass the refused categories in `deniedConsentIds`.
+     
+     This method has no effect while consent management is disabled in
+     `Configuration`; enabling consent management is a load-time decision.
+     
+     - Parameter options: The consent values to apply.
+     */
+    
+    public func setConsent(_ options: ConsentManagementOptions) {
+        guard self.isAnalyticsActive else { return }
+        
+        guard self.consentManagementState.value.active else {
+            self.logger.warn(log: "Analytics: Consent management is not active; setConsent has no effect. Enable it in Configuration's consentManagement and provide at least one consent ID.")
+            return
+        }
+        
+        let allowed = ConsentManagement.normalized(options.allowedConsentIds)
+        let denied = ConsentManagement.normalized(options.deniedConsentIds)
+        guard !(allowed.isEmpty && denied.isEmpty) else {
+            self.logger.warn(log: "Analytics: setConsent requires at least one consent ID; the call has no effect. To deny every category, pass them in deniedConsentIds.")
+            return
+        }
+        
+        // The consent already in force changes no state, so no destination would be re-evaluated to end a
+        // hold opened below; it would stay open for the rest of the session.
+        let current = self.consentManagementState.value
+        guard allowed != current.allowedConsentIds || denied != current.deniedConsentIds else { return }
+        
+        // Ahead of the state change, and only once the call is accepted: re-initialization is
+        // scheduled asynchronously, so a destination about to be re-evaluated has to start holding
+        // before any event can arrive against the new consent, or that event would be dropped.
+        self.integrationsController?.applyConsentDecisionToDestinations()
+        self.consentManagementState.dispatch(action: SetConsentAction(options: options))
     }
 }
 

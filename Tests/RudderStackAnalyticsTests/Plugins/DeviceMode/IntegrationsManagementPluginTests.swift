@@ -128,6 +128,37 @@ struct IntegrationsManagementPluginTests {
         }
     }
     
+    @Test("Given a source config later disabled, When consent changes, Then destinations are not re-initialized from the stale config")
+    func testDisabledSourceIsNotResurrectedByConsentChange() async {
+        let configuration = MockProvider.createMockConfiguration()
+        configuration.flushPolicies = []
+        configuration.consentManagement = ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["analytics"])
+        let analytics = Analytics(configuration: configuration)
+        analytics.isAnalyticsActive = true
+
+        analytics.add(plugin: IntegrationsManagementPlugin())
+        let mockPlugin = MockStandardIntegrationPlugin(key: mockPluginKey)
+        analytics.add(plugin: mockPlugin)
+
+        guard let sourceConfig = MockProvider.sourceConfiguration else {
+            #expect(Bool(false), "sourceConfiguration is nil")
+            return
+        }
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: sourceConfig))
+        await runAfter(0.2) {
+            #expect(mockPlugin.createCalled, "Precondition: the destination is created while the source is enabled.")
+        }
+
+        mockPlugin.resetCallFlags()
+        analytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
+
+        await runAfter(0.2) {
+            #expect(mockPlugin.updateCalled == false, "A consent change must not re-run initialization from a source config that has since been disabled.")
+            #expect(mockPlugin.createCalled == false)
+        }
+    }
+    
     // MARK: - Event Processing Tests
     
     @Test("Given IntegrationsManagementPlugin with queued events, When source config is fetched, Then queued events should be processed")

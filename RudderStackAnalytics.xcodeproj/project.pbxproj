@@ -30,6 +30,8 @@
 		532904EF2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */; };
 		532904F02E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */; };
 		532904F12E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */; };
+		533A9963304EFE3E00B05110 /* DestinationDeliveryControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9962304EFE3E00B05110 /* DestinationDeliveryControl.swift */; };
+		533A9965304EFE5C00B05110 /* DestinationDeliveryControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533A9964304EFE5C00B05110 /* DestinationDeliveryControlTests.swift */; };
 		5358C58D2E702FCC0058E117 /* ResetEntries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C58C2E702FCC0058E117 /* ResetEntries.swift */; };
 		5358C5912E7092FD0058E117 /* ObjCResetOptionsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */; };
 		5358C59B2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5358C59A2E71A84F0058E117 /* ObjCResetEntriesBuilder.swift */; };
@@ -50,6 +52,27 @@
 		539001012EA110C300DAC164 /* BasicStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539001002EA110C300DAC164 /* BasicStorageTests.swift */; };
 		539001062EA11A7400DAC164 /* AnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539001052EA11A7400DAC164 /* AnalyticsTests.swift */; };
 		539301D92E6F10A300DAEAD1 /* ResetOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539301D82E6F10A300DAEAD1 /* ResetOptions.swift */; };
+		5396580D302D955D008A8845 /* ConsentManagementConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396580C302D955D008A8845 /* ConsentManagementConfiguration.swift */; };
+		53965810302D98D9008A8845 /* ConsentManagementOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396580F302D98D9008A8845 /* ConsentManagementOptions.swift */; };
+		53965812302D99B6008A8845 /* ConsentManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965811302D99B6008A8845 /* ConsentManagement.swift */; };
+		53965815302D9B9A008A8845 /* SetConsentAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965814302D9B9A008A8845 /* SetConsentAction.swift */; };
+		53965817302DB578008A8845 /* ObjCConsentManagementConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965816302DB578008A8845 /* ObjCConsentManagementConfiguration.swift */; };
+		53965819302DC4E3008A8845 /* ConsentManagementConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965818302DC4E3008A8845 /* ConsentManagementConfigurationTests.swift */; };
+		5396581F302DC6B8008A8845 /* ConsentManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396581E302DC6B8008A8845 /* ConsentManagementTests.swift */; };
+		53965822302DC8DF008A8845 /* SetConsentActionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965821302DC8DF008A8845 /* SetConsentActionTests.swift */; };
+		53965824302DC8F9008A8845 /* SetConsentAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965823302DC8F9008A8845 /* SetConsentAPITests.swift */; };
+		53965829302F32A0008A8845 /* ConsentManagementPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */; };
+		5396582B302F7EF0008A8845 /* track_with_consent_management.json in Resources */ = {isa = PBXBuildFile; fileRef = 5396582A302F7EF0008A8845 /* track_with_consent_management.json */; };
+		5396582D302F7F28008A8845 /* ConsentManagementPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396582C302F7F28008A8845 /* ConsentManagementPluginTests.swift */; };
+		5396582F3032D7B5008A8845 /* ConsentResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396582E3032D7B5008A8845 /* ConsentResolver.swift */; };
+		53965831303305B0008A8845 /* ConsentGatePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965830303305B0008A8845 /* ConsentGatePlugin.swift */; };
+		539658353033253C008A8845 /* ConsentResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539658343033253C008A8845 /* ConsentResolverTests.swift */; };
+		539658383033256F008A8845 /* SourceConfigConsentParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539658373033256F008A8845 /* SourceConfigConsentParsingTests.swift */; };
+		5396583C30332814008A8845 /* ConsentGatingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396583B30332814008A8845 /* ConsentGatingTests.swift */; };
+		539658403035E566008A8845 /* ContextSnapshotPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396583F3035E566008A8845 /* ContextSnapshotPlugin.swift */; };
+		539658423035EB4F008A8845 /* SchemaGuardPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539658413035EB4F008A8845 /* SchemaGuardPlugin.swift */; };
+		5396584430361E3F008A8845 /* SchemaGuardPluginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5396584330361E3F008A8845 /* SchemaGuardPluginTests.swift */; };
+		53965846303622F6008A8845 /* DeviceModeConsentRestampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53965845303622F6008A8845 /* DeviceModeConsentRestampTests.swift */; };
 		539D86F22E543997009FC144 /* EventQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F12E543997009FC144 /* EventQueue.swift */; };
 		539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F42E5439CB009FC144 /* EventWriter.swift */; };
 		539D86F92E5439E7009FC144 /* EventUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539D86F82E5439E7009FC144 /* EventUploader.swift */; };
@@ -245,6 +268,8 @@
 		532904EB2E05BBDE00C8EFE2 /* RudderStackAnalytics.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RudderStackAnalytics.xctestplan; sourceTree = "<group>"; };
 		532904EC2E05BBDE00C8EFE2 /* SwiftExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftExampleApp.xctestplan; sourceTree = "<group>"; };
 		532904ED2E05BBDE00C8EFE2 /* SwiftUIExampleApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftUIExampleApp.xctestplan; sourceTree = "<group>"; };
+		533A9962304EFE3E00B05110 /* DestinationDeliveryControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationDeliveryControl.swift; sourceTree = "<group>"; };
+		533A9964304EFE5C00B05110 /* DestinationDeliveryControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationDeliveryControlTests.swift; sourceTree = "<group>"; };
 		5351AA662C6BE95D003C3C47 /* RudderStackAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RudderStackAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5358C58C2E702FCC0058E117 /* ResetEntries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetEntries.swift; sourceTree = "<group>"; };
 		5358C5902E7092FD0058E117 /* ObjCResetOptionsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCResetOptionsBuilder.swift; sourceTree = "<group>"; };
@@ -266,6 +291,27 @@
 		539001002EA110C300DAC164 /* BasicStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicStorageTests.swift; sourceTree = "<group>"; };
 		539001052EA11A7400DAC164 /* AnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsTests.swift; sourceTree = "<group>"; };
 		539301D82E6F10A300DAEAD1 /* ResetOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetOptions.swift; sourceTree = "<group>"; };
+		5396580C302D955D008A8845 /* ConsentManagementConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementConfiguration.swift; sourceTree = "<group>"; };
+		5396580F302D98D9008A8845 /* ConsentManagementOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementOptions.swift; sourceTree = "<group>"; };
+		53965811302D99B6008A8845 /* ConsentManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagement.swift; sourceTree = "<group>"; };
+		53965814302D9B9A008A8845 /* SetConsentAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetConsentAction.swift; sourceTree = "<group>"; };
+		53965816302DB578008A8845 /* ObjCConsentManagementConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjCConsentManagementConfiguration.swift; sourceTree = "<group>"; };
+		53965818302DC4E3008A8845 /* ConsentManagementConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementConfigurationTests.swift; sourceTree = "<group>"; };
+		5396581E302DC6B8008A8845 /* ConsentManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementTests.swift; sourceTree = "<group>"; };
+		53965821302DC8DF008A8845 /* SetConsentActionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetConsentActionTests.swift; sourceTree = "<group>"; };
+		53965823302DC8F9008A8845 /* SetConsentAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetConsentAPITests.swift; sourceTree = "<group>"; };
+		53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementPlugin.swift; sourceTree = "<group>"; };
+		5396582A302F7EF0008A8845 /* track_with_consent_management.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = track_with_consent_management.json; sourceTree = "<group>"; };
+		5396582C302F7F28008A8845 /* ConsentManagementPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagementPluginTests.swift; sourceTree = "<group>"; };
+		5396582E3032D7B5008A8845 /* ConsentResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentResolver.swift; sourceTree = "<group>"; };
+		53965830303305B0008A8845 /* ConsentGatePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentGatePlugin.swift; sourceTree = "<group>"; };
+		539658343033253C008A8845 /* ConsentResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentResolverTests.swift; sourceTree = "<group>"; };
+		539658373033256F008A8845 /* SourceConfigConsentParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceConfigConsentParsingTests.swift; sourceTree = "<group>"; };
+		5396583B30332814008A8845 /* ConsentGatingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentGatingTests.swift; sourceTree = "<group>"; };
+		5396583F3035E566008A8845 /* ContextSnapshotPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextSnapshotPlugin.swift; sourceTree = "<group>"; };
+		539658413035EB4F008A8845 /* SchemaGuardPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaGuardPlugin.swift; sourceTree = "<group>"; };
+		5396584330361E3F008A8845 /* SchemaGuardPluginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaGuardPluginTests.swift; sourceTree = "<group>"; };
+		53965845303622F6008A8845 /* DeviceModeConsentRestampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModeConsentRestampTests.swift; sourceTree = "<group>"; };
 		539D86F12E543997009FC144 /* EventQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQueue.swift; sourceTree = "<group>"; };
 		539D86F42E5439CB009FC144 /* EventWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventWriter.swift; sourceTree = "<group>"; };
 		539D86F82E5439E7009FC144 /* EventUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUploader.swift; sourceTree = "<group>"; };
@@ -493,6 +539,7 @@
 			isa = PBXGroup;
 			children = (
 				53DEA5922E03D05A00D6C371 /* Base */,
+				5396580E302D9564008A8845 /* ConsentManagement */,
 				53DEA59A2E03D05A00D6C371 /* Events */,
 				53DEA5A12E03D05A00D6C371 /* Helpers */,
 				53DEA5A42E03D05A00D6C371 /* LifecycleManagement */,
@@ -515,6 +562,7 @@
 			isa = PBXGroup;
 			children = (
 				538180BB2EC60A000019EE05 /* Base */,
+				5396581B302DC4EB008A8845 /* ConsentManagement */,
 				538180BC2EC60A230019EE05 /* EventsModule */,
 				539D87362E5888DE009FC144 /* Helpers */,
 				53DEA6292E03D06F00D6C371 /* LifecycleManagement */,
@@ -597,6 +645,7 @@
 				85E7C4F12E9BB95100520FDB /* IntegrationPluginStore.swift */,
 				85A9333F2E9FCF6100AA1311 /* IntegrationsController.swift */,
 				85CE839B2EB0859C00249576 /* DestinationError.swift */,
+				533A9962304EFE3E00B05110 /* DestinationDeliveryControl.swift */,
 			);
 			path = IntegrationProcessing;
 			sourceTree = "<group>";
@@ -610,11 +659,14 @@
 				53DEA5BC2E03D05A00D6C371 /* LifecycleTrackingPlugin.swift */,
 				53DEA5BD2E03D05A00D6C371 /* LocaleInfoPlugin.swift */,
 				53DEA5BE2E03D05A00D6C371 /* NetworkInfoPlugin.swift */,
+				53965828302F32A0008A8845 /* ConsentManagementPlugin.swift */,
 				53DEA5BF2E03D05A00D6C371 /* OSInfoPlugin.swift */,
 				53DEA5C02E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift */,
 				53DEA5C12E03D05A00D6C371 /* ScreenInfoPlugin.swift */,
 				53DEA5C22E03D05A00D6C371 /* SessionTrackingPlugin.swift */,
 				53DEA5C32E03D05A00D6C371 /* TimeZoneInfoPlugin.swift */,
+				5396583F3035E566008A8845 /* ContextSnapshotPlugin.swift */,
+				539658413035EB4F008A8845 /* SchemaGuardPlugin.swift */,
 			);
 			path = Standard;
 			sourceTree = "<group>";
@@ -625,6 +677,7 @@
 				53DEA5AB2E03D05A00D6C371 /* ObjCAnalytics.swift */,
 				53DEA5AC2E03D05A00D6C371 /* ObjCConfiguration.swift */,
 				53DEA5B32E03D05A00D6C371 /* ObjCSessionConfiguration.swift */,
+				53965816302DB578008A8845 /* ObjCConsentManagementConfiguration.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -703,6 +756,7 @@
 			children = (
 				537B96472EABF7A100E3ADE7 /* SourceConfigTests.swift */,
 				537B964A2EAC04EF00E3ADE7 /* SourceConfigProviderTests.swift */,
+				539658373033256F008A8845 /* SourceConfigConsentParsingTests.swift */,
 			);
 			path = SourceConfig;
 			sourceTree = "<group>";
@@ -754,6 +808,7 @@
 				53DEA6452E03D06F00D6C371 /* DeviceInfoPluginTests.swift */,
 				53DEA6462E03D06F00D6C371 /* LibraryInfoPluginTests.swift */,
 				53DEA6472E03D06F00D6C371 /* LifecycleTrackingPluginTests.swift */,
+				5396582C302F7F28008A8845 /* ConsentManagementPluginTests.swift */,
 				53DEA6482E03D06F00D6C371 /* LocaleInfoPluginTests.swift */,
 				53DEA6492E03D06F00D6C371 /* NetworkInfoPluginTests.swift */,
 				53DEA64A2E03D06F00D6C371 /* OSInfoPluginTests.swift */,
@@ -762,6 +817,7 @@
 				53DEA64D2E03D06F00D6C371 /* TimeZoneInfoPluginTests.swift */,
 				537B96432EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift */,
 				537B96452EAB5D0A00E3ADE7 /* PluginModuleTests.swift */,
+				5396584330361E3F008A8845 /* SchemaGuardPluginTests.swift */,
 			);
 			path = Basic;
 			sourceTree = "<group>";
@@ -776,6 +832,9 @@
 				85A10BC02EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift */,
 				85F2AC062EA7940200BE93AF /* EventFilteringPluginTests.swift */,
 				85F2AC112EAA302100BE93AF /* IntegrationOptionsPluginTests.swift */,
+				5396583B30332814008A8845 /* ConsentGatingTests.swift */,
+				533A9964304EFE5C00B05110 /* DestinationDeliveryControlTests.swift */,
+				53965845303622F6008A8845 /* DeviceModeConsentRestampTests.swift */,
 			);
 			path = DeviceMode;
 			sourceTree = "<group>";
@@ -821,6 +880,44 @@
 				537846AA2EA1723400520374 /* KeyValueStoreTests.swift */,
 			);
 			path = Storage;
+			sourceTree = "<group>";
+		};
+		5396580E302D9564008A8845 /* ConsentManagement */ = {
+			isa = PBXGroup;
+			children = (
+				5396580C302D955D008A8845 /* ConsentManagementConfiguration.swift */,
+				5396580F302D98D9008A8845 /* ConsentManagementOptions.swift */,
+				5396582E3032D7B5008A8845 /* ConsentResolver.swift */,
+			);
+			path = ConsentManagement;
+			sourceTree = "<group>";
+		};
+		53965813302D99C3008A8845 /* Consent */ = {
+			isa = PBXGroup;
+			children = (
+				53965811302D99B6008A8845 /* ConsentManagement.swift */,
+				53965814302D9B9A008A8845 /* SetConsentAction.swift */,
+			);
+			path = Consent;
+			sourceTree = "<group>";
+		};
+		5396581B302DC4EB008A8845 /* ConsentManagement */ = {
+			isa = PBXGroup;
+			children = (
+				53965818302DC4E3008A8845 /* ConsentManagementConfigurationTests.swift */,
+				53965823302DC8F9008A8845 /* SetConsentAPITests.swift */,
+				539658343033253C008A8845 /* ConsentResolverTests.swift */,
+			);
+			path = ConsentManagement;
+			sourceTree = "<group>";
+		};
+		53965820302DC6BE008A8845 /* Consent */ = {
+			isa = PBXGroup;
+			children = (
+				5396581E302DC6B8008A8845 /* ConsentManagementTests.swift */,
+				53965821302DC8DF008A8845 /* SetConsentActionTests.swift */,
+			);
+			path = Consent;
 			sourceTree = "<group>";
 		};
 		539D86F32E5439AA009FC144 /* EventQueue */ = {
@@ -1030,6 +1127,7 @@
 				5358C58F2E7090770058E117 /* Reset */,
 				538F82C82E79584000C7ECEB /* SourceConfig */,
 				530939D42E783EF200E22EE1 /* UserIdentity */,
+				53965813302D99C3008A8845 /* Consent */,
 			);
 			path = StateManagement;
 			sourceTree = "<group>";
@@ -1145,6 +1243,7 @@
 				53DEA63E2E03D06F00D6C371 /* track_with_options.json */,
 				53DEA63F2E03D06F00D6C371 /* track_with_properties.json */,
 				53DEA6402E03D06F00D6C371 /* track_with_properties_options.json */,
+				5396582A302F7EF0008A8845 /* track_with_consent_management.json */,
 			);
 			path = Track;
 			sourceTree = "<group>";
@@ -1187,6 +1286,7 @@
 				53DEA6542E03D06F00D6C371 /* StateManagementTests.swift */,
 				538180B42EC496680019EE05 /* UserIdentity */,
 				538180B12EC478240019EE05 /* SourceConfig */,
+				53965820302DC6BE008A8845 /* Consent */,
 			);
 			path = StateManagement;
 			sourceTree = "<group>";
@@ -1252,6 +1352,7 @@
 			children = (
 				85F2AC0F2EAA300800BE93AF /* IntegrationOptionsPlugin.swift */,
 				85F2AC012EA78EF200BE93AF /* EventFilteringPlugin.swift */,
+				53965830303305B0008A8845 /* ConsentGatePlugin.swift */,
 			);
 			path = IntegrationPlugins;
 			sourceTree = "<group>";
@@ -1386,6 +1487,7 @@
 				53DEA67E2E03D06F00D6C371 /* screen_with_properties.json in Resources */,
 				53DEA67F2E03D06F00D6C371 /* track_with_default_arguments.json in Resources */,
 				53DEA6802E03D06F00D6C371 /* group_with_default_arguments.json in Resources */,
+				5396582B302F7EF0008A8845 /* track_with_consent_management.json in Resources */,
 				53DEA6812E03D06F00D6C371 /* track_with_options.json in Resources */,
 				53DEA6822E03D06F00D6C371 /* identify_with_options.json in Resources */,
 				53DEA6832E03D06F00D6C371 /* identify_with_traits.json in Resources */,
@@ -1464,19 +1566,24 @@
 				53DEA5E42E03D05A00D6C371 /* ScreenInfoPlugin.swift in Sources */,
 				531B80662ED9836B000B1D6A /* ObjCStandardIntegration.swift in Sources */,
 				53DEA5E52E03D05A00D6C371 /* LocaleInfoPlugin.swift in Sources */,
+				5396582F3032D7B5008A8845 /* ConsentResolver.swift in Sources */,
 				53DEA5E62E03D05A00D6C371 /* AliasEvent.swift in Sources */,
 				530939D02E78226E00E22EE1 /* SourceConfig.swift in Sources */,
 				53DEA5E72E03D05A00D6C371 /* LifecycleObserver.swift in Sources */,
 				53DEA5E82E03D05A00D6C371 /* UserIdentity.swift in Sources */,
 				530939D62E78629C00E22EE1 /* SourceConfigResult.swift in Sources */,
 				530F89262E61DC67007A81B2 /* ExponentialBackoffPolicy.swift in Sources */,
+				53965815302D9B9A008A8845 /* SetConsentAction.swift in Sources */,
 				53DEA5E92E03D05A00D6C371 /* DataStore.swift in Sources */,
 				53E112DA2E7C4B9E005FEF67 /* Connectivity.swift in Sources */,
 				53E58C282FA1366A002556B9 /* AnalyticsLogger.swift in Sources */,
+				53965817302DB578008A8845 /* ObjCConsentManagementConfiguration.swift in Sources */,
 				53DEA5EA2E03D05A00D6C371 /* TrackEvent.swift in Sources */,
 				85E7C4F02E9BB6A000520FDB /* IntegrationsManagementPlugin.swift in Sources */,
 				53DEA5EB2E03D05A00D6C371 /* RudderOption.swift in Sources */,
+				539658403035E566008A8845 /* ContextSnapshotPlugin.swift in Sources */,
 				538F82C72E79583900C7ECEB /* UpdateSourceConfigAction.swift in Sources */,
+				5396580D302D955D008A8845 /* ConsentManagementConfiguration.swift in Sources */,
 				53DEA5EC2E03D05A00D6C371 /* HttpNetwork.swift in Sources */,
 				53DEA5ED2E03D05A00D6C371 /* ObjCAnalytics.swift in Sources */,
 				53DEA5EE2E03D05A00D6C371 /* SessionActions.swift in Sources */,
@@ -1498,6 +1605,7 @@
 				53DB9D752F44515A004FB1A4 /* RetryHeadersProvider.swift in Sources */,
 				85F2AC102EAA300800BE93AF /* IntegrationOptionsPlugin.swift in Sources */,
 				53DEA5F92E03D05A00D6C371 /* MemoryStore.swift in Sources */,
+				53965831303305B0008A8845 /* ConsentGatePlugin.swift in Sources */,
 				53DEA5FA2E03D05A00D6C371 /* DiskStore.swift in Sources */,
 				53DEA5FB2E03D05A00D6C371 /* ObjCSessionConfiguration.swift in Sources */,
 				53DEA5FC2E03D05A00D6C371 /* ScreenEvent.swift in Sources */,
@@ -1519,8 +1627,11 @@
 				53DEA6062E03D05A00D6C371 /* TimeZoneInfoPlugin.swift in Sources */,
 				539D86F52E5439CB009FC144 /* EventWriter.swift in Sources */,
 				53DEA6072E03D05A00D6C371 /* SessionHandler.swift in Sources */,
+				539658423035EB4F008A8845 /* SchemaGuardPlugin.swift in Sources */,
 				53DEA6082E03D05A00D6C371 /* IdentifyEvent.swift in Sources */,
+				533A9963304EFE3E00B05110 /* DestinationDeliveryControl.swift in Sources */,
 				85A933402E9FCF6100AA1311 /* IntegrationsController.swift in Sources */,
+				53965829302F32A0008A8845 /* ConsentManagementPlugin.swift in Sources */,
 				53074DFB2E8271E90062703A /* DisableSourceConfigAction.swift in Sources */,
 				5328B87F2E3C8C6E0051A202 /* ObjCIdentifyEvent.swift in Sources */,
 				53DEA6092E03D05A00D6C371 /* HttpClient.swift in Sources */,
@@ -1537,6 +1648,7 @@
 				5328B8772E3B7E4D0051A202 /* ObjCUserIdentity.swift in Sources */,
 				53DEA6112E03D05A00D6C371 /* LifecycleManagementUtils.swift in Sources */,
 				53DEA6122E03D05A00D6C371 /* SwiftLogger.swift in Sources */,
+				53965812302D99B6008A8845 /* ConsentManagement.swift in Sources */,
 				53DEA6132E03D05A00D6C371 /* StartupFlushPolicy.swift in Sources */,
 				5328B8792E3B817B0051A202 /* ObjCTrackEvent.swift in Sources */,
 				53DEA6142E03D05A00D6C371 /* Analytics.swift in Sources */,
@@ -1548,6 +1660,7 @@
 				53DEA6182E03D05A00D6C371 /* Constants.swift in Sources */,
 				53DEA6192E03D05A00D6C371 /* PropertyWrappers.swift in Sources */,
 				85CE839C2EB0859C00249576 /* DestinationError.swift in Sources */,
+				53965810302D98D9008A8845 /* ConsentManagementOptions.swift in Sources */,
 				531B80642ED9830C000B1D6A /* ObjCIntegrationPlugin.swift in Sources */,
 				53DEA61A2E03D05A00D6C371 /* RudderStackDataPlanePlugin.swift in Sources */,
 				53DEA61B2E03D05A00D6C371 /* ObjCEvent.swift in Sources */,
@@ -1570,6 +1683,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				537846B12EAA2B3E00520374 /* EventUploaderTests.swift in Sources */,
+				53965822302DC8DF008A8845 /* SetConsentActionTests.swift in Sources */,
 				85F2AC122EAA302100BE93AF /* IntegrationOptionsPluginTests.swift in Sources */,
 				53DEA65F2E03D06F00D6C371 /* NetworkInfoPluginTests.swift in Sources */,
 				53DEA6602E03D06F00D6C371 /* ResetUserIdentityActionTests.swift in Sources */,
@@ -1583,8 +1697,11 @@
 				537B964B2EAC04EF00E3ADE7 /* SourceConfigProviderTests.swift in Sources */,
 				85A10BBD2EA0B76C00E47E01 /* MockDestination.swift in Sources */,
 				53DEA6632E03D06F00D6C371 /* UserIdTraitsActionTests.swift in Sources */,
+				539658353033253C008A8845 /* ConsentResolverTests.swift in Sources */,
 				53DEA6642E03D06F00D6C371 /* LifecycleTrackingPluginTests.swift in Sources */,
 				53DEA6652E03D06F00D6C371 /* DeviceInfoPluginTests.swift in Sources */,
+				5396583C30332814008A8845 /* ConsentGatingTests.swift in Sources */,
+				5396581F302DC6B8008A8845 /* ConsentManagementTests.swift in Sources */,
 				539000FF2EA105D600DAC164 /* DiskStoreTests.swift in Sources */,
 				53078F1D2EB10B18006F5847 /* LifecycleManagementUtilsTests.swift in Sources */,
 				53E7775C2EB4C7F300564D61 /* FrequencyFlushPolicyTests.swift in Sources */,
@@ -1596,11 +1713,14 @@
 				53E7775E2EB4D21000564D61 /* StartupFlushPolicyTests.swift in Sources */,
 				53DEA6662E03D06F00D6C371 /* GroupEventTests.swift in Sources */,
 				53DB9D952F448B8A004FB1A4 /* RetryMetadataTests.swift in Sources */,
+				5396584430361E3F008A8845 /* SchemaGuardPluginTests.swift in Sources */,
 				85A10BBF2EA0B7A200E47E01 /* MockCustomIntegrationPlugin.swift in Sources */,
 				539000FD2EA0FA2000DAC164 /* MemoryStoreTests.swift in Sources */,
 				53DEA6672E03D06F00D6C371 /* UserIdActionTests.swift in Sources */,
 				859CEE122E9CDDE900519C90 /* MockStandardIntegrationPlugin.swift in Sources */,
 				53DEA6692E03D06F00D6C371 /* IdentifyEventTests.swift in Sources */,
+				5396582D302F7F28008A8845 /* ConsentManagementPluginTests.swift in Sources */,
+				53965819302DC4E3008A8845 /* ConsentManagementConfigurationTests.swift in Sources */,
 				53E58C2E2FA141AC002556B9 /* AnalyticsLoggerTests.swift in Sources */,
 				53DEA66A2E03D06F00D6C371 /* UserIdentityTests.swift in Sources */,
 				53DEA66B2E03D06F00D6C371 /* SessionHandlerTests.swift in Sources */,
@@ -1613,6 +1733,7 @@
 				53DEA66E2E03D06F00D6C371 /* LoggerAnalyticsTests.swift in Sources */,
 				53DEA66F2E03D06F00D6C371 /* LocaleInfoPluginTests.swift in Sources */,
 				53DB9D992F448F17004FB1A4 /* MockRetryHeadersProvider.swift in Sources */,
+				533A9965304EFE5C00B05110 /* DestinationDeliveryControlTests.swift in Sources */,
 				53DEA6702E03D06F00D6C371 /* AppInfoPluginTests.swift in Sources */,
 				537B96442EAAC25E00E3ADE7 /* RudderStackDataPlanePluginTests.swift in Sources */,
 				8C047DA22EF078060019659F /* ExtensionsTests.swift in Sources */,
@@ -1623,6 +1744,7 @@
 				53E777582EB4C2BD00564D61 /* CountFlushPolicyTests.swift in Sources */,
 				53DEA6732E03D06F00D6C371 /* AliasEventTests.swift in Sources */,
 				859CEE142E9CDE5700519C90 /* IntegrationPluginStoreTests.swift in Sources */,
+				53965824302DC8F9008A8845 /* SetConsentAPITests.swift in Sources */,
 				53E777602EB4D4D200564D61 /* FlushPolicyFacadeTests.swift in Sources */,
 				85F2AC072EA7940200BE93AF /* EventFilteringPluginTests.swift in Sources */,
 				53DB9D9B2F449121004FB1A4 /* EventUploaderRetryHeadersTests.swift in Sources */,
@@ -1635,7 +1757,9 @@
 				85A10BC12EA0C19C00E47E01 /* CustomIntegrationPluginTests.swift in Sources */,
 				539001012EA110C300DAC164 /* BasicStorageTests.swift in Sources */,
 				53E777652EB5120C00564D61 /* ExponentialBackoffPolicyTests.swift in Sources */,
+				539658383033256F008A8845 /* SourceConfigConsentParsingTests.swift in Sources */,
 				53C8B38B2FCEC7AE00337763 /* ConfigurationLoggerTests.swift in Sources */,
+				53965846303622F6008A8845 /* DeviceModeConsentRestampTests.swift in Sources */,
 				53DEA67A2E03D06F00D6C371 /* ScreenEventTests.swift in Sources */,
 				53A83F9C2E9F750400DDA0CC /* MockStorage.swift in Sources */,
 				53DEA67B2E03D06F00D6C371 /* TrackEventTests.swift in Sources */,

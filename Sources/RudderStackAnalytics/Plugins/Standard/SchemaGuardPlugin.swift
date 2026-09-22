@@ -1,0 +1,130 @@
+//
+//  SchemaGuardPlugin.swift
+//  RudderStackAnalytics
+//
+//  Created by Satheesh Kannan on 19/08/26.
+//
+
+import Foundation
+
+// MARK: - SchemaGuardPlugin
+/**
+ A terminal plugin that re-asserts SDK-owned context keys after all customer plugins have run.
+ 
+ Registered first in the `terminal` phase, so its re-stamped event flows into both delivery
+ paths — the device-mode fan-out queue plus cloud-mode storage.
+ */
+final class SchemaGuardPlugin: Plugin {
+    var pluginType: PluginType = .terminal
+    var analytics: Analytics?
+    
+    private let snapshotPlugin: ContextSnapshotPlugin
+    
+    init(snapshotPlugin: ContextSnapshotPlugin) {
+        self.snapshotPlugin = snapshotPlugin
+    }
+    
+    func setup(analytics: Analytics) {
+        self.analytics = analytics
+    }
+    
+    func intercept(event: any Event) -> (any Event)? {
+        self.warnOnBaseKeyOverrides(on: event)
+        return self.enforceReservedKeys(on: event)
+    }
+}
+
+// MARK: - Reserved Keys
+
+extension SchemaGuardPlugin {
+    /**
+     Re-asserts every reserved context key from the value the SDK asserted when the event was created.
+
+     The value written is the one captured at creation, not the state at this instant, so a decision
+     taken while the event was in flight cannot rewrite what the event recorded. Any remaining
+     difference is therefore a customer override, which is what the warning reports.
+
+     A key the SDK asserted no value for at creation is not reserved for this event and passes
+     through untouched.
+
+     An event of a type the SDK does not own cannot carry that value at all, so the value in force
+     now is re-asserted on it instead.
+     */
+    private func enforceReservedKeys(on event: any Event) -> any Event {
+        var result = event
+        let carrier = event as? ReservedContextCapturing
+
+        for key in SDKManagedContextKey.reservedKeys {
+            guard let reserved = self.analytics?.reservedContextValue(for: key) else { continue }
+            let advice = reserved.advice
+            // An event type the SDK does not own cannot carry the recorded value, so the value in force now
+            // stands in for it; an SDK event carries what it recorded at creation.
+            let recorded: Any? = carrier == nil ? reserved.value : carrier?.capturedReservedContext?[key.rawValue]
+            guard let value = recorded else { continue }
+            guard result.context?[key.rawValue] != AnyCodable(value) else { continue }
+
+            self.analytics?.logger.warn(log: "SchemaGuardPlugin: Replacing the \"\(key.rawValue)\" key found in the event context; \(advice)")
+            result = result.addToContext(info: [key.rawValue: value])
+        }
+
+        return result
+    }
+}
+
+// MARK: - Base Key Detection
+
+extension SchemaGuardPlugin {
+    /**
+     Logs a value-free deprecation warning for each SDK-stamped base key carrying a
+     customer-supplied value — injected via `RudderOption.customContext` or written by a
+     customer plugin (detected against the snapshot). Detection only: the event is never
+     modified, so existing overrides keep working unchanged.
+     */
+    
+    private func warnOnBaseKeyOverrides(on event: any Event) {
+        var overriddenKeys = Set<String>()
+        
+        if let customContext = event.options?.customContext {
+            for key in SDKManagedContextKey.baseKeys where customContext.keys.contains(key.rawValue) {
+                overriddenKeys.insert(key.rawValue)
+            }
+        }
+        
+        if let snapshot = self.snapshotPlugin.consumeSnapshot(for: event.messageId) {
+            // Only a key the SDK stamped can be overridden; one it left unset holds the customer's own value.
+            for key in SDKManagedContextKey.baseKeys where snapshot[key.rawValue] != nil && !isSameValue(event.context?[key.rawValue], snapshot[key.rawValue]) {
+                overriddenKeys.insert(key.rawValue)
+            }
+        }
+
+        for key in SDKManagedContextKey.baseKeys where overriddenKeys.contains(key.rawValue) {
+            self.analytics?.logger.warn(log: "SchemaGuardPlugin: Detected a custom value for the SDK-managed context key \"\(key.rawValue)\"; overriding SDK-managed context keys is deprecated and will be unsupported in a future major version.")
+        }
+    }
+
+    /**
+     Compares two context values by canonical JSON, so representation changes from a
+     customer plugin rebuilding the context (Swift number or bool types vs `NSNumber`)
+     never register as overrides. Values that cannot be encoded compare as equal —
+     the fail-safe direction for a detection-only warning. Plain equality short-circuits
+     first, so the common no-override case never pays for the encoding.
+     */
+    private func isSameValue(_ lhs: AnyCodable?, _ rhs: AnyCodable?) -> Bool {
+        switch (lhs, rhs) {
+        case (nil, nil):
+            return true
+        case let (lhs?, rhs?):
+            if lhs == rhs { return true }
+            guard let left = canonicalJson(of: lhs), let right = canonicalJson(of: rhs) else { return true }
+            return left == right
+        default:
+            return false
+        }
+    }
+
+    private func canonicalJson(of value: AnyCodable) -> String? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        return (try? encoder.encode(value)).flatMap { String(data: $0, encoding: .utf8) }
+    }
+}
