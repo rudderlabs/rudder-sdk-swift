@@ -63,13 +63,21 @@ enum AppState {
 #elseif os(macOS)
         return NSApp?.isActive ?? false
 #elseif os(watchOS)
+        // Only a single-target watch app runs as `WKApplication`. Any other process waits for its first foreground notification.
+        guard isSingleTargetWatchApp else { return false }
         return WKApplication.shared().applicationState == .active
 #endif
     }
 
+#if os(iOS) || os(tvOS)
     private static var isAppExtension: Bool {
         return Bundle.main.bundlePath.hasSuffix(".appex")
     }
+#elseif os(watchOS)
+    private static var isSingleTargetWatchApp: Bool {
+        return Bundle.main.object(forInfoDictionaryKey: "WKApplication") as? Bool == true
+    }
+#endif
 }
 
 // MARK: - LifecycleEventListener
