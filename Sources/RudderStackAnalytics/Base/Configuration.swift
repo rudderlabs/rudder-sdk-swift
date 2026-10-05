@@ -145,9 +145,9 @@ public class SessionConfiguration: NSObject {
     var sessionTimeoutInMillis: UInt64
 
     /**
-     When `true`, background events update the session's last activity timestamp, extending the session timeout. Defaults to `false`. Only applicable when automatic session tracking is enabled.
+     When `true`, an event that the app creates in the background carries the session and extends it. If no session is live, that event starts a new one. When `false`, such an event carries no session data and does not extend the session. Defaults to `false`. Only applicable to automatic session tracking.
      */
-    public let updateSessionOnBackgroundEvents: Bool
+    public let includeBackgroundEventsInSession: Bool
 
     /**
      Initializes a new session configuration instance.
@@ -155,11 +155,11 @@ public class SessionConfiguration: NSObject {
      - Parameters:
         - automaticSessionTracking: A boolean indicating whether session tracking should be automatic. Default is `true`.
         - sessionTimeoutInMillis: The session timeout duration in milliseconds. Default is `300_000` (5 minutes).
-        - updateSessionOnBackgroundEvents: When `true`, background events update the session's last activity timestamp, extending the session timeout. Defaults to `false`. Only applicable when automatic session tracking is enabled.
+        - includeBackgroundEventsInSession: When `true`, an event that the app creates in the background carries the session and extends it. If no session is live, that event starts a new one. When `false`, such an event carries no session data and does not extend the session. Defaults to `false`. Only applicable to automatic session tracking.
      */
-    public init(automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.defaultConfig.sessionTimeoutInMillis, updateSessionOnBackgroundEvents: Bool = Constants.defaultConfig.updateSessionOnBackgroundEvents) {
+    public init(automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus, sessionTimeoutInMillis: UInt64 = Constants.defaultConfig.sessionTimeoutInMillis, includeBackgroundEventsInSession: Bool = Constants.defaultConfig.includeBackgroundEventsInSession) {
         self.automaticSessionTracking = automaticSessionTracking
         self.sessionTimeoutInMillis = sessionTimeoutInMillis
-        self.updateSessionOnBackgroundEvents = updateSessionOnBackgroundEvents
+        self.includeBackgroundEventsInSession = includeBackgroundEventsInSession
     }
 }

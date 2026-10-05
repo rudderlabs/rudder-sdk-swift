@@ -19,33 +19,47 @@ final class SessionTrackingPlugin: Plugin {
     }
     
     func intercept(event: any Event) -> (any Event)? {
-        return event.addToContext(info: self.sessionInfo(for: event))
+        guard let sessionHandler = self.analytics?.sessionHandler else { return event }
+        
+        // An event type the SDK does not own carries no recorded state, so the state in force now stands in for it.
+        let createdInForeground = (event as? CreationStateCapturing)?.createdInForeground ?? sessionHandler.isInForeground
+        let sessionInfo = sessionHandler.withSessionLock {
+            self.sessionInfo(for: event, createdInForeground: createdInForeground, sessionHandler: sessionHandler)
+        }
+        return event.addToContext(info: sessionInfo)
     }
     
-    private func sessionInfo(for event: any Event) -> [String: Any] {
-        var info: [String: Any] = [:]
-        guard let sessionHandler = self.analytics?.sessionHandler else { return info }
+    private func sessionInfo(for event: any Event, createdInForeground: Bool, sessionHandler: SessionHandler) -> [String: Any] {
+        if !createdInForeground {
+            sessionHandler.startSessionOnBackgroundEventIfNeeded()
+        }
+        guard let sessionId = sessionHandler.sessionId else { return [:] }
         
-        let sessionSnapshot = sessionHandler.sessionSnapshot
-        guard let sessionId = sessionSnapshot.sessionId else { return info }
+        let countsAsUserActivity = sessionHandler.countsAsUserActivity(createdInForeground: createdInForeground)
+        // SDK lifecycle events keep their session in the background, so a session stays measurable.
+        guard sessionHandler.isSessionManual || countsAsUserActivity || event.isLifecycleEvent else {
+            analytics?.logger.debug(log: "SessionTrackingPlugin: Skipping session data for a background event (messageId=\(event.messageId))")
+            return [:]
+        }
         
-        info["sessionId"] = sessionId
-        
-        if sessionSnapshot.isStart {
+        var info: [String: Any] = ["sessionId": sessionId]
+        if sessionHandler.isSessionStart {
             info["sessionStart"] = true
             sessionHandler.updateSessionStart(isSessionStart: false)
         }
         
-        guard sessionSnapshot.type == .automatic else { return info }
-        
-        // An event type the SDK does not own carries no recorded state, so the state in force now stands in for it.
-        let createdInForeground = (event as? CreationStateCapturing)?.createdInForeground ?? sessionHandler.isInForeground
-        if sessionHandler.shouldUpdateActivityTime(forEventCreatedInForeground: createdInForeground) {
+        // The SDK never extends a manual session.
+        if !sessionHandler.isSessionManual && countsAsUserActivity {
             sessionHandler.updateSessionLastActivityTime()
-        } else {
-            analytics?.logger.debug(log: "SessionTrackingPlugin: Not updating activity time for event - the event was created in the background and background event updates are disabled.")
         }
-        
         return info
+    }
+}
+
+private extension Event {
+    /// Matched by name, so an app event with the same name also counts.
+    var isLifecycleEvent: Bool {
+        guard let trackEvent = self as? TrackEvent else { return false }
+        return LifecycleEvent(rawValue: trackEvent.event) != nil
     }
 }

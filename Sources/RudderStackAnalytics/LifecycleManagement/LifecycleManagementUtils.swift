@@ -48,12 +48,40 @@ enum AppLifecycleEvent: CaseIterable {
     }
 }
 
+// MARK: - AppState
+/**
+ The app state as the platform reports it now.
+ */
+enum AppState {
+
+    /// Whether the user sees the app now. Call it on the main thread.
+    static var isActive: Bool {
+#if os(iOS) || os(tvOS)
+        // `UIApplication.shared` is unavailable to app extensions, so it is reached by key path.
+        guard !isAppExtension, let application = UIApplication.value(forKeyPath: "sharedApplication") as? UIApplication else { return false }
+        return application.applicationState == .active
+#elseif os(macOS)
+        return NSApp?.isActive ?? false
+#elseif os(watchOS)
+        return WKApplication.shared().applicationState == .active
+#endif
+    }
+
+    private static var isAppExtension: Bool {
+        return Bundle.main.bundlePath.hasSuffix(".appex")
+    }
+}
+
 // MARK: - LifecycleEventListener
+/**
+ Receives the app's lifecycle changes.
+
+ `onForeground` and `onBackground` arrive once per change of state, never twice in a row.
+ */
 protocol LifecycleEventListener: AnyObject {
     func onBackground()
     func onForeground()
     func onTerminate()
-    func onBecomeActive()
 }
 
 extension LifecycleEventListener {
@@ -66,10 +94,6 @@ extension LifecycleEventListener {
     }
     
     func onTerminate() {
-        /* Default implementation (no-op) */
-    }
-    
-    func onBecomeActive() {
         /* Default implementation (no-op) */
     }
 }
