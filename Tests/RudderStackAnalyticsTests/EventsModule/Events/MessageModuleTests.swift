@@ -151,8 +151,27 @@ struct MessageModuleTests {
         #expect(capturedProvider(of: restored) == "custom")
     }
     
+    @Test("given a newly built event, when sdk-owned state is restored, then the foreground state recorded at creation comes back", arguments: [true, false])
+    func testRestoringSdkOwnedStateBringsBackCreationForegroundState(createdInForeground: Bool) {
+        var original = TrackEvent(event: "original")
+        original.createdInForeground = createdInForeground
+        let replacement: Event = TrackEvent(event: "replaced")
+        
+        let restored = replacement.restoringSdkOwnedState(from: original)
+        
+        #expect((restored as? TrackEvent)?.createdInForeground == createdInForeground)
+    }
+    
+    @Test("given an event with a recorded foreground state, when it is encoded, then the payload does not carry that state")
+    func testCreationForegroundStateIsNotEncoded() {
+        var event = TrackEvent(event: "encoded")
+        event.createdInForeground = true
+        
+        #expect(event.jsonString?.contains("createdInForeground") == false)
+    }
+    
     private func capturedProvider(of event: Event) -> String? {
-        let block = (event as? ReservedContextCapturing)?.capturedReservedContext?["consentManagement"] as? [String: Any]
+        let block = (event as? CreationStateCapturing)?.capturedReservedContext?["consentManagement"] as? [String: Any]
         return block?["provider"] as? String
     }
 }

@@ -208,20 +208,24 @@ public enum EventType: String, CaseIterable, Codable {
     }
 }
 
-// MARK: - ReservedContextCapturing
+// MARK: - CreationStateCapturing
 /**
  The SDK-owned state recorded when the event was created.
 
- Reserved context keys are re-asserted at the terminal boundary and again before device-mode
- handoff. Read live at either point they would record the decision in force at *delivery*, so a
- consent change landing while the event is in flight would rewrite what the event says the user
- agreed to. Capturing at creation is what makes the event its own source of truth.
+ The pipeline processes an event some time after the app creates it. Read live at processing time,
+ this state would describe that later moment: a consent change landing while the event is in flight
+ would rewrite what the event says the user agreed to, and an event created in the background would
+ count as foreground activity once the app opens. Capturing at creation is what makes the event its
+ own source of truth.
 
  Internal, and absent from every `CodingKeys` — it never reaches the payload.
  */
-protocol ReservedContextCapturing: Event {
+protocol CreationStateCapturing: Event {
     /// The values the SDK asserted for its reserved context keys when the event was created.
     var capturedReservedContext: [String: Any]? { get set }
+
+    /// Whether the app was in the foreground when the event was created. `nil` when the state was not recorded.
+    var createdInForeground: Bool? { get set }
 }
 
 // MARK: - SDK-Owned State
@@ -229,17 +233,19 @@ extension Event {
 
     /**
      This event with the state the SDK owns put back from `original`: the values the SDK asserted for
-     its reserved context keys when the event was created.
+     its reserved context keys, and the foreground state, when the event was created.
 
      A plugin may return a newly constructed event rather than the one it was handed. Such an event
-     carries none of that recorded state, and the loss is silent. The captured context is internal and
+     carries none of that recorded state, and the loss is silent. The captured state is internal and
      no plugin can set it, so it is always put back. Everything a plugin can set — the payload, its own
      `messageId` and `options` included — is left exactly as the plugin returned it.
      */
     func restoringSdkOwnedState(from original: Event) -> Event {
         var restored: Event = self
-        if var carrier = restored as? ReservedContextCapturing {
-            carrier.capturedReservedContext = (original as? ReservedContextCapturing)?.capturedReservedContext
+        if var carrier = restored as? CreationStateCapturing {
+            let source = original as? CreationStateCapturing
+            carrier.capturedReservedContext = source?.capturedReservedContext
+            carrier.createdInForeground = source?.createdInForeground
             restored = carrier
         }
         return restored

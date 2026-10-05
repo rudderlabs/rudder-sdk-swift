@@ -446,10 +446,11 @@ extension Analytics {
      - Parameter event: The event to be processed.
      */
     private func process(event: Event) {
-        // Captured here rather than in the plugin chain: this runs synchronously on the caller's thread, so it records the decision in force when the event was created, not when it was later dequeued.
+        // Captured here rather than in the plugin chain: this runs synchronously on the caller's thread, so it records the state in force when the event was created, not when it was later dequeued.
         var event = event
-        if var carrier = event as? ReservedContextCapturing {
+        if var carrier = event as? CreationStateCapturing {
             carrier.capturedReservedContext = self.capturedReservedContext()
+            carrier.createdInForeground = self.sessionHandler?.isInForeground
             event = carrier
         }
         
