@@ -14,7 +14,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct IdentifyEvent: Event, ReservedContextCapturing {
+public struct IdentifyEvent: Event, CreationStateCapturing {
     
     /// The type of the event, defaulting to `.identify`.
     public var type: EventType = .identify
@@ -57,6 +57,9 @@ public struct IdentifyEvent: Event, ReservedContextCapturing {
     
     /// The values the SDK asserted for its reserved context keys when the event was created.
     var capturedReservedContext: [String: Any]?
+
+    /// Whether the app was in the foreground when the event was created.
+    var createdInForeground: Bool?
 
     /**
      Initializes an `IdentifyEvent` with the specified traits, options, and user identity values.

@@ -65,7 +65,7 @@ final class ConsentGatePlugin: Plugin {
      the live state alone — the same fail-open posture the resolver takes for missing configuration.
      */
     private func capturedConsent(of event: any Event) -> ConsentManagement? {
-        guard let stamp = (event as? ReservedContextCapturing)?
+        guard let stamp = (event as? CreationStateCapturing)?
             .capturedReservedContext?[ConsentManagement.contextKey] as? [String: Any] else { return nil }
         
         return ConsentManagement.from(contextStamp: stamp)

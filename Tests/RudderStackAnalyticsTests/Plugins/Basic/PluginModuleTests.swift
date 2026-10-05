@@ -81,7 +81,7 @@ class PluginModuleTests {
         
         let result = interactor.execute(original)
         
-        let captured = (result as? ReservedContextCapturing)?.capturedReservedContext?["consentManagement"] as? [String: Any]
+        let captured = (result as? CreationStateCapturing)?.capturedReservedContext?["consentManagement"] as? [String: Any]
         #expect(result?.messageId == EventReplacingTestPlugin.messageId, "the plugin's messageId was replaced")
         #expect(result?.options?.customContext?["campaign"] as? String == "plugin", "the plugin's options were replaced")
         #expect(captured?["provider"] as? String == "custom", "the captured context was not preserved")

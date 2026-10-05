@@ -16,7 +16,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct TrackEvent: Event, ReservedContextCapturing {
+public struct TrackEvent: Event, CreationStateCapturing {
     
     /// The type of the event, defaulting to `.track`.
     public var type: EventType = .track
@@ -62,6 +62,9 @@ public struct TrackEvent: Event, ReservedContextCapturing {
     
     /// The values the SDK asserted for its reserved context keys when the event was created.
     var capturedReservedContext: [String: Any]?
+
+    /// Whether the app was in the foreground when the event was created.
+    var createdInForeground: Bool?
     
     /**
      Initializes a `TrackEvent` with the specified event name, properties, options and user identity values.

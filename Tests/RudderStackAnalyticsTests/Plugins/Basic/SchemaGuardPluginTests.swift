@@ -402,7 +402,7 @@ extension SchemaGuardPluginTests {
     /// values in force at that moment, which is what the guard restores from.
     private func makeTrackEvent(options: RudderOption? = nil, for analytics: Analytics? = nil) -> Event {
         var event: Event = TrackEvent(event: MockProvider.SampleEventName.track, options: options)
-        if let analytics, var carrier = event as? ReservedContextCapturing {
+        if let analytics, var carrier = event as? CreationStateCapturing {
             carrier.capturedReservedContext = analytics.capturedReservedContext()
             event = carrier
         }
