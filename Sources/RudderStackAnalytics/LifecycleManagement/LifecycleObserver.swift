@@ -51,11 +51,11 @@ extension LifecycleObserver {
         }
     }
 
-    /// An SDK that starts while the app is already active receives no foreground notification, so the state is read once.
+    /// An SDK that starts while the app is already on screen receives no foreground notification, so the state is read once.
     private func readInitialAppState() {
         let readAppState = { [weak self] in
-            guard AppState.isActive else { return }
-            self?.handle(.becomeActive)
+            guard AppState.isInForeground else { return }
+            self?.handle(.foreground)
         }
 
         if Thread.isMainThread {

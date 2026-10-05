@@ -54,18 +54,24 @@ enum AppLifecycleEvent: CaseIterable {
  */
 enum AppState {
 
-    /// Whether the user sees the app now. Call it on the main thread.
-    static var isActive: Bool {
+    /**
+     Whether the app is on screen now. Call it on the main thread.
+
+     An app that is on screen but not yet active counts too. The platform reports that state while the user
+     opens the app, and never while the system runs the app with no screen.
+     */
+    static var isInForeground: Bool {
 #if os(iOS) || os(tvOS)
         // `UIApplication.shared` is unavailable to app extensions, so it is reached by key path.
         guard !isAppExtension, let application = UIApplication.value(forKeyPath: "sharedApplication") as? UIApplication else { return false }
-        return application.applicationState == .active
+        return application.applicationState != .background
 #elseif os(macOS)
+        // On macOS an app that is not the active one counts as in the background.
         return NSApp?.isActive ?? false
 #elseif os(watchOS)
         // Only a single-target watch app runs as `WKApplication`. Any other process waits for its first foreground notification.
         guard isSingleTargetWatchApp else { return false }
-        return WKApplication.shared().applicationState == .active
+        return WKApplication.shared().applicationState != .background
 #endif
     }
 
