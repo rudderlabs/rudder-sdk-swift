@@ -453,7 +453,7 @@ extension Analytics {
         var event = event
         if var carrier = event as? CreationStateCapturing {
             carrier.capturedReservedContext = self.capturedReservedContext()
-            carrier.createdInForeground = self.lifecycleObserver?.isInForeground
+            carrier.createdInForeground = self.lifecycleObserver?.foregroundState
             event = carrier
         }
         

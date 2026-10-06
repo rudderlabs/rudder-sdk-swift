@@ -75,7 +75,7 @@ struct SessionHandlerTests {
     
     @Test("given no stored session, when the app comes to the foreground for the first time, then a new automatic session starts")
     func testFirstForegroundStartsSessionWhenNoneIsStored() {
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: true))
+        let analytics = makeAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: true))
         let sessionHandler = sessionHandler(of: analytics)
         let beforeTime = UInt64(Date().timeIntervalSince1970)
         let beforeTimeInMillis = sessionHandler.systemCurrentTime
@@ -93,7 +93,7 @@ struct SessionHandlerTests {
     @Test("given a stored automatic session inside the timeout, when the app comes to the foreground for the first time, then the session continues")
     func testFirstForegroundContinuesLiveSession() {
         let storage = storageWithSession(isManual: false, lastActivityTime: currentTimeInMillis - 1000)
-        let analytics = MockProvider.createMockAnalytics(storage: storage, sessionConfig: SessionConfiguration(automaticSessionTracking: true))
+        let analytics = makeAnalytics(storage: storage, sessionConfig: SessionConfiguration(automaticSessionTracking: true))
         
         analytics.simulateLifecycleEvent(.becomeActive)
         
@@ -104,7 +104,7 @@ struct SessionHandlerTests {
     func testFirstForegroundReplacesTimedOutSession() {
         let storage = storageWithSession(isManual: false, lastActivityTime: currentTimeInMillis - 10000)
         let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: Self.shortTimeoutInMillis)
-        let analytics = MockProvider.createMockAnalytics(storage: storage, sessionConfig: configuration)
+        let analytics = makeAnalytics(storage: storage, sessionConfig: configuration)
         
         analytics.simulateLifecycleEvent(.becomeActive)
         
@@ -117,7 +117,7 @@ struct SessionHandlerTests {
     @Test("given a manual session from an earlier process, when the app comes to the foreground for the first time, then an automatic session starts")
     func testFirstForegroundStartsAutomaticSessionAfterStaleManualSession() {
         let storage = storageWithSession(isManual: true)
-        let analytics = MockProvider.createMockAnalytics(storage: storage, sessionConfig: SessionConfiguration(automaticSessionTracking: true))
+        let analytics = makeAnalytics(storage: storage, sessionConfig: SessionConfiguration(automaticSessionTracking: true))
         
         analytics.simulateLifecycleEvent(.becomeActive)
         
@@ -129,7 +129,7 @@ struct SessionHandlerTests {
     
     @Test("given an app already in the foreground, when the session handler is created, then a session starts at once")
     func testSessionStartsAtInitWhenAppIsAlreadyInForeground() {
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: false))
+        let analytics = makeAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: false))
         analytics.simulateLifecycleEvent(.becomeActive)
         analytics.configuration.sessionConfiguration = SessionConfiguration(automaticSessionTracking: true)
         
@@ -148,7 +148,7 @@ struct SessionHandlerTests {
     func testLaterForegroundReplacesOnlyTimedOutSession(idleTimeInMillis: UInt64, isReplaced: Bool) {
         let storage = storageWithSession(isManual: false, lastActivityTime: currentTimeInMillis - 1000)
         let configuration = SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: Self.shortTimeoutInMillis)
-        let analytics = MockProvider.createMockAnalytics(storage: storage, sessionConfig: configuration)
+        let analytics = makeAnalytics(storage: storage, sessionConfig: configuration)
         let sessionHandler = sessionHandler(of: analytics)
         analytics.simulateLifecycleEvent(.becomeActive)
         analytics.simulateLifecycleEvent(.background)
@@ -217,7 +217,7 @@ struct SessionHandlerTests {
     
     @Test("given a background event started a session, when the app comes to the foreground at once, then the same session continues")
     func testForegroundAfterBackgroundEventContinuesSession() {
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: Self.includingBackgroundEvents)
+        let analytics = makeAnalytics(sessionConfig: Self.includingBackgroundEvents)
         let sessionHandler = sessionHandler(of: analytics)
         sessionHandler.startSessionOnBackgroundEventIfNeeded()
         let backgroundSessionId = sessionHandler.sessionId
@@ -258,7 +258,7 @@ struct SessionHandlerTests {
             sessionTimeoutInMillis: Self.shortTimeoutInMillis,
             includeBackgroundEventsInSession: includesBackgroundEvents
         )
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: configuration)
+        let analytics = makeAnalytics(sessionConfig: configuration)
         let sessionHandler = sessionHandler(of: analytics)
         analytics.simulateLifecycleEvent(.becomeActive)
         if !isInForeground {
@@ -361,7 +361,7 @@ struct SessionHandlerTests {
     
     @Test("given a session configuration, when testing session persistence across handler instances, then it should maintain session state correctly")
     func testSessionPersistence() {
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: false))
+        let analytics = makeAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: false))
         sessionHandler(of: analytics).startSession(id: Self.storedSessionId, type: .manual)
         
         let secondSessionHandler = SessionHandler(analytics: analytics)
@@ -425,7 +425,7 @@ struct SessionHandlerTests {
     
     @Test("given a session in the foreground, when the app moves to the background, then the last activity time is recorded")
     func testBackgroundRecordsActivityTime() {
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: true))
+        let analytics = makeAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: true))
         let sessionHandler = sessionHandler(of: analytics)
         analytics.simulateLifecycleEvent(.becomeActive)
         sessionHandler.updateSessionLastActivityTime(0)
@@ -437,7 +437,7 @@ struct SessionHandlerTests {
     
     @Test("given a session, when the app terminates, then only an app in the foreground records the last activity time", arguments: [true, false])
     func testTerminateRecordsActivityTimeOnlyInForeground(isInForeground: Bool) {
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: true))
+        let analytics = makeAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: true))
         let sessionHandler = sessionHandler(of: analytics)
         analytics.simulateLifecycleEvent(.becomeActive)
         if !isInForeground {
@@ -456,7 +456,7 @@ struct SessionHandlerTests {
         AutomaticStartTrigger.foreground, .backgroundEvent
     ])
     func testEndSessionWinsARaceWithAnAutomaticStart(trigger: AutomaticStartTrigger) {
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: Self.includingBackgroundEvents)
+        let analytics = makeAnalytics(sessionConfig: Self.includingBackgroundEvents)
         
         for _ in 0..<Self.raceIterations {
             let sessionHandler = SessionHandler(analytics: analytics)
@@ -471,7 +471,7 @@ struct SessionHandlerTests {
         AutomaticStartTrigger.foreground, .backgroundEvent
     ])
     func testManualSessionWinsARaceWithAnAutomaticStart(trigger: AutomaticStartTrigger) {
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: Self.includingBackgroundEvents)
+        let analytics = makeAnalytics(sessionConfig: Self.includingBackgroundEvents)
         
         for _ in 0..<Self.raceIterations {
             let sessionHandler = SessionHandler(analytics: analytics)
@@ -503,7 +503,12 @@ extension SessionHandlerTests {
     }
     
     private func makeSessionHandler(_ configuration: SessionConfiguration, storage: MockStorage = MockStorage()) -> SessionHandler {
-        return sessionHandler(of: MockProvider.createMockAnalytics(storage: storage, sessionConfig: configuration))
+        return sessionHandler(of: makeAnalytics(storage: storage, sessionConfig: configuration))
+    }
+    
+    /// Lifecycle events would pass through the SDK's own session plugin and change the session under test.
+    private func makeAnalytics(storage: MockStorage = MockStorage(), sessionConfig: SessionConfiguration) -> Analytics {
+        return MockProvider.createMockAnalytics(storage: storage, sessionConfig: sessionConfig, trackApplicationLifecycleEvents: false)
     }
     
     private func sessionHandler(of analytics: Analytics) -> SessionHandler {

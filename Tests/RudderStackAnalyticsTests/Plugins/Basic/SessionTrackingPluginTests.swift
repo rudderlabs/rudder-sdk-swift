@@ -196,9 +196,7 @@ struct SessionTrackingPluginTests {
         let analytics = makeAnalytics()
         let recorder = CreationStateRecordingPlugin(eventName: "creation_state_probe")
         analytics.add(plugin: recorder)
-        if isInForeground {
-            analytics.simulateLifecycleEvent(.becomeActive)
-        }
+        analytics.simulateLifecycleEvent(isInForeground ? .becomeActive : .background)
 
         analytics.track(name: "creation_state_probe")
 
@@ -222,7 +220,7 @@ extension SessionTrackingPluginTests {
         _ configuration: SessionConfiguration = SessionConfiguration(automaticSessionTracking: true),
         storage: MockStorage = MockStorage()
     ) -> Analytics {
-        let analytics = MockProvider.createMockAnalytics(storage: storage, sessionConfig: configuration)
+        let analytics = MockProvider.createMockAnalytics(storage: storage, sessionConfig: configuration, trackApplicationLifecycleEvents: false)
         sessionTrackingPlugin.setup(analytics: analytics)
         return analytics
     }

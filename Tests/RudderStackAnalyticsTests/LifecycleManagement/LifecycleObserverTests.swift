@@ -101,6 +101,34 @@ struct LifecycleObserverTests {
         #expect(observer.isInForeground == isInForeground)
     }
     
+    @Test("given an observer created on the main thread, when no lifecycle event occurred, then the foreground state is known at once")
+    func testForegroundStateIsKnownAtOnceOnTheMainThread() async {
+        let foregroundState = await MainActor.run { LifecycleObserver().foregroundState }
+        
+        #expect(foregroundState == false)
+    }
+    
+    @Test("when a lifecycle change occurs, then the foreground state is known", arguments: [
+        (event: AppLifecycleEvent.foreground, expected: true),
+        (event: AppLifecycleEvent.background, expected: false)
+    ])
+    func testLifecycleChangeMakesForegroundStateKnown(event: AppLifecycleEvent, expected: Bool) {
+        observer.handle(event)
+        
+        #expect(observer.foregroundState == expected)
+    }
+    
+    @Test("given a lifecycle change before the first read of the app state, when the read arrives, then it does not replace the newer state")
+    func testInitialAppStateDoesNotReplaceALifecycleChange() {
+        observer.addObserver(listener)
+        observer.handle(.foreground)
+        
+        observer.applyInitialAppState(isInForeground: false)
+        
+        #expect(observer.isInForeground)
+        #expect(listener.onBackgroundCallCount == 0)
+    }
+    
     // MARK: - Observer Management Tests
     
     @Test("given an app in the foreground, when a listener is added, then it receives onForeground at once")
@@ -110,6 +138,26 @@ struct LifecycleObserverTests {
         observer.addObserver(listener)
         
         #expect(listener.onForegroundCallCount == 1)
+    }
+    
+    @Test("given a listener inside its catch-up onForeground, when the app moves to the background on another thread, then onBackground waits for the catch-up to end")
+    func testLifecycleChangeDoesNotCrossTheCatchUpCall() {
+        observer.handle(.becomeActive)
+        let backgroundChange = DispatchGroup()
+        let crossingListener = CallOrderRecordingListener { [observer] in
+            backgroundChange.enter()
+            DispatchQueue.global().async {
+                observer.handle(.background)
+                backgroundChange.leave()
+            }
+            // Long enough for an unguarded background change to arrive inside this call.
+            _ = backgroundChange.wait(timeout: .now() + .milliseconds(200))
+        }
+        
+        observer.addObserver(crossingListener)
+        _ = backgroundChange.wait(timeout: .now() + .seconds(2))
+        
+        #expect(crossingListener.calls == ["onForeground began", "onForeground ended", "onBackground"])
     }
     
     @Test("given an app in the background, when a listener is added, then it receives no callback")
@@ -160,5 +208,26 @@ struct LifecycleObserverTests {
         observer.handle(.foreground)
         
         #expect(listener.onForegroundCallCount == 1)
+    }
+}
+
+// MARK: - CallOrderRecordingListener
+/// Records the order of its callbacks, and runs a block inside `onForeground`.
+private final class CallOrderRecordingListener: LifecycleEventListener {
+    @Synchronized private(set) var calls: [String] = []
+    private let duringForeground: () -> Void
+    
+    init(duringForeground: @escaping () -> Void) {
+        self.duringForeground = duringForeground
+    }
+    
+    func onForeground() {
+        $calls.modify { $0.append("onForeground began") }
+        duringForeground()
+        $calls.modify { $0.append("onForeground ended") }
+    }
+    
+    func onBackground() {
+        $calls.modify { $0.append("onBackground") }
     }
 }
