@@ -16,7 +16,7 @@ struct HttpClientTests {
     private let httpClient: HttpClient
 
     init() {
-        mockAnalytics = MockProvider.createMockAnalytics()
+        mockAnalytics = Self.makeNetworkOnlyAnalytics()
         httpClient = HttpClient(analytics: mockAnalytics)
     }
 
@@ -49,10 +49,7 @@ struct HttpClientTests {
 
     @Test("when preparing events headers with gzip enabled, then omits gzip header")
     func testEventsHeadersExcludeGzipWhenEnabled() {
-        let configuration = MockProvider.createMockConfiguration()
-        configuration.gzipEnabled = true
-
-        let gzipAnalytics = Analytics(configuration: configuration)
+        let gzipAnalytics = Self.makeNetworkOnlyAnalytics(gzipEnabled: true)
         let testAnonymousId = "test-anonymous-id"
 
         let headers = HttpClientRequestType.events.headers(gzipAnalytics, anonymousIdHeader: testAnonymousId)
@@ -138,9 +135,7 @@ struct HttpClientTests {
         MockProvider.setupMockURLSession()
         defer { MockProvider.teardownMockURLSession() }
 
-        let configuration = MockProvider.createMockConfiguration()
-        configuration.gzipEnabled = true
-        let gzipClient = HttpClient(analytics: Analytics(configuration: configuration))
+        let gzipClient = HttpClient(analytics: Self.makeNetworkOnlyAnalytics(gzipEnabled: true))
         let eventBatch = "{\"batch\": [\"event1\", \"event2\"]}"
         let rawBody = Data(eventBatch.utf8)
         let expectedResponseData = "{\"success\": true}".utf8Data
@@ -236,6 +231,15 @@ struct HttpClientTests {
 
 extension HttpClientTests {
     private var _defaultHeaders: [String: String] { ["Content-Type": "application/json"] }
+
+    private static func makeNetworkOnlyAnalytics(gzipEnabled: Bool = false) -> Analytics {
+        let configuration = MockProvider.createMockConfiguration()
+        configuration.gzipEnabled = gzipEnabled
+        configuration.trackApplicationLifecycleEvents = false
+        configuration.sessionConfiguration.automaticSessionTracking = false
+        configuration.flushPolicies = []
+        return Analytics(configuration: configuration)
+    }
 
     private func bodyData(from request: URLRequest) -> Data? {
         if let httpBody = request.httpBody {
