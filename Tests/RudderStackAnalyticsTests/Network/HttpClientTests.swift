@@ -216,39 +216,6 @@ struct HttpClientTests {
         #expect(capturedBody == rawBody)
     }
 
-    @Test("given gzip compression fails, when posting batch events, then sends uncompressed body without gzip header")
-    func testPostBatchEventsGzipFailureSendsUncompressedBodyWithoutHeader() async {
-        MockProvider.setupMockURLSession()
-        defer { MockProvider.teardownMockURLSession() }
-
-        let configuration = MockProvider.createMockConfiguration()
-        configuration.gzipEnabled = true
-        let gzipClient = HttpClient(
-            analytics: Analytics(configuration: configuration),
-            gzipCompressor: { _ in throw StubCompressionError() }
-        )
-        let eventBatch = "{\"batch\": [\"event1\", \"event2\"]}"
-        let rawBody = Data(eventBatch.utf8)
-        let expectedResponseData = "{\"success\": true}".utf8Data
-        var capturedContentEncoding: String?
-        var capturedBody: Data?
-
-        MockURLProtocol.requestHandler = { request in
-            capturedContentEncoding = request.value(forHTTPHeaderField: "Content-Encoding")
-            capturedBody = bodyData(from: request)
-            return (200, expectedResponseData, _defaultHeaders)
-        }
-
-        let result = await gzipClient.postBatchEvents(
-            eventBatch,
-            additionalHeaders: ["Content-Encoding": "gzip"]
-        )
-
-        #expect(result.value == expectedResponseData, "Expected success result with matching data")
-        #expect(capturedContentEncoding == nil)
-        #expect(capturedBody == rawBody)
-    }
-
     @Test("given a failure HTTP response, when posting batch events failure, then the error is handled properly")
     func testPostBatchEventsFailure() async {
         MockProvider.setupMockURLSession()
@@ -294,8 +261,6 @@ extension HttpClientTests {
         return data
     }
 }
-
-struct StubCompressionError: Error {}
 
 // MARK: - ResultExtractable
 

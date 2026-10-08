@@ -23,15 +23,10 @@ protocol HttpClientRequests {
 final class HttpClient: TypeIdentifiable {
     let analytics: Analytics
     private var anonymousIdHeader: String
-    private let gzipCompressor: (Data) throws -> Data
 
-    init(
-        analytics: Analytics,
-        gzipCompressor: @escaping (Data) throws -> Data = { try $0.gzipped() }
-    ) {
+    init(analytics: Analytics) {
         self.analytics = analytics
         self.anonymousIdHeader = analytics.anonymousId ?? String.empty
-        self.gzipCompressor = gzipCompressor
     }
 
     private func prepareGenericUrlRequest(for requestType: HttpClientRequestType) -> URLRequest? {
@@ -70,19 +65,14 @@ extension HttpClient: HttpClientRequests {
         }
 
         additionalHeaders.forEach { urlRequest.setValue($1, forHTTPHeaderField: $0) }
-        urlRequest.setValue(nil, forHTTPHeaderField: "Content-Encoding")
 
-        let rawBody = Data(batch.utf8)
-        urlRequest.httpBody = rawBody
+        urlRequest.httpBody = batch.utf8Data
 
-        if self.analytics.configuration.gzipEnabled {
-            do {
-                urlRequest.httpBody = try gzipCompressor(rawBody)
-                urlRequest.setValue("gzip", forHTTPHeaderField: "Content-Encoding")
-            } catch {
-                analytics.logger.error(log: "HttpClient: gzip compression failed, sending uncompressed batch", error: error)
-                urlRequest.httpBody = rawBody
-            }
+        if self.analytics.configuration.gzipEnabled, let gzipped = try? urlRequest.httpBody?.gzipped() {
+            urlRequest.httpBody = gzipped
+            urlRequest.setValue("gzip", forHTTPHeaderField: "Content-Encoding")
+        } else {
+            urlRequest.setValue(nil, forHTTPHeaderField: "Content-Encoding")
         }
 
         return await HttpNetwork.perform(request: urlRequest, logger: analytics.logger).eventUploadResult
