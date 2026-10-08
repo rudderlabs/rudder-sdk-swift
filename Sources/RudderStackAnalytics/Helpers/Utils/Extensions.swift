@@ -470,7 +470,7 @@ extension Data {
         var status = inflateInit2_(&stream, wBits, ZLIB_VERSION, Int32(MemoryLayout<z_stream>.size))
         guard status == Z_OK else { throw GzipError(code: status, msg: stream.msg) }
         
-        let bufferSize = max(self.count * 2, 1)
+        let bufferSize = Swift.max(self.count * 2, 1)
         var data = Data(count: bufferSize)
 
         self.withUnsafeBytes { input in
