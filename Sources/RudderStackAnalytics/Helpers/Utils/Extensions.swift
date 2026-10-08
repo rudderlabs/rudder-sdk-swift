@@ -431,42 +431,36 @@ extension Data {
         var status = deflateInit2_(&stream, level.rawValue, Z_DEFLATED, wBits, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY, ZLIB_VERSION, Int32(MemoryLayout<z_stream>.size))
         guard status == Z_OK else { throw GzipError(code: status, msg: stream.msg) }
         
-        // Create a mutable data buffer with an initial capacity
-        let data = Data(capacity: 16 * 1024)
-        var outputData = data // Create a separate output variable
-        
-        repeat {
-            // Ensure that the outputData can accommodate additional bytes
-            if Int(stream.total_out) >= outputData.count {
-                outputData.count += 16 * 1024
-            }
-            
-            // Use a local buffer to avoid overlapping access
-            let inputCount = self.count
-            let inputPointer = self.withUnsafeBytes { (inputPointer: UnsafeRawBufferPointer) -> UnsafeRawPointer in
-                return inputPointer.baseAddress!
-            }
-            
-            let outputPointer = outputData.withUnsafeMutableBytes { (outputPointer: UnsafeMutableRawBufferPointer) -> UnsafeMutableRawPointer in
-                return outputPointer.baseAddress!.advanced(by: Int(stream.total_out))
-            }
-            
-            // Set up stream properties
-            stream.next_in = UnsafeMutablePointer<Bytef>(mutating: inputPointer.assumingMemoryBound(to: Bytef.self))
-            stream.avail_in = uInt(inputCount) // Available input size
-            stream.next_out = UnsafeMutablePointer<Bytef>(mutating: outputPointer.assumingMemoryBound(to: Bytef.self))
-            stream.avail_out = uInt(outputData.count) - uInt(stream.total_out) // Available output size
-            
-            status = deflate(&stream, Z_FINISH)
-            
-        } while stream.avail_out == 0 && status != Z_STREAM_END
-        
-        guard deflateEnd(&stream) == Z_OK, status == Z_STREAM_END else {
-            throw GzipError(code: status, msg: stream.msg)
+        var outputData = Data(count: 16 * 1024)
+
+        self.withUnsafeBytes { input in
+            stream.next_in = UnsafeMutablePointer<Bytef>(mutating: input.bindMemory(to: Bytef.self).baseAddress!)
+            stream.avail_in = uInt(input.count)
+
+            repeat {
+                if Int(stream.total_out) >= outputData.count {
+                    outputData.count += 16 * 1024
+                }
+
+                let outputCount = outputData.count
+                outputData.withUnsafeMutableBytes { output in
+                    stream.next_out = output.bindMemory(to: Bytef.self).baseAddress!.advanced(by: Int(stream.total_out))
+                    stream.avail_out = uInt(outputCount) - uInt(stream.total_out)
+                    status = deflate(&stream, Z_FINISH)
+                }
+            } while status == Z_OK
+        }
+
+        let outputSize = Int(stream.total_out)
+        let compressionError = status == Z_STREAM_END ? nil : GzipError(code: status, msg: stream.msg)
+        let endStatus = deflateEnd(&stream)
+        if let compressionError { throw compressionError }
+        guard endStatus == Z_OK else {
+            throw GzipError(code: endStatus, msg: nil)
         }
         
-        outputData.count = Int(stream.total_out)
-        return outputData // Return the newly compressed data
+        outputData.count = outputSize
+        return outputData
     }
     
     func gunzipped(wBits: Int32 = Gzip.maxWindowBits + 32) throws -> Data {
@@ -476,43 +470,36 @@ extension Data {
         var status = inflateInit2_(&stream, wBits, ZLIB_VERSION, Int32(MemoryLayout<z_stream>.size))
         guard status == Z_OK else { throw GzipError(code: status, msg: stream.msg) }
         
-        // Create a buffer for the output data with double the size of the input data.
-        var data = Data(capacity: self.count * 2)
-        
-        repeat {
-            // Resize the data buffer if necessary
-            if Int(stream.total_out) >= data.count {
-                data.count += self.count / 2
-            }
-            
-            // Use local variables to avoid overlapping accesses
-            let inputCount = self.count
-            let outputCount = data.count
-            
-            // Access input data
-            self.withUnsafeBytes { input in
-                // Access output data
+        let bufferSize = max(self.count * 2, 1)
+        var data = Data(count: bufferSize)
+
+        self.withUnsafeBytes { input in
+            stream.next_in = UnsafeMutablePointer<Bytef>(mutating: input.bindMemory(to: Bytef.self).baseAddress!)
+            stream.avail_in = uInt(input.count)
+
+            repeat {
+                if Int(stream.total_out) >= data.count {
+                    data.count += bufferSize
+                }
+
+                let outputCount = data.count
                 data.withUnsafeMutableBytes { output in
-                    // Set up the zlib stream
-                    stream.next_in = UnsafeMutablePointer<Bytef>(mutating: input.bindMemory(to: Bytef.self).baseAddress!)
-                    stream.avail_in = uInt(inputCount)
                     stream.next_out = output.bindMemory(to: Bytef.self).baseAddress!.advanced(by: Int(stream.total_out))
                     stream.avail_out = uInt(outputCount) - uInt(stream.total_out)
-                    
-                    // Inflate the data
                     status = inflate(&stream, Z_SYNC_FLUSH)
                 }
-            }
-            
-        } while stream.avail_out == 0 && status != Z_STREAM_END
-        
-        // Clean up
-        guard inflateEnd(&stream) == Z_OK, status == Z_STREAM_END else {
-            throw GzipError(code: status, msg: stream.msg)
+            } while status == Z_OK
         }
-        
-        // Resize the data to the actual decompressed size
-        data.count = Int(stream.total_out)
+
+        let outputSize = Int(stream.total_out)
+        let decompressionError = status == Z_STREAM_END ? nil : GzipError(code: status, msg: stream.msg)
+        let endStatus = inflateEnd(&stream)
+        if let decompressionError { throw decompressionError }
+        guard endStatus == Z_OK else {
+            throw GzipError(code: endStatus, msg: nil)
+        }
+
+        data.count = outputSize
         return data
     }
     // swiftlint:enable force_unwrapping

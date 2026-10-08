@@ -131,7 +131,7 @@ struct HttpClientTests {
     }
 
     @Test("given gzip enabled, when posting batch events, then compresses body and sends gzip header")
-    func testPostBatchEventsGzipEnabledSendsCompressedBodyAndHeader() async {
+    func testPostBatchEventsGzipEnabledSendsCompressedBodyAndHeader() async throws {
         MockProvider.setupMockURLSession()
         defer { MockProvider.teardownMockURLSession() }
 
@@ -154,7 +154,8 @@ struct HttpClientTests {
         #expect(capturedContentEncoding == "gzip")
         if let capturedBody {
             #expect(capturedBody.isGzipped)
-            #expect(capturedBody != rawBody)
+            let uncompressedBody = try capturedBody.gunzipped()
+            #expect(uncompressedBody == rawBody)
         } else {
             #expect(Bool(false), "Expected request body to be captured")
         }
