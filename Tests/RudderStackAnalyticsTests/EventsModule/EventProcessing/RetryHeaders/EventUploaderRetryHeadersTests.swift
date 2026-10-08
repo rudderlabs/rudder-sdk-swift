@@ -91,8 +91,10 @@ class EventUploaderRetryHeadersTests {
         guard let dataItem = await prepareBatchDataItem() else { return }
         
         var callCount = 0
+        let isOwnRequest = tagOwnRequests()
         MockProvider.setupMockURLSession()
-        MockURLProtocol.requestHandler = { _ in
+        MockURLProtocol.requestHandler = { request in
+            guard isOwnRequest(request) else { return (statusCode: 200, data: "{}".data(using: .utf8), headers: nil) }
             callCount += 1
             if callCount == 1 {
                 return (statusCode: 502, data: nil, headers: nil)
@@ -153,8 +155,10 @@ class EventUploaderRetryHeadersTests {
         guard let dataItem = await prepareBatchDataItem() else { return }
         
         var callCount = 0
+        let isOwnRequest = tagOwnRequests()
         MockProvider.setupMockURLSession()
-        MockURLProtocol.requestHandler = { _ in
+        MockURLProtocol.requestHandler = { request in
+            guard isOwnRequest(request) else { return (statusCode: 200, data: "{}".data(using: .utf8), headers: nil) }
             callCount += 1
             if callCount == 1 {
                 return (statusCode: 502, data: nil, headers: nil)
@@ -172,6 +176,18 @@ class EventUploaderRetryHeadersTests {
 // MARK: - Helpers
 
 extension EventUploaderRetryHeadersTests {
+    private static let requestTagHeader = "X-Test-Request-Tag"
+
+    /**
+     Tags this test's upload requests with a unique header, so the shared `MockURLProtocol.requestHandler`
+     can ignore uploads from other `Analytics` instances that still post through the same mock session.
+     */
+    private func tagOwnRequests() -> (URLRequest) -> Bool {
+        let tag = UUID().uuidString
+        mockRetryHeadersProvider.headersToReturn = [Self.requestTagHeader: tag]
+        return { $0.value(forHTTPHeaderField: Self.requestTagHeader) == tag }
+    }
+
     private func prepareBatchDataItem() async -> EventDataItem? {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
