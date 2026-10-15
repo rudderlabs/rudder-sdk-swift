@@ -153,7 +153,7 @@ private extension IntegrationsController {
     }
     
     func safelyInitOrUpdateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
-        if integration.getDestinationInstance() == nil {
+        if !integration.isDestinationCreated {
             safelyCreateAndNotify(destinationConfig: destinationConfig, integration: integration)
         } else {
             safelyUpdateAndNotify(destinationConfig: destinationConfig, integration: integration)
@@ -166,6 +166,7 @@ private extension IntegrationsController {
             try integration.create(destinationConfig: destinationConfig)
             analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) created successfully.")
             integration.pluginStore?.isDestinationReady = true
+            integration.pluginStore?.hasCreateSucceeded = true
             markReadyAndReplay(for: integration)
             notifyCallbacks(.success(()), for: integration)
         } catch {

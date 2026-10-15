@@ -26,6 +26,11 @@ public protocol ObjCIntegrationPlugin: ObjCEventPlugin {
     @objc var key: String { get set }
     
     /**
+     Whether the app initialised the destination SDK and passed it to this integration.
+     */
+    @objc optional var isLiteMode: Bool { get }
+    
+    /**
      Returns the instance of the destination which was created.
      
      - Returns: The instance of the destination, or nil if not created.
@@ -99,6 +104,9 @@ class ObjCIntegrationPluginAdapter: IntegrationPlugin {
         get { objcIntegration.key }
         set { objcIntegration.key = newValue }
     }
+    
+    /// Whether the wrapped Objective-C integration plugin runs in lite mode.
+    var isLiteMode: Bool { objcIntegration.isLiteMode ?? false }
     
     /// The wrapped Objective-C integration plugin instance.
     private let objcIntegration: ObjCIntegrationPlugin

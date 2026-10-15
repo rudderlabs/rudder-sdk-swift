@@ -15,6 +15,8 @@ class IntegrationPluginStore {
     var pluginChain: PluginChain?
     @Synchronized var destinationReadyCallbacks: [IntegrationCallback] = []
     var isStandardIntegration: Bool = true
+    /// Set when `create` succeeds, because an instance can exist before `create` runs.
+    @Synchronized var hasCreateSucceeded = false
     /// Lifecycle state for flush, reset and readiness callbacks. Delivery is not gated on this —
     /// `DestinationDeliveryControl` decides that, so readiness and any hold cannot disagree.
     var isDestinationReady = false
