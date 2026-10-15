@@ -76,7 +76,25 @@ struct LiteModeIntegrationTests {
 
         #expect(isFailure(callbackResult))
         #expect(!mockPlugin.createCalled)
-        #expect(mockPlugin.pluginStore?.hasCreateSucceeded == false)
+        #expect(mockPlugin.pluginStore?.destinationState == .notCreated)
+    }
+
+    @Test("Given a ready lite integration, When the destination is disabled and enabled again, Then the SDK calls update and not create")
+    func liteIntegrationUpdatesAfterPause() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: false), integration: mockPlugin)
+
+        #expect(mockPlugin.pluginStore?.isDestinationReady == false)
+
+        mockPlugin.resetCallFlags()
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        #expect(!mockPlugin.createCalled)
+        #expect(mockPlugin.updateCalled)
+        #expect(mockPlugin.pluginStore?.isDestinationReady == true)
     }
 
     @Test("Given a lite integration whose create throws, When the next config arrives, Then the callback gets failure and create runs again")
@@ -121,12 +139,20 @@ struct LiteModeIntegrationTests {
         #expect(isSuccess(callbackResult))
     }
 
-    // MARK: - Objective-C Adapter
+    @Test("Given a custom integration that holds no instance, When two configs arrive, Then create runs once and a later callback gets success")
+    func customIntegrationWithoutInstanceCreatesOnce() throws {
+        let controller = try #require(analytics.integrationsController)
+        let plugin = NoInstanceCustomIntegration(key: destinationKey)
+        controller.add(integration: plugin)
+        plugin.setup(analytics: analytics)
 
-    @Test("Given Objective-C integrations with and without isLiteMode, When the adapter reads isLiteMode, Then it reports the implemented value or false")
-    func objcAdapterReportsLiteMode() {
-        #expect(MockObjCIntegration().integration.isLiteMode == false)
-        #expect(MockLiteObjCIntegration().integration.isLiteMode == true)
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: plugin)
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: plugin)
+        var callbackResult: DestinationResult?
+        plugin.onDestinationReady { _, result in callbackResult = result }
+
+        #expect(plugin.createCount == 1)
+        #expect(isSuccess(callbackResult))
     }
 }
 
@@ -184,23 +210,21 @@ extension LiteModeIntegrationTests {
     }
 }
 
-// MARK: - Objective-C Mocks
+// MARK: - Mocks
 
-private final class MockObjCIntegration: NSObject, ObjCIntegrationPlugin {
+private final class NoInstanceCustomIntegration: IntegrationPlugin {
     var pluginType: PluginType = .terminal
-    var key: String = "objc_destination"
+    var analytics: Analytics?
+    var key: String
+    private(set) var createCount = 0
+
+    init(key: String) {
+        self.key = key
+    }
 
     func getDestinationInstance() -> Any? { nil }
 
-    func createWithDestinationConfig(_ destinationConfig: [String: Any], error: NSErrorPointer) -> Bool { true }
-}
-
-private final class MockLiteObjCIntegration: NSObject, ObjCIntegrationPlugin {
-    var pluginType: PluginType = .terminal
-    var key: String = "objc_lite_destination"
-    var isLiteMode: Bool { true }
-
-    func getDestinationInstance() -> Any? { nil }
-
-    func createWithDestinationConfig(_ destinationConfig: [String: Any], error: NSErrorPointer) -> Bool { true }
+    func create(destinationConfig: [String: Any]) throws {
+        createCount += 1
+    }
 }

@@ -27,14 +27,6 @@ public protocol IntegrationPlugin: EventPlugin, AnyObject {
     var key: String { get set }
     
     /**
-     Whether the app initialised the destination SDK and passed it to this integration.
-
-     A lite integration only maps and forwards events. It must not initialise the destination SDK in
-     `create`, and it can return the instance from `getDestinationInstance` before `create` runs.
-     */
-    var isLiteMode: Bool { get }
-    
-    /**
      Returns the instance of the destination which was created.
 
      - Returns: The instance of the destination, or nil if not created.
@@ -42,9 +34,11 @@ public protocol IntegrationPlugin: EventPlugin, AnyObject {
     func getDestinationInstance() -> Any?
     
     /**
-     Creates the destination. The SDK calls this method with the first valid configuration.
+     Creates the destination. The SDK calls this method once, with the first valid configuration.
 
-     In standard mode, initialise the destination SDK here. In lite mode, apply the configuration only.
+     Initialise the destination SDK here, unless the integration already holds an instance that the app passed.
+     Throw an error when the destination cannot be created. The SDK then calls this method again with the next
+     valid configuration.
 
      - Parameter destinationConfig: The configuration for the destination as a dictionary.
      - Throws: Any error that occurs during destination creation.
@@ -72,11 +66,6 @@ public protocol IntegrationPlugin: EventPlugin, AnyObject {
 }
 
 public extension IntegrationPlugin {
-    
-    /**
-     Default implementation for isLiteMode.
-     */
-    var isLiteMode: Bool { false }
     
     /**
      Default implementation for update.
@@ -174,9 +163,6 @@ public extension IntegrationPlugin {
         self.analytics = analytics
         
         let key = self.key
-        if isLiteMode {
-            analytics.logger.debug(log: "IntegrationPlugin[\(key)]: Lite mode. The app initialises the destination SDK.")
-        }
         analytics.integrationsController?.$integrationPluginStores.modify { stores in
             if stores[key] == nil {
                 let pluginStore = IntegrationPluginStore(analytics: analytics)
@@ -213,13 +199,10 @@ extension IntegrationPlugin {
         return self.pluginStore?.pluginChain
     }
     
-    // An instance can exist before `create` runs, so the instance alone does not prove that `create` ran.
+    // Not derived from the instance: an integration can hold one before `create` runs, or never hold one.
     var isDestinationCreated: Bool {
         guard let pluginStore else { return false }
-        
-        if isLiteMode { return pluginStore.hasCreateSucceeded }
-        if pluginStore.isStandardIntegration { return getDestinationInstance() != nil }
-        return pluginStore.hasCreateSucceeded && getDestinationInstance() != nil
+        return pluginStore.destinationState != .notCreated
     }
     
     private func applyDefaultPlugins() {

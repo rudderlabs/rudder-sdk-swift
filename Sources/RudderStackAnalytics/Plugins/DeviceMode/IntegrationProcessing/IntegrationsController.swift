@@ -165,13 +165,12 @@ private extension IntegrationsController {
         do {
             try integration.create(destinationConfig: destinationConfig)
             analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) created successfully.")
-            integration.pluginStore?.isDestinationReady = true
-            integration.pluginStore?.hasCreateSucceeded = true
+            integration.pluginStore?.destinationState = .ready
             markReadyAndReplay(for: integration)
             notifyCallbacks(.success(()), for: integration)
         } catch {
             analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) creating destination \(integration.key).", error: error)
-            integration.pluginStore?.isDestinationReady = false
+            integration.pluginStore?.destinationState = .notCreated
             notifyCallbacks(.failure(error), for: integration)
             discardBufferedEvents(for: integration)
         }
@@ -185,7 +184,7 @@ private extension IntegrationsController {
             integration: integration,
             block: {
                 self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with empty destinationConfig.")
-                integration.pluginStore?.isDestinationReady = false
+                integration.pluginStore?.markNotReady()
                 self.deliveryControl.markNotReady(for: integration.key)
                 self.notifyCallbacks(.failure(error), for: integration)
             }
@@ -195,7 +194,7 @@ private extension IntegrationsController {
     // A destination denied by consent must not be updated: pushing an empty config can throw, which would
     // replace the consent reason with a parse error, and can reset a live destination's state.
     func notifyFailureAndMarkNotReady(error: Error, integration: IntegrationPlugin) {
-        integration.pluginStore?.isDestinationReady = false
+        integration.pluginStore?.markNotReady()
         deliveryControl.markNotReady(for: integration.key)
         notifyCallbacks(.failure(error), for: integration)
     }
@@ -206,7 +205,7 @@ private extension IntegrationsController {
             integration: integration,
             block: {
                 self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with destinationConfig: \(destinationConfig).")
-                integration.pluginStore?.isDestinationReady = true
+                integration.pluginStore?.destinationState = .ready
                 self.markReadyAndReplay(for: integration)
                 self.notifyCallbacks(.success(()), for: integration)
             }
@@ -224,7 +223,7 @@ private extension IntegrationsController {
             }
         } catch {
             analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) updating destination \(integration.key).", error: error)
-            integration.pluginStore?.isDestinationReady = false
+            integration.pluginStore?.markNotReady()
             deliveryControl.markNotReady(for: integration.key)
             notifyCallbacks(.failure(error), for: integration)
         }

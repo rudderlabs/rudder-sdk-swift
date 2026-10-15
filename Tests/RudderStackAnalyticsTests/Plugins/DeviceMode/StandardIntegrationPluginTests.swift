@@ -274,7 +274,7 @@ struct StandardIntegrationPluginTests {
         
         // Setup plugin store as ready
         let pluginStore = IntegrationPluginStore(analytics: analytics)
-        pluginStore.isDestinationReady = true
+        pluginStore.destinationState = .ready
         analytics.integrationsController?.$integrationPluginStores.modify { stores in
             stores[mockPlugin.key] = pluginStore
         }
