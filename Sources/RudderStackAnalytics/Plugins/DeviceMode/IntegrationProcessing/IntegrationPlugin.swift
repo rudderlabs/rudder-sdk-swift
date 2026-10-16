@@ -202,7 +202,7 @@ extension IntegrationPlugin {
     // Not derived from the instance: an integration can hold one before `create` runs, or never hold one.
     var isDestinationCreated: Bool {
         guard let pluginStore else { return false }
-        return pluginStore.destinationState != .notCreated
+        return pluginStore.destinationState != .pendingCreate
     }
     
     private func applyDefaultPlugins() {

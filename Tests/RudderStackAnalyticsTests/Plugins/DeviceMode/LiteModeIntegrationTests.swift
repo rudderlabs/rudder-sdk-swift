@@ -76,7 +76,7 @@ struct LiteModeIntegrationTests {
 
         #expect(isFailure(callbackResult))
         #expect(!mockPlugin.createCalled)
-        #expect(mockPlugin.pluginStore?.destinationState == .notCreated)
+        #expect(mockPlugin.pluginStore?.destinationState == .pendingCreate)
     }
 
     @Test("Given a ready lite integration, When the destination is disabled and enabled again, Then the SDK calls update and not create")
@@ -116,6 +116,52 @@ struct LiteModeIntegrationTests {
 
         #expect(mockPlugin.createCalled)
         #expect(!mockPlugin.updateCalled)
+        #expect(mockPlugin.pluginStore?.isDestinationReady == true)
+    }
+
+    @Test("Given a created integration, When it is removed and added again, Then the next config calls create again")
+    func integrationIsCreatedAgainAfterReAdd() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        controller.remove(integration: mockPlugin)
+        controller.add(integration: mockPlugin)
+        mockPlugin.resetCallFlags()
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        #expect(mockPlugin.createCalled)
+        #expect(!mockPlugin.updateCalled)
+        #expect(mockPlugin.pluginStore?.isDestinationReady == true)
+    }
+
+    @Test("Given a removed integration, When a config arrives, Then create does not run")
+    func removedIntegrationIgnoresConfig() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+
+        controller.remove(integration: mockPlugin)
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        #expect(!mockPlugin.createCalled)
+        #expect(mockPlugin.pluginStore == nil)
+    }
+
+    @Test("Given an integration that is removed while create runs, When it is added again, Then the next config calls create again")
+    func removalDuringCreateDoesNotMarkReAddedIntegrationReady() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        mockPlugin.onCreate = { controller.remove(integration: mockPlugin) }
+
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+        controller.add(integration: mockPlugin)
+
+        #expect(mockPlugin.pluginStore?.destinationState == .pendingCreate)
+
+        mockPlugin.resetCallFlags()
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        #expect(mockPlugin.createCalled)
         #expect(mockPlugin.pluginStore?.isDestinationReady == true)
     }
 

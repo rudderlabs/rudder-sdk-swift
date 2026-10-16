@@ -170,7 +170,7 @@ private extension IntegrationsController {
             notifyCallbacks(.success(()), for: integration)
         } catch {
             analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) creating destination \(integration.key).", error: error)
-            integration.pluginStore?.destinationState = .notCreated
+            integration.pluginStore?.destinationState = .pendingCreate
             notifyCallbacks(.failure(error), for: integration)
             discardBufferedEvents(for: integration)
         }

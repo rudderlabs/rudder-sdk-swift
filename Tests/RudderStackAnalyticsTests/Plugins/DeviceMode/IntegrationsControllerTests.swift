@@ -199,7 +199,7 @@ struct IntegrationsControllerTests {
         
         // Set destinations as ready
         controller.integrationPluginStores["destination1"]?.destinationState = .ready
-        controller.integrationPluginStores["destination2"]?.destinationState = .notCreated
+        controller.integrationPluginStores["destination2"]?.destinationState = .pendingCreate
         
         controller.reset()
         
@@ -222,7 +222,7 @@ struct IntegrationsControllerTests {
         
         // Set destinations as ready
         controller.integrationPluginStores["destination1"]?.destinationState = .ready
-        controller.integrationPluginStores["destination2"]?.destinationState = .notCreated
+        controller.integrationPluginStores["destination2"]?.destinationState = .pendingCreate
         
         controller.flush()
         
