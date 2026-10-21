@@ -271,6 +271,11 @@ private extension IntegrationsController {
     }
     
     private func markReadyAndReplay(for integration: IntegrationPlugin) {
+        // The app can remove the integration while `create` or `update` runs; a removed key must stay closed.
+        guard integration.pluginStore != nil else {
+            deliveryControl.markNotReady(for: integration.key)
+            return
+        }
         deliveryControl.markReady(for: integration.key) { events in
             guard !events.isEmpty else { return }
             

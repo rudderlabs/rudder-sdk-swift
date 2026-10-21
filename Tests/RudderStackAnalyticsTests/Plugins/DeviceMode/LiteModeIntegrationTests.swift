@@ -147,7 +147,24 @@ struct LiteModeIntegrationTests {
         #expect(mockPlugin.pluginStore == nil)
     }
 
-    @Test("Given an integration that is removed while create runs, When it is added again, Then the next config calls create again")
+    @Test("Given a lite integration with a pending Obj-C callback, When the first config disables the destination, Then the callback gets an error and no instance")
+    func objcCallbackReportsFailureForLiteIntegration() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        var callbackInstance: Any?
+        var callbackError: NSError?
+        ObjCAnalytics(analytics: analytics).onDestinationReady(forKey: destinationKey) { instance, error in
+            callbackInstance = instance
+            callbackError = error
+        }
+
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: false), integration: mockPlugin)
+
+        #expect(callbackError != nil)
+        #expect(callbackInstance == nil)
+    }
+
+    @Test("Given an integration that is removed while create runs, When it is added again, Then it gets no event until the next config calls create again")
     func removalDuringCreateDoesNotMarkReAddedIntegrationReady() throws {
         let controller = try #require(analytics.integrationsController)
         let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
@@ -155,8 +172,10 @@ struct LiteModeIntegrationTests {
 
         controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
         controller.add(integration: mockPlugin)
+        controller.deliver(event: TrackEvent(event: "Before Create").updateEventData(), to: mockPlugin)
 
         #expect(mockPlugin.pluginStore?.destinationState == .pendingCreate)
+        #expect(mockPlugin.receivedTrackEventNames.isEmpty)
 
         mockPlugin.resetCallFlags()
         controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
@@ -208,7 +227,7 @@ extension LiteModeIntegrationTests {
 
     private func makeLitePlugin(holding instance: Any) -> MockStandardIntegrationPlugin {
         let mockPlugin = MockStandardIntegrationPlugin(key: destinationKey)
-        mockPlugin.isLiteMode = true
+        mockPlugin.keepsPassedInstance = true
         mockPlugin.setDestinationInstance(instance)
         analytics.integrationsController?.add(integration: mockPlugin)
         mockPlugin.setup(analytics: analytics)

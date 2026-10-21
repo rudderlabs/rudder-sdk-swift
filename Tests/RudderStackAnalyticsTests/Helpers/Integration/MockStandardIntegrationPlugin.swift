@@ -15,7 +15,7 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
     var key: String
-    var isLiteMode = false
+    var keepsPassedInstance = false
     
     // Mock destination instance
     private var destinationInstance: Any?
@@ -70,7 +70,7 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
         }
         
         // A lite integration keeps the instance that the app passed
-        if !isLiteMode {
+        if !keepsPassedInstance {
             destinationInstance = MockDestination(config: destinationConfig)
         }
     }

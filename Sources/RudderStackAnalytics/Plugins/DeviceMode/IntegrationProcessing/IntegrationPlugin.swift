@@ -27,9 +27,9 @@ public protocol IntegrationPlugin: EventPlugin, AnyObject {
     var key: String { get set }
     
     /**
-     Returns the instance of the destination which was created.
+     Returns the instance of the destination.
 
-     - Returns: The instance of the destination, or nil if not created.
+     - Returns: The instance of the destination, or nil if the integration holds none.
      */
     func getDestinationInstance() -> Any?
     
