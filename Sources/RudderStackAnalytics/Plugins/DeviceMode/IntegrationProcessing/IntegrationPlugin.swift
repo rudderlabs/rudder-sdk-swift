@@ -119,7 +119,8 @@ public extension IntegrationPlugin {
         
         var isCreated = false
         pluginStore.$destinationReadyCallbacks.modify { callbacks in
-            isCreated = self.isDestinationCreated
+            // The captured store, not a new lookup: a re-add on another thread can replace the store.
+            isCreated = pluginStore.destinationState != .pendingCreate
             if !isCreated {
                 // Store callback for later notification when destination becomes ready
                 callbacks.append(callback)
