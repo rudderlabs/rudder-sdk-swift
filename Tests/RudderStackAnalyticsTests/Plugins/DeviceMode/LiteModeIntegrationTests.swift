@@ -147,7 +147,7 @@ struct LiteModeIntegrationTests {
         #expect(mockPlugin.pluginStore == nil)
     }
 
-    @Test("Given a lite integration with a pending Obj-C callback, When the first config disables the destination, Then the callback gets an error and no instance")
+    @Test("Given a lite integration with a pending Obj-C callback, When the first config disables the destination, Then the callback gets an error that names the destination, and no instance")
     func objcCallbackReportsFailureForLiteIntegration() throws {
         let controller = try #require(analytics.integrationsController)
         let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
@@ -160,7 +160,7 @@ struct LiteModeIntegrationTests {
 
         controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: false), integration: mockPlugin)
 
-        #expect(callbackError != nil)
+        #expect(callbackError?.localizedDescription.contains(destinationKey) == true)
         #expect(callbackInstance == nil)
     }
 

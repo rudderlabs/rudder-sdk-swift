@@ -229,6 +229,9 @@ extension ObjCAnalytics {
             switch result {
             case .success:
                 callback(destination, nil)
+            case .failure(let destinationError as DestinationError):
+                // `DestinationError` is not a `LocalizedError`, so the default bridge drops its description.
+                callback(nil, NSError(domain: "com.rudderstack.IntegrationPluginError", code: -1, userInfo: [NSLocalizedDescriptionKey: destinationError.errorDescription]))
             case .failure(let error):
                 callback(nil, error as NSError)
             }
