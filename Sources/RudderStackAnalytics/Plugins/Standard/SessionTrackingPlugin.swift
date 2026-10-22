@@ -19,10 +19,10 @@ final class SessionTrackingPlugin: Plugin {
     }
     
     func intercept(event: any Event) -> (any Event)? {
-        return event.addToContext(info: self.prepareSessionInfo)
+        return event.addToContext(info: self.sessionInfo(for: event))
     }
     
-    var prepareSessionInfo: [String: Any] {
+    private func sessionInfo(for event: any Event) -> [String: Any] {
         var info: [String: Any] = [:]
         guard let sessionHandler = self.analytics?.sessionHandler else { return info }
         
@@ -36,10 +36,14 @@ final class SessionTrackingPlugin: Plugin {
             sessionHandler.updateSessionStart(isSessionStart: false)
         }
         
-        if sessionSnapshot.type == .automatic && sessionHandler.shouldUpdateActivityTimeForEvent() {
+        guard sessionSnapshot.type == .automatic else { return info }
+        
+        // An event type the SDK does not own carries no recorded state, so the state in force now stands in for it.
+        let createdInForeground = (event as? CreationStateCapturing)?.createdInForeground ?? sessionHandler.isInForeground
+        if sessionHandler.shouldUpdateActivityTime(forEventCreatedInForeground: createdInForeground) {
             sessionHandler.updateSessionLastActivityTime()
-        } else if sessionSnapshot.type == .automatic {
-            analytics?.logger.debug(log: "SessionTrackingPlugin: Not updating activity time for event - app is in the background and background event updates are disabled.")
+        } else {
+            analytics?.logger.debug(log: "SessionTrackingPlugin: Not updating activity time for event - the event was created in the background and background event updates are disabled.")
         }
         
         return info

@@ -238,7 +238,7 @@ extension IntegrationPlugin {
      consent management was inactive, which the caller treats as consented.
      */
     private func capturedConsent(of event: any Event) -> ConsentManagement? {
-        guard let stamp = (event as? ReservedContextCapturing)?
+        guard let stamp = (event as? CreationStateCapturing)?
             .capturedReservedContext?[ConsentManagement.contextKey] as? [String: Any] else { return nil }
 
         return ConsentManagement.from(contextStamp: stamp)
@@ -256,7 +256,7 @@ extension IntegrationPlugin {
      */
     private func consentRestampedEvent(_ event: any Event) -> any Event {
         let stampKey = SDKManagedContextKey.consentManagement.rawValue
-        guard let captured = (event as? ReservedContextCapturing)?.capturedReservedContext?[stampKey] else { return event }
+        guard let captured = (event as? CreationStateCapturing)?.capturedReservedContext?[stampKey] else { return event }
         guard event.context?[stampKey] != AnyCodable(captured) else { return event }
 
         if pluginStore?.claimRestoreWarning() == true {

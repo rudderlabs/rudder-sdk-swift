@@ -26,7 +26,7 @@ final class SessionHandler: TypeIdentifiable {
     private var sessionCofiguration: SessionConfiguration { analytics.configuration.sessionConfiguration }
     private var automaticSessionTimeout: UInt64 { self.sessionCofiguration.sessionTimeoutInMillis }
     // Setting it to "true" by default, as lifecycle callback is not being fired, when the app is launched for the first time.
-    @Synchronized private var isInForeground: Bool = true
+    @Synchronized private(set) var isInForeground: Bool = true
     
     var analytics: Analytics
     
@@ -149,8 +149,8 @@ extension SessionHandler {
         return interval > 0 ? UInt64(interval * millisecondsInSecond) : 0
     }
     
-    func shouldUpdateActivityTimeForEvent() -> Bool {
-        return sessionCofiguration.updateSessionOnBackgroundEvents || isInForeground
+    func shouldUpdateActivityTime(forEventCreatedInForeground createdInForeground: Bool) -> Bool {
+        return sessionCofiguration.updateSessionOnBackgroundEvents || createdInForeground
     }
     
     /**

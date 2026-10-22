@@ -116,4 +116,83 @@ class SessionTrackingPluginTests {
 
         #expect(sessionHandler?.lastActivityTime != activityTimeBeforeEvent)
     }
+
+    @Test("given an event created in the background, when it is intercepted after the app returns to the foreground, then last activity time is not updated")
+    func testInterceptKeepsBackgroundCreationStateAfterAppReturnsToForeground() {
+        let sessionConfig = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
+        sessionTrackingPlugin.setup(analytics: analytics)
+        let sessionHandler = analytics.sessionHandler
+        var event = MockProvider.mockTrackEvent
+        event.createdInForeground = false
+        sessionHandler?.onForeground()
+        sessionHandler?.updateSessionLastActivityTime(0)
+
+        _ = sessionTrackingPlugin.intercept(event: event)
+
+        #expect(sessionHandler?.lastActivityTime == 0)
+    }
+
+    @Test("given an event created in the foreground, when it is intercepted after the app moves to the background, then last activity time is updated")
+    func testInterceptKeepsForegroundCreationStateAfterAppMovesToBackground() {
+        let sessionConfig = SessionConfiguration(automaticSessionTracking: true)
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
+        sessionTrackingPlugin.setup(analytics: analytics)
+        let sessionHandler = analytics.sessionHandler
+        var event = MockProvider.mockTrackEvent
+        event.createdInForeground = true
+        sessionHandler?.onBackground()
+        sessionHandler?.updateSessionLastActivityTime(0)
+
+        _ = sessionTrackingPlugin.intercept(event: event)
+
+        #expect(sessionHandler?.lastActivityTime != 0)
+    }
+
+    @Test("given the app state, when an event is tracked, then the event records that state at creation", arguments: [true, false])
+    func testTrackRecordsForegroundStateAtCreation(isInForeground: Bool) async {
+        let analytics = MockProvider.createMockAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: true))
+        let recorder = CreationStateRecordingPlugin(eventName: "creation_state_probe")
+        analytics.add(plugin: recorder)
+        if !isInForeground {
+            analytics.sessionHandler?.onBackground()
+        }
+
+        analytics.track(name: "creation_state_probe")
+
+        #expect(await recorder.recordedState() == isInForeground)
+    }
+}
+
+// MARK: - CreationStateRecordingPlugin
+/// Records the creation state of one named event as it passes through the plugin chain.
+private final class CreationStateRecordingPlugin: Plugin {
+    var pluginType: PluginType = .onProcess
+    var analytics: Analytics?
+
+    @Synchronized private var createdInForeground: Bool?
+    private let eventName: String
+
+    init(eventName: String) {
+        self.eventName = eventName
+    }
+
+    func setup(analytics: Analytics) {
+        self.analytics = analytics
+    }
+
+    func intercept(event: any Event) -> (any Event)? {
+        if let track = event as? TrackEvent, track.event == eventName {
+            createdInForeground = track.createdInForeground
+        }
+        return event
+    }
+
+    /// Bounded, so a test whose event never arrives fails on its expectation instead of hanging.
+    func recordedState() async -> Bool? {
+        for _ in 0..<200 where createdInForeground == nil {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+        return createdInForeground
+    }
 }
