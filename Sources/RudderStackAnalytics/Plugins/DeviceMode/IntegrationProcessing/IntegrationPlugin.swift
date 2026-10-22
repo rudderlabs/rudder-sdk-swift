@@ -110,28 +110,31 @@ public extension IntegrationPlugin {
     }
     
     /**
-    Registers a callback to be invoked when the destination of this plugin is ready.
+    Registers a callback that gets the result of the destination setup. The SDK calls each callback at most once.
 
-    - Parameter callback: The callback to be invoked when the destination is ready.
+    Until the first result, the SDK stores the callback. After it, the SDK calls the callback at once with the last
+    result. Success passes the destination instance. Failure passes `nil`.
+
+    - Parameter callback: The callback that gets the destination instance and the result.
     */
     func onDestinationReady(callback: @escaping IntegrationCallback) {
         guard let pluginStore else { return }
         
-        var isCreated = false
+        var lastResult: DestinationResult?
         pluginStore.$destinationReadyCallbacks.modify { callbacks in
             // The captured store, not a new lookup: a re-add on another thread can replace the store.
-            isCreated = pluginStore.destinationState != .pendingCreate
-            if !isCreated {
-                // Store callback for later notification when destination becomes ready
+            lastResult = pluginStore.lastResult
+            if lastResult == nil {
                 callbacks.append(callback)
             }
         }
-        guard isCreated else { return }
+        guard let lastResult else { return }
         
-        if pluginStore.isDestinationReady {
-            callback(getDestinationInstance(), .success(()))
-        } else {
-            callback(nil, .failure(DestinationError.destinationNotReady(key)))
+        switch lastResult {
+        case .success:
+            callback(getDestinationInstance(), lastResult)
+        case .failure:
+            callback(nil, lastResult)
         }
     }
 }

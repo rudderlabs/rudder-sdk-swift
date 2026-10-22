@@ -231,12 +231,15 @@ private extension IntegrationsController {
     
     func notifyCallbacks(_ result: DestinationResult, for integration: IntegrationPlugin) {
         guard let pluginStore = integration.pluginStore else { return }
-        let instance = integration.getDestinationInstance()
+        // Every failure passes no instance: a lite integration holds one even when the destination failed.
+        var instance: Any?
+        if case .success = result { instance = integration.getDestinationInstance() }
         var toRun: [IntegrationCallback] = []
         // Atomically read and clear callbacks
         pluginStore.$destinationReadyCallbacks.modify { callbacks in
             toRun = callbacks
             callbacks.removeAll()
+            pluginStore.lastResult = result
         }
         toRun.forEach { $0(instance, result) }
     }

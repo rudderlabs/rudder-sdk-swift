@@ -219,6 +219,59 @@ struct LiteModeIntegrationTests {
         #expect(plugin.createCount == 1)
         #expect(isSuccess(callbackResult))
     }
+
+    // MARK: - Late Callbacks
+
+    @Test("Given a lite integration whose first config disables the destination, When a callback registers later, Then it gets the dashboard failure at once with no instance, and a later enabled config does not call it again")
+    func lateCallbackGetsDashboardFailureBeforeCreate() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: false), integration: mockPlugin)
+        var results: [(instance: Any?, result: DestinationResult)] = []
+
+        mockPlugin.onDestinationReady { instance, result in results.append((instance, result)) }
+
+        #expect(results.count == 1)
+        #expect(results.first?.instance == nil)
+        #expect(isDisabledError(results.first?.result))
+
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        #expect(mockPlugin.createCalled)
+        #expect(results.count == 1)
+    }
+
+    @Test("Given a lite integration whose create throws, When the config arrives, Then the pending and late callbacks get the create error with no instance")
+    func createFailureReachesPendingAndLateCallbacksWithoutInstance() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        mockPlugin.createThrowsError = MockIntegrationError.createFailed
+        var pending: (instance: Any?, result: DestinationResult)?
+        mockPlugin.onDestinationReady { instance, result in pending = (instance, result) }
+
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+        var late: (instance: Any?, result: DestinationResult)?
+        mockPlugin.onDestinationReady { instance, result in late = (instance, result) }
+
+        #expect(pending?.instance == nil)
+        #expect(errorOf(pending?.result) as? MockIntegrationError == .createFailed)
+        #expect(late?.instance == nil)
+        #expect(errorOf(late?.result) as? MockIntegrationError == .createFailed)
+    }
+
+    @Test("Given a created integration that the dashboard then disables, When a callback registers, Then it gets the dashboard failure, not a generic one")
+    func lateCallbackGetsRealReasonAfterCreate() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: false), integration: mockPlugin)
+        var late: (instance: Any?, result: DestinationResult)?
+
+        mockPlugin.onDestinationReady { instance, result in late = (instance, result) }
+
+        #expect(late?.instance == nil)
+        #expect(isDisabledError(late?.result))
+    }
 }
 
 // MARK: - Helpers
@@ -241,6 +294,16 @@ extension LiteModeIntegrationTests {
 
     private func isFailure(_ result: DestinationResult?) -> Bool {
         if case .failure = result { return true }
+        return false
+    }
+
+    private func errorOf(_ result: DestinationResult?) -> Error? {
+        if case .failure(let error) = result { return error }
+        return nil
+    }
+
+    private func isDisabledError(_ result: DestinationResult?) -> Bool {
+        if case .destinationDisabled(let key) = errorOf(result) as? DestinationError { return key == destinationKey }
         return false
     }
 
