@@ -16,7 +16,7 @@ public final class ObjCSessionConfigurationBuilder: NSObject {
 
     private var automaticSessionTracking: Bool = Constants.defaultConfig.automaticSessionTrackingStatus
     private var sessionTimeoutInMillis: UInt64 = Constants.defaultConfig.sessionTimeoutInMillis
-    private var updateSessionOnBackgroundEvents: Bool = Constants.defaultConfig.updateSessionOnBackgroundEvents
+    private var includeBackgroundEventsInSession: Bool = Constants.defaultConfig.includeBackgroundEventsInSession
 
     /**
      Initializes a new builder.
@@ -31,7 +31,7 @@ public final class ObjCSessionConfigurationBuilder: NSObject {
      */
     @objc
     public func build() -> SessionConfiguration {
-        return SessionConfiguration(automaticSessionTracking: automaticSessionTracking, sessionTimeoutInMillis: sessionTimeoutInMillis, updateSessionOnBackgroundEvents: updateSessionOnBackgroundEvents)
+        return SessionConfiguration(automaticSessionTracking: automaticSessionTracking, sessionTimeoutInMillis: sessionTimeoutInMillis, includeBackgroundEventsInSession: includeBackgroundEventsInSession)
     }
 
     /**
@@ -63,15 +63,15 @@ public final class ObjCSessionConfigurationBuilder: NSObject {
     }
 
     /**
-     Sets whether background events should update the session's last activity timestamp. Only applies when automatic session tracking is enabled.
+     Sets whether an event that the app creates in the background is part of the session. Only applies to automatic session tracking.
 
-     - Parameter updateSessionOnBackgroundEvents: When `true`, background events update the session's last activity timestamp, extending the session timeout.
+     - Parameter includeBackgroundEventsInSession: When `true`, a background event carries the session and extends it, and starts a new session if none is live. When `false`, a background event carries no session data.
      - Returns: The builder instance for chaining.
      */
     @objc
     @discardableResult
-    public func setUpdateSessionOnBackgroundEvents(_ updateSessionOnBackgroundEvents: Bool) -> Self {
-        self.updateSessionOnBackgroundEvents = updateSessionOnBackgroundEvents
+    public func setIncludeBackgroundEventsInSession(_ includeBackgroundEventsInSession: Bool) -> Self {
+        self.includeBackgroundEventsInSession = includeBackgroundEventsInSession
         return self
     }
 }

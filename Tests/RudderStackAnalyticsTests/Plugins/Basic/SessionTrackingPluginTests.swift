@@ -5,162 +5,239 @@
 //  Created by Satheesh Kannan on 27/02/25.
 //
 
+import Foundation
 import Testing
 @testable import RudderStackAnalytics
 
 @Suite("SessionTrackingPlugin Tests")
-class SessionTrackingPluginTests {
-    var sessionTrackingPlugin: SessionTrackingPlugin
+struct SessionTrackingPluginTests {
+    private static let storedSessionId: UInt64 = 1234567890
+    private let sessionTrackingPlugin = SessionTrackingPlugin()
     
-    init() {
-        self.sessionTrackingPlugin = SessionTrackingPlugin()
+    @Test("when setup is called, then analytics reference is stored")
+    func testPluginSetup() {
+        sessionTrackingPlugin.setup(analytics: MockProvider.createMockAnalytics())
+        
+        #expect(sessionTrackingPlugin.analytics != nil)
+        #expect(sessionTrackingPlugin.pluginType == .preProcess)
     }
     
-    @Test("given SessionTrackingPlugin with active session, when intercepting event, then adds session information", arguments:[
+    // MARK: - Foreground Event Tests
+    
+    @Test("given an automatic session, when intercepting a foreground event, then adds session information", arguments: [
         MockProvider.mockTrackEvent as Event,
         MockProvider.mockScreenEvent as Event,
         MockProvider.mockIdentifyEvent as Event,
         MockProvider.mockGroupEvent as Event,
         MockProvider.mockAliasEvent as Event
     ])
-    func testPluginInterceptWithActiveSession(_ event: Event) {
-        let sessionConfig = MockProvider.mockSessionConfiguration
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
-        sessionTrackingPlugin.setup(analytics: analytics)
+    func testForegroundEventCarriesSession(_ event: Event) {
+        let analytics = makeAnalytics()
+        analytics.simulateLifecycleEvent(.becomeActive)
         
-        // Start a session
-        analytics.startSession()
+        let context = interceptedContext(of: event)
         
-        let result = sessionTrackingPlugin.intercept(event: event)
+        #expect(carriedSessionId(in: context) == analytics.sessionHandler?.sessionId)
+    }
+    
+    @Test("given a new session, when intercepting events, then only the first event that carries the session has sessionStart")
+    func testSessionStartIsOnTheFirstEventOnly() {
+        makeAnalytics().simulateLifecycleEvent(.becomeActive)
         
-        #expect(result != nil)
-        #expect(result?.context != nil)
-        guard let context = result?.context?.rawDictionary else {
-            Issue.record("Event context not found")
-            return
-        }
+        let firstContext = interceptedContext(of: MockProvider.mockTrackEvent)
+        let secondContext = interceptedContext(of: MockProvider.mockTrackEvent)
+        
+        #expect(firstContext["sessionStart"] as? Bool == true)
+        #expect(secondContext["sessionId"] != nil)
+        #expect(secondContext["sessionStart"] == nil)
+    }
+    
+    @Test("given an automatic session, when intercepting a foreground event, then last activity time is updated")
+    func testForegroundEventExtendsSession() {
+        let analytics = makeAnalytics()
+        analytics.simulateLifecycleEvent(.becomeActive)
+        analytics.sessionHandler?.updateSessionLastActivityTime(1)
+        
+        _ = sessionTrackingPlugin.intercept(event: MockProvider.mockTrackEvent)
+        
+        #expect(analytics.sessionHandler?.lastActivityTime != 1)
+    }
+    
+    @Test("given no session, when intercepting event, then the event carries no session information")
+    func testEventWithoutSessionCarriesNoSessionInformation() {
+        makeAnalytics(SessionConfiguration(automaticSessionTracking: false)).simulateLifecycleEvent(.becomeActive)
+        
+        let context = interceptedContext(of: MockProvider.mockTrackEvent)
+        
+        #expect(context["sessionId"] == nil)
+        #expect(context["sessionStart"] == nil)
+    }
+    
+    // MARK: - Background Event Tests
+    
+    @Test("given background events are not included, when intercepting a background event, then it carries no session data and does not extend the session")
+    func testBackgroundEventCarriesNoSessionWhenNotIncluded() {
+        let analytics = makeAnalytics()
+        moveToBackgroundWithSession(analytics)
+        
+        let context = interceptedContext(of: MockProvider.mockTrackEvent)
+        
+        #expect(context["sessionId"] == nil)
+        #expect(context["sessionStart"] == nil)
+        #expect(analytics.sessionHandler?.lastActivityTime == 1)
+        #expect(analytics.sessionHandler?.isSessionStart == true, "The first event that carries the session reports its start.")
+    }
+    
+    @Test("given background events are not included, when intercepting an SDK lifecycle event in the background, then it carries the session and does not extend it", arguments: [
+        LifecycleEvent.applicationInstalled, .applicationUpdated, .applicationOpened, .applicationBackgrounded
+    ])
+    func testBackgroundLifecycleEventCarriesSession(lifecycleEvent: LifecycleEvent) {
+        let analytics = makeAnalytics()
+        moveToBackgroundWithSession(analytics)
+        
+        let context = interceptedContext(of: TrackEvent(event: lifecycleEvent.rawValue))
+        
+        #expect(carriedSessionId(in: context) == analytics.sessionHandler?.sessionId)
+        #expect(context["sessionStart"] as? Bool == true)
+        #expect(analytics.sessionHandler?.lastActivityTime == 1)
+    }
+    
+    @Test("given background events are included and a live session, when intercepting a background event, then it carries the session and extends it")
+    func testBackgroundEventCarriesAndExtendsLiveSessionWhenIncluded() {
+        let analytics = makeAnalytics(Self.includingBackgroundEvents)
+        moveToBackgroundWithSession(analytics)
+        let sessionId = analytics.sessionHandler?.sessionId
+        analytics.sessionHandler?.updateSessionLastActivityTime(currentTimeInMillis - 1000)
+        
+        let context = interceptedContext(of: MockProvider.mockTrackEvent)
+        
+        #expect(carriedSessionId(in: context) == sessionId)
+        #expect(analytics.sessionHandler?.lastActivityTime ?? 0 > currentTimeInMillis - 1000)
+    }
+    
+    @Test("given background events are included and no session, when intercepting a background event, then it starts a new session and carries it")
+    func testBackgroundEventStartsSessionWhenIncluded() {
+        let analytics = makeAnalytics(Self.includingBackgroundEvents)
+        
+        let context = interceptedContext(of: MockProvider.mockTrackEvent)
         
         #expect(context["sessionId"] != nil)
+        #expect(carriedSessionId(in: context) == analytics.sessionHandler?.sessionId)
+        #expect(context["sessionStart"] as? Bool == true)
     }
     
-    @Test("given SessionTrackingPlugin without active session, when intercepting event, then context is empty")
-    func testSessionTrackingPluginWithoutActiveSession() {
-        let sessionConfig = MockProvider.mockManualSessionConfiguration
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
-        sessionTrackingPlugin.setup(analytics: analytics)
+    @Test("given background events are included and a timed-out session, when intercepting a background event, then it carries a new session")
+    func testBackgroundEventReplacesTimedOutSessionWhenIncluded() {
+        let storage = MockStorage()
+        storage.write(value: String(Self.storedSessionId), key: Constants.storageKeys.sessionId)
+        storage.write(value: false, key: Constants.storageKeys.isManualSession)
+        storage.write(value: String(currentTimeInMillis - 10000), key: Constants.storageKeys.lastActivityTime)
+        makeAnalytics(Self.includingBackgroundEvents, storage: storage)
         
-        let trackEvent = MockProvider.mockTrackEvent
-        let result = sessionTrackingPlugin.intercept(event: trackEvent)
+        let context = interceptedContext(of: MockProvider.mockTrackEvent)
         
-        #expect(result != nil)
-        #expect(result?.context != nil)
-        guard let context = result?.context?.rawDictionary else {
-            Issue.record("Event context not found")
-            return
+        #expect(context["sessionId"] != nil)
+        #expect(carriedSessionId(in: context) != Self.storedSessionId)
+        #expect(context["sessionStart"] as? Bool == true)
+    }
+    
+    // MARK: - Manual Session Tests
+    
+    @Test("given a manual session, when intercepting an event, then it carries the session and the session is not extended", arguments: [true, false])
+    func testManualSessionIsOnEveryEventAndIsNotExtended(isInForeground: Bool) {
+        let analytics = makeAnalytics()
+        if isInForeground {
+            analytics.simulateLifecycleEvent(.becomeActive)
         }
+        analytics.startSession(sessionId: Self.storedSessionId)
+        analytics.sessionHandler?.updateSessionLastActivityTime(1)
         
-        // When no session is active, the context should be minimal
-        #expect(context["sessionId"] == nil)
+        let context = interceptedContext(of: MockProvider.mockTrackEvent)
+        
+        #expect(carriedSessionId(in: context) == Self.storedSessionId)
+        #expect(analytics.sessionHandler?.lastActivityTime == 1)
     }
     
-    @Test("when setup is called, then analytics reference is stored")
-    func testPluginSetup() {
-        let analytics = MockProvider.createMockAnalytics()
-        
-        sessionTrackingPlugin.setup(analytics: analytics)
-        
-        #expect(sessionTrackingPlugin.analytics != nil)
-        #expect(sessionTrackingPlugin.pluginType == .preProcess)
-    }
-
-    @Test("given app is backgrounded and updateSessionOnBackgroundEvents is false, when intercepting an automatic session event, then last activity time is not updated")
-    func testInterceptDoesNotUpdateActivityTimeForBackgroundEvent() {
-        let sessionConfig = SessionConfiguration(automaticSessionTracking: true)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
-        sessionTrackingPlugin.setup(analytics: analytics)
-        let sessionHandler = analytics.sessionHandler
-        sessionHandler?.onBackground()
-        let activityTimeBeforeEvent = sessionHandler?.lastActivityTime
-
-        _ = sessionTrackingPlugin.intercept(event: MockProvider.mockTrackEvent)
-
-        #expect(sessionHandler?.lastActivityTime == activityTimeBeforeEvent)
-    }
-
-    @Test("given app is backgrounded and updateSessionOnBackgroundEvents is true, when intercepting an automatic session event, then last activity time is updated")
-    func testInterceptUpdatesActivityTimeForBackgroundEventWhenEnabled() {
-        let sessionConfig = SessionConfiguration(automaticSessionTracking: true, updateSessionOnBackgroundEvents: true)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
-        sessionTrackingPlugin.setup(analytics: analytics)
-        let sessionHandler = analytics.sessionHandler
-        sessionHandler?.onBackground()
-        // Reset to a known past value so the update produces a strictly different result
-        sessionHandler?.updateSessionLastActivityTime(0)
-        let activityTimeBeforeEvent = sessionHandler?.lastActivityTime
-
-        _ = sessionTrackingPlugin.intercept(event: MockProvider.mockTrackEvent)
-
-        #expect(sessionHandler?.lastActivityTime != activityTimeBeforeEvent)
-    }
-
-    @Test("given app is in foreground, when intercepting an automatic session event, then last activity time is updated")
-    func testInterceptUpdatesActivityTimeForForegroundEvent() {
-        let sessionConfig = SessionConfiguration(automaticSessionTracking: true)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
-        sessionTrackingPlugin.setup(analytics: analytics)
-        let sessionHandler = analytics.sessionHandler
-        sessionHandler?.onForeground()
-        let activityTimeBeforeEvent = sessionHandler?.lastActivityTime
-
-        _ = sessionTrackingPlugin.intercept(event: MockProvider.mockTrackEvent)
-
-        #expect(sessionHandler?.lastActivityTime != activityTimeBeforeEvent)
-    }
-
-    @Test("given an event created in the background, when it is intercepted after the app returns to the foreground, then last activity time is not updated")
+    // MARK: - Creation State Tests
+    
+    @Test("given an event created in the background, when it is intercepted after the app returns to the foreground, then it stays a background event")
     func testInterceptKeepsBackgroundCreationStateAfterAppReturnsToForeground() {
-        let sessionConfig = SessionConfiguration(automaticSessionTracking: true)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
-        sessionTrackingPlugin.setup(analytics: analytics)
-        let sessionHandler = analytics.sessionHandler
+        let analytics = makeAnalytics()
+        moveToBackgroundWithSession(analytics)
         var event = MockProvider.mockTrackEvent
         event.createdInForeground = false
-        sessionHandler?.onForeground()
-        sessionHandler?.updateSessionLastActivityTime(0)
-
-        _ = sessionTrackingPlugin.intercept(event: event)
-
-        #expect(sessionHandler?.lastActivityTime == 0)
+        analytics.simulateLifecycleEvent(.foreground)
+        let lastActivityTime = currentTimeInMillis - 1000
+        analytics.sessionHandler?.updateSessionLastActivityTime(lastActivityTime)
+        
+        let context = interceptedContext(of: event)
+        
+        #expect(context["sessionId"] == nil)
+        #expect(analytics.sessionHandler?.lastActivityTime == lastActivityTime)
     }
-
-    @Test("given an event created in the foreground, when it is intercepted after the app moves to the background, then last activity time is updated")
+    
+    @Test("given an event created in the foreground, when it is intercepted after the app moves to the background, then it stays a foreground event")
     func testInterceptKeepsForegroundCreationStateAfterAppMovesToBackground() {
-        let sessionConfig = SessionConfiguration(automaticSessionTracking: true)
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: sessionConfig)
-        sessionTrackingPlugin.setup(analytics: analytics)
-        let sessionHandler = analytics.sessionHandler
+        let analytics = makeAnalytics()
+        analytics.simulateLifecycleEvent(.becomeActive)
         var event = MockProvider.mockTrackEvent
         event.createdInForeground = true
-        sessionHandler?.onBackground()
-        sessionHandler?.updateSessionLastActivityTime(0)
-
-        _ = sessionTrackingPlugin.intercept(event: event)
-
-        #expect(sessionHandler?.lastActivityTime != 0)
+        analytics.simulateLifecycleEvent(.background)
+        analytics.sessionHandler?.updateSessionLastActivityTime(1)
+        
+        let context = interceptedContext(of: event)
+        
+        #expect(carriedSessionId(in: context) == analytics.sessionHandler?.sessionId)
+        #expect(analytics.sessionHandler?.lastActivityTime != 1)
     }
-
+    
     @Test("given the app state, when an event is tracked, then the event records that state at creation", arguments: [true, false])
     func testTrackRecordsForegroundStateAtCreation(isInForeground: Bool) async {
-        let analytics = MockProvider.createMockAnalytics(sessionConfig: SessionConfiguration(automaticSessionTracking: true))
+        let analytics = makeAnalytics()
         let recorder = CreationStateRecordingPlugin(eventName: "creation_state_probe")
         analytics.add(plugin: recorder)
-        if !isInForeground {
-            analytics.sessionHandler?.onBackground()
-        }
+        analytics.simulateLifecycleEvent(isInForeground ? .becomeActive : .background)
 
         analytics.track(name: "creation_state_probe")
 
         #expect(await recorder.recordedState() == isInForeground)
+    }
+}
+
+// MARK: - Helpers
+
+extension SessionTrackingPluginTests {
+    private static var includingBackgroundEvents: SessionConfiguration {
+        return SessionConfiguration(automaticSessionTracking: true, sessionTimeoutInMillis: 5000, includeBackgroundEventsInSession: true)
+    }
+    
+    private var currentTimeInMillis: UInt64 {
+        return UInt64(Date().timeIntervalSince1970 * 1000)
+    }
+    
+    @discardableResult
+    private func makeAnalytics(
+        _ configuration: SessionConfiguration = SessionConfiguration(automaticSessionTracking: true),
+        storage: MockStorage = MockStorage()
+    ) -> Analytics {
+        let analytics = MockProvider.createMockAnalytics(storage: storage, sessionConfig: configuration, trackApplicationLifecycleEvents: false)
+        sessionTrackingPlugin.setup(analytics: analytics)
+        return analytics
+    }
+    
+    /// Leaves an app in the background with a session whose last activity time is 1, so a change is visible.
+    private func moveToBackgroundWithSession(_ analytics: Analytics) {
+        analytics.simulateLifecycleEvent(.becomeActive)
+        analytics.simulateLifecycleEvent(.background)
+        analytics.sessionHandler?.updateSessionLastActivityTime(1)
+    }
+    
+    private func carriedSessionId(in context: [String: Any]) -> UInt64? {
+        return (context["sessionId"] as? NSNumber)?.uint64Value
+    }
+    
+    private func interceptedContext(of event: Event) -> [String: Any] {
+        return sessionTrackingPlugin.intercept(event: event)?.context?.rawDictionary ?? [:]
     }
 }
 

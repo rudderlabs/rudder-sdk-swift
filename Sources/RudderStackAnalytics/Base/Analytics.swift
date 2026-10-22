@@ -131,11 +131,14 @@ extension Analytics {
     }
     
     /**
-     A computed property which returns the current active session id.
+     The session ID that an event sent now would carry.
      
-     - Returns: The `UInt64` value if active session exists else `nil`.
+     A manual session always returns its ID. An automatic session returns `nil` while the app is in the background,
+     unless `includeBackgroundEventsInSession` is `true` and the session has not timed out.
+     
+     - Returns: The `UInt64` value if an event sent now would carry a session, else `nil`.
      */
-    public var sessionId: UInt64? { self.isAnalyticsActive ? self.sessionHandler?.sessionId : nil }
+    public var sessionId: UInt64? { self.isAnalyticsActive ? self.sessionHandler?.visibleSessionId : nil }
 }
 
 // MARK: - Events
@@ -450,7 +453,7 @@ extension Analytics {
         var event = event
         if var carrier = event as? CreationStateCapturing {
             carrier.capturedReservedContext = self.capturedReservedContext()
-            carrier.createdInForeground = self.sessionHandler?.isInForeground
+            carrier.createdInForeground = self.lifecycleObserver?.foregroundState
             event = carrier
         }
         
