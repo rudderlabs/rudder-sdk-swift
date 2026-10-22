@@ -104,32 +104,51 @@ class SourceConfigProviderTests {
         var observer1Configs: [SourceConfig] = []
         var observer2Configs: [SourceConfig] = []
         var observer3Configs: [SourceConfig] = []
+        let observerLock = NSLock()
         var cancellables = Set<AnyCancellable>()
         
         // Observer 1
         analytics.sourceConfigState.publisher
-            .sink { config in observer1Configs.append(config) }
+            .sink { config in
+                observerLock.lock()
+                observer1Configs.append(config)
+                observerLock.unlock()
+            }
             .store(in: &cancellables)
         
         // Observer 2
         analytics.sourceConfigState.publisher
-            .sink { config in observer2Configs.append(config) }
+            .sink { config in
+                observerLock.lock()
+                observer2Configs.append(config)
+                observerLock.unlock()
+            }
             .store(in: &cancellables)
         
         // Observer 3
         analytics.sourceConfigState.publisher
-            .sink { config in observer3Configs.append(config) }
+            .sink { config in
+                observerLock.lock()
+                observer3Configs.append(config)
+                observerLock.unlock()
+            }
             .store(in: &cancellables)
         
         sourceConfigProvider.fetchCachedConfigAndNotifyObservers()
+
+        observerLock.lock()
+        let observer1Snapshot = observer1Configs
+        let observer2Snapshot = observer2Configs
+        let observer3Snapshot = observer3Configs
+        observerLock.unlock()
+
+        #expect(observer1Snapshot.count == 2) // Initial + updated
+        #expect(observer2Snapshot.count == 2) // Initial + updated
+        #expect(observer3Snapshot.count == 2) // Initial + updated
         
-        #expect(observer1Configs.count == 2) // Initial + updated
-        #expect(observer2Configs.count == 2) // Initial + updated
-        #expect(observer3Configs.count == 2) // Initial + updated
-        
-        let latestConfig1 = observer1Configs.last
-        let latestConfig2 = observer2Configs.last
-        let latestConfig3 = observer3Configs.last
+        let latestConfig1 = observer1Snapshot.last
+        let latestConfig2 = observer2Snapshot.last
+        let latestConfig3 = observer3Snapshot.last
         
         #expect(latestConfig1?.source.sourceId == storedConfig.source.sourceId)
         #expect(latestConfig2?.source.sourceId == storedConfig.source.sourceId)
