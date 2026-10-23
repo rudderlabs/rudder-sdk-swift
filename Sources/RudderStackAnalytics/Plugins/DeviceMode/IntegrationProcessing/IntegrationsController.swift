@@ -153,7 +153,8 @@ private extension IntegrationsController {
     }
     
     func safelyInitOrUpdateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
-        if !integration.isDestinationCreated {
+        // Older integrations return from a failed `create` without an error and no instance, and expect `create` again.
+        if !integration.isDestinationCreated || integration.getDestinationInstance() == nil {
             safelyCreateAndNotify(destinationConfig: destinationConfig, integration: integration)
         } else {
             safelyUpdateAndNotify(destinationConfig: destinationConfig, integration: integration)

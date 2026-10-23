@@ -204,8 +204,8 @@ struct LiteModeIntegrationTests {
         #expect(isSuccess(callbackResult))
     }
 
-    @Test("Given a custom integration that holds no instance, When two configs arrive, Then create runs once and a later callback gets success")
-    func customIntegrationWithoutInstanceCreatesOnce() throws {
+    @Test("Given a custom integration that holds no instance, When two configs arrive, Then create runs for each and a later callback gets success")
+    func customIntegrationWithoutInstanceCreatesOnEachConfig() throws {
         let controller = try #require(analytics.integrationsController)
         let plugin = NoInstanceCustomIntegration(key: destinationKey)
         controller.add(integration: plugin)
@@ -216,8 +216,70 @@ struct LiteModeIntegrationTests {
         var callbackResult: DestinationResult?
         plugin.onDestinationReady { _, result in callbackResult = result }
 
-        #expect(plugin.createCount == 1)
+        #expect(plugin.createCount == 2)
         #expect(isSuccess(callbackResult))
+    }
+
+    @Test("Given a standard integration whose create returns without an instance, When the next config arrives, Then create runs again and not update")
+    func createRunsAgainWhileIntegrationHoldsNoInstance() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = MockStandardIntegrationPlugin(key: destinationKey)
+        mockPlugin.keepsPassedInstance = true
+        controller.add(integration: mockPlugin)
+        mockPlugin.setup(analytics: analytics)
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        mockPlugin.createCalled = false
+        mockPlugin.keepsPassedInstance = false
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        #expect(mockPlugin.createCalled)
+        #expect(mockPlugin.updateCalled == false)
+
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        #expect(mockPlugin.updateCalled)
+        #expect(mockPlugin.getDestinationInstance() != nil)
+    }
+
+    @Test("Given a pending Obj-C callback, When create throws a vendor error, Then the callback gets the SDK error domain and code, with the vendor error as the underlying error")
+    func objcCallbackKeepsErrorDomainForCreateFailure() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        mockPlugin.createThrowsError = NSError(domain: "VendorDomain", code: 7, userInfo: [NSLocalizedDescriptionKey: "Vendor failed"])
+        var callbackError: NSError?
+        ObjCAnalytics(analytics: analytics).onDestinationReady(forKey: destinationKey) { _, error in callbackError = error }
+
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        let error = try #require(callbackError)
+        #expect(error.domain == "com.rudderstack.IntegrationPluginError")
+        #expect(error.code == -1)
+        #expect(error.localizedDescription == "Vendor failed")
+        let underlying = try #require(error.userInfo[NSUnderlyingErrorKey] as? NSError)
+        #expect(underlying.domain == "VendorDomain")
+        #expect(underlying.code == 7)
+    }
+
+    @Test("Given a custom integration that holds no instance, When its Obj-C callback gets a success, Then it gets the SDK error and no destination")
+    func objcCallbackReportsErrorForSuccessWithoutInstance() throws {
+        let controller = try #require(analytics.integrationsController)
+        let plugin = NoInstanceCustomIntegration(key: destinationKey)
+        controller.add(integration: plugin)
+        plugin.setup(analytics: analytics)
+        var callbackInstance: Any?
+        var callbackError: NSError?
+        ObjCAnalytics(analytics: analytics).onDestinationReady(forKey: destinationKey) { instance, error in
+            callbackInstance = instance
+            callbackError = error
+        }
+
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: plugin)
+
+        let error = try #require(callbackError)
+        #expect(error.domain == "com.rudderstack.IntegrationPluginError")
+        #expect(error.code == -1)
+        #expect(callbackInstance == nil)
     }
 }
 

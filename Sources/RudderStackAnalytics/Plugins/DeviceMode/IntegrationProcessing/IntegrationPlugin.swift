@@ -34,7 +34,8 @@ public protocol IntegrationPlugin: EventPlugin, AnyObject {
     func getDestinationInstance() -> Any?
     
     /**
-     Creates the destination. The SDK calls this method once, with the first valid configuration.
+     Creates the destination. The SDK calls this method with the first valid configuration. It calls this method
+     again with a later valid configuration while `getDestinationInstance()` returns `nil`.
 
      Initialise the destination SDK here, unless the integration already holds an instance that the app passed.
      Throw an error when the destination cannot be created. The SDK then calls this method again with the next
@@ -200,7 +201,7 @@ extension IntegrationPlugin {
         return self.pluginStore?.pluginChain
     }
     
-    // Not derived from the instance: an integration can hold one before `create` runs, or never hold one.
+    // Not derived from the instance: a lite integration holds one before `create` runs.
     var isDestinationCreated: Bool {
         guard let pluginStore else { return false }
         return pluginStore.destinationState != .pendingCreate
