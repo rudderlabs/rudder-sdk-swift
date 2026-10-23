@@ -30,7 +30,7 @@ final class ConsentManagementPlugin: Plugin {
     
     func intercept(event: any Event) -> (any Event)? {
         let consentKey = ConsentManagement.contextKey
-        guard let captured = (event as? ReservedContextCapturing)?.capturedReservedContext?[consentKey] else {
+        guard let captured = (event as? CreationStateCapturing)?.capturedReservedContext?[consentKey] else {
             return event
         }
         

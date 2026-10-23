@@ -70,7 +70,7 @@ extension ObjCAnalytics {
     }
     
     /**
-     The current session ID, if available.
+     The session ID that an event sent now would carry, if any.
      */
     @objc public var sessionId: NSNumber? {
         guard let sessionId = self.analytics.sessionId else { return nil }
