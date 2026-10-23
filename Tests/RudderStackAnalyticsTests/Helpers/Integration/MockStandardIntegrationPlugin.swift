@@ -15,6 +15,7 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
     var pluginType: PluginType = .terminal
     var analytics: Analytics?
     var key: String
+    var keepsPassedInstance = false
     
     // Mock destination instance
     private var destinationInstance: Any?
@@ -68,8 +69,10 @@ class MockStandardIntegrationPlugin: IntegrationPlugin, StandardIntegration {
             throw error
         }
         
-        // Simulate successful creation
-        destinationInstance = MockDestination(config: destinationConfig)
+        // A lite integration keeps the instance that the app passed
+        if !keepsPassedInstance {
+            destinationInstance = MockDestination(config: destinationConfig)
+        }
     }
     
     func update(destinationConfig: [String: Any]) throws {

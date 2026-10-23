@@ -27,14 +27,19 @@ public protocol IntegrationPlugin: EventPlugin, AnyObject {
     var key: String { get set }
     
     /**
-     Returns the instance of the destination which was created.
+     Returns the instance of the destination.
 
-     - Returns: The instance of the destination, or nil if not created.
+     - Returns: The instance of the destination, or nil if the integration holds none.
      */
     func getDestinationInstance() -> Any?
     
     /**
-     Creates the destination instance. Override this method for the initialization of destination.
+     Creates the destination. The SDK calls this method with the first valid configuration. It calls this method
+     again with a later valid configuration while `getDestinationInstance()` returns `nil`.
+
+     Initialise the destination SDK here, unless the integration already holds an instance that the app passed.
+     Throw an error when the destination cannot be created. The SDK then calls this method again with the next
+     valid configuration.
 
      - Parameter destinationConfig: The configuration for the destination as a dictionary.
      - Throws: Any error that occurs during destination creation.
@@ -113,15 +118,21 @@ public extension IntegrationPlugin {
     func onDestinationReady(callback: @escaping IntegrationCallback) {
         guard let pluginStore else { return }
         
-        if let destinationInstance = getDestinationInstance() {
-            if pluginStore.isDestinationReady {
-                callback(destinationInstance, .success(()))
-            } else {
-                callback(nil, .failure(DestinationError.destinationNotReady(key)))
+        var isCreated = false
+        pluginStore.$destinationReadyCallbacks.modify { callbacks in
+            // The captured store, not a new lookup: a re-add on another thread can replace the store.
+            isCreated = pluginStore.destinationState != .pendingCreate
+            if !isCreated {
+                // Store callback for later notification when destination becomes ready
+                callbacks.append(callback)
             }
+        }
+        guard isCreated else { return }
+        
+        if pluginStore.isDestinationReady {
+            callback(getDestinationInstance(), .success(()))
         } else {
-            // Store callback for later notification when destination becomes ready
-            pluginStore.destinationReadyCallbacks.append(callback)
+            callback(nil, .failure(DestinationError.destinationNotReady(key)))
         }
     }
 }
@@ -188,6 +199,12 @@ extension IntegrationPlugin {
     
     var pluginChain: PluginChain? {
         return self.pluginStore?.pluginChain
+    }
+    
+    // Not derived from the instance: a lite integration holds one before `create` runs.
+    var isDestinationCreated: Bool {
+        guard let pluginStore else { return false }
+        return pluginStore.destinationState != .pendingCreate
     }
     
     private func applyDefaultPlugins() {

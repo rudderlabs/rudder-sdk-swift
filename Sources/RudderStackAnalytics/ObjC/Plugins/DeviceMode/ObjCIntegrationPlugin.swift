@@ -26,16 +26,21 @@ public protocol ObjCIntegrationPlugin: ObjCEventPlugin {
     @objc var key: String { get set }
     
     /**
-     Returns the instance of the destination which was created.
-     
-     - Returns: The instance of the destination, or nil if not created.
+     Returns the instance of the destination.
+
+     - Returns: The instance of the destination, or nil if the integration holds none.
      */
     @objc
     func getDestinationInstance() -> Any?
-    
+
     /**
-     Creates the destination instance. Override this method for the initialization of destination.
-     
+     Creates the destination. The SDK calls this method with the first valid configuration. It calls this method
+     again with a later valid configuration while `getDestinationInstance()` returns `nil`.
+
+     Initialise the destination SDK here, unless the integration already holds an instance that the app passed.
+     Return NO when the destination cannot be created. The SDK then calls this method again with the next
+     valid configuration.
+
      - Parameter destinationConfig: The configuration for the destination as a dictionary.
      - Parameter error: A pointer to an NSError object that will be set if an error occurs.
      - Returns: YES if the destination was created successfully, NO otherwise.
@@ -220,11 +225,21 @@ extension ObjCAnalytics {
     @objc
     public func onDestinationReady(forKey destinationKey: String, _ callback: @escaping ObjCIntegrationCallback) {
         guard let adaptedIntegration = self.integrationPlugin(for: destinationKey) else { return }
-        adaptedIntegration.onDestinationReady { destination, _ in
-            if let destination {
-                callback(destination, nil)
-            } else {
-                callback(nil, NSError(domain: "com.rudderstack.IntegrationPluginError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Destination \(adaptedIntegration.key) is absent or disabled in dashboard."]))
+        // Decided by the result: a lite integration holds its instance even when the destination failed.
+        adaptedIntegration.onDestinationReady { destination, result in
+            switch result {
+            case .success:
+                if let destination {
+                    callback(destination, nil)
+                } else {
+                    // As in released versions, an Obj-C caller never gets a success without a destination.
+                    callback(nil, NSError(domain: "com.rudderstack.IntegrationPluginError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Destination \(adaptedIntegration.key) holds no instance."]))
+                }
+            case .failure(let error):
+                // `DestinationError` is not a `LocalizedError`, so the default bridge drops its description.
+                let message = (error as? DestinationError)?.errorDescription ?? error.localizedDescription
+                // The domain and code that Obj-C callers already check; the original error is the underlying error.
+                callback(nil, NSError(domain: "com.rudderstack.IntegrationPluginError", code: -1, userInfo: [NSLocalizedDescriptionKey: message, NSUnderlyingErrorKey: error as NSError]))
             }
         }
     }
