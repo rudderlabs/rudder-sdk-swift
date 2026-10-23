@@ -234,13 +234,20 @@ private extension IntegrationsController {
         guard let pluginStore = integration.pluginStore else { return }
         // Every failure passes no instance: a lite integration holds one even when the destination failed.
         var instance: Any?
-        if case .success = result { instance = integration.getDestinationInstance() }
+        var isSuccess = false
+        if case .success = result {
+            instance = integration.getDestinationInstance()
+            isSuccess = true
+        }
+        // The caller sets the state before it notifies, so this is the state that goes with this result.
+        let isNeverSetUp = pluginStore.destinationState == .pendingCreate
         var toRun: [IntegrationCallback] = []
         // Atomically read and clear callbacks
         pluginStore.$destinationReadyCallbacks.modify { callbacks in
             toRun = callbacks
             callbacks.removeAll()
             pluginStore.lastResult = result
+            pluginStore.keepsLateCallbacks = isNeverSetUp || (pluginStore.isStandardIntegration && isSuccess && instance == nil)
         }
         toRun.forEach { $0(instance, result) }
     }

@@ -113,8 +113,9 @@ public extension IntegrationPlugin {
     /**
     Registers a callback that gets the result of the destination setup. The SDK calls each callback at most once.
 
-    Until the first result, the SDK stores the callback. After it, the SDK calls the callback at once with the last
-    result. Success passes the destination instance. Failure passes `nil`.
+    Until the destination is set up, the SDK stores the callback and calls it with the next result. After the setup,
+    the SDK calls the callback at once with the last result. Success passes the destination instance. Failure passes
+    `nil`. A standard destination that is ready with no instance keeps the callback until the next result.
 
     - Parameter callback: The callback that gets the destination instance and the result.
     */
@@ -124,7 +125,7 @@ public extension IntegrationPlugin {
         var lastResult: DestinationResult?
         pluginStore.$destinationReadyCallbacks.modify { callbacks in
             // The captured store, not a new lookup: a re-add on another thread can replace the store.
-            lastResult = pluginStore.lastResult
+            lastResult = pluginStore.keepsLateCallbacks ? nil : pluginStore.lastResult
             if lastResult == nil {
                 callbacks.append(callback)
             }
