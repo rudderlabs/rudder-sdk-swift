@@ -34,7 +34,8 @@ public protocol ObjCIntegrationPlugin: ObjCEventPlugin {
     func getDestinationInstance() -> Any?
 
     /**
-     Creates the destination. The SDK calls this method once, with the first valid configuration.
+     Creates the destination. The SDK calls this method with the first valid configuration. It calls this method
+     again with a later valid configuration while `getDestinationInstance()` returns `nil`.
 
      Initialise the destination SDK here, unless the integration already holds an instance that the app passed.
      Return NO when the destination cannot be created. The SDK then calls this method again with the next
@@ -228,12 +229,17 @@ extension ObjCAnalytics {
         adaptedIntegration.onDestinationReady { destination, result in
             switch result {
             case .success:
-                callback(destination, nil)
-            case .failure(let destinationError as DestinationError):
-                // `DestinationError` is not a `LocalizedError`, so the default bridge drops its description.
-                callback(nil, NSError(domain: "com.rudderstack.IntegrationPluginError", code: -1, userInfo: [NSLocalizedDescriptionKey: destinationError.errorDescription]))
+                if let destination {
+                    callback(destination, nil)
+                } else {
+                    // As in released versions, an Obj-C caller never gets a success without a destination.
+                    callback(nil, NSError(domain: "com.rudderstack.IntegrationPluginError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Destination \(adaptedIntegration.key) holds no instance."]))
+                }
             case .failure(let error):
-                callback(nil, error as NSError)
+                // `DestinationError` is not a `LocalizedError`, so the default bridge drops its description.
+                let message = (error as? DestinationError)?.errorDescription ?? error.localizedDescription
+                // The domain and code that Obj-C callers already check; the original error is the underlying error.
+                callback(nil, NSError(domain: "com.rudderstack.IntegrationPluginError", code: -1, userInfo: [NSLocalizedDescriptionKey: message, NSUnderlyingErrorKey: error as NSError]))
             }
         }
     }
