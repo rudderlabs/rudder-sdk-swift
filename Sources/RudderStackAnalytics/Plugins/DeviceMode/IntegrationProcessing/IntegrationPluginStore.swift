@@ -27,6 +27,11 @@ class IntegrationPluginStore {
     var analytics: Analytics?
     var pluginChain: PluginChain?
     @Synchronized var destinationReadyCallbacks: [IntegrationCallback] = []
+    /// The last result reported to the callbacks. Read and write it only inside `$destinationReadyCallbacks.modify`.
+    var lastResult: DestinationResult?
+    /// Late callbacks wait for the next result: the destination was never set up, or a standard one has no instance.
+    /// Read and write it only inside `$destinationReadyCallbacks.modify`.
+    var keepsLateCallbacks = false
     var isStandardIntegration: Bool = true
     /// Lifecycle state for create or update, flush, reset and readiness callbacks. Delivery is not gated on this —
     /// `DestinationDeliveryControl` decides that, so readiness and any hold cannot disagree.

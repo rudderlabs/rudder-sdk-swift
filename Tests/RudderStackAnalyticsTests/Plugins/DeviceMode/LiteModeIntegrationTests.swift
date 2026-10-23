@@ -220,6 +220,58 @@ struct LiteModeIntegrationTests {
         #expect(isSuccess(callbackResult))
     }
 
+    // MARK: - Late Callbacks
+
+    @Test("Given a lite integration whose first config disables the destination, When a callback registers later, Then it waits and gets success with the instance from a later enabled config")
+    func lateCallbackWaitsForSuccessAfterDashboardFailureBeforeCreate() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: false), integration: mockPlugin)
+        var results: [(instance: Any?, result: DestinationResult)] = []
+
+        mockPlugin.onDestinationReady { instance, result in results.append((instance, result)) }
+
+        #expect(results.isEmpty)
+
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        #expect(mockPlugin.createCalled)
+        #expect(results.count == 1)
+        #expect(results.first?.instance is MockDestination)
+        #expect(isSuccess(results.first?.result))
+    }
+
+    @Test("Given a lite integration whose create throws, When the config arrives, Then the pending callback gets the create error with no instance, and a late callback waits")
+    func createFailureReachesPendingCallbackAndLateCallbackWaits() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        mockPlugin.createThrowsError = MockIntegrationError.createFailed
+        var pending: (instance: Any?, result: DestinationResult)?
+        mockPlugin.onDestinationReady { instance, result in pending = (instance, result) }
+
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+        var late: (instance: Any?, result: DestinationResult)?
+        mockPlugin.onDestinationReady { instance, result in late = (instance, result) }
+
+        #expect(pending?.instance == nil)
+        #expect(errorOf(pending?.result) as? MockIntegrationError == .createFailed)
+        #expect(late == nil)
+    }
+
+    @Test("Given a created integration that the dashboard then disables, When a callback registers, Then it gets the dashboard failure, not a generic one")
+    func lateCallbackGetsRealReasonAfterCreate() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = makeLitePlugin(holding: MockDestination(config: [:]))
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: false), integration: mockPlugin)
+        var late: (instance: Any?, result: DestinationResult)?
+
+        mockPlugin.onDestinationReady { instance, result in late = (instance, result) }
+
+        #expect(late?.instance == nil)
+        #expect(isDisabledError(late?.result))
+    }
+
     @Test("Given a standard integration whose create returns without an instance, When the next config arrives, Then create runs again and not update")
     func createRunsAgainWhileIntegrationHoldsNoInstance() throws {
         let controller = try #require(analytics.integrationsController)
@@ -240,6 +292,28 @@ struct LiteModeIntegrationTests {
 
         #expect(mockPlugin.updateCalled)
         #expect(mockPlugin.getDestinationInstance() != nil)
+    }
+
+    @Test("Given a standard integration that is ready with no instance, When a callback registers, Then it waits for the next result and gets the instance")
+    func lateCallbackWaitsWhileStandardIntegrationHoldsNoInstance() throws {
+        let controller = try #require(analytics.integrationsController)
+        let mockPlugin = MockStandardIntegrationPlugin(key: destinationKey)
+        mockPlugin.keepsPassedInstance = true
+        controller.add(integration: mockPlugin)
+        mockPlugin.setup(analytics: analytics)
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+        var results: [(instance: Any?, result: DestinationResult)] = []
+
+        mockPlugin.onDestinationReady { instance, result in results.append((instance, result)) }
+
+        #expect(results.isEmpty)
+
+        mockPlugin.keepsPassedInstance = false
+        controller.initDestination(sourceConfig: makeSourceConfig(isDestinationEnabled: true), integration: mockPlugin)
+
+        #expect(results.count == 1)
+        #expect(results.first?.instance is MockDestination)
+        #expect(isSuccess(results.first?.result))
     }
 
     @Test("Given a pending Obj-C callback, When create throws a vendor error, Then the callback gets the SDK error domain and code, with the vendor error as the underlying error")
@@ -303,6 +377,16 @@ extension LiteModeIntegrationTests {
 
     private func isFailure(_ result: DestinationResult?) -> Bool {
         if case .failure = result { return true }
+        return false
+    }
+
+    private func errorOf(_ result: DestinationResult?) -> Error? {
+        if case .failure(let error) = result { return error }
+        return nil
+    }
+
+    private func isDisabledError(_ result: DestinationResult?) -> Bool {
+        if case .destinationDisabled(let key) = errorOf(result) as? DestinationError { return key == destinationKey }
         return false
     }
 

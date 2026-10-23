@@ -257,6 +257,7 @@ struct CustomIntegrationPluginTests {
         // Setup plugin store as ready
         let pluginStore = IntegrationPluginStore(analytics: analytics)
         pluginStore.destinationState = .ready
+        pluginStore.lastResult = .success(())
         analytics.integrationsController?.$integrationPluginStores.modify { stores in
             stores[mockPlugin.key] = pluginStore
         }
