@@ -156,7 +156,8 @@ struct IntegrationsControllerTests {
         let sourceConfig = MockProvider.sourceConfiguration!
         
         // Create destination first
-        try mockPlugin.create(destinationConfig: [:])
+        controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
+        mockPlugin.resetCallFlags()
         
         controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
@@ -168,14 +169,14 @@ struct IntegrationsControllerTests {
     func testUpdateDestinationError() throws {
         let controller = analytics.integrationsController!
         let mockPlugin = MockStandardIntegrationPlugin(key: mockPluginKey)
-        mockPlugin.updateThrowsError = MockIntegrationError.updateFailed
         
         controller.add(integration: mockPlugin)
         mockPlugin.setup(analytics: analytics) // Ensure plugin has analytics reference
         let sourceConfig = MockProvider.sourceConfiguration!
         
         // Create destination first
-        try mockPlugin.create(destinationConfig: [:])
+        controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
+        mockPlugin.updateThrowsError = MockIntegrationError.updateFailed
         
         controller.initDestination(sourceConfig: sourceConfig, integration: mockPlugin)
         
@@ -197,8 +198,8 @@ struct IntegrationsControllerTests {
         mockPlugin2.setup(analytics: analytics)
         
         // Set destinations as ready
-        controller.integrationPluginStores["destination1"]?.isDestinationReady = true
-        controller.integrationPluginStores["destination2"]?.isDestinationReady = false
+        controller.integrationPluginStores["destination1"]?.destinationState = .ready
+        controller.integrationPluginStores["destination2"]?.destinationState = .pendingCreate
         
         controller.reset()
         
@@ -220,8 +221,8 @@ struct IntegrationsControllerTests {
         mockPlugin2.setup(analytics: analytics)
         
         // Set destinations as ready
-        controller.integrationPluginStores["destination1"]?.isDestinationReady = true
-        controller.integrationPluginStores["destination2"]?.isDestinationReady = false
+        controller.integrationPluginStores["destination1"]?.destinationState = .ready
+        controller.integrationPluginStores["destination2"]?.destinationState = .pendingCreate
         
         controller.flush()
         

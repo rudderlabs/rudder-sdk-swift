@@ -90,7 +90,7 @@ struct IntegrationPluginStoreTests {
     func isDestinationReadyModification() {
         let pluginStore = IntegrationPluginStore(analytics: analytics)
         
-        pluginStore.isDestinationReady = true
+        pluginStore.destinationState = .ready
         
         #expect(pluginStore.isDestinationReady)
     }
@@ -147,7 +147,7 @@ struct IntegrationPluginStoreTests {
         let pluginStore = IntegrationPluginStore(analytics: analytics)
         
         pluginStore.isStandardIntegration = false
-        pluginStore.isDestinationReady = true
+        pluginStore.destinationState = .ready
         
         let callback: IntegrationCallback = { _, _ in
             /* Default implementation (no-op) */

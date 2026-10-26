@@ -16,7 +16,7 @@ import Foundation
 
  - Conforms to: `Event`
  */
-public struct GroupEvent: Event, ReservedContextCapturing {
+public struct GroupEvent: Event, CreationStateCapturing {
     
     /// The type of the event, defaulting to `.group`.
     public var type: EventType = .group
@@ -59,6 +59,9 @@ public struct GroupEvent: Event, ReservedContextCapturing {
     
     /// The values the SDK asserted for its reserved context keys when the event was created.
     var capturedReservedContext: [String: Any]?
+
+    /// Whether the app was in the foreground when the event was created.
+    var createdInForeground: Bool?
     
     /**
      Initializes a `GroupEvent` with the specified group identifier, traits, and options and user identity values.

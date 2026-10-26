@@ -196,8 +196,8 @@ public struct _DefaultConfig {
     /// Default session timeout duration in milliseconds (5 minutes).
     public let sessionTimeoutInMillis: UInt64 = 300_000
 
-    /// Whether to update the session on background events by default.
-    public let updateSessionOnBackgroundEvents: Bool = false
+    /// Whether background events are part of the session by default.
+    public let includeBackgroundEventsInSession: Bool = false
 
     /// Whether consent management is enabled by default.
     public let consentManagementEnabled: Bool = false
@@ -244,5 +244,5 @@ enum SDKManagedContextKey: String, CaseIterable {
  **Important:**
  Do not edit this value unless performing a manual release.
  */
-let RSVersion: String = "1.4.0"
+let RSVersion: String = "2.0.0"
 let RSLibraryName: String = "rudder-sdk-swift"

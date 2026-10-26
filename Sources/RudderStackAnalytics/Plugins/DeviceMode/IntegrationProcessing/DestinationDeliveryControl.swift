@@ -38,13 +38,13 @@ final class DestinationDeliveryControl {
         case skipped
     }
 
-    private final class DestinationState {
+    private final class DeliveryState {
         let lock = NSRecursiveLock()
         /// Events held while initialization is in flight; `nil` when not buffering.
         var buffered: [Event]?
         var isReady = false
 
-        func withLock(_ block: (DestinationState) -> Void) {
+        func withLock(_ block: (DeliveryState) -> Void) {
             self.lock.lock()
             defer { self.lock.unlock() }
             block(self)
@@ -52,7 +52,7 @@ final class DestinationDeliveryControl {
     }
 
     private static let maxBufferSize = Constants.defaultConfig.maxHeldEventsPerDestination
-    @Synchronized private var destinations: [String: DestinationState] = [:]
+    @Synchronized private var destinations: [String: DeliveryState] = [:]
 
     /**
      Starts holding events for a destination that is initializing.
@@ -146,13 +146,13 @@ final class DestinationDeliveryControl {
 
     /// Looks up a destination's state, optionally creating it. The map lock is released before the
     /// destination's own lock is taken, so the two are never held together.
-    private func state(for key: String, creatingIfNeeded: Bool) -> DestinationState? {
-        var state: DestinationState?
+    private func state(for key: String, creatingIfNeeded: Bool) -> DeliveryState? {
+        var state: DeliveryState?
         $destinations.modify { destinations in
             if let existing = destinations[key] {
                 state = existing
             } else if creatingIfNeeded {
-                let fresh = DestinationState()
+                let fresh = DeliveryState()
                 destinations[key] = fresh
                 state = fresh
             }

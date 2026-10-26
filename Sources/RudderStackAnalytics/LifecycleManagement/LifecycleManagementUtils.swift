@@ -48,12 +48,53 @@ enum AppLifecycleEvent: CaseIterable {
     }
 }
 
+// MARK: - AppState
+/**
+ The app state as the platform reports it now.
+ */
+enum AppState {
+
+    /// Whether the app is on screen now. Call it on the main thread.
+    static var isInForeground: Bool {
+#if os(iOS) || os(tvOS)
+        // `UIApplication.shared` is unavailable to app extensions, so it is reached by key path.
+        guard !isAppExtension, let application = UIApplication.value(forKeyPath: "sharedApplication") as? UIApplication else { return false }
+        // An app that is on screen but not yet active counts too. UIKit reports that state while the user
+        // opens the app, and never while the system runs the app with no screen.
+        return application.applicationState != .background
+#elseif os(macOS)
+        // On macOS an app that is not the active one counts as in the background.
+        return NSApp?.isActive ?? false
+#elseif os(watchOS)
+        // Only a single-target watch app runs as `WKApplication`. Any other process waits for its first foreground notification.
+        guard isSingleTargetWatchApp else { return false }
+        // Only an active app counts. watchOS reports an app as inactive at every launch, even when the
+        // system starts it with no screen, so that state cannot tell the two launches apart.
+        return WKApplication.shared().applicationState == .active
+#endif
+    }
+
+#if os(iOS) || os(tvOS)
+    private static var isAppExtension: Bool {
+        return Bundle.main.bundlePath.hasSuffix(".appex")
+    }
+#elseif os(watchOS)
+    private static var isSingleTargetWatchApp: Bool {
+        return Bundle.main.object(forInfoDictionaryKey: "WKApplication") as? Bool == true
+    }
+#endif
+}
+
 // MARK: - LifecycleEventListener
+/**
+ Receives the app's lifecycle changes.
+
+ `onForeground` and `onBackground` arrive once per change of state, never twice in a row.
+ */
 protocol LifecycleEventListener: AnyObject {
     func onBackground()
     func onForeground()
     func onTerminate()
-    func onBecomeActive()
 }
 
 extension LifecycleEventListener {
@@ -66,10 +107,6 @@ extension LifecycleEventListener {
     }
     
     func onTerminate() {
-        /* Default implementation (no-op) */
-    }
-    
-    func onBecomeActive() {
         /* Default implementation (no-op) */
     }
 }

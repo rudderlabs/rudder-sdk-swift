@@ -27,14 +27,19 @@ public protocol IntegrationPlugin: EventPlugin, AnyObject {
     var key: String { get set }
     
     /**
-     Returns the instance of the destination which was created.
+     Returns the instance of the destination.
 
-     - Returns: The instance of the destination, or nil if not created.
+     - Returns: The instance of the destination, or nil if the integration holds none.
      */
     func getDestinationInstance() -> Any?
     
     /**
-     Creates the destination instance. Override this method for the initialization of destination.
+     Creates the destination. The SDK calls this method with the first valid configuration. It calls this method
+     again with a later valid configuration while `getDestinationInstance()` returns `nil`.
+
+     Initialise the destination SDK here, unless the integration already holds an instance that the app passed.
+     Throw an error when the destination cannot be created. The SDK then calls this method again with the next
+     valid configuration.
 
      - Parameter destinationConfig: The configuration for the destination as a dictionary.
      - Throws: Any error that occurs during destination creation.
@@ -106,22 +111,32 @@ public extension IntegrationPlugin {
     }
     
     /**
-    Registers a callback to be invoked when the destination of this plugin is ready.
+    Registers a callback that gets the result of the destination setup. The SDK calls each callback at most once.
 
-    - Parameter callback: The callback to be invoked when the destination is ready.
+    Until the destination is set up, the SDK stores the callback and calls it with the next result. After the setup,
+    the SDK calls the callback at once with the last result. Success passes the destination instance. Failure passes
+    `nil`. A standard destination that is ready with no instance keeps the callback until the next result.
+
+    - Parameter callback: The callback that gets the destination instance and the result.
     */
     func onDestinationReady(callback: @escaping IntegrationCallback) {
         guard let pluginStore else { return }
         
-        if let destinationInstance = getDestinationInstance() {
-            if pluginStore.isDestinationReady {
-                callback(destinationInstance, .success(()))
-            } else {
-                callback(nil, .failure(DestinationError.destinationNotReady(key)))
+        var lastResult: DestinationResult?
+        pluginStore.$destinationReadyCallbacks.modify { callbacks in
+            // The captured store, not a new lookup: a re-add on another thread can replace the store.
+            lastResult = pluginStore.keepsLateCallbacks ? nil : pluginStore.lastResult
+            if lastResult == nil {
+                callbacks.append(callback)
             }
-        } else {
-            // Store callback for later notification when destination becomes ready
-            pluginStore.destinationReadyCallbacks.append(callback)
+        }
+        guard let lastResult else { return }
+        
+        switch lastResult {
+        case .success:
+            callback(getDestinationInstance(), lastResult)
+        case .failure:
+            callback(nil, lastResult)
         }
     }
 }
@@ -190,6 +205,12 @@ extension IntegrationPlugin {
         return self.pluginStore?.pluginChain
     }
     
+    // Not derived from the instance: a lite integration holds one before `create` runs.
+    var isDestinationCreated: Bool {
+        guard let pluginStore else { return false }
+        return pluginStore.destinationState != .pendingCreate
+    }
+    
     private func applyDefaultPlugins() {
         self.add(plugin: ConsentGatePlugin(key: self.key))
         self.add(plugin: EventFilteringPlugin(key: self.key))
@@ -238,7 +259,7 @@ extension IntegrationPlugin {
      consent management was inactive, which the caller treats as consented.
      */
     private func capturedConsent(of event: any Event) -> ConsentManagement? {
-        guard let stamp = (event as? ReservedContextCapturing)?
+        guard let stamp = (event as? CreationStateCapturing)?
             .capturedReservedContext?[ConsentManagement.contextKey] as? [String: Any] else { return nil }
 
         return ConsentManagement.from(contextStamp: stamp)
@@ -256,7 +277,7 @@ extension IntegrationPlugin {
      */
     private func consentRestampedEvent(_ event: any Event) -> any Event {
         let stampKey = SDKManagedContextKey.consentManagement.rawValue
-        guard let captured = (event as? ReservedContextCapturing)?.capturedReservedContext?[stampKey] else { return event }
+        guard let captured = (event as? CreationStateCapturing)?.capturedReservedContext?[stampKey] else { return event }
         guard event.context?[stampKey] != AnyCodable(captured) else { return event }
 
         if pluginStore?.claimRestoreWarning() == true {

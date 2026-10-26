@@ -153,7 +153,8 @@ private extension IntegrationsController {
     }
     
     func safelyInitOrUpdateAndNotify(destinationConfig: [String: Any], integration: IntegrationPlugin) {
-        if integration.getDestinationInstance() == nil {
+        // Older integrations return from a failed `create` without an error and no instance, and expect `create` again.
+        if !integration.isDestinationCreated || integration.getDestinationInstance() == nil {
             safelyCreateAndNotify(destinationConfig: destinationConfig, integration: integration)
         } else {
             safelyUpdateAndNotify(destinationConfig: destinationConfig, integration: integration)
@@ -165,12 +166,12 @@ private extension IntegrationsController {
         do {
             try integration.create(destinationConfig: destinationConfig)
             analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) created successfully.")
-            integration.pluginStore?.isDestinationReady = true
+            integration.pluginStore?.destinationState = .ready
             markReadyAndReplay(for: integration)
             notifyCallbacks(.success(()), for: integration)
         } catch {
             analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) creating destination \(integration.key).", error: error)
-            integration.pluginStore?.isDestinationReady = false
+            integration.pluginStore?.destinationState = .pendingCreate
             notifyCallbacks(.failure(error), for: integration)
             discardBufferedEvents(for: integration)
         }
@@ -184,7 +185,7 @@ private extension IntegrationsController {
             integration: integration,
             block: {
                 self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with empty destinationConfig.")
-                integration.pluginStore?.isDestinationReady = false
+                integration.pluginStore?.markNotReady()
                 self.deliveryControl.markNotReady(for: integration.key)
                 self.notifyCallbacks(.failure(error), for: integration)
             }
@@ -194,7 +195,7 @@ private extension IntegrationsController {
     // A destination denied by consent must not be updated: pushing an empty config can throw, which would
     // replace the consent reason with a parse error, and can reset a live destination's state.
     func notifyFailureAndMarkNotReady(error: Error, integration: IntegrationPlugin) {
-        integration.pluginStore?.isDestinationReady = false
+        integration.pluginStore?.markNotReady()
         deliveryControl.markNotReady(for: integration.key)
         notifyCallbacks(.failure(error), for: integration)
     }
@@ -205,7 +206,7 @@ private extension IntegrationsController {
             integration: integration,
             block: {
                 self.analytics?.logger.debug(log: "IntegrationsController: Destination \(integration.key) updated with destinationConfig: \(destinationConfig).")
-                integration.pluginStore?.isDestinationReady = true
+                integration.pluginStore?.destinationState = .ready
                 self.markReadyAndReplay(for: integration)
                 self.notifyCallbacks(.success(()), for: integration)
             }
@@ -223,7 +224,7 @@ private extension IntegrationsController {
             }
         } catch {
             analytics?.logger.error(log: "IntegrationsController: Error: \(error.localizedDescription) updating destination \(integration.key).", error: error)
-            integration.pluginStore?.isDestinationReady = false
+            integration.pluginStore?.markNotReady()
             deliveryControl.markNotReady(for: integration.key)
             notifyCallbacks(.failure(error), for: integration)
         }
@@ -231,12 +232,22 @@ private extension IntegrationsController {
     
     func notifyCallbacks(_ result: DestinationResult, for integration: IntegrationPlugin) {
         guard let pluginStore = integration.pluginStore else { return }
-        let instance = integration.getDestinationInstance()
+        // Every failure passes no instance: a lite integration holds one even when the destination failed.
+        var instance: Any?
+        var isSuccess = false
+        if case .success = result {
+            instance = integration.getDestinationInstance()
+            isSuccess = true
+        }
+        // The caller sets the state before it notifies, so this is the state that goes with this result.
+        let isNeverSetUp = pluginStore.destinationState == .pendingCreate
         var toRun: [IntegrationCallback] = []
         // Atomically read and clear callbacks
         pluginStore.$destinationReadyCallbacks.modify { callbacks in
             toRun = callbacks
             callbacks.removeAll()
+            pluginStore.lastResult = result
+            pluginStore.keepsLateCallbacks = isNeverSetUp || (pluginStore.isStandardIntegration && isSuccess && instance == nil)
         }
         toRun.forEach { $0(instance, result) }
     }
@@ -271,6 +282,11 @@ private extension IntegrationsController {
     }
     
     private func markReadyAndReplay(for integration: IntegrationPlugin) {
+        // The app can remove the integration while `create` or `update` runs; a removed key must stay closed.
+        guard integration.pluginStore != nil else {
+            deliveryControl.markNotReady(for: integration.key)
+            return
+        }
         deliveryControl.markReady(for: integration.key) { events in
             guard !events.isEmpty else { return }
             

@@ -24,9 +24,11 @@ final class MockProvider {
     
     static func createMockAnalytics(
         storage: Storage = MockStorage(),
-        sessionConfig: SessionConfiguration? = nil
+        sessionConfig: SessionConfiguration? = nil,
+        trackApplicationLifecycleEvents: Bool = true
     ) -> Analytics {
         let config = createMockConfiguration(storage: storage)
+        config.trackApplicationLifecycleEvents = trackApplicationLifecycleEvents
         
         if let sessionConfig = sessionConfig {
             config.sessionConfiguration = sessionConfig

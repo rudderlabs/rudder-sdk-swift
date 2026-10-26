@@ -16,7 +16,7 @@ struct ConsentGatingTests {
 
     // MARK: - Initialization gate
 
-    @Test("given a denied destination, when initialized, then create is never invoked with a consent-denied callback plus warning")
+    @Test("given a denied destination, when initialized, then create is never invoked, the pending callback gets consent-denied, a late callback waits for the grant, plus warning")
     func testDeniedDestinationIsNeverCreated() {
         let mockLogger = MockLogger()
         let analytics = makeAnalytics(consent: ConsentManagementConfiguration(enabled: true, allowedConsentIds: ["something-else"]), logger: mockLogger)
@@ -34,6 +34,26 @@ struct ConsentGatingTests {
         let warnings = mockLogger.logs.filter { $0.level == "WARN" }
         #expect(warnings.contains { $0.message.contains("denied by user consent") }, "The warning must name the denial.")
         #expect(warnings.allSatisfy { !$0.message.contains("marketing") }, "Warnings must never contain consent ID values.")
+
+        var lateCallCount = 0
+        var lateInstance: Any?
+        var lateResult: DestinationResult?
+        plugin.onDestinationReady { instance, result in
+            lateCallCount += 1
+            lateInstance = instance
+            lateResult = result
+        }
+        #expect(lateCallCount == 0, "A late callback must wait while the destination was never set up.")
+
+        analytics.setConsent(ConsentManagementOptions(allowedConsentIds: ["marketing"]))
+        analytics.integrationsController?.initDestination(sourceConfig: makeSourceConfig(consentEntries: [gatedEntry()]), integration: plugin)
+
+        #expect(lateCallCount == 1)
+        #expect(lateInstance is MockDestination, "After the grant, the late callback must get the instance.")
+        guard case .success = lateResult else {
+            Issue.record("After the grant, the late callback must get success.")
+            return
+        }
     }
 
     @Test("given a denied destination whose update rejects an empty config, when initialized, then the consent reason still reaches the callback")

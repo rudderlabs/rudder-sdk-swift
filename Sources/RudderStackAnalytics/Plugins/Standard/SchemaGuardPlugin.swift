@@ -52,7 +52,7 @@ extension SchemaGuardPlugin {
      */
     private func enforceReservedKeys(on event: any Event) -> any Event {
         var result = event
-        let carrier = event as? ReservedContextCapturing
+        let carrier = event as? CreationStateCapturing
 
         for key in SDKManagedContextKey.reservedKeys {
             guard let reserved = self.analytics?.reservedContextValue(for: key) else { continue }

@@ -17,19 +17,17 @@ final class LifecycleTrackingPlugin: Plugin {
     var analytics: Analytics?
     var appVersion: AppVersion?
     
-    @Synchronized private var isFirstLaunch = true
-    @Synchronized private var didAppEnterBackground = false
+    @Synchronized private var isFirstForegroundPending = true
     
     func setup(analytics: Analytics) {
         self.analytics = analytics
-        
         self.appVersion = self.prepareAppVersion()
-        self.updateAppVersion()
         
         if analytics.configuration.trackApplicationLifecycleEvents {
-            self.trackAppInstallOrUpdateEvents()
-            self.trackAppOpenedEvent()
             analytics.lifecycleObserver?.addObserver(self)
+        } else {
+            // No install or update event is ever sent, so the marker is kept current on its own.
+            self.updateAppVersion()
         }
     }
     
@@ -42,15 +40,22 @@ final class LifecycleTrackingPlugin: Plugin {
 
 extension LifecycleTrackingPlugin: LifecycleEventListener {
     
-    func onBecomeActive() {
-        if didAppEnterBackground {
-            didAppEnterBackground = false
-            self.trackAppOpenedEvent()
+    func onForeground() {
+        var isFirstForeground = false
+        $isFirstForegroundPending.modify { isPending in
+            isFirstForeground = isPending
+            isPending = false
         }
+        
+        if isFirstForeground {
+            // The marker is written before the event is queued, so a process that stops midway cannot send the event again.
+            self.updateAppVersion()
+            self.trackAppInstallOrUpdateEvents()
+        }
+        self.trackAppOpenedEvent(isFirstForeground: isFirstForeground)
     }
     
     func onBackground() {
-        didAppEnterBackground = true
         self.analytics?.track(name: LifecycleEvent.applicationBackgrounded.rawValue)
     }
 }
@@ -76,13 +81,12 @@ extension LifecycleTrackingPlugin {
         }
     }
     
-    func trackAppOpenedEvent() {
+    func trackAppOpenedEvent(isFirstForeground: Bool) {
         var properties: [String: Any] = [:]
-        if isFirstLaunch {
+        if isFirstForeground {
             properties["version"] = appVersion?.currentVersionName
         }
-        properties["from_background"] = !isFirstLaunch
-        isFirstLaunch = false
+        properties["from_background"] = !isFirstForeground
         self.analytics?.track(name: LifecycleEvent.applicationOpened.rawValue, properties: properties)
     }
 }
