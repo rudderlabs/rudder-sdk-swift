@@ -1,5 +1,21 @@
 # Changelog
 
+# [2.0.0](https://github.com/rudderlabs/rudder-sdk-swift/compare/1.4.0...2.0.0) (2026-10-26)
+
+
+### Bug Fixes
+
+* only send gzip header for compressed event batches ([#262](https://github.com/rudderlabs/rudder-sdk-swift/issues/262)) ([bb0caf3](https://github.com/rudderlabs/rudder-sdk-swift/commit/bb0caf3e47c49bf0375799f6f746b6b7b5f123af))
+
+
+### Features
+
+* **device-mode:** add lite mode to device-mode integrations ([#269](https://github.com/rudderlabs/rudder-sdk-swift/issues/269)) ([97dc46a](https://github.com/rudderlabs/rudder-sdk-swift/commit/97dc46a5393e32855acdf81a72b0080294784e46)), closes [integration-swift-facebook#17](https://github.com/integration-swift-facebook/issues/17) [rudderlabs/rudder-sdk-kotlin#367](https://github.com/rudderlabs/rudder-sdk-kotlin/issues/367) [#270](https://github.com/rudderlabs/rudder-sdk-swift/issues/270)
+* **device-mode:** answer late ready callbacks with the last result after setup ([#270](https://github.com/rudderlabs/rudder-sdk-swift/issues/270)) ([da819dd](https://github.com/rudderlabs/rudder-sdk-swift/commit/da819dd047484569b6dec621f350672f101006b5)), closes [#269](https://github.com/rudderlabs/rudder-sdk-swift/issues/269) [#269](https://github.com/rudderlabs/rudder-sdk-swift/issues/269) [rudder-sdk-kotlin#372](https://github.com/rudder-sdk-kotlin/issues/372)
+* record whether the app was in the foreground when an event was created ([#267](https://github.com/rudderlabs/rudder-sdk-swift/issues/267)) ([d1f60d2](https://github.com/rudderlabs/rudder-sdk-swift/commit/d1f60d2372b0df926f4dbfb2a424af42e3169288))
+
+
+
 # [1.4.0](https://github.com/rudderlabs/rudder-sdk-swift/compare/1.3.1...1.4.0) (2026-09-22)
 
 
