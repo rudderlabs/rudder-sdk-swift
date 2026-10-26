@@ -244,5 +244,5 @@ enum SDKManagedContextKey: String, CaseIterable {
  **Important:**
  Do not edit this value unless performing a manual release.
  */
-let RSVersion: String = "1.4.0"
+let RSVersion: String = "2.0.0"
 let RSLibraryName: String = "rudder-sdk-swift"

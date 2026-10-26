@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0] - 2026-10-26
+
+### ⚠ Breaking Changes
+
+- start sessions and lifecycle events on the first foreground (#268)
+- rename `updateSessionOnBackgroundEvents` to `includeBackgroundEventsInSession` (#268)
+
+### Features
+
+- add lite mode to device-mode integrations (#269)
+- answer late ready callbacks with the last result after setup (#270)
+- record whether the app was in the foreground when an event was created (#267)
+
+### Bug Fixes
+
+- only send gzip header for compressed event batches (#262)
+
 # [1.4.0](https://github.com/rudderlabs/rudder-sdk-swift/compare/1.3.1...1.4.0) (2026-09-22)
 
 
