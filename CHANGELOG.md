@@ -5,6 +5,7 @@
 ### ⚠ Breaking Changes
 
 - start sessions and lifecycle events on the first foreground (#268)
+- rename `updateSessionOnBackgroundEvents` to `includeBackgroundEventsInSession` (#268)
 
 ### Features
 
