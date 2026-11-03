@@ -30,8 +30,7 @@ final class EventFilteringPlugin: Plugin {
     var analytics: Analytics?
     
     private let destinationKey: String
-    @Synchronized private var filteringOption: String = ""
-    @Synchronized private var filteringList: [String] = []
+    @Synchronized private var filteringRule = FilteringRule.none
     private var cancellables = Set<AnyCancellable>()
     
     /**
@@ -64,9 +63,19 @@ final class EventFilteringPlugin: Plugin {
     }
     
     deinit {
-        filteringList.removeAll()
-        filteringOption = ""
         cancellables.removeAll()
+    }
+}
+
+// MARK: - FilteringRule
+extension EventFilteringPlugin {
+
+    /** The filtering option and its event names, which an update replaces together. */
+    private struct FilteringRule {
+        let option: String
+        let events: Set<String>
+
+        static let none = FilteringRule(option: "", events: [])
     }
 }
 
@@ -80,11 +89,12 @@ extension EventFilteringPlugin {
      - Returns: `true` if the event should be dropped, `false` otherwise.
      */
     private func shouldDropEvent(eventName: String) -> Bool {
-        switch filteringOption {
+        let rule = filteringRule
+        switch rule.option {
         case EventFilteringPluginConstants.allowListEventsKey:
-            return !filteringList.contains(eventName)
+            return !rule.events.contains(eventName)
         case EventFilteringPluginConstants.denyListEventsKey:
-            return filteringList.contains(eventName)
+            return rule.events.contains(eventName)
         default:
             return false
         }
@@ -133,21 +143,19 @@ extension EventFilteringPlugin {
         
         if newFilteringOption.isEmpty {
             logger.debug(log: "EventFilteringPlugin: Missing event filtering option for destination: \(destinationKey)")
-            filteringOption = ""
-            filteringList.removeAll()
+            filteringRule = .none
             return
         }
-        
+
         // Check if the configuration has a valid structure
         if !hasValidFilteringArray(filteringOption: newFilteringOption, destinationConfig: destinationConfig) {
             logger.debug(log: "EventFilteringPlugin: Malformed configuration detected for destination: \(destinationKey), disabling filtering")
-            filteringOption = ""
-            filteringList.removeAll()
+            filteringRule = .none
             return
         }
-        
-        filteringOption = newFilteringOption
-        filteringList = getEventFilteringList(eventFilteringOption: filteringOption, destinationConfig: destinationConfig)
+
+        let events = getEventFilteringList(eventFilteringOption: newFilteringOption, destinationConfig: destinationConfig)
+        filteringRule = FilteringRule(option: newFilteringOption, events: Set(events))
     }
     
     /**
