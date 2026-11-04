@@ -136,6 +136,7 @@ extension EventFilteringPlugin {
     private func updateFilteringConfiguration(destinationConfig: [String: Any]?) {
         guard let destinationConfig = destinationConfig else {
             logger.debug(log: "EventFilteringPlugin: No destination config found for: \(destinationKey)")
+            filteringRule = .none
             return
         }
         
