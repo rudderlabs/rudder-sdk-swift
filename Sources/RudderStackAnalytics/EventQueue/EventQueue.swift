@@ -86,16 +86,18 @@ extension EventQueue {
                 config.source.isSourceEnabled
             }
             .removeDuplicates()
+            // The seed counts as enabled, so the first value never flushes.
+            .scan((wasDisabled: false, isEnabled: true)) { last, isEnabled in
+                (wasDisabled: !last.isEnabled, isEnabled: isEnabled)
+            }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isSourceEnabled in
+            .sink { [weak self] state in
                 
                 guard let self else { return }
                 
-                if isSourceEnabled {
+                if state.isEnabled {
                     self.eventWriter?.startSchedule()
-                    // swiftlint:disable:next todo
-                    // TODO: Uncomment after dynamic update of source config is implemented
-                    // self.eventUploader?.start()
+                    if state.wasDisabled { self.flush() }
                 } else {
                     self.eventWriter?.cancelSchedule()
                 }

@@ -187,3 +187,77 @@ class EventQueueTests {
         #expect(batchContent.contains("before_change") && batchContent.contains("after_change"))
     }
 }
+
+#if !os(watchOS) // URLProtocol-based mocks don’t work on watchOS..
+// Uses only the queue that the SDK owns, so that one uploader reads the storage.
+@Suite("EventQueue source re-enable Tests")
+class EventQueueSourceReEnableTests {
+    var mockStorage = MockStorage()
+    var postCount = 0
+    
+    deinit {
+        MockProvider.teardownMockURLSession()
+        let storage = mockStorage
+        Task.detached {
+            await storage.removeAll()
+        }
+    }
+    
+    private func makeAnalytics(statusCodes: [Int]) -> Analytics {
+        let config = MockProvider.createMockConfiguration(storage: mockStorage)
+        config.trackApplicationLifecycleEvents = false
+        config.sessionConfiguration.automaticSessionTracking = false
+        config.flushPolicies = []
+        MockURLProtocol.requestHandler = { [unowned self] request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
+            self.postCount += 1
+            let statusCode = statusCodes[min(self.postCount, statusCodes.count) - 1]
+            return (statusCode: statusCode, data: "{}".data(using: .utf8), headers: nil)
+        }
+        let analytics = Analytics(configuration: config)
+        analytics.isAnalyticsActive = true
+        return analytics
+    }
+    
+    private func waitUntil(_ condition: () -> Bool) async {
+        let deadline = Date().addingTimeInterval(15.0)
+        while !condition() && Date() < deadline {
+            try? await Task.sleep(nanoseconds: MockStorage.pollInterval)
+        }
+    }
+    
+    @Test("given a 404 disabled the source, when the source is enabled again, then the stored batch uploads once")
+    func testReEnableUploadsStoredBatchOnce() async {
+        let analytics = makeAnalytics(statusCodes: [404, 200])
+        analytics.track(name: "re_enable_test")
+        await mockStorage.waitForCurrentBatchEvents()
+        
+        analytics.flush()
+        await waitUntil { !analytics.sourceConfigState.value.source.isSourceEnabled }
+        #expect(mockStorage.batchCount == 1)
+        
+        analytics.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: .initialState()))
+        await waitUntil { mockStorage.batchCount == 0 }
+        
+        #expect(mockStorage.batchCount == 0)
+        #expect(postCount == 2)
+    }
+    
+    @Test("given a stored batch and an enabled source, when the SDK starts, then the queue sends no flush")
+    func testFirstValueDoesNotFlush() async {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
+            return
+        }
+        await mockStorage.write(event: mockEventJson)
+        await mockStorage.rollover()
+        
+        let analytics = makeAnalytics(statusCodes: [200])
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        withExtendedLifetime(analytics) {}
+        #expect(postCount == 0)
+        #expect(mockStorage.batchCount == 1)
+    }
+}
+#endif

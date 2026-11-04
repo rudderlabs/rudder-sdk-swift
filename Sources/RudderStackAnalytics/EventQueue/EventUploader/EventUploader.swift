@@ -42,6 +42,11 @@ final class EventUploader {
                 for item in dataItems {
                     // Check shutdown conditions before processing each item
                     if self.analytics.isAnalyticsShutdown || self.uploadChannel.isClosed { break }
+                    guard self.isSourceEnabled else {
+                        analytics.logger.debug(log: "\(className): Source is disabled. Keeping the remaining batches for later")
+                        await self.backoff.reset()
+                        break
+                    }
                     
                     // Read the event batch from storage
                     let batch = self.analytics.storage.eventStorageMode == .memory ? item.batch : (FileManager.contentsOf(file: item.reference) ?? .empty)
@@ -99,7 +104,7 @@ extension EventUploader {
                 await self.handleBatchUploadFailure(error, reference: reference, batchId: batchId, timestampInMillis: currentTimestampInMillis)
                 shouldRetry = error is RetryableEventUploadError
             }
-        } while shouldRetry
+        } while shouldRetry && self.isSourceEnabled
     }
     
     private func handleBatchUploadResponse(_ data: Data, reference: String) async {
@@ -145,8 +150,7 @@ extension EventUploader: TypeIdentifiable {
             self.analytics.handleInvalidWriteKey()
             
         case .error404:
-            analytics.logger.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.", error: nil)
-            self.stop()
+            analytics.logger.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Source is disabled. Keeping the stored events until the source is enabled again.", error: nil)
             self.analytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
             
         case .error413:
@@ -188,6 +192,10 @@ extension EventUploader {
             analytics.logger.error(log: "Failed to create regex for anonymousId extraction: \(error)", error: error)
             return nil
         }
+    }
+    
+    private var isSourceEnabled: Bool {
+        return self.analytics.sourceConfigState.value.source.isSourceEnabled
     }
     
     private var currentTimeInMillis: UInt64 {

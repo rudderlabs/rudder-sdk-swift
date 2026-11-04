@@ -275,8 +275,8 @@ class EventUploaderTests {
         #expect(analytics.isAnalyticsShutdown) // Analytics should be shutdown
     }
     
-    @Test("given EventUploader with non-retryable error 404, when upload batch, then stops uploader")
-    func testUploadBatchWithNonRetryableError404StopsUploader() async throws {
+    @Test("given EventUploader with non-retryable error 404, when upload batch, then disables the source and keeps the channel and the batch")
+    func testUploadBatchWithNonRetryableError404PausesUploader() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
             return
@@ -302,8 +302,39 @@ class EventUploaderTests {
         await eventUploader.uploadBatch(dataItem.batch, reference: dataItem.reference)
         
         #expect(callCount == 1) // Should not have retried
-        #expect(uploadChannel.isClosed) // Upload channel should be closed
+        #expect(!uploadChannel.isClosed)
+        #expect(mockStorage.batchCount == 1)
         #expect(!analytics.isSourceEnabled) // Source should be disabled
+    }
+    
+    @Test("given an upload waits to retry, when the source becomes disabled, then the uploader stops the retries and keeps the batch")
+    func testRetryStopsWhenSourceBecomesDisabled() async throws {
+        guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
+            Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
+            return
+        }
+        await mockStorage.write(event: mockEventJson)
+        await mockStorage.rollover()
+        
+        guard let dataItem = await mockStorage.read().dataItems.first else {
+            Issue.record("\(EventUploaderTestsIssue.readStorageDataItem)")
+            return
+        }
+        
+        var callCount = 0
+        let sourceConfigState = analytics.sourceConfigState
+        MockProvider.setupMockURLSession()
+        MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "POST" else { return (200, nil, nil) }
+            callCount += 1
+            sourceConfigState.dispatch(action: DisableSourceConfigAction())
+            return (statusCode: 502, data: nil, headers: nil)
+        }
+        
+        await eventUploader.uploadBatch(dataItem.batch, reference: dataItem.reference)
+        
+        #expect(callCount == 1)
+        #expect(mockStorage.batchCount == 1)
     }
     
     @Test("given EventUploader with non-retryable error 413, when upload batch, then does not retry")
@@ -336,7 +367,7 @@ class EventUploaderTests {
         #expect(mockStorage.batchCount == 0)
     }
     
-    @Test("given multiple queued batches and retryable error followed by non-retryable error on first batch, when start processes batches, then stops without processing remaining batches")
+    @Test("given multiple queued batches and retryable error followed by 404 on first batch, when start processes batches, then pauses without processing remaining batches")
     func testStopsProcessingRemainingBatchesAfterNonRetryableError() async throws {
         guard let mockEventJson = MockProvider.mockTrackEvent.jsonString else {
             Issue.record("\(EventUploaderTestsIssue.prepareMockEventJson)")
@@ -359,22 +390,22 @@ class EventUploaderTests {
             if uploadCallCount == 1 {
                 return (statusCode: 502, data: nil, headers: nil) // retryable
             } else {
-                return (statusCode: 404, data: nil, headers: nil) // non-retryable, stops uploader
+                return (statusCode: 404, data: nil, headers: nil) // disables the source
             }
         }
 
         // Trigger start()'s processing loop via the upload channel
         try uploadChannel.send("trigger")
 
-        // Wait for the channel to close, which happens when the non-retryable error is handled
+        // The 404 handler disables the source before the loop reaches the second batch
         let deadline = Date().addingTimeInterval(15.0)
-        while !uploadChannel.isClosed && Date() < deadline {
+        while analytics.sourceConfigState.value.source.isSourceEnabled && Date() < deadline {
             try? await Task.sleep(nanoseconds: MockStorage.pollInterval)
         }
 
-        #expect(uploadChannel.isClosed) // Uploader stopped after non-retryable error
-        #expect(uploadCallCount == 2)   // Only first batch attempted: 1 retryable + 1 non-retryable
-                                        // If the second batch were processed, uploadCallCount would be > 2
+        #expect(!uploadChannel.isClosed)
+        #expect(uploadCallCount == 2)   // Only first batch attempted: 1 retryable + 1 404
+        #expect(mockStorage.batchCount == 2)
     }
 
     @Test("given EventUploader with successful response, when upload batch, then completes without retry")
