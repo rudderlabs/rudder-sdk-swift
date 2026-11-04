@@ -21,6 +21,7 @@ class SourceConfigProvider: TypeIdentifiable {
     @Synchronized private(set) var refreshIntervalInMillis: UInt64
     
     @Synchronized private var launchFetchTask: Task<Void, Never>?
+    private let launchFetchEnded = CurrentValueSubject<Bool, Never>(false)
     @Synchronized private var refreshTask: Task<Void, Never>?
     @Synchronized private(set) var lastFetchEndInMillis: UInt64?
     
@@ -43,9 +44,11 @@ class SourceConfigProvider: TypeIdentifiable {
     
     func fetchConfigAtLaunchAndNotifyObservers() {
         let connectivityState = self.connectivityMonitor?.connectivityState
+        let launchFetchEnded = self.launchFetchEnded
         self.launchFetchTask = Task { [weak self] in
-            await Self.waitForConnection(connectivityState)
+            await Self.waitUntilTrue(connectivityState)
             await self?.fetchAndNotifyObservers { await $0.downloadSourceConfig() }
+            launchFetchEnded.send(true)
         }
     }
     
@@ -55,6 +58,7 @@ class SourceConfigProvider: TypeIdentifiable {
         guard !Task.isCancelled else { return }
         
         if let downloadedSourceConfig {
+            self.analytics?.storage.write(value: downloadedSourceConfig.jsonString, key: Constants.storageKeys.sourceConfig)
             self.notifyObservers(config: downloadedSourceConfig)
         }
         self.lastFetchEndInMillis = Self.currentTimeInMillis
@@ -65,9 +69,10 @@ class SourceConfigProvider: TypeIdentifiable {
         self.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: config))
     }
     
-    private static func waitForConnection(_ connectivityState: AnyPublisher<Bool, Never>?) async {
-        guard let connectivityState else { return }
-        for await isConnected in connectivityState.values where isConnected {
+    /** Returns at the first `true`, or at once for a nil publisher. A cancelled task stops waiting. */
+    private static func waitUntilTrue(_ publisher: AnyPublisher<Bool, Never>?) async {
+        guard let publisher else { return }
+        for await value in publisher.values where value {
             return
         }
     }
@@ -78,6 +83,7 @@ class SourceConfigProvider: TypeIdentifiable {
     }
     
     deinit {
+        self.launchFetchTask?.cancel()
         self.refreshTask?.cancel()
     }
 }
@@ -118,12 +124,13 @@ extension SourceConfigProvider: LifecycleEventListener {
     }
     
     private func refreshPeriodically() -> Task<Void, Never> {
-        let launchFetchTask = self.launchFetchTask
+        // The loop waits on the end signal, not on the launch task: cancelling a wait on `Task.value` does not stop it.
+        let launchFetchEnded = self.launchFetchTask == nil ? nil : self.launchFetchEnded.eraseToAnyPublisher()
         let connectivityState = self.connectivityMonitor?.connectivityState
         
         // Holds no strong reference while it waits, so the provider can deinit and cancel the loop.
         return Task { [weak self] in
-            await launchFetchTask?.value
+            await Self.waitUntilTrue(launchFetchEnded)
             while !Task.isCancelled {
                 guard let delayInMillis = self?.timeUntilNextRefresh() else { return }
                 do {
@@ -131,7 +138,7 @@ extension SourceConfigProvider: LifecycleEventListener {
                 } catch {
                     return
                 }
-                await Self.waitForConnection(connectivityState)
+                await Self.waitUntilTrue(connectivityState)
                 guard !Task.isCancelled else { return }
                 await self?.fetchAndNotifyObservers { await $0.downloadSourceConfigOnce() }
             }
@@ -210,7 +217,6 @@ extension SourceConfigProvider {
             let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: data)
             analytics?.logger.debug(log: "\(className): SourceConfig downloaded: \(sourceConfig)")
             
-            self.analytics?.storage.write(value: sourceConfig.jsonString, key: Constants.storageKeys.sourceConfig)
             return sourceConfig
         } catch {
             analytics?.logger.error(log: "Failed to decode SourceConfig from response: \(error)", error: error)
