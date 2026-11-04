@@ -396,6 +396,25 @@ struct EventFilteringPluginTests {
         #expect(plugin.intercept(event: TrackEvent(event: "Event A")) != nil)
     }
 
+    @Test("Given a blacklist rule, When a configuration with a malformed whitelist arrives, Then the blacklist rule is kept")
+    func testMalformedUpdateKeepsPreviousRule() {
+        let analytics = createAnalytics()
+        let plugin = createPlugin()
+        plugin.setup(analytics: analytics)
+
+        plugin.updateConfiguration(destinationConfig: [
+            "eventFilteringOption": "blacklistedEvents",
+            "blacklistedEvents": [["eventName": "Event A"]]
+        ])
+        plugin.updateConfiguration(destinationConfig: [
+            "eventFilteringOption": "whitelistedEvents",
+            "whitelistedEvents": "invalid_format"
+        ])
+
+        #expect(plugin.intercept(event: TrackEvent(event: "Event A")) == nil)
+        #expect(plugin.intercept(event: TrackEvent(event: "Event B")) != nil)
+    }
+
     @Test("Given a blacklist rule, When the destination is missing from the configuration, Then the rule is cleared")
     func testMissingDestinationClearsRule() {
         let analytics = createAnalytics()

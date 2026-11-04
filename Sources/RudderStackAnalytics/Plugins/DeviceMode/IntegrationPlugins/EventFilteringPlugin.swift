@@ -11,7 +11,6 @@ import Combine
 struct EventFilteringPluginConstants {
     static let allowListEventsKey = "whitelistedEvents"
     static let denyListEventsKey = "blacklistedEvents"
-    static let disableFilteringKey = "disable"
     static let eventFilteringOptionKey = "eventFilteringOption"
 }
 
@@ -148,10 +147,9 @@ extension EventFilteringPlugin {
             return
         }
 
-        // Check if the configuration has a valid structure
+        // A malformed list keeps the last valid rule.
         if !hasValidFilteringArray(filteringOption: newFilteringOption, destinationConfig: destinationConfig) {
-            logger.debug(log: "EventFilteringPlugin: Malformed configuration detected for destination: \(destinationKey), disabling filtering")
-            filteringRule = .none
+            logger.debug(log: "EventFilteringPlugin: Malformed configuration detected for destination: \(destinationKey), keeping the previous filtering rule")
             return
         }
 
@@ -165,7 +163,7 @@ extension EventFilteringPlugin {
      - Parameters:
         - filteringOption: The filtering option to check.
         - destinationConfig: The destination configuration dictionary.
-     - Returns: `true` if the configuration has a valid array structure, `false` otherwise.
+     - Returns: `true` if the option needs no list or its list is valid, `false` otherwise.
      */
     private func hasValidFilteringArray(filteringOption: String, destinationConfig: [String: Any]) -> Bool {
         let listKey: String
@@ -174,10 +172,8 @@ extension EventFilteringPlugin {
             listKey = EventFilteringPluginConstants.allowListEventsKey
         case EventFilteringPluginConstants.denyListEventsKey:
             listKey = EventFilteringPluginConstants.denyListEventsKey
-        case EventFilteringPluginConstants.disableFilteringKey:
-            return true
         default:
-            return false
+            return true
         }
         
         return destinationConfig[listKey] is [[String: Any]]
