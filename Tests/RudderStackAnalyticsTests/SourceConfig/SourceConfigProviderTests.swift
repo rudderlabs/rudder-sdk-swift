@@ -157,7 +157,7 @@ class SourceConfigProviderTests {
         cancellables.removeAll()
     }
     
-    @Test("given a SourceConfig request returning HTTP 400 error, when refreshConfig is called, then handles invalidWriteKey without retries")
+    @Test("given a SourceConfig request returning HTTP 400 error, when the launch fetch runs, then handles invalidWriteKey without retries")
     func testHandleHTTP400InvalidWriteKey() {
         
         MockProvider.setupMockURLSession()
@@ -180,13 +180,13 @@ class SourceConfigProviderTests {
             }
             .store(in: &cancellables)
         
-        sourceConfigProvider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.fetchConfigAtLaunchAndNotifyObservers()
         
         #expect(receivedConfig?.jsonString == initialConfig.jsonString)
         #expect(configUpdateCount == 1) // No update due to 400 error
     }
     
-    @Test("given a SourceConfig request returning invalidWriteKey error, when refreshConfig is called, then shuts down analytics and clears storage")
+    @Test("given a SourceConfig request returning invalidWriteKey error, when the launch fetch runs, then shuts down analytics and clears storage")
     func testHandleInvalidWriteKeyError() async {
         MockProvider.setupMockURLSession()
         HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 400)
@@ -196,7 +196,7 @@ class SourceConfigProviderTests {
         mockStorage.write(value: "test_user_data", key: "user_data")
         mockStorage.write(value: "cached_config_data", key: Constants.storageKeys.sourceConfig)
         
-        sourceConfigProvider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.fetchConfigAtLaunchAndNotifyObservers()
         
         await mockStorage.waitForKeyRemoval(key: Constants.storageKeys.sourceConfig)
         
@@ -211,7 +211,7 @@ class SourceConfigProviderTests {
         #expect(clearedSourceConfig == nil, "Source config should be cleared after invalid write key error")
     }
     
-    @Test("given a SourceConfig request returning success after a failure, when refreshConfig is called, then eventually succeeds with valid config")
+    @Test("given a SourceConfig request returning success after a failure, when the launch fetch runs, then eventually succeeds with valid config")
     func testHandleSuccessAfterRetries() async {
         MockProvider.setupMockURLSession()
         HttpNetwork.session = prepareMockUrlSessionWithEventualSuccess(failureCount: 1)
@@ -233,7 +233,7 @@ class SourceConfigProviderTests {
             }
             .store(in: &cancellables)
         
-        sourceConfigProvider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.fetchConfigAtLaunchAndNotifyObservers()
         
         await mockStorage.waitForKeyValue(key: Constants.storageKeys.sourceConfig, expectedValue: expectedConfig?.jsonString)
         
@@ -241,7 +241,7 @@ class SourceConfigProviderTests {
         #expect(configUpdateCount == 2) // Initial state + successful update
     }
     
-    @Test("given storage has a valid cached source config, when fetchCachedConfig and refreshConfig are called, then both complete successfully")
+    @Test("given storage has a valid cached source config, when fetchCachedConfig and the launch fetch run, then both complete successfully")
     func testCachedAndRefreshIntegration() async {
         let mockConfig = MockProvider.sourceConfiguration
         mockStorage.write(value: mockConfig?.jsonString, key: Constants.storageKeys.sourceConfig)
@@ -264,7 +264,7 @@ class SourceConfigProviderTests {
             .store(in: &cancellables)
         
         sourceConfigProvider.fetchCachedConfigAndNotifyObservers() // Should load from cache
-        sourceConfigProvider.refreshConfigAndNotifyObservers() // Should attempt network fetch
+        sourceConfigProvider.fetchConfigAtLaunchAndNotifyObservers() // Should attempt network fetch
         
         await mockStorage.waitForKeyValue(key: Constants.storageKeys.sourceConfig)
         
@@ -276,7 +276,7 @@ class SourceConfigProviderTests {
         }
     }
     
-    @Test("given a SourceConfig request returning HTTP 500 error, when refreshConfig is called, then retries with exponential backoff until max attempts")
+    @Test("given a SourceConfig request returning HTTP 500 error, when the launch fetch runs, then retries with exponential backoff until max attempts")
     func testHandleHTTP500WithRetries() async {
         MockProvider.setupMockURLSession()
         HttpNetwork.session = MockProvider.prepareMockSessionConfigSession(with: 500)
@@ -299,7 +299,7 @@ class SourceConfigProviderTests {
             .store(in: &cancellables)
                 
         // When
-        sourceConfigProvider.refreshConfigAndNotifyObservers()
+        sourceConfigProvider.fetchConfigAtLaunchAndNotifyObservers()
         
         await runAfter(0.1) {
             #expect(receivedConfig?.jsonString == initialConfig.jsonString)
@@ -362,4 +362,178 @@ extension SourceConfigProviderTests {
         config.protocolClasses = [MockURLProtocol.self]
         return URLSession(configuration: config)
     }
+}
+
+// MARK: - Periodic Refresh
+@Suite("SourceConfigProvider periodic refresh Tests")
+class SourceConfigProviderRefreshTests {
+    private static let intervalInMillis: UInt64 = 1_000
+    
+    private let mockStorage = MockStorage()
+    private let requestCounter = RequestCounter()
+    private var analytics: Analytics?
+    
+    deinit {
+        MockURLProtocol.forwardGetRequestsToHandler = false
+        MockProvider.teardownMockURLSession()
+        let storage = self.mockStorage
+        Task.detached {
+            await storage.removeAll()
+        }
+    }
+    
+    /** Returns a provider with a short interval, after the SDK's own launch fetch has stored its config. */
+    private func makeProvider(refreshStatusCode: Int = 200, refreshResponseDelay: TimeInterval = 0) async -> (Analytics, SourceConfigProvider) {
+        let counter = self.requestCounter
+        MockURLProtocol.forwardGetRequestsToHandler = true
+        MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "GET" else { return (200, nil, nil) }
+            let isLaunchFetch = counter.increment() == 0
+            if !isLaunchFetch { Thread.sleep(forTimeInterval: refreshResponseDelay) }
+            let statusCode = isLaunchFetch ? 200 : refreshStatusCode
+            let json = statusCode == 200 ? (MockProvider.sourceConfigurationDictionary ?? [:]) : ["error": "Server error"]
+            return (statusCode, try JSONSerialization.data(withJSONObject: json), ["Content-Type": "application/json"])
+        }
+        let analytics = MockProvider.createMockAnalytics(storage: mockStorage)
+        self.analytics = analytics
+        await mockStorage.waitForKeyValue(key: Constants.storageKeys.sourceConfig)
+        analytics.sourceConfigProvider?.stopPeriodicRefresh()
+        analytics.lifecycleObserver?.handle(.background)
+        counter.reset()
+        
+        let provider = SourceConfigProvider(analytics: analytics, refreshIntervalInMillis: Self.intervalInMillis)
+        provider.fetchConfigAtLaunchAndNotifyObservers()
+        await waitUntil { provider.lastFetchEndInMillis != nil }
+        return (analytics, provider)
+    }
+    
+    private func waitUntil(timeout: TimeInterval = 5.0, _ condition: () -> Bool) async {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !condition() && Date() < deadline {
+            try? await Task.sleep(nanoseconds: MockStorage.pollInterval)
+        }
+    }
+    
+    private func sleep(milliseconds: UInt64) async {
+        try? await Task.sleep(nanoseconds: milliseconds * 1_000_000)
+    }
+    
+    @Test("given a long foreground session, when the loop runs, then no refresh happens before the interval and one happens after it")
+    func testForegroundSessionRefreshesOncePerInterval() async {
+        let (analytics, provider) = await makeProvider()
+        analytics.lifecycleObserver?.addObserver(provider)
+        analytics.lifecycleObserver?.handle(.foreground)
+        
+        await sleep(milliseconds: Self.intervalInMillis / 2)
+        #expect(requestCounter.count == 1)
+        
+        await waitUntil { self.requestCounter.count == 2 }
+        #expect(requestCounter.count == 2)
+        provider.stopPeriodicRefresh()
+    }
+    
+    @Test("given the app is in the background, when it returns after the interval, then the provider fetches at once, and a quick return does not fetch")
+    func testBackgroundThenReturn() async {
+        let (analytics, provider) = await makeProvider()
+        analytics.lifecycleObserver?.addObserver(provider)
+        
+        await sleep(milliseconds: Self.intervalInMillis * 3 / 2)
+        #expect(requestCounter.count == 1)
+        
+        let launchFetchEnd = provider.lastFetchEndInMillis
+        analytics.lifecycleObserver?.handle(.foreground)
+        await waitUntil(timeout: Double(Self.intervalInMillis) / 2_000) { provider.lastFetchEndInMillis != launchFetchEnd }
+        #expect(requestCounter.count == 2)
+        
+        analytics.lifecycleObserver?.handle(.background)
+        analytics.lifecycleObserver?.handle(.foreground)
+        await sleep(milliseconds: Self.intervalInMillis / 2)
+        #expect(requestCounter.count == 2)
+        provider.stopPeriodicRefresh()
+    }
+    
+    @Test("given a refresh is in flight, when the app goes to the background, then the fetch records no end and the next foreground fetches at once")
+    func testCancelledRefreshRecordsNoEnd() async {
+        let (analytics, provider) = await makeProvider(refreshResponseDelay: 0.5)
+        analytics.lifecycleObserver?.addObserver(provider)
+        await sleep(milliseconds: Self.intervalInMillis)
+        let launchFetchEnd = provider.lastFetchEndInMillis
+        
+        analytics.lifecycleObserver?.handle(.foreground)
+        await waitUntil { self.requestCounter.count == 2 }
+        analytics.lifecycleObserver?.handle(.background)
+        await sleep(milliseconds: 800) // Longer than the response delay, so the cancelled fetch has ended
+        #expect(provider.lastFetchEndInMillis == launchFetchEnd)
+        
+        analytics.lifecycleObserver?.handle(.foreground)
+        await waitUntil { self.requestCounter.count == 3 }
+        provider.stopPeriodicRefresh()
+        #expect(requestCounter.count == 3)
+    }
+    
+    @Test("given the launch fetch is still running, when the loop starts, then the loop waits for it and does not fetch at once")
+    func testLoopWaitsForLaunchFetch() async {
+        let (analytics, _) = await makeProvider()
+        let counter = RequestCounter()
+        MockURLProtocol.requestHandler = { request in
+            guard request.httpMethod == "GET" else { return (200, nil, nil) }
+            counter.increment()
+            Thread.sleep(forTimeInterval: 0.5)
+            return (200, try JSONSerialization.data(withJSONObject: MockProvider.sourceConfigurationDictionary ?? [:]), ["Content-Type": "application/json"])
+        }
+        let provider = SourceConfigProvider(analytics: analytics, refreshIntervalInMillis: Self.intervalInMillis)
+        
+        provider.fetchConfigAtLaunchAndNotifyObservers()
+        provider.startPeriodicRefresh()
+        await waitUntil { provider.lastFetchEndInMillis != nil }
+        await sleep(milliseconds: Self.intervalInMillis / 2)
+        provider.stopPeriodicRefresh()
+        
+        #expect(counter.count == 1)
+    }
+    
+    @Test("given a refresh returns 400, when the loop runs, then the SDK keeps its config and does not shut down")
+    func testRefreshWith400KeepsConfig() async {
+        let (analytics, provider) = await makeProvider(refreshStatusCode: 400)
+        let configBeforeRefresh = analytics.sourceConfigState.value
+        
+        let launchFetchEnd = provider.lastFetchEndInMillis
+        provider.startPeriodicRefresh()
+        await waitUntil { provider.lastFetchEndInMillis != launchFetchEnd }
+        provider.stopPeriodicRefresh()
+        
+        #expect(requestCounter.count == 2) // One attempt, no backoff retries
+        #expect(!analytics.isAnalyticsShutdown)
+        #expect(analytics.sourceConfigState.value == configBeforeRefresh)
+    }
+    
+    @Test("given a last fetch end, a current time, and an interval, when the delay is computed, then it is the time left, or zero when due",
+          arguments: [
+            (lastFetchEnd: UInt64?.none, now: UInt64(5_000), expected: UInt64(0)),
+            (lastFetchEnd: UInt64?.some(5_000), now: UInt64(5_400), expected: UInt64(600)),
+            (lastFetchEnd: UInt64?.some(5_000), now: UInt64(6_000), expected: UInt64(0)),
+            (lastFetchEnd: UInt64?.some(5_000), now: UInt64(4_000), expected: UInt64(0))
+          ])
+    func testTimeUntilNextFetch(lastFetchEnd: UInt64?, now: UInt64, expected: UInt64) {
+        let delay = SourceConfigProvider.timeUntilNextFetch(lastFetchEndInMillis: lastFetchEnd, nowInMillis: now, intervalInMillis: Self.intervalInMillis)
+        #expect(delay == expected)
+    }
+}
+
+/** Counts requests from the URL loading thread and the test thread. */
+private final class RequestCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value = 0
+    
+    var count: Int { lock.withLock { value } }
+    
+    @discardableResult
+    func increment() -> Int {
+        lock.withLock {
+            defer { value += 1 }
+            return value
+        }
+    }
+    
+    func reset() { lock.withLock { value = 0 } }
 }
