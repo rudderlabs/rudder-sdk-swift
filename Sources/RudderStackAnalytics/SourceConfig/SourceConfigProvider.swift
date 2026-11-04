@@ -18,7 +18,7 @@ class SourceConfigProvider: TypeIdentifiable {
     private var backoffPolicy: BackoffPolicy?
     
     private var connectivityMonitor: Connectivity? = Connectivity()
-    private let refreshIntervalInMillis: UInt64
+    @Synchronized private(set) var refreshIntervalInMillis: UInt64
     
     @Synchronized private var launchFetchTask: Task<Void, Never>?
     @Synchronized private var refreshTask: Task<Void, Never>?
@@ -26,6 +26,7 @@ class SourceConfigProvider: TypeIdentifiable {
     
     private static let maxRetryAttempts = 5
     private static let defaultRefreshIntervalInMillis: UInt64 = 3_600_000 // 1 hour
+    static let minTestRefreshIntervalInMillis: UInt64 = 60_000 // 1 minute
     
     init(analytics: Analytics, backoffPolicy: BackoffPolicy = ExponentialBackoffPolicy(), refreshIntervalInMillis: UInt64 = SourceConfigProvider.defaultRefreshIntervalInMillis) {
         self.analytics = analytics
@@ -103,6 +104,16 @@ extension SourceConfigProvider: LifecycleEventListener {
         $refreshTask.modify { refreshTask in
             refreshTask?.cancel()
             refreshTask = nil
+        }
+    }
+    
+    /** Sets a shorter interval for the E2E rig, with a minimum of one minute, and restarts a running loop. */
+    func setRefreshIntervalForTesting(milliseconds: UInt64) {
+        self.refreshIntervalInMillis = max(milliseconds, Self.minTestRefreshIntervalInMillis)
+        $refreshTask.modify { refreshTask in
+            guard refreshTask != nil else { return }
+            refreshTask?.cancel()
+            refreshTask = self.refreshPeriodically()
         }
     }
     

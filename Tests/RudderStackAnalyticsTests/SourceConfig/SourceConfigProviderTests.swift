@@ -507,6 +507,17 @@ class SourceConfigProviderRefreshTests {
         #expect(analytics.sourceConfigState.value == configBeforeRefresh)
     }
     
+    @Test("given an interval below one minute, when the test hook sets it, then the provider uses one minute")
+    func testRefreshIntervalForTestingHasMinimum() async {
+        let (_, provider) = await makeProvider()
+        
+        provider.setRefreshIntervalForTesting(milliseconds: 1)
+        #expect(provider.refreshIntervalInMillis == SourceConfigProvider.minTestRefreshIntervalInMillis)
+        
+        provider.setRefreshIntervalForTesting(milliseconds: 120_000)
+        #expect(provider.refreshIntervalInMillis == 120_000)
+    }
+    
     @Test("given a last fetch end, a current time, and an interval, when the delay is computed, then it is the time left, or zero when due",
           arguments: [
             (lastFetchEnd: UInt64?.none, now: UInt64(5_000), expected: UInt64(0)),
