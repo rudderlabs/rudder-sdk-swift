@@ -44,7 +44,6 @@ final class EventUploader {
                     if self.analytics.isAnalyticsShutdown || self.uploadChannel.isClosed { break }
                     guard self.isSourceEnabled else {
                         analytics.logger.debug(log: "\(className): Source is disabled. Keeping the remaining batches for later")
-                        await self.backoff.reset()
                         break
                     }
                     
@@ -105,6 +104,9 @@ extension EventUploader {
                 shouldRetry = error is RetryableEventUploadError
             }
         } while shouldRetry && self.isSourceEnabled
+        
+        // The source became disabled during the retries; the retry headers stay for the next attempt.
+        if shouldRetry { await self.backoff.reset() }
     }
     
     private func handleBatchUploadResponse(_ data: Data, reference: String) async {
