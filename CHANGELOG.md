@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/rudderlabs/rudder-monorepo-swift/compare/swift-sdk-2.0.0...swift-sdk-2.0.1) (2026-11-06)
+
+
+### Code Refactoring
+
+* **swift-sdk:** read RSVersion from Version.swift ([#46](https://github.com/rudderlabs/rudder-monorepo-swift/issues/46)) ([ac49b02](https://github.com/rudderlabs/rudder-monorepo-swift/commit/ac49b0214997c40eca839bb3d09c49112330bfc3))
+
 ## [2.0.0] - 2026-10-26
 
 ### ⚠ Breaking Changes
