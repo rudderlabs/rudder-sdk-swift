@@ -629,7 +629,7 @@
   "fileHashes": {
     ".github/CODEOWNERS": "b6186d483919a45be6dd29537a58adc1a5a34338ab74fcf6e9985506c18eb025",
     ".gitignore": "6c3f21e0d020c2a3887f176d7d69e0e6456e31888e053bf9dd5d1c5c78972aeb",
-    "CHANGELOG.md": "0972e4292057e0b28d35cc02109baa9c4b9467b6455131f4b29e189196ccfc5a",
+    "CHANGELOG.md": "3cf4023f3af741ade9f558acab60c999b19fb210c3702fffbb7cba69cc247053",
     "CONTRIBUTING.md": "cd48f334ac627ca981e8e0b87e1805049698160eae19f4ea56f6c6bbf66b85ae",
     "LICENSE": "130c075edb106634e90df2eb62cba8f7a3cb2c0e8ccec39cb168fc649684205d",
     "Package.swift": "10f4444c09f5806c5387ba5b36bb137188f1d2d202ca6e9aad5f76d7934baeb3",
@@ -660,7 +660,7 @@
     "Sources/RudderStackAnalytics/Helpers/CoreSupport/PropertyWrappers.swift": "81715ed5efe60ebc23dec6b4112f2c5f2edac2effce8a7221e5c187bff74e9ae",
     "Sources/RudderStackAnalytics/Helpers/ECommerce/ECommerceEvents.swift": "98abe6d191040e9b70e25554be743ea720fd17b98e4d31550c36076d831a4a87",
     "Sources/RudderStackAnalytics/Helpers/ECommerce/ECommerceParamNames.swift": "0a918688e3f2501819ac1c3b5aef39461d0eb2a943d04a691e5d88824a3d9b86",
-    "Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift": "c8e083024eed041a1048b463affc8466e0d8b48f119ff757266bf5315f22c70f",
+    "Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift": "fd014a698ad283f180e9d2ec1c2f0894aacde23eac6173e38cc5242a7b9511c2",
     "Sources/RudderStackAnalytics/Helpers/Utils/Extensions.swift": "affab1bf585da39049423ced9ccad7593951df9d26cbcbbb10bff882d27e8071",
     "Sources/RudderStackAnalytics/Helpers/Utils/NetworkInfoPluginUtils.swift": "922c1be171644cdbf5868846a3c83e4f00a68e42b68e8be50147f57d2656e359",
     "Sources/RudderStackAnalytics/LifecycleManagement/LifecycleManagementUtils.swift": "8eed459e1e19148fc63f57898d081d2db8119bbd38f659593d2b6a033a42045c",
@@ -750,16 +750,16 @@
     "Sources/RudderStackAnalytics/Storage/Store/KeyValueStore.swift": "8874b3169709d310c7b2aecf274fcad1f6d0324ef46ade3f15d6cc49832ee2b7",
     "Sources/RudderStackAnalytics/Storage/Store/MemoryStore.swift": "c884d21d8a6240ca8bac077125a0e9a11dc8ef1be9847ddcd79e9771c65fbd90",
     "Sources/RudderStackAnalytics/Storage/StoreModels/StorageModels.swift": "7f93d730b7629c20335973053ce98ed0792c3fd93c938f0f5c4af63617b791a6",
-    "Sources/RudderStackAnalytics/Version.swift": "e988e2012f43134c1cf4bb8381437836b962eb381397ed92f15d1df1e538100b",
-    "VERSION": "c28fcca53637bc88e124af1725df13cb98c69dedefd62fb3cdbe1cdb6b760624"
+    "Sources/RudderStackAnalytics/Version.swift": "f2e3fe803ed274cbd660f7928d6b7a9db01a36035713a39bb92ad803ae2be478",
+    "VERSION": "fe840f52fb5578d3f77eb497115eb02c6036601c3a53e60df7995c7276baa77a"
   },
   "package": "swift-sdk",
   "policies": {},
   "schemaVersion": 1,
-  "sourceCommit": "a923096f690ec858e3a6aa6edbc7388c7aefbe07",
+  "sourceCommit": "1e9598ae7811c53b4f9a4609a206e8f93d66085e",
   "sourceRepository": "rudderlabs/rudder-monorepo-swift",
   "targetClosure": [
     "RudderStackAnalytics"
   ],
-  "version": "2.0.0"
+  "version": "2.0.1"
 }
