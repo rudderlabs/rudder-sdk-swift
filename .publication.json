@@ -1,0 +1,765 @@
+{
+  "copiedFiles": [
+    {
+      "output": "Sources/RudderStackAnalytics/Base/Analytics.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Base/Analytics.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Base/Configuration.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Base/Configuration.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ConsentManagement/ConsentManagementConfiguration.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ConsentManagement/ConsentManagementConfiguration.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ConsentManagement/ConsentManagementOptions.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ConsentManagement/ConsentManagementOptions.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ConsentManagement/ConsentResolver.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ConsentManagement/ConsentResolver.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/EventQueue/EventQueue.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/EventQueue/EventQueue.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/EventQueue/EventUploader/EventUploadResult.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/EventQueue/EventUploader/EventUploadResult.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/EventQueue/EventUploader/EventUploader.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/EventQueue/EventUploader/EventUploader.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/EventQueue/EventWriter/EventWriter.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/EventQueue/EventWriter/EventWriter.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/EventQueue/EventWriter/ProcessingEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/EventQueue/EventWriter/ProcessingEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/EventQueue/RetryHeaders/PrimaryRetryHeadersProvider.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/EventQueue/RetryHeaders/PrimaryRetryHeadersProvider.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/EventQueue/RetryHeaders/RetryHeadersProvider.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/EventQueue/RetryHeaders/RetryHeadersProvider.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/EventQueue/RetryHeaders/RetryMetadata.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/EventQueue/RetryHeaders/RetryMetadata.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Events/AliasEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Events/AliasEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Events/Event.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Events/Event.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Events/GroupEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Events/GroupEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Events/IdentifyEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Events/IdentifyEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Events/RudderOption.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Events/RudderOption.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Events/ScreenEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Events/ScreenEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Events/TrackEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Events/TrackEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Helpers/CoreSupport/AsyncChannel.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Helpers/CoreSupport/AsyncChannel.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Helpers/CoreSupport/CodableTypes.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Helpers/CoreSupport/CodableTypes.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Helpers/CoreSupport/Connectivity.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Helpers/CoreSupport/Connectivity.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Helpers/CoreSupport/PropertyWrappers.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Helpers/CoreSupport/PropertyWrappers.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Helpers/ECommerce/ECommerceEvents.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Helpers/ECommerce/ECommerceEvents.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Helpers/ECommerce/ECommerceParamNames.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Helpers/ECommerce/ECommerceParamNames.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Helpers/Utils/Extensions.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Helpers/Utils/Extensions.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Helpers/Utils/NetworkInfoPluginUtils.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Helpers/Utils/NetworkInfoPluginUtils.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/LifecycleManagement/LifecycleManagementUtils.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/LifecycleManagement/LifecycleManagementUtils.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/LifecycleManagement/LifecycleObserver.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/LifecycleManagement/LifecycleObserver.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Logger/AnalyticsLogger.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Logger/AnalyticsLogger.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Logger/LoggerAnalytics.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Logger/LoggerAnalytics.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Logger/SwiftLogger.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Logger/SwiftLogger.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Network/HttpClient.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Network/HttpClient.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Network/HttpNetwork.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Network/HttpNetwork.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Base/ObjCAnalytics.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Base/ObjCAnalytics.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Base/ObjCConfiguration.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Base/ObjCConfiguration.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Base/ObjCConsentManagementConfiguration.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Base/ObjCConsentManagementConfiguration.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Base/ObjCSessionConfiguration.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Base/ObjCSessionConfiguration.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Events/ObjCAliasEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Events/ObjCAliasEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Events/ObjCEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Events/ObjCEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Events/ObjCGroupEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Events/ObjCGroupEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Events/ObjCIdentifyEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Events/ObjCIdentifyEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Events/ObjCOption.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Events/ObjCOption.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Events/ObjCScreenEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Events/ObjCScreenEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Events/ObjCTrackEvent.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Events/ObjCTrackEvent.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/FlushPolicy/ObjCFlushPolicy.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/FlushPolicy/ObjCFlushPolicy.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Logger/ObjCAnalyticsLogger.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Logger/ObjCAnalyticsLogger.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Logger/ObjCLogger.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Logger/ObjCLogger.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Logger/ObjCLoggerAnalytics.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Logger/ObjCLoggerAnalytics.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Plugins/Base/ObjCEventPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Plugins/Base/ObjCEventPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Plugins/Base/ObjCPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Plugins/Base/ObjCPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Plugins/DeviceMode/ObjCIntegrationPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Plugins/DeviceMode/ObjCIntegrationPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/Plugins/DeviceMode/ObjCStandardIntegration.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/Plugins/DeviceMode/ObjCStandardIntegration.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/StateManagement/ObjCResetEntriesBuilder.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/StateManagement/ObjCResetEntriesBuilder.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/StateManagement/ObjCResetOptionsBuilder.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/StateManagement/ObjCResetOptionsBuilder.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/ObjC/StateManagement/ObjCUserIdentity.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/ObjC/StateManagement/ObjCUserIdentity.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Core/Plugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Core/Plugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Core/PluginChain.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Core/PluginChain.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Core/PluginInteractor.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Core/PluginInteractor.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationPlugins/ConsentGatePlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationPlugins/ConsentGatePlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationPlugins/EventFilteringPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationPlugins/EventFilteringPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationPlugins/IntegrationOptionsPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationPlugins/IntegrationOptionsPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/DestinationDeliveryControl.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/DestinationDeliveryControl.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/DestinationError.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/DestinationError.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationPluginStore.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationPluginStore.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationsController.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationsController.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationsManagementPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationsManagementPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/AppInfoPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/AppInfoPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/ConsentManagementPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/ConsentManagementPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/ContextSnapshotPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/ContextSnapshotPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/DeviceInfoPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/DeviceInfoPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/LibraryInfoPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/LibraryInfoPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/LifecycleTrackingPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/LifecycleTrackingPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/LocaleInfoPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/LocaleInfoPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/NetworkInfoPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/NetworkInfoPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/OSInfoPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/OSInfoPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/RudderStackDataPlanePlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/RudderStackDataPlanePlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/SchemaGuardPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/SchemaGuardPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/ScreenInfoPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/ScreenInfoPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/SessionTrackingPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/SessionTrackingPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Plugins/Standard/TimeZoneInfoPlugin.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Plugins/Standard/TimeZoneInfoPlugin.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Policies/BackoffPolicy/BackoffPolicy.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Policies/BackoffPolicy/BackoffPolicy.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Policies/BackoffPolicy/BackoffPolicyHandler.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Policies/BackoffPolicy/BackoffPolicyHandler.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Policies/BackoffPolicy/ExponentialBackoffPolicy.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Policies/BackoffPolicy/ExponentialBackoffPolicy.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Policies/FlushPolicy/CountFlushPolicy.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Policies/FlushPolicy/CountFlushPolicy.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Policies/FlushPolicy/FlushPolicy.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Policies/FlushPolicy/FlushPolicy.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Policies/FlushPolicy/FrequencyFlushPolicy.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Policies/FlushPolicy/FrequencyFlushPolicy.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Policies/FlushPolicy/StartupFlushPolicy.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Policies/FlushPolicy/StartupFlushPolicy.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/SessionManagement/SessionActions.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/SessionManagement/SessionActions.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/SessionManagement/SessionHandler.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/SessionManagement/SessionHandler.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/SessionManagement/SessionInfo.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/SessionManagement/SessionInfo.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/SourceConfig/SourceConfig.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/SourceConfig/SourceConfig.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/SourceConfig/SourceConfigProvider.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/SourceConfig/SourceConfigProvider.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/SourceConfig/SourceConfigResult.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/SourceConfig/SourceConfigResult.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/Consent/ConsentManagement.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/Consent/ConsentManagement.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/Consent/SetConsentAction.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/Consent/SetConsentAction.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/Reset/ResetEntries.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/Reset/ResetEntries.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/Reset/ResetOptions.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/Reset/ResetOptions.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/SourceConfig/DisableSourceConfigAction.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/SourceConfig/DisableSourceConfigAction.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/SourceConfig/UpdateSourceConfigAction.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/SourceConfig/UpdateSourceConfigAction.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/StateManagement.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/StateManagement.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/UserIdentity/ResetUserIdentityAction.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/UserIdentity/ResetUserIdentityAction.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/UserIdentity/SetUserIdAction.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/UserIdentity/SetUserIdAction.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/UserIdentity/SetUserIdAndTraitsAction.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/UserIdentity/SetUserIdAndTraitsAction.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/StateManagement/UserIdentity/UserIdentity.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/StateManagement/UserIdentity/UserIdentity.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Storage/BasicStorage.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Storage/BasicStorage.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Storage/Storage.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Storage/Storage.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Storage/Store/DataStore.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Storage/Store/DataStore.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Storage/Store/DiskStore.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Storage/Store/DiskStore.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Storage/Store/KeyValueStore.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Storage/Store/KeyValueStore.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Storage/Store/MemoryStore.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Storage/Store/MemoryStore.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Storage/StoreModels/StorageModels.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Storage/StoreModels/StorageModels.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Version.swift",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Version.swift",
+      "transform": "copy"
+    },
+    {
+      "output": "Sources/RudderStackAnalytics/Resources/PrivacyInfo.xcprivacy",
+      "source": "Packages/RudderStackAnalytics/Sources/RudderStackAnalytics/Resources/PrivacyInfo.xcprivacy",
+      "transform": "copy"
+    },
+    {
+      "output": "CHANGELOG.md",
+      "source": "Packages/RudderStackAnalytics/CHANGELOG.md",
+      "transform": "copy"
+    },
+    {
+      "output": "LICENSE",
+      "source": "LICENSE",
+      "transform": "copy"
+    },
+    {
+      "output": "README.md",
+      "source": "Packages/RudderStackAnalytics/README.md",
+      "transform": "generated"
+    },
+    {
+      "output": ".github/CODEOWNERS",
+      "source": null,
+      "transform": "generated"
+    },
+    {
+      "output": ".gitignore",
+      "source": null,
+      "transform": "generated"
+    },
+    {
+      "output": "CONTRIBUTING.md",
+      "source": null,
+      "transform": "generated"
+    },
+    {
+      "output": "Package.swift",
+      "source": null,
+      "transform": "generated"
+    },
+    {
+      "output": "VERSION",
+      "source": null,
+      "transform": "generated"
+    }
+  ],
+  "fileHashes": {
+    ".github/CODEOWNERS": "b6186d483919a45be6dd29537a58adc1a5a34338ab74fcf6e9985506c18eb025",
+    ".gitignore": "6c3f21e0d020c2a3887f176d7d69e0e6456e31888e053bf9dd5d1c5c78972aeb",
+    "CHANGELOG.md": "0972e4292057e0b28d35cc02109baa9c4b9467b6455131f4b29e189196ccfc5a",
+    "CONTRIBUTING.md": "cd48f334ac627ca981e8e0b87e1805049698160eae19f4ea56f6c6bbf66b85ae",
+    "LICENSE": "130c075edb106634e90df2eb62cba8f7a3cb2c0e8ccec39cb168fc649684205d",
+    "Package.swift": "10f4444c09f5806c5387ba5b36bb137188f1d2d202ca6e9aad5f76d7934baeb3",
+    "README.md": "d20af09e81ab05d5b8a4847315cc48b47bce07b3030ea3b3094ac36a162ef91f",
+    "Sources/RudderStackAnalytics/Base/Analytics.swift": "f31ee23538ff4df5de12e9da9b0bb1e058a0d4bf52e6060b1d76719b45a7deb8",
+    "Sources/RudderStackAnalytics/Base/Configuration.swift": "e21f24a00635b5ec4dc45ad527872a004995d13d0d36eaa1389433e825168b3a",
+    "Sources/RudderStackAnalytics/ConsentManagement/ConsentManagementConfiguration.swift": "58dac517bae56a3a7d8b4ff0627e8610f36f4f93c4922d1a60ad940392cebb81",
+    "Sources/RudderStackAnalytics/ConsentManagement/ConsentManagementOptions.swift": "2ec5446d98c9042546f946c4feb51444493acb4b37da6515bd38864b1785861d",
+    "Sources/RudderStackAnalytics/ConsentManagement/ConsentResolver.swift": "764fc63ad0f6f3a21b25bd24fce99630437b251454ee65797f05817839959325",
+    "Sources/RudderStackAnalytics/EventQueue/EventQueue.swift": "05a023d00072ffcd876c6deebe1ab9a117b48cee7ff43ac10fce6595fd04ee63",
+    "Sources/RudderStackAnalytics/EventQueue/EventUploader/EventUploadResult.swift": "e3ebef22906cdb0c5bfca29c1ca783bf4b6da8ed925ce87de922abdb41818067",
+    "Sources/RudderStackAnalytics/EventQueue/EventUploader/EventUploader.swift": "5e92356cc0245d1d2c896c787619d04ac3c35b5f79122b358c80a582994e5949",
+    "Sources/RudderStackAnalytics/EventQueue/EventWriter/EventWriter.swift": "498364cf8c6abe5b4c767a17247b827522e128fbb36eb09d607d844d799b02ae",
+    "Sources/RudderStackAnalytics/EventQueue/EventWriter/ProcessingEvent.swift": "e72938467faaad9a1756493f98bb0f2f02331e48f7948c61575ef1c99d6c8b39",
+    "Sources/RudderStackAnalytics/EventQueue/RetryHeaders/PrimaryRetryHeadersProvider.swift": "2091e9c41ccb41ba50504b9193ea3245a58940c890ba1c16838fab1bdc4d2beb",
+    "Sources/RudderStackAnalytics/EventQueue/RetryHeaders/RetryHeadersProvider.swift": "69743cd70288708f954b4c9feac7ba62b667ecf82676b07ba0b2b1ab911bf3da",
+    "Sources/RudderStackAnalytics/EventQueue/RetryHeaders/RetryMetadata.swift": "8a4a39a3a36e8427ffa1b2671627599d9b15180ab383b70b13939e53b4266393",
+    "Sources/RudderStackAnalytics/Events/AliasEvent.swift": "d07b58af33f8c8965649449dcb5b4a34b63a5919426b4efb356f84d540a6b977",
+    "Sources/RudderStackAnalytics/Events/Event.swift": "ea1c60041f9b55fd9e810830d33a76dbbd4daee7a4861b28966deb54697b334d",
+    "Sources/RudderStackAnalytics/Events/GroupEvent.swift": "79fcda004149019c1b403587ca386921f8b59e29df39ec7e2c37fbf9454f1f94",
+    "Sources/RudderStackAnalytics/Events/IdentifyEvent.swift": "d10daf524594075475be05a39f84c87d143c5afd2355202fee67d175f64802dc",
+    "Sources/RudderStackAnalytics/Events/RudderOption.swift": "413de9121edd3c9b0ebdb653fd72a049b7c9086e310bb3c225d5491260eb13e8",
+    "Sources/RudderStackAnalytics/Events/ScreenEvent.swift": "ea7d2aa51e5c537870c4f00a50e95005c331872bc621e5684d6d2e138b8557c2",
+    "Sources/RudderStackAnalytics/Events/TrackEvent.swift": "8be0ff964206195430111ec00a953637ede64e9da2a6b2277427ce4f329cb9f0",
+    "Sources/RudderStackAnalytics/Helpers/CoreSupport/AsyncChannel.swift": "b544e353fd68dafe4d787db8d93f22f39fa089f00366d620f53a66196c16f96d",
+    "Sources/RudderStackAnalytics/Helpers/CoreSupport/CodableTypes.swift": "8a92cd206e74fec9bf8cb6f96ebaacb2979c936f6d230967dfbc547cd879eaeb",
+    "Sources/RudderStackAnalytics/Helpers/CoreSupport/Connectivity.swift": "8b2b25dc078efb0783f07095642dd38055afc09ba1b23e611a3bff705c0c5530",
+    "Sources/RudderStackAnalytics/Helpers/CoreSupport/PropertyWrappers.swift": "81715ed5efe60ebc23dec6b4112f2c5f2edac2effce8a7221e5c187bff74e9ae",
+    "Sources/RudderStackAnalytics/Helpers/ECommerce/ECommerceEvents.swift": "98abe6d191040e9b70e25554be743ea720fd17b98e4d31550c36076d831a4a87",
+    "Sources/RudderStackAnalytics/Helpers/ECommerce/ECommerceParamNames.swift": "0a918688e3f2501819ac1c3b5aef39461d0eb2a943d04a691e5d88824a3d9b86",
+    "Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift": "c8e083024eed041a1048b463affc8466e0d8b48f119ff757266bf5315f22c70f",
+    "Sources/RudderStackAnalytics/Helpers/Utils/Extensions.swift": "affab1bf585da39049423ced9ccad7593951df9d26cbcbbb10bff882d27e8071",
+    "Sources/RudderStackAnalytics/Helpers/Utils/NetworkInfoPluginUtils.swift": "922c1be171644cdbf5868846a3c83e4f00a68e42b68e8be50147f57d2656e359",
+    "Sources/RudderStackAnalytics/LifecycleManagement/LifecycleManagementUtils.swift": "8eed459e1e19148fc63f57898d081d2db8119bbd38f659593d2b6a033a42045c",
+    "Sources/RudderStackAnalytics/LifecycleManagement/LifecycleObserver.swift": "88de0a540a25367e583798a9cb3fe4c25acd229341104ab8fa7ce7e95fb20f66",
+    "Sources/RudderStackAnalytics/Logger/AnalyticsLogger.swift": "a78a286b3b7e3353dd005aada9e858e33d26ca61a6fb1779338e5ba3ea705598",
+    "Sources/RudderStackAnalytics/Logger/LoggerAnalytics.swift": "dcdb1d2ab3625252c12460b5def3ae37c6b9e8afa6d9f8013cc044320057578d",
+    "Sources/RudderStackAnalytics/Logger/SwiftLogger.swift": "89c3f1b72ee5d965848940852f600f3afe844779db2d76e8022f46f9dffa3b84",
+    "Sources/RudderStackAnalytics/Network/HttpClient.swift": "0007271e9ffb7b31f79b8cd2efaf82022ca00718cc0e6112b39f71ba1d51a2a2",
+    "Sources/RudderStackAnalytics/Network/HttpNetwork.swift": "32357ad1ed2878a0f7981f127db6576a8ae72c3bd19c8470e1bea365dff8658e",
+    "Sources/RudderStackAnalytics/ObjC/Base/ObjCAnalytics.swift": "60b671783a960c25e7b0795ed266520cbacd8835e4639f15702e4b214f32eb2a",
+    "Sources/RudderStackAnalytics/ObjC/Base/ObjCConfiguration.swift": "1cc478d599aba4905ff47ce1e4f380de870fe6318c6135f4576e74327a5ea730",
+    "Sources/RudderStackAnalytics/ObjC/Base/ObjCConsentManagementConfiguration.swift": "ca6b77fb3524456087d12b5b0f297f093eb958d91370acf6299a2e618526b91f",
+    "Sources/RudderStackAnalytics/ObjC/Base/ObjCSessionConfiguration.swift": "ebda98befc24464360d13fc43f8d33dad4930d8152591c84feb822aa10ad8c2d",
+    "Sources/RudderStackAnalytics/ObjC/Events/ObjCAliasEvent.swift": "498d9eb86ab0c74cb128e23ea2bbeab37e0cdfe6b177726542bd7d950f3cc7ce",
+    "Sources/RudderStackAnalytics/ObjC/Events/ObjCEvent.swift": "4b4ca0b3ba833d8e27840f73565a3d86e0af7743a50406e23a19d8ac177f09c5",
+    "Sources/RudderStackAnalytics/ObjC/Events/ObjCGroupEvent.swift": "9859529f9dfd628526b8bfc64d5cdec26c3c9c30c04db489a4d1e17f62ec3673",
+    "Sources/RudderStackAnalytics/ObjC/Events/ObjCIdentifyEvent.swift": "258f61cdfdff6c06a21a1fe43361d71119c83f4fc68efaf24c73ecdd731f7340",
+    "Sources/RudderStackAnalytics/ObjC/Events/ObjCOption.swift": "3643402e816c3eaffa7b63bdf0ffc943fa5fb0f0c385f1ac2d4df2267cd47c29",
+    "Sources/RudderStackAnalytics/ObjC/Events/ObjCScreenEvent.swift": "57e09b34f28c53b453b31e4b19660457dcfc83d722ea2dbed4e52ba6a52089d0",
+    "Sources/RudderStackAnalytics/ObjC/Events/ObjCTrackEvent.swift": "b8933faa6435153d8a937a7e65aa8bad6e519f2b8d0f690db0f7706cc209888c",
+    "Sources/RudderStackAnalytics/ObjC/FlushPolicy/ObjCFlushPolicy.swift": "5aa79d7b2a1cf182d0ca542ccdb75c1130917a8856cdace748e1f79574ecf0fc",
+    "Sources/RudderStackAnalytics/ObjC/Logger/ObjCAnalyticsLogger.swift": "1c4d9b8b9459f935b71cfb46181c1cc15268c58b5eadeb7c94910f38a769348f",
+    "Sources/RudderStackAnalytics/ObjC/Logger/ObjCLogger.swift": "0d6d0d03284f4b5444eb5ee0cd5d9ccca6d9b5a7f1689d5ca7c48bfae13775e6",
+    "Sources/RudderStackAnalytics/ObjC/Logger/ObjCLoggerAnalytics.swift": "5cb0fa81a59b4781e4846502f6ffefed27a76eb86594b530673b6ea25da930d0",
+    "Sources/RudderStackAnalytics/ObjC/Plugins/Base/ObjCEventPlugin.swift": "276d3f8ca30337fffe44f8b2a624bc6f4177e5f6e33d38b709928316909455ae",
+    "Sources/RudderStackAnalytics/ObjC/Plugins/Base/ObjCPlugin.swift": "3df8d34a184807466955aefef132c0e043fc934dfc1a23a2cb43209b1e48dd30",
+    "Sources/RudderStackAnalytics/ObjC/Plugins/DeviceMode/ObjCIntegrationPlugin.swift": "967406e6c2f85e343a163090532844b4daa419b49f8344c0da796f36219b4e0c",
+    "Sources/RudderStackAnalytics/ObjC/Plugins/DeviceMode/ObjCStandardIntegration.swift": "9096dedb91176a682f39c6b7ae9620904cfbde009a10716bfdbb309fb3027878",
+    "Sources/RudderStackAnalytics/ObjC/StateManagement/ObjCResetEntriesBuilder.swift": "08bd85049c3f3c817c05be7d7cd13a686ccd66ad1548b8cc7a1d451da78e682e",
+    "Sources/RudderStackAnalytics/ObjC/StateManagement/ObjCResetOptionsBuilder.swift": "4a5cef77345e27c0b20b933007c7d57e94075882b8d53229240a81c88849e5e0",
+    "Sources/RudderStackAnalytics/ObjC/StateManagement/ObjCUserIdentity.swift": "53bf5e015ce7498f06ecd47314092adec7b9ba93f068679e167d7d04527d2ca2",
+    "Sources/RudderStackAnalytics/Plugins/Core/Plugin.swift": "e36b0a8dc1f1532bfae5cf4391df15c3f169037220a82157f53262f4a375045d",
+    "Sources/RudderStackAnalytics/Plugins/Core/PluginChain.swift": "b87d723e2d6c3b49e8dd7e18570b9c280e2483baa7654583756ea820e87eb291",
+    "Sources/RudderStackAnalytics/Plugins/Core/PluginInteractor.swift": "c7ed83df755ba241b2e7aa1e9bb60b0ae2cb3ac06eeb8825dc4863c7e7281be0",
+    "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationPlugins/ConsentGatePlugin.swift": "e2bdf0b9144e99584a99542414dc121f59333e8df4fa09784c9372fc63c16227",
+    "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationPlugins/EventFilteringPlugin.swift": "e795a8c36e1c8d027568504feb120425ae06eea1a5eac08d2e5853716acbd4ab",
+    "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationPlugins/IntegrationOptionsPlugin.swift": "26c360b95fb313f8c77ac43a6406e9c9a1eb1e03340ff25062cc8e31d5e0582a",
+    "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/DestinationDeliveryControl.swift": "9658452dc5c68b7f55e794a56b01f9dd089d403599e0cadfea1056185f016b0b",
+    "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/DestinationError.swift": "63b8134262ce2408cd55ad5a8d42e2918a9a99c9bde89356dbda3de13d6ba6cc",
+    "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationPlugin.swift": "d01dd04880fdeeb9bf3757811cf7ac487e3253a272666955b1407fef578cf6ee",
+    "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationPluginStore.swift": "d17affaad842d4030bb96f13f17bf049f74c69f058947bce85c862fbe8b26908",
+    "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationsController.swift": "57d81f1bdbcbebf789d48842c33851459615f02421fd102d6d39aa3273b5c9c2",
+    "Sources/RudderStackAnalytics/Plugins/DeviceMode/IntegrationProcessing/IntegrationsManagementPlugin.swift": "249fb7e398e126286bc08d6f869d8bd72927f23eb7e5c2d635ee2284d4c3660e",
+    "Sources/RudderStackAnalytics/Plugins/Standard/AppInfoPlugin.swift": "4f5dbe256d002334cf9bbcf1fd59a98adb1fdbf238566d99c1ce08a12e608d38",
+    "Sources/RudderStackAnalytics/Plugins/Standard/ConsentManagementPlugin.swift": "2e711b75a8f13ba7afe7deb5febe9f03e4754d6afba0ae2221a5a301f18ee5c8",
+    "Sources/RudderStackAnalytics/Plugins/Standard/ContextSnapshotPlugin.swift": "e9169f0704121a5d09af52a87573d0b0dc41f09d34caeeeaafd76392be13b98c",
+    "Sources/RudderStackAnalytics/Plugins/Standard/DeviceInfoPlugin.swift": "208a34f5bda3ca68ab4b2d5f80136a1ad1ee00a49ce0ceafc26c35b3367da630",
+    "Sources/RudderStackAnalytics/Plugins/Standard/LibraryInfoPlugin.swift": "4cb0a7531fefda7e69f9138a9a44e8934f17eb5a51aaa87262abe60f05f10801",
+    "Sources/RudderStackAnalytics/Plugins/Standard/LifecycleTrackingPlugin.swift": "3806f6bb2314aa19ae429eb1366ccfee1febc14a828b97dfea47c5f8e454bc1a",
+    "Sources/RudderStackAnalytics/Plugins/Standard/LocaleInfoPlugin.swift": "228b7a1ca8c79f58505ad904ba7cc1765e5643f9625b6c4238eca3f7847acda4",
+    "Sources/RudderStackAnalytics/Plugins/Standard/NetworkInfoPlugin.swift": "4a343cfc0ff07bf64118248dad99fb7bf12f2b2fcbabec2bf26ff890babd0f87",
+    "Sources/RudderStackAnalytics/Plugins/Standard/OSInfoPlugin.swift": "cc12ff669b3b0c663f02a7addbf776f32645b0e2fa646120e6fcc836ff8288af",
+    "Sources/RudderStackAnalytics/Plugins/Standard/RudderStackDataPlanePlugin.swift": "68b435a4de31d39544e3776b76036097db6cb77de43d4018704982434ea28167",
+    "Sources/RudderStackAnalytics/Plugins/Standard/SchemaGuardPlugin.swift": "fd661e44ea745392937447df61e75240dbe721d7a3cb6e7d937665a68e837b3b",
+    "Sources/RudderStackAnalytics/Plugins/Standard/ScreenInfoPlugin.swift": "280a3d60370ccb2509ea80ae2d3db45b3de98ea6faaf22170b61a881c8078e93",
+    "Sources/RudderStackAnalytics/Plugins/Standard/SessionTrackingPlugin.swift": "27495123c26e5cec2037c441676d17431e34be6709efdd0ea0300988a6b53f86",
+    "Sources/RudderStackAnalytics/Plugins/Standard/TimeZoneInfoPlugin.swift": "cf2a55c07f7c5de07d2ab35865305ab5351e89d8ad91ab1cd9fde3caa721fb25",
+    "Sources/RudderStackAnalytics/Policies/BackoffPolicy/BackoffPolicy.swift": "cf10990552b41a88fa1ba0f4f3173b50845a76c9e06b07aa2bc65fe0d0a5b479",
+    "Sources/RudderStackAnalytics/Policies/BackoffPolicy/BackoffPolicyHandler.swift": "097fd89250637d114d3a456821761965e8be977f5aaee88e9f03ce07f81fa9f4",
+    "Sources/RudderStackAnalytics/Policies/BackoffPolicy/ExponentialBackoffPolicy.swift": "16fbd631f3854271f1101b7848a45c423ea2c0fce6cbdc389b2babacbb7a580b",
+    "Sources/RudderStackAnalytics/Policies/FlushPolicy/CountFlushPolicy.swift": "d3e835c9f9b1efc12b19d4835c3159911d4cb0a32cb78fd3d62530ac73f163ed",
+    "Sources/RudderStackAnalytics/Policies/FlushPolicy/FlushPolicy.swift": "02f099d636780a74c604911b296ce40bb91296a24bf64329f02e7e8f8ea6160c",
+    "Sources/RudderStackAnalytics/Policies/FlushPolicy/FrequencyFlushPolicy.swift": "11e1be04efca49cba778663f350767d3bc9425345467c6c2dc3b8133db609b73",
+    "Sources/RudderStackAnalytics/Policies/FlushPolicy/StartupFlushPolicy.swift": "49fad440059b3236a2506cb519346c9bb947b88b7db814121dc50f8fc3ae9b5e",
+    "Sources/RudderStackAnalytics/Resources/PrivacyInfo.xcprivacy": "2e785ad550f62c366663fc88cc393a684dbee2a4d04ef6d48d223c15af05ef94",
+    "Sources/RudderStackAnalytics/SessionManagement/SessionActions.swift": "68f25933a9fbb4ddc42b12a7ed724dafcd10116f110b79ac1f5b2a2fd3c578e6",
+    "Sources/RudderStackAnalytics/SessionManagement/SessionHandler.swift": "2e44e88554db438287fd99df635a3856760569f203eb56a86a053f5b50d82505",
+    "Sources/RudderStackAnalytics/SessionManagement/SessionInfo.swift": "d827db450ba5fd07fd6ce2f69545c7c8ceb2634b24cb32ec0a87cc929e78e044",
+    "Sources/RudderStackAnalytics/SourceConfig/SourceConfig.swift": "1c7006e5b1436661970fe8ab76a167907aeeef360fa0c8e0b5a578cbbfbbe126",
+    "Sources/RudderStackAnalytics/SourceConfig/SourceConfigProvider.swift": "13eedcff898b7e6e1be104be70919b87964e8526552a8f7ae0e9c6b10e2663cf",
+    "Sources/RudderStackAnalytics/SourceConfig/SourceConfigResult.swift": "2e7f4b3eee3d1df1dcc3b28c65778d736ea22af00986a35b5926e59ca5e31679",
+    "Sources/RudderStackAnalytics/StateManagement/Consent/ConsentManagement.swift": "262466952c6fa079b947ff4d1a453c9e9281210313d82feff4230f3e572e970c",
+    "Sources/RudderStackAnalytics/StateManagement/Consent/SetConsentAction.swift": "fcc4c21a7e132bbcffb27a0037812ac2d8abe28b99925e8df70534aeef063079",
+    "Sources/RudderStackAnalytics/StateManagement/Reset/ResetEntries.swift": "12f671240c9f7e516f5c84bf25acf998bc0fd57002cc4a1de374cb939dcc2afe",
+    "Sources/RudderStackAnalytics/StateManagement/Reset/ResetOptions.swift": "080cadc1645e845829b56b62e7eff0e390a30250adbe7485f40a1e4ad49a741f",
+    "Sources/RudderStackAnalytics/StateManagement/SourceConfig/DisableSourceConfigAction.swift": "6058f22d1e6906b071089eedd744c65c7df67898b123fef3d75ad27c7b9f4628",
+    "Sources/RudderStackAnalytics/StateManagement/SourceConfig/UpdateSourceConfigAction.swift": "ca77e93954bfc26ad175fcab486e3850e99d93e02dd185eab89d230ff78bb6bf",
+    "Sources/RudderStackAnalytics/StateManagement/StateManagement.swift": "8885507e69e9c93928cc3a16ff4ba56073b9aba754a1d021728d506934d53611",
+    "Sources/RudderStackAnalytics/StateManagement/UserIdentity/ResetUserIdentityAction.swift": "c02082a5a6e2f27ae6d8a919d74ffb2224914fb1522cffd33f920884cfa73aa2",
+    "Sources/RudderStackAnalytics/StateManagement/UserIdentity/SetUserIdAction.swift": "437f90f6526329807270eee0228320a1785ff0d80b695e36f2f4a737abb47611",
+    "Sources/RudderStackAnalytics/StateManagement/UserIdentity/SetUserIdAndTraitsAction.swift": "7b0ab3772e67a67fed9ae715675a82b5d9b73c6b193c23c57382d58d95cd815d",
+    "Sources/RudderStackAnalytics/StateManagement/UserIdentity/UserIdentity.swift": "e4be065d022f2c8cdb427df88c4554f89557faa22d51d470af3d2a1e324adb94",
+    "Sources/RudderStackAnalytics/Storage/BasicStorage.swift": "ece5adc83200f387f1385ef83084b9fc48148bba654db3158ae63c02de8b0218",
+    "Sources/RudderStackAnalytics/Storage/Storage.swift": "fa51b530b29739141f8af72d9d10a204bf491455c298d4d04cb0f9a83c8a25c9",
+    "Sources/RudderStackAnalytics/Storage/Store/DataStore.swift": "ab0f3f34d4ce71b992da40d1e604f10e8045bbb7a1ea92115905b94d536d056e",
+    "Sources/RudderStackAnalytics/Storage/Store/DiskStore.swift": "124a0fdb09ecaa7642daf58b96b9419a8ae26a662a0606e876677b857aaa155b",
+    "Sources/RudderStackAnalytics/Storage/Store/KeyValueStore.swift": "8874b3169709d310c7b2aecf274fcad1f6d0324ef46ade3f15d6cc49832ee2b7",
+    "Sources/RudderStackAnalytics/Storage/Store/MemoryStore.swift": "c884d21d8a6240ca8bac077125a0e9a11dc8ef1be9847ddcd79e9771c65fbd90",
+    "Sources/RudderStackAnalytics/Storage/StoreModels/StorageModels.swift": "7f93d730b7629c20335973053ce98ed0792c3fd93c938f0f5c4af63617b791a6",
+    "Sources/RudderStackAnalytics/Version.swift": "e988e2012f43134c1cf4bb8381437836b962eb381397ed92f15d1df1e538100b",
+    "VERSION": "c28fcca53637bc88e124af1725df13cb98c69dedefd62fb3cdbe1cdb6b760624"
+  },
+  "package": "swift-sdk",
+  "policies": {},
+  "schemaVersion": 1,
+  "sourceCommit": "a923096f690ec858e3a6aa6edbc7388c7aefbe07",
+  "sourceRepository": "rudderlabs/rudder-monorepo-swift",
+  "targetClosure": [
+    "RudderStackAnalytics"
+  ],
+  "version": "2.0.0"
+}
