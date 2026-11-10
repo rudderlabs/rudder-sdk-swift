@@ -328,3 +328,7 @@ For more information:
 - [Slack](https://rudderstack.com/join-rudderstack-slack-community)
 - [Twitter](https://twitter.com/rudderstack)
 - [YouTube](https://www.youtube.com/channel/UCgV-B77bV_-LOmKYHw8jvBw)
+
+## Report issues / contribute
+
+This repository only publishes releases; it does not accept pull requests. To report a bug or request a feature, [open an issue](https://github.com/rudderlabs/rudder-sdk-swift/issues). See [CONTRIBUTING.md](CONTRIBUTING.md).
