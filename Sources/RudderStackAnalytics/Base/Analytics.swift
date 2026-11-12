@@ -353,6 +353,7 @@ extension Analytics {
     private func referenceCleanup() async {
         self.sessionHandler = nil
         self.lifecycleObserver = nil
+        self.sourceConfigProvider?.stopPeriodicRefresh()
         self.sourceConfigProvider = nil
         self.integrationsController = nil
     }
@@ -396,6 +397,7 @@ extension Analytics {
         self.startProcessingEvents()
         
         self.lifecycleObserver = LifecycleObserver() // Should be initialized before SessionHandler
+        self.sourceConfigProvider.map { self.lifecycleObserver?.addObserver($0) }
         self.pluginChain = PluginChain(analytics: self)
         self.sessionHandler = SessionHandler(analytics: self)
         self.integrationsController = IntegrationsController(analytics: self)
@@ -520,7 +522,7 @@ extension Analytics {
         self.sourceConfigProvider = SourceConfigProvider(analytics: self)
         
         sourceConfigProvider?.fetchCachedConfigAndNotifyObservers()
-        sourceConfigProvider?.refreshConfigAndNotifyObservers()
+        sourceConfigProvider?.fetchConfigAtLaunchAndNotifyObservers()
     }
     
     /**
@@ -532,6 +534,21 @@ extension Analytics {
             return false
         }
         return true
+    }
+}
+
+// MARK: - Testing
+
+extension Analytics {
+
+    /**
+     Sets a shorter source config refresh interval, for the E2E rig only. The minimum is one minute.
+
+     It is not part of the public API: a caller needs `@_spi(Testing) import RudderStackAnalytics`.
+     */
+    @_spi(Testing)
+    public func setSourceConfigRefreshIntervalForTesting(milliseconds: UInt64) {
+        self.sourceConfigProvider?.setRefreshIntervalForTesting(milliseconds: milliseconds)
     }
 }
 

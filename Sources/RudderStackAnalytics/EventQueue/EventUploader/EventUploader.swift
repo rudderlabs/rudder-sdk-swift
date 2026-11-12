@@ -42,6 +42,10 @@ final class EventUploader {
                 for item in dataItems {
                     // Check shutdown conditions before processing each item
                     if self.analytics.isAnalyticsShutdown || self.uploadChannel.isClosed { break }
+                    guard self.isSourceEnabled else {
+                        analytics.logger.debug(log: "\(className): Source is disabled. Keeping the remaining batches for later")
+                        break
+                    }
                     
                     // Read the event batch from storage
                     let batch = self.analytics.storage.eventStorageMode == .memory ? item.batch : (FileManager.contentsOf(file: item.reference) ?? .empty)
@@ -56,8 +60,11 @@ final class EventUploader {
                     // Update anonymousId header if needed
                     self.updateAnonymousIdHeaderIfNeeded(batch)
                     
-                    // Upload the batch
-                    await self.uploadBatch(batch, reference: item.reference)
+                    // A later batch must not upload first: its success would clear the paused batch's retry headers.
+                    guard await self.uploadBatch(batch, reference: item.reference) == .done else {
+                        analytics.logger.debug(log: "\(className): Upload paused. Keeping the remaining batches for later")
+                        break
+                    }
                 }
             }
         }
@@ -71,8 +78,16 @@ final class EventUploader {
 
 // MARK: - Batch Upload
 extension EventUploader {
-    func uploadBatch(_ batch: String, reference: String) async {
+    /// The result of one batch upload. A paused batch stays in storage with its retry headers.
+    enum BatchOutcome {
+        case done
+        case paused
+    }
+
+    @discardableResult
+    func uploadBatch(_ batch: String, reference: String) async -> BatchOutcome {
         var shouldRetry = false
+        var isSourceNotFound = false
         let batchId = self.storage.resolveBatchId(batchReference: reference)
         
         repeat {
@@ -98,8 +113,16 @@ extension EventUploader {
             case .failure(let error):
                 await self.handleBatchUploadFailure(error, reference: reference, batchId: batchId, timestampInMillis: currentTimestampInMillis)
                 shouldRetry = error is RetryableEventUploadError
+                isSourceNotFound = (error as? NonRetryableEventUploadError) == .error404
             }
-        } while shouldRetry
+        } while shouldRetry && self.isSourceEnabled
+
+        // The source became disabled during the retries; the retry headers stay for the next attempt.
+        if shouldRetry {
+            await self.backoff.reset()
+            return .paused
+        }
+        return isSourceNotFound ? .paused : .done
     }
     
     private func handleBatchUploadResponse(_ data: Data, reference: String) async {
@@ -145,8 +168,7 @@ extension EventUploader: TypeIdentifiable {
             self.analytics.handleInvalidWriteKey()
             
         case .error404:
-            analytics.logger.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Stopping the events upload process until the source is enabled again.", error: nil)
-            self.stop()
+            analytics.logger.error(log: "\(className): \(error.formatStatusCodeMessage). " + "Source is disabled. Keeping the stored events until the source is enabled again.", error: nil)
             self.analytics.sourceConfigState.dispatch(action: DisableSourceConfigAction())
             
         case .error413:
@@ -190,6 +212,10 @@ extension EventUploader {
         }
     }
     
+    private var isSourceEnabled: Bool {
+        return self.analytics.sourceConfigState.value.source.isSourceEnabled
+    }
+
     private var currentTimeInMillis: UInt64 {
         let millisecondsPerSecond: Double = 1_000
         return UInt64(Date().timeIntervalSince1970 * millisecondsPerSecond)
