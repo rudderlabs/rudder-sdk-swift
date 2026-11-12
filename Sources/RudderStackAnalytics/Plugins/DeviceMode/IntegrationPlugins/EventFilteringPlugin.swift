@@ -11,8 +11,8 @@ import Combine
 struct EventFilteringPluginConstants {
     static let allowListEventsKey = "whitelistedEvents"
     static let denyListEventsKey = "blacklistedEvents"
-    static let disableFilteringKey = "disable"
     static let eventFilteringOptionKey = "eventFilteringOption"
+    static let eventNameKey = "eventName"
 }
 
 // MARK: - EventFilteringPlugin
@@ -30,8 +30,8 @@ final class EventFilteringPlugin: Plugin {
     var analytics: Analytics?
     
     private let destinationKey: String
-    @Synchronized private var filteringOption: String = ""
-    @Synchronized private var filteringList: [String] = []
+    /// `nil` until the first configuration arrives, so an invalid first list still gives the result it always gave.
+    @Synchronized private var filteringRule: FilteringRule?
     private var cancellables = Set<AnyCancellable>()
     
     /**
@@ -64,9 +64,19 @@ final class EventFilteringPlugin: Plugin {
     }
     
     deinit {
-        filteringList.removeAll()
-        filteringOption = ""
         cancellables.removeAll()
+    }
+}
+
+// MARK: - FilteringRule
+extension EventFilteringPlugin {
+
+    /** The filtering option and its event names, which an update replaces together. */
+    private struct FilteringRule {
+        let option: String
+        let events: Set<String>
+
+        static let none = FilteringRule(option: "", events: [])
     }
 }
 
@@ -80,11 +90,12 @@ extension EventFilteringPlugin {
      - Returns: `true` if the event should be dropped, `false` otherwise.
      */
     private func shouldDropEvent(eventName: String) -> Bool {
-        switch filteringOption {
+        guard let rule = filteringRule else { return false }
+        switch rule.option {
         case EventFilteringPluginConstants.allowListEventsKey:
-            return !filteringList.contains(eventName)
+            return !rule.events.contains(eventName)
         case EventFilteringPluginConstants.denyListEventsKey:
-            return filteringList.contains(eventName)
+            return rule.events.contains(eventName)
         default:
             return false
         }
@@ -126,6 +137,7 @@ extension EventFilteringPlugin {
     private func updateFilteringConfiguration(destinationConfig: [String: Any]?) {
         guard let destinationConfig = destinationConfig else {
             logger.debug(log: "EventFilteringPlugin: No destination config found for: \(destinationKey)")
+            filteringRule = FilteringRule.none
             return
         }
         
@@ -133,21 +145,23 @@ extension EventFilteringPlugin {
         
         if newFilteringOption.isEmpty {
             logger.debug(log: "EventFilteringPlugin: Missing event filtering option for destination: \(destinationKey)")
-            filteringOption = ""
-            filteringList.removeAll()
+            filteringRule = FilteringRule.none
             return
         }
-        
-        // Check if the configuration has a valid structure
+
+        // A malformed list keeps the last valid rule.
         if !hasValidFilteringArray(filteringOption: newFilteringOption, destinationConfig: destinationConfig) {
-            logger.debug(log: "EventFilteringPlugin: Malformed configuration detected for destination: \(destinationKey), disabling filtering")
-            filteringOption = ""
-            filteringList.removeAll()
+            guard filteringRule == nil else {
+                logger.debug(log: "EventFilteringPlugin: Malformed configuration detected for destination: \(destinationKey), keeping the previous filtering rule")
+                return
+            }
+            logger.debug(log: "EventFilteringPlugin: Malformed configuration detected for destination: \(destinationKey), applying its valid entries")
+            filteringRule = firstRuleFromInvalidList(filteringOption: newFilteringOption, destinationConfig: destinationConfig)
             return
         }
-        
-        filteringOption = newFilteringOption
-        filteringList = getEventFilteringList(eventFilteringOption: filteringOption, destinationConfig: destinationConfig)
+
+        let events = getEventFilteringList(eventFilteringOption: newFilteringOption, destinationConfig: destinationConfig)
+        filteringRule = FilteringRule(option: newFilteringOption, events: Set(events))
     }
     
     /**
@@ -156,7 +170,7 @@ extension EventFilteringPlugin {
      - Parameters:
         - filteringOption: The filtering option to check.
         - destinationConfig: The destination configuration dictionary.
-     - Returns: `true` if the configuration has a valid array structure, `false` otherwise.
+     - Returns: `true` if the option needs no list, or if every entry of its list has a string event name; `false` otherwise.
      */
     private func hasValidFilteringArray(filteringOption: String, destinationConfig: [String: Any]) -> Bool {
         let listKey: String
@@ -165,13 +179,27 @@ extension EventFilteringPlugin {
             listKey = EventFilteringPluginConstants.allowListEventsKey
         case EventFilteringPluginConstants.denyListEventsKey:
             listKey = EventFilteringPluginConstants.denyListEventsKey
-        case EventFilteringPluginConstants.disableFilteringKey:
-            return true
         default:
-            return false
+            return true
         }
         
-        return destinationConfig[listKey] is [[String: Any]]
+        guard let entries = destinationConfig[listKey] as? [[String: Any]] else { return false }
+        // One invalid entry rejects the whole list, so a partly read list never replaces a valid rule.
+        // The config decoder turns some strings into a URL or a Date; each was still a string in the JSON.
+        return entries.allSatisfy { entry in
+            let eventName = entry[EventFilteringPluginConstants.eventNameKey]
+            return eventName is String || eventName is URL || eventName is Date
+        }
+    }
+
+    /**
+     The rule for an invalid list in the first configuration: its valid event names, or no filter when the list is
+     not an array. This is the result the plugin gave before it kept the last valid rule.
+     */
+    private func firstRuleFromInvalidList(filteringOption: String, destinationConfig: [String: Any]) -> FilteringRule {
+        guard destinationConfig[filteringOption] is [[String: Any]] else { return .none }
+        let events = getEventFilteringList(eventFilteringOption: filteringOption, destinationConfig: destinationConfig)
+        return FilteringRule(option: filteringOption, events: Set(events))
     }
     
     /**
@@ -209,7 +237,7 @@ extension EventFilteringPlugin {
      */
     private func parseFilteredEvents(eventsArray: [[String: Any]]) -> [String] {
         return eventsArray.compactMap { eventDict in
-            guard let eventName = eventDict["eventName"] as? String else {
+            guard let eventName = eventDict[EventFilteringPluginConstants.eventNameKey] as? String else {
                 return nil
             }
             let trimmedName = eventName.trimmingCharacters(in: .whitespacesAndNewlines)

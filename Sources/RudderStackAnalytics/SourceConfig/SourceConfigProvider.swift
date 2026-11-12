@@ -18,15 +18,23 @@ class SourceConfigProvider: TypeIdentifiable {
     private var backoffPolicy: BackoffPolicy?
     
     private var connectivityMonitor: Connectivity? = Connectivity()
-    private var cancellables = Set<AnyCancellable>()
+    @Synchronized private(set) var refreshIntervalInMillis: UInt64
+
+    @Synchronized private var launchFetchTask: Task<Void, Never>?
+    private let launchFetchEnded = CurrentValueSubject<Bool, Never>(false)
+    @Synchronized private var refreshTask: Task<Void, Never>?
+    @Synchronized private(set) var lastFetchEndInMillis: UInt64?
     
     private static let maxRetryAttempts = 5
+    private static let defaultRefreshIntervalInMillis: UInt64 = 3_600_000 // 1 hour
+    static let minTestRefreshIntervalInMillis: UInt64 = 60_000 // 1 minute
     
-    init(analytics: Analytics, backoffPolicy: BackoffPolicy = ExponentialBackoffPolicy()) {
+    init(analytics: Analytics, backoffPolicy: BackoffPolicy = ExponentialBackoffPolicy(), refreshIntervalInMillis: UInt64 = SourceConfigProvider.defaultRefreshIntervalInMillis) {
         self.analytics = analytics
         self.sourceConfigState = analytics.sourceConfigState
         self.httpClient = HttpClient(analytics: analytics)
         self.backoffPolicy = backoffPolicy
+        self.refreshIntervalInMillis = refreshIntervalInMillis
     }
     
     func fetchCachedConfigAndNotifyObservers() {
@@ -34,18 +42,26 @@ class SourceConfigProvider: TypeIdentifiable {
         self.notifyObservers(config: cachedSourceConfig)
     }
     
-    func refreshConfigAndNotifyObservers() {
-        // Attempt to download the latest SourceConfig
-        self.connectivityMonitor?.connectivityState
-            .filter { $0 } // Proceed only when connected
-            .first() // Take only the first true value
-            .sink { [weak self] _ in
-                Task { [weak self] in
-                    guard let self, let downloadedSourceConfig = await self.downloadSourceConfig() else { return }
-                    self.notifyObservers(config: downloadedSourceConfig)
-                }
-            }
-            .store(in: &cancellables)
+    func fetchConfigAtLaunchAndNotifyObservers() {
+        let connectivityState = self.connectivityMonitor?.connectivityState
+        let launchFetchEnded = self.launchFetchEnded
+        self.launchFetchTask = Task { [weak self] in
+            await Self.waitUntilTrue(connectivityState)
+            await self?.fetchAndNotifyObservers { await $0.downloadSourceConfig() }
+            launchFetchEnded.send(true)
+        }
+    }
+
+    private func fetchAndNotifyObservers(download: (SourceConfigProvider) async -> SourceConfig?) async {
+        let downloadedSourceConfig = await download(self)
+        // A cancelled refresh applies nothing and records no end, so the next foreground fetches at once.
+        guard !Task.isCancelled else { return }
+
+        if let downloadedSourceConfig {
+            self.analytics?.storage.write(value: downloadedSourceConfig.jsonString, key: Constants.storageKeys.sourceConfig)
+            self.notifyObservers(config: downloadedSourceConfig)
+        }
+        self.lastFetchEndInMillis = Self.currentTimeInMillis
     }
     
     private func notifyObservers(config: SourceConfig) {
@@ -53,8 +69,91 @@ class SourceConfigProvider: TypeIdentifiable {
         self.sourceConfigState.dispatch(action: UpdateSourceConfigAction(updatedSourceConfig: config))
     }
     
+    /** Returns at the first `true`, or at once for a nil publisher. A cancelled task stops waiting. */
+    private static func waitUntilTrue(_ publisher: AnyPublisher<Bool, Never>?) async {
+        guard let publisher else { return }
+        for await value in publisher.values where value {
+            return
+        }
+    }
+
+    private static var currentTimeInMillis: UInt64 {
+        let millisecondsPerSecond: Double = 1_000
+        return UInt64(Date().timeIntervalSince1970 * millisecondsPerSecond)
+    }
+
     deinit {
-        self.cancellables.removeAll()
+        self.launchFetchTask?.cancel()
+        self.refreshTask?.cancel()
+    }
+}
+
+// MARK: - Periodic Refresh
+extension SourceConfigProvider: LifecycleEventListener {
+
+    func onForeground() {
+        self.startPeriodicRefresh()
+    }
+
+    func onBackground() {
+        self.stopPeriodicRefresh()
+    }
+
+    func startPeriodicRefresh() {
+        $refreshTask.modify { refreshTask in
+            guard refreshTask == nil else { return }
+            refreshTask = self.refreshPeriodically()
+        }
+    }
+
+    func stopPeriodicRefresh() {
+        $refreshTask.modify { refreshTask in
+            refreshTask?.cancel()
+            refreshTask = nil
+        }
+    }
+
+    /** Sets a shorter interval for the E2E rig, with a minimum of one minute, and restarts a running loop. */
+    func setRefreshIntervalForTesting(milliseconds: UInt64) {
+        self.refreshIntervalInMillis = max(milliseconds, Self.minTestRefreshIntervalInMillis)
+        $refreshTask.modify { refreshTask in
+            guard refreshTask != nil else { return }
+            refreshTask?.cancel()
+            refreshTask = self.refreshPeriodically()
+        }
+    }
+
+    private func refreshPeriodically() -> Task<Void, Never> {
+        // The loop waits on the end signal, not on the launch task: cancelling a wait on `Task.value` does not stop it.
+        let launchFetchEnded = self.launchFetchTask == nil ? nil : self.launchFetchEnded.eraseToAnyPublisher()
+        let connectivityState = self.connectivityMonitor?.connectivityState
+
+        // Holds no strong reference while it waits, so the provider can deinit and cancel the loop.
+        return Task { [weak self] in
+            await Self.waitUntilTrue(launchFetchEnded)
+            while !Task.isCancelled {
+                guard let delayInMillis = self?.timeUntilNextRefresh() else { return }
+                do {
+                    try await BackoffPolicyHelper.sleep(milliseconds: Int(delayInMillis))
+                } catch {
+                    return
+                }
+                await Self.waitUntilTrue(connectivityState)
+                guard !Task.isCancelled else { return }
+                await self?.fetchAndNotifyObservers { await $0.downloadSourceConfigOnce() }
+            }
+        }
+    }
+
+    private func timeUntilNextRefresh() -> UInt64 {
+        return Self.timeUntilNextFetch(lastFetchEndInMillis: self.lastFetchEndInMillis, nowInMillis: Self.currentTimeInMillis, intervalInMillis: self.refreshIntervalInMillis)
+    }
+
+    /** A clock that moved back counts as due. */
+    static func timeUntilNextFetch(lastFetchEndInMillis: UInt64?, nowInMillis: UInt64, intervalInMillis: UInt64) -> UInt64 {
+        guard let lastFetchEndInMillis, nowInMillis >= lastFetchEndInMillis else { return 0 }
+        let elapsedInMillis = nowInMillis - lastFetchEndInMillis
+        return elapsedInMillis >= intervalInMillis ? 0 : intervalInMillis - elapsedInMillis
     }
 }
 
@@ -101,12 +200,23 @@ extension SourceConfigProvider {
         return nil
     }
     
+    private func downloadSourceConfigOnce() async -> SourceConfig? {
+        switch await self.httpClient.getConfigurationData() {
+        case .success(let data):
+            return self.handleSourceConfigResponse(data: data)
+
+        case .failure(let error):
+            // A refresh never shuts down the SDK: uploads and the next launch already handle an invalid write key.
+            analytics?.logger.error(log: "\(className): Error refreshing SourceConfig: \(error.errorDescription). Keeping the current config", error: error)
+            return nil
+        }
+    }
+
     private func handleSourceConfigResponse(data: Data) -> SourceConfig? {
         do {
             let sourceConfig = try JSONDecoder().decode(SourceConfig.self, from: data)
             analytics?.logger.debug(log: "\(className): SourceConfig downloaded: \(sourceConfig)")
             
-            self.analytics?.storage.write(value: sourceConfig.jsonString, key: Constants.storageKeys.sourceConfig)
             return sourceConfig
         } catch {
             analytics?.logger.error(log: "Failed to decode SourceConfig from response: \(error)", error: error)

@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0](https://github.com/rudderlabs/rudder-monorepo-swift/compare/swift-sdk-2.0.1...swift-sdk-2.1.0) (2026-11-12)
+
+
+### Features
+
+* **swift-sdk:** refresh the source config while the app is in the foreground ([#53](https://github.com/rudderlabs/rudder-monorepo-swift/issues/53)) ([38d21a7](https://github.com/rudderlabs/rudder-monorepo-swift/commit/38d21a7929e2a7ce32a4c98b274aaafc59afccd1))
+
+
+### Bug Fixes
+
+* **swift-sdk:** keep one event filter rule per destination ([#52](https://github.com/rudderlabs/rudder-monorepo-swift/issues/52)) ([27e8abf](https://github.com/rudderlabs/rudder-monorepo-swift/commit/27e8abf6157d937fa672eb1bc98fe628d468e190))
+* **swift-sdk:** pause uploads on a 404 and flush on re-enable ([#54](https://github.com/rudderlabs/rudder-monorepo-swift/issues/54)) ([c8abe21](https://github.com/rudderlabs/rudder-monorepo-swift/commit/c8abe213cd5b39c3dab16f40f2f700bab4c44d75))
+
 ## [2.0.1](https://github.com/rudderlabs/rudder-monorepo-swift/compare/swift-sdk-2.0.0...swift-sdk-2.0.1) (2026-11-06)
 
 
