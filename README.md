@@ -136,7 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 Replace:
 - `<WRITE_KEY>`: Your project's write key from the RudderStack dashboard.
-- `<DATA_PLANE_URL>`: The URL of your RudderStack data plane.
+- `<DATA_PLANE_URL>`: The URL of your RudderStack data plane. Use an `https` URL.
 
 ## Identifying users
 
