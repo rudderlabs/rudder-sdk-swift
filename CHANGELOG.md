@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.2.0](https://github.com/rudderlabs/rudder-monorepo-swift/compare/swift-sdk-2.1.0...swift-sdk-2.2.0) (2026-11-19)
+
+
+### Features
+
+* **swift-sdk:** add context.wrapperLibrary for wrapper sdks ([#68](https://github.com/rudderlabs/rudder-monorepo-swift/issues/68)) ([a0a3df0](https://github.com/rudderlabs/rudder-monorepo-swift/commit/a0a3df0fff7b4ee55a67566d043a00ee7a498a34))
+* **swift-sdk:** refuse a second instance for a running write key ([#72](https://github.com/rudderlabs/rudder-monorepo-swift/issues/72)) ([0ae70cc](https://github.com/rudderlabs/rudder-monorepo-swift/commit/0ae70cc2c77537dbd28b21e5f56c6942c667c4f9))
+
+
+### Miscellaneous Chores
+
+* use the MIT license in the integration onboarding skill ([#75](https://github.com/rudderlabs/rudder-monorepo-swift/issues/75)) ([3b2bd4b](https://github.com/rudderlabs/rudder-monorepo-swift/commit/3b2bd4b1d2a842448d1a28fc2b2d74eb1ba7a500))
+
 ## [2.1.0](https://github.com/rudderlabs/rudder-monorepo-swift/compare/swift-sdk-2.0.1...swift-sdk-2.1.0) (2026-11-12)
 
 
