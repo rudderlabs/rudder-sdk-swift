@@ -634,13 +634,13 @@
   "fileHashes": {
     ".github/CODEOWNERS": "b6186d483919a45be6dd29537a58adc1a5a34338ab74fcf6e9985506c18eb025",
     ".gitignore": "6c3f21e0d020c2a3887f176d7d69e0e6456e31888e053bf9dd5d1c5c78972aeb",
-    "CHANGELOG.md": "aa2d00c25e73cb09660b48397588c4da89c5acbc07531c0425d813da02410633",
-    "CONTRIBUTING.md": "cd48f334ac627ca981e8e0b87e1805049698160eae19f4ea56f6c6bbf66b85ae",
+    "CHANGELOG.md": "62aa7389ba6033deeec6a6777d799c728c24f409ae02601b7863526c042a941c",
+    "CONTRIBUTING.md": "16cc37a206bc8ff87fd01913e4f94e45c254beb5b3b3602e791a8ee0014f87ae",
     "LICENSE": "130c075edb106634e90df2eb62cba8f7a3cb2c0e8ccec39cb168fc649684205d",
     "Package.swift": "10f4444c09f5806c5387ba5b36bb137188f1d2d202ca6e9aad5f76d7934baeb3",
-    "README.md": "062c08cbc519563f887b1d52542b4190b25d877812f1570b145e4d4e4d38013d",
+    "README.md": "9f9fa1488aee87e0fc944b021badf2acfa6b0742efeda2a028b955a14bc6423b",
     "Sources/RudderStackAnalytics/Base/Analytics.swift": "1b6c83f1766d1b13c2e4725371b2708b4cf46804f8c61df428fb5f62c463599e",
-    "Sources/RudderStackAnalytics/Base/Configuration.swift": "e21f24a00635b5ec4dc45ad527872a004995d13d0d36eaa1389433e825168b3a",
+    "Sources/RudderStackAnalytics/Base/Configuration.swift": "05ee928a2e690e6f5cca9935bb2dde9f737f1a3e386a8dd521fced60c6af779e",
     "Sources/RudderStackAnalytics/Base/RunningWriteKeys.swift": "2c2570f37d8a60d6ab1c19d2a46b266a8db8e1ad5ffe01c3846fa9754cb8a242",
     "Sources/RudderStackAnalytics/ConsentManagement/ConsentManagementConfiguration.swift": "58dac517bae56a3a7d8b4ff0627e8610f36f4f93c4922d1a60ad940392cebb81",
     "Sources/RudderStackAnalytics/ConsentManagement/ConsentManagementOptions.swift": "2ec5446d98c9042546f946c4feb51444493acb4b37da6515bd38864b1785861d",
@@ -666,7 +666,7 @@
     "Sources/RudderStackAnalytics/Helpers/CoreSupport/PropertyWrappers.swift": "81715ed5efe60ebc23dec6b4112f2c5f2edac2effce8a7221e5c187bff74e9ae",
     "Sources/RudderStackAnalytics/Helpers/ECommerce/ECommerceEvents.swift": "98abe6d191040e9b70e25554be743ea720fd17b98e4d31550c36076d831a4a87",
     "Sources/RudderStackAnalytics/Helpers/ECommerce/ECommerceParamNames.swift": "0a918688e3f2501819ac1c3b5aef39461d0eb2a943d04a691e5d88824a3d9b86",
-    "Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift": "fd014a698ad283f180e9d2ec1c2f0894aacde23eac6173e38cc5242a7b9511c2",
+    "Sources/RudderStackAnalytics/Helpers/Utils/Constants.swift": "c8dd29ed523a1e897462f0cc3e1ba27bb5c7dc224aa193c5ba1db0f3e3b7c5d0",
     "Sources/RudderStackAnalytics/Helpers/Utils/Extensions.swift": "affab1bf585da39049423ced9ccad7593951df9d26cbcbbb10bff882d27e8071",
     "Sources/RudderStackAnalytics/Helpers/Utils/NetworkInfoPluginUtils.swift": "922c1be171644cdbf5868846a3c83e4f00a68e42b68e8be50147f57d2656e359",
     "Sources/RudderStackAnalytics/LifecycleManagement/LifecycleManagementUtils.swift": "8eed459e1e19148fc63f57898d081d2db8119bbd38f659593d2b6a033a42045c",
@@ -674,7 +674,7 @@
     "Sources/RudderStackAnalytics/Logger/AnalyticsLogger.swift": "a78a286b3b7e3353dd005aada9e858e33d26ca61a6fb1779338e5ba3ea705598",
     "Sources/RudderStackAnalytics/Logger/LoggerAnalytics.swift": "dcdb1d2ab3625252c12460b5def3ae37c6b9e8afa6d9f8013cc044320057578d",
     "Sources/RudderStackAnalytics/Logger/SwiftLogger.swift": "89c3f1b72ee5d965848940852f600f3afe844779db2d76e8022f46f9dffa3b84",
-    "Sources/RudderStackAnalytics/Network/HttpClient.swift": "0007271e9ffb7b31f79b8cd2efaf82022ca00718cc0e6112b39f71ba1d51a2a2",
+    "Sources/RudderStackAnalytics/Network/HttpClient.swift": "26cf0defd0f834cb9e0329fbbab808da8eca2b93654a5e9f1fe601e8f6bc7e39",
     "Sources/RudderStackAnalytics/Network/HttpNetwork.swift": "32357ad1ed2878a0f7981f127db6576a8ae72c3bd19c8470e1bea365dff8658e",
     "Sources/RudderStackAnalytics/ObjC/Base/ObjCAnalytics.swift": "60b671783a960c25e7b0795ed266520cbacd8835e4639f15702e4b214f32eb2a",
     "Sources/RudderStackAnalytics/ObjC/Base/ObjCConfiguration.swift": "1cc478d599aba4905ff47ce1e4f380de870fe6318c6135f4576e74327a5ea730",
@@ -736,7 +736,7 @@
     "Sources/RudderStackAnalytics/SessionManagement/SessionHandler.swift": "2e44e88554db438287fd99df635a3856760569f203eb56a86a053f5b50d82505",
     "Sources/RudderStackAnalytics/SessionManagement/SessionInfo.swift": "d827db450ba5fd07fd6ce2f69545c7c8ceb2634b24cb32ec0a87cc929e78e044",
     "Sources/RudderStackAnalytics/SourceConfig/SourceConfig.swift": "1c7006e5b1436661970fe8ab76a167907aeeef360fa0c8e0b5a578cbbfbbe126",
-    "Sources/RudderStackAnalytics/SourceConfig/SourceConfigProvider.swift": "f107b53b675de6d2ad310bdbd19cc51c5d966b03ddebb8041fb300aa48195bc7",
+    "Sources/RudderStackAnalytics/SourceConfig/SourceConfigProvider.swift": "37dde8d8b4dec5a9485740c33399e8b16854284a0310a683d89eaf5f57b069bb",
     "Sources/RudderStackAnalytics/SourceConfig/SourceConfigResult.swift": "2e7f4b3eee3d1df1dcc3b28c65778d736ea22af00986a35b5926e59ca5e31679",
     "Sources/RudderStackAnalytics/StateManagement/Consent/ConsentManagement.swift": "262466952c6fa079b947ff4d1a453c9e9281210313d82feff4230f3e572e970c",
     "Sources/RudderStackAnalytics/StateManagement/Consent/SetConsentAction.swift": "fcc4c21a7e132bbcffb27a0037812ac2d8abe28b99925e8df70534aeef063079",
@@ -756,16 +756,16 @@
     "Sources/RudderStackAnalytics/Storage/Store/KeyValueStore.swift": "8874b3169709d310c7b2aecf274fcad1f6d0324ef46ade3f15d6cc49832ee2b7",
     "Sources/RudderStackAnalytics/Storage/Store/MemoryStore.swift": "c884d21d8a6240ca8bac077125a0e9a11dc8ef1be9847ddcd79e9771c65fbd90",
     "Sources/RudderStackAnalytics/Storage/StoreModels/StorageModels.swift": "7f93d730b7629c20335973053ce98ed0792c3fd93c938f0f5c4af63617b791a6",
-    "Sources/RudderStackAnalytics/Version.swift": "c8956211e7f87ec42c856012ca3fa9712eb707a901ef58c0875484ea8230bfec",
-    "VERSION": "c4a2383a03bdb6739d16a0e24058e4b9c7da4e63d203e0be2f448868cc03c530"
+    "Sources/RudderStackAnalytics/Version.swift": "8f15c755058f4edce31bed5961eeb6613656f114b1e9018712fb96061d8335d8",
+    "VERSION": "a42caf4a54bbbe27aa45b6efbc6356c5e299b19763e728b6cdb7201b02ebbe36"
   },
   "package": "swift-sdk",
   "policies": {},
   "schemaVersion": 1,
-  "sourceCommit": "6c27a6c7bc14f054deb065711f5911552711ff42",
+  "sourceCommit": "50e0b3a2de18dbab9ce43cae2231426073fc842e",
   "sourceRepository": "rudderlabs/rudder-monorepo-swift",
   "targetClosure": [
     "RudderStackAnalytics"
   ],
-  "version": "2.2.0"
+  "version": "2.3.0"
 }

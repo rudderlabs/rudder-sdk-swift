@@ -72,7 +72,7 @@ public class Configuration: NSObject {
     /**
      The log level for this Analytics instance.
      */
-    var logLevel: LogLevel
+    public let logLevel: LogLevel
     
     /**
      A configuration instance for managing consent settings. Defaults to disabled.

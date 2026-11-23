@@ -1,7 +1,8 @@
 # Contributing
 
-This repository only publishes releases. Its code is generated from the source repository, so it does not accept pull requests.
+This repository is read-only. Its code is generated from [rudder-monorepo-swift](https://github.com/rudderlabs/rudder-monorepo-swift), so it does not accept issues or pull requests.
 
-- Report a bug or request a feature: [open an issue](https://github.com/rudderlabs/rudder-sdk-swift/issues) in this repository.
+- Report a bug or request a feature: [open an issue](https://github.com/rudderlabs/rudder-monorepo-swift/issues/new/choose) in rudder-monorepo-swift.
+- Propose a change: follow the monorepo's [CONTRIBUTING.md](https://github.com/rudderlabs/rudder-monorepo-swift/blob/main/CONTRIBUTING.md).
 
-Maintainers make the change in the source repository; it ships in this package's next release.
+Changes ship in this package's next release.

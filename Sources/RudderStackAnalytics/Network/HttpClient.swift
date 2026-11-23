@@ -12,7 +12,7 @@ import Foundation
  This protocol is designed to execute predefined network requests.
  */
 protocol HttpClientRequests {
-    func getConfigurationData() async -> SourceConfigResult
+    func getConfigurationData(isRefresh: Bool) async -> SourceConfigResult
     func postBatchEvents(_ batch: String, additionalHeaders: [String: String]) async -> EventUploadResult
 }
 
@@ -29,20 +29,21 @@ final class HttpClient: TypeIdentifiable {
         self.anonymousIdHeader = analytics.anonymousId ?? String.empty
     }
 
-    private func prepareGenericUrlRequest(for requestType: HttpClientRequestType) -> URLRequest? {
-        guard let url = self.prepareRequestUrl(for: requestType) else { return nil }
+    private func prepareGenericUrlRequest(for requestType: HttpClientRequestType, isRefresh: Bool = false) -> URLRequest? {
+        guard let url = self.prepareRequestUrl(for: requestType, isRefresh: isRefresh) else { return nil }
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = requestType.httpMethod
         urlRequest.allHTTPHeaderFields = requestType.headers(analytics, anonymousIdHeader: self.anonymousIdHeader)
         return urlRequest
     }
 
-    func prepareRequestUrl(for requestType: HttpClientRequestType) -> URL? {
+    func prepareRequestUrl(for requestType: HttpClientRequestType, isRefresh: Bool = false) -> URL? {
         guard var url = URL(string: requestType.url(analytics).trimmedUrlString) else { return nil }
         url = url.appendingPathComponent(requestType.endpoint)
 
         if requestType == .configuration {
-            url = url.appendQueryParameters(Constants.defaultConfig.queryParams + ["writeKey": analytics.configuration.writeKey])
+            let refreshParams: [String: String] = isRefresh ? Constants.defaultConfig.refreshQueryParams : [:]
+            url = url.appendQueryParameters(Constants.defaultConfig.queryParams + ["writeKey": analytics.configuration.writeKey] + refreshParams)
         }
         return url
     }
@@ -54,8 +55,8 @@ final class HttpClient: TypeIdentifiable {
 
 // MARK: - HttpClientRequests
 extension HttpClient: HttpClientRequests {
-    func getConfigurationData() async -> SourceConfigResult {
-        guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration) else { return .failure(SourceConfigError.unknown) }
+    func getConfigurationData(isRefresh: Bool = false) async -> SourceConfigResult {
+        guard let urlRequest = self.prepareGenericUrlRequest(for: .configuration, isRefresh: isRefresh) else { return .failure(SourceConfigError.unknown) }
         return await HttpNetwork.perform(request: urlRequest, logger: analytics.logger).sourceConfigResult
     }
 

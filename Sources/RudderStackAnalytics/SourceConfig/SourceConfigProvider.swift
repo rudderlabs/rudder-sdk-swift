@@ -201,7 +201,7 @@ extension SourceConfigProvider {
     }
     
     private func downloadSourceConfigOnce() async -> SourceConfig? {
-        switch await self.httpClient.getConfigurationData() {
+        switch await self.httpClient.getConfigurationData(isRefresh: true) {
         case .success(let data):
             return self.handleSourceConfigResponse(data: data)
 
