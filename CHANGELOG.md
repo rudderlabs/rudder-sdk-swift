@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.0](https://github.com/rudderlabs/rudder-monorepo-swift/compare/swift-sdk-2.2.0...swift-sdk-2.3.0) (2026-11-23)
+
+
+### Features
+
+* log integrations through the instance logger ([#74](https://github.com/rudderlabs/rudder-monorepo-swift/issues/74)) ([d00be0c](https://github.com/rudderlabs/rudder-monorepo-swift/commit/d00be0c2e42dcd4677a0f9285ac14e4e137ddef3))
+* **swift-sdk:** mark source config refresh requests with a query parameter ([#77](https://github.com/rudderlabs/rudder-monorepo-swift/issues/77)) ([03990dc](https://github.com/rudderlabs/rudder-monorepo-swift/commit/03990dcd0f0231df6bea6834e50ace8e19f6148a))
+
 ## [2.2.0](https://github.com/rudderlabs/rudder-monorepo-swift/compare/swift-sdk-2.1.0...swift-sdk-2.2.0) (2026-11-19)
 
 

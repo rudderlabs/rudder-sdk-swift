@@ -211,6 +211,9 @@ public struct _DefaultConfig {
         guard let buildVersion = OSInfo.preparedOSInfo["version"] as? String else { return params }
         return params + ["bv": buildVersion]
     }
+
+    /// Added only to a source config refresh, so the backend logs can tell it from the launch fetch.
+    let refreshQueryParams: [String: String] = ["refresh": "true"]
     
     /// Special signal string used to trigger uploads.
     let uploadSignal = "#!upload"
